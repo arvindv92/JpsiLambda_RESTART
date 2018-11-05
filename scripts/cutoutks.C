@@ -24,6 +24,7 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 	TCut L_dmcut, pidcut,masswindow, totalcut;
 
 	Int_t entries_init = 0, entries_final = 0, entries_gen = 0;
+	Float_t eff_excl = 0.0, eff_excl_err = 0.0, eff_incl = 0.0, eff_incl_err = 0.0;
 	Double_t L_dm = 0.0, p_PIDp = 0.0, Lb_DTF_L_WMpipi_JpsiConstr = 0.0;
 	Bool_t logFlag = 0, genFlag = 0;
 	//TEST CHANGE TO TEST GITHUB
@@ -44,7 +45,14 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 			switch(run)
 			{
 			case 1:
-				if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiLambda/run1/cutoutks_log.txt");
+				if(logFlag == 1 && trackType == 3)
+				{
+					gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiLambda/run1/cutoutks_LL_log.txt");
+				}
+				if(logFlag == 1 && trackType == 5)
+				{
+					gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiLambda/run1/cutoutks_DD_log.txt");
+				}
 				if(!gSystem->AccessPathName("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiLambda/run1/gen_log.txt"))
 				{
 					genfile.open("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiLambda/run1/gen_log.txt");
@@ -55,7 +63,14 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 				break;
 
 			case 2:
-				if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiLambda/run2/cutoutks_log.txt");
+				if(logFlag == 1 && trackType == 3)
+				{
+					gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiLambda/run2/cutoutks_LL_log.txt");
+				}
+				if(logFlag == 1 && trackType == 5)
+				{
+					gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiLambda/run2/cutoutks_DD_log.txt");
+				}
 				if(!gSystem->AccessPathName("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiLambda/run2/gen_log.txt"))
 				{
 					genfile.open("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiLambda/run2/gen_log.txt");
@@ -71,7 +86,14 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 			switch(run)
 			{
 			case 1:
-				if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiSigma/run1/cutoutks_log.txt");
+				if(logFlag == 1 && trackType == 3)
+				{
+					gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiSigma/run1/cutoutks_LL_log.txt");
+				}
+				if(logFlag == 1 && trackType == 5)
+				{
+					gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiSigma/run1/cutoutks_DD_log.txt");
+				}
 				if(!gSystem->AccessPathName("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiSigma/run1/gen_log.txt"))
 				{
 					genfile.open("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiSigma/run1/gen_log.txt");
@@ -82,7 +104,14 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 				break;
 
 			case 2:
-				if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiSigma/run2/cutoutks_log.txt");
+				if(logFlag == 1 && trackType == 3)
+				{
+					gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiSigma/run2/cutoutks_LL_log.txt");
+				}
+				if(logFlag == 1 && trackType == 5)
+				{
+					gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiSigma/run2/cutoutks_DD_log.txt");
+				}
 				if(!gSystem->AccessPathName("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiSigma/run2/gen_log.txt"))
 				{
 					genfile.open("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiSigma/run2/gen_log.txt");
@@ -98,7 +127,14 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 			switch(run)
 			{
 			case 1:
-				if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiXi/run1/cutoutks_log.txt");
+				if(logFlag == 1 && trackType == 3)
+				{
+					gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiXi/run1/cutoutks_LL_log.txt");
+				}
+				if(logFlag == 1 && trackType == 5)
+				{
+					gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiXi/run1/cutoutks_DD_log.txt");
+				}
 				if(!gSystem->AccessPathName("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiXi/run1/gen_log.txt"))
 				{
 					genfile.open("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiXi/run1/gen_log.txt");
@@ -109,7 +145,14 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 				break;
 
 			case 2:
-				if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiXi/run2/cutoutks_log.txt");
+				if(logFlag == 1 && trackType == 3)
+				{
+					gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiXi/run2/cutoutks_LL_log.txt");
+				}
+				if(logFlag == 1 && trackType == 5)
+				{
+					gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiXi/run2/cutoutks_DD_log.txt");
+				}
 				if(!gSystem->AccessPathName("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiXi/run2/gen_log.txt"))
 				{
 					genfile.open("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiXi/run2/gen_log.txt");
@@ -128,13 +171,27 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 		switch(run)
 		{
 		case 1:
-			if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/data/JpsiLambda/run1/cutoutks_log.txt");
+			if(logFlag == 1 && trackType == 3)
+			{
+				gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/data/JpsiLambda/run1/cutoutks_LL_log.txt");
+			}
+			if(logFlag == 1 && trackType == 5)
+			{
+				gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/data/JpsiLambda/run1/cutoutks_DD_log.txt");
+			}
 			filein = TFile::Open(TString::Format("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_sanity_%s.root",type),"READ");
 			fileout = new TFile(TString::Format("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_cutoutks_%s.root",type),"RECREATE");
 			break;
 
 		case 2:
-			if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/data/JpsiLambda/run2/cutoutks_log.txt");
+			if(logFlag == 1 && trackType == 3)
+			{
+				gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/data/JpsiLambda/run2/cutoutks_LL_log.txt");
+			}
+			if(logFlag == 1 && trackType == 5)
+			{
+				gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/data/JpsiLambda/run2/cutoutks_DD_log.txt");
+			}
 			filein = TFile::Open(TString::Format("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_sanity_%s.root",type),"READ");
 			fileout = new TFile(TString::Format("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_%s.root",type),"RECREATE");
 			break;
@@ -153,6 +210,7 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 	treein->SetBranchAddress("L_dm",&L_dm);
 	treein->SetBranchAddress("p_PIDp",&p_PIDp);
 	treein->SetBranchAddress("Lb_DTF_L_WMpipi_JpsiConstr",&Lb_DTF_L_WMpipi_JpsiConstr);
+
 	treeout = (TTree*)treein->CloneTree(0);
 
 	if(trackType == 3)
@@ -200,21 +258,11 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 	{
 		if(entries_init != 0)
 		{
-			if(trackType == 3)
-			{
-				eff_excl_LL = (Float_t)entries_final_LL*100/entries_init;
-				eff_excl_LL_err = sqrt( eff_excl_LL*(100.0-eff_excl_LL)/entries_init);
-			}
-			else if(trackType == 5)
-			{
-				eff_excl_DD = (Float_t)entries_final_DD*100/entries_init;
-				eff_excl_DD_err = sqrt( eff_excl_DD*(100.0-eff_excl_DD)/entries_init);
-			}
-
+			eff_excl = (Float_t)entries_final*100/entries_init;
+			eff_excl_err = sqrt( eff_excl*(100.0-eff_excl)/entries_init);
 		}
 		cout<<"******************************************"<<endl;
-		cout<<"LL Sanity cuts made with exclusive efficiency = "<<eff_excl_LL<<"% +/- " <<eff_excl_LL_err<<" %"<<endl;
-		cout<<"DD Sanity cuts made with exclusive efficiency = "<<eff_excl_DD<<"% +/- " <<eff_excl_DD_err<<" %"<<endl;
+		cout<<type<<" Sanity cuts made with exclusive efficiency = "<<eff_excl<<"% +/- " <<eff_excl_err<<" %"<<endl;
 		cout<<"******************************************"<<endl;
 
 		if(genFlag)
@@ -223,24 +271,16 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 			cout<<"Original generated number = "<<entries_gen<<endl;
 			if(entries_gen != 0)
 			{
-				eff_incl_LL = (Float_t)entries_final_LL*100/entries_gen;
-				eff_incl_LL_err = sqrt(eff_incl_LL*(100.0-eff_incl_LL)/entries_gen);
-
-				eff_incl_DD = (Float_t)entries_final_DD*100/entries_gen;
-				eff_incl_DD_err = sqrt(eff_incl_DD*(100.0-eff_incl_DD)/entries_gen);
+				eff_incl = (Float_t)entries_final*100/entries_gen;
+				eff_incl_err = sqrt(eff_incl*(100.0-eff_incl)/entries_gen);
 			}
 			cout<<"******************************************"<<endl;
-			cout<<"LL Sanity cuts made with inclusive efficiency = "<<eff_incl_LL<<"% +/- " <<eff_incl_LL_err<<" %"<<endl;
-			cout<<"DD Sanity cuts made with inclusive efficiency = "<<eff_incl_DD<<"% +/- " <<eff_incl_DD_err<<" %"<<endl;
+			cout<<type<<" Sanity cuts made with inclusive efficiency = "<<eff_incl<<"% +/- " <<eff_incl_err<<" %"<<endl;
 			cout<<"******************************************"<<endl;
 		}
 	}
 
-	gROOT->ProcessLine(".>");
-	if(flag==1)
-		gSystem->Exec("cat cutoutks_LL_log.txt");
-	else if(flag==2)
-		gSystem->Exec("cat cutoutks_DD_log.txt");
+	if(logFlag) gROOT->ProcessLine(".>");
 
 	fileout->Write();
 	fileout->Close();
