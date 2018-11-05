@@ -27,8 +27,8 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 	Float_t eff_excl = 0.0, eff_excl_err = 0.0, eff_incl = 0.0, eff_incl_err = 0.0;
 	Double_t L_dm = 0.0, p_PIDp = 0.0, Lb_DTF_L_WMpipi_JpsiConstr = 0.0;
 	Bool_t logFlag = 0, genFlag = 0;
-	//TEST CHANGE TO TEST GITHUB
 	fstream genfile;
+
 	masswindow = "Lb_DTF_L_WMpipi_JpsiConstr > 480 && Lb_DTF_L_WMpipi_JpsiConstr < 520";
 
 	const char* type = (trackType == 3) ? ("LL") : ("DD");
@@ -72,7 +72,7 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 			case 2:
 				if(logFlag == 1)
 				{
-					gROOT->ProcessLine(strcat(".> logs/mc/JpsiLambda/run2/cutoutks_LL_log.txt",logFileName));
+					gROOT->ProcessLine(strcat(".> logs/mc/JpsiLambda/run2/",logFileName));
 				}
 				if(!gSystem->AccessPathName("logs/mc/JpsiLambda/run2/gen_log.txt"))
 				{
@@ -91,7 +91,7 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 			case 1:
 				if(logFlag == 1)
 				{
-					gROOT->ProcessLine(strcat(".> logs/mc/JpsiSigma/run1/cutoutks_LL_log.txt",logFileName));
+					gROOT->ProcessLine(strcat(".> logs/mc/JpsiSigma/run1/",logFileName));
 				}
 				if(!gSystem->AccessPathName("logs/mc/JpsiSigma/run1/gen_log.txt"))
 				{
@@ -105,7 +105,7 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 			case 2:
 				if(logFlag == 1)
 				{
-					gROOT->ProcessLine(strcat(".> logs/mc/JpsiSigma/run2/cutoutks_LL_log.txt",logFileName));
+					gROOT->ProcessLine(strcat(".> logs/mc/JpsiSigma/run2/",logFileName));
 				}
 				if(!gSystem->AccessPathName("logs/mc/JpsiSigma/run2/gen_log.txt"))
 				{
@@ -124,7 +124,7 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 			case 1:
 				if(logFlag == 1)
 				{
-					gROOT->ProcessLine(strcat(".> logs/mc/JpsiXi/run1/cutoutks_LL_log.txt",logFileName));
+					gROOT->ProcessLine(strcat(".> logs/mc/JpsiXi/run1/",logFileName));
 				}
 				if(!gSystem->AccessPathName("logs/mc/JpsiXi/run1/gen_log.txt"))
 				{
@@ -138,7 +138,7 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 			case 2:
 				if(logFlag == 1)
 				{
-					gROOT->ProcessLine(strcat(".> logs/mc/JpsiXi/run2/cutoutks_LL_log.txt",logFileName));
+					gROOT->ProcessLine(strcat(".> logs/mc/JpsiXi/run2/",logFileName));
 				}
 				if(!gSystem->AccessPathName("logs/mc/JpsiXi/run2/gen_log.txt"))
 				{
@@ -160,7 +160,7 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 		case 1:
 			if(logFlag == 1)
 			{
-				gROOT->ProcessLine(strcat(".> logs/data/JpsiLambda/run1/cutoutks_LL_log.txt",logFileName));
+				gROOT->ProcessLine(strcat(".> logs/data/JpsiLambda/run1/",logFileName));
 			}
 			filein = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_sanity_%s.root",type),"READ");
 			fileout = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_cutoutks_%s.root",type),"RECREATE");
@@ -169,7 +169,7 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 		case 2:
 			if(logFlag == 1)
 			{
-				gROOT->ProcessLine(strcat(".> logs/data/JpsiLambda/run2/cutoutks_LL_log.txt",logFileName));
+				gROOT->ProcessLine(strcat(".> logs/data/JpsiLambda/run2/",logFileName));
 			}
 			filein = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_sanity_%s.root",type),"READ");
 			fileout = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_%s.root",type),"RECREATE");
@@ -214,18 +214,38 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 	{
 		if(i % 100000 == 0) cout<<i<<endl;
 		treein->GetEntry(i);
-		if(trackType == 3)
+		if(Lb_DTF_L_WMpipi_JpsiConstr < 480 || Lb_DTF_L_WMpipi_JpsiConstr > 520)
 		{
-			if((L_dm < 7.5 && p_PIDp > 10 && Lb_DTF_L_WMpipi_JpsiConstr > 480 && Lb_DTF_L_WMpipi_JpsiConstr < 520) || !(Lb_DTF_L_WMpipi_JpsiConstr > 480 && Lb_DTF_L_WMpipi_JpsiConstr < 520))
-			{
-				treeout->Fill();
-			}
+			treeout->Fill();
+			continue;
 		}
-		else if(trackType == 5)
+		else
 		{
-			if((L_dm < 10 && p_PIDp > 15 && Lb_DTF_L_WMpipi_JpsiConstr > 480 && Lb_DTF_L_WMpipi_JpsiConstr < 520) || !(Lb_DTF_L_WMpipi_JpsiConstr > 480 && Lb_DTF_L_WMpipi_JpsiConstr < 520))
+			if(trackType == 3)
 			{
-				treeout->Fill();
+				if (Lb_DTF_L_WMpipi_JpsiConstr > 480 && Lb_DTF_L_WMpipi_JpsiConstr < 520)
+				{
+					if (p_PIDp > 10)
+					{
+						if(L_dm < 7.5)
+						{
+							treeout->Fill();
+						}
+					}
+				}
+			}
+			if(trackType == 5)
+			{
+				if (Lb_DTF_L_WMpipi_JpsiConstr > 480 && Lb_DTF_L_WMpipi_JpsiConstr < 520)
+				{
+					if (p_PIDp > 15)
+					{
+						if(L_dm < 10)
+						{
+							treeout->Fill();
+						}
+					}
+				}
 			}
 		}
 	}
@@ -256,6 +276,8 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 			cout<<"******************************************"<<endl;
 			cout<<type<<" Sanity cuts made with inclusive efficiency = "<<eff_incl<<"% +/- " <<eff_incl_err<<" %"<<endl;
 			cout<<"******************************************"<<endl;
+
+			genfile.close();
 		}
 	}
 
