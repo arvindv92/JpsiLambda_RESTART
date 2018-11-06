@@ -39,7 +39,7 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 		cout<<"Processing LL"<<endl;
 		logFileName = "cutoutks_LL_log.txt";
 	}
-	if(trackType == 5)
+	else if(trackType == 5)
 	{
 		cout<<"Processing DD"<<endl;
 		logFileName = "cutoutks_DD_log.txt";
@@ -49,132 +49,171 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 
 	switch(isData)//Setup logging, input and output files.
 	{
-	case 0: // MC
+	case 0:         // MC
 		switch(mcType)
 		{
-		case 1: //JpsiLambda
-			switch(run)
+		case 1:         //JpsiLambda
+			if(logFlag == 1)
 			{
-			case 1:
-				if(logFlag == 1)
-				{
-					gROOT->ProcessLine(strcat(".> logs/mc/JpsiLambda/run1/",logFileName));//What is ProcessLineFast()?
-				}
-				if(!gSystem->AccessPathName("logs/mc/JpsiLambda/run1/gen_log.txt"))
-				{
-					genfile.open("logs/mc/JpsiLambda/run1/gen_log.txt");
-					genFlag = 1;
-				}
-				filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run1/jpsilambda_sanity_%s.root",type),"READ");
-				fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run1/jpsilambda_cutoutks_%s.root",type),"RECREATE");
-				break;
-
-			case 2:
-				if(logFlag == 1)
-				{
-					gROOT->ProcessLine(strcat(".> logs/mc/JpsiLambda/run2/",logFileName));
-				}
-				if(!gSystem->AccessPathName("logs/mc/JpsiLambda/run2/gen_log.txt"))
-				{
-					genfile.open("logs/mc/JpsiLambda/run2/gen_log.txt");
-					genFlag = 1;
-				}
-				filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run2/jpsilambd_sanity_%s.root",type),"READ");
-				fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run2/jpsilambda_cutoutks_%s.root",type),"RECREATE");
-				break;
+				gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiLambda/run%d/%s",run,type)).Data());
 			}
+			if(!gSystem->AccessPathName((TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run)).Data()))
+			{
+				genfile.open((TString::Format("logs/mc/JpsiXi/run%d/gen_log.txt",run)).Data());
+				genFlag = 1;
+			}
+			filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_sanity_%s.root",run,type),"READ");
+			fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s.root",run,type),"RECREATE");
+			/*switch(run)
+			   {
+			   case 1:
+			     if(logFlag == 1)
+			     {
+			             gROOT->ProcessLine(strcat(".> logs/mc/JpsiLambda/run1/",logFileName));//What is ProcessLineFast()?
+			     }
+			     if(!gSystem->AccessPathName("logs/mc/JpsiLambda/run1/gen_log.txt"))
+			     {
+			             genfile.open("logs/mc/JpsiLambda/run1/gen_log.txt");
+			             genFlag = 1;
+			     }
+			     filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run1/jpsilambda_sanity_%s.root",type),"READ");
+			     fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run1/jpsilambda_cutoutks_%s.root",type),"RECREATE");
+			     break;
+
+			   case 2:
+			     if(logFlag == 1)
+			     {
+			             gROOT->ProcessLine(strcat(".> logs/mc/JpsiLambda/run2/",logFileName));
+			     }
+			     if(!gSystem->AccessPathName("logs/mc/JpsiLambda/run2/gen_log.txt"))
+			     {
+			             genfile.open("logs/mc/JpsiLambda/run2/gen_log.txt");
+			             genFlag = 1;
+			     }
+			     filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run2/jpsilambd_sanity_%s.root",type),"READ");
+			     fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run2/jpsilambda_cutoutks_%s.root",type),"RECREATE");
+			     break;
+			   }*/
 			break;
 
-		case 2: //JpsiSigma
-			switch(run)
+		case 2:         //JpsiSigma
+			if(logFlag == 1)
 			{
-			case 1:
-				if(logFlag == 1)
-				{
-					gROOT->ProcessLine(strcat(".> logs/mc/JpsiSigma/run1/",logFileName));
-				}
-				if(!gSystem->AccessPathName("logs/mc/JpsiSigma/run1/gen_log.txt"))
-				{
-					genfile.open("logs/mc/JpsiSigma/run1/gen_log.txt");
-					genFlag = 1;
-				}
-				filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run1/jpsisigma_sanity_%s.root",type),"READ");
-				fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run1/jpsisigma_cutoutks_%s.root",type),"RECREATE");
-				break;
-
-			case 2:
-				if(logFlag == 1)
-				{
-					gROOT->ProcessLine(strcat(".> logs/mc/JpsiSigma/run2/",logFileName));
-				}
-				if(!gSystem->AccessPathName("logs/mc/JpsiSigma/run2/gen_log.txt"))
-				{
-					genfile.open("logs/mc/JpsiSigma/run2/gen_log.txt");
-					genFlag = 1;
-				}
-				filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run2/jpsisigma_sanity_%s.root",type),"READ");
-				fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run2/jpsisigma_cutoutks_%s.root",type),"RECREATE");
-				break;
+				gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiSigma/run%d/%s",run,type)).Data());
 			}
+			if(!gSystem->AccessPathName((TString::Format("logs/mc/JpsiSigma/run%d/gen_log.txt",run)).Data()))
+			{
+				genfile.open((TString::Format("logs/mc/JpsiSigma/run%d/gen_log.txt",run)).Data());
+				genFlag = 1;
+			}
+			filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_sanity_%s.root",run,type),"READ");
+			fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_cutoutks_%s.root",run,type),"RECREATE");
+			/*switch(run)
+			   {
+			   case 1:
+			     if(logFlag == 1)
+			     {
+			             gROOT->ProcessLine(strcat(".> logs/mc/JpsiSigma/run1/",logFileName));
+			     }
+			     if(!gSystem->AccessPathName("logs/mc/JpsiSigma/run1/gen_log.txt"))
+			     {
+			             genfile.open("logs/mc/JpsiSigma/run1/gen_log.txt");
+			             genFlag = 1;
+			     }
+			     filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run1/jpsisigma_sanity_%s.root",type),"READ");
+			     fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run1/jpsisigma_cutoutks_%s.root",type),"RECREATE");
+			     break;
+
+			   case 2:
+			     if(logFlag == 1)
+			     {
+			             gROOT->ProcessLine(strcat(".> logs/mc/JpsiSigma/run2/",logFileName));
+			     }
+			     if(!gSystem->AccessPathName("logs/mc/JpsiSigma/run2/gen_log.txt"))
+			     {
+			             genfile.open("logs/mc/JpsiSigma/run2/gen_log.txt");
+			             genFlag = 1;
+			     }
+			     filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run2/jpsisigma_sanity_%s.root",type),"READ");
+			     fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run2/jpsisigma_cutoutks_%s.root",type),"RECREATE");
+			     break;
+			   }*/
 			break;
 
-		case 3: //JpsiXi
-			switch(run)
+		case 3:         //JpsiXi
+			if(logFlag == 1)
 			{
-			case 1:
-				if(logFlag == 1)
-				{
-					gROOT->ProcessLine(strcat(".> logs/mc/JpsiXi/run1/",logFileName));
-				}
-				if(!gSystem->AccessPathName("logs/mc/JpsiXi/run1/gen_log.txt"))
-				{
-					genfile.open("logs/mc/JpsiXi/run1/gen_log.txt");
-					genFlag = 1;
-				}
-				filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run1/jpsixi_sanity_%s.root",type),"READ");
-				fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run1/jpsixi_cutoutks_%s.root",type),"RECREATE");
-				break;
-
-			case 2:
-				if(logFlag == 1)
-				{
-					gROOT->ProcessLine(strcat(".> logs/mc/JpsiXi/run2/",logFileName));
-				}
-				if(!gSystem->AccessPathName("logs/mc/JpsiXi/run2/gen_log.txt"))
-				{
-					genfile.open("logs/mc/JpsiXi/run2/gen_log.txt");
-					genFlag = 1;
-				}
-				filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run2/jpsixi_sanity_%s.root",type),"READ");
-				fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run2/jpsixi_cutoutks_%s.root",type),"RECREATE");
-				break;
+				gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiXi/run%d/%s",run,type)).Data());
 			}
+			if(!gSystem->AccessPathName((TString::Format("logs/mc/JpsiXi/run%d/gen_log.txt",run)).Data()))
+			{
+				genfile.open((TString::Format("logs/mc/JpsiXi/run%d/gen_log.txt",run)).Data());
+				genFlag = 1;
+			}
+			filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_sanity_%s.root",run,type),"READ");
+			fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_cutoutks_%s.root",run,type),"RECREATE");
+			/*switch(run)
+			   {
+			   case 1:
+			     if(logFlag == 1)
+			     {
+			             gROOT->ProcessLine(strcat(".> logs/mc/JpsiXi/run1/",logFileName));
+			     }
+			     if(!gSystem->AccessPathName("logs/mc/JpsiXi/run1/gen_log.txt"))
+			     {
+			             genfile.open("logs/mc/JpsiXi/run1/gen_log.txt");
+			             genFlag = 1;
+			     }
+			     filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run1/jpsixi_sanity_%s.root",type),"READ");
+			     fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run1/jpsixi_cutoutks_%s.root",type),"RECREATE");
+			     break;
+
+			   case 2:
+			     if(logFlag == 1)
+			     {
+			             gROOT->ProcessLine(strcat(".> logs/mc/JpsiXi/run2/",logFileName));
+			     }
+			     if(!gSystem->AccessPathName("logs/mc/JpsiXi/run2/gen_log.txt"))
+			     {
+			             genfile.open("logs/mc/JpsiXi/run2/gen_log.txt");
+			             genFlag = 1;
+			     }
+			     filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run2/jpsixi_sanity_%s.root",type),"READ");
+			     fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run2/jpsixi_cutoutks_%s.root",type),"RECREATE");
+			     break;
+			   }*/
 			break;
 		}
 		treein = (TTree*)filein->Get("MyTuple");
 		break;
 
-	case 1: // Data
-		switch(run)
+	case 1:                 // Data
+		if(logFlag == 1)
 		{
-		case 1:
-			if(logFlag == 1)
-			{
-				gROOT->ProcessLine(strcat(".> logs/data/JpsiLambda/run1/",logFileName));
-			}
-			filein = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_sanity_%s.root",type),"READ");
-			fileout = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_cutoutks_%s.root",type),"RECREATE");
-			break;
-
-		case 2:
-			if(logFlag == 1)
-			{
-				gROOT->ProcessLine(strcat(".> logs/data/JpsiLambda/run2/",logFileName));
-			}
-			filein = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_sanity_%s.root",type),"READ");
-			fileout = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_%s.root",type),"RECREATE");
-			break;
+			gROOT->ProcessLine((TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,type)).Data());
 		}
+		filein = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_%s.root",run,type),"READ");
+		fileout = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s.root",run,type),"RECREATE");
+		/*switch(run)
+		   {
+		   case 1:
+		     if(logFlag == 1)
+		     {
+		             gROOT->ProcessLine(strcat(".> logs/data/JpsiLambda/run1/",logFileName));
+		     }
+		     filein = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_sanity_%s.root",type),"READ");
+		     fileout = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_cutoutks_%s.root",type),"RECREATE");
+		     break;
+
+		   case 2:
+		     if(logFlag == 1)
+		     {
+		             gROOT->ProcessLine(strcat(".> logs/data/JpsiLambda/run2/",logFileName));
+		     }
+		     filein = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_sanity_%s.root",type),"READ");
+		     fileout = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_%s.root",type),"RECREATE");
+		     break;
+		   }*/
 		treein = (TTree*)filein->Get("MyTuple");
 		break;
 	}
