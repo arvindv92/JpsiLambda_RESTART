@@ -34,7 +34,7 @@ void AddData(RooWorkspace*,Int_t,Int_t);
 void DoSPlot(RooWorkspace*);
 void MakePlots(RooWorkspace*);
 
-void Lb_splot_LL(Int_t run, Int_t trackType)
+void Lb_splot(Int_t run, Int_t trackType)
 /*
 run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
 isData = 1 for data, 0 for MC
@@ -42,6 +42,24 @@ mcType = 0 when running over data. When running over MC, mcType = 1 for JpsiLamb
 trackType = 3 for LL, 5 for DD.
 */
 {
+
+  Bool_t logFlag = 0;
+  const char* logFileName;
+
+  if(trackType == 3)
+  {
+    cout<<"Processing LL"<<endl;
+    logFileName = "sPlot_LL_log.txt";
+  }
+  else if(trackType == 5)
+  {
+    cout<<"Processing DD"<<endl;
+    logFileName = "sPlot_DD_log.txt";
+  }
+  if(logFlag == 1)
+  {
+    gROOT->ProcessLine((TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName)).Data());
+  }
   // Create a new workspace to manage the project.
   RooWorkspace* wspace = new RooWorkspace("myWS");
 
@@ -65,6 +83,7 @@ trackType = 3 for LL, 5 for DD.
 
   // cleanup
   delete wspace;
+  if(logFlag == 1) gROOT->ProcessLine(".>");
 }
 
 void AddModel(RooWorkspace* ws)
@@ -83,7 +102,7 @@ void AddModel(RooWorkspace* ws)
 
   // SIGNAL MODEL
   cout << "Making signal model" << endl;
-  RooRealVar mean("mean","Gaussian Mean",5619.42,5619.0,5620.0);
+  RooRealVar mean("mean","Gaussian Mean",5619.42,5618.0,5621.0);
   RooRealVar sigma1("sigma1","Gaussian sigma1",7.5,1.0,20.0);
   RooRealVar sigma2("sigma2","Gaussian sigma2",10.0,1.0,20.0);
 
@@ -158,6 +177,9 @@ void DoSPlot(RooWorkspace* ws)
   cout<<"Starting DoSPlot()"<<endl;
   cout << "Calculating sWeights" << endl;
 
+  TFile *fileout(0);
+  TTree *treeout(0);
+
   // get what we need out of the workspace to do the fit
   RooAbsPdf* model = ws->pdf("model");
   RooRealVar* sigYield = ws->var("sigYield");
@@ -221,8 +243,8 @@ void DoSPlot(RooWorkspace* ws)
   cout<<"No. of entries in dataset = "<<dsentries<<endl;
 
   cout<<"Writing output tree with unbinned sweighted data"<<endl;
-  TFile *fileout = new TFile("jpsilambda_LL_withsw.root","RECREATE");
-  TTree *treeout = new TTree("MyTuple","SWeighted Stuff");
+  fileout = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw.root",run,type),"RECREATE");
+  treeout = new TTree("MyTuple","SWeighted Stuff");
 
   Double_t B_MASS, SIGW, BKGW;
 

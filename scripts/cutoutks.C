@@ -55,11 +55,11 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 		case 1:         //JpsiLambda
 			if(logFlag == 1)
 			{
-				gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiLambda/run%d/%s",run,type)).Data());
+				gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiLambda/run%d/%s",run,logFileName)).Data());
 			}
 			if(!gSystem->AccessPathName((TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run)).Data()))
 			{
-				genfile.open((TString::Format("logs/mc/JpsiXi/run%d/gen_log.txt",run)).Data());
+				genfile.open((TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run)).Data());
 				genFlag = 1;
 			}
 			filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_sanity_%s.root",run,type),"READ");
@@ -99,7 +99,7 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 		case 2:         //JpsiSigma
 			if(logFlag == 1)
 			{
-				gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiSigma/run%d/%s",run,type)).Data());
+				gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiSigma/run%d/%s",run,logFileName)).Data());
 			}
 			if(!gSystem->AccessPathName((TString::Format("logs/mc/JpsiSigma/run%d/gen_log.txt",run)).Data()))
 			{
@@ -143,7 +143,7 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 		case 3:         //JpsiXi
 			if(logFlag == 1)
 			{
-				gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiXi/run%d/%s",run,type)).Data());
+				gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiXi/run%d/%s",run,logFileName)).Data());
 			}
 			if(!gSystem->AccessPathName((TString::Format("logs/mc/JpsiXi/run%d/gen_log.txt",run)).Data()))
 			{
@@ -190,7 +190,7 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 	case 1:                 // Data
 		if(logFlag == 1)
 		{
-			gROOT->ProcessLine((TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,type)).Data());
+			gROOT->ProcessLine((TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName)).Data());
 		}
 		filein = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_%s.root",run,type),"READ");
 		fileout = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s.root",run,type),"RECREATE");
