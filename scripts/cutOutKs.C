@@ -1,3 +1,6 @@
+/********************************
+   Author : Aravindhan V.
+ *********************************/
 #include <TFile.h>
 #include <TTree.h>
 #include <TCanvas.h>
@@ -10,7 +13,7 @@
 
 using namespace std;
 
-void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType = 3)
+void cutOutKs(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType = 3)
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = 1 for data, 0 for MC
@@ -31,18 +34,20 @@ void cutoutks(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 
 	masswindow = "Lb_DTF_L_WMpipi_JpsiConstr > 480 && Lb_DTF_L_WMpipi_JpsiConstr < 520";
 
-	const char* type = (trackType == 3) ? ("LL") : ("DD");
+	const char* type;
 	const char* logFileName;
 
 	if(trackType == 3)
 	{
 		cout<<"Processing LL"<<endl;
 		logFileName = "cutoutks_LL_log.txt";
+		type = "LL";
 	}
 	else if(trackType == 5)
 	{
 		cout<<"Processing DD"<<endl;
 		logFileName = "cutoutks_DD_log.txt";
+		type = "DD";
 	}
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
