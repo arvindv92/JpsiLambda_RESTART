@@ -1,10 +1,11 @@
 /********************************
    Author : Aravindhan V.
  *********************************/
-#include <TFile.h>
-#include <TTree.h>
-#include <TString.h>
-#include <TROOT.h>
+#include "TFile.h"
+#include "TTree.h"
+#include "TString.h"
+#include "TROOT.h"
+#include "TSystem.h"
 #include <iostream>
 
 using namespace std;
@@ -15,10 +16,14 @@ void massCut(Int_t run = 1, Int_t trackType = 3, Int_t low = 5200, Int_t high = 
    high and low refer to the mass cut you want to make
  */
 {
-	Bool_t logFlag = 0;
-	const char *logFileName = "", *type = "", *masscut = "";
+	Bool_t logFlag = false;
 	Double_t Lb_DTF_M_JpsiLConstr = 0.;
 	Int_t entries_init = 0, entries_final = 0;
+	TFile *filein(0), *fileout(0);
+	TTree *treein(0), *treeout(0);
+	const char *logFileName = "", *type = "", *masscut = "";
+
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
 
 	masscut = (TString::Format("Lb_DTF_M_JpsiLConstr > %d && Lb_DTF_M_JpsiLConstr < %d",low,high)).Data();
 
@@ -34,10 +39,8 @@ void massCut(Int_t run = 1, Int_t trackType = 3, Int_t low = 5200, Int_t high = 
 		logFileName = "masscut_DD_log.txt";
 		type = "DD";
 	}
-	TFile *filein(0), *fileout(0);
-	TTree *treein(0), *treeout(0);
 
-	if(logFlag == 1)
+	if(logFlag)
 	{
 		gROOT->ProcessLine((TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName)).Data());
 	}
@@ -73,7 +76,7 @@ void massCut(Int_t run = 1, Int_t trackType = 3, Int_t low = 5200, Int_t high = 
 	entries_final = treeout->GetEntries();
 	cout<<"Outgoing entries = "<<entries_final<<endl;
 
-	if(logFlag == 1) gROOT->ProcessLine(".>");
+	if(logFlag) gROOT->ProcessLine(".>");
 
 	fileout->Write();
 	fileout->Close();

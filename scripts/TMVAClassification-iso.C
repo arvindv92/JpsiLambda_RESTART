@@ -1,0 +1,231 @@
+/********************************
+   Author : Aravindhan V.
+ *********************************/
+#include <cstdlib>
+#include <iostream>
+#include <map>
+#include <string>
+
+#include "TChain.h"
+#include "TFile.h"
+#include "TTree.h"
+#include "TString.h"
+#include "TObjString.h"
+#include "TSystem.h"
+#include "TROOT.h"
+#include "TMVAGui.C"
+
+#if not defined(__CINT__) || defined(__MAKECINT__)
+// needs to be included when makecint runs (ACLIC)
+#include "TMVA/Factory.h"
+#include "TMVA/Tools.h"
+#endif
+
+void TMVAClassification_iso(Int_t run = 1,Int_t trackType = 3, const char* version = "v1")
+/*
+   run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
+   trackType = 3 for LL, 5 for DD.
+   version = "v1" or "v2"
+ */
+{
+	Bool_t logFlag = false;
+	TString outfileName = "";
+	TFile *outputFile(0), *input(0), *input1(0), *input_LL(0), *input_DD(0);
+	const char *logFileName = "", *type = "";
+	TMVA::Factory *factory;
+	TMVA::Tools::Instance(); // This loads the library
+
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
+	if(trackType == 3)
+	{
+		cout<<"Processing LL"<<endl;
+		logFileName = "isolationTraining_LL_log.txt";
+		type = "LL";
+	}
+	else if(trackType == 5)
+	{
+		cout<<"Processing DD"<<endl;
+		logFileName = "isolationTraining_DD_log.txt";
+		type = "DD";
+	}
+
+	if(logFlag)
+	{
+		gROOT->ProcessLine((TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName)).Data());
+	}
+
+	std::cout << std::endl;
+	std::cout << "==> Start TMVAClassification" << std::endl;
+
+	outfileName = TString::Format("TMVA-isokDD_data_%s.root",version);
+	outputFile = TFile::Open(outfileName, "RECREATE");
+	factory = new TMVA::Factory( TString::Format("TMVAClassification-isokDD_data_%s",version), outputFile,
+	                             "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
+	factory->AddVariable( "PT", 'F' );
+	factory->AddVariable( "IPCHI2", 'F' );
+	factory->AddVariable( "VCHI2DOF", 'F' );
+	factory->AddVariable( "MINIPCHI2", 'F' );
+
+	if(version == "v2") {
+		factory->AddVariable( "GHOSTPROB", 'F' );
+		factory->AddVariable( "TRACKCHI2DOF", 'F' );
+	}
+
+	TString fname_LL = "sweightstuff/jpsilambda_LL_forTMVAisoTraining.root";//Signal Training Sample
+	input_LL = TFile::Open( fname_LL );
+
+	TString fname_DD = "sweightstuff/jpsilambda_DD_forTMVAisoTraining.root";//Signal Training Sample
+	input_DD = TFile::Open( fname_DD );
+
+	TString fname1 = "/data1/avenkate/B+toJpsiK+/RealData_AllKaons/total/splot/maketuples/jpsik_forTMVAisoTraining.root";//Background 1 Training Sample
+	input1 = TFile::Open( fname1 );
+
+	// TString fname2 = "./jpsikpi.root";//Background 2 Training Sample
+	// input2 = TFile::Open( fname2 );
+
+	std::cout << "--- TMVAClassification       : Using background input file: " << input1->GetName() << std::endl;
+	std::cout << "--- TMVAClassification       : Using signal input file: " << input_DD->GetName() << std::endl;
+
+	// --- Register the training and test trees
+
+	TTree *signal_DD     = (TTree*)input_DD->Get("MyTuple");
+	TTree *signal_LL     = (TTree*)input_LL->Get("MyTuple");
+	TTree *background1 = (TTree*)input1->Get("MyTuple");
+
+	// global event weights per tree (see below for setting event-wise weights)
+	Double_t signalWeight     = 1.0;
+	Double_t backgroundWeight = 1.0;
+
+	// You can add an arbitrary number of signal or background trees
+	factory->AddSignalTree    ( signal_DD,     signalWeight     );
+	factory->AddBackgroundTree( background1, backgroundWeight );
+
+	factory->SetSignalWeightExpression( "SW" );
+	factory->SetBackgroundWeightExpression("SW");
+	//factory->SetBackgroundWeightExpression("BW");
+
+	// Apply additional cuts on the signal and background samples (can be different)
+	TCut mycuts = "PT > 0 && MINIPCHI2 > 0 && VCHI2DOF > 0 && PT < 10000 && MINIPCHI2 < 100";//CHANGED FROM MINIPCHI2 < 10000
+	TCut mycutb = "PT > 0 && MINIPCHI2 > 0 && VCHI2DOF > 0 && PT < 10000 && MINIPCHI2 < 100";//CHANGED FROM MINIPCHI2 < 10000
+
+	factory->PrepareTrainingAndTestTree( mycuts, mycutb,
+	                                     "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V" );
+
+
+	factory->BookMethod( TMVA::Types::kBDT, "BDTconf1",
+	                     "!H:!V:NTrees=850:MinNodeSize=1.25%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
+
+	// factory->BookMethod( TMVA::Types::kBDT, "BDTconf5",
+	//                      "!H:!V:NTrees=850:MinNodeSize=0.75%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
+
+	// factory->BookMethod( TMVA::Types::kBDT, "BDTconf2",
+	//                      "!H:!V:NTrees=850:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.7:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
+
+	// factory->BookMethod( TMVA::Types::kBDT, "BDTconf3",
+	//                      "!H:!V:NTrees=850:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.7:SeparationType=GiniIndex:nCuts=20" );
+
+	// factory->BookMethod( TMVA::Types::kBDT, "BDTconf4",
+	//                      "!H:!V:NTrees=1000:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
+
+	// factory->BookMethod( TMVA::Types::kBDT, "BDTMitFisher",
+	//                      "!H:!V:NTrees=50:MinNodeSize=2.5%:UseFisherCuts:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:SeparationType=GiniIndex:nCuts=20" );
+
+	// factory->BookMethod( TMVA::Types::kBDT, "BDTG",
+	//                      "!H:!V:NTrees=1000:MinNodeSize=2.5%:BoostType=Grad:Shrinkage=0.10:UseBaggedBoost:BaggedSampleFraction=0.5:nCuts=20:MaxDepth=2" );
+
+	// ---- STILL EXPERIMENTAL and only implemented for BDT's !
+	// factory->OptimizeAllMethods("SigEffAt001","Scan");
+	// factory->OptimizeAllMethods("ROCIntegral","FitGA");
+
+	// --------------------------------------------------------------------------------------------------
+
+	// ---- Now you can tell the factory to train, test, and evaluate the MVAs
+
+	factory->TrainAllMethods();
+
+	factory->TestAllMethods();
+
+	factory->EvaluateAllMethods();
+
+	// --------------------------------------------------------------
+
+	// Save the output
+	outputFile->Close();
+
+	std::cout << "==> Wrote root file: " << outputFile->GetName() << std::endl;
+	std::cout << "==> TMVAClassification is done!" << std::endl;
+
+	delete factory;
+
+	//      Launch the GUI for the root macros
+	//   if (!gROOT->IsBatch()) TMVAGui( outfileName );
+
+	if(version == "v1") {
+		outfileName = "TMVA-isokLL_data.root";
+		outputFile = TFile::Open( outfileName, "RECREATE" );
+		factory = new TMVA::Factory( "TMVAClassification-isokLL_data", outputFile,
+		                             "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
+	}
+	else if(version == "v2") {
+		outfileName = "TMVA-isokLL_data_v2.root";
+		outputFile = TFile::Open( outfileName, "RECREATE" );
+		factory = new TMVA::Factory( "TMVAClassification-isokLL_data_v2", outputFile,
+		                             "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
+	}
+
+	std::cout << "--- TMVAClassification       : Using background input file: " << input1->GetName() << std::endl;
+	std::cout << "--- TMVAClassification       : Using signal input file: " << input_LL->GetName() << std::endl;
+
+	factory->AddVariable( "PT", 'F' );
+	factory->AddVariable( "IPCHI2", 'F' );
+	factory->AddVariable( "VCHI2DOF", 'F' );
+	factory->AddVariable( "MINIPCHI2", 'F' );
+	if(version == "v2") {
+		factory->AddVariable( "GHOSTPROB", 'F' );
+		factory->AddVariable( "TRACKCHI2DOF", 'F' );
+	}
+
+	// You can add an arbitrary number of signal or background trees
+	factory->AddSignalTree    ( signal_LL,     signalWeight     );
+	factory->AddBackgroundTree( background1, backgroundWeight );
+
+	factory->SetSignalWeightExpression( "SW" );
+	factory->SetBackgroundWeightExpression("SW");
+
+	factory->PrepareTrainingAndTestTree( mycuts, mycutb,
+	                                     "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:V" );
+
+	factory->BookMethod( TMVA::Types::kBDT, "BDTconf1",
+	                     "!H:!V:NTrees=850:MinNodeSize=1.25%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
+
+	// factory->BookMethod( TMVA::Types::kBDT, "BDTconf5",
+	//                      "!H:!V:NTrees=850:MinNodeSize=0.75%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
+
+	// factory->BookMethod( TMVA::Types::kBDT, "BDTconf2",
+	//                      "!H:!V:NTrees=850:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.7:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
+
+	// factory->BookMethod( TMVA::Types::kBDT, "BDTconf3",
+	//                      "!H:!V:NTrees=850:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.7:SeparationType=GiniIndex:nCuts=20" );
+
+	// factory->BookMethod( TMVA::Types::kBDT, "BDTconf4",
+	//                      "!H:!V:NTrees=1000:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
+
+	// factory->BookMethod( TMVA::Types::kBDT, "BDTMitFisher",
+	//                      "!H:!V:NTrees=50:MinNodeSize=2.5%:UseFisherCuts:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:SeparationType=GiniIndex:nCuts=20" );
+
+	// factory->BookMethod( TMVA::Types::kBDT, "BDTG",
+	//                      "!H:!V:NTrees=1000:MinNodeSize=2.5%:BoostType=Grad:Shrinkage=0.10:UseBaggedBoost:BaggedSampleFraction=0.5:nCuts=20:MaxDepth=2" );
+
+
+	factory->TrainAllMethods();
+
+	factory->TestAllMethods();
+
+	factory->EvaluateAllMethods();
+
+	outputFile->Close();
+
+	delete factory;
+	// Launch the GUI for the root macros
+	// if (!gROOT->IsBatch()) TMVAGui( outfileName );
+}

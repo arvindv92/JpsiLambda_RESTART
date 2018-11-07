@@ -1,16 +1,14 @@
 /********************************
    Author : Aravindhan V.
  *********************************/
-#include <TFile.h>
-#include <TTree.h>
-#include <TCanvas.h>
-#include <TCut.h>
+#include "TFile.h"
+#include "TTree.h"
+#include "TCanvas.h"
+#include "TROOT.h"
+#include "TString.h"
+#include "TSystem.h"
 #include <iostream>
 #include <fstream>
-#include <TROOT.h>
-#include <TString.h>
-#include <TSystem.h>
-
 using namespace std;
 
 void cutOutKs(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType = 3)
@@ -24,18 +22,17 @@ void cutOutKs(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 	TFile *filein(0), *fileout(0);
 	TTree *treein(0), *treeout(0);
 
-	TCut L_dmcut, pidcut,masswindow, totalcut;
-
+	const char *L_dmcut = "", *pidcut = "", *masswindow = "";
 	Int_t entries_init = 0, entries_final = 0, entries_gen = 0;
 	Float_t eff_excl = 0.0, eff_excl_err = 0.0, eff_incl = 0.0, eff_incl_err = 0.0;
 	Double_t L_dm = 0.0, p_PIDp = 0.0, Lb_DTF_L_WMpipi_JpsiConstr = 0.0;
-	Bool_t logFlag = 0, genFlag = 0;
+	const char *type = "", *logFileName = "";
+
+	Bool_t logFlag = false, genFlag = false;
+
 	fstream genfile;
 
 	masswindow = "Lb_DTF_L_WMpipi_JpsiConstr > 480 && Lb_DTF_L_WMpipi_JpsiConstr < 520";
-
-	const char* type;
-	const char* logFileName;
 
 	if(trackType == 3)
 	{
@@ -58,42 +55,42 @@ void cutOutKs(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 		switch(mcType)
 		{
 		case 1:         //JpsiLambda
-			if(logFlag == 1)
+			if(logFlag)
 			{
 				gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiLambda/run%d/%s",run,logFileName)).Data());
 			}
 			if(!gSystem->AccessPathName((TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run)).Data()))
 			{
 				genfile.open((TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run)).Data());
-				genFlag = 1;
+				genFlag = true;
 			}
 			filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_sanity_%s.root",run,type),"READ");
 			fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s.root",run,type),"RECREATE");
 			/*switch(run)
 			   {
 			   case 1:
-			     if(logFlag == 1)
+			     if(logFlag)
 			     {
 			             gROOT->ProcessLine(strcat(".> logs/mc/JpsiLambda/run1/",logFileName));//What is ProcessLineFast()?
 			     }
 			     if(!gSystem->AccessPathName("logs/mc/JpsiLambda/run1/gen_log.txt"))
 			     {
 			             genfile.open("logs/mc/JpsiLambda/run1/gen_log.txt");
-			             genFlag = 1;
+			             genFlag = true;
 			     }
 			     filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run1/jpsilambda_sanity_%s.root",type),"READ");
 			     fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run1/jpsilambda_cutoutks_%s.root",type),"RECREATE");
 			     break;
 
 			   case 2:
-			     if(logFlag == 1)
+			     if(logFlag)
 			     {
 			             gROOT->ProcessLine(strcat(".> logs/mc/JpsiLambda/run2/",logFileName));
 			     }
 			     if(!gSystem->AccessPathName("logs/mc/JpsiLambda/run2/gen_log.txt"))
 			     {
 			             genfile.open("logs/mc/JpsiLambda/run2/gen_log.txt");
-			             genFlag = 1;
+			             genFlag = true;
 			     }
 			     filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run2/jpsilambd_sanity_%s.root",type),"READ");
 			     fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run2/jpsilambda_cutoutks_%s.root",type),"RECREATE");
@@ -102,7 +99,7 @@ void cutOutKs(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 			break;
 
 		case 2:         //JpsiSigma
-			if(logFlag == 1)
+			if(logFlag)
 			{
 				gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiSigma/run%d/%s",run,logFileName)).Data());
 			}
@@ -116,28 +113,28 @@ void cutOutKs(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 			/*switch(run)
 			   {
 			   case 1:
-			     if(logFlag == 1)
+			     if(logFlag)
 			     {
 			             gROOT->ProcessLine(strcat(".> logs/mc/JpsiSigma/run1/",logFileName));
 			     }
 			     if(!gSystem->AccessPathName("logs/mc/JpsiSigma/run1/gen_log.txt"))
 			     {
 			             genfile.open("logs/mc/JpsiSigma/run1/gen_log.txt");
-			             genFlag = 1;
+			             genFlag = true;
 			     }
 			     filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run1/jpsisigma_sanity_%s.root",type),"READ");
 			     fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run1/jpsisigma_cutoutks_%s.root",type),"RECREATE");
 			     break;
 
 			   case 2:
-			     if(logFlag == 1)
+			     if(logFlag)
 			     {
 			             gROOT->ProcessLine(strcat(".> logs/mc/JpsiSigma/run2/",logFileName));
 			     }
 			     if(!gSystem->AccessPathName("logs/mc/JpsiSigma/run2/gen_log.txt"))
 			     {
 			             genfile.open("logs/mc/JpsiSigma/run2/gen_log.txt");
-			             genFlag = 1;
+			             genFlag = true;
 			     }
 			     filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run2/jpsisigma_sanity_%s.root",type),"READ");
 			     fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run2/jpsisigma_cutoutks_%s.root",type),"RECREATE");
@@ -146,42 +143,42 @@ void cutOutKs(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 			break;
 
 		case 3:         //JpsiXi
-			if(logFlag == 1)
+			if(logFlag)
 			{
 				gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiXi/run%d/%s",run,logFileName)).Data());
 			}
 			if(!gSystem->AccessPathName((TString::Format("logs/mc/JpsiXi/run%d/gen_log.txt",run)).Data()))
 			{
 				genfile.open((TString::Format("logs/mc/JpsiXi/run%d/gen_log.txt",run)).Data());
-				genFlag = 1;
+				genFlag = true;
 			}
 			filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_sanity_%s.root",run,type),"READ");
 			fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_cutoutks_%s.root",run,type),"RECREATE");
 			/*switch(run)
 			   {
 			   case 1:
-			     if(logFlag == 1)
+			     if(logFlag)
 			     {
 			             gROOT->ProcessLine(strcat(".> logs/mc/JpsiXi/run1/",logFileName));
 			     }
 			     if(!gSystem->AccessPathName("logs/mc/JpsiXi/run1/gen_log.txt"))
 			     {
 			             genfile.open("logs/mc/JpsiXi/run1/gen_log.txt");
-			             genFlag = 1;
+			             genFlag = true;
 			     }
 			     filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run1/jpsixi_sanity_%s.root",type),"READ");
 			     fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run1/jpsixi_cutoutks_%s.root",type),"RECREATE");
 			     break;
 
 			   case 2:
-			     if(logFlag == 1)
+			     if(logFlag)
 			     {
 			             gROOT->ProcessLine(strcat(".> logs/mc/JpsiXi/run2/",logFileName));
 			     }
 			     if(!gSystem->AccessPathName("logs/mc/JpsiXi/run2/gen_log.txt"))
 			     {
 			             genfile.open("logs/mc/JpsiXi/run2/gen_log.txt");
-			             genFlag = 1;
+			             genFlag = true;
 			     }
 			     filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run2/jpsixi_sanity_%s.root",type),"READ");
 			     fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run2/jpsixi_cutoutks_%s.root",type),"RECREATE");
@@ -193,7 +190,7 @@ void cutOutKs(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 		break;
 
 	case 1:                 // Data
-		if(logFlag == 1)
+		if(logFlag)
 		{
 			gROOT->ProcessLine((TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName)).Data());
 		}
@@ -202,7 +199,7 @@ void cutOutKs(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 		/*switch(run)
 		   {
 		   case 1:
-		     if(logFlag == 1)
+		     if(logFlag)
 		     {
 		             gROOT->ProcessLine(strcat(".> logs/data/JpsiLambda/run1/",logFileName));
 		     }
@@ -211,7 +208,7 @@ void cutOutKs(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 		     break;
 
 		   case 2:
-		     if(logFlag == 1)
+		     if(logFlag)
 		     {
 		             gROOT->ProcessLine(strcat(".> logs/data/JpsiLambda/run2/",logFileName));
 		     }
@@ -249,10 +246,9 @@ void cutOutKs(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 		cout<<"Making DD file"<<endl;
 	}
 
-	totalcut = (L_dmcut && pidcut && masswindow) || (!masswindow);
-
-	cout<<"I am making the following cutoutks cuts. Sit tight"<<endl;
-	totalcut.Print();
+	cout<<"I am making the following cutoutks cuts only on events within 480-520 MeV in Lb_DTF_L_WMpipi_JpsiConstr. Events outside this window aren't cut on. Sit tight"<<endl;
+	cout<<L_dmcut<<endl;
+	cout<<pidcut<<endl;
 
 	for (Int_t i = 0; i < entries_init; i++)
 	{

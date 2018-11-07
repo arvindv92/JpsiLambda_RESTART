@@ -1,14 +1,14 @@
 /********************************
    Author : Aravindhan V.
  *********************************/
-#include <TFile.h>
-#include <TTree.h>
-#include <TCanvas.h>
-#include <TCut.h>
+#include "TFile.h"
+#include "TTree.h"
+#include "TCanvas.h"
+#include "TCut.h"
+#include "TROOT.h"
+#include "TSystem.h"
 #include <iostream>
 #include <fstream>
-#include <TROOT.h>
-#include <TSystem.h>
 using namespace std;
 
 void sanity(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0)
@@ -35,7 +35,8 @@ void sanity(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0)
 	Float_t eff_excl_DD = 0.0, eff_excl_DD_err = 0.0,eff_incl_DD = 0.0,eff_incl_DD_err = 0.0;
 	Double_t Lb_TAU = 0.0, Lb_ConsLb_chi2 = 0.0, Lb_ConsLb_nDOF = 0.0, Lb_ETA = 0.0;
 	Double_t pi_PIDp = 0.0, pi_PIDK = 0.0, p_PIDp = 0.0, p_PIDK = 0.0, MyL_TAU = 0.0;
-	Bool_t logFlag = 0, genFlag = 0;
+
+	Bool_t logFlag = false, genFlag = false;
 
 	fstream genfile;
 

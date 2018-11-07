@@ -12,15 +12,15 @@ void collateFiles(Int_t run, Int_t isData, Int_t mcType, TChain** h1, TChain** h
    mcType = 0 when running over data. When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
  */
 {
-	cout<<"Staring to collate"<<endl;
-//    gROOT->ProcessLine(".> collate_log.txt");
+	Bool_t logFlag = false;
+
 	if(isData == 1)
 	{
-		cout<<"PROCESSING DATA"<<endl;
 		gSystem->cd("/data1/avenkate/JpsiLambda/massdump/data");
 		if(run==1)
 		{
-			cout<<"Adding Run 1 ROOT files to TChain. Sit tight"<<endl;
+			if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/data/JpsiLambda/run1/collate_log.txt");
+			cout<<"Adding Run 1 Data ROOT files to TChain. Sit tight"<<endl;
 
 			gSystem->Exec("ls 2011_Mag*/*/jpsilambda.root 2012_Mag*/*/jpsilambda.root > run1Files.txt");
 			TFileCollection fc_run1("run1","","run1Files.txt");
@@ -30,7 +30,8 @@ void collateFiles(Int_t run, Int_t isData, Int_t mcType, TChain** h1, TChain** h
 		}
 		else if(run == 2)
 		{
-			cout<<"Adding Run 2 ROOT files to TChain. Sit tight"<<endl;
+			if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/data/JpsiLambda/run2/collate_log.txt");
+			cout<<"Adding Run 2 Data ROOT files to TChain. Sit tight"<<endl;
 
 			gSystem->Exec("ls 2015_Mag*/*/jpsilambda.root 2016_Mag*/*/jpsilambda.root 2017_Mag*/*/jpsilambda.root 2018_Mag*/*/jpsilambda.root > run2Files.txt");
 			TFileCollection fc_run2("run2","","run2Files.txt");
@@ -48,10 +49,12 @@ void collateFiles(Int_t run, Int_t isData, Int_t mcType, TChain** h1, TChain** h
 		{
 			if(run == 1)
 			{
+				if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiLambda/run1/collate_log.txt");
 				gSystem->Exec("hadd -f /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/run1/jpsilambda.root JpsiLambda/Pythia8/2011*/*/*.root JpsiLambda/Pythia8/2012*/*/*.root");
 			}
 			if(run == 2)
 			{
+				if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiLambda/run2/collate_log.txt");
 				gSystem->Exec("hadd -f /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/run2/jpsilambda.root JpsiLambda/Pythia8/2015*/*/*.root JpsiLambda/Pythia8/2016*/*/*.root");
 			}
 		}
@@ -59,10 +62,12 @@ void collateFiles(Int_t run, Int_t isData, Int_t mcType, TChain** h1, TChain** h
 		{
 			if(run == 1)
 			{
+				if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiSigma/run1/collate_log.txt");
 				gSystem->Exec("hadd -f /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiSigma/run1/jpsisigma.root  JpsiSigma/Pythia8/2012*/*/*.root");
 			}
 			if(run == 2)
 			{
+				if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiSigma/run2/collate_log.txt");
 				gSystem->Exec("hadd -f /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiSigma/run2/jpsisigma.root JpsiSigma/Pythia8/2015*/*/*.root JpsiSigma/Pythia8/2016*/*/*.root");
 			}
 		}
@@ -70,14 +75,16 @@ void collateFiles(Int_t run, Int_t isData, Int_t mcType, TChain** h1, TChain** h
 		{
 			if(run == 1)
 			{
+				if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiXi/run1/collate_log.txt");
 				gSystem->Exec("hadd -f /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiXi/run1/jpsixi.root JpsiXi/Pythia8/2011*/*/*.root JpsiXi/Pythia8/2012*/*/*.root");
 			}
 			if(run == 2)
 			{
+				if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiXi/run2/collate_log.txt");
 				gSystem->Exec("hadd -f /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiXi/run2/jpsixi.root JpsiXi/Pythia8/2015*/*/*.root JpsiXi/Pythia8/2016*/*/*.root");
 			}
 		}
 	}
-	// gROOT->ProcessLine(".>");
+	if(logFlag) gROOT->ProcessLine(".>");
 	// gSystem->Exec("cat collate_log.txt");
 }

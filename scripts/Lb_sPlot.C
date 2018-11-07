@@ -21,12 +21,12 @@
 #include "RooFitResult.h"
 #include "RooWorkspace.h"
 #include "RooConstVar.h"
-#include "TCut.h"
-#include <TFile.h>
+#include "TFile.h"
 #include "TTree.h"
 #include "TH1.h"
 #include "TMath.h"
-#include <TROOT.h>
+#include "TROOT.h"
+#include "TSystem.h"
 #include "TBranch.h"
 // use this order for safety on library loading
 using namespace RooFit;
@@ -48,8 +48,9 @@ void Lb_sPlot(Int_t run, Int_t trackType)
  */
 {
 
-	Bool_t logFlag = 0;
+	Bool_t logFlag = false;
 	const char* logFileName = "", *type = "";
+
 	if(trackType == 3)
 	{
 		cout<<"Processing LL"<<endl;
@@ -62,7 +63,7 @@ void Lb_sPlot(Int_t run, Int_t trackType)
 		logFileName = "sPlot_DD_log.txt";
 		type = "DD";
 	}
-	if(logFlag == 1)
+	if(logFlag)
 	{
 		gROOT->ProcessLine((TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName)).Data());
 	}
@@ -90,7 +91,7 @@ void Lb_sPlot(Int_t run, Int_t trackType)
 
 	// cleanup
 	delete wspace;
-	if(logFlag == 1) gROOT->ProcessLine(".>");
+	if(logFlag) gROOT->ProcessLine(".>");
 }
 
 void AddModel(RooWorkspace* ws)
@@ -158,7 +159,7 @@ void AddData(RooWorkspace* ws, Int_t run, const char* type)
 
 	//const char* cuts = "";
 	//Import the data
-
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
 	filein = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s.root",run,type),"READ");
 
 	treein = (TTree*)filein->Get("MyTuple");
@@ -182,6 +183,8 @@ void DoSPlot(RooWorkspace* ws, Int_t run, const char* type)
 {
 	cout<<"Starting DoSPlot()"<<endl;
 	cout << "Calculating sWeights" << endl;
+
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
 
 	TFile *fileout(0), *fileout_training(0);
 	TTree *treeout(0), *treeout_training(0);
