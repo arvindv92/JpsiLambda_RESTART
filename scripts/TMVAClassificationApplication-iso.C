@@ -37,7 +37,23 @@ void TMVAClassificationApplication_iso(Int_t run = 1, Int_t isData = 1, Int_t mc
 {
 	Bool_t logFlag = false, genFlag = false; //logFlag should be 0 only while testing.
 	fstream genfile;
+	const char *type = "";
 	TFile *filein(0), *filein_sig(0), *fileout(0), *fileout_sig(0);
+	TString logFileName = "";
+
+	logFileName = (trackType == 3) ? ("isolationTraining_LL_log.txt") : ("isolationTraining_DD_log.txt");
+
+	if(trackType == 3)
+	{
+		cout<<"Processing LL"<<endl;
+		type = "LL";
+	}
+	else if(trackType == 5)
+	{
+		cout<<"Processing DD"<<endl;
+		type = "DD";
+	}
+
 	switch(isData)
 	{
 	case 0: // MC
@@ -54,7 +70,7 @@ void TMVAClassificationApplication_iso(Int_t run = 1, Int_t isData = 1, Int_t mc
 					genFlag = 1;
 				}
 				filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s.root",run,type));
-				fileout = new TFile("rootFiles/mcFiles/JpsiLambda/run1/jpsilambda_LL_withiso.root","RECREATE");
+				fileout = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run1/jpsilambda_%s_withiso.root",type),"RECREATE");
 				break;
 
 			case 2:
