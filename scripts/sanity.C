@@ -35,10 +35,11 @@ void sanity(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0)
 	Float_t eff_excl_DD = 0.0, eff_excl_DD_err = 0.0,eff_incl_DD = 0.0,eff_incl_DD_err = 0.0;
 	Double_t Lb_TAU = 0.0, Lb_ConsLb_chi2 = 0.0, Lb_ConsLb_nDOF = 0.0, Lb_ETA = 0.0;
 	Double_t pi_PIDp = 0.0, pi_PIDK = 0.0, p_PIDp = 0.0, p_PIDK = 0.0, MyL_TAU = 0.0;
-
 	Bool_t logFlag = false, genFlag = false;
-
+	const char* logFileName = "sanity_log.txt";
 	fstream genfile;
+
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
 
 	switch(isData)
 	{
@@ -46,90 +47,120 @@ void sanity(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0)
 		switch(mcType)
 		{
 		case 1: //JpsiLambda
-			switch(run)
+			if(logFlag) gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiLambda/run%d/%s",run,logFileName)).Data());
+			if(!gSystem->AccessPathName((TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run)).Data()))
 			{
-			case 1:
-				if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiLambda/run1/sanity_log.txt");
-				if(!gSystem->AccessPathName("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiLambda/run1/gen_log.txt"))
-				{
-					genfile.open("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiLambda/run1/gen_log.txt");
-					genFlag = 1;
-				}
-				filein = TFile::Open("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/run1/jpsilambda_triggered.root");
-				fileout_LL = new TFile("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/run1/jpsilambda_sanity_LL.root","RECREATE");
-				fileout_DD = new TFile("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/run1/jpsilambda_sanity_DD.root","RECREATE");
-				break;
-
-			case 2:
-				if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiLambda/run2/sanity_log.txt");
-				if(!gSystem->AccessPathName("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiLambda/run2/gen_log.txt"))
-				{
-					genfile.open("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiLambda/run2/gen_log.txt");
-					genFlag = 1;
-				}
-				filein = TFile::Open("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/run2/jpsilambda_triggered.root");
-				fileout_LL = new TFile("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/run2/jpsilambda_sanity_LL.root","RECREATE");
-				fileout_DD = new TFile("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/run2/jpsilambda_sanity_DD.root","RECREATE");
-				break;
+				genfile.open((TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run)).Data());
+				genFlag = true;
 			}
+			filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_triggered.root",run));
+			fileout_LL = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_sanity_LL.root",run),"RECREATE");
+			fileout_DD = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_sanity_DD.root",run),"RECREATE");
+			/*switch(run)
+			   {
+			   case 1:
+			        if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiLambda/run1/sanity_log.txt");
+			        if(!gSystem->AccessPathName("logs/mc/JpsiLambda/run1/gen_log.txt"))
+			        {
+			                genfile.open("logs/mc/JpsiLambda/run1/gen_log.txt");
+			                genFlag = true;
+			        }
+			        filein = TFile::Open("rootFiles/mcFiles/JpsiLambda/run1/jpsilambda_triggered.root");
+			        fileout_LL = new TFile("rootFiles/mcFiles/JpsiLambda/run1/jpsilambda_sanity_LL.root","RECREATE");
+			        fileout_DD = new TFile("rootFiles/mcFiles/JpsiLambda/run1/jpsilambda_sanity_DD.root","RECREATE");
+			        break;
+
+			   case 2:
+			        if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiLambda/run2/sanity_log.txt");
+			        if(!gSystem->AccessPathName("logs/mc/JpsiLambda/run2/gen_log.txt"))
+			        {
+			                genfile.open("logs/mc/JpsiLambda/run2/gen_log.txt");
+			                genFlag = true;
+			        }
+			        filein = TFile::Open("rootFiles/mcFiles/JpsiLambda/run2/jpsilambda_triggered.root");
+			        fileout_LL = new TFile("rootFiles/mcFiles/JpsiLambda/run2/jpsilambda_sanity_LL.root","RECREATE");
+			        fileout_DD = new TFile("rootFiles/mcFiles/JpsiLambda/run2/jpsilambda_sanity_DD.root","RECREATE");
+			        break;
+			   }
+			 */
 			break;
 
 		case 2: //JpsiSigma
-			switch(run)
+			if(logFlag) gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiSigma/run%d/%s",run,logFileName)).Data());
+			if(!gSystem->AccessPathName((TString::Format("logs/mc/JpsiSigma/run%d/gen_log.txt",run)).Data()))
 			{
-			case 1:
-				if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiSigma/run1/sanity_log.txt");
-				if(!gSystem->AccessPathName("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiSigma/run1/gen_log.txt"))
-				{
-					genfile.open("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiSigma/run1/gen_log.txt");
-					genFlag = 1;
-				}
-				filein = TFile::Open("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiSigma/run1/jpsisigma_triggered.root");
-				fileout_LL = new TFile("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiSigma/run1/jpsisigma_sanity_LL.root","RECREATE");
-				fileout_DD = new TFile("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiSigma/run1/jpsisigma_sanity_DD.root","RECREATE");
-				break;
-
-			case 2:
-				if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiSigma/run2/sanity_log.txt");
-				if(!gSystem->AccessPathName("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiSigma/run2/gen_log.txt"))
-				{
-					genfile.open("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiSigma/run2/gen_log.txt");
-					genFlag = 1;
-				}
-				filein = TFile::Open("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiSigma/run2/jpsisigma_triggered.root");
-				fileout_LL = new TFile("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiSigma/run2/jpsisigma_sanity_LL.root","RECREATE");
-				fileout_DD = new TFile("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiSigma/run2/jpsisigma_sanity_DD.root","RECREATE");
-				break;
+				genfile.open((TString::Format("logs/mc/JpsiSigma/run%d/gen_log.txt",run)).Data());
+				genFlag = true;
 			}
+			filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_triggered.root",run));
+			fileout_LL = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_sanity_LL.root",run),"RECREATE");
+			fileout_DD = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_sanity_DD.root",run),"RECREATE");
+			/*	switch(run)
+			        {
+			        case 1:
+			                if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiSigma/run1/sanity_log.txt");
+			                if(!gSystem->AccessPathName("logs/mc/JpsiSigma/run1/gen_log.txt"))
+			                {
+			                        genfile.open("logs/mc/JpsiSigma/run1/gen_log.txt");
+			                        genFlag = true;
+			                }
+			                filein = TFile::Open("rootFiles/mcFiles/JpsiSigma/run1/jpsisigma_triggered.root");
+			                fileout_LL = new TFile("rootFiles/mcFiles/JpsiSigma/run1/jpsisigma_sanity_LL.root","RECREATE");
+			                fileout_DD = new TFile("rootFiles/mcFiles/JpsiSigma/run1/jpsisigma_sanity_DD.root","RECREATE");
+			                break;
+
+			        case 2:
+			                if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiSigma/run2/sanity_log.txt");
+			                if(!gSystem->AccessPathName("logs/mc/JpsiSigma/run2/gen_log.txt"))
+			                {
+			                        genfile.open("logs/mc/JpsiSigma/run2/gen_log.txt");
+			                        genFlag = true;
+			                }
+			                filein = TFile::Open("rootFiles/mcFiles/JpsiSigma/run2/jpsisigma_triggered.root");
+			                fileout_LL = new TFile("rootFiles/mcFiles/JpsiSigma/run2/jpsisigma_sanity_LL.root","RECREATE");
+			                fileout_DD = new TFile("rootFiles/mcFiles/JpsiSigma/run2/jpsisigma_sanity_DD.root","RECREATE");
+			                break;
+			        }
+			 */
 			break;
 
 		case 3: //JpsiXi
-			switch(run)
+			if(logFlag) gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiXi/run%d/%s",run,logFileName)).Data());
+			if(!gSystem->AccessPathName((TString::Format("logs/mc/JpsiXi/run%d/gen_log.txt",run)).Data()))
 			{
-			case 1:
-				if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiXi/run1/sanity_log.txt");
-				if(!gSystem->AccessPathName("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiXi/run1/gen_log.txt"))
-				{
-					genfile.open("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiXi/run1/gen_log.txt");
-					genFlag = 1;
-				}
-				filein = TFile::Open("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiXi/run1/jpsixi_triggered.root");
-				fileout_LL = new TFile("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiXi/run1/jpsixi_sanity_LL.root","RECREATE");
-				fileout_DD = new TFile("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiXi/run1/jpsixi_sanity_DD.root","RECREATE");
-				break;
-
-			case 2:
-				if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiXi/run2/sanity_log.txt");
-				if(!gSystem->AccessPathName("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiXi/run2/gen_log.txt"))
-				{
-					genfile.open("/data1/avenkate/JpsiLambda_RESTART/logs/mc/JpsiXi/run2/gen_log.txt");
-					genFlag = 1;
-				}
-				filein = TFile::Open("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiXi/run2/jpsixi_triggered.root");
-				fileout_LL = new TFile("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiXi/run2/jpsixi_sanity_LL.root","RECREATE");
-				fileout_DD = new TFile("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiXi/run2/jpsixi_sanity_DD.root","RECREATE");
-				break;
+				genfile.open((TString::Format("logs/mc/JpsiXi/run%d/gen_log.txt",run)).Data());
+				genFlag = true;
 			}
+			filein = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_triggered.root",run));
+			fileout_LL = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_sanity_LL.root",run),"RECREATE");
+			fileout_DD = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_sanity_DD.root",run),"RECREATE");
+			/*	switch(run)
+			        {
+			        case 1:
+			                if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiXi/run1/sanity_log.txt");
+			                if(!gSystem->AccessPathName("logs/mc/JpsiXi/run1/gen_log.txt"))
+			                {
+			                        genfile.open("logs/mc/JpsiXi/run1/gen_log.txt");
+			                        genFlag = true;
+			                }
+			                filein = TFile::Open("rootFiles/mcFiles/JpsiXi/run1/jpsixi_triggered.root");
+			                fileout_LL = new TFile("rootFiles/mcFiles/JpsiXi/run1/jpsixi_sanity_LL.root","RECREATE");
+			                fileout_DD = new TFile("rootFiles/mcFiles/JpsiXi/run1/jpsixi_sanity_DD.root","RECREATE");
+			                break;
+
+			        case 2:
+			                if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiXi/run2/sanity_log.txt");
+			                if(!gSystem->AccessPathName("logs/mc/JpsiXi/run2/gen_log.txt"))
+			                {
+			                        genfile.open("logs/mc/JpsiXi/run2/gen_log.txt");
+			                        genFlag = true;
+			                }
+			                filein = TFile::Open("rootFiles/mcFiles/JpsiXi/run2/jpsixi_triggered.root");
+			                fileout_LL = new TFile("rootFiles/mcFiles/JpsiXi/run2/jpsixi_sanity_LL.root","RECREATE");
+			                fileout_DD = new TFile("rootFiles/mcFiles/JpsiXi/run2/jpsixi_sanity_DD.root","RECREATE");
+			                break;
+			        }
+			 */
 			break;
 		}
 		treein = (TTree*)filein->Get("MyTuple");
@@ -137,22 +168,27 @@ void sanity(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0)
 		break;
 
 	case 1: // Data
-		switch(run)
-		{
-		case 1:
-			if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/data/JpsiLambda/run1/sanity_log.txt");
-			filein = TFile::Open("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_triggered.root");
-			fileout_LL = new TFile("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_sanity_LL.root","RECREATE");
-			fileout_DD = new TFile("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_sanity_DD.root","RECREATE");
-			break;
+		if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/%ss",run,logFileName).Data());
+		filein = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered.root",run));
+		fileout_LL = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_LL.root",run),"RECREATE");
+		fileout_DD = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_DD.root",run),"RECREATE");
+		/*switch(run)
+		   {
+		   case 1:
+		        if(logFlag) gROOT->ProcessLine(".> logs/data/JpsiLambda/run1/sanity_log.txt");
+		        filein = TFile::Open("rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_triggered.root");
+		        fileout_LL = new TFile("rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_sanity_LL.root","RECREATE");
+		        fileout_DD = new TFile("rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_sanity_DD.root","RECREATE");
+		        break;
 
-		case 2:
-			if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/data/JpsiLambda/run2/sanity_log.txt");
-			filein = TFile::Open("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_triggered.root");
-			fileout_LL = new TFile("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_sanity_LL.root","RECREATE");
-			fileout_DD = new TFile("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_sanity_DD.root","RECREATE");
-			break;
-		}
+		   case 2:
+		        if(logFlag) gROOT->ProcessLine(".> logs/data/JpsiLambda/run2/sanity_log.txt");
+		        filein = TFile::Open("rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_triggered.root");
+		        fileout_LL = new TFile("rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_sanity_LL.root","RECREATE");
+		        fileout_DD = new TFile("rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_sanity_DD.root","RECREATE");
+		        break;
+		   }
+		 */
 		treein = (TTree*)filein->Get("MyTuple");
 		break;
 	}

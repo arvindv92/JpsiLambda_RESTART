@@ -22,11 +22,10 @@ void cutOutKs(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType
 	TFile *filein(0), *fileout(0);
 	TTree *treein(0), *treeout(0);
 
-	const char *L_dmcut = "", *pidcut = "", *masswindow = "";
+	const char *L_dmcut = "", *pidcut = "", *masswindow = "", *type = "", *logFileName = "";
 	Int_t entries_init = 0, entries_final = 0, entries_gen = 0;
 	Float_t eff_excl = 0.0, eff_excl_err = 0.0, eff_incl = 0.0, eff_incl_err = 0.0;
 	Double_t L_dm = 0.0, p_PIDp = 0.0, Lb_DTF_L_WMpipi_JpsiConstr = 0.0;
-	const char *type = "", *logFileName = "";
 
 	Bool_t logFlag = false, genFlag = false;
 
