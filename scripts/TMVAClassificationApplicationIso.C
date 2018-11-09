@@ -44,6 +44,7 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Int_t isData = 1, Int_t mcT
 	const char *type = "", *logFileName = "";
 	TFile *fileIn(0), *fileOut(0);
 	TTree *treeIn(0), *treeOut(0);
+
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
 
 	logFileName = (trackType == 3) ? ("isolationTraining_LL_log.txt") : ("isolationTraining_DD_log.txt");
@@ -61,10 +62,10 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Int_t isData = 1, Int_t mcT
 
 	switch(isData)
 	{
-	case 0:                                                                 // MC
+	case 0: // MC
 		switch(mcType)
 		{
-		case 1:                                                                 //JpsiLambda
+		case 1:  //JpsiLambda
 			if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/mc/JpsiLambda/run%d/%s",run,logFileName));
 			if(!gSystem->AccessPathName(TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run)))
 			{
