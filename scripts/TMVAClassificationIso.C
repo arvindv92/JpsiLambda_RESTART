@@ -21,7 +21,7 @@
 #include "TMVA/Tools.h"
 #endif
 
-void TMVAClassification_iso(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
+void TMVAClassificationIso(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    trackType = 3 for LL, 5 for DD.
@@ -75,12 +75,6 @@ void TMVAClassification_iso(Int_t run = 1,Int_t trackType = 3, TString version =
 	fname_sig = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_forIsoTraining.root",run,type);
 	input_sig = TFile::Open(fname_sig);
 
-	// TString fname_LL = "sweightstuff/jpsilambda_LL_forTMVAisoTraining.root";//Signal Training Sample
-	// input_LL = TFile::Open( fname_LL );
-	//
-	// TString fname_DD = "sweightstuff/jpsilambda_DD_forTMVAisoTraining.root";//Signal Training Sample
-	// input_DD = TFile::Open( fname_DD );
-
 	fname_bkg = TString::Format("/data1/avenkate/B+toJpsiK+/RealData_AllKaons/total_run%d/splot/maketuples/jpsik_forTMVAisoTraining.root",run);//Background 1 Training Sample
 	input_bkg = TFile::Open( fname_bkg );
 
@@ -94,10 +88,6 @@ void TMVAClassification_iso(Int_t run = 1,Int_t trackType = 3, TString version =
 
 	sigTree = (TTree*)input_sig->Get("MyTuple");
 	bkgTree = (TTree*)input_bkg->Get("MyTuple");
-
-	// TTree *signal_DD     = (TTree*)input_DD->Get("MyTuple");
-	// TTree *signal_LL     = (TTree*)input_LL->Get("MyTuple");
-	// TTree *background1 = (TTree*)input1->Get("MyTuple");
 
 	// global event weights per tree (see below for setting event-wise weights)
 	Double_t signalWeight     = 1.0;
@@ -167,74 +157,3 @@ void TMVAClassification_iso(Int_t run = 1,Int_t trackType = 3, TString version =
 
 	if(logFlag) gROOT->ProcessLine(".>");
 }
-/*
-        if(version == "v1") {
-                outfileName = "TMVA-isokLL_data.root";
-                outputFile = TFile::Open( outfileName, "RECREATE" );
-                factory = new TMVA::Factory( "TMVAClassification-isokLL_data", outputFile,
-                                             "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
-        }
-        else if(version == "v2") {
-                outfileName = "TMVA-isokLL_data_v2.root";
-                outputFile = TFile::Open( outfileName, "RECREATE" );
-                factory = new TMVA::Factory( "TMVAClassification-isokLL_data_v2", outputFile,
-                                             "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
-        }
-
-        std::cout << "--- TMVAClassification       : Using background input file: " << input1->GetName() << std::endl;
-        std::cout << "--- TMVAClassification       : Using signal input file: " << input_LL->GetName() << std::endl;
-
-        factory->AddVariable( "PT", 'F' );
-        factory->AddVariable( "IPCHI2", 'F' );
-        factory->AddVariable( "VCHI2DOF", 'F' );
-        factory->AddVariable( "MINIPCHI2", 'F' );
-        if(version == "v2") {
-                factory->AddVariable( "GHOSTPROB", 'F' );
-                factory->AddVariable( "TRACKCHI2DOF", 'F' );
-        }
-
-        // You can add an arbitrary number of signal or background trees
-        factory->AddSignalTree    ( signal_LL,     signalWeight     );
-        factory->AddBackgroundTree( background1, backgroundWeight );
-
-        factory->SetSignalWeightExpression( "SW" );
-        factory->SetBackgroundWeightExpression("SW");
-
-        factory->PrepareTrainingAndTestTree( mycuts, mycutb,
-                                             "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:V" );
-
-        factory->BookMethod( TMVA::Types::kBDT, "BDTconf1",
-                             "!H:!V:NTrees=850:MinNodeSize=1.25%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
-
-        // factory->BookMethod( TMVA::Types::kBDT, "BDTconf5",
-        //                      "!H:!V:NTrees=850:MinNodeSize=0.75%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
-
-        // factory->BookMethod( TMVA::Types::kBDT, "BDTconf2",
-        //                      "!H:!V:NTrees=850:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.7:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
-
-        // factory->BookMethod( TMVA::Types::kBDT, "BDTconf3",
-        //                      "!H:!V:NTrees=850:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.7:SeparationType=GiniIndex:nCuts=20" );
-
-        // factory->BookMethod( TMVA::Types::kBDT, "BDTconf4",
-        //                      "!H:!V:NTrees=1000:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
-
-        // factory->BookMethod( TMVA::Types::kBDT, "BDTMitFisher",
-        //                      "!H:!V:NTrees=50:MinNodeSize=2.5%:UseFisherCuts:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:SeparationType=GiniIndex:nCuts=20" );
-
-        // factory->BookMethod( TMVA::Types::kBDT, "BDTG",
-        //                      "!H:!V:NTrees=1000:MinNodeSize=2.5%:BoostType=Grad:Shrinkage=0.10:UseBaggedBoost:BaggedSampleFraction=0.5:nCuts=20:MaxDepth=2" );
-
-
-        factory->TrainAllMethods();
-
-        factory->TestAllMethods();
-
-        factory->EvaluateAllMethods();
-
-        outputFile->Close();
-
-        delete factory;
-        // Launch the GUI for the root macros
-        // if (!gROOT->IsBatch()) TMVAGui( outfileName );
-    }
- */
