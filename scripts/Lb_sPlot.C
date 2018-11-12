@@ -391,7 +391,10 @@ void DoSPlot(RooWorkspace* ws, Int_t run, const char* type)
 	treeout->SetBranchStatus("Added_H_PT",1);
 	treeout->SetBranchStatus("psi_1S_H_MINIPCHI2",1);
 	treeout->SetBranchStatus("psi_1S_H_VERTEXCHI2_NEW",1);
-	treeout->SetBranchStatus("psi_1S_H_IPCHI2_NEW",1);
+	treeout->SetBranchStatus("psi_1S_H_IPCHI2_NEW",1);//Maybe also use IP_NEW?
+	treeout->SetBranchStatus("psi_1S_H_IP_NEW",1);
+	treeout->SetBranchStatus("psi_1S_H_FD_NEW",1);
+	treeout->SetBranchStatus("psi_1S_H_FDCHI2_NEW",1);
 	treeout->SetBranchStatus("psi_1S_VERTEX_Z_NEW",1);
 	treeout->SetBranchStatus("Added_H_TRACKCHI2",1);
 	treeout->SetBranchStatus("Added_H_GHOST",1);
@@ -406,6 +409,9 @@ void DoSPlot(RooWorkspace* ws, Int_t run, const char* type)
 	treeout_training->SetAlias("MINIPCHI2","Added_H_MINIPCHI2");
 	treeout_training->SetAlias("VCHI2DOF","psi_1S_H_VERTEXCHI2_NEW");
 	treeout_training->SetAlias("IPCHI2","psi_1S_H_IPCHI2_NEW");
+	treeout_training->SetAlias("IP","psi_1S_H_IP_NEW");
+	treeout_training->SetAlias("FD","psi_1S_H_FD_NEW");
+	treeout_training->SetAlias("FDCHI2","psi_1S_H_FDCHI2_NEW");
 	treeout_training->SetAlias("TRACKORIVX_Z","psi_1S_H_VERTEXCHI2_NEW");
 	treeout_training->SetAlias("GHOSTPROB","Added_H_GHOST");
 	treeout_training->SetAlias("TRACKCHI2DOF","Added_H_TRACKCHI2");
