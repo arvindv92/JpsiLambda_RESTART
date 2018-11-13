@@ -25,7 +25,7 @@ void TMVAClassificationIso(Int_t run = 1,Int_t trackType = 3, TString version = 
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    trackType = 3 for LL, 5 for DD.
-   version = "v1","v2" or "v3"
+   version = "v0","v1","v2" or "v3"
  */
 {
 	Bool_t logFlag = false;
@@ -63,11 +63,18 @@ void TMVAClassificationIso(Int_t run = 1,Int_t trackType = 3, TString version = 
 	outputFile  = TFile::Open(outfileName, "RECREATE");
 	factory     = new TMVA::Factory( TString::Format("TMVAClassification-isok%s_data_%s",type,version.Data()), outputFile,
 	                                 "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
-	factory->AddVariable("PT",'F');
-	factory->AddVariable("IPCHI2",'F');
-	factory->AddVariable("VCHI2DOF",'F');
-	factory->AddVariable("MINIPCHI2",'F');
 
+
+	if(version == "v0" || version == "v1" || version == "v2" || version == "v3")
+	{
+		factory->AddVariable("IPCHI2",'F');
+		factory->AddVariable("VCHI2DOF",'F');
+		factory->AddVariable("MINIPCHI2",'F');
+	}
+	if(version == "v1")
+	{
+		factory->AddVariable("PT",'F');
+	}
 	if(version == "v2")
 	{
 		factory->AddVariable("FD",'F');

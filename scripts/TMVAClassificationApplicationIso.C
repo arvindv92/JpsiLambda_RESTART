@@ -31,7 +31,7 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Int_t isData = 1, Int_t mcT
    mcType = 0 when running over data. When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
    trackType = 3 for LL, 5 for DD.
    flag = 1 when applying on all data, flag = 2 when applying only on signal training sample
-   version = "v1" or "v2"
+   version = "v0","v1", "v2" or "v3"
  */
 {
 	#ifdef __CINT__
@@ -95,7 +95,6 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Int_t isData = 1, Int_t mcT
 			}
 			fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_cutoutks_%s.root",run,type));
 			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_%s_withiso_%s.root",run,type,version),"RECREATE");
-
 			break;
 		}
 		treeIn = (TTree*)fileIn->Get("MyTuple");
@@ -135,11 +134,16 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Int_t isData = 1, Int_t mcT
 	// - the variable names MUST corresponds in name and type to those given in the weight file(s) used
 	Float_t var[6];
 
-	reader->AddVariable("PT",        &var[0]);
-	reader->AddVariable("IPCHI2",    &var[1]);
-	reader->AddVariable("VCHI2DOF",  &var[2]);
-	reader->AddVariable("MINIPCHI2", &var[3]);
-
+	if (!strncmp(version,"v0",2) || !strncmp(version,"v1",2) || !strncmp(version,"v2",2) || !strncmp(version,"v3",2) )
+	{
+		reader->AddVariable("IPCHI2",    &var[1]);
+		reader->AddVariable("VCHI2DOF",  &var[2]);
+		reader->AddVariable("MINIPCHI2", &var[3]);
+	}
+	if(!strncmp(version,"v1",2))
+	{
+		reader->AddVariable("PT",        &var[0]);
+	}
 	if(!strncmp(version,"v2",2))
 	{
 		reader->AddVariable("FD",      &var[4] );
