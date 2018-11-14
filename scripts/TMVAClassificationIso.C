@@ -19,6 +19,7 @@
 // needs to be included when makecint runs (ACLIC)
 #include "TMVA/Factory.h"
 #include "TMVA/Tools.h"
+#include "TMVA/DataLoader.h"
 #endif
 
 void TMVAClassificationIso(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
@@ -32,9 +33,10 @@ void TMVAClassificationIso(Int_t run = 1,Int_t trackType = 3, TString version = 
 	TString outfileName = "", fname_sig = "", fname_bkg = "";
 	TCut mycuts = "", mycutb = "";
 	const char *logFileName = "", *type = "";
-	TFile *outputFile(0), *input_sig(0), *input_bkg(0);
-	TTree *sigTree(0),*bkgTree(0);
-	TMVA::Factory *factory(0);
+	TFile *outputFile = NULL, *input_sig = NULL, *input_bkg = NULL;
+	TTree *sigTree = NULL,*bkgTree = NULL;
+	TMVA::Factory *factory = NULL;
+	TMVA::DataLoader *dataloader = NULL;
 	TMVA::Tools::Instance(); // This loads the library
 
 	logFileName = (trackType == 3) ? (TString::Format("isolationTraining_LL_%s_log.txt",version.Data())) : (TString::Format("isolationTraining_DD_%s_log.txt",version.Data()));
@@ -64,24 +66,25 @@ void TMVAClassificationIso(Int_t run = 1,Int_t trackType = 3, TString version = 
 	factory     = new TMVA::Factory( TString::Format("TMVAClassification-isok%s_data_%s",type,version.Data()), outputFile,
 	                                 "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
 
+	dataloader = new TMVA::DataLoader("dataset");
 
 	if(version == "v0" || version == "v1" || version == "v2" || version == "v3")
 	{
-		factory->AddVariable("IPCHI2",'F');
-		factory->AddVariable("VCHI2DOF",'F');
-		factory->AddVariable("MINIPCHI2",'F');
+		dataloader->AddVariable("IPCHI2",'F');
+		dataloader->AddVariable("VCHI2DOF",'F');
+		dataloader->AddVariable("MINIPCHI2",'F');
 	}
 	if(version == "v1")
 	{
-		factory->AddVariable("PT",'F');
+		dataloader->AddVariable("PT",'F');
 	}
 	if(version == "v2")
 	{
-		factory->AddVariable("FD",'F');
+		dataloader->AddVariable("FD",'F');
 	}
 	if(version == "v3")
 	{
-		factory->AddVariable("FDCHI2",'F');
+		dataloader->AddVariable("FDCHI2",'F');
 	}
 
 	fname_sig = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_forIsoTraining.root",run,type);
@@ -106,12 +109,12 @@ void TMVAClassificationIso(Int_t run = 1,Int_t trackType = 3, TString version = 
 	Double_t backgroundWeight = 1.0;
 
 	// You can add an arbitrary number of signal or background trees
-	factory->AddSignalTree    (sigTree,signalWeight);
-	factory->AddBackgroundTree(bkgTree,backgroundWeight);
+	dataloader->AddSignalTree    (sigTree,signalWeight);
+	dataloader->AddBackgroundTree(bkgTree,backgroundWeight);
 
-	factory->SetSignalWeightExpression("SW");
-	factory->SetBackgroundWeightExpression("SW");
-	//factory->SetBackgroundWeightExpression("BW");
+	dataloader->SetSignalWeightExpression("SW");
+	dataloader->SetBackgroundWeightExpression("SW");
+	//dataloader->SetBackgroundWeightExpression("BW");
 
 	// Apply additional cuts on the signal and background samples (can be different)
 	mycuts = "PT > 0 && MINIPCHI2 > 0 && VCHI2DOF > 0 && PT < 10000 && MINIPCHI2 < 50";//CHANGED FROM MINIPCHI2 < 10000
@@ -127,12 +130,12 @@ void TMVAClassificationIso(Int_t run = 1,Int_t trackType = 3, TString version = 
 		mycutb = "PT > 0 && MINIPCHI2 > 0 && VCHI2DOF > 0 && PT < 10000 && MINIPCHI2 < 100 && FDCHI2 < 1000";
 	}
 
-	factory->PrepareTrainingAndTestTree(mycuts, mycutb, "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V");
+	dataloader->PrepareTrainingAndTestTree(mycuts, mycutb, "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V");
 
-	factory->BookMethod(TMVA::Types::kBDT, "BDTconf1",
+	factory->BookMethod(dataloader, TMVA::Types::kBDT, "BDTconf1",
 	                    "!H:!V:NTrees=850:MinNodeSize=1.25%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
 
-	factory->BookMethod(TMVA::Types::kBDT, "BDTconf5",
+	factory->BookMethod(dataloader, TMVA::Types::kBDT, "BDTconf5",
 	                    "!H:!V:NTrees=850:MinNodeSize=0.75%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
 
 	/*	factory->BookMethod( TMVA::Types::kBDT, "BDTconf2",
