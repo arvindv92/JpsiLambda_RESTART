@@ -7,6 +7,6 @@
 #include <TSystem.h>
 #include <TCollection.h>
 #include <TFileCollection.h>
-void collateFiles(Int_t run = 1, Int_t isData = 1, Int_t mcType = 1, TChain** h1 = NULL, TChain** h2 = NULL);
+void collateFiles(Int_t run = 1, Bool_t isData = true, Int_t mcType = 1, TChain** h1 = NULL, TChain** h2 = NULL, Bool_t testing = false, Bool_t loose = true);
 
 #endif

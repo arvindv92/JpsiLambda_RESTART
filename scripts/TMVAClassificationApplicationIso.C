@@ -25,9 +25,9 @@
 
 using namespace TMVA;
 /****MODIFIED****/
-void TMVAClassificationApplicationIso(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType = 3, Int_t flag = 1, const char* version = "v1", Int_t isoConf = 1)
+void TMVAClassificationApplicationIso(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t trackType = 3, Int_t flag = 1, const char* version = "v1", Int_t isoConf = 1)
 /* run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
-   isData = 1 for data, 0 for MC
+   isData = true for data, false for MC
    mcType = 0 when running over data. When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
    trackType = 3 for LL, 5 for DD.
    flag = 1 when applying on all data, flag = 2 when applying only on signal training sample
@@ -41,10 +41,12 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Int_t isData = 1, Int_t mcT
 	Bool_t logFlag = false, genFlag = false; //logFlag should be 0 only while testing.
 	fstream genFile;
 	const char *type = "", *logFileName = "";
-	TFile *fileIn(0), *fileOut(0);
-	TTree *treeIn(0), *treeOut(0);
+	TFile *fileIn = NULL, *fileOut = NULL;
+	TTree *treeIn = NULL, *treeOut = NULL;
+	Int_t entries_init = 0;
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
+	cout<<"WD = "<<gSystem->pwd()<<endl;
 
 	logFileName = (trackType == 3) ? ("isoApplication_LL_log.txt") : ("isoApplication_DD_log.txt");
 
@@ -59,9 +61,8 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Int_t isData = 1, Int_t mcT
 		type = "DD";
 	}
 
-	switch(isData)
+	if(!isData)  // MC
 	{
-	case 0:                                 // MC
 		switch(mcType)
 		{
 		case 1:                                  //JpsiLambda
@@ -97,11 +98,9 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Int_t isData = 1, Int_t mcT
 			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_%s_withiso_%s.root",run,type,version),"RECREATE");
 			break;
 		}
-		treeIn = (TTree*)fileIn->Get("MyTuple");
-		treeOut = (TTree*)treeIn->CloneTree(0);
-		break;
-
-	case 1: // Data
+	}
+	else  // Data
+	{
 		if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/%s.txt",run,logFileName));
 		if(flag == 1)
 		{
@@ -113,15 +112,18 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Int_t isData = 1, Int_t mcT
 			fileIn  = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw.root",run,type));
 			fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withiso_%s.root",run,type,version),"RECREATE");
 		}
-		treeIn      = (TTree*)fileIn->Get("MyTuple");
-		treeOut     = (TTree*)treeIn->CloneTree(0);
-		break;
 	}
+
+	treeIn = (TTree*)fileIn->Get("MyTuple");
+	treeOut = (TTree*)treeIn->CloneTree(0);
+
 	cout<<"******************************************"<<endl;
 	cout<<"Input file = "<<fileIn->GetName()<<endl;
 	cout<<"Output file = "<<fileOut->GetName()<<endl;
 	cout<<"******************************************"<<endl;
 
+	entries_init = treeIn->GetEntries();
+	cout<<"Incoming entries = "<<entries_init<<endl;
 	// This loads the library
 	TMVA::Tools::Instance();
 
@@ -212,10 +214,10 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Int_t isData = 1, Int_t mcT
 	//      treeOut->Branch("FDCHI2",FDCHI2,"FDCHI2[ntracks]/F");
 	// }
 
-	std::cout << "--- Processing: " << treeIn->GetEntries() << " events" << std::endl;
+	std::cout << "--- Processing: " << entries_init << " events" << std::endl;
 	TStopwatch sw;
 	sw.Start();
-	for (Long64_t ievt=0; ievt<treeIn->GetEntries(); ievt++)
+	for (Long64_t ievt = 0; ievt < entries_init; ievt++)
 	{
 		if (ievt%50000 == 0) std::cout << "--- ... Processing event: " << ievt << std::endl;
 

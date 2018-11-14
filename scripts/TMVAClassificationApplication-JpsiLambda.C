@@ -1,11 +1,6 @@
-/**********************************************************************************
-* Project   : TMVA - a Root-integrated toolkit for multivariate data analysis    *
-* Package   : TMVA                                                               *
-* Exectuable: TMVAClassificationApplication                                      *
-*                                                                                *
-* This macro provides a simple example on how to use the trained classifiers     *
-* within an analysis module                                                      *
-**********************************************************************************/
+/********************************
+   Author : Aravindhan V.
+ *********************************/
 
 #include <cstdlib>
 #include <vector>
@@ -31,7 +26,7 @@
 
 using namespace TMVA;
 
-void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0, Int_t trackType = 3, const char* version = "v1", Int_t bdtConf = 1, Int_t flag = 1)
+void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t trackType = 3, const char* version = "v1", Int_t bdtConf = 1, Int_t flag = 1)
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = 1 for data, 0 for MC
@@ -44,14 +39,16 @@ void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Int_t isData = 1, I
 	Bool_t logFlag = false, genFlag = false;
 	const char *logFileName = "", *type = "";
 	TString outfileName = "";
-	TFile *fileIn(0), *fileOut(0);
-	TTree *treeIn(0), *treeOut(0);
+	TFile *fileIn = NULL, *fileOut = NULL;
+	TTree *treeIn = NULL, *treeOut = NULL;
 
+	Int_t entries_init = 0;
 	fstream genFile;
 
 	logFileName = (trackType == 3) ? (TString::Format("finalBDTApplication_LL_%s_log.txt",version)) : (TString::Format("finalBDTApplication_DD_%s_log.txt",version));
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
+	cout<<"WD = "<<gSystem->pwd()<<endl;
 
 	if(trackType == 3)
 	{
@@ -64,12 +61,12 @@ void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Int_t isData = 1, I
 		type = "DD";
 	}
 
-	switch(isData)
+
+	if(!isData) // MC
 	{
-	case 0:                                         // MC
 		switch(mcType)
 		{
-		case 1:                                  //JpsiLambda
+		case 1: //JpsiLambda
 			if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/mc/JpsiLambda/run%d/%s",run,logFileName));
 			if(!gSystem->AccessPathName(TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run)))
 			{
@@ -102,11 +99,9 @@ void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Int_t isData = 1, I
 			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi%s_withfinalBDT_%s.root",run,type,version),"RECREATE");
 			break;
 		}
-		treeIn = (TTree*)fileIn->Get("MyTuple");
-		treeOut = (TTree*)treeIn->CloneTree(0);
-		break;
-
-	case 1: // Data
+	}
+	else // Data
+	{
 		if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/%s.txt",run,logFileName));
 		if(flag == 1)
 		{
@@ -118,14 +113,19 @@ void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Int_t isData = 1, I
 			fileIn  = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw.root",run,type));
 			fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withfinalBDT_%s.root",run,type,version),"RECREATE");
 		}
-		treeIn      = (TTree*)fileIn->Get("MyTuple");
-		treeOut     = (TTree*)treeIn->CloneTree(0);
-		break;
 	}
+
+	treeIn = (TTree*)fileIn->Get("MyTuple");
+	treeOut = (TTree*)treeIn->CloneTree(0);
+
 	cout<<"******************************************"<<endl;
 	cout<<"Input file = "<<fileIn->GetName()<<endl;
 	cout<<"Output file = "<<fileOut->GetName()<<endl;
 	cout<<"******************************************"<<endl;
+
+	entries_init = treeIn->GetEntries();
+
+	cout<<"Incoming Entries = "<<entries_init;
 
 	#ifdef __CINT__
 	gROOT->ProcessLine( ".O0" ); // turn off optimization in CINT
@@ -368,10 +368,10 @@ void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Int_t isData = 1, I
 	// treeout->Branch( "BDTk", &userVar[29],"BDTk/D" );
 	// treeout->Branch( "Lb_DTF_M_JpsiLConstr", &bmass, "Lb_DTF_M_JpsiLConstr/D");
 
-	std::cout << "--- Processing: " << treeIn->GetEntries() << " events" << std::endl;
+	std::cout << "--- Processing: " << entries_init << " events" << std::endl;
 	TStopwatch sw;
 	sw.Start();
-	for (Long64_t ievt=0; ievt<treeIn->GetEntries(); ievt++) {
+	for (Long64_t ievt = 0; ievt < entries_init; ievt++) {
 
 		if (ievt%50000 == 0) std::cout << "--- ... Processing event: " << ievt << std::endl;
 

@@ -12,19 +12,22 @@
 #include <fstream>
 
 using namespace std;
-void trigger(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0)
+void trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testing = false, Bool_t loose = true)
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
-   isData = 1 for data, 0 for MC
+   isData = true for data, false for MC
    mcType = 0 when running over data. When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
+   testing = true to run only over a subset of data
+   loose = true to run over data from loose stripping line. Only LL for loose stripping line
  */
 {
 	gROOT->ProcessLine(".L collateFiles.C++");
+
 	Bool_t logFlag = false; //This should be 0 only while testing.
 	Bool_t collateFlag = 1; //If you don't want to re-collate MC, set this to zero. For example, if only the trigger condition changes.
-	TFile *fileout(0);
-	TTree *treeout(0), *mytree(0);
-	char *triggerCut(0);
+	TFile *fileOut = NULL;
+	TTree *treeOut = NULL, *myTree = NULL;
+	const char *triggerCut = "(Lb_Hlt1DiMuonHighMassDecision_TOS==1||Lb_Hlt1TrackMuonDecision_TOS==1||Lb_Hlt1TrackAllL0Decision_TOS==1)&&(Lb_Hlt2DiMuonDetachedJPsiDecision_TOS==1)";
 
 	Int_t entries_init = 0, entries_final = 0, entries_gen = 0;
 	Bool_t hlt1DiMuonHighMass = 0,hlt1TrackMuon = 0,hlt1TrackAllL0 = 0,hlt2DiMuonDetached = 0;
@@ -32,7 +35,7 @@ void trigger(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0)
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
 
-	if(isData == 1)
+	if(isData)
 	{
 		TH1D *lumihist, *lumierrhist;
 		Double_t lumi, lumierr;
@@ -43,18 +46,16 @@ void trigger(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0)
 		{
 			if(logFlag) gROOT->ProcessLine(".> logs/data/JpsiLambda/run1/trigger_log.txt");
 
-			collateFiles(run,isData,mcType,&h1,&h2);
-			fileout = new TFile("rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_triggered.root","RECREATE");
+			collateFiles(run,isData,mcType,&h1,&h2,testing,loose);//collateFiles will cd to the massdump folder and then back to JpsiLambda_RESTART
+			fileOut = new TFile("rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_triggered.root","RECREATE");
 		}
 		else if(run == 2)
 		{
 			if(logFlag) gROOT->ProcessLine(".> logs/data/JpsiLambda/run2/trigger_log.txt");
 
-			collateFiles(run,isData,mcType,&h1,&h2);
-			fileout = new TFile("rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_triggered.root","RECREATE");
+			collateFiles(run,isData,mcType,&h1,&h2,testing,loose);
+			fileOut = new TFile("rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_triggered.root","RECREATE");
 		}
-
-		entries_init = h1->GetEntries();
 
 		h2->Draw("IntegratedLuminosity>>lumihist","","goff");
 		h2->Draw("IntegratedLuminosityErr>>lumierrhist","","goff");
@@ -69,38 +70,38 @@ void trigger(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0)
 
 		cout<<"Processing "<<lumi<<" +/- "<<lumierr<< "luminosity"<<endl;
 
-		mytree = (TTree*)h1;
-	}
+		myTree = (TTree*)h1;
+	}//end Data block
 
-	if(isData == 0)
+	else //MC
 	{
-		TFile *filein(0);
-		TTree *treein(0), *treein_gen(0);
-		ofstream genfile;//The number of generated MC entries in every MC case will be written out to this file, so that it can be accessed for calculating exclusive efficiencies later
+		TFile *fileIn(0);
+		TTree *treeIn(0), *treeIn_gen(0);
+		ofstream genFile;//The number of generated MC entries in every MC case will be written out to this file, so that it can be accessed for calculating exclusive efficiencies later
 
 		if(mcType == 1)//Jpsi Lambda
 		{
 			if(run == 1)
 			{
 				if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiLambda/run1/trigger_log.txt");
-				genfile.open("logs/mc/JpsiLambda/run1/gen_log.txt");
+				genFile.open("logs/mc/JpsiLambda/run1/gen_log.txt");
 				cout<<"PROCESSING MC for Run 1 Jpsi Lambda"<<endl;
 				if(collateFlag) collateFiles(run,isData,mcType);
-				filein = TFile::Open("rootFiles/mcFiles/JpsiLambda/run1/jpsilambda.root");
-				treein_gen = (TTree*)filein->Get("MCTuple/MCDecayTree");
-				treein = (TTree*)filein->Get("Lb2JpsiLTree/MyTuple");
-				fileout = new TFile("rootFiles/mcFiles/JpsiLambda/run1/jpsilambda_triggered.root","RECREATE");
+				fileIn = TFile::Open("rootFiles/mcFiles/JpsiLambda/run1/jpsilambda.root");
+				treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
+				treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
+				fileOut = new TFile("rootFiles/mcFiles/JpsiLambda/run1/jpsilambda_triggered.root","RECREATE");
 			}
 			if(run == 2)
 			{
 				if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiLambda/run2/trigger_log.txt");
-				genfile.open("logs/mc/JpsiLambda/run2/gen_log.txt");
+				genFile.open("logs/mc/JpsiLambda/run2/gen_log.txt");
 				cout<<"PROCESSING MC for Run 2 Jpsi Lambda"<<endl;
 				if(collateFlag) collateFiles(run,isData,mcType);
-				filein = TFile::Open("rootFiles/mcFiles/JpsiLambda/run2/jpsilambda.root");
-				treein_gen = (TTree*)filein->Get("MCTuple/MCDecayTree");
-				treein = (TTree*)filein->Get("Lb2JpsiLTree/MyTuple");
-				fileout = new TFile("rootFiles/mcFiles/JpsiLambda/run2/jpsilambda_triggered.root","RECREATE");
+				fileIn = TFile::Open("rootFiles/mcFiles/JpsiLambda/run2/jpsilambda.root");
+				treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
+				treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
+				fileOut = new TFile("rootFiles/mcFiles/JpsiLambda/run2/jpsilambda_triggered.root","RECREATE");
 			}
 		}
 		if(mcType == 2)//Jpsi Sigma
@@ -108,24 +109,24 @@ void trigger(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0)
 			if(run == 1)
 			{
 				if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiSigma/run1/trigger_log.txt");
-				genfile.open("logs/mc/JpsiSigma/run1/gen_log.txt");
+				genFile.open("logs/mc/JpsiSigma/run1/gen_log.txt");
 				cout<<"PROCESSING MC for Run 1 JpsiSigma"<<endl;
 				if(collateFlag) collateFiles(run,isData,mcType);
-				filein = TFile::Open("rootFiles/mcFiles/JpsiSigma/run1/jpsisigma.root");
-				treein_gen = (TTree*)filein->Get("MCTuple/MCDecayTree");
-				treein = (TTree*)filein->Get("Lb2JpsiLTree/MyTuple");
-				fileout = new TFile("rootFiles/mcFiles/JpsiSigma/run1/jpsisigma_triggered.root","RECREATE");
+				fileIn = TFile::Open("rootFiles/mcFiles/JpsiSigma/run1/jpsisigma.root");
+				treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
+				treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
+				fileOut = new TFile("rootFiles/mcFiles/JpsiSigma/run1/jpsisigma_triggered.root","RECREATE");
 			}
 			if(run == 2)
 			{
 				if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiSigma/run2/trigger_log.txt");
-				genfile.open("logs/mc/JpsiSigma/run2/gen_log.txt");
+				genFile.open("logs/mc/JpsiSigma/run2/gen_log.txt");
 				cout<<"PROCESSING MC for Run 2 JpsiSigma"<<endl;
 				if(collateFlag) collateFiles(run,isData,mcType);
-				filein = TFile::Open("rootFiles/mcFiles/JpsiSigma/run2/jpsisigma.root");
-				treein_gen = (TTree*)filein->Get("MCTuple/MCDecayTree");
-				treein = (TTree*)filein->Get("Lb2JpsiLTree/MyTuple");
-				fileout = new TFile("rootFiles/mcFiles/JpsiSigma/run2/jpsisigma_triggered.root","RECREATE");
+				fileIn = TFile::Open("rootFiles/mcFiles/JpsiSigma/run2/jpsisigma.root");
+				treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
+				treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
+				fileOut = new TFile("rootFiles/mcFiles/JpsiSigma/run2/jpsisigma_triggered.root","RECREATE");
 			}
 		}
 		if(mcType == 3)//Jpsi Xi
@@ -133,69 +134,72 @@ void trigger(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0)
 			if(run == 1)
 			{
 				if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiXi/run1/trigger_log.txt");
-				genfile.open("logs/mc/JpsiXi/run1/gen_log.txt");
+				genFile.open("logs/mc/JpsiXi/run1/gen_log.txt");
 				cout<<"PROCESSING MC for Run 1 JpsiXi"<<endl;
 				if(collateFlag) collateFiles(run,isData,mcType);
-				filein = TFile::Open("rootFiles/mcFiles/JpsiXi/run1/jpsixi.root");
-				treein_gen = (TTree*)filein->Get("MCTuple/MCDecayTree");
-				treein = (TTree*)filein->Get("Lb2JpsiLTree/MyTuple");
-				fileout = new TFile("rootFiles/mcFiles/JpsiXi/run1/jpsixi_triggered.root","RECREATE");
+				fileIn = TFile::Open("rootFiles/mcFiles/JpsiXi/run1/jpsixi.root");
+				treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
+				treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
+				fileOut = new TFile("rootFiles/mcFiles/JpsiXi/run1/jpsixi_triggered.root","RECREATE");
 			}
 			if(run == 2)
 			{
 				if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiXi/run2/trigger_log.txt");
-				genfile.open("logs/mc/JpsiXi/run2/gen_log.txt");
+				genFile.open("logs/mc/JpsiXi/run2/gen_log.txt");
 				cout<<"PROCESSING MC for Run 2 JpsiXi"<<endl;
 				if(collateFlag) collateFiles(run,isData,mcType);
-				filein = TFile::Open("rootFiles/mcFiles/JpsiXi/run2/jpsixi.root");
-				treein_gen = (TTree*)filein->Get("MCTuple/MCDecayTree");
-				treein = (TTree*)filein->Get("Lb2JpsiLTree/MyTuple");
-				fileout = new TFile("rootFiles/mcFiles/JpsiXi/run2/jpsixi_triggered.root","RECREATE");
+				fileIn = TFile::Open("rootFiles/mcFiles/JpsiXi/run2/jpsixi.root");
+				treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
+				treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
+				fileOut = new TFile("rootFiles/mcFiles/JpsiXi/run2/jpsixi_triggered.root","RECREATE");
 			}
 		}
-		entries_gen = treein_gen->GetEntries();
-		genfile<<entries_gen<<endl;
-		genfile.close();
-		entries_init = treein->GetEntries();
-		mytree = treein;
-	}
+		entries_gen = treeIn_gen->GetEntries();
+		genFile<<entries_gen<<endl;
+		genFile.close();
+		entries_init = treeIn->GetEntries();
+		myTree = treeIn;
 
-	cout<<mytree->GetEntries()<<endl;
-	treeout = mytree->CloneTree(0);
+		cout<<"******************************************"<<endl;
+		cout<<"Input file = "<<fileIn->GetName()<<endl;
+	}//end MC block
 
+	cout<<"Output file = "<<fileOut->GetName()<<endl;
+	cout<<"******************************************"<<endl;
+
+	entries_init = myTree->GetEntries();
 	cout<<"Incoming entries = "<<entries_init<<endl;
 
-	mytree->SetBranchAddress("Lb_Hlt1DiMuonHighMassDecision_TOS",&hlt1DiMuonHighMass);
-	mytree->SetBranchAddress("Lb_Hlt1TrackMuonDecision_TOS",&hlt1TrackMuon);
-	mytree->SetBranchAddress("Lb_Hlt1TrackAllL0Decision_TOS",&hlt1TrackAllL0);
-	mytree->SetBranchAddress("Lb_Hlt2DiMuonDetachedJPsiDecision_TOS",&hlt2DiMuonDetached);
+	treeOut = myTree->CloneTree(0);
 
-	triggerCut = (char*)"(Lb_Hlt1DiMuonHighMassDecision_TOS==1||Lb_Hlt1TrackMuonDecision_TOS==1||Lb_Hlt1TrackAllL0Decision_TOS==1)&&(Lb_Hlt2DiMuonDetachedJPsiDecision_TOS==1)";
+	myTree->SetBranchAddress("Lb_Hlt1DiMuonHighMassDecision_TOS",&hlt1DiMuonHighMass);
+	myTree->SetBranchAddress("Lb_Hlt1TrackMuonDecision_TOS",&hlt1TrackMuon);
+	myTree->SetBranchAddress("Lb_Hlt1TrackAllL0Decision_TOS",&hlt1TrackAllL0);
+	myTree->SetBranchAddress("Lb_Hlt2DiMuonDetachedJPsiDecision_TOS",&hlt2DiMuonDetached);
 
 	cout<<"I am making the following trigger cuts. Sit tight"<<endl;
 	cout<<triggerCut<<endl;
 
 	for(Int_t i = 0; i < entries_init; i++)
 	{
-		//if(i==100000) break;//TESTING ONLY
 		if(i%100000 == 0)
 		{
 			cout<<i<<endl;
 		}
-		mytree->GetEntry(i);
+		myTree->GetEntry(i);
 		if(hlt2DiMuonDetached)
 		{
 			if(hlt1DiMuonHighMass||hlt1TrackMuon||hlt1TrackAllL0)
 			{
-				treeout->Fill();
+				treeOut->Fill();
 			}
 		}
 	}
 
-	entries_final = treeout->GetEntries();
+	entries_final = treeOut->GetEntries();
 	cout<<"Outgoing entries = "<<entries_final<<endl;
 
-	if(isData == 0)
+	if(!isData)
 	{
 		if(entries_init != 0)
 		{
@@ -216,9 +220,9 @@ void trigger(Int_t run = 1, Int_t isData = 1, Int_t mcType = 0)
 		cout<<"******************************************"<<endl;
 	}
 
-	fileout->cd();
-	treeout->Write();
-	fileout->Close();
+	fileOut->cd();
+	treeOut->Write();
+	fileOut->Close();
 
 	if(logFlag) gROOT->ProcessLine(".>");
 	//if(logFlag) gSystem->Exec("cat trigger_log.txt");
