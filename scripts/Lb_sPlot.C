@@ -34,7 +34,7 @@ using namespace RooStats;
 using namespace std;
 
 // see below for implementation
-void AddModel(RooWorkspace*);
+void AddModel(RooWorkspace*, Int_t, Int_t);
 void AddData(RooWorkspace*,Int_t,const char*, TString, TTree*);
 void DoSPlot(RooWorkspace*,Int_t,const char*, TString, TString, TTree*);
 void MakePlots(RooWorkspace*);
@@ -52,6 +52,8 @@ void Lb_sPlot(Int_t run = 1, Int_t trackType = 3)
 	TString inFileName = "", outFileName = "", trainFileName = "";
 	TFile *fileIn = nullptr, *fileOut = nullptr;
 	TTree *treeIn = nullptr, *treeOut = nullptr;
+	Int_t entries_init = 0, lowRange = 5200, highRange = 6000;
+	Double_t Lb_DTF_M_JpsiLConstr = 0.0;
 
 	if(logFlag)
 	{
@@ -78,26 +80,39 @@ void Lb_sPlot(Int_t run = 1, Int_t trackType = 3)
 
 	fileIn  = TFile::Open(inFileName,"READ");
 	treeIn  = (TTree*)fileIn->Get("MyTuple");
+	entries_init = treeIn->GetEntries();
 
 	fileOut = TFile::Open(outFileName,"RECREATE");
 	treeOut = (TTree*)treeIn->CloneTree(0);
 
-	treeIn->SetBranchStatus("*",0);
+//	treeIn->SetBranchStatus("*",0);
 	treeIn->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-	cout<<"Incoming Entries = "<<treeIn->GetEntries()<<endl;
+	treeIn->SetBranchAddress("Lb_DTF_M_JpsiLConstr",&Lb_DTF_M_JpsiLConstr);
+	cout<<"Incoming Entries = "<<entries_init<<endl;
 
 	cout<<"******************************************"<<endl;
-	cout<<"Input file = "<<inFileName<<endl;
-	cout<<"sWeighted Output file = "<<outFileName<<endl;
+	cout<<"Input file = "<<fileIn->GetName()<<endl;
+	cout<<"sWeighted Output file = "<<fileOut->GetName()<<endl;
 	cout<<"Training Output file = "<<trainFileName<<endl;
 	cout<<"******************************************"<<endl;
+
+	cout<<"Making mass cut on "<<entries_init<<" entries"<<endl;
+	for (Int_t i = 0; i < entries_init; i++)
+	{
+		if(i%50000 == 0) cout<<i<<endl;
+		treeIn->GetEntry(i);
+		if(Lb_DTF_M_JpsiLConstr > lowRange && Lb_DTF_M_JpsiLConstr < highRange)
+		{
+			treeOut->Fill();
+		}
+	}
 
 	// Create a new workspace to manage the project.
 	RooWorkspace* wSpace = new RooWorkspace("myWS");
 
 	// add the signal and background models to the workspace.
 	// Inside this function you will find a discription our model.
-	AddModel(wSpace);
+	AddModel(wSpace, lowRange, highRange);
 
 	// add some toy data to the workspace
 	AddData(wSpace, run, type, inFileName, treeIn);
@@ -124,16 +139,13 @@ void Lb_sPlot(Int_t run = 1, Int_t trackType = 3)
 	if(logFlag) gROOT->ProcessLine(".>");
 }
 
-void AddModel(RooWorkspace* ws = nullptr)
+void AddModel(RooWorkspace* ws = nullptr, Int_t lowRange = 5200, Int_t highRange = 6000)
 {
 	cout<<"Starting AddModel()"<<endl;
 	// Make models for signal and background
 
-	// set range of observable
-	Double_t lowRange = 5200.0, highRange = 6000.0;//highRange changed from 6800
-
 	// make a RooRealVar for the observables
-	RooRealVar Lb_DTF_M_JpsiLConstr("Lb_DTF_M_JpsiLConstr", "M_{inv}", lowRange, highRange,"MeV");//discriminating variable
+	RooRealVar Lb_DTF_M_JpsiLConstr("Lb_DTF_M_JpsiLConstr", "M_{J/#psi#Lambda}", lowRange, highRange,"MeV");//discriminating variable
 
 	Int_t nbins = (Int_t)(highRange-lowRange)/4;
 	Lb_DTF_M_JpsiLConstr.setBins(nbins);
@@ -182,7 +194,8 @@ void AddData(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	cout<<"Starting AddData()"<<endl;
 
 	// get what we need out of the workspace to make toy data
-
+	treeIn->SetBranchStatus("*",0);
+	treeIn->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 	RooRealVar Lb_DTF_M_JpsiLConstr = *(ws->var("Lb_DTF_M_JpsiLConstr"));
 
 	//const char* cuts = "";
@@ -209,7 +222,7 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	cout << "Calculating sWeights" << endl;
 
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
-	cout<<"WD = "<<gSystem->pwd()<<endl;
+	//cout<<"WD = "<<gSystem->pwd()<<endl;
 
 	// get what we need out of the workspace to do the fit
 	RooAbsPdf *model                 = ws->pdf("model");
@@ -407,6 +420,7 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 
 	for(Int_t i = 0; i < dsentries; i++)
 	{
+
 		// B_MASS = (data->get(i))->getRealValue("Lb_DTF_M_JpsiLConstr");
 		SIGW = (data->get(i))->getRealValue("sigYield_sw");
 		BKGW = (data->get(i))->getRealValue("bkgYield_sw");
@@ -414,7 +428,7 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 		// bMass->Fill();
 		sigW->Fill();
 		bkgW->Fill();
-		treeOut->Fill();
+		//treeOut->Fill();
 	}
 
 	treeOut->SetBranchStatus("*",0);
@@ -438,7 +452,7 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	treeOut_training = treeOut->CopyTree("");
 
 	treeOut_training->SetAlias("PT","Added_H_PT");
-	treeOut_training->SetAlias("MINIPCHI2","Added_H_MINIPCHI2");
+	treeOut_training->SetAlias("MINIPCHI2","psi_1S_H_MINIPCHI2");
 	treeOut_training->SetAlias("VCHI2DOF","psi_1S_H_VERTEXCHI2_NEW");
 	treeOut_training->SetAlias("IPCHI2","psi_1S_H_IPCHI2_NEW");
 	treeOut_training->SetAlias("IP","psi_1S_H_IP_NEW");
