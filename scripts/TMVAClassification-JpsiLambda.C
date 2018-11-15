@@ -46,6 +46,7 @@
 // needs to be included when makecint runs (ACLIC)
 #include "TMVA/Factory.h"
 #include "TMVA/Tools.h"
+#include "TMVA/DataLoader.h"
 #endif
 
 void TMVAClassification_JpsiLambda(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
@@ -58,7 +59,8 @@ void TMVAClassification_JpsiLambda(Int_t run = 1,Int_t trackType = 3, TString ve
 	Bool_t logFlag = false;
 	const char *logFileName = "", *type = "";
 	TString outfileName = "";
-
+	TMVA::DataLoader *dataloader = NULL;
+	TMVA::Factory *factory = NULL;
 	logFileName = (trackType == 3) ? (TString::Format("finalBDTTraining_LL_%s_log.txt",version.Data())) : (TString::Format("finalBDTTraining_DD_%s_log.txt",version.Data()));
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
@@ -91,7 +93,7 @@ void TMVAClassification_JpsiLambda(Int_t run = 1,Int_t trackType = 3, TString ve
 
 	// Create a ROOT output file where TMVA will store ntuples, histograms, etc.
 
-	TMVA::Factory *factory;
+
 	outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVA-JpsiLambda%s_data_%s.root",run,type,version.Data());
 
 	TFile* outputFile = TFile::Open( outfileName, "RECREATE" );
@@ -99,41 +101,43 @@ void TMVAClassification_JpsiLambda(Int_t run = 1,Int_t trackType = 3, TString ve
 	factory = new TMVA::Factory( TString::Format("TMVAClassification-JpsiLambda%s_data_%s",type,version.Data()), outputFile,
 	                             "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
 
-	factory->AddVariable( "log_dtfchi2 := log10(Lb_ConsLb_chi2)", 'F' );
-	factory->AddVariable( "log_lbminipchi2 := log10(Lb_MINIPCHI2)", 'F' );
-	factory->AddVariable( "logacos_lbdira := log10(acos(Lb_DIRA_OWNPV))", 'F' );
-	factory->AddVariable( "log_lbfd_ownpv := log10(Lb_FD_OWNPV)", 'F' );
-	factory->AddVariable( "log_dtfctaul := log10(Lb_DTF_CTAU_L)", 'F' );
-	factory->AddVariable( "Lb_DTF_CTAUS_L", 'F' );
+	dataloader = new TMVA::DataLoader("dataset");
 
-	factory->AddVariable( "log_jpsiminipchi2 := log10(Jpsi_MINIPCHI2)", 'F' );
-	factory->AddVariable( "log_jpsimass := log10(Jpsi_M)", 'F' );
-	factory->AddVariable( "Jpsi_CosTheta", 'F' );
-	factory->AddVariable( "Jpsi_PT", 'F' );
+	dataloader->AddVariable( "log_dtfchi2 := log10(Lb_ConsLb_chi2)", 'F' );
+	dataloader->AddVariable( "log_lbminipchi2 := log10(Lb_MINIPCHI2)", 'F' );
+	dataloader->AddVariable( "logacos_lbdira := log10(acos(Lb_DIRA_OWNPV))", 'F' );
+	dataloader->AddVariable( "log_lbfd_ownpv := log10(Lb_FD_OWNPV)", 'F' );
+	dataloader->AddVariable( "log_dtfctaul := log10(Lb_DTF_CTAU_L)", 'F' );
+	dataloader->AddVariable( "Lb_DTF_CTAUS_L", 'F' );
 
-	factory->AddVariable( "log_lfdchi2 := log10(L_FDCHI2_ORIVX)", 'F' );
-	factory->AddVariable( "logacos_ldira_orivx := log10(acos(L_DIRA_ORIVX))", 'F' );
-	factory->AddVariable( "log_lfd_orivx := log10(L_FD_ORIVX)", 'F' );
-	factory->AddVariable( "logacos_ldira_ownpv := log10(acos(L_DIRA_OWNPV))", 'F' );
-	factory->AddVariable( "L_dm", 'F' );
-	factory->AddVariable( "log_lminipchi2 := log10(L_MINIPCHI2)", 'F' );
-	factory->AddVariable( "L_PT", 'F' );
-	factory->AddVariable( "L_ENDVERTEX_CHI2", 'F' );
-	factory->AddVariable( "L_CosTheta", 'F' );
+	dataloader->AddVariable( "log_jpsiminipchi2 := log10(Jpsi_MINIPCHI2)", 'F' );
+	dataloader->AddVariable( "log_jpsimass := log10(Jpsi_M)", 'F' );
+	dataloader->AddVariable( "Jpsi_CosTheta", 'F' );
+	dataloader->AddVariable( "Jpsi_PT", 'F' );
 
-	factory->AddVariable( "p_PIDp", 'F' );
-	factory->AddVariable( "log_pminipchi2 := log10(p_MINIPCHI2)", 'F' );
-	factory->AddVariable( "p_TRACK_GhostProb", 'F' );
-	factory->AddVariable( "log_p_PT := log10(p_PT)", 'F' );
-	factory->AddVariable( "p_ProbNNp", 'F' );
+	dataloader->AddVariable( "log_lfdchi2 := log10(L_FDCHI2_ORIVX)", 'F' );
+	dataloader->AddVariable( "logacos_ldira_orivx := log10(acos(L_DIRA_ORIVX))", 'F' );
+	dataloader->AddVariable( "log_lfd_orivx := log10(L_FD_ORIVX)", 'F' );
+	dataloader->AddVariable( "logacos_ldira_ownpv := log10(acos(L_DIRA_OWNPV))", 'F' );
+	dataloader->AddVariable( "L_dm", 'F' );
+	dataloader->AddVariable( "log_lminipchi2 := log10(L_MINIPCHI2)", 'F' );
+	dataloader->AddVariable( "L_PT", 'F' );
+	dataloader->AddVariable( "L_ENDVERTEX_CHI2", 'F' );
+	dataloader->AddVariable( "L_CosTheta", 'F' );
 
-	factory->AddVariable( "pi_TRACK_GhostProb", 'F' );
-	factory->AddVariable( "pi_PIDK", 'F');
-	factory->AddVariable( "log_piminipchi2 := log10(pi_MINIPCHI2)", 'F');
-	factory->AddVariable( "log_pi_PT := log10(pi_PT)", 'F' );
-	factory->AddVariable( "pi_ProbNNpi", 'F' );
+	dataloader->AddVariable( "p_PIDp", 'F' );
+	dataloader->AddVariable( "log_pminipchi2 := log10(p_MINIPCHI2)", 'F' );
+	dataloader->AddVariable( "p_TRACK_GhostProb", 'F' );
+	dataloader->AddVariable( "log_p_PT := log10(p_PT)", 'F' );
+	dataloader->AddVariable( "p_ProbNNp", 'F' );
 
-	factory->AddVariable( TString::Format("BDTkMin_%s",version.Data()), 'F' );
+	dataloader->AddVariable( "pi_TRACK_GhostProb", 'F' );
+	dataloader->AddVariable( "pi_PIDK", 'F');
+	dataloader->AddVariable( "log_piminipchi2 := log10(pi_MINIPCHI2)", 'F');
+	dataloader->AddVariable( "log_pi_PT := log10(pi_PT)", 'F' );
+	dataloader->AddVariable( "pi_ProbNNpi", 'F' );
+
+	dataloader->AddVariable( TString::Format("BDTkMin_%s",version.Data()), 'F' );
 
 	TFile *input(0);//Signal and Background training files
 	TTree *treeIn(0);
@@ -191,28 +195,28 @@ void TMVAClassification_JpsiLambda(Int_t run = 1,Int_t trackType = 3, TString ve
 	signalCut = "Lb_MINIPCHI2 < 5000 && Jpsi_MINIPCHI2 < 5000 && pi_PIDK < 5 && p_PIDp > 5 && pi_MINIPCHI2 < 5000 && L_MINIPCHI2 < 10000";//Maybe add Lbmass < 5700 here?
 	bkgCut    = "Lb_MINIPCHI2 < 5000 && Jpsi_MINIPCHI2 < 5000 && pi_PIDK < 5 && p_PIDp > 5 && pi_MINIPCHI2 < 5000 && L_MINIPCHI2 < 10000 && Lb_DTF_M_JpsiLConstr > 5700 && Lb_DTF_M_JpsiLConstr < 7000";
 
-	factory->SetInputTrees(treeIn, signalCut, bkgCut);
+	dataloader->SetInputTrees(treeIn, signalCut, bkgCut);
 
 	// global event weights per tree (see below for setting event-wise weights)
 	// Double_t signalWeight     = 1.0;
 	// Double_t backgroundWeight = 1.0;
 
 	// You can add an arbitrary number of signal or background trees
-	// factory->AddSignalTree    ( signal,     signalWeight     );
-	// factory->AddBackgroundTree( background, backgroundWeight );
+	// dataloader->AddSignalTree    ( signal,     signalWeight     );
+	// dataloader->AddBackgroundTree( background, backgroundWeight );
 
-	factory->SetSignalWeightExpression("SW");
-	factory->SetBackgroundWeightExpression("BW");
+	dataloader->SetSignalWeightExpression("SW");
+	dataloader->SetBackgroundWeightExpression("BW");
 
 	// Apply additional cuts on the signal and background samples (can be different)
 	TCut mycuts = "";
 	TCut mycutb = "";
 
-	factory->PrepareTrainingAndTestTree( mycuts, mycutb, "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V" );
+	dataloader->PrepareTrainingAndTestTree( mycuts, mycutb, "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V" );
 
-	factory->BookMethod( TMVA::Types::kBDT, "BDTconf1",
+	factory->BookMethod( dataloader, TMVA::Types::kBDT, "BDTconf1",
 	                     "!H:!V:NTrees=850:MinNodeSize=1.25%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
-	factory->BookMethod( TMVA::Types::kBDT, "BDTconf5",
+	factory->BookMethod( dataloader, TMVA::Types::kBDT, "BDTconf5",
 	                     "!H:!V:NTrees=850:MinNodeSize=0.625%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
 
 	/*factory->BookMethod( TMVA::Types::kBDT, "BDTconf6",

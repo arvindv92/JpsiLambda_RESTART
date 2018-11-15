@@ -18,14 +18,14 @@ void collateFiles(Int_t run, Bool_t isData, Int_t mcType, TChain** h1, TChain** 
 
 	if(isData)
 	{
-		if(loose)
-		{
-			gSystem->cd("/data1/avenkate/JpsiLambda/massdump/data/LooseLL");
-		}
-		else
-		{
-			gSystem->cd("/data1/avenkate/JpsiLambda/massdump/data");
-		}
+		// if(loose)
+		// {
+		//      gSystem->cd("/data1/avenkate/JpsiLambda/massdump/data/LooseLL");
+		// }
+		// else
+		// {
+		//      gSystem->cd("/data1/avenkate/JpsiLambda/massdump/data");
+		// }
 		cout<<"WD = "<<gSystem->pwd()<<endl;
 
 		if(run == 1)
@@ -33,7 +33,14 @@ void collateFiles(Int_t run, Bool_t isData, Int_t mcType, TChain** h1, TChain** 
 			if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/data/JpsiLambda/run1/collate_log.txt");
 			cout<<"Adding Run 1 Data ROOT files to TChain. Sit tight"<<endl;
 
-			gSystem->Exec("ls 2011_Mag*/*/jpsilambda.root 2012_Mag*/*/jpsilambda.root > run1Files.txt");
+			if(loose)
+			{
+				gSystem->Exec("ls /data1/avenkate/JpsiLambda/massdump/data/LooseLL/2011_Mag*/*/jpsilambda.root /data1/avenkate/JpsiLambda/massdump/data/LooseLL/2012_Mag*/*/jpsilambda.root > run1Files.txt");
+			}
+			else
+			{
+				gSystem->Exec("ls /data1/avenkate/JpsiLambda/massdump/data/2011_Mag*/*/jpsilambda.root /data1/avenkate/JpsiLambda/massdump/data/2012_Mag*/*/jpsilambda.root > run1Files.txt");
+			}
 			TFileCollection fc_run1("run1","","run1Files.txt");
 			TCollection *run1_list = (TCollection*)fc_run1.GetList();
 			if(testing)
@@ -52,7 +59,14 @@ void collateFiles(Int_t run, Bool_t isData, Int_t mcType, TChain** h1, TChain** 
 			if(logFlag) gROOT->ProcessLine(".> /data1/avenkate/JpsiLambda_RESTART/logs/data/JpsiLambda/run2/collate_log.txt");
 			cout<<"Adding Run 2 Data ROOT files to TChain. Sit tight"<<endl;
 
-			gSystem->Exec("ls 2015_Mag*/*/jpsilambda.root 2016_Mag*/*/jpsilambda.root 2017_Mag*/*/jpsilambda.root 2018_Mag*/*/jpsilambda.root > run2Files.txt");
+			if(loose)
+			{
+				gSystem->Exec("ls /data1/avenkate/JpsiLambda/massdump/data/LooseLL/2015_Mag*/*/jpsilambda.root /data1/avenkate/JpsiLambda/massdump/data/LooseLL/2016_Mag*/*/jpsilambda.root /data1/avenkate/JpsiLambda/massdump/data/LooseLL/2017_Mag*/*/jpsilambda.root /data1/avenkate/JpsiLambda/massdump/data/LooseLL/2018_Mag*/*/jpsilambda.root > run2Files.txt");
+			}
+			else
+			{
+				gSystem->Exec("ls /data1/avenkate/JpsiLambda/massdump/data/2015_Mag*/*/jpsilambda.root /data1/avenkate/JpsiLambda/massdump/data/2016_Mag*/*/jpsilambda.root	/data1/avenkate/JpsiLambda/massdump/data/2017_Mag*/*/jpsilambda.root /data1/avenkate/JpsiLambda/massdump/data/2018_Mag*/*/jpsilambda.root > run2Files.txt");
+			}
 			TFileCollection fc_run2("run2","","run2Files.txt");
 			TCollection *run2_list = (TCollection*)fc_run2.GetList();
 			if(testing)

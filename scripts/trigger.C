@@ -1,5 +1,6 @@
 /********************************
    Author : Aravindhan V.
+         The purpose of this script is to apply trigger cuts on data/MC coming out of DaVinci.
  *********************************/
 #include "TFile.h"
 #include "TChain.h"
@@ -24,16 +25,16 @@ void trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 	gROOT->ProcessLine(".L collateFiles.C++");
 
 	Bool_t logFlag = false; //This should be 0 only while testing.
-	Bool_t collateFlag = 1; //If you don't want to re-collate MC, set this to zero. For example, if only the trigger condition changes.
-	TFile *fileOut = NULL;
-	TTree *treeOut = NULL, *myTree = NULL;
+	Bool_t collateFlag = true; //If you don't want to re-collate MC, set this to zero. For example, if only the trigger condition changes.
+	TFile *fileOut = nullptr;
+	TTree *treeOut = nullptr, *myTree = nullptr;
 	const char *triggerCut = "(Lb_Hlt1DiMuonHighMassDecision_TOS==1||Lb_Hlt1TrackMuonDecision_TOS==1||Lb_Hlt1TrackAllL0Decision_TOS==1)&&(Lb_Hlt2DiMuonDetachedJPsiDecision_TOS==1)";
 
 	Int_t entries_init = 0, entries_final = 0, entries_gen = 0;
 	Bool_t hlt1DiMuonHighMass = 0,hlt1TrackMuon = 0,hlt1TrackAllL0 = 0,hlt2DiMuonDetached = 0;
-	Float_t eff_excl = 0.0, eff_excl_err = 0.0,eff_incl = 0.0,eff_incl_err = 0.0;
+	Float_t eff_excl = 0., eff_excl_err = 0.,eff_incl = 0.,eff_incl_err = 0.;
 
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
+	//gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
 
 	if(isData)
 	{
@@ -46,14 +47,14 @@ void trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 		{
 			if(logFlag) gROOT->ProcessLine(".> logs/data/JpsiLambda/run1/trigger_log.txt");
 
-			collateFiles(run,isData,mcType,&h1,&h2,testing,loose);//collateFiles will cd to the massdump folder and then back to JpsiLambda_RESTART
+			collateFiles(run, isData, mcType, &h1, &h2, testing, loose);//collateFiles will cd to the massdump folder and then back to JpsiLambda_RESTART
 			fileOut = new TFile("rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_triggered.root","RECREATE");
 		}
 		else if(run == 2)
 		{
 			if(logFlag) gROOT->ProcessLine(".> logs/data/JpsiLambda/run2/trigger_log.txt");
 
-			collateFiles(run,isData,mcType,&h1,&h2,testing,loose);
+			collateFiles(run, isData, mcType, &h1, &h2, testing, loose);
 			fileOut = new TFile("rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_triggered.root","RECREATE");
 		}
 
@@ -75,8 +76,8 @@ void trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 
 	else //MC
 	{
-		TFile *fileIn(0);
-		TTree *treeIn(0), *treeIn_gen(0);
+		TFile *fileIn = nullptr;
+		TTree *treeIn = nullptr, *treeIn_gen = nullptr;
 		ofstream genFile;//The number of generated MC entries in every MC case will be written out to this file, so that it can be accessed for calculating exclusive efficiencies later
 
 		if(mcType == 1)//Jpsi Lambda
@@ -170,7 +171,7 @@ void trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 	entries_init = myTree->GetEntries();
 	cout<<"Incoming entries = "<<entries_init<<endl;
 
-	treeOut = myTree->CloneTree(0);
+	treeOut = (TTree*)myTree->CloneTree(0);
 
 	myTree->SetBranchAddress("Lb_Hlt1DiMuonHighMassDecision_TOS",&hlt1DiMuonHighMass);
 	myTree->SetBranchAddress("Lb_Hlt1TrackMuonDecision_TOS",&hlt1TrackMuon);

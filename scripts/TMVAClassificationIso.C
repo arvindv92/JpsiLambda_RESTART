@@ -33,10 +33,10 @@ void TMVAClassificationIso(Int_t run = 1,Int_t trackType = 3, TString version = 
 	TString outfileName = "", fname_sig = "", fname_bkg = "";
 	TCut mycuts = "", mycutb = "";
 	const char *logFileName = "", *type = "";
-	TFile *outputFile = NULL, *input_sig = NULL, *input_bkg = NULL;
-	TTree *sigTree = NULL,*bkgTree = NULL;
-	TMVA::Factory *factory = NULL;
-	TMVA::DataLoader *dataloader = NULL;
+	TFile *outputFile = nullptr, *input_sig = nullptr, *input_bkg = nullptr;
+	TTree *sigTree = nullptr,*bkgTree = nullptr;
+	TMVA::Factory *factory = nullptr;
+	TMVA::DataLoader *dataloader = nullptr;
 	TMVA::Tools::Instance(); // This loads the library
 
 	logFileName = (trackType == 3) ? (TString::Format("isolationTraining_LL_%s_log.txt",version.Data())) : (TString::Format("isolationTraining_DD_%s_log.txt",version.Data()));

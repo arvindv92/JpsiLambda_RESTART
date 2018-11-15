@@ -25,6 +25,7 @@
 #endif
 
 using namespace TMVA;
+using namespace std;
 
 void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t trackType = 3, const char* version = "v1", Int_t bdtConf = 1, Int_t flag = 1)
 /*
