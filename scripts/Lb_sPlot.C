@@ -82,7 +82,7 @@ void Lb_sPlot(Int_t run = 1, Int_t trackType = 3)
 	fileOut = TFile::Open(outFileName,"RECREATE");
 	treeOut = (TTree*)treeIn->CloneTree(0);
 
-	treeIn->SetBranchStatus("*",1);
+	treeIn->SetBranchStatus("*",0);
 	treeIn->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 	cout<<"Incoming Entries = "<<treeIn->GetEntries()<<endl;
 
