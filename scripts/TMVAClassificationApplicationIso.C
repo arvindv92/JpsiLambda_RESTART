@@ -15,16 +15,17 @@
 #include "TROOT.h"
 #include "TStopwatch.h"
 
-#include "TMVAGui.C"
+//#include "TMVAGui.C"
 
-#if not defined(__CINT__) || defined(__MAKECINT__)
+//#if not defined(__CINT__) || defined(__MAKECINT__)
 #include "TMVA/Tools.h"
 #include "TMVA/Reader.h"
 #include "TMVA/MethodCuts.h"
-#endif
+//#endif
 
 using namespace TMVA;
-/****MODIFIED****/
+using namespace std;
+
 void TMVAClassificationApplicationIso(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t trackType = 3, Int_t flag = 1, const char* version = "v1", Int_t isoConf = 1)
 /* run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = true for data, false for MC
@@ -34,9 +35,9 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Bool_t isData = true, Int_t
    version = "v0","v1", "v2" or "v3"
  */
 {
-	#ifdef __CINT__
-	gROOT->ProcessLine( ".O0" );         // turn off optimization in CINT
-	#endif
+	// #ifdef __CINT__
+	// gROOT->ProcessLine( ".O0" );         // turn off optimization in CINT
+	// #endif
 
 	Bool_t logFlag = false, genFlag = false; //logFlag should be 0 only while testing.
 	fstream genFile;
@@ -65,7 +66,7 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Bool_t isData = true, Int_t
 	{
 		switch(mcType)
 		{
-		case 1:                                  //JpsiLambda
+		case 1:  //JpsiLambda
 			if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/mc/JpsiLambda/run%d/%s",run,logFileName));
 			if(!gSystem->AccessPathName(TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run)))
 			{
@@ -127,8 +128,8 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Bool_t isData = true, Int_t
 	// This loads the library
 	TMVA::Tools::Instance();
 
-	std::cout << std::endl;
-	std::cout << "==> Start TMVAClassificationApplication" << std::endl;
+	cout << endl;
+	cout << "==> Start TMVAClassificationApplication" << endl;
 
 	TMVA::Reader *reader = new TMVA::Reader( "!Color:!Silent" );
 
@@ -155,7 +156,7 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Bool_t isData = true, Int_t
 		reader->AddVariable("FDCHI2",  &var[4] );
 	}
 
-	TString dir        = "weights/";
+	TString dir        = "dataset/weights/";
 	TString prefix     = TString::Format("TMVAClassification-isok%s_data_%s",type,version);
 	TString methodName = "BDT method";
 
@@ -163,7 +164,7 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Bool_t isData = true, Int_t
 	reader->BookMVA(methodName, weightfile);
 
 	// --- Event loop
-	std::cout << "--- Select signal sample" << std::endl;
+	cout << "--- Select signal sample" <<endl;
 
 	treeIn->SetBranchStatus("*",0);
 	treeIn->SetBranchStatus("psi_1S_H_MINIPCHI2",1);
@@ -214,12 +215,12 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Bool_t isData = true, Int_t
 	//      treeOut->Branch("FDCHI2",FDCHI2,"FDCHI2[ntracks]/F");
 	// }
 
-	std::cout << "--- Processing: " << entries_init << " events" << std::endl;
+	cout << "--- Processing: " << entries_init << " events" <<endl;
 	TStopwatch sw;
 	sw.Start();
 	for (Long64_t ievt = 0; ievt < entries_init; ievt++)
 	{
-		if (ievt%50000 == 0) std::cout << "--- ... Processing event: " << ievt << std::endl;
+		if (ievt%50000 == 0) cout << "--- ... Processing event: " << ievt << endl;
 
 		treeIn->GetEntry(ievt);
 		for(Int_t j=0; j<ntracks; j++)//Loop over all the added tracks in a given event
@@ -246,7 +247,7 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Bool_t isData = true, Int_t
 		treeOut->Fill();
 	}
 	sw.Stop();// Get elapsed time
-	std::cout << "--- End of event loop: ";
+	cout << "--- End of event loop: ";
 	sw.Print();
 	//treeOut->Print();
 
@@ -254,11 +255,11 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Bool_t isData = true, Int_t
 	treeOut->Write();
 	fileOut->Close();
 
-	std::cout << "--- Created root file: "<<fileOut->GetName()<<" containing the MVA output histograms" << std::endl;
+	cout<< "--- Created root file: "<<fileOut->GetName()<<" containing the MVA output histograms" <<endl;
 
 	delete reader;
 
-	std::cout << "==> TMVAClassificationApplication is done!" << endl << std::endl;
+	cout<< "==> TMVAClassificationApplication is done!" << endl <<endl;
 
 	if(logFlag) gROOT->ProcessLine(".>");
 }

@@ -28,13 +28,14 @@
 #include "TROOT.h"
 #include "TSystem.h"
 #include "TBranch.h"
+#include "TPaveLabel.h"
 // use this order for safety on library loading
 using namespace RooFit;
 using namespace RooStats;
 using namespace std;
 
 // see below for implementation
-void AddModel(RooWorkspace*, Int_t, Int_t);
+void AddModel(RooWorkspace*, Int_t, Int_t, Int_t);
 void AddData(RooWorkspace*,Int_t,const char*, TString, TTree*);
 void DoSPlot(RooWorkspace*,Int_t,const char*, TString, TString, TTree*);
 void MakePlots(RooWorkspace*);
@@ -52,7 +53,7 @@ void Lb_sPlot(Int_t run = 1, Int_t trackType = 3)
 	TString inFileName = "", outFileName = "", trainFileName = "";
 	TFile *fileIn = nullptr, *fileOut = nullptr;
 	TTree *treeIn = nullptr, *treeOut = nullptr;
-	Int_t entries_init = 0, lowRange = 5200, highRange = 6000;
+	Int_t entries_init = 0, entries_massWindow = 0, lowRange = 5200, highRange = 6000;
 	Double_t Lb_DTF_M_JpsiLConstr = 0.0;
 
 	if(logFlag)
@@ -60,7 +61,9 @@ void Lb_sPlot(Int_t run = 1, Int_t trackType = 3)
 		gROOT->ProcessLine((TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName)).Data());
 	}
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
+	cout<<"********************************"<<endl;
 	cout<<"WD = "<<gSystem->pwd()<<endl;
+	cout<<"********************************"<<endl;
 
 	if(trackType == 3)
 	{
@@ -81,6 +84,7 @@ void Lb_sPlot(Int_t run = 1, Int_t trackType = 3)
 	fileIn  = TFile::Open(inFileName,"READ");
 	treeIn  = (TTree*)fileIn->Get("MyTuple");
 	entries_init = treeIn->GetEntries();
+	entries_massWindow = treeIn->GetEntries(TString::Format("Lb_DTF_M_JpsiLConstr > %d && Lb_DTF_M_JpsiLConstr < %d",lowRange,highRange));
 
 	fileOut = TFile::Open(outFileName,"RECREATE");
 	treeOut = (TTree*)treeIn->CloneTree(0);
@@ -112,7 +116,7 @@ void Lb_sPlot(Int_t run = 1, Int_t trackType = 3)
 
 	// add the signal and background models to the workspace.
 	// Inside this function you will find a discription our model.
-	AddModel(wSpace, lowRange, highRange);
+	AddModel(wSpace, lowRange, highRange, entries_massWindow);
 
 	// add some toy data to the workspace
 	AddData(wSpace, run, type, inFileName, treeIn);
@@ -139,7 +143,7 @@ void Lb_sPlot(Int_t run = 1, Int_t trackType = 3)
 	if(logFlag) gROOT->ProcessLine(".>");
 }
 
-void AddModel(RooWorkspace* ws = nullptr, Int_t lowRange = 5200, Int_t highRange = 6000)
+void AddModel(RooWorkspace* ws = nullptr, Int_t lowRange = 5200, Int_t highRange = 6000, Int_t nEntries = 0)
 {
 	cout<<"Starting AddModel()"<<endl;
 	// Make models for signal and background
@@ -153,13 +157,13 @@ void AddModel(RooWorkspace* ws = nullptr, Int_t lowRange = 5200, Int_t highRange
 	// SIGNAL MODEL
 	cout << "Making signal model" << endl;
 	RooRealVar mean("mean","Gaussian Mean",5619.42,5618.0,5621.0);
-	RooRealVar sigma1("sigma1","Gaussian sigma1",7.5,2.0,20.0);
-	RooRealVar sigma2("sigma2","Gaussian sigma2",10.0,2.0,20.0);
+	RooRealVar sigma1("sigma1","Gaussian sigma1",5.0,1.0,30.0);
+	RooRealVar sigma2("sigma2","Gaussian sigma2",7.0,1.0,30.0);
 
 	RooGaussian sig1("sig1","Gaussian signal1",Lb_DTF_M_JpsiLConstr,mean,sigma1);
 	RooGaussian sig2("sig2","Gaussian signal2",Lb_DTF_M_JpsiLConstr,mean,sigma2);
 
-	RooRealVar frac1("frac1","Fraction of sig1 in signal",0.5,0.1,0.9);
+	RooRealVar frac1("frac1","Fraction of sig1 in signal",0.5,0.01,1.0);
 
 	RooAddPdf sig("sig","Gaussian signal",RooArgList(sig1,sig2),frac1);
 
@@ -174,7 +178,7 @@ void AddModel(RooWorkspace* ws = nullptr, Int_t lowRange = 5200, Int_t highRange
 	cout << "Making full model" << endl;
 
 	RooRealVar sigYield("sigYield","fitted yield for sig",5000,0, 15000);
-	RooRealVar bkgYield("bkgYield","fitted yield for bkg",100000,0, 1.1e+06);//adjust this based on nentries
+	RooRealVar bkgYield("bkgYield","fitted yield for bkg",(nEntries/2),0, nEntries);
 
 	RooAddPdf model("model","signal+background models", RooArgList(sig, bkg), RooArgList(sigYield,bkgYield));
 
@@ -221,9 +225,6 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	cout<<"Starting DoSPlot()"<<endl;
 	cout << "Calculating sWeights" << endl;
 
-	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
-	//cout<<"WD = "<<gSystem->pwd()<<endl;
-
 	// get what we need out of the workspace to do the fit
 	RooAbsPdf *model                 = ws->pdf("model");
 	RooAbsPdf *sig1                  = ws->pdf("sig1");
@@ -236,16 +237,13 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	RooRealVar *Lb_DTF_M_JpsiLConstr = ws->var("Lb_DTF_M_JpsiLConstr");
 
 	// fit the model to the data.
-	model->fitTo(*data, Extended(), Strategy(2));
-
-	//Should ideally be plotting here.
+	RooFitResult *r = model->fitTo(*data, Extended(), Strategy(2), Save(true));
 
 	cout<<"Starting MakePlots()"<<endl;
 
 	// make our canvas
 	TCanvas *fitCanvas = new TCanvas("sPlot","sPlot demo", 1200, 800);
 
-	///////////
 	TPad *pad1 = new TPad("pad1","pad1",0.0,0.3,1.0,1.0);
 	TPad *pad2 = new TPad("pad2","pad2",0.0,0.0,1.0,0.3);
 	pad1->SetBottomMargin(0);
@@ -260,7 +258,6 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 
 	gPad->SetTopMargin(0.06);
 	pad1->Update();
-	////////////
 
 	//plot Lb_DTF_M_JpsiLConstr for data with full model and individual componenets overlayed
 
@@ -271,7 +268,7 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	model->plotOn(frame,Components(*sig2),LineStyle(kDotted),LineColor(kMagenta));
 	model->plotOn(frame,Components(*sig),LineStyle(kDashed), LineColor(kRed));
 	model->plotOn(frame,Components(*bkg),LineStyle(kDashed),LineColor(kGreen));
-
+	model->paramOn(frame, Format("NEU"), Layout(0.65,0.85,0.9));
 	frame->SetTitle("Fit of model to discriminating variable");
 	frame->Draw();
 
@@ -284,6 +281,11 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	int floatpars = (floatpar->selectByAttrib("Constant",kFALSE))->getSize();
 	Double_t chi2 = frame->chiSquare("curvetot","Hist",floatpars);
 	cout<<"chi square2 = "<<chi2<<endl;
+	//
+	TPaveLabel *t1 = new TPaveLabel(0.1,0.8,0.3,0.88, Form("#chi^{2}/dof = %f", chi2),"NDC");
+	t1->Draw();
+	frame->addObject(t1);
+	pad1->Update();
 
 	// Pull distribution
 	RooPlot *framex2 = Lb_DTF_M_JpsiLConstr->frame();
@@ -293,13 +295,13 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	hpull->SetMarkerColor(kBlack);
 	framex2->SetTitle(0);
 	framex2->GetYaxis()->SetTitle("Pull");
-	framex2->GetYaxis()->SetTitleSize(0.15);
+	framex2->GetYaxis()->SetTitleSize(0.11);
 	framex2->GetYaxis()->SetLabelSize(0.15);
-	framex2->GetXaxis()->SetTitleSize(0.2);
+	framex2->GetXaxis()->SetTitleSize(0.15);
 	framex2->GetXaxis()->SetLabelSize(0.15);
 	framex2->GetYaxis()->CenterTitle();
-	framex2->GetYaxis()->SetTitleOffset(0.45);
-	framex2->GetXaxis()->SetTitleOffset(1.1);
+	framex2->GetYaxis()->SetTitleOffset(0.4);
+	framex2->GetXaxis()->SetTitleOffset(0.7);
 	framex2->GetYaxis()->SetNdivisions(505);
 	framex2->GetYaxis()->SetRangeUser(-8.8,8.8);
 	pad2->cd();
@@ -307,6 +309,7 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 
 	fitCanvas->cd();
 
+	fitCanvas->Update();
 	fitCanvas->SaveAs(TString::Format("plots/fit_run%d%s.pdf",run,type));
 
 	cout<<"Pull Mean Y = "<<hpull->GetMean(2)<<endl;
@@ -362,26 +365,21 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	ws->Print();
 
 	TCanvas *sWeightCanvas = new TCanvas();
-	cout<<"1"<<endl;
 	RooRealVar *sigYield_sw = ws->var("sigYield_sw");
-	cout<<"2"<<endl;
 	sigYield_sw->setRange(-1.0,1.5);
 	RooPlot* frame_sigsw = sigYield_sw->frame();
-	cout<<"3"<<endl;
 	frame_sigsw->SetTitle("Signal sweights");
-	cout<<"4"<<endl;
 	data->plotOn(frame_sigsw);
-	cout<<"5"<<endl;
 	frame_sigsw->Draw();
-	cout<<"6"<<endl;
+	sWeightCanvas->Update();
 	sWeightCanvas->SaveAs(TString::Format("plots/fit_run%d%s_sWeights.pdf",run,type));
-	cout<<"7"<<endl;
 
 	TCanvas *sWeightVsMass = new TCanvas();
 	RooPlot* frame_sigsw_x = Lb_DTF_M_JpsiLConstr->frame();
 	frame_sigsw_x->SetTitle("sWeights vs bmass");
 	data->plotOnXY(frame_sigsw_x,YVar(*sigYield_sw),MarkerColor(kBlue));
 	frame_sigsw_x->Draw();
+	sWeightVsMass->Update();
 	sWeightVsMass->SaveAs(TString::Format("plots/fit_run%d%s_sWeightsVsMass.pdf",run,type));
 
 	// create weightfed data set
@@ -405,6 +403,7 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	frame2_2->SetTitle("Lb DTF Mass Distribution (BW)");
 	frame2_2->Draw();
 
+	sWeightMass->Update();
 	sWeightMass->SaveAs(TString::Format("plots/fit_run%d%s_sWeightedMass.pdf",run,type));
 
 	Int_t dsentries = data->numEntries();
