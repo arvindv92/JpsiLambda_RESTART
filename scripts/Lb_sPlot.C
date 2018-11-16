@@ -89,7 +89,7 @@ void Lb_sPlot(Int_t run = 1, Int_t trackType = 3)
 	fileOut = TFile::Open(outFileName,"RECREATE");
 	treeOut = (TTree*)treeIn->CloneTree(0);
 
-//	treeIn->SetBranchStatus("*",0);
+	//	treeIn->SetBranchStatus("*",0);
 	treeIn->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 	treeIn->SetBranchAddress("Lb_DTF_M_JpsiLConstr",&Lb_DTF_M_JpsiLConstr);
 	cout<<"Incoming Entries = "<<entries_init<<endl;
@@ -130,13 +130,7 @@ void Lb_sPlot(Int_t run = 1, Int_t trackType = 3)
 
 	fileOut->cd();
 	treeOut->Write("",TObject::kOverwrite);
-	//fileOut->Write();
 	fileOut->Close();
-
-	// Make some plots showing the discriminating variable and
-	// the control variable after unfolding.
-
-	//MakePlots(wSpace);
 
 	// cleanup
 	delete wSpace;
@@ -156,9 +150,9 @@ void AddModel(RooWorkspace* ws = nullptr, Int_t lowRange = 5200, Int_t highRange
 
 	// SIGNAL MODEL
 	cout << "Making signal model" << endl;
-	RooRealVar mean("mean","Gaussian Mean",5619.42,5618.0,5621.0);
-	RooRealVar sigma1("sigma1","Gaussian sigma1",5.0,1.0,30.0);
-	RooRealVar sigma2("sigma2","Gaussian sigma2",7.0,1.0,30.0);
+	RooRealVar mean("mean","Gaussian Mean",5619.42,5619.0,5621.0);
+	RooRealVar sigma1("sigma1","Gaussian sigma1",7.0,5.0,20.0);
+	RooRealVar sigma2("sigma2","Gaussian sigma2",7.0,3.0,20.0);
 
 	RooGaussian sig1("sig1","Gaussian signal1",Lb_DTF_M_JpsiLConstr,mean,sigma1);
 	RooGaussian sig2("sig2","Gaussian signal2",Lb_DTF_M_JpsiLConstr,mean,sigma2);
@@ -168,22 +162,21 @@ void AddModel(RooWorkspace* ws = nullptr, Int_t lowRange = 5200, Int_t highRange
 	RooAddPdf sig("sig","Gaussian signal",RooArgList(sig1,sig2),frac1);
 
 	// BACKGROUND MODEL
-	cout << "make background model" << endl;
-	RooRealVar c0("c0","c0",-0.1,-1.0,1.0);
-	RooRealVar c1("c1","c1",0.1,-1.0,1.0);
+	cout << "Making background model" << endl;
+	// RooRealVar c0("c0","c0",-0.1,-1.0,1.0);
+	// RooRealVar c1("c1","c1",0.1,-1.0,1.0);
+	//
+	// RooChebychev bkg("bkg","bkg",Lb_DTF_M_JpsiLConstr,RooArgList(c0,c1));
 
-	RooChebychev bkg("bkg","bkg",Lb_DTF_M_JpsiLConstr,RooArgList(c0,c1));
+	RooRealVar tau("tau","tau",-0.0007,-0.01,-0.0000001);
+	RooExponential bkg("bkg","Exponential Bkg",Lb_DTF_M_JpsiLConstr,tau);
 
-	// COMBINED MODEL
-	cout << "Making full model" << endl;
+	// COMBINED MODEL	cout << "Making full model" << endl;
 
 	RooRealVar sigYield("sigYield","fitted yield for sig",5000,0, 15000);
 	RooRealVar bkgYield("bkgYield","fitted yield for bkg",(nEntries/2),0, nEntries);
 
 	RooAddPdf model("model","signal+background models", RooArgList(sig, bkg), RooArgList(sigYield,bkgYield));
-
-	// interesting for debugging and visualizing the model
-	//model.graphVizTree("fullModel.dot");
 
 	cout << "Importing model into workspace" << endl;
 
@@ -202,7 +195,6 @@ void AddData(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	treeIn->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 	RooRealVar Lb_DTF_M_JpsiLConstr = *(ws->var("Lb_DTF_M_JpsiLConstr"));
 
-	//const char* cuts = "";
 	//Import the data
 	cout<<"Importing data. This could take a while. Sit tight"<<endl;
 
@@ -237,7 +229,7 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	RooRealVar *Lb_DTF_M_JpsiLConstr = ws->var("Lb_DTF_M_JpsiLConstr");
 
 	// fit the model to the data.
-	RooFitResult *r = model->fitTo(*data, Extended(), Strategy(2), Save(true));
+	RooFitResult *r = model->fitTo(*data, Extended(), Strategy(2), Save(true)); //unbinned extended ML fit
 
 	cout<<"Starting MakePlots()"<<endl;
 
@@ -281,7 +273,7 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	int floatpars = (floatpar->selectByAttrib("Constant",kFALSE))->getSize();
 	Double_t chi2 = frame->chiSquare("curvetot","Hist",floatpars);
 	cout<<"chi square2 = "<<chi2<<endl;
-	//
+
 	TPaveLabel *t1 = new TPaveLabel(0.1,0.8,0.3,0.88, Form("#chi^{2}/dof = %f", chi2),"NDC");
 	t1->Draw();
 	frame->addObject(t1);
@@ -315,19 +307,31 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	cout<<"Pull Mean Y = "<<hpull->GetMean(2)<<endl;
 	cout<<"Pull RMS  Y = "<<hpull->GetRMS(2)<<endl;
 
+	cout<<"***************"<<endl;
+	r->Print("v");
+	cout<<"***************"<<endl;
+	cout<<"covQual = "<<r->covQual()<<endl;
+	cout<<"numStatusHistory = "<<r->numStatusHistory()<<endl;
+	for(UInt_t i=0; i<r->numStatusHistory(); i++)
+	{
+		cout<<r->statusCodeHistory(i)<<" "<<r->statusLabelHistory(i)<<endl;
+	}
+
 	// The sPlot technique requires that we fix the parameters
 	// of the model that are not yields after doing the fit.
 	RooRealVar *sigma1 = ws->var("sigma1");
 	RooRealVar *sigma2 = ws->var("sigma2");
 	RooRealVar *mean   = ws->var("mean");
-	RooRealVar *c0     = ws->var("c0");
-	RooRealVar *c1     = ws->var("c1");
+	// RooRealVar *c0     = ws->var("c0");
+	// RooRealVar *c1     = ws->var("c1");
+	RooRealVar *tau    = ws->var("tau");
 
 	mean->setConstant(kTRUE);
 	sigma1->setConstant(kTRUE);
 	sigma2->setConstant(kTRUE);
-	c0->setConstant(kTRUE);
-	c1->setConstant(kTRUE);
+	// c0->setConstant(kTRUE);
+	// c1->setConstant(kTRUE);
+	tau->setConstant(kTRUE);
 
 	RooMsgService::instance().setSilentMode(true);
 

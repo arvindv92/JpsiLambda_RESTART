@@ -13,14 +13,17 @@
 #include "TObjString.h"
 #include "TSystem.h"
 #include "TROOT.h"
-#include "TMVAGui.C"
+//#include "TMVAGui.C"
 
 #if not defined(__CINT__) || defined(__MAKECINT__)
 // needs to be included when makecint runs (ACLIC)
 #include "TMVA/Factory.h"
 #include "TMVA/Tools.h"
 #include "TMVA/DataLoader.h"
+#include "TMVA/TMVAGui.h"
 #endif
+
+using namespace std;
 
 void TMVAClassificationIso(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
 /*
@@ -41,7 +44,10 @@ void TMVAClassificationIso(Int_t run = 1,Int_t trackType = 3, TString version = 
 
 	logFileName = (trackType == 3) ? (TString::Format("isolationTraining_LL_%s_log.txt",version.Data())) : (TString::Format("isolationTraining_DD_%s_log.txt",version.Data()));
 
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	cout<<"*****************************"<<endl;
+	cout<<"WD = "<<gSystem->pwd()<<endl;
+	cout<<"*****************************"<<endl;
 
 	if(logFlag)
 	{

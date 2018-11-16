@@ -42,12 +42,14 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Bool_t isData = true, Int_t
 	Bool_t logFlag = false, genFlag = false; //logFlag should be 0 only while testing.
 	fstream genFile;
 	const char *type = "", *logFileName = "";
-	TFile *fileIn = NULL, *fileOut = NULL;
-	TTree *treeIn = NULL, *treeOut = NULL;
+	TFile *fileIn = nullptr, *fileOut = nullptr;
+	TTree *treeIn = nullptr, *treeOut = nullptr;
 	Int_t entries_init = 0;
 
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	cout<<"*****************************"<<endl;
 	cout<<"WD = "<<gSystem->pwd()<<endl;
+	cout<<"*****************************"<<endl;
 
 	logFileName = (trackType == 3) ? ("isoApplication_LL_log.txt") : ("isoApplication_DD_log.txt");
 
@@ -199,7 +201,7 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Bool_t isData = true, Int_t
 	}
 
 	//treeOut->Branch("ntracks",&ntracks,"ntracks/I");
-	treeOut->Branch(TString::Format("BDTk_%s",version),BDT,TString::Format("BDT_%s[ntracks]/D",version));
+	treeOut->Branch(TString::Format("BDTk_%s",version),BDT,TString::Format("BDT_%s[Added_n_Particles]/D",version));
 	treeOut->Branch(TString::Format("BDTkMin_%s",version),&BDTmin,TString::Format("BDTmin_%s/D",version));
 	//Why should I re-add the below branches? They are already there in the original tree.
 	// treeOut->Branch("PT",PT,"PT[ntracks]/F");
@@ -250,6 +252,8 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Bool_t isData = true, Int_t
 	cout << "--- End of event loop: ";
 	sw.Print();
 	//treeOut->Print();
+
+	treeIn->SetBranchStatus("*",1);
 
 	fileOut->cd();
 	treeOut->Write();

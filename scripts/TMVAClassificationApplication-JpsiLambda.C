@@ -16,7 +16,7 @@
 #include "TROOT.h"
 #include "TStopwatch.h"
 
-#include "TMVAGui.C"
+//#include "TMVAGui.C"
 
 #if not defined(__CINT__) || defined(__MAKECINT__)
 #include "TMVA/Tools.h"

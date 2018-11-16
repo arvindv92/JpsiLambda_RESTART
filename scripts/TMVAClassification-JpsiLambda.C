@@ -1,32 +1,6 @@
-// @(#)root/tmva $Id$
-/**********************************************************************************
-* Project   : TMVA - a ROOT-integrated toolkit for multivariate data analysis    *
-* Package   : TMVA                                                               *
-* Root Macro: TMVAClassification                                                 *
-*                                                                                *
-* This macro provides examples for the training and testing of the               *
-* TMVA classifiers.                                                              *
-*                                                                                *
-* As input data is used a toy-MC sample consisting of four Gaussian-distributed  *
-* and linearly correlated input variables.                                       *
-*                                                                                *
-* The methods to be used can be switched on and off by means of booleans, or     *
-* via the prompt command, for example:                                           *
-*                                                                                *
-*    root -l ./TMVAClassification.C\(\"Fisher,Likelihood\"\)                     *
-*                                                                                *
-* (note that the backslashes are mandatory)                                      *
-* If no method given, a default set of classifiers is used.                      *
-*                                                                                *
-* The output file "TMVA.root" can be analysed with the use of dedicated          *
-* macros (simply say: root -l <macro.C>), which can be conveniently              *
-* invoked through a GUI that will appear at the end of the run of this macro.    *
-* Launch the GUI via the command:                                                *
-*                                                                                *
-*    root -l ./TMVAGui.C                                                         *
-*                                                                                *
-**********************************************************************************/
-
+/********************************
+   Author : Aravindhan V.
+ *********************************/
 #include <cstdlib>
 #include <iostream>
 #include <map>
@@ -39,15 +13,17 @@
 #include "TObjString.h"
 #include "TSystem.h"
 #include "TROOT.h"
-
-#include "TMVAGui.C"
+//#include "TMVAGui.C"
 
 #if not defined(__CINT__) || defined(__MAKECINT__)
 // needs to be included when makecint runs (ACLIC)
 #include "TMVA/Factory.h"
 #include "TMVA/Tools.h"
 #include "TMVA/DataLoader.h"
+#include "TMVA/TMVAGui.h"
 #endif
+
+using namespace std;
 
 void TMVAClassification_JpsiLambda(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
 /*
@@ -57,13 +33,21 @@ void TMVAClassification_JpsiLambda(Int_t run = 1,Int_t trackType = 3, TString ve
  */
 {
 	Bool_t logFlag = false;
-	const char *logFileName = "", *type = "";
 	TString outfileName = "";
-	TMVA::DataLoader *dataloader = NULL;
-	TMVA::Factory *factory = NULL;
+	const char *logFileName = "", *type = "";
+	TFile *input = nullptr, *outputFile = nullptr;//Signal and Background training files
+	TTree *treeIn = nullptr;
+	TCut signalCut = "", bkgCut = "";
+	TMVA::DataLoader *dataloader = nullptr;
+	TMVA::Factory *factory = nullptr;
+	TMVA::Tools::Instance();// This loads the library
+
 	logFileName = (trackType == 3) ? (TString::Format("finalBDTTraining_LL_%s_log.txt",version.Data())) : (TString::Format("finalBDTTraining_DD_%s_log.txt",version.Data()));
 
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	cout<<"*****************************"<<endl;
+	cout<<"WD = "<<gSystem->pwd()<<endl;
+	cout<<"*****************************"<<endl;
 
 	if(logFlag)
 	{
@@ -79,25 +63,14 @@ void TMVAClassification_JpsiLambda(Int_t run = 1,Int_t trackType = 3, TString ve
 		cout<<"Processing DD"<<endl;
 		type = "DD";
 	}
-	//---------------------------------------------------------------
-	// This loads the library
-	TMVA::Tools::Instance();
 
-	std::cout << std::endl;
-	std::cout << "==> Start TMVAClassification" << std::endl;
+	cout << endl;
+	cout << "==> Start TMVAClassification" << endl;
 
 	gROOT->ProcessLine("(TMVA::gConfig().GetVariablePlotting()).fMaxNumOfAllowedVariablesForScatterPlots = 10;");
-	// --------------------------------------------------------------------------------------------------
-
-	// --- Here the preparation phase begins
-
-	// Create a ROOT output file where TMVA will store ntuples, histograms, etc.
-
 
 	outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVA-JpsiLambda%s_data_%s.root",run,type,version.Data());
-
-	TFile* outputFile = TFile::Open( outfileName, "RECREATE" );
-
+	outputFile = TFile::Open( outfileName, "RECREATE" );
 	factory = new TMVA::Factory( TString::Format("TMVAClassification-JpsiLambda%s_data_%s",type,version.Data()), outputFile,
 	                             "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
 
@@ -139,15 +112,10 @@ void TMVAClassification_JpsiLambda(Int_t run = 1,Int_t trackType = 3, TString ve
 
 	dataloader->AddVariable( TString::Format("BDTkMin_%s",version.Data()), 'F' );
 
-	TFile *input(0);//Signal and Background training files
-	TTree *treeIn(0);
-	TString fname, fname1;
-	TCut signalCut, bkgCut;
-
 	input = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withiso_%s.root",run,type,version.Data()));
 
-	std::cout << "--- TMVAClassification       : Using input file: " << input->GetName() << std::endl;
-	//std::cout << "--- TMVAClassification       : Using signal input file: " << input->GetName() << std::endl;
+	cout << "--- TMVAClassification       : Using input file: " << input->GetName() << endl;
+	//cout << "--- TMVAClassification       : Using signal input file: " << input->GetName() << endl;
 
 	treeIn = (TTree*)input->Get("MyTuple");
 
@@ -192,8 +160,11 @@ void TMVAClassification_JpsiLambda(Int_t run = 1,Int_t trackType = 3, TString ve
 
 	treeIn->SetBranchStatus(TString::Format("BDTkMin_%s",version.Data()),1);
 
-	signalCut = "Lb_MINIPCHI2 < 5000 && Jpsi_MINIPCHI2 < 5000 && pi_PIDK < 5 && p_PIDp > 5 && pi_MINIPCHI2 < 5000 && L_MINIPCHI2 < 10000";//Maybe add Lbmass < 5700 here?
-	bkgCut    = "Lb_MINIPCHI2 < 5000 && Jpsi_MINIPCHI2 < 5000 && pi_PIDK < 5 && p_PIDp > 5 && pi_MINIPCHI2 < 5000 && L_MINIPCHI2 < 10000 && Lb_DTF_M_JpsiLConstr > 5700 && Lb_DTF_M_JpsiLConstr < 7000";
+	treeIn->SetBranchStatus("SW",1);
+	treeIn->SetBranchStatus("BW",1);
+
+	signalCut = "";
+	bkgCut    = "";
 
 	dataloader->SetInputTrees(treeIn, signalCut, bkgCut);
 
@@ -209,14 +180,16 @@ void TMVAClassification_JpsiLambda(Int_t run = 1,Int_t trackType = 3, TString ve
 	dataloader->SetBackgroundWeightExpression("BW");
 
 	// Apply additional cuts on the signal and background samples (can be different)
-	TCut mycuts = "";
-	TCut mycutb = "";
-
+	TCut mycuts = "Lb_MINIPCHI2 < 5000 && Jpsi_MINIPCHI2 < 5000 && pi_PIDK < 5 && p_PIDp > 5 && pi_MINIPCHI2 < 5000 && L_MINIPCHI2 < 10000";//Maybe add Lbmass < 5700 here? Maybe dtfchi2 cut?
+	TCut mycutb = "Lb_MINIPCHI2 < 5000 && Jpsi_MINIPCHI2 < 5000 && pi_PIDK < 5 && p_PIDp > 5 && pi_MINIPCHI2 < 5000 && L_MINIPCHI2 < 10000 && Lb_DTF_M_JpsiLConstr > 5700 && Lb_DTF_M_JpsiLConstr < 7000";
+	cout<<"3"<<endl;
 	dataloader->PrepareTrainingAndTestTree( mycuts, mycutb, "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V" );
 
-	factory->BookMethod( dataloader, TMVA::Types::kBDT, "BDTconf1",
-	                     "!H:!V:NTrees=850:MinNodeSize=1.25%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
-	factory->BookMethod( dataloader, TMVA::Types::kBDT, "BDTconf5",
+	cout<<"3.5"<<endl;
+	factory->BookMethod(dataloader,TMVA::Types::kBDT, "BDTconf1",
+	                    "!H:!V:NTrees=850:MinNodeSize=1.25%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
+	cout<<"4"<<endl;
+	factory->BookMethod( dataloader,TMVA::Types::kBDT, "BDTconf5",
 	                     "!H:!V:NTrees=850:MinNodeSize=0.625%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
 
 	/*factory->BookMethod( TMVA::Types::kBDT, "BDTconf6",
@@ -257,8 +230,8 @@ void TMVAClassification_JpsiLambda(Int_t run = 1,Int_t trackType = 3, TString ve
 	// Save the output
 	outputFile->Close();
 
-	std::cout << "==> Wrote root file: " << outputFile->GetName() << std::endl;
-	std::cout << "==> TMVAClassification is done!" << std::endl;
+	cout << "==> Wrote root file: " << outputFile->GetName() << endl;
+	cout << "==> TMVAClassification is done!" << endl;
 
 	delete factory;
 
