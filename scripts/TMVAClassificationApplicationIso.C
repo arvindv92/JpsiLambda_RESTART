@@ -168,14 +168,14 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Bool_t isData = true, Int_t
 	// --- Event loop
 	cout << "--- Select signal sample" <<endl;
 
-	treeIn->SetBranchStatus("*",0);
-	treeIn->SetBranchStatus("psi_1S_H_MINIPCHI2",1);
-	treeIn->SetBranchStatus("psi_1S_H_IPCHI2_NEW",1);
-	treeIn->SetBranchStatus("psi_1S_H_VERTEXCHI2_NEW",1);
-	treeIn->SetBranchStatus("Added_H_PT",1);
-	treeIn->SetBranchStatus("Added_n_Particles",1);
-	treeIn->SetBranchStatus("psi_1S_H_FD_NEW",1);
-	treeIn->SetBranchStatus("psi_1S_H_FDCHI2_NEW",1);
+	// treeIn->SetBranchStatus("*",0);
+	// treeIn->SetBranchStatus("psi_1S_H_MINIPCHI2",1);
+	// treeIn->SetBranchStatus("psi_1S_H_IPCHI2_NEW",1);
+	// treeIn->SetBranchStatus("psi_1S_H_VERTEXCHI2_NEW",1);
+	// treeIn->SetBranchStatus("Added_H_PT",1);
+	// treeIn->SetBranchStatus("Added_n_Particles",1);
+	// treeIn->SetBranchStatus("psi_1S_H_FD_NEW",1);
+	// treeIn->SetBranchStatus("psi_1S_H_FDCHI2_NEW",1);
 	// treeIn->SetBranchStatus("Added_H_TRACKCHI2",1);
 	// treeIn->SetBranchStatus("Added_H_GHOST",1);
 
@@ -253,7 +253,7 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Bool_t isData = true, Int_t
 	sw.Print();
 	//treeOut->Print();
 
-	treeIn->SetBranchStatus("*",1);
+	//	treeIn->SetBranchStatus("*",1);
 
 	fileOut->cd();
 	treeOut->Write();

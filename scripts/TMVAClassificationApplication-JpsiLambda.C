@@ -145,7 +145,7 @@ void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Bool_t isData = tru
 	// Create a set of variables and declare them to the reader
 	// - the variable names MUST corresponds in name and type to those given in the weight file(s) used
 
-	Float_t log_dtfChi2 = 0., log_lbMinIpChi2 = 0., logAcos_lbDira_ownPV = 0., log_lbFd_ownPV = 0., log_lbDtfCTauL = 0., l_dtfCtauS = 0.;
+	Float_t log_dtfChi2 = 0., log_lbMinIpChi2 = 0., logAcos_lbDira_ownPV = 0., log_lbFd_ownPV = 0., log_lTau = 0. /*, l_dtfCtauS = 0.*/;
 	Float_t log_jpsiMinIpChi2 = 0., log_jpsiMass = 0., jpsi_cosTheta = 0., jpsi_pt = 0.;
 	Float_t log_lFdChi2_orivX = 0., logAcos_lDira_orivX = 0., log_lFd_orivX = 0., logAcos_lDira_ownPV = 0., l_dm = 0., log_lMinIpChi2 = 0., l_pt = 0., l_endVertex_Chi2 = 0., l_cosTheta = 0.;
 	Float_t p_PIDp = 0., log_pMinIpChi2 = 0., p_ghostProb = 0., log_p_pt = 0., p_probNNp = 0.;
@@ -156,8 +156,8 @@ void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Bool_t isData = tru
 	reader->AddVariable( "log_lbminipchi2 := log10(Lb_MINIPCHI2)", &log_lbMinIpChi2 );
 	reader->AddVariable( "logacos_lbdira := log10(acos(Lb_DIRA_OWNPV))", &logAcos_lbDira_ownPV );
 	reader->AddVariable( "log_lbfd_ownpv := log10(Lb_FD_OWNPV)", &log_lbFd_ownPV );
-	reader->AddVariable( "log_dtfctaul := log10(Lb_DTF_CTAU_L)", &log_lbDtfCTauL );
-	reader->AddVariable( "Lb_DTF_CTAUS_L", &l_dtfCtauS );
+	reader->AddVariable( "log_ltau := log10(L_TAU)", &log_lTau );
+	//reader->AddVariable( "Lb_DTF_CTAUS_L", &l_dtfCtauS );
 
 	reader->AddVariable( "log_jpsiminipchi2 := log10(Jpsi_MINIPCHI2)", &log_jpsiMinIpChi2 );
 	reader->AddVariable( "log_jpsimass := log10(Jpsi_M)", &log_jpsiMass );
@@ -186,13 +186,13 @@ void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Bool_t isData = tru
 	reader->AddVariable( "log_pi_PT := log10(pi_PT)", &log_pi_pt );
 	reader->AddVariable( "pi_ProbNNpi", &pi_probNNpi );
 
-	reader->AddVariable( TString::Format("BDTkMin_%s",version), &bdtK );
+//	reader->AddVariable( TString::Format("BDTkMin_%s",version), &bdtK );
 
 	// --- Book the MVA methods
 
-	TString dir    = "weights/";
+	TString dir    = "dataset/weights/";
 	TString prefix;
-	prefix = TString::Format("TMVAClassification-JpsiLambda_%s_data_%s",type,version);
+	prefix = TString::Format("TMVAClassification-JpsiLambda%s_data_%s",type,version);
 
 	// Book method(s)
 	// for (std::map<std::string,int>::iterator it = Use.begin(); it != Use.end(); it++) {
@@ -286,11 +286,11 @@ void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Bool_t isData = tru
 	//
 	std::cout << "--- Select signal sample" << std::endl;
 	Float_t chi2array[200];
-	Float_t lbMinIpChi2 = 0., lbDira_ownPV = 0., lbFd_ownPV = 0., lbDtfCTauL = 0.;
-	Float_t jpsiMinIpChi2 = 0., jpsiMass = 0.;
-	Float_t lFdChi2_orivX = 0., lDira_orivX = 0., lFd_orivX = 0., lDira_ownPV = 0., lMinIpChi2 = 0.;
-	Float_t pMinIpChi2 = 0., p_pt = 0.;
-	Float_t piMinIpChi2 = 0., pi_pt = 0.;
+	Double_t lbMinIpChi2 = 0., lbDira_ownPV = 0., lbFd_ownPV = 0., lTau = 0.;
+	Double_t jpsiMinIpChi2 = 0., jpsiMass = 0., jpsiCosTheta = 0., jpsiPT = 0.;
+	Double_t lFdChi2_orivX = 0., lDira_orivX = 0., lFd_orivX = 0., lDira_ownPV = 0., lDm = 0., lMinIpChi2 = 0., lPT = 0., lEndVertexChi2 = 0., lCosTheta = 0.;
+	Double_t pPIDp = 0., pMinIpChi2 = 0., pGhostProb = 0., pPT = 0., pProbNNp = 0.;
+	Double_t piPIDK = 0., piMinIpChi2 = 0., piGhostProb = 0., piPT = 0., piProbNNpi = 0.;
 	// Double_t userVar[19], BDT, bmass;
 	Double_t BDT;
 	//treeIn->SetBranchAddress("BW", &BW);
@@ -299,35 +299,35 @@ void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Bool_t isData = tru
 	treeIn->SetBranchAddress( "Lb_MINIPCHI2", &lbMinIpChi2 );
 	treeIn->SetBranchAddress( "Lb_DIRA_OWNPV", &lbDira_ownPV  );
 	treeIn->SetBranchAddress( "Lb_FD_OWNPV", &lbFd_ownPV );
-	treeIn->SetBranchAddress( "Lb_DTF_CTAU_L", &lbDtfCTauL);
-	treeIn->SetBranchAddress( "Lb_DTF_CTAUS_L", &l_dtfCtauS );
+	treeIn->SetBranchAddress( "L_TAU", &lTau);
+	//treeIn->SetBranchAddress( "Lb_DTF_CTAUS_L", &l_dtfCtauS );
 
 	treeIn->SetBranchAddress( "Jpsi_MINIPCHI2", &jpsiMinIpChi2 );
 	treeIn->SetBranchAddress( "Jpsi_M", &jpsiMass );
-	treeIn->SetBranchAddress( "Jpsi_CosTheta", &jpsi_cosTheta );
-	treeIn->SetBranchAddress( "Jpsi_PT", &jpsi_pt );
+	treeIn->SetBranchAddress( "Jpsi_CosTheta", &jpsiCosTheta );
+	treeIn->SetBranchAddress( "Jpsi_PT", &jpsiPT );
 
 	treeIn->SetBranchAddress( "L_FDCHI2_ORIVX", &lFdChi2_orivX );
 	treeIn->SetBranchAddress( "L_DIRA_ORIVX", &lDira_orivX );
 	treeIn->SetBranchAddress( "L_FD_ORIVX", &lFd_orivX );
 	treeIn->SetBranchAddress( "L_DIRA_OWNPV", &lDira_ownPV );
-	treeIn->SetBranchAddress( "L_dm", &l_dm );
+	treeIn->SetBranchAddress( "L_dm", &lDm );
 	treeIn->SetBranchAddress( "L_MINIPCHI2", &lMinIpChi2 );
-	treeIn->SetBranchAddress( "L_PT", &l_pt );
-	treeIn->SetBranchAddress( "L_ENDVERTEX_CHI2", &l_endVertex_Chi2 );
-	treeIn->SetBranchAddress( "L_CosTheta", &l_cosTheta );
+	treeIn->SetBranchAddress( "L_PT", &lPT );
+	treeIn->SetBranchAddress( "L_ENDVERTEX_CHI2", &lEndVertexChi2 );
+	treeIn->SetBranchAddress( "L_CosTheta", &lCosTheta );
 
-	treeIn->SetBranchAddress( "p_PIDp", &p_PIDp );
+	treeIn->SetBranchAddress( "p_PIDp", &pPIDp );
 	treeIn->SetBranchAddress( "p_MINIPCHI2", &pMinIpChi2 );
-	treeIn->SetBranchAddress( "p_TRACK_GhostProb", &p_ghostProb );
-	treeIn->SetBranchAddress( "p_PT", &p_pt );
-	treeIn->SetBranchAddress( "p_ProbNNp", &p_probNNp );
+	treeIn->SetBranchAddress( "p_TRACK_GhostProb", &pGhostProb );
+	treeIn->SetBranchAddress( "p_PT", &pPT );
+	treeIn->SetBranchAddress( "p_ProbNNp", &pProbNNp );
 
-	treeIn->SetBranchAddress( "pi_TRACK_GhostProb", &pi_ghostProb );
-	treeIn->SetBranchAddress( "pi_PIDK", &pi_PIDK );
+	treeIn->SetBranchAddress( "pi_TRACK_GhostProb", &piGhostProb );
+	treeIn->SetBranchAddress( "pi_PIDK", &piPIDK );
 	treeIn->SetBranchAddress( "pi_MINIPCHI2", &piMinIpChi2 );
-	treeIn->SetBranchAddress( "pi_PT", &pi_pt );
-	treeIn->SetBranchAddress( "pi_ProbNNpi", &pi_probNNpi );
+	treeIn->SetBranchAddress( "pi_PT", &piPT );
+	treeIn->SetBranchAddress( "pi_ProbNNpi", &piProbNNpi );
 
 	treeIn->SetBranchAddress( TString::Format("BDTkMin_%s",version), &bdtK );
 
@@ -336,7 +336,7 @@ void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Bool_t isData = tru
 	// treeout->Branch( "Lb_MINIPCHI2", &userVar[1],"Lb_MINIPCHI2/D" );
 	// treeout->Branch( "Lb_DIRA_OWNPV", &userVar[2],"Lb_DIRA_OWNPV/D" );
 	// treeout->Branch( "Lb_FD_OWNPV", &userVar[3],"Lb_FD_OWNPV/D" );
-	// treeout->Branch( "Lb_DTF_CTAU_L", &userVar[4],"Lb_DTF_CTAU_L/D" );
+	// treeout->Branch( "L_TAU", &userVar[4],"L_TAU/D" );
 	// treeout->Branch( "Lb_DTF_CTAUS_L", &userVar[5],"Lb_DTF_CTAUS_L/D" );
 	//
 	// treeout->Branch( "Jpsi_MINIPCHI2", &userVar[6],"Jpsi_MINIPCHI2/D" );
@@ -382,35 +382,35 @@ void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Bool_t isData = tru
 		log_lbMinIpChi2 = log10(lbMinIpChi2);//Lb_MINIPCHI2
 		logAcos_lbDira_ownPV = log10(acos(lbDira_ownPV));//Lb_DIRA_OWNPV
 		log_lbFd_ownPV = log10(lbFd_ownPV);//Lb_FD_OWNPV
-		log_lbDtfCTauL = log10(lbDtfCTauL);//Lb_DTF_CTAU_L
+		log_lTau = log10(lTau);//L_TAU
 		//	var[5] = userVar[5];//Lb_DTF_CTAUS_L
 
 		log_jpsiMinIpChi2 = log10(jpsiMinIpChi2);//Jpsi_MINIPCHI2
 		log_jpsiMass = log10(jpsiMass);//Jpsi_M
-		//	var[8] = userVar[8];//Jpsi_CosTheta
-		//	var[9] = userVar[9];//Jpsi_PT
+		jpsi_cosTheta = jpsiCosTheta;//Jpsi_CosTheta
+		jpsi_pt = jpsiPT;//Jpsi_PT
 
 		log_lFdChi2_orivX = log10(lFdChi2_orivX);//L_FDCHI2_ORIVX
 		logAcos_lDira_orivX = log10(acos(lDira_orivX));//L_DIRA_ORIVX
 		log_lFd_orivX = log10(lFd_orivX);//L_FD_ORIVX
 		logAcos_lDira_ownPV = log10(acos(lDira_ownPV));//L_DIRA_OWNPV
-		//var[14] = userVar[14];//L_dm
+		l_dm = lDm;//L_dm
 		log_lMinIpChi2 = log10(lMinIpChi2);//L_MINIPCHI2
-		//var[16] = userVar[16];//L_PT
-		//var[17] = userVar[17];//L_ENDVERTEX_CHI2
-		//var[18] = userVar[18];//L_CosTheta
+		l_pt = lPT;//L_PT
+		l_endVertex_Chi2 = lEndVertexChi2;//L_ENDVERTEX_CHI2
+		l_cosTheta = lCosTheta;//L_CosTheta
 
-		// var[19] = userVar[19];//p_PIDp
+		pPIDp = p_PIDp; //p_PIDp
 		log_pMinIpChi2 = log10(pMinIpChi2);//p_MINIPCHI2
-		// var[21] = userVar[21];//p_TRACK_GhostProb
-		log_p_pt = log10(p_pt);//p_PT
-		// var[23] = userVar[23];//p_ProbNNp
+		p_ghostProb = pGhostProb;//p_TRACK_GhostProb
+		log_p_pt = log10(pPT);//p_PT
+		p_probNNp = pProbNNp;//p_ProbNNp
 
-		// var[24] = userVar[24];//pi_TRACK_GhostProb
-		// var[25] = userVar[25];//pi_PIDK
+		pi_ghostProb = piGhostProb;//pi_TRACK_GhostProb
+		pi_PIDK = piPIDK;//pi_PIDK
 		log_piMinIpChi2 = log10(piMinIpChi2);//pi_MINIPCHI2
-		log_pi_pt = log10(pi_pt);//pi_PT
-		// var[28] = userVar[28];//pi_ProbNNpi
+		log_pi_pt = log10(piPT);//pi_PT
+		pi_probNNpi = piProbNNpi;//pi_ProbNNpi
 		// var[29] = userVar[29];//BDTk
 
 		BDT = reader->EvaluateMVA("BDT method");

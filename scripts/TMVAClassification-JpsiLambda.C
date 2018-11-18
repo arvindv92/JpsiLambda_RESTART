@@ -80,8 +80,8 @@ void TMVAClassification_JpsiLambda(Int_t run = 1,Int_t trackType = 3, TString ve
 	dataloader->AddVariable( "log_lbminipchi2 := log10(Lb_MINIPCHI2)", 'F' );
 	dataloader->AddVariable( "logacos_lbdira := log10(acos(Lb_DIRA_OWNPV))", 'F' );
 	dataloader->AddVariable( "log_lbfd_ownpv := log10(Lb_FD_OWNPV)", 'F' );
-	dataloader->AddVariable( "log_dtfctaul := log10(Lb_DTF_CTAU_L)", 'F' );
-	dataloader->AddVariable( "Lb_DTF_CTAUS_L", 'F' );
+	dataloader->AddVariable( "log_ltau := log10(L_TAU)", 'F' );
+	//dataloader->AddVariable( "Lb_DTF_CTAUS_L", 'F' );
 
 	dataloader->AddVariable( "log_jpsiminipchi2 := log10(Jpsi_MINIPCHI2)", 'F' );
 	dataloader->AddVariable( "log_jpsimass := log10(Jpsi_M)", 'F' );
@@ -110,9 +110,9 @@ void TMVAClassification_JpsiLambda(Int_t run = 1,Int_t trackType = 3, TString ve
 	dataloader->AddVariable( "log_pi_PT := log10(pi_PT)", 'F' );
 	dataloader->AddVariable( "pi_ProbNNpi", 'F' );
 
-	dataloader->AddVariable( TString::Format("BDTkMin_%s",version.Data()), 'F' );
+//	dataloader->AddVariable( TString::Format("BDTkMin_%s",version.Data()), 'F' );
 
-	input = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withiso_%s.root",run,type,version.Data()));
+	input = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withiso_%s.root",run,type,version.Data()));
 
 	cout << "--- TMVAClassification       : Using input file: " << input->GetName() << endl;
 	//cout << "--- TMVAClassification       : Using signal input file: " << input->GetName() << endl;
@@ -125,8 +125,8 @@ void TMVAClassification_JpsiLambda(Int_t run = 1,Int_t trackType = 3, TString ve
 	treeIn->SetBranchStatus("Lb_MINIPCHI2",1);
 	treeIn->SetBranchStatus("Lb_DIRA_OWNPV",1);
 	treeIn->SetBranchStatus("Lb_FD_OWNPV",1);
-	treeIn->SetBranchStatus("Lb_DTF_CTAUS_L",1);
-	treeIn->SetBranchStatus("Lb_DTF_CTAU_L",1);
+//	treeIn->SetBranchStatus("Lb_DTF_CTAUS_L",1);
+	treeIn->SetBranchStatus("L_TAU",1);
 
 	treeIn->SetBranchStatus("Jpsi_MINIPCHI2",1);
 	treeIn->SetBranchStatus("Jpsi_M",1);
@@ -180,8 +180,8 @@ void TMVAClassification_JpsiLambda(Int_t run = 1,Int_t trackType = 3, TString ve
 	dataloader->SetBackgroundWeightExpression("BW");
 
 	// Apply additional cuts on the signal and background samples (can be different)
-	TCut mycuts = "Lb_MINIPCHI2 < 5000 && Jpsi_MINIPCHI2 < 5000 && pi_PIDK < 5 && p_PIDp > 5 && pi_MINIPCHI2 < 5000 && L_MINIPCHI2 < 10000";//Maybe add Lbmass < 5700 here? Maybe dtfchi2 cut?
-	TCut mycutb = "Lb_MINIPCHI2 < 5000 && Jpsi_MINIPCHI2 < 5000 && pi_PIDK < 5 && p_PIDp > 5 && pi_MINIPCHI2 < 5000 && L_MINIPCHI2 < 10000 && Lb_DTF_M_JpsiLConstr > 5700 && Lb_DTF_M_JpsiLConstr < 7000";
+	TCut mycuts = "Lb_ConsLb_chi2 > 0 && Lb_MINIPCHI2 > 0 && Lb_FD_OWNPV > 0 && L_TAU > 0 && Jpsi_MINIPCHI2 > 0 && Jpsi_M > 0 && L_FDCHI2_ORIVX > 0 && L_FD_ORIVX > 0 && L_MINIPCHI2 > 0 && p_MINIPCHI2 > 0 && p_PT > 0 && pi_MINIPCHI2 > 0 && pi_PT > 0 && Lb_MINIPCHI2 < 5000 && Jpsi_MINIPCHI2 < 5000 && pi_PIDK < 5 && p_PIDp > 5 && pi_MINIPCHI2 < 5000 && L_MINIPCHI2 < 10000";//Maybe add Lbmass < 5700 here? Maybe dtfchi2 cut?
+	TCut mycutb = "Lb_ConsLb_chi2 > 0 && Lb_MINIPCHI2 > 0 && Lb_FD_OWNPV > 0 && L_TAU > 0 && Jpsi_MINIPCHI2 > 0 && Jpsi_M > 0 && L_FDCHI2_ORIVX > 0 && L_FD_ORIVX > 0 && L_MINIPCHI2 > 0 && p_MINIPCHI2 > 0 && p_PT > 0 && pi_MINIPCHI2 > 0 && pi_PT > 0 && Lb_MINIPCHI2 < 5000 && Jpsi_MINIPCHI2 < 5000 && pi_PIDK < 5 && p_PIDp > 5 && pi_MINIPCHI2 < 5000 && L_MINIPCHI2 < 10000 && Lb_DTF_M_JpsiLConstr > 5700 && Lb_DTF_M_JpsiLConstr < 7000";
 	cout<<"3"<<endl;
 	dataloader->PrepareTrainingAndTestTree( mycuts, mycutb, "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V" );
 
