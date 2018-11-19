@@ -8,12 +8,13 @@
 #include "TH1D.h"
 #include "TROOT.h"
 #include "TSystem.h"
-#include "collateFiles.h"
+#include "TStopwatch.h"
+#include "CollateFiles.h"
 #include <iostream>
 #include <fstream>
 
 using namespace std;
-void trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testing = false, Bool_t loose = true)
+void Trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testing = false, Bool_t loose = true)
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = true for data, false for MC
@@ -22,7 +23,9 @@ void trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
    loose = true to run over data from loose stripping line. Only LL for loose stripping line
  */
 {
-	gROOT->ProcessLine(".L collateFiles.C++");
+	gROOT->ProcessLine(".L CollateFiles.C++");
+	TStopwatch sw;
+	sw.Start();
 
 	Bool_t logFlag = false; //This should be 0 only while testing.
 	Bool_t collateFlag = true; //If you don't want to re-collate MC, set this to zero. For example, if only the trigger condition changes.
@@ -47,14 +50,14 @@ void trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 		{
 			if(logFlag) gROOT->ProcessLine(".> logs/data/JpsiLambda/run1/trigger_log.txt");
 
-			collateFiles(run, isData, mcType, &h1, &h2, testing, loose);//collateFiles will cd to the massdump folder and then back to JpsiLambda_RESTART
+			CollateFiles(run, isData, mcType, &h1, &h2, testing, loose);//CollateFiles will cd to the massdump folder and then back to JpsiLambda_RESTART
 			fileOut = new TFile("rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_triggered.root","RECREATE");
 		}
 		else if(run == 2)
 		{
 			if(logFlag) gROOT->ProcessLine(".> logs/data/JpsiLambda/run2/trigger_log.txt");
 
-			collateFiles(run, isData, mcType, &h1, &h2, testing, loose);
+			CollateFiles(run, isData, mcType, &h1, &h2, testing, loose);
 			fileOut = new TFile("rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_triggered.root","RECREATE");
 		}
 
@@ -87,7 +90,7 @@ void trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 				if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiLambda/run1/trigger_log.txt");
 				genFile.open("logs/mc/JpsiLambda/run1/gen_log.txt");
 				cout<<"PROCESSING MC for Run 1 Jpsi Lambda"<<endl;
-				if(collateFlag) collateFiles(run,isData,mcType);
+				if(collateFlag) CollateFiles(run,isData,mcType);
 				fileIn = TFile::Open("rootFiles/mcFiles/JpsiLambda/run1/jpsilambda.root");
 				treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
 				treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
@@ -98,7 +101,7 @@ void trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 				if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiLambda/run2/trigger_log.txt");
 				genFile.open("logs/mc/JpsiLambda/run2/gen_log.txt");
 				cout<<"PROCESSING MC for Run 2 Jpsi Lambda"<<endl;
-				if(collateFlag) collateFiles(run,isData,mcType);
+				if(collateFlag) CollateFiles(run,isData,mcType);
 				fileIn = TFile::Open("rootFiles/mcFiles/JpsiLambda/run2/jpsilambda.root");
 				treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
 				treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
@@ -112,7 +115,7 @@ void trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 				if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiSigma/run1/trigger_log.txt");
 				genFile.open("logs/mc/JpsiSigma/run1/gen_log.txt");
 				cout<<"PROCESSING MC for Run 1 JpsiSigma"<<endl;
-				if(collateFlag) collateFiles(run,isData,mcType);
+				if(collateFlag) CollateFiles(run,isData,mcType);
 				fileIn = TFile::Open("rootFiles/mcFiles/JpsiSigma/run1/jpsisigma.root");
 				treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
 				treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
@@ -123,7 +126,7 @@ void trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 				if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiSigma/run2/trigger_log.txt");
 				genFile.open("logs/mc/JpsiSigma/run2/gen_log.txt");
 				cout<<"PROCESSING MC for Run 2 JpsiSigma"<<endl;
-				if(collateFlag) collateFiles(run,isData,mcType);
+				if(collateFlag) CollateFiles(run,isData,mcType);
 				fileIn = TFile::Open("rootFiles/mcFiles/JpsiSigma/run2/jpsisigma.root");
 				treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
 				treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
@@ -137,7 +140,7 @@ void trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 				if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiXi/run1/trigger_log.txt");
 				genFile.open("logs/mc/JpsiXi/run1/gen_log.txt");
 				cout<<"PROCESSING MC for Run 1 JpsiXi"<<endl;
-				if(collateFlag) collateFiles(run,isData,mcType);
+				if(collateFlag) CollateFiles(run,isData,mcType);
 				fileIn = TFile::Open("rootFiles/mcFiles/JpsiXi/run1/jpsixi.root");
 				treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
 				treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
@@ -148,7 +151,7 @@ void trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 				if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiXi/run2/trigger_log.txt");
 				genFile.open("logs/mc/JpsiXi/run2/gen_log.txt");
 				cout<<"PROCESSING MC for Run 2 JpsiXi"<<endl;
-				if(collateFlag) collateFiles(run,isData,mcType);
+				if(collateFlag) CollateFiles(run,isData,mcType);
 				fileIn = TFile::Open("rootFiles/mcFiles/JpsiXi/run2/jpsixi.root");
 				treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
 				treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
@@ -225,6 +228,8 @@ void trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 	treeOut->Write();
 	fileOut->Close();
 
+	sw.Stop();
+	cout << "--- End of Trigger: "; sw.Print();
 	if(logFlag) gROOT->ProcessLine(".>");
 	//if(logFlag) gSystem->Exec("cat trigger_log.txt");
 }

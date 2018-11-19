@@ -8,17 +8,17 @@
 #include "TCut.h"
 #include "TROOT.h"
 #include "TSystem.h"
+#include "TStopwatch.h"
 #include <iostream>
 #include <fstream>
 using namespace std;
 
-void sanity(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0)
+void Sanity(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0)
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = 1 for data, 0 for MC
    mcType = 0 when running over data. When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
  */
-
 /*
    NB: BKGCAT applies to MC, but not data. Read  Steve's analysis and think about exactly what TM condition is to be applied
    Lb_DTF_CTAU_L -> Lb_TAU
@@ -26,6 +26,9 @@ void sanity(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0)
    PID cuts are applied to reject junk events with PID's of 0 or -1000 for Run1 and reject -1000 for Run2
  */
 {
+	TStopwatch sw;
+	sw.Start();
+
 	TFile *fileIn = nullptr, *fileOut_LL = nullptr, *fileOut_DD = nullptr;
 	TTree *treeIn = nullptr, *treeOut_LL = nullptr, *treeOut_DD = nullptr;
 	Int_t entries_init = 0, entries_final_LL = 0, entries_final_DD, entries_gen = 0, Lb_BKGCAT = 0, p_TRACK_Type = 0;
@@ -236,7 +239,8 @@ void sanity(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0)
 	fileOut_DD->Write();
 	fileOut_DD->Close();
 
-	cout<<"Finishing Sanity"<<endl;
+	sw.Stop();
+	cout << "--- End of Sanity: "; sw.Print();
 
 	if(logFlag) gROOT->ProcessLine(".>");
 	//if(logFlag) gSystem->Exec("cat sanity_log.txt");

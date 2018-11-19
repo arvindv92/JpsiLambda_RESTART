@@ -27,7 +27,7 @@
 using namespace TMVA;
 using namespace std;
 
-void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t trackType = 3, const char* version = "v1", Int_t bdtConf = 1, Int_t flag = 1)
+void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t trackType = 3, const char* version = "v1", Int_t bdtConf = 1, Int_t flag = 1)
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = 1 for data, 0 for MC
@@ -37,6 +37,9 @@ void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Bool_t isData = tru
    flag = 1 when applying on all data, flag = 2 when applying only on signal training sample
  */
 {
+	TStopwatch sw;
+	sw.Start();
+
 	Bool_t logFlag = false, genFlag = false;
 	const char *logFileName = "", *type = "";
 	TString outfileName = "";
@@ -186,96 +189,23 @@ void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Bool_t isData = tru
 	reader->AddVariable( "log_pi_PT := log10(pi_PT)", &log_pi_pt );
 	reader->AddVariable( "pi_ProbNNpi", &pi_probNNpi );
 
-//	reader->AddVariable( TString::Format("BDTkMin_%s",version), &bdtK );
+	reader->AddVariable( TString::Format("BDTkMin_%s",version), &bdtK );
 
 	// --- Book the MVA methods
 
 	TString dir    = "dataset/weights/";
 	TString prefix;
-	prefix = TString::Format("TMVAClassification-JpsiLambda%s_data_%s",type,version);
+	prefix = TString::Format("TMVAClassification-JpsiLambda%s_dataRun%d_%s",type,run,version);
 
-	// Book method(s)
-	// for (std::map<std::string,int>::iterator it = Use.begin(); it != Use.end(); it++) {
-	//   //   if (it->second) {
-	//   TString methodName = TString("BDT method");
-	//   TString weightfile = dir + prefix + TString("_") + TString("BDTconf5") + TString(".weights.xml");
-	//   reader->BookMVA( methodName, weightfile );
-	//       // }
-	// }
 	TString methodName = TString("BDT method");
 	TString weightfile = dir + prefix + TString("_") + TString::Format("BDTconf%d",bdtConf) + TString(".weights.xml");
 	reader->BookMVA( methodName, weightfile );
-	// Book output histograms
-
-	// Prepare input tree (this must be replaced by your data source)
-	// in this example, there is a toy tree with signal and one with background events
-	// we'll later on use only the "signal" events for the test in this example.
-	//
-	// TFile *input(0);
-	// TString fname;
-	//
-	// switch(flag) {
-	// case 1:
-	//      fname = "applicationfiles/jpsilambda_LL_forfinalBDTApp.root";
-	//      cout<<"TMVA application on all LL"<<endl;
-	//      break;
-	// case 2:
-	//      fname = "applicationfiles/jpsilambda_DD_forfinalBDTApp.root";
-	//      cout<<"TMVA application on all DD"<<endl;
-	//      break;
-	// case 3:
-	//      fname = "trainingfiles/jpsilambda_LL_sig.root";
-	//      cout<<"TMVA application on LL sig"<<endl;
-	//      break;
-	// case 4:
-	//      fname = "trainingfiles/jpsilambda_DD_sig.root";
-	//      cout<<"TMVA application on DD sig"<<endl;
-	//      break;
-	// case 5:
-	//      fname = "trainingfiles/jpsilambda_LL_bkg.root";
-	//      cout<<"TMVA application on LL bkg"<<endl;
-	//      break;
-	// case 6:
-	//      fname = "trainingfiles/jpsilambda_DD_bkg.root";
-	//      cout<<"TMVA application on DD bkg"<<endl;
-	//      break;
-	// }
-	//input = TFile::Open(fname,"READ");
 
 	if (!fileIn) {
 		std::cout << "ERROR: could not open data file" << std::endl;
 		exit(1);
 	}
 	std::cout << "--- TMVAClassificationApp    : Using input file: " << fileIn->GetName() << std::endl;
-
-	// TFile *target(0);
-	// TTree *treeout(0);
-	// TString targetname;
-	//
-	// switch(flag) {
-	// case 1:
-	//      targetname = "applicationfiles/TMVApp-JpsiLambda_LL_BDTconf5.root";
-	//      break;
-	// case 2:
-	//      targetname = "applicationfiles/TMVApp-JpsiLambda_DD_BDTconf5.root";
-	//      break;
-	// case 3:
-	//      targetname = "applicationfiles/TMVApp-JpsiLambda_LLsig_BDTconf5.root";
-	//      break;
-	// case 4:
-	//      targetname = "applicationfiles/TMVApp-JpsiLambda_DDsig_BDTconf5.root";
-	//      break;
-	// case 5:
-	//      targetname = "applicationfiles/TMVApp-JpsiLambda_LLbkg_BDTconf5.root";
-	//      break;
-	// case 6:
-	//      targetname = "applicationfiles/TMVApp-JpsiLambda_DDbkg_BDTconf5.root";
-	//      break;
-	// }
-	//
-	// target = new TFile(targetname,"RECREATE" );
-	//
-	// treeout = new TTree("MyTuple","BDT stuff");
 
 	// --- Event loop
 
@@ -292,7 +222,7 @@ void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Bool_t isData = tru
 	Double_t pPIDp = 0., pMinIpChi2 = 0., pGhostProb = 0., pPT = 0., pProbNNp = 0.;
 	Double_t piPIDK = 0., piMinIpChi2 = 0., piGhostProb = 0., piPT = 0., piProbNNpi = 0.;
 	// Double_t userVar[19], BDT, bmass;
-	Double_t BDT;
+	Double_t myBdtK = 0., BDT = 0.;
 	//treeIn->SetBranchAddress("BW", &BW);
 
 	treeIn->SetBranchAddress( "Lb_ConsLb_chi2", chi2array );
@@ -329,7 +259,7 @@ void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Bool_t isData = tru
 	treeIn->SetBranchAddress( "pi_PT", &piPT );
 	treeIn->SetBranchAddress( "pi_ProbNNpi", &piProbNNpi );
 
-	treeIn->SetBranchAddress( TString::Format("BDTkMin_%s",version), &bdtK );
+	treeIn->SetBranchAddress( TString::Format("BDTkMin_%s",version), &myBdtK );
 
 	treeOut->Branch( "BDT", &BDT, "BDT/D");
 	// treeout->Branch( "Lb_ConsLb_chi2", &chi2array[0],"Lb_ConsLb_chi2/F" );
@@ -370,8 +300,7 @@ void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Bool_t isData = tru
 	// treeout->Branch( "Lb_DTF_M_JpsiLConstr", &bmass, "Lb_DTF_M_JpsiLConstr/D");
 
 	std::cout << "--- Processing: " << entries_init << " events" << std::endl;
-	TStopwatch sw;
-	sw.Start();
+
 	for (Long64_t ievt = 0; ievt < entries_init; ievt++) {
 
 		if (ievt%50000 == 0) std::cout << "--- ... Processing event: " << ievt << std::endl;
@@ -411,7 +340,7 @@ void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Bool_t isData = tru
 		log_piMinIpChi2 = log10(piMinIpChi2);//pi_MINIPCHI2
 		log_pi_pt = log10(piPT);//pi_PT
 		pi_probNNpi = piProbNNpi;//pi_ProbNNpi
-		// var[29] = userVar[29];//BDTk
+		bdtK = myBdtK;//BDTk
 
 		BDT = reader->EvaluateMVA("BDT method");
 
@@ -419,7 +348,7 @@ void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Bool_t isData = tru
 	}
 	// Get elapsed time
 	sw.Stop();
-	std::cout << "--- End of event loop: "; sw.Print();
+	std::cout << "--- End of event loop: ";
 
 	fileOut->cd();
 	treeOut->Write();
@@ -429,6 +358,6 @@ void TMVAClassificationApplication_JpsiLambda(Int_t run = 1, Bool_t isData = tru
 
 	delete reader;
 
-	std::cout << "==> TMVAClassificationApplication is done!" << endl << std::endl;
+	std::cout << "==> End of ApplyFinalBDT"; sw.Print();
 	if(logFlag) gROOT->ProcessLine(".>");
 }

@@ -26,7 +26,7 @@
 using namespace TMVA;
 using namespace std;
 
-void TMVAClassificationApplicationIso(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t trackType = 3, Int_t flag = 1, const char* version = "v1", Int_t isoConf = 1)
+void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t trackType = 3, Int_t flag = 1, const char* version = "v1", Int_t isoConf = 1)
 /* run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = true for data, false for MC
    mcType = 0 when running over data. When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
@@ -35,6 +35,11 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Bool_t isData = true, Int_t
    version = "v0","v1", "v2" or "v3"
  */
 {
+	TStopwatch sw;
+	sw.Start();
+
+	cout<< "==> Start of ApplyIsolation"<<endl;
+
 	// #ifdef __CINT__
 	// gROOT->ProcessLine( ".O0" );         // turn off optimization in CINT
 	// #endif
@@ -159,7 +164,7 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Bool_t isData = true, Int_t
 	}
 
 	TString dir        = "dataset/weights/";
-	TString prefix     = TString::Format("TMVAClassification-isok%s_data_%s",type,version);
+	TString prefix     = TString::Format("TMVAClassification-isok%s_dataRun%d_%s",type,run,version);
 	TString methodName = "BDT method";
 
 	TString weightfile = dir + prefix + TString("_") + TString::Format("BDTconf%d",isoConf) + TString(".weights.xml");// change  configuration to conf1 or conf5 depending on which is better
@@ -218,8 +223,7 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Bool_t isData = true, Int_t
 	// }
 
 	cout << "--- Processing: " << entries_init << " events" <<endl;
-	TStopwatch sw;
-	sw.Start();
+
 	for (Long64_t ievt = 0; ievt < entries_init; ievt++)
 	{
 		if (ievt%50000 == 0) cout << "--- ... Processing event: " << ievt << endl;
@@ -248,12 +252,6 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Bool_t isData = true, Int_t
 		}
 		treeOut->Fill();
 	}
-	sw.Stop();// Get elapsed time
-	cout << "--- End of event loop: ";
-	sw.Print();
-	//treeOut->Print();
-
-	//	treeIn->SetBranchStatus("*",1);
 
 	fileOut->cd();
 	treeOut->Write();
@@ -263,7 +261,8 @@ void TMVAClassificationApplicationIso(Int_t run = 1, Bool_t isData = true, Int_t
 
 	delete reader;
 
-	cout<< "==> TMVAClassificationApplication is done!" << endl <<endl;
+	sw.Stop();// Get elapsed time
+	cout<< "==> End of ApplyIsolation"; sw.Print();
 
 	if(logFlag) gROOT->ProcessLine(".>");
 }

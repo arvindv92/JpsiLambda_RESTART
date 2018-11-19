@@ -12,6 +12,7 @@
 #include "TString.h"
 #include "TObjString.h"
 #include "TSystem.h"
+#include "TStopwatch.h"
 #include "TROOT.h"
 //#include "TMVAGui.C"
 
@@ -25,13 +26,18 @@
 
 using namespace std;
 
-void TMVAClassificationIso(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
+void TrainIsolation(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    trackType = 3 for LL, 5 for DD.
    version = "v0","v1","v2" or "v3"
  */
 {
+	TStopwatch sw;
+	sw.Start();
+
+	cout << "==> Start of TrainIsolation: "<<endl;
+
 	Bool_t logFlag = false;
 	TString outfileName = "", fname_sig = "", fname_bkg = "";
 	TCut mycuts = "", mycutb = "";
@@ -69,7 +75,7 @@ void TMVAClassificationIso(Int_t run = 1,Int_t trackType = 3, TString version = 
 
 	outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVA-isok%s_data_%s.root",run,type,version.Data());
 	outputFile  = TFile::Open(outfileName, "RECREATE");
-	factory     = new TMVA::Factory( TString::Format("TMVAClassification-isok%s_data_%s",type,version.Data()), outputFile,
+	factory     = new TMVA::Factory( TString::Format("TMVAClassification-isok%s_dataRun%d_%s",type,run,version.Data()), outputFile,
 	                                 "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
 
 	dataloader = new TMVA::DataLoader("dataset");
@@ -183,8 +189,8 @@ void TMVAClassificationIso(Int_t run = 1,Int_t trackType = 3, TString version = 
 
 	delete factory;
 
-	//      Launch the GUI for the root macros
-	//   if (!gROOT->IsBatch()) TMVAGui( outfileName );
+	sw.Stop();
+	cout << "==> End of TrainIsolation: "; sw.Print();
 
 	if(logFlag) gROOT->ProcessLine(".>");
 }

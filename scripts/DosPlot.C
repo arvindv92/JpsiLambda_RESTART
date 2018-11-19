@@ -40,7 +40,7 @@ void AddData(RooWorkspace*,Int_t,const char*, TString, TTree*);
 void DoSPlot(RooWorkspace*,Int_t,const char*, TString, TString, TTree*);
 void MakePlots(RooWorkspace*);
 
-void Lb_sPlot(Int_t run = 1, Int_t trackType = 3)
+void DosPlot(Int_t run = 1, Int_t trackType = 3)
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = 1 for data, 0 for MC

@@ -12,6 +12,7 @@
 #include "TString.h"
 #include "TObjString.h"
 #include "TSystem.h"
+#include "TStopwatch.h"
 #include "TROOT.h"
 //#include "TMVAGui.C"
 
@@ -25,13 +26,18 @@
 
 using namespace std;
 
-void TMVAClassification_JpsiLambda(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
+void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    trackType = 3 for LL, 5 for DD.
    version = "v1","v2" or "v3"
  */
 {
+	TStopwatch sw;
+	sw.Start();
+
+	cout << "==> Start of TrainFinalBDT: "<<endl;
+
 	Bool_t logFlag = false;
 	TString outfileName = "";
 	const char *logFileName = "", *type = "";
@@ -71,7 +77,7 @@ void TMVAClassification_JpsiLambda(Int_t run = 1,Int_t trackType = 3, TString ve
 
 	outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVA-JpsiLambda%s_data_%s.root",run,type,version.Data());
 	outputFile = TFile::Open( outfileName, "RECREATE" );
-	factory = new TMVA::Factory( TString::Format("TMVAClassification-JpsiLambda%s_data_%s",type,version.Data()), outputFile,
+	factory = new TMVA::Factory( TString::Format("TMVAClassification-JpsiLambda%s_dataRun%d_%s",type,run,version.Data()), outputFile,
 	                             "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
 
 	dataloader = new TMVA::DataLoader("dataset");
@@ -110,7 +116,7 @@ void TMVAClassification_JpsiLambda(Int_t run = 1,Int_t trackType = 3, TString ve
 	dataloader->AddVariable( "log_pi_PT := log10(pi_PT)", 'F' );
 	dataloader->AddVariable( "pi_ProbNNpi", 'F' );
 
-//	dataloader->AddVariable( TString::Format("BDTkMin_%s",version.Data()), 'F' );
+	dataloader->AddVariable( TString::Format("BDTkMin_%s",version.Data()), 'F' );
 
 	input = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withiso_%s.root",run,type,version.Data()));
 
@@ -234,6 +240,9 @@ void TMVAClassification_JpsiLambda(Int_t run = 1,Int_t trackType = 3, TString ve
 	cout << "==> TMVAClassification is done!" << endl;
 
 	delete factory;
+
+	sw.Stop();
+	cout << "==> End of TrainFinalBDT: "; sw.Print();
 
 	if(logFlag) gROOT->ProcessLine(".>");
 	// Launch the GUI for the root macros
