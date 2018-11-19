@@ -29,8 +29,6 @@ void Sanity(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0)
 	TStopwatch sw;
 	sw.Start();
 
-	TFile *fileIn = nullptr, *fileOut_LL = nullptr, *fileOut_DD = nullptr;
-	TTree *treeIn = nullptr, *treeOut_LL = nullptr, *treeOut_DD = nullptr;
 	Int_t entries_init = 0, entries_final_LL = 0, entries_final_DD, entries_gen = 0, Lb_BKGCAT = 0, p_TRACK_Type = 0;
 	Float_t eff_excl_LL = 0.0, eff_excl_LL_err = 0.0,eff_incl_LL = 0.0,eff_incl_LL_err = 0.0;
 	Float_t eff_excl_DD = 0.0, eff_excl_DD_err = 0.0,eff_incl_DD = 0.0,eff_incl_DD_err = 0.0;
@@ -40,12 +38,15 @@ void Sanity(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0)
 	Bool_t logFlag = false, genFlag = false;
 	const char* logFileName = "sanity_log.txt";
 	TCut dtfCut, lifetimeCut, pidCut, etaCut, tmCut;
+	TFile *fileIn = nullptr, *fileOut_LL = nullptr, *fileOut_DD = nullptr;
+	TTree *treeIn = nullptr, *treeOut_LL = nullptr, *treeOut_DD = nullptr;
 
 	fstream genFile;//contains no of generated candidates in MC.
 
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 
+	// Set up input, output, logging
 	if(!isData)  // MC
 	{
 		switch(mcType)
@@ -107,8 +108,12 @@ void Sanity(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0)
 		fileOut_DD = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_DD.root",run),"RECREATE");
 		treeOut_DD = (TTree*)treeIn->CloneTree(0);
 	}//end Data block
+	 //end setup of input, output, logging
 
-	cout<<"Starting Sanity"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"==> Starting Sanity: "<<endl;
+	cout<<"WD = "<<gSystem->pwd()<<endl;
+	cout<<"******************************************"<<endl;
 
 	cout<<"******************************************"<<endl;
 	cout<<"Input file = "<<fileIn->GetName()<<endl;
@@ -240,7 +245,7 @@ void Sanity(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0)
 	fileOut_DD->Close();
 
 	sw.Stop();
-	cout << "--- End of Sanity: "; sw.Print();
+	cout << "==> Sanity is done! Mazel Tov!: "; sw.Print();
 
 	if(logFlag) gROOT->ProcessLine(".>");
 	//if(logFlag) gSystem->Exec("cat sanity_log.txt");

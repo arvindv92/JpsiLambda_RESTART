@@ -36,8 +36,6 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
 	TStopwatch sw;
 	sw.Start();
 
-	cout << "==> Start of TrainFinalBDT: "<<endl;
-
 	Bool_t logFlag = false;
 	TString outfileName = "";
 	const char *logFileName = "", *type = "";
@@ -51,11 +49,8 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
 	logFileName = (trackType == 3) ? (TString::Format("finalBDTTraining_LL_%s_log.txt",version.Data())) : (TString::Format("finalBDTTraining_DD_%s_log.txt",version.Data()));
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
-	cout<<"*****************************"<<endl;
-	cout<<"WD = "<<gSystem->pwd()<<endl;
-	cout<<"*****************************"<<endl;
 
-	if(logFlag)
+	if(logFlag) //set up logging
 	{
 		gROOT->ProcessLine((TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName)).Data());
 	}
@@ -70,8 +65,11 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
 		type = "DD";
 	}
 
-	cout << endl;
-	cout << "==> Start TMVAClassification" << endl;
+	cout<<"*****************************"<<endl;
+	cout << "==> Starting TrainFinalBDT: "<<endl;
+	cout<<"WD = "<<gSystem->pwd()<<endl;
+	cout<<"*****************************"<<endl;
+
 
 	gROOT->ProcessLine("(TMVA::gConfig().GetVariablePlotting()).fMaxNumOfAllowedVariablesForScatterPlots = 10;");
 
@@ -242,7 +240,7 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
 	delete factory;
 
 	sw.Stop();
-	cout << "==> End of TrainFinalBDT: "; sw.Print();
+	cout << "==> TrainFinalBDT is done! Home streeeeetch!: "; sw.Print();
 
 	if(logFlag) gROOT->ProcessLine(".>");
 	// Launch the GUI for the root macros

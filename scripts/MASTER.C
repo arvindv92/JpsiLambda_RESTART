@@ -8,64 +8,69 @@ void MASTER()
 {
 	//Data- Run 1
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// gROOT->ProcessLine(".L trigger.C++");
-	// gROOT->ProcessLine("trigger(1, true, 0, true, true)");
+	// gROOT->ProcessLine(".L Trigger.C++");
+	// gROOT->ProcessLine("Trigger(1, true, 0, true, true)");
 	// gROOT->Reset();
 	//
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// gROOT->ProcessLine(".L sanity.C++");
-	// gROOT->ProcessLine("sanity(1, true, 0)");
+	// gROOT->ProcessLine(".L Sanity.C++");
+	// gROOT->ProcessLine("Sanity(1, true, 0)");
 	// gROOT->Reset();
 	//
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// gROOT->ProcessLine(".L cutOutKs.C++");
-	// gROOT->ProcessLine("cutOutKs(1, true, 0, 3)"); //LL
+	// gROOT->ProcessLine(".L CutOutKs.C++");
+	// gROOT->ProcessLine("CutOutKs(1, true, 0, 3)"); //LL
 	// gROOT->Reset();
 	//
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 	// gROOT->ProcessLine(".L DosPlot.C++");
 	// gROOT->ProcessLine("DosPlot(1, 3)");
 	// gROOT->Reset();
-	//
+
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// gROOT->ProcessLine(".L TMVAClassificationIso.C++");
-	// gROOT->ProcessLine("TMVAClassificationIso(1, 3, \"v1\")"); //include other versions later
+	// gROOT->ProcessLine(".L TrainIsolation.C++");
+	// gROOT->ProcessLine("TrainIsolation(1, 3, \"v1\")"); //include other versions later
 	// gROOT->Reset();
 	//
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// gROOT->ProcessLine(".L TMVAClassificationApplicationIso.C++");
-	// gROOT->ProcessLine("TMVAClassificationApplicationIso(1, true, 0, 3, 1 , \"v1\", 1)"); //include other versions and conf later
+	// gROOT->ProcessLine(".L ApplyIsolation.C++");
+	// gROOT->ProcessLine("ApplyIsolation(1, true, 0, 3, 1 , \"v1\", 1)"); //include other versions and conf later
 	// gROOT->Reset();
 	//
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// gROOT->ProcessLine(".L TMVAClassificationApplicationIso.C++");
-	// gROOT->ProcessLine("TMVAClassificationApplicationIso(1, true, 0, 3, 2 , \"v1\", 1)"); //include other versions and conf later
+	// //gROOT->ProcessLine(".L ApplyIsolation.C++");
+	// gROOT->ProcessLine("ApplyIsolation(1, true, 0, 3, 2 , \"v1\", 1)"); //include other versions and conf later
 	// gROOT->Reset();
 	//
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	gROOT->ProcessLine(".L TMVAClassification-JpsiLambda.C++");
-	gROOT->ProcessLine("TMVAClassification_JpsiLambda(1, 3, \"v1\")");
-	gROOT->Reset();
+	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
+	// gROOT->ProcessLine(".L TrainFinalBDT.C++");
+	// gROOT->ProcessLine("TrainFinalBDT(1, 3, \"v1\")");
+	// gROOT->Reset();
+	//
+	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
+	// gROOT->ProcessLine(".L ApplyFinalBDT.C++");
+	// gROOT->ProcessLine("ApplyFinalBDT(1, true, 0, 3, \"v1\", 1, 1)");//Apply on all data
+	// gROOT->Reset();
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	gROOT->ProcessLine(".L TMVAClassificationApplication-JpsiLambda.C++");
-	gROOT->ProcessLine("TMVAClassificationApplication_JpsiLambda(1, true, 0, 3, \"v1\", 1, 1)");
+	gROOT->ProcessLine(".L ApplyFinalBDT.C++");
+	gROOT->ProcessLine("ApplyFinalBDT(1, true, 0, 3, \"v1\", 1, 2)");//Apply only on weighted data
 	gROOT->Reset();
 
 	//Data- Run 2
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// gROOT->ProcessLine(".L trigger.C++");
-	// gROOT->ProcessLine("trigger(2, true, 0, true, true)");
+	// gROOT->ProcessLine(".L Trigger.C++");
+	// gROOT->ProcessLine("Trigger(2, true, 0, true, true)");
 	// gROOT->Reset();
 	//
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// gROOT->ProcessLine(".L sanity.C++");
-	// gROOT->ProcessLine("sanity(2, true, 0)");
+	// gROOT->ProcessLine(".L Sanity.C++");
+	// gROOT->ProcessLine("Sanity(2, true, 0)");
 	// gROOT->Reset();
 	//
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// gROOT->ProcessLine(".L cutOutKs.C++");
-	// gROOT->ProcessLine("cutOutKs(2, true, 0, 3)"); //LL
+	// gROOT->ProcessLine(".L CutOutKs.C++");
+	// gROOT->ProcessLine("CutOutKs(2, true, 0, 3)"); //LL
 	// gROOT->Reset();
 	//
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
@@ -74,27 +79,27 @@ void MASTER()
 	// gROOT->Reset();
 	//
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// gROOT->ProcessLine(".L TMVAClassificationIso.C++");
-	// gROOT->ProcessLine("TMVAClassificationIso(2, 3, \"v1\")"); //include other versions later
+	// gROOT->ProcessLine(".L TrainIsolation.C++");
+	// gROOT->ProcessLine("TrainIsolation(2, 3, \"v1\")"); //include other versions later
 	// gROOT->Reset();
 	//
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// gROOT->ProcessLine(".L TMVAClassificationApplicationIso.C++");
-	// gROOT->ProcessLine("TMVAClassificationApplicationIso(2, true, 0, 3, 1 , \"v1\", 1)"); //include other versions and conf later
+	// gROOT->ProcessLine(".L ApplyIsolation.C++");
+	// gROOT->ProcessLine("ApplyIsolation(2, true, 0, 3, 1 , \"v1\", 1)"); //include other versions and conf later
 	// gROOT->Reset();
 	//
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// gROOT->ProcessLine(".L TMVAClassificationApplicationIso.C++");
-	// gROOT->ProcessLine("TMVAClassificationApplicationIso(2, true, 0, 3, 2 , \"v1\", 1)"); //include other versions and conf later
+	// gROOT->ProcessLine(".L ApplyIsolation.C++");
+	// gROOT->ProcessLine("ApplyIsolation(2, true, 0, 3, 2 , \"v1\", 1)"); //include other versions and conf later
 	// gROOT->Reset();
 
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// gROOT->ProcessLine(".L TMVAClassification-JpsiLambda.C++");
-	// gROOT->ProcessLine("TMVAClassification_JpsiLambda(2, 3, \"v1\")");
+	// gROOT->ProcessLine(".L TrainFinalBDT.C++");
+	// gROOT->ProcessLine("TrainFinalBDT(2, 3, \"v1\")");
 	// gROOT->Reset();
 	//
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// gROOT->ProcessLine(".L TMVAClassificationApplication-JpsiLambda.C++");
-	// gROOT->ProcessLine("TMVAClassificationApplication_JpsiLambda(2, true, 0, 3, \"v1\", 1, 1)");
+	// gROOT->ProcessLine(".L ApplyFinalBDT.C++");
+	// gROOT->ProcessLine("ApplyFinalBDT(2, true, 0, 3, \"v1\", 1, 1)");
 	// gROOT->Reset();
 }

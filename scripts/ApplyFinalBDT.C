@@ -40,14 +40,30 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 	TStopwatch sw;
 	sw.Start();
 
+	Int_t entries_init = 0;
 	Bool_t logFlag = false, genFlag = false;
 	const char *logFileName = "", *type = "";
 	TString outfileName = "";
-	TFile *fileIn = NULL, *fileOut = NULL;
-	TTree *treeIn = NULL, *treeOut = NULL;
-
-	Int_t entries_init = 0;
+	TFile *fileIn = nullptr, *fileOut = nullptr;
+	TTree *treeIn = nullptr, *treeOut = nullptr;
+	TMVA::Tools::Instance();// This loads the library
+	TMVA::Reader *reader = nullptr;
 	fstream genFile;
+
+	Float_t log_dtfChi2 = 0., log_lbMinIpChi2 = 0., logAcos_lbDira_ownPV = 0., log_lbFd_ownPV = 0., log_lTau = 0. /*, l_dtfCtauS = 0.*/;
+	Float_t log_jpsiMinIpChi2 = 0., log_jpsiMass = 0., jpsi_cosTheta = 0., jpsi_pt = 0.;
+	Float_t log_lFdChi2_orivX = 0., logAcos_lDira_orivX = 0., log_lFd_orivX = 0., logAcos_lDira_ownPV = 0., l_dm = 0., log_lMinIpChi2 = 0., l_pt = 0., l_endVertex_Chi2 = 0., l_cosTheta = 0.;
+	Float_t p_PIDp = 0., log_pMinIpChi2 = 0., p_ghostProb = 0., log_p_pt = 0., p_probNNp = 0.;
+	Float_t pi_PIDK = 0., log_piMinIpChi2 = 0., pi_ghostProb = 0., log_pi_pt = 0., pi_probNNpi = 0.;
+	Float_t BDTK = 0.;
+
+	Float_t chi2array[200];
+	Double_t lbMinIpChi2 = 0., lbDira_ownPV = 0., lbFd_ownPV = 0., lTau = 0.;
+	Double_t jpsiMinIpChi2 = 0., jpsiMass = 0., jpsiCosTheta = 0., jpsiPT = 0.;
+	Double_t lFdChi2_orivX = 0., lDira_orivX = 0., lFd_orivX = 0., lDira_ownPV = 0., lDm = 0., lMinIpChi2 = 0., lPT = 0., lEndVertexChi2 = 0., lCosTheta = 0.;
+	Double_t pPIDp = 0., pMinIpChi2 = 0., pGhostProb = 0., pPT = 0., pProbNNp = 0.;
+	Double_t piPIDK = 0., piMinIpChi2 = 0., piGhostProb = 0., piPT = 0., piProbNNpi = 0.;
+	Double_t myBDTK = 0., BDT = 0.;
 
 	logFileName = (trackType == 3) ? (TString::Format("finalBDTApplication_LL_%s_log.txt",version)) : (TString::Format("finalBDTApplication_DD_%s_log.txt",version));
 
@@ -65,7 +81,7 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 		type = "DD";
 	}
 
-
+	//set up logging, input, output
 	if(!isData) // MC
 	{
 		switch(mcType)
@@ -75,7 +91,7 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 			if(!gSystem->AccessPathName(TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run)))
 			{
 				genFile.open((TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run)).Data());
-				genFlag = 1;
+				genFlag = true;
 			}
 			fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_%s_withiso_%s.root",run,type,version));
 			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda%s_withfinalBDT_%s.root",run,type,version),"RECREATE");
@@ -86,7 +102,7 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 			if(!gSystem->AccessPathName(TString::Format("logs/mc/JpsiSigma/run%d/gen_log.txt",run)))
 			{
 				genFile.open((TString::Format("logs/mc/JpsiSigma/run%d/gen_log.txt",run)).Data());
-				genFlag = 1;
+				genFlag = true;
 			}
 			fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_%s_withiso_%s.root",run,type,version));
 			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma%s_withfinalBDT_%s.root",run,type,version),"RECREATE");
@@ -97,13 +113,13 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 			if(!gSystem->AccessPathName(TString::Format("logs/mc/JpsiXi/run%d/gen_log.txt",run)))
 			{
 				genFile.open((TString::Format("logs/mc/JpsiXi/run%d/gen_log.txt",run)).Data());
-				genFlag = 1;
+				genFlag = true;
 			}
 			fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_%s_withiso_%s.root",run,type,version));
 			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi%s_withfinalBDT_%s.root",run,type,version),"RECREATE");
 			break;
 		}
-	}
+	}//end MC block
 	else // Data
 	{
 		if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/%s.txt",run,logFileName));
@@ -114,10 +130,14 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 		}
 		else if(flag == 2)
 		{
-			fileIn  = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw.root",run,type));
+			fileIn  = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withiso_%s.root",run,type,version));
 			fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withfinalBDT_%s.root",run,type,version),"RECREATE");
 		}
-	}
+	}//end Data block
+	cout<<"******************************************"<<endl;
+	cout<<"Starting ApplyFinalBDT "<<endl;
+	cout<<"WD = "<<gSystem->pwd()<<endl;
+	cout<<"******************************************"<<endl;
 
 	treeIn = (TTree*)fileIn->Get("MyTuple");
 	treeOut = (TTree*)treeIn->CloneTree(0);
@@ -131,29 +151,14 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 
 	cout<<"Incoming Entries = "<<entries_init;
 
-	#ifdef __CINT__
-	gROOT->ProcessLine( ".O0" ); // turn off optimization in CINT
-	#endif
-	TString myMethodList = "";
-	//---------------------------------------------------------------
+	// #ifdef __CINT__
+	// gROOT->ProcessLine( ".O0" ); // turn off optimization in CINT
+	// #endif
 
-	// This loads the library
-	TMVA::Tools::Instance();
-
-	std::cout << std::endl;
-	std::cout << "==> Start TMVAClassificationApplication" << std::endl;
-
-	TMVA::Reader *reader = new TMVA::Reader( "!Color:!Silent" );
+	reader = new TMVA::Reader( "!Color:!Silent" );
 
 	// Create a set of variables and declare them to the reader
 	// - the variable names MUST corresponds in name and type to those given in the weight file(s) used
-
-	Float_t log_dtfChi2 = 0., log_lbMinIpChi2 = 0., logAcos_lbDira_ownPV = 0., log_lbFd_ownPV = 0., log_lTau = 0. /*, l_dtfCtauS = 0.*/;
-	Float_t log_jpsiMinIpChi2 = 0., log_jpsiMass = 0., jpsi_cosTheta = 0., jpsi_pt = 0.;
-	Float_t log_lFdChi2_orivX = 0., logAcos_lDira_orivX = 0., log_lFd_orivX = 0., logAcos_lDira_ownPV = 0., l_dm = 0., log_lMinIpChi2 = 0., l_pt = 0., l_endVertex_Chi2 = 0., l_cosTheta = 0.;
-	Float_t p_PIDp = 0., log_pMinIpChi2 = 0., p_ghostProb = 0., log_p_pt = 0., p_probNNp = 0.;
-	Float_t pi_PIDK = 0., log_piMinIpChi2 = 0., pi_ghostProb = 0., log_pi_pt = 0., pi_probNNpi = 0.;
-	Float_t bdtK = 0.;
 
 	reader->AddVariable( "log_dtfchi2 := log10(Lb_ConsLb_chi2)", &log_dtfChi2 );
 	reader->AddVariable( "log_lbminipchi2 := log10(Lb_MINIPCHI2)", &log_lbMinIpChi2 );
@@ -189,9 +194,7 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 	reader->AddVariable( "log_pi_PT := log10(pi_PT)", &log_pi_pt );
 	reader->AddVariable( "pi_ProbNNpi", &pi_probNNpi );
 
-	reader->AddVariable( TString::Format("BDTkMin_%s",version), &bdtK );
-
-	// --- Book the MVA methods
+	reader->AddVariable( TString::Format("BDTkMin_%s",version), &BDTK );
 
 	TString dir    = "dataset/weights/";
 	TString prefix;
@@ -201,29 +204,12 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 	TString weightfile = dir + prefix + TString("_") + TString::Format("BDTconf%d",bdtConf) + TString(".weights.xml");
 	reader->BookMVA( methodName, weightfile );
 
-	if (!fileIn) {
-		std::cout << "ERROR: could not open data file" << std::endl;
+	if (!fileIn)
+	{
+		cout << "ERROR: could not open data file" << endl;
 		exit(1);
 	}
-	std::cout << "--- TMVAClassificationApp    : Using input file: " << fileIn->GetName() << std::endl;
-
-	// --- Event loop
-
-	// Prepare the event tree
-	// - here the variable names have to corresponds to your tree
-	// - you can use the same variables as above which is slightly faster,
-	//   but of course you can use different ones and copy the values inside the event loop
-	//
-	std::cout << "--- Select signal sample" << std::endl;
-	Float_t chi2array[200];
-	Double_t lbMinIpChi2 = 0., lbDira_ownPV = 0., lbFd_ownPV = 0., lTau = 0.;
-	Double_t jpsiMinIpChi2 = 0., jpsiMass = 0., jpsiCosTheta = 0., jpsiPT = 0.;
-	Double_t lFdChi2_orivX = 0., lDira_orivX = 0., lFd_orivX = 0., lDira_ownPV = 0., lDm = 0., lMinIpChi2 = 0., lPT = 0., lEndVertexChi2 = 0., lCosTheta = 0.;
-	Double_t pPIDp = 0., pMinIpChi2 = 0., pGhostProb = 0., pPT = 0., pProbNNp = 0.;
-	Double_t piPIDK = 0., piMinIpChi2 = 0., piGhostProb = 0., piPT = 0., piProbNNpi = 0.;
-	// Double_t userVar[19], BDT, bmass;
-	Double_t myBdtK = 0., BDT = 0.;
-	//treeIn->SetBranchAddress("BW", &BW);
+	cout << "--- TMVAClassificationApp    : Using input file: " << fileIn->GetName() << endl;
 
 	treeIn->SetBranchAddress( "Lb_ConsLb_chi2", chi2array );
 	treeIn->SetBranchAddress( "Lb_MINIPCHI2", &lbMinIpChi2 );
@@ -259,51 +245,15 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 	treeIn->SetBranchAddress( "pi_PT", &piPT );
 	treeIn->SetBranchAddress( "pi_ProbNNpi", &piProbNNpi );
 
-	treeIn->SetBranchAddress( TString::Format("BDTkMin_%s",version), &myBdtK );
+	treeIn->SetBranchAddress( TString::Format("BDTkMin_%s",version), &myBDTK );
 
 	treeOut->Branch( "BDT", &BDT, "BDT/D");
-	// treeout->Branch( "Lb_ConsLb_chi2", &chi2array[0],"Lb_ConsLb_chi2/F" );
-	// treeout->Branch( "Lb_MINIPCHI2", &userVar[1],"Lb_MINIPCHI2/D" );
-	// treeout->Branch( "Lb_DIRA_OWNPV", &userVar[2],"Lb_DIRA_OWNPV/D" );
-	// treeout->Branch( "Lb_FD_OWNPV", &userVar[3],"Lb_FD_OWNPV/D" );
-	// treeout->Branch( "L_TAU", &userVar[4],"L_TAU/D" );
-	// treeout->Branch( "Lb_DTF_CTAUS_L", &userVar[5],"Lb_DTF_CTAUS_L/D" );
-	//
-	// treeout->Branch( "Jpsi_MINIPCHI2", &userVar[6],"Jpsi_MINIPCHI2/D" );
-	// treeout->Branch( "Jpsi_M", &userVar[7],"Jpsi_M/D" );
-	// treeout->Branch( "Jpsi_CosTheta", &userVar[8],"Jpsi_CosTheta/D" );
-	// treeout->Branch( "Jpsi_PT", &userVar[9],"Jpsi_PT/D" );
-	//
-	// treeout->Branch( "L_FDCHI2_ORIVX", &userVar[10],"L_FDCHI2_ORIVX/D" );
-	// treeout->Branch( "L_DIRA_ORIVX", &userVar[11],"L_DIRA_ORIVX/D" );
-	// treeout->Branch( "L_FD_ORIVX", &userVar[12],"L_FD_ORIVX/D" );
-	// treeout->Branch( "L_DIRA_OWNPV", &userVar[13],"L_DIRA_OWNPV/D" );
-	// treeout->Branch( "L_dm", &userVar[14],"L_dm/D" );
-	// treeout->Branch( "L_MINIPCHI2", &userVar[15],"L_MINIPCHI2/D" );
-	// treeout->Branch( "L_PT", &userVar[16],"L_PT/D" );
-	// treeout->Branch( "L_ENDVERTEX_CHI2", &userVar[17],"L_ENDVERTEX_CHI2/D" );
-	// treeout->Branch( "L_CosTheta", &userVar[18],"L_CosTheta/D" );
-	//
-	// treeout->Branch( "p_PIDp", &userVar[19],"p_PIDp/D" );
-	// treeout->Branch( "p_MINIPCHI2", &userVar[20],"p_MINIPCHI2/D" );
-	// treeout->Branch( "p_TRACK_GhostProb", &userVar[21],"p_TRACK_GhostProb/D" );
-	// treeout->Branch( "p_PT", &userVar[22],"p_PT/D" );
-	// treeout->Branch( "p_ProbNNp", &userVar[23],"p_ProbNNp/D" );
-	//
-	// treeout->Branch( "pi_TRACK_GhostProb", &userVar[24],"pi_TRACK_GhostProb/D" );
-	// treeout->Branch( "pi_PIDK", &userVar[25], "pi_PIDK/D" );
-	// treeout->Branch( "pi_MINIPCHI2", &userVar[26], "pi_MINIPCHI2/D");
-	// treeout->Branch( "pi_PT", &userVar[27], "pi_PT/D");
-	// treeout->Branch( "pi_ProbNNpi", &userVar[28], "pi_ProbNNpi/D");
-	//
-	// treeout->Branch( "BDTk", &userVar[29],"BDTk/D" );
-	// treeout->Branch( "Lb_DTF_M_JpsiLConstr", &bmass, "Lb_DTF_M_JpsiLConstr/D");
 
-	std::cout << "--- Processing: " << entries_init << " events" << std::endl;
+	cout << "--- Processing: " << entries_init << " events" << endl;
 
 	for (Long64_t ievt = 0; ievt < entries_init; ievt++) {
 
-		if (ievt%50000 == 0) std::cout << "--- ... Processing event: " << ievt << std::endl;
+		if (ievt%50000 == 0) cout << "--- ... Processing event: " << ievt << endl;
 
 		treeIn->GetEntry(ievt);
 
@@ -340,7 +290,7 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 		log_piMinIpChi2 = log10(piMinIpChi2);//pi_MINIPCHI2
 		log_pi_pt = log10(piPT);//pi_PT
 		pi_probNNpi = piProbNNpi;//pi_ProbNNpi
-		bdtK = myBdtK;//BDTk
+		BDTK = myBDTK;//BDTk
 
 		BDT = reader->EvaluateMVA("BDT method");
 
@@ -348,16 +298,16 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 	}
 	// Get elapsed time
 	sw.Stop();
-	std::cout << "--- End of event loop: ";
+	cout << "--- End of event loop: ";
 
 	fileOut->cd();
 	treeOut->Write();
 	fileOut->Close();
 
-	std::cout << "--- Created root file: "<<fileOut->GetName()<<" containing the MVA output histograms" << std::endl;
+	cout << "--- Created root file: "<<fileOut->GetName()<<" containing the MVA output histograms" << endl;
 
 	delete reader;
 
-	std::cout << "==> End of ApplyFinalBDT"; sw.Print();
+	cout << "==> ApplyFinalBDT is done! Go optimize and fit!: "; sw.Print();
 	if(logFlag) gROOT->ProcessLine(".>");
 }
