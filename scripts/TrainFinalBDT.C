@@ -31,6 +31,7 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1", In
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    trackType = 3 for LL, 5 for DD.
    version = "v1","v2" or "v3"
+         isoConf = 1 or 5
    isoFlag = true if you want to use isolation in the final BDT.
  */
 {
@@ -47,7 +48,7 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1", In
 	TMVA::Factory *factory = nullptr;
 	TMVA::Tools::Instance();// This loads the library
 
-	logFileName = (trackType == 3) ? (TString::Format("finalBDTTraining_LL_%s_log.txt",version.Data())) : (TString::Format("finalBDTTraining_DD_%s_log.txt",version.Data()));
+	logFileName = (trackType == 3) ? (TString::Format("finalBDTTraining_LL_iso%d_%s_log.txt",isoConf,version.Data())) : (TString::Format("finalBDTTraining_DD_iso%d_%s_log.txt",isoConf,version.Data()));
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
@@ -76,9 +77,9 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1", In
 
 	if(isoFlag)
 	{
-		outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVA-JpsiLambda%s_data_%s.root",run,type,version.Data());
+		outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVA-JpsiLambda_%s_data_iso%d_%s.root",run,type,isoConf,version.Data());
 		outputFile = TFile::Open( outfileName, "RECREATE" );
-		factory = new TMVA::Factory( TString::Format("TMVAClassification-JpsiLambda%s_dataRun%d_%s",type,run,version.Data()), outputFile,
+		factory = new TMVA::Factory( TString::Format("TMVAClassification-JpsiLambda%s_dataRun%d_iso%d_%s",type,run,isoConf,version.Data()), outputFile,
 		                             "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
 	}
 	else

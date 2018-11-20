@@ -27,13 +27,14 @@
 using namespace TMVA;
 using namespace std;
 
-void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t trackType = 3, const char* version = "v1", Int_t bdtConf = 1, Int_t flag = 1, Bool_t isoFlag = true)
+void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t trackType = 3, const char* version = "v1", Int_t isoConf = 1, Int_t bdtConf = 1, Int_t flag = 1, Bool_t isoFlag = true)
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = 1 for data, 0 for MC
    mcType = 0 when running over data. When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
    trackType = 3 for LL, 5 for DD.
    version = "v1","v2", "v3" or "v4". Refers to isolation version.
+         isoConf = 1 or 5. Refers to config of isolation BDT.
    bdtConf = 1 or 5. refers to finalBDT training configs
    flag = 1 when applying on all data, flag = 2 when applying only on signal training sample
    isoFlag = true if you want to use isolation in the final BDT.
@@ -67,7 +68,7 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 	Double_t piPIDK = 0., piMinIpChi2 = 0., piGhostProb = 0., piPT = 0., piProbNNpi = 0.;
 	Double_t myBDTK = 0., BDT = 0.;
 
-	logFileName = (trackType == 3) ? (TString::Format("finalBDT%dApplication_LL_%s_log.txt",bdtConf,version)) : (TString::Format("finalBDT%dApplication_DD_%s_log.txt",bdtConf,version));
+	logFileName = (trackType == 3) ? (TString::Format("finalBDT%dApplication_LL_iso%d_%s.txt",bdtConf,isoConf,version)) : (TString::Format("finalBDT%dApplication_DD_iso%d_%s.txt",bdtConf,isoConf,version));
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 	cout<<"WD = "<<gSystem->pwd()<<endl;
@@ -97,8 +98,8 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 			}
 			if(isoFlag)
 			{
-				fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_%s_withiso_%s.root",run,type,version));
-				fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_%s_withFinalBDT%d_%s.root",run,type,bdtConf,version),"RECREATE");
+				fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_%s_withiso%d_%s.root",run,type,isoConf,version));
+				fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_%s_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,version),"RECREATE");
 			}
 			else
 			{
@@ -116,8 +117,8 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 			}
 			if(isoFlag)
 			{
-				fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_%s_withiso_%s.root",run,type,version));
-				fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_%s_withFinalBDT%d_%s.root",run,type,bdtConf,version),"RECREATE");
+				fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_%s_withiso%d_%s.root",run,type,isoConf,version));
+				fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_%s_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,version),"RECREATE");
 			}
 			else
 			{
@@ -135,8 +136,8 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 			}
 			if(isoFlag)
 			{
-				fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_%s_withiso_%s.root",run,type,version));
-				fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_%s_withFinalBDT%d_%s.root",run,type,bdtConf,version),"RECREATE");
+				fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_%s_withiso%d_%s.root",run,type,isoConf,version));
+				fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_%s_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,version),"RECREATE");
 			}
 			else
 			{
@@ -153,8 +154,8 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 		{
 			if(isoFlag)
 			{
-				fileIn  =  TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withiso_%s.root",run,type,version));
-				fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withFinalBDT%d_%s.root",run,type,bdtConf,version),"RECREATE");
+				fileIn  =  TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withiso%d_%s.root",run,type,isoConf,version));
+				fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,version),"RECREATE");
 			}
 			else
 			{
@@ -166,8 +167,8 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 		{
 			if(isoFlag)
 			{
-				fileIn  = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withiso_%s.root",run,type,version));
-				fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withFinalBDT%d_%s.root",run,type,bdtConf,version),"RECREATE");
+				fileIn  = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withiso%d_%s.root",run,type,isoConf,version));
+				fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,version),"RECREATE");
 			}
 			else
 			{
@@ -242,7 +243,7 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 	TString prefix;
 	if(isoFlag)
 	{
-		prefix = TString::Format("TMVAClassification-JpsiLambda%s_dataRun%d_%s",type,run,version);
+		prefix = TString::Format("TMVAClassification-JpsiLambda%s_dataRun%d_iso%d_%s",type,run,isoConf,version);
 	}
 	else
 	{

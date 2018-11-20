@@ -32,49 +32,49 @@ void MASTER()
 	// gROOT->ProcessLine("TrainIsolation(1, 3, \"v1\")"); //include other versions later
 	// gROOT->Reset();
 	//
-	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// gROOT->ProcessLine(".L ApplyIsolation.C++");
-	// gROOT->ProcessLine("ApplyIsolation(1, true, 0, 3, 1 , \"v1\", 1)"); //include other versions and conf later
-	// gROOT->Reset();
-	//
-	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// //gROOT->ProcessLine(".L ApplyIsolation.C++");
-	// gROOT->ProcessLine("ApplyIsolation(1, true, 0, 3, 2 , \"v1\", 1)"); //include other versions and conf later
-	// gROOT->Reset();
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
+	gROOT->ProcessLine(".L ApplyIsolation.C++");
+	gROOT->ProcessLine("ApplyIsolation(1, true, 0, 3, 1 , \"v4\", 5)"); //include other versions and conf later
+	gROOT->Reset();
 
-	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// gROOT->ProcessLine(".L TrainFinalBDT.C++");
-	// gROOT->ProcessLine("TrainFinalBDT(1, 3, \"v1\", 1, false)");
-	// gROOT->Reset();
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
+	gROOT->ProcessLine(".L ApplyIsolation.C++");
+	gROOT->ProcessLine("ApplyIsolation(1, true, 0, 3, 2 , \"v4\", 5)"); //include other versions and conf later
+	gROOT->Reset();
+
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
+	gROOT->ProcessLine(".L TrainFinalBDT.C++");
+	gROOT->ProcessLine("TrainFinalBDT(1, 3, \"v4\", 5, true)");
+	gROOT->Reset();
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 	gROOT->ProcessLine(".L ApplyFinalBDT.C++");
-	gROOT->ProcessLine("ApplyFinalBDT(1, true, 0, 3, \"v1\", 1, 1, false)");//Apply on all data
+	gROOT->ProcessLine("ApplyFinalBDT(1, true, 0, 3, \"v4\", 5, 1, 1, true)");//Apply on all data
 	gROOT->Reset();
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 	// gROOT->ProcessLine(".L ApplyFinalBDT.C++");
-	gROOT->ProcessLine("ApplyFinalBDT(1, true, 0, 3, \"v1\", 5, 1, false)");//Apply on all data
+	gROOT->ProcessLine("ApplyFinalBDT(1, true, 0, 3, \"v4\", 5, 5, 1, true)");//Apply on all data
 	gROOT->Reset();
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 	// gROOT->ProcessLine(".L ApplyFinalBDT.C++");
-	gROOT->ProcessLine("ApplyFinalBDT(1, true, 0, 3, \"v1\", 1, 2, false)");//Apply only on weighted data
+	gROOT->ProcessLine("ApplyFinalBDT(1, true, 0, 3, \"v4\", 5, 1, 2, true)");//Apply only on weighted data
 	gROOT->Reset();
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 	// gROOT->ProcessLine(".L ApplyFinalBDT.C++");
-	gROOT->ProcessLine("ApplyFinalBDT(1, true, 0, 3, \"v1\", 5, 2, false)");//Apply only on weighted data
+	gROOT->ProcessLine("ApplyFinalBDT(1, true, 0, 3, \"v4\", 5, 5, 2, true)");//Apply only on weighted data
 	gROOT->Reset();
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 	gROOT->ProcessLine(".L optimizeFinalBDT.C++");
-	gROOT->ProcessLine("optimizeFinalBDT(1, 3, \"v1\", 1, false)");
+	gROOT->ProcessLine("optimizeFinalBDT(1, 3, \"v4\", 5, 1, true)");
 	gROOT->Reset();
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 	// gROOT->ProcessLine(".L optimizeFinalBDT.C++");
-	gROOT->ProcessLine("optimizeFinalBDT(1, 3, \"v1\", 5, false)");
+	gROOT->ProcessLine("optimizeFinalBDT(1, 3, \"v4\", 5, 5, true)");
 	gROOT->Reset();
 
 	//Data- Run 2
@@ -100,26 +100,26 @@ void MASTER()
 	//
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 	// gROOT->ProcessLine(".L TrainIsolation.C++");
-	// gROOT->ProcessLine("TrainIsolation(2, 3, \"v1\")"); //include other versions later
+	// gROOT->ProcessLine("TrainIsolation(2, 3, \"v4\")"); //include other versions later
 	// gROOT->Reset();
 	//
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 	// gROOT->ProcessLine(".L ApplyIsolation.C++");
-	// gROOT->ProcessLine("ApplyIsolation(2, true, 0, 3, 1 , \"v1\", 1)"); //include other versions and conf later
+	// gROOT->ProcessLine("ApplyIsolation(2, true, 0, 3, 1 , \"v4\", 1)"); //include other versions and conf later
 	// gROOT->Reset();
 	//
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 	// gROOT->ProcessLine(".L ApplyIsolation.C++");
-	// gROOT->ProcessLine("ApplyIsolation(2, true, 0, 3, 2 , \"v1\", 1)"); //include other versions and conf later
+	// gROOT->ProcessLine("ApplyIsolation(2, true, 0, 3, 2 , \"v4\", 1)"); //include other versions and conf later
 	// gROOT->Reset();
 
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 	// gROOT->ProcessLine(".L TrainFinalBDT.C++");
-	// gROOT->ProcessLine("TrainFinalBDT(2, 3, \"v1\")");
+	// gROOT->ProcessLine("TrainFinalBDT(2, 3, \"v4\")");
 	// gROOT->Reset();
 	//
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 	// gROOT->ProcessLine(".L ApplyFinalBDT.C++");
-	// gROOT->ProcessLine("ApplyFinalBDT(2, true, 0, 3, \"v1\", 1, 1)");
+	// gROOT->ProcessLine("ApplyFinalBDT(2, true, 0, 3, \"v4\", 1, 1)");
 	// gROOT->Reset();
 }

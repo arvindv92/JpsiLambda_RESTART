@@ -10,7 +10,7 @@ using namespace std;
 
 Double_t getSumOfWeights(Double_t mybdt, TTree *tree, Int_t flag, Int_t bdtConf);
 
-void optimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* version = "v1", Int_t bdtConf = 1, Bool_t isoFlag = true)
+void optimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* version = "v1", Int_t isoConf = 1, Int_t bdtConf = 1, Bool_t isoFlag = true)
 {
 	TFile *fileIn = nullptr;
 	TTree *treeIn = nullptr;
@@ -23,8 +23,6 @@ void optimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* version = 
 	TString t = "";
 	const char *logFileName = "", *type = "";
 
-	if(!isoFlag) version = "noIso";
-
 	if(trackType == 3)
 	{
 		cout<<"Processing LL"<<endl;
@@ -36,7 +34,7 @@ void optimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* version = 
 		type = "DD";
 	}
 
-	logFileName = (trackType == 3) ? (TString::Format("optimizeFinalBDT%d_LL_%s_log.txt",bdtConf,version)) : (TString::Format("optimizeFinalBDT%d_DD_%s_log.txt",bdtConf,version));
+	logFileName = (trackType == 3) ? (TString::Format("optimizeFinalBDT%d_LL_iso%d_%s.txt",bdtConf,isoConf,version)) : (TString::Format("optimizeFinalBDT%d_DD_iso%d_%s.txt",bdtConf,isoConf,version));
 
 	if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/%s.txt",run,logFileName));
 
@@ -46,7 +44,14 @@ void optimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* version = 
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 	cout<<"******************************************"<<endl;
 
-	fileIn = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withFinalBDT%d_%s.root",run,type,bdtConf,version),"READ");
+	if(isoFlag)
+	{
+		fileIn = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,version),"READ");
+	}
+	else
+	{
+		fileIn = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withFinalBDT%d_noIso.root",run,type,bdtConf),"READ");
+	}
 	treeIn = (TTree*)fileIn->Get("MyTuple");
 
 	treeIn->Draw(TString::Format("BDT%d>>hsig0(90,-0.4,0.5)",bdtConf),"SW","goff");
