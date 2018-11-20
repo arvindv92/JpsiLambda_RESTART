@@ -82,7 +82,7 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 				genFlag = 1;
 			}
 			fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_nonZeroTracks.root",run,type));
-			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_%s_withiso_%s.root",run,type,version),"RECREATE");
+			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_%s_withiso%d_%s.root",run,type,isoConf,version),"RECREATE");
 			break;
 
 		case 2: //JpsiSigma
@@ -93,7 +93,7 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 				genFlag = 1;
 			}
 			fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_cutoutks_%s_nonZeroTracks.root",run,type));
-			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_%s_withiso_%s.root",run,type,version),"RECREATE");
+			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_%s_withiso%d_%s.root",run,type,isoConf,version),"RECREATE");
 			break;
 
 		case 3: //JpsiXi
@@ -104,7 +104,7 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 				genFlag = 1;
 			}
 			fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_cutoutks_%s_nonZeroTracks.root",run,type));
-			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_%s_withiso_%s.root",run,type,version),"RECREATE");
+			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_%s_withiso%d_%s.root",run,type,isoConf,version),"RECREATE");
 			break;
 		}
 	}//end MC block
@@ -114,12 +114,12 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 		if(flag == 1)
 		{
 			fileIn      = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_nonZeroTracks.root",run,type));
-			fileOut     = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withiso_%s.root",run,type,version),"RECREATE");
+			fileOut     = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withiso%d_%s.root",run,type,isoConf,version),"RECREATE");
 		}
 		else if(flag == 2)
 		{
 			fileIn  = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw_nonZeroTracks.root",run,type));
-			fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withiso_%s.root",run,type,version),"RECREATE");
+			fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withiso%d_%s.root",run,type,isoConf,version),"RECREATE");
 		}
 	}
 	//end Data block
@@ -148,7 +148,7 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 	// Create a set of variables and declare them to the reader
 	// - the variable names MUST corresponds in name and type to those given in the weight file(s) used
 
-	if (!strncmp(version,"v0",2) || !strncmp(version,"v1",2) || !strncmp(version,"v2",2) || !strncmp(version,"v3",2) )
+	if (!strncmp(version,"v0",2) || !strncmp(version,"v1",2) || !strncmp(version,"v2",2) || !strncmp(version,"v3",2) || !strncmp(version,"v4",2) )
 	{
 		reader->AddVariable("IPCHI2", &ipChi2);
 		reader->AddVariable("VCHI2DOF", &vChi2Dof);

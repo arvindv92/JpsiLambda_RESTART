@@ -77,7 +77,7 @@ void TrainIsolation(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
 
 	dataloader = new TMVA::DataLoader("dataset");
 
-	if(version == "v0" || version == "v1" || version == "v2" || version == "v3")
+	if(version == "v0" || version == "v1" || version == "v2" || version == "v3" || version == "v4")
 	{
 		dataloader->AddVariable("IPCHI2",'F');
 		dataloader->AddVariable("VCHI2DOF",'F');

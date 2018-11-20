@@ -41,20 +41,40 @@ void MASTER()
 	// //gROOT->ProcessLine(".L ApplyIsolation.C++");
 	// gROOT->ProcessLine("ApplyIsolation(1, true, 0, 3, 2 , \"v1\", 1)"); //include other versions and conf later
 	// gROOT->Reset();
-	//
+
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 	// gROOT->ProcessLine(".L TrainFinalBDT.C++");
-	// gROOT->ProcessLine("TrainFinalBDT(1, 3, \"v1\")");
-	// gROOT->Reset();
-	//
-	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// gROOT->ProcessLine(".L ApplyFinalBDT.C++");
-	// gROOT->ProcessLine("ApplyFinalBDT(1, true, 0, 3, \"v1\", 1, 1)");//Apply on all data
+	// gROOT->ProcessLine("TrainFinalBDT(1, 3, \"v1\", 1, false)");
 	// gROOT->Reset();
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 	gROOT->ProcessLine(".L ApplyFinalBDT.C++");
-	gROOT->ProcessLine("ApplyFinalBDT(1, true, 0, 3, \"v1\", 1, 2)");//Apply only on weighted data
+	gROOT->ProcessLine("ApplyFinalBDT(1, true, 0, 3, \"v1\", 1, 1, false)");//Apply on all data
+	gROOT->Reset();
+
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
+	// gROOT->ProcessLine(".L ApplyFinalBDT.C++");
+	gROOT->ProcessLine("ApplyFinalBDT(1, true, 0, 3, \"v1\", 5, 1, false)");//Apply on all data
+	gROOT->Reset();
+
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
+	// gROOT->ProcessLine(".L ApplyFinalBDT.C++");
+	gROOT->ProcessLine("ApplyFinalBDT(1, true, 0, 3, \"v1\", 1, 2, false)");//Apply only on weighted data
+	gROOT->Reset();
+
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
+	// gROOT->ProcessLine(".L ApplyFinalBDT.C++");
+	gROOT->ProcessLine("ApplyFinalBDT(1, true, 0, 3, \"v1\", 5, 2, false)");//Apply only on weighted data
+	gROOT->Reset();
+
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
+	gROOT->ProcessLine(".L optimizeFinalBDT.C++");
+	gROOT->ProcessLine("optimizeFinalBDT(1, 3, \"v1\", 1, false)");
+	gROOT->Reset();
+
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
+	// gROOT->ProcessLine(".L optimizeFinalBDT.C++");
+	gROOT->ProcessLine("optimizeFinalBDT(1, 3, \"v1\", 5, false)");
 	gROOT->Reset();
 
 	//Data- Run 2

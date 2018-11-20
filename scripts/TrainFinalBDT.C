@@ -26,11 +26,12 @@
 
 using namespace std;
 
-void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
+void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1", Int_t isoConf = 1, Bool_t isoFlag = true)
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    trackType = 3 for LL, 5 for DD.
    version = "v1","v2" or "v3"
+   isoFlag = true if you want to use isolation in the final BDT.
  */
 {
 	TStopwatch sw;
@@ -73,10 +74,20 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
 
 	gROOT->ProcessLine("(TMVA::gConfig().GetVariablePlotting()).fMaxNumOfAllowedVariablesForScatterPlots = 10;");
 
-	outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVA-JpsiLambda%s_data_%s.root",run,type,version.Data());
-	outputFile = TFile::Open( outfileName, "RECREATE" );
-	factory = new TMVA::Factory( TString::Format("TMVAClassification-JpsiLambda%s_dataRun%d_%s",type,run,version.Data()), outputFile,
-	                             "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
+	if(isoFlag)
+	{
+		outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVA-JpsiLambda%s_data_%s.root",run,type,version.Data());
+		outputFile = TFile::Open( outfileName, "RECREATE" );
+		factory = new TMVA::Factory( TString::Format("TMVAClassification-JpsiLambda%s_dataRun%d_%s",type,run,version.Data()), outputFile,
+		                             "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
+	}
+	else
+	{
+		outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVA-JpsiLambda%s_data_noIso.root",run,type);
+		outputFile = TFile::Open( outfileName, "RECREATE");
+		factory = new TMVA::Factory( TString::Format("TMVAClassification-JpsiLambda%s_dataRun%d_noIso",type,run), outputFile,
+		                             "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
+	}
 
 	dataloader = new TMVA::DataLoader("dataset");
 
@@ -114,9 +125,16 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
 	dataloader->AddVariable( "log_pi_PT := log10(pi_PT)", 'F' );
 	dataloader->AddVariable( "pi_ProbNNpi", 'F' );
 
-	dataloader->AddVariable( TString::Format("BDTkMin_%s",version.Data()), 'F' );
+	if(isoFlag) dataloader->AddVariable( TString::Format("BDTkMin_%s",version.Data()), 'F' );
 
-	input = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withiso_%s.root",run,type,version.Data()));
+	if(isoFlag)
+	{
+		input = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withiso%d_%s.root",run,type,isoConf,version.Data()));
+	}
+	else
+	{
+		input = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw.root",run,type));
+	}
 
 	cout << "--- TMVAClassification       : Using input file: " << input->GetName() << endl;
 	//cout << "--- TMVAClassification       : Using signal input file: " << input->GetName() << endl;
