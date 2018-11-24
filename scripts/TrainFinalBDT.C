@@ -77,14 +77,14 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1", In
 
 	if(isoFlag)
 	{
-		outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVA-JpsiLambda_%s_data_iso%d_%s.root",run,type,isoConf,version.Data());
+		outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVAtraining/iso/TMVA-JpsiLambda_%s_data_iso%d_%s.root",run,type,isoConf,version.Data());
 		outputFile = TFile::Open( outfileName, "RECREATE" );
 		factory = new TMVA::Factory( TString::Format("TMVAClassification-JpsiLambda%s_dataRun%d_iso%d_%s",type,run,isoConf,version.Data()), outputFile,
 		                             "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
 	}
 	else
 	{
-		outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVA-JpsiLambda%s_data_noIso.root",run,type);
+		outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVAtraining/noIso/TMVA-JpsiLambda%s_data_noIso.root",run,type);
 		outputFile = TFile::Open( outfileName, "RECREATE");
 		factory = new TMVA::Factory( TString::Format("TMVAClassification-JpsiLambda%s_dataRun%d_noIso",type,run), outputFile,
 		                             "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
@@ -181,7 +181,7 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1", In
 	treeIn->SetBranchStatus("pi_PT",1);
 	treeIn->SetBranchStatus("pi_ProbNNpi",1);
 
-	treeIn->SetBranchStatus(TString::Format("BDTkMin_%s",version.Data()),1);
+	if(isoFlag) treeIn->SetBranchStatus(TString::Format("BDTkMin_%s",version.Data()),1);
 
 	treeIn->SetBranchStatus("SW",1);
 	treeIn->SetBranchStatus("BW",1);
@@ -212,7 +212,7 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1", In
 	factory->BookMethod(dataloader,TMVA::Types::kBDT, "BDTconf1",
 	                    "!H:!V:NTrees=850:MinNodeSize=1.25%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
 	cout<<"4"<<endl;
-	factory->BookMethod( dataloader,TMVA::Types::kBDT, "BDTconf5",
+	factory->BookMethod( dataloader,TMVA::Types::kBDT, "BDTconf2",
 	                     "!H:!V:NTrees=850:MinNodeSize=0.625%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
 
 	/*factory->BookMethod( TMVA::Types::kBDT, "BDTconf6",

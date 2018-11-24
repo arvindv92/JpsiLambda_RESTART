@@ -208,8 +208,8 @@ void AddData(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 
 void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL", TString outFileName = "", TString trainFileName = "", TTree *treeOut = nullptr)
 {
-	TFile *fileOut_training = nullptr, *fileOut_nonZeroTracks = nullptr;
-	TTree *treeOut_training = nullptr, *treeOut_nonZeroTracks = nullptr;
+	TFile *fileOut_training = nullptr, *fileOut_nonZeroTracks = nullptr, *fileOut_ZeroTracks = nullptr;
+	TTree *treeOut_training = nullptr, *treeOut_nonZeroTracks = nullptr, *treeOut_ZeroTracks = nullptr;
 
 	Float_t SIGW = 0., BKGW = 0.;
 	TBranch *sigW = nullptr,*bkgW = nullptr;
@@ -483,6 +483,16 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	fileOut_nonZeroTracks->Close();
 
 	cout<<"Done writing output tree with unbinned sWeighted data for nonZeroTracks"<<endl;
+
+	fileOut_ZeroTracks = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw_ZeroTracks.root",run,type),"RECREATE");
+	cout<<"Copying tree with s-weights to make ZeroTracks file"<<endl;
+	treeOut_ZeroTracks = (TTree*)treeOut->CopyTree("Added_n_Particles == 0");
+
+	fileOut_ZeroTracks->cd();
+	treeOut_ZeroTracks->Write();
+	fileOut_ZeroTracks->Close();
+
+	cout<<"Done writing output tree with unbinned sWeighted data for ZeroTracks"<<endl;
 
 	cout<<"Finishing DoSPlot()"<<endl;
 }

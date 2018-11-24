@@ -24,11 +24,11 @@ void CutOutKs(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t track
 	TStopwatch sw;
 	sw.Start();
 
-	TFile *fileIn = nullptr, *fileOut = nullptr, *fileOut_nonZeroTracks = nullptr;
-	TTree *treeIn = nullptr, *treeOut = nullptr, *treeOut_nonZeroTracks = nullptr;
+	TFile *fileIn = nullptr, *fileOut = nullptr, *fileOut_nonZeroTracks = nullptr, *fileOut_ZeroTracks = nullptr;;
+	TTree *treeIn = nullptr, *treeOut = nullptr, *treeOut_nonZeroTracks = nullptr, *treeOut_ZeroTracks = nullptr;
 
 	const char *L_dmcut = "", *pidcut = "", *massWindow = "", *type = "", *logFileName = "";
-	Int_t entries_init = 0, entries_final = 0, entries_final_nonZeroTracks = 0, entries_gen = 0, nTracks = 0;
+	Int_t entries_init = 0, entries_final = 0, entries_final_nonZeroTracks = 0, entries_final_ZeroTracks = 0, entries_gen = 0, nTracks = 0;
 	Float_t eff_excl = 0.0, eff_excl_err = 0.0, eff_incl = 0.0, eff_incl_err = 0.0;
 	Double_t L_dm = 0.0, p_PIDp = 0.0, Lb_DTF_L_WMpipi_JpsiConstr = 0.0;
 	Bool_t logFlag = false, genFlag = false;
@@ -74,6 +74,8 @@ void CutOutKs(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t track
 			treeOut = (TTree*)treeIn->CloneTree(0);
 			fileOut_nonZeroTracks = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_nonZeroTracks.root",run,type),"RECREATE");
 			treeOut_nonZeroTracks = (TTree*)treeIn->CloneTree(0);
+			fileOut_ZeroTracks = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_ZeroTracks.root",run,type),"RECREATE");
+			treeOut_ZeroTracks = (TTree*)treeIn->CloneTree(0);
 			break;
 
 		case 2:         //JpsiSigma
@@ -92,6 +94,8 @@ void CutOutKs(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t track
 			treeOut = (TTree*)treeIn->CloneTree(0);
 			fileOut_nonZeroTracks = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_cutoutks_%s_nonZeroTracks.root",run,type),"RECREATE");
 			treeOut_nonZeroTracks = (TTree*)treeIn->CloneTree(0);
+			fileOut_ZeroTracks = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_cutoutks_%s_ZeroTracks.root",run,type),"RECREATE");
+			treeOut_ZeroTracks = (TTree*)treeIn->CloneTree(0);
 			break;
 
 		case 3:         //JpsiXi
@@ -110,6 +114,8 @@ void CutOutKs(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t track
 			treeOut = (TTree*)treeIn->CloneTree(0);
 			fileOut_nonZeroTracks = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_cutoutks_%s_nonZeroTracks.root",run,type),"RECREATE");
 			treeOut_nonZeroTracks = (TTree*)treeIn->CloneTree(0);
+			fileOut_ZeroTracks = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_cutoutks_%s_ZeroTracks.root",run,type),"RECREATE");
+			treeOut_ZeroTracks = (TTree*)treeIn->CloneTree(0);
 			break;
 		}
 	}
@@ -125,6 +131,8 @@ void CutOutKs(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t track
 		treeOut = (TTree*)treeIn->CloneTree(0);
 		fileOut_nonZeroTracks = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_nonZeroTracks.root",run,type),"RECREATE");
 		treeOut_nonZeroTracks = (TTree*)treeIn->CloneTree(0);
+		fileOut_ZeroTracks = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_ZeroTracks.root",run,type),"RECREATE");
+		treeOut_ZeroTracks = (TTree*)treeIn->CloneTree(0);
 	}
 	//end setup of input, output, logging
 
@@ -137,6 +145,7 @@ void CutOutKs(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t track
 	cout<<"Input file = "<<fileIn->GetName()<<endl;
 	cout<<"Output file = "<<fileOut->GetName()<<endl;
 	cout<<"nonZeroTracks Output file = "<<fileOut_nonZeroTracks->GetName()<<endl;
+	cout<<"ZeroTracks Output file = "<<fileOut_ZeroTracks->GetName()<<endl;
 	cout<<"******************************************"<<endl;
 
 	entries_init = treeIn->GetEntries();
@@ -171,6 +180,7 @@ void CutOutKs(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t track
 		if(Lb_DTF_L_WMpipi_JpsiConstr < 480 || Lb_DTF_L_WMpipi_JpsiConstr > 520)
 		{
 			if(nTracks > 0) treeOut_nonZeroTracks->Fill();
+			else if(nTracks == 0) treeOut_ZeroTracks->Fill();
 			treeOut->Fill();
 			continue;
 		}
@@ -185,6 +195,7 @@ void CutOutKs(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t track
 						if(L_dm < 7.5)
 						{
 							if(nTracks > 0) treeOut_nonZeroTracks->Fill();
+							else if(nTracks == 0) treeOut_ZeroTracks->Fill();
 							treeOut->Fill();
 						}
 					}
@@ -199,6 +210,7 @@ void CutOutKs(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t track
 						if(L_dm < 10)
 						{
 							if(nTracks > 0) treeOut_nonZeroTracks->Fill();
+							if(nTracks == 0) treeOut_ZeroTracks->Fill();
 							treeOut->Fill();
 						}
 					}
@@ -209,9 +221,11 @@ void CutOutKs(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t track
 
 	entries_final = treeOut->GetEntries();
 	entries_final_nonZeroTracks = treeOut_nonZeroTracks->GetEntries();
+	entries_final_ZeroTracks = treeOut_ZeroTracks->GetEntries();
 
 	cout<<"Outgoing Entries = "<<entries_final<<endl;
 	cout<<"Outgoing Entries with nonZeroTracks = "<<entries_final_nonZeroTracks<<endl;
+	cout<<"Outgoing Entries with ZeroTracks = "<<entries_final_ZeroTracks<<endl;
 
 	if(!isData)//Calculate inclusive and exclusive efficiencies for MC
 	{

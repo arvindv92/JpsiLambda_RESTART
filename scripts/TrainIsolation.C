@@ -70,7 +70,7 @@ void TrainIsolation(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 	cout<<"*****************************"<<endl;
 
-	outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVA-isok%s_data_%s.root",run,type,version.Data());
+	outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVAtraining/iso/TMVA-isok%s_data_%s.root",run,type,version.Data());
 	outputFile  = TFile::Open(outfileName, "RECREATE");
 	factory     = new TMVA::Factory( TString::Format("TMVAClassification-isok%s_dataRun%d_%s",type,run,version.Data()), outputFile,
 	                                 "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
@@ -160,10 +160,10 @@ void TrainIsolation(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
 	dataloader->PrepareTrainingAndTestTree(mycuts, mycutb,
 	                                       "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V");
 
-	factory->BookMethod(dataloader, TMVA::Types::kBDT, "BDTconf1",
+	factory->BookMethod(dataloader, TMVA::Types::kBDT, "isoConf1",
 	                    "!H:!V:NTrees=850:MinNodeSize=1.25%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
 
-	factory->BookMethod(dataloader, TMVA::Types::kBDT, "BDTconf5",
+	factory->BookMethod(dataloader, TMVA::Types::kBDT, "isoConf2",
 	                    "!H:!V:NTrees=850:MinNodeSize=0.75%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
 
 	/*	factory->BookMethod( TMVA::Types::kBDT, "BDTconf2",

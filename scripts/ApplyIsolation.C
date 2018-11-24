@@ -33,6 +33,7 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
    trackType = 3 for LL, 5 for DD.
    flag = 1 when applying on all data, flag = 2 when applying only on signal training sample
    version = "v0","v1", "v2" or "v3"
+         isoConf = 1 or 2.
  */
 {
 	TStopwatch sw;
@@ -177,7 +178,7 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 	TString prefix     = TString::Format("TMVAClassification-isok%s_dataRun%d_%s",type,run,version);
 	TString methodName = "BDT method";
 
-	TString weightfile = dir + prefix + TString("_") + TString::Format("BDTconf%d",isoConf) + TString(".weights.xml");// change  configuration to conf1 or conf5 depending on which is better
+	TString weightfile = dir + prefix + TString("_") + TString::Format("isoConf%d",isoConf) + TString(".weights.xml");// change  configuration to conf1 or conf5 depending on which is better
 	reader->BookMVA(methodName, weightfile);
 
 	// treeIn->SetBranchStatus("*",0);
