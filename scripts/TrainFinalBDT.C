@@ -203,7 +203,7 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1", In
 	dataloader->SetBackgroundWeightExpression("BW");
 
 	// Apply additional cuts on the signal and background samples (can be different)
-	TCut mycuts = "Lb_ConsLb_chi2 > 0 && Lb_MINIPCHI2 > 0 && Lb_FD_OWNPV > 0 && L_TAU > 0 && Jpsi_MINIPCHI2 > 0 && Jpsi_M > 0 && L_FDCHI2_ORIVX > 0 && L_FD_ORIVX > 0 && L_MINIPCHI2 > 0 && p_MINIPCHI2 > 0 && p_PT > 0 && pi_MINIPCHI2 > 0 && pi_PT > 0 && Lb_MINIPCHI2 < 5000 && Jpsi_MINIPCHI2 < 5000 && pi_PIDK < 5 && p_PIDp > 5 && pi_MINIPCHI2 < 5000 && L_MINIPCHI2 < 10000";//Maybe add Lbmass < 5700 here? Maybe dtfchi2 cut?
+	TCut mycuts = "Lb_ConsLb_chi2 > 0 && Lb_MINIPCHI2 > 0 && Lb_FD_OWNPV > 0 && L_TAU > 0 && Jpsi_MINIPCHI2 > 0 && Jpsi_M > 0 && L_FDCHI2_ORIVX > 0 && L_FD_ORIVX > 0 && L_MINIPCHI2 > 0 && p_MINIPCHI2 > 0 && p_PT > 0 && pi_MINIPCHI2 > 0 && pi_PT > 0 && Lb_MINIPCHI2 < 5000 && Jpsi_MINIPCHI2 < 5000 && pi_PIDK < 5 && p_PIDp > 5 && pi_MINIPCHI2 < 5000 && L_MINIPCHI2 < 10000 && Lb_DTF_M_JpsiLConstr < 5700";//Maybe add Lbmass < 5700 here? Maybe dtfchi2 cut?
 	TCut mycutb = "Lb_ConsLb_chi2 > 0 && Lb_MINIPCHI2 > 0 && Lb_FD_OWNPV > 0 && L_TAU > 0 && Jpsi_MINIPCHI2 > 0 && Jpsi_M > 0 && L_FDCHI2_ORIVX > 0 && L_FD_ORIVX > 0 && L_MINIPCHI2 > 0 && p_MINIPCHI2 > 0 && p_PT > 0 && pi_MINIPCHI2 > 0 && pi_PT > 0 && Lb_MINIPCHI2 < 5000 && Jpsi_MINIPCHI2 < 5000 && pi_PIDK < 5 && p_PIDp > 5 && pi_MINIPCHI2 < 5000 && L_MINIPCHI2 < 10000 && Lb_DTF_M_JpsiLConstr > 5700 && Lb_DTF_M_JpsiLConstr < 7000";
 	cout<<"3"<<endl;
 	dataloader->PrepareTrainingAndTestTree( mycuts, mycutb, "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V" );

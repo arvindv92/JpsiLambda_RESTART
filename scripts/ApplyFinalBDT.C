@@ -34,7 +34,7 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
    mcType = 0 when running over data. When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
    trackType = 3 for LL, 5 for DD.
    version = "v1","v2", "v3" or "v4". Refers to isolation version.
-         isoConf = 1 or 5. Refers to config of isolation BDT.
+   isoConf = 1 or 5. Refers to config of isolation BDT.
    bdtConf = 1 or 5. refers to finalBDT training configs
    flag = 1 when applying on all data, flag = 2 when applying only on signal training sample
    isoFlag = true if you want to use isolation in the final BDT.

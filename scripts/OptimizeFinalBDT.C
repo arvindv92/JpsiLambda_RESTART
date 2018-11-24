@@ -8,16 +8,16 @@
 
 using namespace std;
 
-Double_t getSumOfWeights(Double_t mybdt, TTree *tree, Int_t flag, Int_t bdtConf);
+Double_t getSumOfWeights(Double_t mybdt, TTree *tree, Int_t flag, Int_t bdtConf, Int_t nEntries);
 
-void optimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* version = "v1", Int_t isoConf = 1, Int_t bdtConf = 1, Bool_t isoFlag = true)
+void OptimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* version = "v1", Int_t isoConf = 1, Int_t bdtConf = 1, Bool_t isoFlag = true)
 {
 	TFile *fileIn = nullptr;
 	TTree *treeIn = nullptr;
 	TH1D *hsig = nullptr, *hbkg = nullptr;
 
-	Int_t sig = 0, bkg = 0, siginit = 0, bkginit = 0;
-	Double_t BDT = 0., BDT_max = 0., FOM = 0., FOM_max = 0.;
+	Int_t nEntries = 0;
+	Double_t BDT = 0., BDT_max = 0., FOM = 0., FOM_max = 0., sig = 0., bkg = 0., siginit = 0., bkginit = 0.;
 	Double_t eff_sig = 0., eff_sig_max = 0., eff_bkg = 0., eff_bkg_max = 0.;
 	Bool_t logFlag = false;
 	TString t = "";
@@ -54,6 +54,8 @@ void optimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* version = 
 	}
 	treeIn = (TTree*)fileIn->Get("MyTuple");
 
+	nEntries = treeIn->GetEntries();
+
 	treeIn->Draw(TString::Format("BDT%d>>hsig0(90,-0.4,0.5)",bdtConf),"SW","goff");
 	treeIn->Draw(TString::Format("BDT%d>>hsig(90,-0.4,0.5)",bdtConf),"SW*(Lb_DTF_M_JpsiLConstr < 5700)","goff");//Should there be a lower bound as well?
 	treeIn->Draw(TString::Format("BDT%d>>hsig1(90,-0.4,0.5)",bdtConf),"SW*(Lb_DTF_M_JpsiLConstr < 5700 && Lb_DTF_M_JpsiLConstr > 5300)","goff");
@@ -62,8 +64,8 @@ void optimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* version = 
 	hsig = (TH1D*)gDirectory->Get("hsig0");//play around with this
 	hbkg = (TH1D*)gDirectory->Get("hbkg");
 
-	siginit =  getSumOfWeights(-0.5,treeIn,1,bdtConf);
-	bkginit =  getSumOfWeights(-0.5,treeIn,2,bdtConf);
+	siginit =  (Int_t)getSumOfWeights(-0.5,treeIn,1,bdtConf,nEntries);//rounding off happening here
+	bkginit =  (Int_t)getSumOfWeights(-0.5,treeIn,2,bdtConf,nEntries);
 
 	cout<<"siginit = "<<siginit<<endl;
 	cout<<"bkginit = "<<bkginit<<endl;
@@ -74,11 +76,11 @@ void optimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* version = 
 
 		t = Form("BDT > %f",BDT);
 
-		// sig = getSumOfWeights(BDT, sigtree,1);
-		// bkg = getSumOfWeights(BDT, bkgtree,2);
+		sig = (Int_t)getSumOfWeights(BDT,treeIn,1,bdtConf,nEntries);
+		bkg = (Int_t)getSumOfWeights(BDT,treeIn,2,bdtConf,nEntries);
 
-		sig = hsig->Integral(i,90);
-		bkg = hbkg->Integral(i,90);
+		// sig = hsig->Integral(i,90);
+		// bkg = hbkg->Integral(i,90);
 
 		cout<<"SIG = "<<sig<<" BKG = "<<bkg;
 		eff_sig = (Double_t) sig/siginit;
@@ -101,22 +103,27 @@ void optimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* version = 
 	}
 	cout<<"MAXIMUM FOM = "<<FOM_max<<" at BDT = "<<BDT_max<<" with sig_eff = "<<eff_sig_max*100<<"% and bkg_eff = "<<eff_bkg_max*100<<"%"<<endl;
 }
-Double_t getSumOfWeights(Double_t mybdt, TTree *tree, Int_t flag, Int_t bdtConf)
+Double_t getSumOfWeights(Double_t mybdt, TTree *tree, Int_t flag, Int_t bdtConf, Int_t nEntries)
 {
 	Double_t sum = 0., mybdt1 = 0., bmass = 0.;
 	Float_t myweight = 0.;
 	// TTree *treecut = (TTree*)tree->CopyTree(Form("BDT > %f",mybdt));
 
-	Int_t nentries = tree->GetEntries();
-
 	if(flag == 1)
+	{
+		cout<<"1"<<endl;
 		tree->SetBranchAddress("SW",&myweight);
+	}
 	else if(flag == 2)
+	{
 		tree->SetBranchAddress("BW",&myweight);
+	}
+
 	tree->SetBranchAddress("Lb_DTF_M_JpsiLConstr",&bmass);
 	tree->SetBranchAddress(TString::Format("BDT%d",bdtConf),&mybdt1);
 
-	for(Int_t i=0; i<nentries; i++) {
+	for(Int_t i=0; i<nEntries; i++)
+	{
 		tree->GetEntry(i);
 
 		if(mybdt1 > mybdt)
@@ -127,5 +134,6 @@ Double_t getSumOfWeights(Double_t mybdt, TTree *tree, Int_t flag, Int_t bdtConf)
 			}
 		}
 	}
+	cout<<"mybdt = "<<mybdt<<" sum = "<<sum<<endl;
 	return sum;
 }

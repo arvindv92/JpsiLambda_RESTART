@@ -102,7 +102,7 @@ void TrainIsolation(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
 		dataloader->AddVariable("log_FDCHI2 := log10(FDCHI2)",'F');
 	}
 
-	fname_sig = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_forIsoTraining.root",run,type);
+	fname_sig = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_forIsoTraining_massCut.root",run,type);
 	input_sig = TFile::Open(fname_sig);
 
 	fname_bkg = TString::Format("/data1/avenkate/B+toJpsiK+/RealData_AllKaons/total_run%d/splot/maketuples/jpsik_forTMVAisoTraining.root",run);//Background 1 Training Sample
@@ -137,7 +137,7 @@ void TrainIsolation(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
 
 	if(version == "v1")
 	{
-		mycuts = "PT > 0 && MINIPCHI2 > 0 && VCHI2DOF > 0";// && PT < 10000 && MINIPCHI2 < 50";//CHANGED FROM MINIPCHI2 < 10000
+		mycuts = "PT > 0 && MINIPCHI2 > 0 && VCHI2DOF > 0";//"&& Lb_DTF_M_JpsiLConstr < 5700 && Lb_DTF_M_JpsiLConstr > 5400";// && PT < 10000 && MINIPCHI2 < 50";//CHANGED FROM MINIPCHI2 < 10000
 		mycutb = "PT > 0 && MINIPCHI2 > 0 && VCHI2DOF > 0";// && PT < 10000 && MINIPCHI2 < 50";//CHANGED FROM MINIPCHI2 < 10000
 	}
 	else if(version == "v2")
@@ -150,6 +150,12 @@ void TrainIsolation(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
 		mycuts = "PT > 0 && MINIPCHI2 > 0 && VCHI2DOF > 0 && FDCHI2 > 0";// && PT < 10000 && MINIPCHI2 < 100 && FDCHI2 < 1000";
 		mycutb = "PT > 0 && MINIPCHI2 > 0 && VCHI2DOF > 0 && FDCHI2 > 0";// && PT < 10000 && MINIPCHI2 < 100 && FDCHI2 < 1000";
 	}
+	else if(version == "v4")
+	{
+		mycuts = "PT > 0 && MINIPCHI2 > 0 && VCHI2DOF > 0 && FDCHI2 > 0 && FD > 0";// && PT < 10000 && MINIPCHI2 < 100 && FDCHI2 < 1000";
+		mycutb = "PT > 0 && MINIPCHI2 > 0 && VCHI2DOF > 0 && FDCHI2 > 0 && FD > 0";// && PT < 10000 && MINIPCHI2 < 100 && FDCHI2 < 1000";
+	}
+
 
 	dataloader->PrepareTrainingAndTestTree(mycuts, mycutb,
 	                                       "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V");
