@@ -1,5 +1,10 @@
 /********************************
    Author : Aravindhan V.
+   The purpose of this script is to train a BDT to isolate background coming
+   from b -> Jpsi + charged tracks
+   Signal Training: sWeighted Lb -> J/psi L data
+   Background Training: sWeighted B+ -> J/psi K+ data.
+   TODO: Also train against B0 -> J/psi K+ pi-
  *********************************/
 #include <cstdlib>
 #include <iostream>
@@ -26,17 +31,16 @@
 
 using namespace std;
 
-void TrainIsolation(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
+void TrainIsolation(Int_t run = 1,Int_t trackType = 3, TString isoVersion = "v1", Bool_t logFlag = false)
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    trackType = 3 for LL, 5 for DD.
-   version = "v0","v1","v2" or "v3"
+   isoVersion = "v0","v1","v2","v3"
  */
 {
 	TStopwatch sw;
 	sw.Start();
 
-	Bool_t logFlag = false;
 	TString outfileName = "", fname_sig = "", fname_bkg = "";
 	TCut mycuts = "", mycutb = "";
 	const char *logFileName = "", *type = "";
@@ -46,7 +50,8 @@ void TrainIsolation(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
 	TMVA::DataLoader *dataloader = nullptr;
 	TMVA::Tools::Instance(); // This loads the library
 
-	logFileName = (trackType == 3) ? (TString::Format("isolationTraining_LL_%s_log.txt",version.Data())) : (TString::Format("isolationTraining_DD_%s_log.txt",version.Data()));
+	logFileName = (trackType == 3) ? (TString::Format("isolationTraining_LL_%s_log.txt",isoVersion.Data())) : (TString::Format("isolationTraining_DD_%s_log.txt",isoVersion.Data()));
+	type        = (trackType == 3) ? ("LL") : ("DD");
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
@@ -54,48 +59,36 @@ void TrainIsolation(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
 	{
 		gROOT->ProcessLine((TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName)).Data());
 	}
-	if(trackType == 3)
-	{
-		cout<<"Processing LL"<<endl;
-		type = "LL";
-	}
-	else if(trackType == 5)
-	{
-		cout<<"Processing DD"<<endl;
-		type = "DD";
-	}
+	cout<<"******************************************"<<endl;
+	cout<<"Processing Run "<<run<<" "<<type<<endl;
+	cout<<"******************************************"<<endl;
 
 	cout<<"*****************************"<<endl;
 	cout<<"==> Starting TrainIsolation: "<<endl;
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 	cout<<"*****************************"<<endl;
 
-	outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVAtraining/iso/TMVA-isok%s_data_%s.root",run,type,version.Data());
+	outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVAtraining/iso/TMVA-isok%s_data_%s.root",run,type,isoVersion.Data());
 	outputFile  = TFile::Open(outfileName, "RECREATE");
-	factory     = new TMVA::Factory( TString::Format("TMVAClassification-isok%s_dataRun%d_%s",type,run,version.Data()), outputFile,
+	factory     = new TMVA::Factory( TString::Format("TMVAClassification-isok%s_dataRun%d_%s",type,run,isoVersion.Data()), outputFile,
 	                                 "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
 
 	dataloader = new TMVA::DataLoader("dataset");
 
-	if(version == "v0" || version == "v1" || version == "v2" || version == "v3" || version == "v4")
-	{
-		dataloader->AddVariable("IPCHI2",'F');
-		dataloader->AddVariable("VCHI2DOF",'F');
-		dataloader->AddVariable("log_MINIPCHI2 := log10(MINIPCHI2)",'F');
-	}
-	if(version == "v1")
+	dataloader->AddVariable("IPCHI2",'F');
+	dataloader->AddVariable("VCHI2DOF",'F');
+	dataloader->AddVariable("log_MINIPCHI2 := log10(MINIPCHI2)",'F');
+
+	if(isoVersion == "v1")
 	{
 		dataloader->AddVariable("log_PT := log10(PT)",'F');
 	}
-	if(version == "v2")
+	else if(isoVersion == "v2")
 	{
 		dataloader->AddVariable("log_FD := log10(FD)",'F');
-	}
-	if(version == "v3")
-	{
 		dataloader->AddVariable("log_FDCHI2 := log10(FDCHI2)",'F');
 	}
-	if(version == "v4")
+	else if(isoVersion == "v3")
 	{
 		dataloader->AddVariable("log_PT := log10(PT)",'F');
 		dataloader->AddVariable("log_FD := log10(FD)",'F');
@@ -135,22 +128,17 @@ void TrainIsolation(Int_t run = 1,Int_t trackType = 3, TString version = "v1")
 	mycuts = "MINIPCHI2 > 0 && VCHI2DOF > 0";// && PT < 10000 && MINIPCHI2 < 50";//CHANGED FROM MINIPCHI2 < 10000
 	mycutb = "MINIPCHI2 > 0 && VCHI2DOF > 0";// && PT < 10000 && MINIPCHI2 < 50";//CHANGED FROM MINIPCHI2 < 10000
 
-	if(version == "v1")
+	if(isoVersion == "v1")
 	{
 		mycuts = "PT > 0 && MINIPCHI2 > 0 && VCHI2DOF > 0";//"&& Lb_DTF_M_JpsiLConstr < 5700 && Lb_DTF_M_JpsiLConstr > 5400";// && PT < 10000 && MINIPCHI2 < 50";//CHANGED FROM MINIPCHI2 < 10000
 		mycutb = "PT > 0 && MINIPCHI2 > 0 && VCHI2DOF > 0";// && PT < 10000 && MINIPCHI2 < 50";//CHANGED FROM MINIPCHI2 < 10000
 	}
-	else if(version == "v2")
+	else if(isoVersion == "v2")
 	{
-		mycuts = "PT > 0 && MINIPCHI2 > 0 && VCHI2DOF > 0 && FD > 0";// && PT < 10000 && MINIPCHI2 < 100 && FD < 10000";
-		mycutb = "PT > 0 && MINIPCHI2 > 0 && VCHI2DOF > 0 && FD > 0";// && PT < 10000 && MINIPCHI2 < 100 && FD < 10000";
+		mycuts = "PT > 0 && MINIPCHI2 > 0 && VCHI2DOF > 0 && FD > 0 && FDCHI2 > 0";// && PT < 10000 && MINIPCHI2 < 100 && FD < 10000";
+		mycutb = "PT > 0 && MINIPCHI2 > 0 && VCHI2DOF > 0 && FD > 0 && FDCHI2 > 0";// && PT < 10000 && MINIPCHI2 < 100 && FD < 10000";
 	}
-	else if(version == "v3")
-	{
-		mycuts = "PT > 0 && MINIPCHI2 > 0 && VCHI2DOF > 0 && FDCHI2 > 0";// && PT < 10000 && MINIPCHI2 < 100 && FDCHI2 < 1000";
-		mycutb = "PT > 0 && MINIPCHI2 > 0 && VCHI2DOF > 0 && FDCHI2 > 0";// && PT < 10000 && MINIPCHI2 < 100 && FDCHI2 < 1000";
-	}
-	else if(version == "v4")
+	else if(isoVersion == "v3")
 	{
 		mycuts = "PT > 0 && MINIPCHI2 > 0 && VCHI2DOF > 0 && FDCHI2 > 0 && FD > 0";// && PT < 10000 && MINIPCHI2 < 100 && FDCHI2 < 1000";
 		mycutb = "PT > 0 && MINIPCHI2 > 0 && VCHI2DOF > 0 && FDCHI2 > 0 && FD > 0";// && PT < 10000 && MINIPCHI2 < 100 && FDCHI2 < 1000";

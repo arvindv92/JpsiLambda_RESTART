@@ -21,7 +21,7 @@ using namespace std;
    testing = true to run only over a subset of data
    loose = true to run over data from loose stripping line. Only LL for loose stripping line
  */
-void Trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testing = false, Bool_t loose = true)
+void Trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testing = false, Bool_t loose = true, Bool_t logFlag = false)
 {
 	gROOT->ProcessLine(".L CollateFiles.C++");
 	TStopwatch sw;
@@ -30,7 +30,7 @@ void Trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 	Int_t entries_init = 0, entries_final = 0, entries_gen = 0;
 	Float_t eff_excl = 0., eff_excl_err = 0., eff_incl = 0., eff_incl_err = 0.;
 	Bool_t hlt1DiMuonHighMass = false, hlt1TrackMuon = false, hlt1TrackAllL0 = false, hlt2DiMuonDetached = false;
-	Bool_t logFlag = false; //This should be 0 only while testing.
+	//Bool_t logFlag = false; //This should be 0 only while testing.
 	Bool_t collateFlag = true; //If you don't want to re-collate MC, set this to zero. For example, if only the trigger condition changes.
 	TFile *fileOut = nullptr, *fileIn = nullptr;
 	TTree *treeIn = nullptr, *treeIn_gen = nullptr, *treeOut = nullptr, *myTree = nullptr;

@@ -13,7 +13,7 @@
 #include <fstream>
 using namespace std;
 
-void Sanity(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0)
+void Sanity(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t logFlag = false)
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = 1 for data, 0 for MC
@@ -35,7 +35,7 @@ void Sanity(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0)
 	Float_t Lb_ConsLb_chi2 = 0.0, Lb_ConsLb_nDOF = 0.0;
 	Double_t Lb_TAU = 0.0, Lb_ETA = 0.0;
 	Double_t pi_PIDp = 0.0, pi_PIDK = 0.0, p_PIDp = 0.0, p_PIDK = 0.0, L_TAU = 0.0;
-	Bool_t logFlag = false, genFlag = false;
+	Bool_t genFlag = false;
 	const char* logFileName = "sanity_log.txt";
 	TCut dtfCut, lifetimeCut, pidCut, etaCut, tmCut;
 	TFile *fileIn = nullptr, *fileOut_LL = nullptr, *fileOut_DD = nullptr;
@@ -151,7 +151,7 @@ void Sanity(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0)
 	{
 		if(mcType == 1 || mcType == 2)
 		{
-			tmCut  = "(Lb_BKGCAT == 0 || Lb_BKGCAT == 50)";
+			tmCut  = "(Lb_BKGCAT == 0 || Lb_BKGCAT == 50 || Lb_BKGCAT == 60)";
 		}
 		if(mcType == 3)
 		{
@@ -182,7 +182,7 @@ void Sanity(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0)
 				{
 					if((run == 1 && pi_PIDp != 0 && pi_PIDp != -1000 && pi_PIDK != 0 && p_PIDp !=0 && p_PIDp!= -1000 && p_PIDK !=0)|| (run == 2 && p_PIDp != -1000 && pi_PIDp != -1000))
 					{
-						if(isData == 1 || (isData == 0 && mcType == 3 && Lb_BKGCAT == 40) || (isData == 0 && (mcType == 1 || mcType == 2) && (Lb_BKGCAT == 0 || Lb_BKGCAT == 50)))//TM, needs more thought.
+						if(isData == 1 || (isData == 0 && mcType == 3 && Lb_BKGCAT == 40) || (isData == 0 && (mcType == 1 || mcType == 2) && (Lb_BKGCAT == 0 || Lb_BKGCAT == 50 || Lb_BKGCAT == 60)))//TM, needs more thought.
 						{
 							if(p_TRACK_Type == 3)
 							{

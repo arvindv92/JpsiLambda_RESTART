@@ -13,7 +13,7 @@
 #include <fstream>
 using namespace std;
 
-void CutOutKs(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t trackType = 3)
+void CutOutKs(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t trackType = 3, Bool_t logFlag = false)
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = 1 for data, 0 for MC
@@ -31,7 +31,7 @@ void CutOutKs(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t track
 	Int_t entries_init = 0, entries_final = 0, entries_final_nonZeroTracks = 0, entries_final_ZeroTracks = 0, entries_gen = 0, nTracks = 0;
 	Float_t eff_excl = 0.0, eff_excl_err = 0.0, eff_incl = 0.0, eff_incl_err = 0.0;
 	Double_t L_dm = 0.0, p_PIDp = 0.0, Lb_DTF_L_WMpipi_JpsiConstr = 0.0;
-	Bool_t logFlag = false, genFlag = false;
+	Bool_t genFlag = false;
 
 	fstream genFile;
 

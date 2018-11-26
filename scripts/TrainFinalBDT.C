@@ -26,19 +26,18 @@
 
 using namespace std;
 
-void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1", Int_t isoConf = 1, Bool_t isoFlag = true)
+void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1", Int_t isoConf = 1, Bool_t isoFlag = true, Bool_t logFlag = false)
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    trackType = 3 for LL, 5 for DD.
    version = "v1","v2" or "v3"
-         isoConf = 1 or 5
+   isoConf = 1 or 5
    isoFlag = true if you want to use isolation in the final BDT.
  */
 {
 	TStopwatch sw;
 	sw.Start();
 
-	Bool_t logFlag = false;
 	TString outfileName = "";
 	const char *logFileName = "", *type = "";
 	TFile *input = nullptr, *outputFile = nullptr;//Signal and Background training files

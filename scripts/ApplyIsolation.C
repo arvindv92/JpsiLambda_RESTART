@@ -1,5 +1,6 @@
 /********************************
    Author : Aravindhan V.
+         The purpose of this script is to apply the isolation BDT to data/MC.
  *********************************/
 #include <cstdlib>
 #include <vector>
@@ -26,14 +27,14 @@
 using namespace TMVA;
 using namespace std;
 
-void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t trackType = 3, Int_t flag = 1, const char* version = "v1", Int_t isoConf = 1)
+void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t trackType = 3, Int_t flag = 1, const char* isoVersion = "v1", Int_t isoConf = 1, Bool_t logFlag = false)
 /* run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = true for data, false for MC
    mcType = 0 when running over data. When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
    trackType = 3 for LL, 5 for DD.
    flag = 1 when applying on all data, flag = 2 when applying only on signal training sample
-   version = "v0","v1", "v2" or "v3"
-         isoConf = 1 or 2.
+   isoVersion = "v0","v1", "v2" or "v3"
+   isoConf = 1 or 2.
  */
 {
 	TStopwatch sw;
@@ -48,7 +49,7 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 	Float_t PT[Max], IPCHI2[Max], VCHI2DOF[Max], MINIPCHI2[Max], FD[Max], FDCHI2[Max];
 	Float_t ipChi2 = 0., vChi2Dof = 0., log_minIpChi2 = 0., log_PT = 0., log_FD = 0., log_fdChi2 = 0.;
 	Double_t BDTk[Max], BDTkMin = 1.1;
-	Bool_t logFlag = false, genFlag = false; //logFlag should be 0 only while testing.
+	Bool_t genFlag = false; //logFlag should be 0 only while testing.
 	const char *type = "", *logFileName = "";
 	TFile *fileIn = nullptr, *fileOut = nullptr;
 	TTree *treeIn = nullptr, *treeOut = nullptr;
@@ -58,17 +59,7 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 
 	logFileName = (trackType == 3) ? ("isoApplication_LL_log.txt") : ("isoApplication_DD_log.txt");
-
-	if(trackType == 3)
-	{
-		cout<<"Processing LL"<<endl;
-		type = "LL";
-	}
-	else if(trackType == 5)
-	{
-		cout<<"Processing DD"<<endl;
-		type = "DD";
-	}
+	type        = (trackType == 3) ? ("LL") : ("DD");
 
 	//set up input, output, logging
 	if(!isData)  // MC
@@ -83,7 +74,7 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 				genFlag = 1;
 			}
 			fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_nonZeroTracks.root",run,type));
-			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_%s_withiso%d_%s.root",run,type,isoConf,version),"RECREATE");
+			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_%s_withiso%d_%s.root",run,type,isoConf,isoVersion),"RECREATE");
 			break;
 
 		case 2: //JpsiSigma
@@ -94,7 +85,7 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 				genFlag = 1;
 			}
 			fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_cutoutks_%s_nonZeroTracks.root",run,type));
-			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_%s_withiso%d_%s.root",run,type,isoConf,version),"RECREATE");
+			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_%s_withiso%d_%s.root",run,type,isoConf,isoVersion),"RECREATE");
 			break;
 
 		case 3: //JpsiXi
@@ -105,7 +96,7 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 				genFlag = 1;
 			}
 			fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_cutoutks_%s_nonZeroTracks.root",run,type));
-			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_%s_withiso%d_%s.root",run,type,isoConf,version),"RECREATE");
+			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_%s_withiso%d_%s.root",run,type,isoConf,isoVersion),"RECREATE");
 			break;
 		}
 	}//end MC block
@@ -115,19 +106,22 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 		if(flag == 1)
 		{
 			fileIn      = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_nonZeroTracks.root",run,type));
-			fileOut     = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withiso%d_%s.root",run,type,isoConf,version),"RECREATE");
+			fileOut     = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withiso%d_%s.root",run,type,isoConf,isoVersion),"RECREATE");
 		}
 		else if(flag == 2)
 		{
 			fileIn  = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw_nonZeroTracks.root",run,type));
-			fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withiso%d_%s.root",run,type,isoConf,version),"RECREATE");
+			fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withiso%d_%s.root",run,type,isoConf,isoVersion),"RECREATE");
 		}
 	}
 	//end Data block
 	//end set up of input, output, logging
+	cout<<"******************************************"<<endl;
+	cout<<"Processing Run "<<run<<" "<<type<<((isData) ? (" Data") : (" MC type "))<<mcType<<endl;
+	cout<<"******************************************"<<endl;
 
 	cout<<"******************************************"<<endl;
-	cout<< "==> Start of ApplyIsolation"<<endl;
+	cout<< "==> Start of ApplyIsolation isoVersion "<<isoVersion<<" isoConf "<<isoConf<<endl;
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 	cout<<"******************************************"<<endl;
 
@@ -149,25 +143,20 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 	// Create a set of variables and declare them to the reader
 	// - the variable names MUST corresponds in name and type to those given in the weight file(s) used
 
-	if (!strncmp(version,"v0",2) || !strncmp(version,"v1",2) || !strncmp(version,"v2",2) || !strncmp(version,"v3",2) || !strncmp(version,"v4",2) )
-	{
-		reader->AddVariable("IPCHI2", &ipChi2);
-		reader->AddVariable("VCHI2DOF", &vChi2Dof);
-		reader->AddVariable("log_minIpChi2 := log10(MINIPCHI2)", &log_minIpChi2);
-	}
-	if(!strncmp(version,"v1",2))
+	reader->AddVariable("IPCHI2", &ipChi2);
+	reader->AddVariable("VCHI2DOF", &vChi2Dof);
+	reader->AddVariable("log_minIpChi2 := log10(MINIPCHI2)", &log_minIpChi2);
+
+	if(!strncmp(isoVersion,"v1",2))
 	{
 		reader->AddVariable("log_PT := log10(PT)", &log_PT);
 	}
-	if(!strncmp(version,"v2",2))
+	else if(!strncmp(isoVersion,"v2",2))
 	{
 		reader->AddVariable("log_FD := log10(FD)", &log_FD);
-	}
-	if(!strncmp(version,"v3",2))
-	{
 		reader->AddVariable("log_fdChi2 := log10(FDCHI2)", &log_fdChi2);
 	}
-	if(!strncmp(version,"v4",2))
+	else if(!strncmp(isoVersion,"v3",2))
 	{
 		reader->AddVariable("log_PT := log10(PT)", &log_PT);
 		reader->AddVariable("log_FD := log10(FD)", &log_FD);
@@ -175,7 +164,7 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 	}
 
 	TString dir        = "dataset/weights/";
-	TString prefix     = TString::Format("TMVAClassification-isok%s_dataRun%d_%s",type,run,version);
+	TString prefix     = TString::Format("TMVAClassification-isok%s_dataRun%d_%s",type,run,isoVersion);
 	TString methodName = "BDT method";
 
 	TString weightfile = dir + prefix + TString("_") + TString::Format("isoConf%d",isoConf) + TString(".weights.xml");// change  configuration to conf1 or conf5 depending on which is better
@@ -197,65 +186,151 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 	treeIn->SetBranchAddress( "psi_1S_H_VERTEXCHI2_NEW", VCHI2DOF);
 	treeIn->SetBranchAddress( "psi_1S_H_MINIPCHI2", MINIPCHI2);
 
-	if(!strncmp(version,"v1",2) || !strncmp(version,"v4",2))
+	if(!strncmp(isoVersion,"v1",2) || !strncmp(isoVersion,"v3",2))
 	{
 		treeIn->SetBranchAddress( "Added_H_PT", PT);
 	}
-	if(!strncmp(version,"v2",2) || !strncmp(version,"v4",2))
+	if(!strncmp(isoVersion,"v2",2) || !strncmp(isoVersion,"v3",2))
 	{
 		treeIn->SetBranchAddress( "psi_1S_H_FD_NEW", FD);
-	}
-	if(!strncmp(version,"v3",2) || !strncmp(version,"v4",2))
-	{
 		treeIn->SetBranchAddress( "psi_1S_H_FDCHI2_NEW", FDCHI2);
+
 	}
 
 	//treeOut->Branch("ntracks",&ntracks,"ntracks/I");
-	treeOut->Branch(TString::Format("BDTk_%s",version),BDTk,TString::Format("BDTk_%s[Added_n_Particles]/D",version));
-	treeOut->Branch(TString::Format("BDTkMin_%s",version),&BDTkMin,TString::Format("BDTkMin_%s/D",version));
+	treeOut->Branch(TString::Format("BDTk_%s",isoVersion),BDTk,TString::Format("BDTk_%s[Added_n_Particles]/D",isoVersion));
+	treeOut->Branch(TString::Format("BDTkMin_%s",isoVersion),&BDTkMin,TString::Format("BDTkMin_%s/D",isoVersion));
 
 	cout << "--- Processing: " << entries_init << " events" <<endl;
 
-
 	Int_t tripFlag = 1;
-	for (Long64_t ievt = 0; ievt < entries_init; ievt++)
+
+	if(!strncmp(isoVersion,"v0",2))
 	{
-		if (ievt%50000 == 0) cout << "--- ... Processing event: " << ievt << endl;
-
-		treeIn->GetEntry(ievt);
-		BDTkMin = 1.1;
-
-		//if(nTracks == 0) BDTkMin = 1.0; //some events don't have any tracks added to them by TTAT
-
-		for(Int_t j = 0; j < nTracks; j++) //Loop over all the added tracks in a given event
+		for (Long64_t ievt = 0; ievt < entries_init; ievt++)
 		{
-			tripFlag = 1;
-			ipChi2 = IPCHI2[j];
-			vChi2Dof = VCHI2DOF[j];
+			if (ievt%50000 == 0) cout << "--- ... Processing event: " << ievt << endl;
 
-			(MINIPCHI2[j] > 0) ? (log_minIpChi2 = log10(MINIPCHI2[j])) : (tripFlag = -1);
+			treeIn->GetEntry(ievt);
+			BDTkMin = 1.1;
 
-			if(!strncmp(version,"v1",2) || !strncmp(version,"v4",2))
+			for(Int_t j = 0; j < nTracks; j++) //Loop over all the added tracks in a given event
 			{
-				(PT[j] > 0) ? (log_PT = log10(PT[j])) : (tripFlag = -1);
-			}
-			else if(!strncmp(version,"v2",2) || !strncmp(version,"v4",2))
-			{
-				(FD[j] > 0) ? (log_FD = log10(FD[j])) : (tripFlag = -1);
-			}
-			else if(!strncmp(version,"v3",2) || !strncmp(version,"v4",2))
-			{
-				(FDCHI2[j] > 0) ? (log_fdChi2 = log10(FDCHI2[j])) : (tripFlag = -1);
-			}
-			BDTk[j] = (tripFlag == 1) ? (reader->EvaluateMVA(methodName)) : (1.1);
+				tripFlag = 1;
+				ipChi2 = IPCHI2[j];
+				vChi2Dof = VCHI2DOF[j];
 
-			if(BDTk[j] < BDTkMin)
-			{
-				BDTkMin = BDTk[j];
+				(MINIPCHI2[j] > 0) ? (log_minIpChi2 = log10(MINIPCHI2[j])) : (tripFlag = -1);
+
+				BDTk[j] = (tripFlag == 1) ? (reader->EvaluateMVA(methodName)) : (1.1);
+
+				if(BDTk[j] < BDTkMin)
+				{
+					BDTkMin = BDTk[j];
+				}
 			}
+			treeOut->Fill();
 		}
-		treeOut->Fill();
-	}
+	}//end of v0 for loop
+	else if(!strncmp(isoVersion,"v1",2))
+	{
+		for (Long64_t ievt = 0; ievt < entries_init; ievt++)
+		{
+			if (ievt%50000 == 0) cout << "--- ... Processing event: " << ievt << endl;
+
+			treeIn->GetEntry(ievt);
+			BDTkMin = 1.1;
+
+			for(Int_t j = 0; j < nTracks; j++) //Loop over all the added tracks in a given event
+			{
+				ipChi2 = IPCHI2[j];
+				vChi2Dof = VCHI2DOF[j];
+
+				if( (MINIPCHI2[j] < 0) || (PT[j] < 0) )
+				{
+					BDTk[j] = 1.1;
+				}
+				else
+				{
+					log_minIpChi2 = log10(MINIPCHI2[j]);
+					log_PT        = log10(PT[j]);
+					BDTk[j]       = reader->EvaluateMVA(methodName);
+				}
+				if(BDTk[j] < BDTkMin)
+				{
+					BDTkMin = BDTk[j];
+				}
+			}
+			treeOut->Fill();
+		}
+	}//end of v1 for loop
+	else if(!strncmp(isoVersion,"v2",2))
+	{
+		for (Long64_t ievt = 0; ievt < entries_init; ievt++)
+		{
+			if (ievt%50000 == 0) cout << "--- ... Processing event: " << ievt << endl;
+
+			treeIn->GetEntry(ievt);
+			BDTkMin = 1.1;
+
+			for(Int_t j = 0; j < nTracks; j++) //Loop over all the added tracks in a given event
+			{
+				ipChi2 = IPCHI2[j];
+				vChi2Dof = VCHI2DOF[j];
+
+				if( (MINIPCHI2[j] < 0) || (FD[j] < 0) || (FDCHI2[j] < 0) )
+				{
+					BDTk[j] = 1.1;
+				}
+				else
+				{
+					log_minIpChi2 = log10(MINIPCHI2[j]);
+					log_FD        = log10(FD[j]);
+					log_fdChi2    = log10(FDCHI2[j]);
+					BDTk[j]       = reader->EvaluateMVA(methodName);
+				}
+				if(BDTk[j] < BDTkMin)
+				{
+					BDTkMin = BDTk[j];
+				}
+			}
+			treeOut->Fill();
+		}
+	}//end of v2 for loop
+	else if(!strncmp(isoVersion,"v3",2))
+	{
+		for (Long64_t ievt = 0; ievt < entries_init; ievt++)
+		{
+			if (ievt%50000 == 0) cout << "--- ... Processing event: " << ievt << endl;
+
+			treeIn->GetEntry(ievt);
+			BDTkMin = 1.1;
+
+			for(Int_t j = 0; j < nTracks; j++) //Loop over all the added tracks in a given event
+			{
+				ipChi2 = IPCHI2[j];
+				vChi2Dof = VCHI2DOF[j];
+
+				if( (MINIPCHI2[j] < 0) || (PT[j] < 0) || (FD[j] < 0) || (FDCHI2[j] < 0) )
+				{
+					BDTk[j] = 1.1;
+				}
+				else
+				{
+					log_minIpChi2 = log10(MINIPCHI2[j]);
+					log_PT        = log10(PT[j]);
+					log_FD        = log10(FD[j]);
+					log_fdChi2    = log10(FDCHI2[j]);
+					BDTk[j]       = reader->EvaluateMVA(methodName);
+				}
+				if(BDTk[j] < BDTkMin)
+				{
+					BDTkMin = BDTk[j];
+				}
+			}
+			treeOut->Fill();
+		}
+	}//end of v3 for loop
 
 	fileOut->cd();
 	treeOut->Write();

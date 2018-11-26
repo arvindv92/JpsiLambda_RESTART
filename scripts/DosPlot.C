@@ -1,5 +1,6 @@
 /********************************
    Author : Aravindhan V.
+         The purpose of this script is to sWeight data in 5200-6000 GeV, and write out weighted data
  *********************************/
 #ifndef __CINT__
 #include "RooGlobalFunc.h"
@@ -40,7 +41,7 @@ void AddData(RooWorkspace*,Int_t,const char*, TString, TTree*);
 void DoSPlot(RooWorkspace*,Int_t,const char*, TString, TString, TTree*);
 void MakePlots(RooWorkspace*);
 
-void DosPlot(Int_t run = 1, Int_t trackType = 3)
+void DosPlot(Int_t run = 1, Int_t trackType = 3, Bool_t logFlag = false)
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = 1 for data, 0 for MC
@@ -48,7 +49,6 @@ void DosPlot(Int_t run = 1, Int_t trackType = 3)
    trackType = 3 for LL, 5 for DD.
  */
 {
-	Bool_t logFlag = false;
 	const char* logFileName = "", *type = "";
 	TString inFileName = "", outFileName = "", trainFileName = "";
 	TFile *fileIn = nullptr, *fileOut = nullptr;
