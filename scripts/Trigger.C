@@ -21,7 +21,7 @@ using namespace std;
    testing = true to run only over a subset of data
    loose = true to run over data from loose stripping line. Only LL for loose stripping line
  */
-void Trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testing = false, Bool_t loose = true, Bool_t logFlag = false)
+void Trigger(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcType = 0, Bool_t testing = false, Bool_t loose = true, Bool_t logFlag = false)
 {
 	gROOT->ProcessLine(".L CollateFiles.C++");
 	TStopwatch sw;
@@ -49,8 +49,8 @@ void Trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 
 		if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/trigger_log.txt",run).Data());
 
-		CollateFiles(run, isData, mcType, &h1, &h2, testing, loose, logFlag);//CollateFiles will cd to the massdump folder and then back to JpsiLambda_RESTART
-		fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered.root",run),"RECREATE");
+		CollateFiles(run, year, isData, mcType, &h1, &h2, testing, loose, logFlag);//CollateFiles will cd to the massdump folder and then back to JpsiLambda_RESTART
+		fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_%d.root",run,year),"RECREATE");
 
 		h2->Draw("IntegratedLuminosity>>lumiHist","","goff");
 		h2->Draw("IntegratedLuminosityErr>>lumiErrHist","","goff");
@@ -80,7 +80,7 @@ void Trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 
 			cout<<"PROCESSING MC for Run "<<run<<" Jpsi Lambda"<<endl;
 
-			if(collateFlag) CollateFiles(run,isData,mcType);
+			if(collateFlag) CollateFiles(run, year, isData, mcType);
 
 			fileIn = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda.root",run));
 			treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
@@ -95,7 +95,7 @@ void Trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 
 			cout<<"PROCESSING MC for Run "<<run<<" Jpsi Lambda"<<endl;
 
-			if(collateFlag) CollateFiles(run,isData,mcType);
+			if(collateFlag) CollateFiles(run, year, isData, mcType);
 
 			fileIn = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma.root",run));
 			treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
@@ -110,7 +110,7 @@ void Trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 
 			cout<<"PROCESSING MC for Run "<<run<<" Jpsi Lambda"<<endl;
 
-			if(collateFlag) CollateFiles(run,isData,mcType);
+			if(collateFlag) CollateFiles(run, year, isData, mcType);
 
 			fileIn = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi.root",run));
 			treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");

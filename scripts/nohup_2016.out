@@ -1,0 +1,14 @@
+nohup: ignoring input
+
+Processing MASTER_FIXED.C(2016)...
+Info in <TUnixSystem::ACLiC>: creating shared library /data1/avenkate/JpsiLambda_RESTART/scripts/./Trigger_C.so
+Info in <TUnixSystem::ACLiC>: creating shared library /data1/avenkate/JpsiLambda_RESTART/scripts/./CollateFiles_C.so
+Redirect::open: No such file or directory
+WD = /data1/avenkate/JpsiLambda_RESTART/scripts
+RedirectOutput::restore: Bad file descriptor
+Error in <TChain::LoadTree>: Cannot find tree with name Lb2JpsiLTree/MyTuple in file file:///data1/avenkate/JpsiLambda/massdump/data/LooseLL/2016_MagDown/1257_12/jpsilambda.root
+Error in <TChain::LoadTree>: Cannot find tree with name Lb2JpsiLTree/MyTuple in file file:///data1/avenkate/JpsiLambda/massdump/data/LooseLL/2016_MagDown/1297_4/jpsilambda.root
+Error in <TChain::LoadTree>: Cannot find tree with name Lb2JpsiLTree/MyTuple in file file:///data1/avenkate/JpsiLambda/massdump/data/LooseLL/2016_MagDown/1297_9/jpsilambda.root
+Error in <TChain::LoadTree>: Cannot find tree with name Lb2JpsiLTree/MyTuple in file file:///data1/avenkate/JpsiLambda/massdump/data/LooseLL/2016_MagUp/1273_159/jpsilambda.root
+Error in <TChain::LoadTree>: Cannot find tree with name Lb2JpsiLTree/MyTuple in file file:///data1/avenkate/JpsiLambda/massdump/data/LooseLL/2016_MagUp/1273_277/jpsilambda.root
+Error in <TChain::LoadTree>: Cannot find tree with name Lb2JpsiLTree/MyTuple in file file:///data1/avenkate/JpsiLambda/massdump/data/LooseLL/2016_MagUp/1273_282/jpsilambda.root

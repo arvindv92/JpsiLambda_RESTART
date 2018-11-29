@@ -13,7 +13,7 @@
 #include <fstream>
 using namespace std;
 
-void Sanity(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t logFlag = false)
+void Sanity(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcType = 0, Bool_t logFlag = false)
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = 1 for data, 0 for MC
@@ -36,7 +36,7 @@ void Sanity(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t logFla
 	Double_t Lb_TAU = 0.0, Lb_ETA = 0.0;
 	Double_t pi_PIDp = 0.0, pi_PIDK = 0.0, p_PIDp = 0.0, p_PIDK = 0.0, L_TAU = 0.0;
 	Bool_t genFlag = false;
-	const char* logFileName = "sanity_log.txt";
+	TString logFileName = TString::Format("sanity_%d_log.txt",year);
 	TCut dtfCut, lifetimeCut, pidCut, etaCut, tmCut;
 	TFile *fileIn = nullptr, *fileOut_LL = nullptr, *fileOut_DD = nullptr;
 	TTree *treeIn = nullptr, *treeOut_LL = nullptr, *treeOut_DD = nullptr;
@@ -52,7 +52,7 @@ void Sanity(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t logFla
 		switch(mcType)
 		{
 		case 1:                 //JpsiLambda
-			if(logFlag) gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiLambda/run%d/%s",run,logFileName)).Data());
+			if(logFlag) gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiLambda/run%d/%s",run,logFileName.Data())).Data());
 			if(!gSystem->AccessPathName((TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run)).Data()))
 			{
 				genFile.open((TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run)).Data());
@@ -67,7 +67,7 @@ void Sanity(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t logFla
 			break;
 
 		case 2: //JpsiSigma
-			if(logFlag) gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiSigma/run%d/%s",run,logFileName)).Data());
+			if(logFlag) gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiSigma/run%d/%s",run,logFileName.Data())).Data());
 			if(!gSystem->AccessPathName((TString::Format("logs/mc/JpsiSigma/run%d/gen_log.txt",run)).Data()))
 			{
 				genFile.open((TString::Format("logs/mc/JpsiSigma/run%d/gen_log.txt",run)).Data());
@@ -82,7 +82,7 @@ void Sanity(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t logFla
 			break;
 
 		case 3: //JpsiXi
-			if(logFlag) gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiXi/run%d/%s",run,logFileName)).Data());
+			if(logFlag) gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiXi/run%d/%s",run,logFileName.Data())).Data());
 			if(!gSystem->AccessPathName((TString::Format("logs/mc/JpsiXi/run%d/gen_log.txt",run)).Data()))
 			{
 				genFile.open((TString::Format("logs/mc/JpsiXi/run%d/gen_log.txt",run)).Data());
@@ -100,12 +100,12 @@ void Sanity(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t logFla
 	} // end MC block
 	else //Data
 	{
-		if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/%ss",run,logFileName).Data());
-		fileIn = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered.root",run));
+		if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName.Data()).Data());
+		fileIn = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_%d.root",run,year));
 		treeIn = (TTree*)fileIn->Get("MyTuple");
-		fileOut_LL = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_LL.root",run),"RECREATE");
+		fileOut_LL = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_LL_%d.root",run,year),"RECREATE");
 		treeOut_LL = (TTree*)treeIn->CloneTree(0);
-		fileOut_DD = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_DD.root",run),"RECREATE");
+		fileOut_DD = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_DD_%d.root",run,year),"RECREATE");
 		treeOut_DD = (TTree*)treeIn->CloneTree(0);
 	}//end Data block
 	 //end setup of input, output, logging
