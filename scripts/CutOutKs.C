@@ -35,20 +35,9 @@ void CutOutKs(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t track
 
 	fstream genFile;
 
-	massWindow = "Lb_DTF_L_WMpipi_JpsiConstr > 480 && Lb_DTF_L_WMpipi_JpsiConstr < 520";
-
-	if(trackType == 3)
-	{
-		cout<<"Processing LL"<<endl;
-		logFileName = "cutoutks_LL_log.txt";
-		type = "LL";
-	}
-	else if(trackType == 5)
-	{
-		cout<<"Processing DD"<<endl;
-		logFileName = "cutoutks_DD_log.txt";
-		type = "DD";
-	}
+	massWindow  = "Lb_DTF_L_WMpipi_JpsiConstr > 480 && Lb_DTF_L_WMpipi_JpsiConstr < 520";
+	type        = (trackType == 3) ? ("LL") : ("DD");
+	logFileName = (trackType == 3) ? ("cutoutks_LL_log.txt") : ("cutoutks_DD_log.txt");
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
 	cout<<"WD = "<<gSystem->pwd()<<endl;
@@ -135,10 +124,13 @@ void CutOutKs(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t track
 		treeOut_ZeroTracks = (TTree*)treeIn->CloneTree(0);
 	}
 	//end setup of input, output, logging
-
 	cout<<"******************************************"<<endl;
 	cout<<"==> Starting CutOutKs: "<<endl;
 	cout<<"WD = "<<gSystem->pwd()<<endl;
+	cout<<"******************************************"<<endl;
+
+	cout<<"******************************************"<<endl;
+	cout<<"Processing Run "<<run<<" "<<type<<((isData) ? (" Data") : (" MC type "))<<mcType<<endl;
 	cout<<"******************************************"<<endl;
 
 	cout<<"******************************************"<<endl;
@@ -259,6 +251,8 @@ void CutOutKs(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t track
 	fileOut->Close();
 	fileOut_nonZeroTracks->Write();
 	fileOut_nonZeroTracks->Close();
+	fileOut_ZeroTracks->Write();
+	fileOut_ZeroTracks->Close();
 	fileIn->Close();
 
 	sw.Stop();

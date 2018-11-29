@@ -1,0 +1,21 @@
+Adding Run 1 Data ROOT files to TChain. Sit tight
+DONE ATTACHING ROOT FILES
+DONE COLLATING
+WD = /data1/avenkate/JpsiLambda_RESTART
+Processing 2972.32 +/- 39.8794luminosity
+******************************************
+==> Starting Trigger: 
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+Output file = rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_triggered.root
+******************************************
+Incoming entries = 11949591
+I am making the following trigger cuts. Sit tight
+(Lb_Hlt1DiMuonHighMassDecision_TOS==1||Lb_Hlt1TrackMuonDecision_TOS==1||Lb_Hlt1TrackAllL0Decision_TOS==1)&&(Lb_Hlt2DiMuonDetachedJPsiDecision_TOS==1)
+0
+100000
+200000
+300000
+400000
+500000

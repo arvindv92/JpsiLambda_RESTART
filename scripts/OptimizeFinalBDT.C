@@ -10,7 +10,7 @@ using namespace std;
 
 Double_t getSumOfWeights(Double_t mybdt, TTree *tree, Int_t flag, Int_t bdtConf, Int_t nEntries);
 
-void OptimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* version = "v1", Int_t isoConf = 1, Int_t bdtConf = 1, Bool_t isoFlag = true)
+void OptimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* isoVersion = "v1", Int_t isoConf = 1, Int_t bdtConf = 1, Bool_t isoFlag = true, Bool_t logFlag = false)
 {
 	TFile *fileIn = nullptr;
 	TTree *treeIn = nullptr;
@@ -19,7 +19,6 @@ void OptimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* version = 
 	Int_t nEntries = 0;
 	Double_t BDT = 0., BDT_max = 0., FOM = 0., FOM_max = 0., sig = 0., bkg = 0., siginit = 0., bkginit = 0.;
 	Double_t eff_sig = 0., eff_sig_max = 0., eff_bkg = 0., eff_bkg_max = 0.;
-	Bool_t logFlag = false;
 	TString t = "";
 	const char *logFileName = "", *type = "";
 
@@ -34,7 +33,7 @@ void OptimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* version = 
 		type = "DD";
 	}
 
-	logFileName = (trackType == 3) ? (TString::Format("optimizeFinalBDT%d_LL_iso%d_%s.txt",bdtConf,isoConf,version)) : (TString::Format("optimizeFinalBDT%d_DD_iso%d_%s.txt",bdtConf,isoConf,version));
+	logFileName = (trackType == 3) ? (TString::Format("optimizeFinalBDT%d_LL_iso%d_%s.txt",bdtConf,isoConf,isoVersion)) : (TString::Format("optimizeFinalBDT%d_DD_iso%d_%s.txt",bdtConf,isoConf,isoVersion));
 
 	if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/%s.txt",run,logFileName));
 
@@ -46,7 +45,7 @@ void OptimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* version = 
 
 	if(isoFlag)
 	{
-		fileIn = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,version),"READ");
+		fileIn = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"READ");
 	}
 	else
 	{
@@ -76,11 +75,11 @@ void OptimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* version = 
 
 		t = Form("BDT > %f",BDT);
 
-		sig = (Int_t)getSumOfWeights(BDT,treeIn,1,bdtConf,nEntries);
-		bkg = (Int_t)getSumOfWeights(BDT,treeIn,2,bdtConf,nEntries);
+		// sig = (Int_t)getSumOfWeights(BDT,treeIn,1,bdtConf,nEntries);
+		// bkg = (Int_t)getSumOfWeights(BDT,treeIn,2,bdtConf,nEntries);
 
-		// sig = hsig->Integral(i,90);
-		// bkg = hbkg->Integral(i,90);
+		sig = hsig->Integral(i,90);
+		bkg = hbkg->Integral(i,90);
 
 		cout<<"SIG = "<<sig<<" BKG = "<<bkg;
 		eff_sig = (Double_t) sig/siginit;
@@ -88,7 +87,8 @@ void OptimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* version = 
 
 		if(sig + bkg > 0)
 			FOM = (Double_t)eff_sig/sqrt(sig+bkg);
-		else{
+		else
+		{
 			cout<<"NO"<<endl;
 			continue;
 		}
@@ -111,7 +111,6 @@ Double_t getSumOfWeights(Double_t mybdt, TTree *tree, Int_t flag, Int_t bdtConf,
 
 	if(flag == 1)
 	{
-		cout<<"1"<<endl;
 		tree->SetBranchAddress("SW",&myweight);
 	}
 	else if(flag == 2)

@@ -1,6 +1,6 @@
 /********************************
    Author : Aravindhan V.
-         The purpose of this script is to apply trigger cuts on data/MC coming out of DaVinci.
+   The purpose of this script is to apply trigger cuts on data/MC coming out of DaVinci.
  *********************************/
 #include "TFile.h"
 #include "TChain.h"
@@ -30,7 +30,6 @@ void Trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 	Int_t entries_init = 0, entries_final = 0, entries_gen = 0;
 	Float_t eff_excl = 0., eff_excl_err = 0., eff_incl = 0., eff_incl_err = 0.;
 	Bool_t hlt1DiMuonHighMass = false, hlt1TrackMuon = false, hlt1TrackAllL0 = false, hlt2DiMuonDetached = false;
-	//Bool_t logFlag = false; //This should be 0 only while testing.
 	Bool_t collateFlag = true; //If you don't want to re-collate MC, set this to zero. For example, if only the trigger condition changes.
 	TFile *fileOut = nullptr, *fileIn = nullptr;
 	TTree *treeIn = nullptr, *treeIn_gen = nullptr, *treeOut = nullptr, *myTree = nullptr;
@@ -50,23 +49,8 @@ void Trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 
 		if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/trigger_log.txt",run).Data());
 
-		CollateFiles(run, isData, mcType, &h1, &h2, testing, loose);//CollateFiles will cd to the massdump folder and then back to JpsiLambda_RESTART
+		CollateFiles(run, isData, mcType, &h1, &h2, testing, loose, logFlag);//CollateFiles will cd to the massdump folder and then back to JpsiLambda_RESTART
 		fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered.root",run),"RECREATE");
-
-		// if(run == 1)
-		// {
-		//      if(logFlag) gROOT->ProcessLine(".> logs/data/JpsiLambda/run1/trigger_log.txt");
-		//
-		//      CollateFiles(run, isData, mcType, &h1, &h2, testing, loose);//CollateFiles will cd to the massdump folder and then back to JpsiLambda_RESTART
-		//      fileOut = new TFile("rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_triggered.root","RECREATE");
-		// }
-		// else if(run == 2)
-		// {
-		//      if(logFlag) gROOT->ProcessLine(".> logs/data/JpsiLambda/run2/trigger_log.txt");
-		//
-		//      CollateFiles(run, isData, mcType, &h1, &h2, testing, loose);
-		//      fileOut = new TFile("rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_triggered.root","RECREATE");
-		// }
 
 		h2->Draw("IntegratedLuminosity>>lumiHist","","goff");
 		h2->Draw("IntegratedLuminosityErr>>lumiErrHist","","goff");
@@ -103,36 +87,6 @@ void Trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 			treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
 
 			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_triggered.root",run),"RECREATE");
-			// if(run == 1)
-			// {
-			//      if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiLambda/run1/trigger_log.txt");
-			//      genFile.open("logs/mc/JpsiLambda/run1/gen_log.txt");
-			//
-			//      cout<<"PROCESSING MC for Run 1 Jpsi Lambda"<<endl;
-			//
-			//      if(collateFlag) CollateFiles(run,isData,mcType);
-			//
-			//      fileIn = TFile::Open("rootFiles/mcFiles/JpsiLambda/run1/jpsilambda.root");
-			//      treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
-			//      treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
-			//
-			//      fileOut = new TFile("rootFiles/mcFiles/JpsiLambda/run1/jpsilambda_triggered.root","RECREATE");
-			// }
-			// if(run == 2)
-			// {
-			//      if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiLambda/run2/trigger_log.txt");
-			//      genFile.open("logs/mc/JpsiLambda/run2/gen_log.txt");
-			//
-			//      cout<<"PROCESSING MC for Run 2 Jpsi Lambda"<<endl;
-			//
-			//      if(collateFlag) CollateFiles(run,isData,mcType);
-			//
-			//      fileIn = TFile::Open("rootFiles/mcFiles/JpsiLambda/run2/jpsilambda.root");
-			//      treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
-			//      treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
-			//
-			//      fileOut = new TFile("rootFiles/mcFiles/JpsiLambda/run2/jpsilambda_triggered.root","RECREATE");
-			// }
 		}
 		if(mcType == 2)//Jpsi Sigma
 		{
@@ -148,36 +102,6 @@ void Trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 			treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
 
 			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_triggered.root",run),"RECREATE");
-			// if(run == 1)
-			// {
-			//      if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiSigma/run1/trigger_log.txt");
-			//      genFile.open("logs/mc/JpsiSigma/run1/gen_log.txt");
-			//
-			//      cout<<"PROCESSING MC for Run 1 JpsiSigma"<<endl;
-			//
-			//      if(collateFlag) CollateFiles(run,isData,mcType);
-			//
-			//      fileIn = TFile::Open("rootFiles/mcFiles/JpsiSigma/run1/jpsisigma.root");
-			//      treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
-			//      treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
-			//
-			//      fileOut = new TFile("rootFiles/mcFiles/JpsiSigma/run1/jpsisigma_triggered.root","RECREATE");
-			// }
-			// if(run == 2)
-			// {
-			//      if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiSigma/run2/trigger_log.txt");
-			//      genFile.open("logs/mc/JpsiSigma/run2/gen_log.txt");
-			//
-			//      cout<<"PROCESSING MC for Run 2 JpsiSigma"<<endl;
-			//
-			//      if(collateFlag) CollateFiles(run,isData,mcType);
-			//
-			//      fileIn = TFile::Open("rootFiles/mcFiles/JpsiSigma/run2/jpsisigma.root");
-			//      treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
-			//      treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
-			//
-			//      fileOut = new TFile("rootFiles/mcFiles/JpsiSigma/run2/jpsisigma_triggered.root","RECREATE");
-			// }
 		}
 		if(mcType == 3)//Jpsi Xi
 		{
@@ -193,36 +117,6 @@ void Trigger(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Bool_t testi
 			treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
 
 			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_triggered.root",run),"RECREATE");
-			// if(run == 1)
-			// {
-			//      if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiXi/run1/trigger_log.txt");
-			//      genFile.open("logs/mc/JpsiXi/run1/gen_log.txt");
-			//
-			//      cout<<"PROCESSING MC for Run 1 JpsiXi"<<endl;
-			//
-			//      if(collateFlag) CollateFiles(run,isData,mcType);
-			//
-			//      fileIn = TFile::Open("rootFiles/mcFiles/JpsiXi/run1/jpsixi.root");
-			//      treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
-			//      treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
-			//
-			//      fileOut = new TFile("rootFiles/mcFiles/JpsiXi/run1/jpsixi_triggered.root","RECREATE");
-			// }
-			// if(run == 2)
-			// {
-			//      if(logFlag) gROOT->ProcessLine(".> logs/mc/JpsiXi/run2/trigger_log.txt");
-			//      genFile.open("logs/mc/JpsiXi/run2/gen_log.txt");
-			//
-			//      cout<<"PROCESSING MC for Run 2 JpsiXi"<<endl;
-			//
-			//      if(collateFlag) CollateFiles(run,isData,mcType);
-			//
-			//      fileIn = TFile::Open("rootFiles/mcFiles/JpsiXi/run2/jpsixi.root");
-			//      treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
-			//      treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
-			//
-			//      fileOut = new TFile("rootFiles/mcFiles/JpsiXi/run2/jpsixi_triggered.root","RECREATE");
-			// }
 		}
 		entries_gen = treeIn_gen->GetEntries();
 		genFile<<entries_gen<<endl;

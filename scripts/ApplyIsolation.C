@@ -117,7 +117,7 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 	//end Data block
 	//end set up of input, output, logging
 	cout<<"******************************************"<<endl;
-	cout<<"Processing Run "<<run<<" "<<type<<((isData) ? (" Data") : (" MC type "))<<mcType<<endl;
+	cout<<"Processing Run "<<run<<" "<<type<<((isData) ? (" Data ") : (" MC type "))<<mcType<<((flag == 2) ? ("sWeighted") : (""))<<endl;
 	cout<<"******************************************"<<endl;
 
 	cout<<"******************************************"<<endl;

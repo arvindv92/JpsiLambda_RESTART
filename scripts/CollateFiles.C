@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void CollateFiles(Int_t run, Bool_t isData, Int_t mcType, TChain** h1, TChain** h2, Bool_t testing, Bool_t loose)//defaults provided in header
+void CollateFiles(Int_t run, Bool_t isData, Int_t mcType, TChain** h1, TChain** h2, Bool_t testing, Bool_t loose, Bool_t logFlag)//defaults provided in header
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = true for data, false for MC
@@ -14,8 +14,6 @@ void CollateFiles(Int_t run, Bool_t isData, Int_t mcType, TChain** h1, TChain** 
    loose = true to run over data from loose stripping line. Only LL for loose stripping line
  */
 {
-	Bool_t logFlag = false;
-
 	if(isData)
 	{
 		// if(loose)

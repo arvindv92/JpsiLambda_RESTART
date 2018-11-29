@@ -38,7 +38,7 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
    bdtConf = 1 or 2. refers to finalBDT training configs
    flag = 1 when applying on all data, flag = 2 when applying only on signal training sample
    isoFlag = true if you want to use isolation in the final BDT.
-         zeroFlag = true to apply final BDT on zeroTrack data, false to apply on nonZeroTracks data.
+   zeroFlag = true to apply final BDT on zeroTrack data, false to apply on nonZeroTracks data.
  */
 {
 	TStopwatch sw;
@@ -70,20 +70,10 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 	Double_t myBDTK = 0., BDT = 0.;
 
 	logFileName = (trackType == 3) ? (TString::Format("finalBDT%dApplication_LL_iso%d_%s.txt",bdtConf,isoConf,isoVersion)) : (TString::Format("finalBDT%dApplication_DD_iso%d_%s.txt",bdtConf,isoConf,isoVersion));
+	type        = (trackType == 3) ? ("LL") : ("DD");
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 	cout<<"WD = "<<gSystem->pwd()<<endl;
-
-	if(trackType == 3)
-	{
-		cout<<"Processing LL"<<endl;
-		type = "LL";
-	}
-	else if(trackType == 5)
-	{
-		cout<<"Processing DD"<<endl;
-		type = "DD";
-	}
 
 	//set up logging, input, output
 	if(!isData) // MC
@@ -182,18 +172,18 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 				if(!zeroFlag)
 				{
 					fileIn  =  TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withiso%d_%s.root",run,type,isoConf,isoVersion));
-					fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
+					fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambdaLite_%s_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
 				}
 				else
 				{
 					fileIn  =  TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_ZeroTracks.root",run,type));
-					fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_zeroTracks%s_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
+					fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambdaLite_zeroTracks%s_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
 				}
 			}
 			else
 			{
 				fileIn  =  TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s.root",run,type));
-				fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withFinalBDT%d_noIso.root",run,type,bdtConf),"RECREATE");
+				fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambdaLite_%s_withFinalBDT%d_noIso.root",run,type,bdtConf),"RECREATE");
 			}
 		}
 		else if(flag == 2)
@@ -203,24 +193,29 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 				if(!zeroFlag)
 				{
 					fileIn  = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withiso%d_%s.root",run,type,isoConf,isoVersion));
-					fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
+					fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambdaLite_%ssig_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
 				}
 				else
 				{
 					fileIn = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw_ZeroTracks.root",run,type));
-					fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_zeroTracks%ssig_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
+					fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambdaLite_zeroTracks%ssig_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
 				}
 			}
 			else
 			{
 				fileIn  = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw.root",run,type));
-				fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withFinalBDT%d_noIso.root",run,type,bdtConf),"RECREATE");
+				fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambdaLite_%ssig_withFinalBDT%d_noIso.root",run,type,bdtConf),"RECREATE");
 			}
 		}
 	}//end Data block
+	//end setup of input, output, logging
 	cout<<"******************************************"<<endl;
 	cout<<"Starting ApplyFinalBDT "<<endl;
 	cout<<"WD = "<<gSystem->pwd()<<endl;
+	cout<<"******************************************"<<endl;
+
+	cout<<"******************************************"<<endl;
+	cout<<"Processing Run "<<run<<" "<<type<<((isData) ? (" Data") : (" MC type "))<<mcType<<((flag == 2) ? ("sWeighted") : (""))<<((zeroFlag) ? ("zeroTracks") : (""))<<endl;
 	cout<<"******************************************"<<endl;
 
 	treeIn = (TTree*)fileIn->Get("MyTuple");
@@ -248,13 +243,13 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 	reader->AddVariable( "log_lbminipchi2 := log10(Lb_MINIPCHI2)", &log_lbMinIpChi2 );
 	reader->AddVariable( "logacos_lbdira := log10(acos(Lb_DIRA_OWNPV))", &logAcos_lbDira_ownPV );
 	reader->AddVariable( "log_lbfd_ownpv := log10(Lb_FD_OWNPV)", &log_lbFd_ownPV );
-	reader->AddVariable( "log_ltau := log10(L_TAU)", &log_lTau );
+//	reader->AddVariable( "log_ltau := log10(L_TAU)", &log_lTau );
 	//reader->AddVariable( "Lb_DTF_CTAUS_L", &l_dtfCtauS );
 
 	reader->AddVariable( "log_jpsiminipchi2 := log10(Jpsi_MINIPCHI2)", &log_jpsiMinIpChi2 );
 	reader->AddVariable( "log_jpsimass := log10(Jpsi_M)", &log_jpsiMass );
-	reader->AddVariable( "Jpsi_CosTheta", &jpsi_cosTheta );
-	reader->AddVariable( "Jpsi_PT", &jpsi_pt );
+//	reader->AddVariable( "Jpsi_CosTheta", &jpsi_cosTheta );
+//	reader->AddVariable( "Jpsi_PT", &jpsi_pt );
 
 	reader->AddVariable( "log_lfdchi2 := log10(L_FDCHI2_ORIVX)", &log_lFdChi2_orivX );
 	reader->AddVariable( "logacos_ldira_orivx := log10(acos(L_DIRA_ORIVX))", &logAcos_lDira_orivX );
@@ -262,9 +257,9 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 	reader->AddVariable( "logacos_ldira_ownpv := log10(acos(L_DIRA_OWNPV))", &logAcos_lDira_ownPV );
 	reader->AddVariable( "L_dm", &l_dm );
 	reader->AddVariable( "log_lminipchi2 := log10(L_MINIPCHI2)", &log_lMinIpChi2 );
-	reader->AddVariable( "L_PT", &l_pt );
+//	reader->AddVariable( "L_PT", &l_pt );
 	reader->AddVariable( "L_ENDVERTEX_CHI2", &l_endVertex_Chi2);
-	reader->AddVariable( "L_CosTheta", &l_cosTheta );
+//	reader->AddVariable( "L_CosTheta", &l_cosTheta );
 
 	reader->AddVariable( "p_PIDp", &p_PIDp );
 	reader->AddVariable( "log_pminipchi2 := log10(p_MINIPCHI2)", &log_pMinIpChi2 );
@@ -272,24 +267,24 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 	reader->AddVariable( "log_p_PT := log10(p_PT)", &log_p_pt);
 	reader->AddVariable( "p_ProbNNp", &p_probNNp );
 
-	reader->AddVariable( "pi_TRACK_GhostProb", &pi_ghostProb );
-	reader->AddVariable( "pi_PIDK", &pi_PIDK);
+//	reader->AddVariable( "pi_TRACK_GhostProb", &pi_ghostProb );
+//	reader->AddVariable( "pi_PIDK", &pi_PIDK);
 	reader->AddVariable( "log_piminipchi2 := log10(pi_MINIPCHI2)", &log_piMinIpChi2);
 	reader->AddVariable( "log_pi_PT := log10(pi_PT)", &log_pi_pt );
 	reader->AddVariable( "pi_ProbNNpi", &pi_probNNpi );
 
-	if(isoFlag) reader->AddVariable( TString::Format("BDTkMin_%s",isoVersion), &BDTK );
+	if(isoFlag && !zeroFlag) reader->AddVariable( TString::Format("BDTkMin_%s",isoVersion), &BDTK );
 
 	//***********Load weights file**********************************
 	TString dir    = "dataset/weights/";
 	TString prefix;
 	if(isoFlag && !zeroFlag)
 	{
-		prefix = TString::Format("TMVAClassification-JpsiLambda%s_dataRun%d_iso%d_%s",type,run,isoConf,isoVersion);
+		prefix = TString::Format("TMVAClassificationLite-JpsiLambda%s_dataRun%d_iso%d_%s",type,run,isoConf,isoVersion);
 	}
 	else if(!isoFlag || (isoFlag && zeroFlag))
 	{
-		prefix = TString::Format("TMVAClassification-JpsiLambda%s_dataRun%d_noIso",type,run);
+		prefix = TString::Format("TMVAClassificationLite-JpsiLambda%s_dataRun%d_noIso",type,run);
 	}
 	TString methodName = TString("BDT method");
 	TString weightfile = dir + prefix + TString("_") + TString::Format("BDTconf%d",bdtConf) + TString(".weights.xml");
@@ -336,7 +331,7 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 	treeIn->SetBranchAddress( "pi_PT", &piPT );
 	treeIn->SetBranchAddress( "pi_ProbNNpi", &piProbNNpi );
 
-	if(isoFlag) treeIn->SetBranchAddress( TString::Format("BDTkMin_%s",isoVersion), &myBDTK );
+	if(isoFlag && !zeroFlag) treeIn->SetBranchAddress( TString::Format("BDTkMin_%s",isoVersion), &myBDTK );
 
 	treeOut->Branch( TString::Format("BDT%d",bdtConf), &BDT, TString::Format("BDT%d/D",bdtConf));
 
@@ -348,42 +343,42 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 
 		treeIn->GetEntry(ievt);
 
-		log_dtfChi2 = log10(chi2array[0]);//Lb_ConsLb_chi2
-		log_lbMinIpChi2 = log10(lbMinIpChi2);//Lb_MINIPCHI2
-		logAcos_lbDira_ownPV = log10(acos(lbDira_ownPV));//Lb_DIRA_OWNPV
-		log_lbFd_ownPV = log10(lbFd_ownPV);//Lb_FD_OWNPV
-		log_lTau = log10(lTau);//L_TAU
-		//	var[5] = userVar[5];//Lb_DTF_CTAUS_L
+		log_dtfChi2                   = log10(chi2array[0]);//Lb_ConsLb_chi2
+		log_lbMinIpChi2               = log10(lbMinIpChi2);//Lb_MINIPCHI2
+		logAcos_lbDira_ownPV          = log10(acos(lbDira_ownPV));//Lb_DIRA_OWNPV
+		log_lbFd_ownPV                = log10(lbFd_ownPV);//Lb_FD_OWNPV
+		//	log_lTau                  = log10(lTau);//L _TAU
+		//	var[5]                    = userVar[5];//Lb_DTF_CTAUS_L
 
-		log_jpsiMinIpChi2 = log10(jpsiMinIpChi2);//Jpsi_MINIPCHI2
-		log_jpsiMass = log10(jpsiMass);//Jpsi_M
-		jpsi_cosTheta = jpsiCosTheta;//Jpsi_CosTheta
-		jpsi_pt = jpsiPT;//Jpsi_PT
+		log_jpsiMinIpChi2             = log10(jpsiMinIpChi2);//Jpsi_MINIPCHI2
+		log_jpsiMass                  = log10(jpsiMass);//Jpsi_M
+		//	jpsi_cosTheta             = jpsiCosTheta;//Jpsi_CosTheta
+		//	jpsi_pt                   = jpsiPT;//Jpsi_PT
 
-		log_lFdChi2_orivX = log10(lFdChi2_orivX);//L_FDCHI2_ORIVX
-		logAcos_lDira_orivX = log10(acos(lDira_orivX));//L_DIRA_ORIVX
-		log_lFd_orivX = log10(lFd_orivX);//L_FD_ORIVX
-		logAcos_lDira_ownPV = log10(acos(lDira_ownPV));//L_DIRA_OWNPV
-		l_dm = lDm;//L_dm
-		log_lMinIpChi2 = log10(lMinIpChi2);//L_MINIPCHI2
-		l_pt = lPT;//L_PT
-		l_endVertex_Chi2 = lEndVertexChi2;//L_ENDVERTEX_CHI2
-		l_cosTheta = lCosTheta;//L_CosTheta
+		log_lFdChi2_orivX             = log10(lFdChi2_orivX);//L_FDCHI2_ORIVX
+		logAcos_lDira_orivX           = log10(acos(lDira_orivX));//L_DIRA_ORIVX
+		log_lFd_orivX                 = log10(lFd_orivX);//L_FD_ORIVX
+		logAcos_lDira_ownPV           = log10(acos(lDira_ownPV));//L_DIRA_OWNPV
+		l_dm                          = lDm;//L_dm
+		log_lMinIpChi2                = log10(lMinIpChi2);//L_MINIPCHI2
+		//	l_pt                      = lPT;//L_PT
+		l_endVertex_Chi2              = lEndVertexChi2;//L_ENDVERTEX_CHI2
+		//	l_cosTheta                = lCosTheta;//L_CosTheta
 
-		pPIDp = p_PIDp; //p_PIDp
-		log_pMinIpChi2 = log10(pMinIpChi2);//p_MINIPCHI2
-		p_ghostProb = pGhostProb;//p_TRACK_GhostProb
-		log_p_pt = log10(pPT);//p_PT
-		p_probNNp = pProbNNp;//p_ProbNNp
+		pPIDp                         = p_PIDp; //p_PIDp
+		log_pMinIpChi2                = log10(pMinIpChi2);//p_MINIPCHI2
+		p_ghostProb                   = pGhostProb;//p_TRACK_GhostProb
+		log_p_pt                      = log10(pPT);//p_PT
+		p_probNNp                     = pProbNNp;//p_ProbNNp
 
-		pi_ghostProb = piGhostProb;//pi_TRACK_GhostProb
-		pi_PIDK = piPIDK;//pi_PIDK
-		log_piMinIpChi2 = log10(piMinIpChi2);//pi_MINIPCHI2
-		log_pi_pt = log10(piPT);//pi_PT
-		pi_probNNpi = piProbNNpi;//pi_ProbNNpi
-		if(isoFlag) BDTK = myBDTK; //BDTk
+		// pi_ghostProb               = piGhostProb;//pi_TRACK_GhostProb
+		//	pi_PIDK                   = piPIDK;//pi_PIDK
+		log_piMinIpChi2               = log10(piMinIpChi2);//pi_MINIPCHI2
+		log_pi_pt                     = log10(piPT);//pi_PT
+		pi_probNNpi                   = piProbNNpi;//pi_ProbNNpi
+		if(isoFlag && !zeroFlag) BDTK = myBDTK; //BDTk
 
-		BDT = reader->EvaluateMVA("BDT method");
+		BDT                           = reader->EvaluateMVA("BDT method");
 
 		treeOut->Fill();
 	}

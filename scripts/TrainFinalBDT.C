@@ -26,11 +26,11 @@
 
 using namespace std;
 
-void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1", Int_t isoConf = 1, Bool_t isoFlag = true, Bool_t logFlag = false)
+void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString isoVersion = "v1", Int_t isoConf = 1, Bool_t isoFlag = true, Bool_t logFlag = false)
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    trackType = 3 for LL, 5 for DD.
-   version = "v1","v2" or "v3"
+   isoVersion = "v0","v1","v2" or "v3"
    isoConf = 1 or 5
    isoFlag = true if you want to use isolation in the final BDT.
  */
@@ -47,7 +47,7 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1", In
 	TMVA::Factory *factory = nullptr;
 	TMVA::Tools::Instance();// This loads the library
 
-	logFileName = (trackType == 3) ? (TString::Format("finalBDTTraining_LL_iso%d_%s_log.txt",isoConf,version.Data())) : (TString::Format("finalBDTTraining_DD_iso%d_%s_log.txt",isoConf,version.Data()));
+	logFileName = (trackType == 3) ? (TString::Format("finalBDTTraining_LL_iso%d_%s_log.txt",isoConf,isoVersion.Data())) : (TString::Format("finalBDTTraining_DD_iso%d_%s_log.txt",isoConf,isoVersion.Data()));
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
@@ -76,16 +76,16 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1", In
 
 	if(isoFlag)
 	{
-		outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVAtraining/iso/TMVA-JpsiLambda_%s_data_iso%d_%s.root",run,type,isoConf,version.Data());
+		outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVAtraining/iso/TMVALite-JpsiLambda_%s_data_iso%d_%s.root",run,type,isoConf,isoVersion.Data());
 		outputFile = TFile::Open( outfileName, "RECREATE" );
-		factory = new TMVA::Factory( TString::Format("TMVAClassification-JpsiLambda%s_dataRun%d_iso%d_%s",type,run,isoConf,version.Data()), outputFile,
+		factory = new TMVA::Factory( TString::Format("TMVAClassificationLite-JpsiLambda%s_dataRun%d_iso%d_%s",type,run,isoConf,isoVersion.Data()), outputFile,
 		                             "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
 	}
 	else
 	{
-		outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVAtraining/noIso/TMVA-JpsiLambda%s_data_noIso.root",run,type);
+		outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVAtraining/noIso/TMVALite-JpsiLambda%s_data_noIso.root",run,type);
 		outputFile = TFile::Open( outfileName, "RECREATE");
-		factory = new TMVA::Factory( TString::Format("TMVAClassification-JpsiLambda%s_dataRun%d_noIso",type,run), outputFile,
+		factory = new TMVA::Factory( TString::Format("TMVAClassificationLite-JpsiLambda%s_dataRun%d_noIso",type,run), outputFile,
 		                             "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
 	}
 
@@ -95,13 +95,13 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1", In
 	dataloader->AddVariable( "log_lbminipchi2 := log10(Lb_MINIPCHI2)", 'F' );
 	dataloader->AddVariable( "logacos_lbdira := log10(acos(Lb_DIRA_OWNPV))", 'F' );
 	dataloader->AddVariable( "log_lbfd_ownpv := log10(Lb_FD_OWNPV)", 'F' );
-	dataloader->AddVariable( "log_ltau := log10(L_TAU)", 'F' );
+//	dataloader->AddVariable( "log_ltau := log10(L_TAU)", 'F' );
 	//dataloader->AddVariable( "Lb_DTF_CTAUS_L", 'F' );
 
 	dataloader->AddVariable( "log_jpsiminipchi2 := log10(Jpsi_MINIPCHI2)", 'F' );
 	dataloader->AddVariable( "log_jpsimass := log10(Jpsi_M)", 'F' );
-	dataloader->AddVariable( "Jpsi_CosTheta", 'F' );
-	dataloader->AddVariable( "Jpsi_PT", 'F' );
+//	dataloader->AddVariable( "Jpsi_CosTheta", 'F' );
+//	dataloader->AddVariable( "Jpsi_PT", 'F' );
 
 	dataloader->AddVariable( "log_lfdchi2 := log10(L_FDCHI2_ORIVX)", 'F' );
 	dataloader->AddVariable( "logacos_ldira_orivx := log10(acos(L_DIRA_ORIVX))", 'F' );
@@ -109,9 +109,9 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1", In
 	dataloader->AddVariable( "logacos_ldira_ownpv := log10(acos(L_DIRA_OWNPV))", 'F' );
 	dataloader->AddVariable( "L_dm", 'F' );
 	dataloader->AddVariable( "log_lminipchi2 := log10(L_MINIPCHI2)", 'F' );
-	dataloader->AddVariable( "L_PT", 'F' );
+//	dataloader->AddVariable( "L_PT", 'F' );
 	dataloader->AddVariable( "L_ENDVERTEX_CHI2", 'F' );
-	dataloader->AddVariable( "L_CosTheta", 'F' );
+//	dataloader->AddVariable( "L_CosTheta", 'F' );
 
 	dataloader->AddVariable( "p_PIDp", 'F' );
 	dataloader->AddVariable( "log_pminipchi2 := log10(p_MINIPCHI2)", 'F' );
@@ -119,17 +119,17 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1", In
 	dataloader->AddVariable( "log_p_PT := log10(p_PT)", 'F' );
 	dataloader->AddVariable( "p_ProbNNp", 'F' );
 
-	dataloader->AddVariable( "pi_TRACK_GhostProb", 'F' );
-	dataloader->AddVariable( "pi_PIDK", 'F');
+//	dataloader->AddVariable( "pi_TRACK_GhostProb", 'F' );
+//	dataloader->AddVariable( "pi_PIDK", 'F');
 	dataloader->AddVariable( "log_piminipchi2 := log10(pi_MINIPCHI2)", 'F');
 	dataloader->AddVariable( "log_pi_PT := log10(pi_PT)", 'F' );
 	dataloader->AddVariable( "pi_ProbNNpi", 'F' );
 
-	if(isoFlag) dataloader->AddVariable( TString::Format("BDTkMin_%s",version.Data()), 'F' );
+	if(isoFlag) dataloader->AddVariable( TString::Format("BDTkMin_%s",isoVersion.Data()), 'F' );
 
 	if(isoFlag)
 	{
-		input = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withiso%d_%s.root",run,type,isoConf,version.Data()));
+		input = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withiso%d_%s.root",run,type,isoConf,isoVersion.Data()));
 	}
 	else
 	{
@@ -180,7 +180,7 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1", In
 	treeIn->SetBranchStatus("pi_PT",1);
 	treeIn->SetBranchStatus("pi_ProbNNpi",1);
 
-	if(isoFlag) treeIn->SetBranchStatus(TString::Format("BDTkMin_%s",version.Data()),1);
+	if(isoFlag) treeIn->SetBranchStatus(TString::Format("BDTkMin_%s",isoVersion.Data()),1);
 
 	treeIn->SetBranchStatus("SW",1);
 	treeIn->SetBranchStatus("BW",1);
@@ -209,10 +209,10 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString version = "v1", In
 
 	cout<<"3.5"<<endl;
 	factory->BookMethod(dataloader,TMVA::Types::kBDT, "BDTconf1",
-	                    "!H:!V:NTrees=850:MinNodeSize=1.25%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
+	                    "!H:!V:NTrees=300:MinNodeSize=1.0%:MaxDepth=5:BoostType=AdaBoost:AdaBoostBeta=0.2:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
 	cout<<"4"<<endl;
-	factory->BookMethod( dataloader,TMVA::Types::kBDT, "BDTconf2",
-	                     "!H:!V:NTrees=850:MinNodeSize=0.625%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
+	factory->BookMethod(dataloader,TMVA::Types::kBDT, "BDTconf2",
+	                    "!H:!V:NTrees=300:MinNodeSize=0.5%:MaxDepth=5:BoostType=AdaBoost:AdaBoostBeta=0.2:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
 
 	/*factory->BookMethod( TMVA::Types::kBDT, "BDTconf6",
 	   "!H:!V:NTrees=1000:MinNodeSize=0.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.3:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );

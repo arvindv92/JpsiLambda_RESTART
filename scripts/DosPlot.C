@@ -1,6 +1,6 @@
 /********************************
    Author : Aravindhan V.
-         The purpose of this script is to sWeight data in 5200-6000 GeV, and write out weighted data
+   The purpose of this script is to sWeight data in 5200-6000 GeV, and write out weighted data
  *********************************/
 #ifndef __CINT__
 #include "RooGlobalFunc.h"
@@ -30,6 +30,7 @@
 #include "TSystem.h"
 #include "TBranch.h"
 #include "TPaveLabel.h"
+#include "TStopwatch.h"
 // use this order for safety on library loading
 using namespace RooFit;
 using namespace RooStats;
@@ -49,6 +50,9 @@ void DosPlot(Int_t run = 1, Int_t trackType = 3, Bool_t logFlag = false)
    trackType = 3 for LL, 5 for DD.
  */
 {
+	TStopwatch sw;
+	sw.Start();
+
 	const char* logFileName = "", *type = "";
 	TString inFileName = "", outFileName = "", trainFileName = "";
 	TFile *fileIn = nullptr, *fileOut = nullptr;
@@ -56,34 +60,30 @@ void DosPlot(Int_t run = 1, Int_t trackType = 3, Bool_t logFlag = false)
 	Int_t entries_init = 0, entries_massWindow = 0, lowRange = 5200, highRange = 6000;
 	Double_t Lb_DTF_M_JpsiLConstr = 0.0;
 
-	if(logFlag)
-	{
-		gROOT->ProcessLine((TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName)).Data());
-	}
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
-	cout<<"********************************"<<endl;
-	cout<<"WD = "<<gSystem->pwd()<<endl;
-	cout<<"********************************"<<endl;
-
-	if(trackType == 3)
-	{
-		cout<<"Processing LL"<<endl;
-		type = "LL";
-	}
-	else if(trackType == 5)
-	{
-		cout<<"Processing DD"<<endl;
-		type = "DD";
-	}
-
+	type          = (trackType == 3) ? ("LL") : ("DD");
 	logFileName   = (trackType == 3) ? ("sPlot_LL_log.txt") : ("sPlot_DD_log.txt");
 	inFileName    = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s.root",run,type);
 	outFileName   = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw.root",run,type);
 	trainFileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_forIsoTraining.root",run,type);
 
-	fileIn  = TFile::Open(inFileName,"READ");
-	treeIn  = (TTree*)fileIn->Get("MyTuple");
-	entries_init = treeIn->GetEntries();
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
+	if(logFlag)
+	{
+		gROOT->ProcessLine((TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName)).Data());
+	}
+	cout<<"********************************"<<endl;
+	cout<<"==> Starting DosPlot: "<<endl;
+	cout<<"WD = "<<gSystem->pwd()<<endl;
+	cout<<"********************************"<<endl;
+
+	cout<<"******************************************"<<endl;
+	cout<<"Processing Run "<<run<<" "<<type<<endl;
+	cout<<"******************************************"<<endl;
+
+	fileIn             = TFile                     ::Open(inFileName,"READ");
+	treeIn             = (TTree*)fileIn->Get("MyTuple");
+
+	entries_init       = treeIn->GetEntries();
 	entries_massWindow = treeIn->GetEntries(TString::Format("Lb_DTF_M_JpsiLConstr > %d && Lb_DTF_M_JpsiLConstr < %d",lowRange,highRange));
 
 	fileOut = TFile::Open(outFileName,"RECREATE");
@@ -134,6 +134,9 @@ void DosPlot(Int_t run = 1, Int_t trackType = 3, Bool_t logFlag = false)
 
 	// cleanup
 	delete wSpace;
+
+	sw.Stop();
+	cout << "==> DosPlot is done! Check fit status! sWeights FTW!: "; sw.Print();
 	if(logFlag) gROOT->ProcessLine(".>");
 }
 
