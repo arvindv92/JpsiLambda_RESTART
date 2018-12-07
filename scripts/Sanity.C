@@ -26,6 +26,8 @@ void Sanity(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcType
    PID cuts are applied to reject junk events with PID's of 0 or -1000 for Run1 and reject -1000 for Run2
  */
 {
+	cout<<"***********Starting Sanity***********"<<endl;
+
 	TStopwatch sw;
 	sw.Start();
 

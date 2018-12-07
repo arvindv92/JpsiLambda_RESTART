@@ -29,3 +29,775 @@ input_line_101:2:3: error: use of undeclared identifier 'Trigger'
   ^
 terminate called after throwing an instance of 'cling::CompilationException'
   what():  Error evaluating expression (Trigger(2, 1, 0, 0, 1, 1))
+
+nohup: ignoring input
+
+Processing MASTER.C...
+Info in <TUnixSystem::ACLiC>: creating shared library /data1/avenkate/JpsiLambda_RESTART/scripts/./massCut_C.so
+******Starting massCut*********
+Processing LL
+******************************************
+Input file = rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_forIsoTraining.root
+Output file = rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_forIsoTraining_massCut.root
+******************************************
+Incoming entries = 408371
+I am making the following mass cuts. Sit tight
+@Õ	4
+Outgoing entries = 160635
+==> End of massCut! Cheers!: Real time 0:00:08, CP time 7.470
+Info in <TUnixSystem::ACLiC>: creating shared library /data1/avenkate/JpsiLambda_RESTART/scripts/./TrainIsolation_C.so
+***********Starting TrainIsolation***********
+Redirect::open: No such file or directory
+******************************************
+Processing Run 1 LL
+******************************************
+*****************************
+==> Starting TrainIsolation: 
+WD = /data1/avenkate/JpsiLambda_RESTART
+*****************************
+--- TMVAClassification : Using background input file: /data1/avenkate/B+toJpsiK+/RealData_AllKaons/total_run1/splot/maketuples/jpsik_forTMVAisoTraining.root
+--- TMVAClassification : Using signal input file: rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_forIsoTraining_massCut.root
+DataSetInfo              : [dataset] : Added class "Signal"
+                         : Add Tree MyTuple of type Signal with 160635 events
+DataSetInfo              : [dataset] : Added class "Background"
+                         : Add Tree MyTuple of type Background with 510623 events
+Factory                  : Booking method: [1misoConf1[0m
+                         : 
+DataSetFactory           : [dataset] : Number of events in input trees
+                         : Dataset[dataset] :     Signal     requirement: "MINIPCHI2 > 0 && VCHI2DOF > 0"
+                         : Dataset[dataset] :     Signal          -- number of events passed: 2457790  / sum of weights: 201361
+                         : Dataset[dataset] :     Signal          -- efficiency             : 0.99998
+                         : Dataset[dataset] :     Background requirement: "MINIPCHI2 > 0 && VCHI2DOF > 0"
+                         : Dataset[dataset] :     Background      -- number of events passed: 510623  / sum of weights: 213264
+                         : Dataset[dataset] :     Background      -- efficiency             : 1     
+                         : Dataset[dataset] :  you have opted for interpreting the requested number of training/testing events
+                         :  to be the number of events AFTER your preselection cuts
+                         : 
+                         : 
+                         : Number of training and testing events
+                         : ---------------------------------------------------------------------------
+                         : Signal     -- training events            : 1228895
+                         : Signal     -- testing events             : 1228895
+                         : Signal     -- training and testing events: 2457790
+                         : Dataset[dataset] : Signal     -- due to the preselection a scaling factor has been applied to the numbers of requested events: 0.99998
+                         : Background -- training events            : 255311
+                         : Background -- testing events             : 255311
+                         : Background -- training and testing events: 510622
+                         : 
+DataSetInfo              : Correlation matrix (Signal):
+                         : ---------------------------------------------------
+                         :                    IPCHI2 VCHI2DOF log10(MINIPCHI2)
+                         :           IPCHI2:  +1.000   +0.815           +0.146
+                         :         VCHI2DOF:  +0.815   +1.000           +0.159
+                         : log10(MINIPCHI2):  +0.146   +0.159           +1.000
+                         : ---------------------------------------------------
+DataSetInfo              : Correlation matrix (Background):
+                         : ---------------------------------------------------
+                         :                    IPCHI2 VCHI2DOF log10(MINIPCHI2)
+                         :           IPCHI2:  +1.000   +0.668           +0.027
+                         :         VCHI2DOF:  +0.668   +1.000           +0.075
+                         : log10(MINIPCHI2):  +0.027   +0.075           +1.000
+                         : ---------------------------------------------------
+DataSetFactory           : [dataset] :  
+                         : 
+Factory                  : Booking method: [1misoConf2[0m
+                         : 
+Factory                  : [1mTrain all methods[0m
+Factory                  : [dataset] : Create Transformation "I" with events from all classes.
+                         : 
+                         : Transformation, Variable selection : 
+                         : Input : variable 'IPCHI2' <---> Output : variable 'IPCHI2'
+                         : Input : variable 'VCHI2DOF' <---> Output : variable 'VCHI2DOF'
+                         : Input : variable 'log_MINIPCHI2' <---> Output : variable 'log_MINIPCHI2'
+TFHandler_Factory        :      Variable             Mean             RMS     [        Min             Max ]
+                         : ------------------------------------------------------------------------------------
+                         :        IPCHI2:         5.0405         5.0012   [     1.3841e-07         32.730 ]
+                         :      VCHI2DOF:         2.7143         2.1465   [     7.9119e-05         9.9999 ]
+                         : log_MINIPCHI2:        0.58533         1.2048   [        -5.8148         5.8559 ]
+                         : ------------------------------------------------------------------------------------
+                         : Ranking input variables (method unspecific)...
+IdTransformation         : Ranking result (top variable is best ranked)
+                         : --------------------------------------
+                         : Rank : Variable      : Separation
+                         : --------------------------------------
+                         :    1 : log_MINIPCHI2 : 7.580e-01
+                         :    2 : IPCHI2        : 3.496e-01
+                         :    3 : VCHI2DOF      : 1.513e-01
+                         : --------------------------------------
+Factory                  : Train method: isoConf1 for Classification
+                         : 
+<WARNING>                : Events with negative event weights are USED during the BDT training. This might cause problems with small node sizes or with the boosting. Please remove negative events from training using the option *IgnoreEventsWithNegWeightsInTraining* in case you observe problems with the boosting
+isoConf1                 : #events: (reweighted) sig: 742103 bkg: 742103
+                         : #events: (unweighted) sig: 1228895 bkg: 255311
+                         : Training 850 Decision Trees ... patience please
+                         : Elapsed time for training with 1484206 events: 528 sec         
+isoConf1                 : [dataset] : Evaluation of isoConf1 on training sample (1484206 events)
+                         : Elapsed time for evaluation of 1484206 events: 130 sec       
+                         : Creating xml weight file: [0;36mdataset/weights/TMVAClassification-isokLL_dataRun1_v0_isoConf1.weights.xml[0m
+                         : Creating standalone class: [0;36mdataset/weights/TMVAClassification-isokLL_dataRun1_v0_isoConf1.class.C[0m
+Factory                  : Training finished
+                         : 
+Factory                  : Train method: isoConf2 for Classification
+                         : 
+<WARNING>                : Events with negative event weights are USED during the BDT training. This might cause problems with small node sizes or with the boosting. Please remove negative events from training using the option *IgnoreEventsWithNegWeightsInTraining* in case you observe problems with the boosting
+isoConf2                 : #events: (reweighted) sig: 742103 bkg: 742103
+                         : #events: (unweighted) sig: 1228895 bkg: 255311
+                         : Training 850 Decision Trees ... patience please
+                         : Elapsed time for training with 1484206 events: 528 sec         
+isoConf2                 : [dataset] : Evaluation of isoConf2 on training sample (1484206 events)
+                         : Elapsed time for evaluation of 1484206 events: 132 sec       
+                         : Creating xml weight file: [0;36mdataset/weights/TMVAClassification-isokLL_dataRun1_v0_isoConf2.weights.xml[0m
+                         : Creating standalone class: [0;36mdataset/weights/TMVAClassification-isokLL_dataRun1_v0_isoConf2.class.C[0m
+Factory                  : Training finished
+                         : 
+                         : Ranking input variables (method specific)...
+isoConf1                 : Ranking result (top variable is best ranked)
+                         : -----------------------------------------------
+                         : Rank : Variable      : Variable Importance
+                         : -----------------------------------------------
+                         :    1 : log_MINIPCHI2 : 4.399e-01
+                         :    2 : IPCHI2        : 2.934e-01
+                         :    3 : VCHI2DOF      : 2.667e-01
+                         : -----------------------------------------------
+isoConf2                 : Ranking result (top variable is best ranked)
+                         : -----------------------------------------------
+                         : Rank : Variable      : Variable Importance
+                         : -----------------------------------------------
+                         :    1 : log_MINIPCHI2 : 4.490e-01
+                         :    2 : IPCHI2        : 2.830e-01
+                         :    3 : VCHI2DOF      : 2.680e-01
+                         : -----------------------------------------------
+Factory                  : === Destroy and recreate all methods via weight files for testing ===
+                         : 
+Factory                  : [1mTest all methods[0m
+Factory                  : Test method: isoConf1 for Classification performance
+                         : 
+isoConf1                 : [dataset] : Evaluation of isoConf1 on testing sample (1484206 events)
+                         : Elapsed time for evaluation of 1484206 events: 81.3 sec       
+Factory                  : Test method: isoConf2 for Classification performance
+                         : 
+isoConf2                 : [dataset] : Evaluation of isoConf2 on testing sample (1484206 events)
+                         : Elapsed time for evaluation of 1484206 events: 81.7 sec       
+Factory                  : [1mEvaluate all methods[0m
+Factory                  : Evaluate classifier: isoConf1
+                         : 
+isoConf1                 : [dataset] : Loop over test events and fill histograms with classifier response...
+                         : 
+TFHandler_isoConf1       :      Variable             Mean             RMS     [        Min             Max ]
+                         : ------------------------------------------------------------------------------------
+                         :        IPCHI2:         3.4439         4.4005   [     4.9477e-07         29.584 ]
+                         :      VCHI2DOF:         2.2015         1.9649   [     0.00023814         9.9999 ]
+                         : log_MINIPCHI2:         1.4006         1.4544   [        -5.9264         5.8551 ]
+                         : ------------------------------------------------------------------------------------
+Factory                  : Evaluate classifier: isoConf2
+                         : 
+isoConf2                 : [dataset] : Loop over test events and fill histograms with classifier response...
+                         : 
+TFHandler_isoConf2       :      Variable             Mean             RMS     [        Min             Max ]
+                         : ------------------------------------------------------------------------------------
+                         :        IPCHI2:         3.4439         4.4005   [     4.9477e-07         29.584 ]
+                         :      VCHI2DOF:         2.2015         1.9649   [     0.00023814         9.9999 ]
+                         : log_MINIPCHI2:         1.4006         1.4544   [        -5.9264         5.8551 ]
+                         : ------------------------------------------------------------------------------------
+                         : 
+                         : Evaluation results ranked by best signal efficiency and purity (area)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : DataSet       MVA                       
+                         : Name:         Method:          ROC-integ
+                         : dataset       isoConf1       : 0.976
+                         : dataset       isoConf2       : 0.976
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : 
+                         : Testing efficiency compared to training efficiency (overtraining check)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : DataSet              MVA              Signal efficiency: from test sample (from training sample) 
+                         : Name:                Method:          @B=0.01             @B=0.10            @B=0.30   
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : dataset              isoConf1       : 0.542 (0.552)       0.965 (0.966)      0.987 (0.987)
+                         : dataset              isoConf2       : 0.546 (0.563)       0.965 (0.966)      0.987 (0.987)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : 
+Dataset:dataset          : Created tree 'TestTree' with 1484206 events
+                         : 
+Dataset:dataset          : Created tree 'TrainTree' with 1484206 events
+                         : 
+Factory                  : [1mThank you for using TMVA![0m
+                         : [1mFor citation information, please visit: http://tmva.sf.net/citeTMVA.html[0m
+==> Wrote root file: rootFiles/dataFiles/JpsiLambda/run1/TMVAtraining/iso/TMVA-isokLL_data_v0.root
+==> TMVAClassification is done!
+==> End of TrainIsolation! Cheers!: Real time 0:29:03, CP time 1739.690
+Info in <TUnixSystem::ACLiC>: creating shared library /data1/avenkate/JpsiLambda_RESTART/scripts/./ApplyIsolation_C.so
+***********Starting ApplyIsolation***********
+WD = /data1/avenkate/JpsiLambda_RESTART
+***********Starting ApplyIsolation***********
+WD = /data1/avenkate/JpsiLambda_RESTART
+Info in <TUnixSystem::ACLiC>: creating shared library /data1/avenkate/JpsiLambda_RESTART/scripts/./TrainFinalBDT_C.so
+***********Starting TrainFinalBDT***********
+Redirect::open: No such file or directory
+Processing LL
+*****************************
+==> Starting TrainFinalBDT: 
+WD = /data1/avenkate/JpsiLambda_RESTART
+*****************************
+--- TMVAClassification       : Using input file: rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LLsig_withiso1_v0.root
+DataSetInfo              : [dataset] : Added class "Signal"
+                         : Add Tree MyTuple of type Signal with 404742 events
+DataSetInfo              : [dataset] : Added class "Background"
+                         : Add Tree MyTuple of type Background with 404742 events
+3
+3.5
+Factory                  : Booking method: [1mBDTconf1[0m
+                         : 
+DataSetFactory           : [dataset] : Number of events in input trees
+                         : Dataset[dataset] :     Signal     requirement: "Lb_ConsLb_chi2 > 0 && Lb_MINIPCHI2 > 0 && Lb_FD_OWNPV > 0 && L_TAU > 0 && Jpsi_MINIPCHI2 > 0 && Jpsi_M > 0 && L_FDCHI2_ORIVX > 0 && L_FD_ORIVX > 0 && L_MINIPCHI2 > 0 && p_MINIPCHI2 > 0 && p_PT > 0 && pi_MINIPCHI2 > 0 && pi_PT > 0 && Lb_MINIPCHI2 < 5000 && Jpsi_MINIPCHI2 < 5000 && pi_PIDK < 5 && p_PIDp > 5 && pi_MINIPCHI2 < 5000 && L_MINIPCHI2 < 10000 && Lb_DTF_M_JpsiLConstr < 5700"
+                         : Dataset[dataset] :     Signal          -- number of events passed: 118091  / sum of weights: 7286.82
+                         : Dataset[dataset] :     Signal          -- efficiency             : 1.10956
+                         : Dataset[dataset] :     Background requirement: "Lb_ConsLb_chi2 > 0 && Lb_MINIPCHI2 > 0 && Lb_FD_OWNPV > 0 && L_TAU > 0 && Jpsi_MINIPCHI2 > 0 && Jpsi_M > 0 && L_FDCHI2_ORIVX > 0 && L_FD_ORIVX > 0 && L_MINIPCHI2 > 0 && p_MINIPCHI2 > 0 && p_PT > 0 && pi_MINIPCHI2 > 0 && pi_PT > 0 && Lb_MINIPCHI2 < 5000 && Jpsi_MINIPCHI2 < 5000 && pi_PIDK < 5 && p_PIDp > 5 && pi_MINIPCHI2 < 5000 && L_MINIPCHI2 < 10000 && Lb_DTF_M_JpsiLConstr > 5700 && Lb_DTF_M_JpsiLConstr < 7000"
+                         : Dataset[dataset] :     Background      -- number of events passed: 41869  / sum of weights: 43445.9
+                         : Dataset[dataset] :     Background      -- efficiency             : 0.109492
+                         : Dataset[dataset] :  you have opted for interpreting the requested number of training/testing events
+                         :  to be the number of events AFTER your preselection cuts
+                         : 
+                         : Dataset[dataset] :  you have opted for interpreting the requested number of training/testing events
+                         :  to be the number of events AFTER your preselection cuts
+                         : 
+                         : Number of training and testing events
+                         : ---------------------------------------------------------------------------
+                         : Signal     -- training events            : 59045
+                         : Signal     -- testing events             : 59045
+                         : Signal     -- training and testing events: 118090
+                         : Dataset[dataset] : Signal     -- due to the preselection a scaling factor has been applied to the numbers of requested events: 0.291769
+                         : Background -- training events            : 20934
+                         : Background -- testing events             : 20934
+                         : Background -- training and testing events: 41868
+                         : Dataset[dataset] : Background -- due to the preselection a scaling factor has been applied to the numbers of requested events: 0.103446
+                         : 
+DataSetInfo              : Correlation matrix (Signal):
+                         : --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                         :                             log10(Lb_ConsLb_chi2) log10(Lb_MINIPCHI2) log10(acos(Lb_DIRA_OWNPV)) log10(Lb_FD_OWNPV) log10(Jpsi_MINIPCHI2) log10(Jpsi_M) log10(L_FDCHI2_ORIVX) log10(acos(L_DIRA_ORIVX)) log10(L_FD_ORIVX) log10(acos(L_DIRA_OWNPV))    L_dm log10(L_MINIPCHI2) L_ENDVERTEX_CHI2  p_PIDp log10(p_MINIPCHI2) p_TRACK_GhostProb log10(p_PT) p_ProbNNp log10(pi_MINIPCHI2) log10(pi_PT) pi_ProbNNpi BDTkMin_v0
+                         :      log10(Lb_ConsLb_chi2):                +1.000              +0.482                     +0.435             -0.130                -0.243        -0.028                -0.373                    +0.578            +0.058                    +0.094  +0.713             -0.244           +0.321  -0.212             -0.160            +0.541      -0.171    -0.401              -0.215       -0.226      -0.463     -0.366
+                         :        log10(Lb_MINIPCHI2):                +0.482              +1.000                     +0.787             -0.094                -0.148        +0.017                -0.293                    +0.370            +0.133                    -0.028  +0.403             -0.297           +0.111  -0.200             -0.187            +0.487      -0.154    -0.315              -0.163       -0.200      -0.416     -0.383
+                         : log10(acos(Lb_DIRA_OWNPV)):                +0.435              +0.787                     +1.000             -0.653                -0.443        +0.023                -0.231                    +0.351            +0.089                    -0.197  +0.371             -0.548           +0.099  -0.172             -0.292            +0.407      -0.153    -0.291              -0.196       -0.204      -0.345     -0.410
+                         :         log10(Lb_FD_OWNPV):                -0.130              -0.094                     -0.653             +1.000                +0.488        -0.013                +0.034                    -0.140            +0.093                    +0.250  -0.108             +0.492           -0.030  +0.050             +0.234            -0.059      +0.028    +0.097              +0.130       +0.049      +0.041     +0.206
+                         :      log10(Jpsi_MINIPCHI2):                -0.243              -0.148                     -0.443             +0.488                +1.000        -0.020                +0.153                    -0.207            -0.067                    +0.226  -0.217             +0.493           -0.039  +0.127             +0.249            -0.227      +0.184    +0.196              +0.162       +0.142      +0.184     +0.282
+                         :              log10(Jpsi_M):                -0.028              +0.017                     +0.023             -0.013                -0.020        +1.000                -0.017                    +0.003            +0.014                    -0.007  +0.046             -0.023           -0.010  -0.033             -0.027            +0.011      -0.019    -0.010              -0.031       +0.005      -0.024     -0.008
+                         :      log10(L_FDCHI2_ORIVX):                -0.373              -0.293                     -0.231             +0.034                +0.153        -0.017                +1.000                    -0.636            +0.478                    -0.441  -0.420             +0.103           -0.094  +0.191             +0.281            -0.394      +0.035    +0.308              +0.607       +0.027      +0.280     +0.242
+                         :  log10(acos(L_DIRA_ORIVX)):                +0.578              +0.370                     +0.351             -0.140                -0.207        +0.003                -0.636                    +1.000            -0.389                    +0.488  +0.502             -0.135           +0.188  -0.233             -0.212            +0.427      -0.316    -0.435              -0.418       -0.317      -0.373     -0.262
+                         :          log10(L_FD_ORIVX):                +0.058              +0.133                     +0.089             +0.093                -0.067        +0.014                +0.478                    -0.389            +1.000                    -0.730  -0.026             -0.439           -0.125  -0.045             +0.001            +0.151      -0.189    -0.011              +0.336       -0.193      -0.199     -0.107
+                         :  log10(acos(L_DIRA_OWNPV)):                +0.094              -0.028                     -0.197             +0.250                +0.226        -0.007                -0.441                    +0.488            -0.730                    +1.000  +0.147             +0.705           +0.159  -0.056             +0.149            +0.045      -0.078    -0.203              -0.224       -0.011      -0.035     +0.079
+                         :                       L_dm:                +0.713              +0.403                     +0.371             -0.108                -0.217        +0.046                -0.420                    +0.502            -0.026                    +0.147  +1.000             -0.227           +0.225  -0.217             -0.220            +0.519      -0.154    -0.361              -0.287       -0.276      -0.461     -0.281
+                         :         log10(L_MINIPCHI2):                -0.244              -0.297                     -0.548             +0.492                +0.493        -0.023                +0.103                    -0.135            -0.439                    +0.705  -0.227             +1.000           +0.031  +0.118             +0.424            -0.302      +0.160    +0.120              +0.144       +0.217      +0.250     +0.311
+                         :           L_ENDVERTEX_CHI2:                +0.321              +0.111                     +0.099             -0.030                -0.039        -0.010                -0.094                    +0.188            -0.125                    +0.159  +0.225             +0.031           +1.000  -0.057             -0.092            +0.083      -0.033    -0.120              -0.099       -0.062      -0.098     -0.063
+                         :                     p_PIDp:                -0.212              -0.200                     -0.172             +0.050                +0.127        -0.033                +0.191                    -0.233            -0.045                    -0.056  -0.217             +0.118           -0.057  +1.000             +0.120            -0.241      +0.283    +0.691              +0.149       +0.190      +0.299     +0.216
+                         :         log10(p_MINIPCHI2):                -0.160              -0.187                     -0.292             +0.234                +0.249        -0.027                +0.281                    -0.212            +0.001                    +0.149  -0.220             +0.424           -0.092  +0.120             +1.000            -0.160      +0.130    +0.093              +0.353       +0.056      +0.128     +0.196
+                         :          p_TRACK_GhostProb:                +0.541              +0.487                     +0.407             -0.059                -0.227        +0.011                -0.394                    +0.427            +0.151                    +0.045  +0.519             -0.302           +0.083  -0.241             -0.160            +1.000      -0.163    -0.531              -0.224       -0.189      -0.516     -0.368
+                         :                log10(p_PT):                -0.171              -0.154                     -0.153             +0.028                +0.184        -0.019                +0.035                    -0.316            -0.189                    -0.078  -0.154             +0.160           -0.033  +0.283             +0.130            -0.163      +1.000    +0.400              +0.136       +0.721      +0.215     +0.128
+                         :                  p_ProbNNp:                -0.401              -0.315                     -0.291             +0.097                +0.196        -0.010                +0.308                    -0.435            -0.011                    -0.203  -0.361             +0.120           -0.120  +0.691             +0.093            -0.531      +0.400    +1.000              +0.206       +0.305      +0.431     +0.299
+                         :        log10(pi_MINIPCHI2):                -0.215              -0.163                     -0.196             +0.130                +0.162        -0.031                +0.607                    -0.418            +0.336                    -0.224  -0.287             +0.144           -0.099  +0.149             +0.353            -0.224      +0.136    +0.206              +1.000       +0.149      +0.111     +0.141
+                         :               log10(pi_PT):                -0.226              -0.200                     -0.204             +0.049                +0.142        +0.005                +0.027                    -0.317            -0.193                    -0.011  -0.276             +0.217           -0.062  +0.190             +0.056            -0.189      +0.721    +0.305              +0.149       +1.000      +0.339     +0.170
+                         :                pi_ProbNNpi:                -0.463              -0.416                     -0.345             +0.041                +0.184        -0.024                +0.280                    -0.373            -0.199                    -0.035  -0.461             +0.250           -0.098  +0.299             +0.128            -0.516      +0.215    +0.431              +0.111       +0.339      +1.000     +0.337
+                         :                 BDTkMin_v0:                -0.366              -0.383                     -0.410             +0.206                +0.282        -0.008                +0.242                    -0.262            -0.107                    +0.079  -0.281             +0.311           -0.063  +0.216             +0.196            -0.368      +0.128    +0.299              +0.141       +0.170      +0.337     +1.000
+                         : --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+DataSetInfo              : Correlation matrix (Background):
+                         : --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                         :                             log10(Lb_ConsLb_chi2) log10(Lb_MINIPCHI2) log10(acos(Lb_DIRA_OWNPV)) log10(Lb_FD_OWNPV) log10(Jpsi_MINIPCHI2) log10(Jpsi_M) log10(L_FDCHI2_ORIVX) log10(acos(L_DIRA_ORIVX)) log10(L_FD_ORIVX) log10(acos(L_DIRA_OWNPV))    L_dm log10(L_MINIPCHI2) L_ENDVERTEX_CHI2  p_PIDp log10(p_MINIPCHI2) p_TRACK_GhostProb log10(p_PT) p_ProbNNp log10(pi_MINIPCHI2) log10(pi_PT) pi_ProbNNpi BDTkMin_v0
+                         :      log10(Lb_ConsLb_chi2):                +1.000              +0.106                     -0.030             +0.158                +0.069        -0.039                -0.403                    +0.322            -0.076                    +0.318  +0.724             +0.211           +0.137  -0.159             -0.051            +0.284      -0.033    -0.368              -0.139       +0.014      -0.235     -0.051
+                         :        log10(Lb_MINIPCHI2):                +0.106              +1.000                     +0.606             +0.318                +0.445        -0.013                -0.039                    +0.038            +0.194                    +0.040  +0.055             +0.041           -0.010  -0.075             +0.068            +0.206      +0.003    -0.148              +0.117       +0.035      -0.135     -0.156
+                         : log10(acos(Lb_DIRA_OWNPV)):                -0.030              +0.606                     +1.000             -0.504                +0.059        -0.004                +0.130                    -0.082            +0.113                    -0.126  -0.039             -0.137           -0.036  +0.037             -0.043            +0.046      +0.130    +0.074              +0.080       +0.111      +0.021     -0.040
+                         :         log10(Lb_FD_OWNPV):                +0.158              +0.318                     -0.504             +1.000                +0.365        -0.013                -0.202                    +0.116            +0.123                    +0.175  +0.109             +0.193           +0.022  -0.120             +0.135            +0.194      -0.119    -0.253              +0.054       -0.069      -0.181     -0.127
+                         :      log10(Jpsi_MINIPCHI2):                +0.069              +0.445                     +0.059             +0.365                +1.000        -0.037                -0.057                    +0.036            +0.055                    +0.064  +0.053             +0.091           +0.020  -0.035             +0.082            +0.059      +0.007    -0.085              +0.042       -0.004      -0.067     -0.029
+                         :              log10(Jpsi_M):                -0.039              -0.013                     -0.004             -0.013                -0.037        +1.000                +0.003                    -0.011            +0.009                    -0.005  -0.001             -0.001           -0.005  +0.004             +0.000            +0.005      -0.006    -0.001              +0.001       -0.002      -0.001     +0.008
+                         :      log10(L_FDCHI2_ORIVX):                -0.403              -0.039                     +0.130             -0.202                -0.057        +0.003                +1.000                    -0.526            +0.435                    -0.641  -0.372             -0.364           -0.113  +0.240             +0.168            -0.355      -0.038    +0.524              +0.457       -0.090      +0.230     +0.056
+                         :  log10(acos(L_DIRA_ORIVX)):                +0.322              +0.038                     -0.082             +0.116                +0.036        -0.011                -0.526                    +1.000            -0.552                    +0.772  +0.239             +0.330           +0.207  -0.167             -0.154            +0.166      -0.222    -0.359              -0.348       -0.131      -0.150     -0.023
+                         :          log10(L_FD_ORIVX):                -0.076              +0.194                     +0.113             +0.123                +0.055        +0.009                +0.435                    -0.552            +1.000                    -0.657  -0.182             -0.491           -0.181  +0.027             +0.189            +0.151      -0.007    +0.056              +0.552       -0.025      -0.185     -0.064
+                         :  log10(acos(L_DIRA_OWNPV)):                +0.318              +0.040                     -0.126             +0.175                +0.064        -0.005                -0.641                    +0.772            -0.657                    +1.000  +0.314             +0.740           +0.237  -0.168             -0.086            +0.186      -0.117    -0.415              -0.435       -0.041      -0.124     -0.020
+                         :                       L_dm:                +0.724              +0.055                     -0.039             +0.109                +0.053        -0.001                -0.372                    +0.239            -0.182                    +0.314  +1.000             +0.237           +0.122  -0.162             -0.115            +0.205      +0.038    -0.287              -0.217       -0.058      -0.208     -0.014
+                         :         log10(L_MINIPCHI2):                +0.211              +0.041                     -0.137             +0.193                +0.091        -0.001                -0.364                    +0.330            -0.491                    +0.740  +0.237             +1.000           +0.164  -0.068             +0.109            +0.084      +0.087    -0.242              -0.288       +0.056      -0.040     -0.003
+                         :           L_ENDVERTEX_CHI2:                +0.137              -0.010                     -0.036             +0.022                +0.020        -0.005                -0.113                    +0.207            -0.181                    +0.237  +0.122             +0.164           +1.000  -0.076             -0.133            +0.029      -0.031    -0.117              -0.107       -0.106      -0.082     +0.004
+                         :                     p_PIDp:                -0.159              -0.075                     +0.037             -0.120                -0.035        +0.004                +0.240                    -0.167            +0.027                    -0.168  -0.162             -0.068           -0.076  +1.000             +0.165            -0.146      +0.245    +0.526              +0.144       +0.116      +0.220     +0.060
+                         :         log10(p_MINIPCHI2):                -0.051              +0.068                     -0.043             +0.135                +0.082        +0.000                +0.168                    -0.154            +0.189                    -0.086  -0.115             +0.109           -0.133  +0.165             +1.000            +0.062      +0.208    +0.031              +0.250       +0.112      +0.021     -0.017
+                         :          p_TRACK_GhostProb:                +0.284              +0.206                     +0.046             +0.194                +0.059        +0.005                -0.355                    +0.166            +0.151                    +0.186  +0.205             +0.084           +0.029  -0.146             +0.062            +1.000      +0.092    -0.571              -0.007       +0.093      -0.299     -0.121
+                         :                log10(p_PT):                -0.033              +0.003                     +0.130             -0.119                +0.007        -0.006                -0.038                    -0.222            -0.007                    -0.117  +0.038             +0.087           -0.031  +0.245             +0.208            +0.092      +1.000    +0.150              +0.097       +0.553      +0.088     +0.015
+                         :                  p_ProbNNp:                -0.368              -0.148                     +0.074             -0.253                -0.085        -0.001                +0.524                    -0.359            +0.056                    -0.415  -0.287             -0.242           -0.117  +0.526             +0.031            -0.571      +0.150    +1.000              +0.159       +0.041      +0.345     +0.090
+                         :        log10(pi_MINIPCHI2):                -0.139              +0.117                     +0.080             +0.054                +0.042        +0.001                +0.457                    -0.348            +0.552                    -0.435  -0.217             -0.288           -0.107  +0.144             +0.250            -0.007      +0.097    +0.159              +1.000       +0.051      -0.075     -0.033
+                         :               log10(pi_PT):                +0.014              +0.035                     +0.111             -0.069                -0.004        -0.002                -0.090                    -0.131            -0.025                    -0.041  -0.058             +0.056           -0.106  +0.116             +0.112            +0.093      +0.553    +0.041              +0.051       +1.000      +0.208     -0.007
+                         :                pi_ProbNNpi:                -0.235              -0.135                     +0.021             -0.181                -0.067        -0.001                +0.230                    -0.150            -0.185                    -0.124  -0.208             -0.040           -0.082  +0.220             +0.021            -0.299      +0.088    +0.345              -0.075       +0.208      +1.000     +0.085
+                         :                 BDTkMin_v0:                -0.051              -0.156                     -0.040             -0.127                -0.029        +0.008                +0.056                    -0.023            -0.064                    -0.020  -0.014             -0.003           +0.004  +0.060             -0.017            -0.121      +0.015    +0.090              -0.033       -0.007      +0.085     +1.000
+                         : --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+DataSetFactory           : [dataset] :  
+                         : 
+4
+Factory                  : Booking method: [1mBDTconf2[0m
+                         : 
+Factory                  : [1mTrain all methods[0m
+Factory                  : [dataset] : Create Transformation "I" with events from all classes.
+                         : 
+                         : Transformation, Variable selection : 
+                         : Input : variable 'log_dtfchi2' <---> Output : variable 'log_dtfchi2'
+                         : Input : variable 'log_lbminipchi2' <---> Output : variable 'log_lbminipchi2'
+                         : Input : variable 'logacos_lbdira' <---> Output : variable 'logacos_lbdira'
+                         : Input : variable 'log_lbfd_ownpv' <---> Output : variable 'log_lbfd_ownpv'
+                         : Input : variable 'log_jpsiminipchi2' <---> Output : variable 'log_jpsiminipchi2'
+                         : Input : variable 'log_jpsimass' <---> Output : variable 'log_jpsimass'
+                         : Input : variable 'log_lfdchi2' <---> Output : variable 'log_lfdchi2'
+                         : Input : variable 'logacos_ldira_orivx' <---> Output : variable 'logacos_ldira_orivx'
+                         : Input : variable 'log_lfd_orivx' <---> Output : variable 'log_lfd_orivx'
+                         : Input : variable 'logacos_ldira_ownpv' <---> Output : variable 'logacos_ldira_ownpv'
+                         : Input : variable 'L_dm' <---> Output : variable 'L_dm'
+                         : Input : variable 'log_lminipchi2' <---> Output : variable 'log_lminipchi2'
+                         : Input : variable 'L_ENDVERTEX_CHI2' <---> Output : variable 'L_ENDVERTEX_CHI2'
+                         : Input : variable 'p_PIDp' <---> Output : variable 'p_PIDp'
+                         : Input : variable 'log_pminipchi2' <---> Output : variable 'log_pminipchi2'
+                         : Input : variable 'p_TRACK_GhostProb' <---> Output : variable 'p_TRACK_GhostProb'
+                         : Input : variable 'log_p_PT' <---> Output : variable 'log_p_PT'
+                         : Input : variable 'p_ProbNNp' <---> Output : variable 'p_ProbNNp'
+                         : Input : variable 'log_piminipchi2' <---> Output : variable 'log_piminipchi2'
+                         : Input : variable 'log_pi_PT' <---> Output : variable 'log_pi_PT'
+                         : Input : variable 'pi_ProbNNpi' <---> Output : variable 'pi_ProbNNpi'
+                         : Input : variable 'BDTkMin_v0' <---> Output : variable 'BDTkMin_v0'
+TFHandler_Factory        :            Variable                   Mean                   RMS           [        Min                   Max ]
+                         : ------------------------------------------------------------------------------------------------------------------
+                         :         log_dtfchi2:               1.2381              0.56714   [             -0.64760               2.4771 ]
+                         :     log_lbminipchi2:              0.81599              0.94401   [              -4.1005               3.6972 ]
+                         :      logacos_lbdira:              -2.1557              0.61764   [              -4.7467              0.48864 ]
+                         :      log_lbfd_ownpv:              0.78242              0.36509   [              0.17610               2.5327 ]
+                         :   log_jpsiminipchi2:               1.7447              0.80230   [              -3.4062               3.6980 ]
+                         :        log_jpsimass:               3.4912            0.0021510   [               3.4826               3.4978 ]
+                         :         log_lfdchi2:               3.0756               1.3741   [              -2.8560               6.4620 ]
+                         : logacos_ldira_orivx:              -3.2174              0.74577   [              -6.0228              0.49709 ]
+                         :       log_lfd_orivx:               2.1652              0.57498   [              -2.1984               3.3324 ]
+                         : logacos_ldira_ownpv:              -2.6314              0.67332   [              -5.4757              0.49708 ]
+                         :                L_dm:               3.7110               5.4031   [           2.2540e-05               29.998 ]
+                         :      log_lminipchi2:               1.5568              0.97519   [              -4.0999               3.9960 ]
+                         :    L_ENDVERTEX_CHI2:               1.8248               2.6805   [           3.2849e-26               11.999 ]
+                         :              p_PIDp:               22.806               13.032   [               5.0002               151.22 ]
+                         :      log_pminipchi2:               2.2802              0.65763   [              0.95427               5.6615 ]
+                         :   p_TRACK_GhostProb:              0.17251              0.27379   [           2.5748e-06               1.0000 ]
+                         :            log_p_PT:               3.0977              0.25611   [               1.8456               3.9746 ]
+                         :           p_ProbNNp:              0.41455              0.36140   [           1.3233e-07              0.99939 ]
+                         :     log_piminipchi2:               2.4355              0.71433   [              0.95425               3.6989 ]
+                         :           log_pi_PT:               2.4617              0.24587   [              0.92580               3.3803 ]
+                         :         pi_ProbNNpi:              0.67188              0.34766   [           5.7428e-09              0.99995 ]
+                         :          BDTkMin_v0:           0.00046677              0.15833   [             -0.51502              0.25202 ]
+                         : ------------------------------------------------------------------------------------------------------------------
+                         : [32m
+                         : <PlotVariables> Will not produce scatter plots ==> 
+                         : |  The number of 22 input variables and 0 target values would require 231 two-dimensional
+                         : |  histograms, which would occupy the computer's memory. Note that this
+                         : |  suppression does not have any consequences for your analysis, other
+                         : |  than not disposing of these scatter plots. You can modify the maximum
+                         : |  number of input variables allowed to generate scatter plots in your
+                         : |  script via the command line:
+                         : |  "(TMVA::gConfig().GetVariablePlotting()).fMaxNumOfAllowedVariablesForScatterPlots = <some int>;"[0m
+                         : 
+                         : Some more output
+                         : Ranking input variables (method unspecific)...
+IdTransformation         : Ranking result (top variable is best ranked)
+                         : --------------------------------------------
+                         : Rank : Variable            : Separation
+                         : --------------------------------------------
+                         :    1 : log_dtfchi2         : 3.678e-01
+                         :    2 : log_lbminipchi2     : 3.527e-01
+                         :    3 : logacos_ldira_orivx : 3.418e-01
+                         :    4 : logacos_lbdira      : 2.973e-01
+                         :    5 : p_ProbNNp           : 2.533e-01
+                         :    6 : L_dm                : 2.391e-01
+                         :    7 : log_lfdchi2         : 2.150e-01
+                         :    8 : log_lminipchi2      : 2.093e-01
+                         :    9 : p_TRACK_GhostProb   : 2.015e-01
+                         :   10 : pi_ProbNNpi         : 1.653e-01
+                         :   11 : BDTkMin_v0          : 1.636e-01
+                         :   12 : p_PIDp              : 1.302e-01
+                         :   13 : log_pi_PT           : 1.229e-01
+                         :   14 : log_p_PT            : 1.189e-01
+                         :   15 : log_lfd_orivx       : 9.680e-02
+                         :   16 : log_jpsiminipchi2   : 8.352e-02
+                         :   17 : log_piminipchi2     : 8.048e-02
+                         :   18 : log_pminipchi2      : 6.307e-02
+                         :   19 : log_lbfd_ownpv      : 2.494e-02
+                         :   20 : logacos_ldira_ownpv : 2.182e-02
+                         :   21 : L_ENDVERTEX_CHI2    : 1.848e-02
+                         :   22 : log_jpsimass        : 1.384e-02
+                         : --------------------------------------------
+Factory                  : Train method: BDTconf1 for Classification
+                         : 
+<WARNING>                : Events with negative event weights are USED during the BDT training. This might cause problems with small node sizes or with the boosting. Please remove negative events from training using the option *IgnoreEventsWithNegWeightsInTraining* in case you observe problems with the boosting
+BDTconf1                 : #events: (reweighted) sig: 39989.5 bkg: 39989.5
+                         : #events: (unweighted) sig: 59045 bkg: 20934
+                         : Training 300 Decision Trees ... patience please
+                         : Elapsed time for training with 79979 events: 23.9 sec         
+BDTconf1                 : [dataset] : Evaluation of BDTconf1 on training sample (79979 events)
+                         : Elapsed time for evaluation of 79979 events: 4.21 sec       
+                         : Creating xml weight file: [0;36mdataset/weights/TMVAClassificationLite-JpsiLambdaLL_dataRun1_iso1_v0_BDTconf1.weights.xml[0m
+                         : Creating standalone class: [0;36mdataset/weights/TMVAClassificationLite-JpsiLambdaLL_dataRun1_iso1_v0_BDTconf1.class.C[0m
+Factory                  : Training finished
+                         : 
+Factory                  : Train method: BDTconf2 for Classification
+                         : 
+<WARNING>                : Events with negative event weights are USED during the BDT training. This might cause problems with small node sizes or with the boosting. Please remove negative events from training using the option *IgnoreEventsWithNegWeightsInTraining* in case you observe problems with the boosting
+BDTconf2                 : #events: (reweighted) sig: 39989.5 bkg: 39989.5
+                         : #events: (unweighted) sig: 59045 bkg: 20934
+                         : Training 300 Decision Trees ... patience please
+                         : Elapsed time for training with 79979 events: 23.6 sec         
+BDTconf2                 : [dataset] : Evaluation of BDTconf2 on training sample (79979 events)
+                         : Elapsed time for evaluation of 79979 events: 4.71 sec       
+                         : Creating xml weight file: [0;36mdataset/weights/TMVAClassificationLite-JpsiLambdaLL_dataRun1_iso1_v0_BDTconf2.weights.xml[0m
+                         : Creating standalone class: [0;36mdataset/weights/TMVAClassificationLite-JpsiLambdaLL_dataRun1_iso1_v0_BDTconf2.class.C[0m
+Factory                  : Training finished
+                         : 
+                         : Ranking input variables (method specific)...
+BDTconf1                 : Ranking result (top variable is best ranked)
+                         : -----------------------------------------------------
+                         : Rank : Variable            : Variable Importance
+                         : -----------------------------------------------------
+                         :    1 : log_dtfchi2         : 1.014e-01
+                         :    2 : logacos_ldira_orivx : 7.849e-02
+                         :    3 : logacos_lbdira      : 7.836e-02
+                         :    4 : log_lminipchi2      : 7.161e-02
+                         :    5 : log_lbminipchi2     : 7.139e-02
+                         :    6 : p_ProbNNp           : 4.909e-02
+                         :    7 : log_lfdchi2         : 4.859e-02
+                         :    8 : log_jpsiminipchi2   : 4.010e-02
+                         :    9 : log_piminipchi2     : 3.964e-02
+                         :   10 : pi_ProbNNpi         : 3.832e-02
+                         :   11 : BDTkMin_v0          : 3.811e-02
+                         :   12 : L_dm                : 3.453e-02
+                         :   13 : p_TRACK_GhostProb   : 3.398e-02
+                         :   14 : logacos_ldira_ownpv : 3.369e-02
+                         :   15 : log_jpsimass        : 3.345e-02
+                         :   16 : log_pi_PT           : 3.245e-02
+                         :   17 : log_lbfd_ownpv      : 3.210e-02
+                         :   18 : log_p_PT            : 3.067e-02
+                         :   19 : log_pminipchi2      : 3.035e-02
+                         :   20 : p_PIDp              : 2.886e-02
+                         :   21 : log_lfd_orivx       : 2.855e-02
+                         :   22 : L_ENDVERTEX_CHI2    : 2.622e-02
+                         : -----------------------------------------------------
+BDTconf2                 : Ranking result (top variable is best ranked)
+                         : -----------------------------------------------------
+                         : Rank : Variable            : Variable Importance
+                         : -----------------------------------------------------
+                         :    1 : log_dtfchi2         : 1.176e-01
+                         :    2 : logacos_ldira_orivx : 8.102e-02
+                         :    3 : log_lminipchi2      : 7.319e-02
+                         :    4 : logacos_lbdira      : 6.757e-02
+                         :    5 : log_lbminipchi2     : 6.470e-02
+                         :    6 : p_ProbNNp           : 4.716e-02
+                         :    7 : log_lfdchi2         : 4.341e-02
+                         :    8 : log_piminipchi2     : 4.287e-02
+                         :    9 : log_jpsiminipchi2   : 4.161e-02
+                         :   10 : L_dm                : 3.724e-02
+                         :   11 : BDTkMin_v0          : 3.623e-02
+                         :   12 : p_TRACK_GhostProb   : 3.466e-02
+                         :   13 : pi_ProbNNpi         : 3.359e-02
+                         :   14 : log_pi_PT           : 3.325e-02
+                         :   15 : log_jpsimass        : 3.294e-02
+                         :   16 : log_lbfd_ownpv      : 3.266e-02
+                         :   17 : log_p_PT            : 3.265e-02
+                         :   18 : logacos_ldira_ownpv : 3.231e-02
+                         :   19 : log_pminipchi2      : 3.065e-02
+                         :   20 : L_ENDVERTEX_CHI2    : 3.012e-02
+                         :   21 : p_PIDp              : 2.755e-02
+                         :   22 : log_lfd_orivx       : 2.705e-02
+                         : -----------------------------------------------------
+Factory                  : === Destroy and recreate all methods via weight files for testing ===
+                         : 
+Factory                  : [1mTest all methods[0m
+Factory                  : Test method: BDTconf1 for Classification performance
+                         : 
+BDTconf1                 : [dataset] : Evaluation of BDTconf1 on testing sample (79979 events)
+                         : Elapsed time for evaluation of 79979 events: 2.84 sec       
+Factory                  : Test method: BDTconf2 for Classification performance
+                         : 
+BDTconf2                 : [dataset] : Evaluation of BDTconf2 on testing sample (79979 events)
+                         : Elapsed time for evaluation of 79979 events: 2.93 sec       
+Factory                  : [1mEvaluate all methods[0m
+Factory                  : Evaluate classifier: BDTconf1
+                         : 
+BDTconf1                 : [dataset] : Loop over test events and fill histograms with classifier response...
+                         : 
+TFHandler_BDTconf1       :            Variable                   Mean                   RMS           [        Min                   Max ]
+                         : ------------------------------------------------------------------------------------------------------------------
+                         :         log_dtfchi2:               1.6295              0.52274   [             -0.81737               2.4771 ]
+                         :     log_lbminipchi2:               1.4236              0.89660   [              -3.5425               3.6977 ]
+                         :      logacos_lbdira:              -1.7958              0.52365   [              -4.8248              0.49290 ]
+                         :      log_lbfd_ownpv:              0.74016              0.37757   [              0.17614               2.6101 ]
+                         :   log_jpsiminipchi2:               1.4903              0.79820   [              -4.4477               3.6913 ]
+                         :        log_jpsimass:               3.4911            0.0023569   [               3.4832               3.4986 ]
+                         :         log_lfdchi2:               2.3789               1.2927   [              -2.1677               6.6948 ]
+                         : logacos_ldira_orivx:              -2.7582              0.72463   [              -5.7807              0.49709 ]
+                         :       log_lfd_orivx:               2.2262              0.66255   [              -1.8810               3.3774 ]
+                         : logacos_ldira_ownpv:              -2.6367              0.76273   [              -5.5729              0.49712 ]
+                         :                L_dm:               6.6752               6.7964   [           0.00013634               29.999 ]
+                         :      log_lminipchi2:               1.0562              0.89946   [              -3.8314               3.9966 ]
+                         :    L_ENDVERTEX_CHI2:               2.1891               2.9677   [           2.2777e-26               12.000 ]
+                         :              p_PIDp:               17.750               10.280   [               5.0001               104.62 ]
+                         :      log_pminipchi2:               2.1369              0.71924   [              0.95427               5.4428 ]
+                         :   p_TRACK_GhostProb:              0.32340              0.33214   [           2.5844e-06               1.0000 ]
+                         :            log_p_PT:               2.9964              0.25227   [               1.7022               4.0404 ]
+                         :           p_ProbNNp:              0.21824              0.30803   [           3.3059e-07              0.99932 ]
+                         :     log_piminipchi2:               2.2404              0.79516   [              0.95427               3.6988 ]
+                         :           log_pi_PT:               2.3632              0.22770   [              0.86679               3.4109 ]
+                         :         pi_ProbNNpi:              0.49576              0.38167   [           5.8962e-09              0.99994 ]
+                         :          BDTkMin_v0:            -0.076695              0.16724   [             -0.51231              0.25876 ]
+                         : ------------------------------------------------------------------------------------------------------------------
+                         : [32m
+                         : <PlotVariables> Will not produce scatter plots ==> 
+                         : |  The number of 22 input variables and 0 target values would require 231 two-dimensional
+                         : |  histograms, which would occupy the computer's memory. Note that this
+                         : |  suppression does not have any consequences for your analysis, other
+                         : |  than not disposing of these scatter plots. You can modify the maximum
+                         : |  number of input variables allowed to generate scatter plots in your
+                         : |  script via the command line:
+                         : |  "(TMVA::gConfig().GetVariablePlotting()).fMaxNumOfAllowedVariablesForScatterPlots = <some int>;"[0m
+                         : 
+                         : Some more output
+Factory                  : Evaluate classifier: BDTconf2
+                         : 
+BDTconf2                 : [dataset] : Loop over test events and fill histograms with classifier response...
+                         : 
+TFHandler_BDTconf2       :            Variable                   Mean                   RMS           [        Min                   Max ]
+                         : ------------------------------------------------------------------------------------------------------------------
+                         :         log_dtfchi2:               1.6295              0.52274   [             -0.81737               2.4771 ]
+                         :     log_lbminipchi2:               1.4236              0.89660   [              -3.5425               3.6977 ]
+                         :      logacos_lbdira:              -1.7958              0.52365   [              -4.8248              0.49290 ]
+                         :      log_lbfd_ownpv:              0.74016              0.37757   [              0.17614               2.6101 ]
+                         :   log_jpsiminipchi2:               1.4903              0.79820   [              -4.4477               3.6913 ]
+                         :        log_jpsimass:               3.4911            0.0023569   [               3.4832               3.4986 ]
+                         :         log_lfdchi2:               2.3789               1.2927   [              -2.1677               6.6948 ]
+                         : logacos_ldira_orivx:              -2.7582              0.72463   [              -5.7807              0.49709 ]
+                         :       log_lfd_orivx:               2.2262              0.66255   [              -1.8810               3.3774 ]
+                         : logacos_ldira_ownpv:              -2.6367              0.76273   [              -5.5729              0.49712 ]
+                         :                L_dm:               6.6752               6.7964   [           0.00013634               29.999 ]
+                         :      log_lminipchi2:               1.0562              0.89946   [              -3.8314               3.9966 ]
+                         :    L_ENDVERTEX_CHI2:               2.1891               2.9677   [           2.2777e-26               12.000 ]
+                         :              p_PIDp:               17.750               10.280   [               5.0001               104.62 ]
+                         :      log_pminipchi2:               2.1369              0.71924   [              0.95427               5.4428 ]
+                         :   p_TRACK_GhostProb:              0.32340              0.33214   [           2.5844e-06               1.0000 ]
+                         :            log_p_PT:               2.9964              0.25227   [               1.7022               4.0404 ]
+                         :           p_ProbNNp:              0.21824              0.30803   [           3.3059e-07              0.99932 ]
+                         :     log_piminipchi2:               2.2404              0.79516   [              0.95427               3.6988 ]
+                         :           log_pi_PT:               2.3632              0.22770   [              0.86679               3.4109 ]
+                         :         pi_ProbNNpi:              0.49576              0.38167   [           5.8962e-09              0.99994 ]
+                         :          BDTkMin_v0:            -0.076695              0.16724   [             -0.51231              0.25876 ]
+                         : ------------------------------------------------------------------------------------------------------------------
+                         : [32m
+                         : <PlotVariables> Will not produce scatter plots ==> 
+                         : |  The number of 22 input variables and 0 target values would require 231 two-dimensional
+                         : |  histograms, which would occupy the computer's memory. Note that this
+                         : |  suppression does not have any consequences for your analysis, other
+                         : |  than not disposing of these scatter plots. You can modify the maximum
+                         : |  number of input variables allowed to generate scatter plots in your
+                         : |  script via the command line:
+                         : |  "(TMVA::gConfig().GetVariablePlotting()).fMaxNumOfAllowedVariablesForScatterPlots = <some int>;"[0m
+                         : 
+                         : Some more output
+                         : 
+                         : Evaluation results ranked by best signal efficiency and purity (area)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : DataSet       MVA                       
+                         : Name:         Method:          ROC-integ
+                         : dataset       BDTconf2       : 0.901
+                         : dataset       BDTconf1       : 0.900
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : 
+                         : Testing efficiency compared to training efficiency (overtraining check)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : DataSet              MVA              Signal efficiency: from test sample (from training sample) 
+                         : Name:                Method:          @B=0.01             @B=0.10            @B=0.30   
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : dataset              BDTconf2       : 0.747 (0.760)       0.819 (0.823)      0.862 (0.869)
+                         : dataset              BDTconf1       : 0.751 (0.759)       0.825 (0.829)      0.858 (0.862)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : 
+Dataset:dataset          : Created tree 'TestTree' with 79979 events
+                         : 
+Dataset:dataset          : Created tree 'TrainTree' with 79979 events
+                         : 
+Factory                  : [1mThank you for using TMVA![0m
+                         : [1mFor citation information, please visit: http://tmva.sf.net/citeTMVA.html[0m
+==> Wrote root file: rootFiles/dataFiles/JpsiLambda/run1/TMVAtraining/iso/TMVALite-JpsiLambda_LL_data_iso1_v0.root
+==> TMVAClassification is done!
+==> TrainFinalBDT is done! Home streeeeetch!: Real time 0:01:22, CP time 82.200
+***********Starting TrainFinalBDT***********
+Info in <TUnixSystem::ACLiC>: creating shared library /data1/avenkate/JpsiLambda_RESTART/scripts/./ApplyFinalBDT_C.so
+***********Starting ApplyFinalBDT***********
+WD = /data1/avenkate/JpsiLambda_RESTART
+Redirect::open: No such file or directory
+******************************************
+Starting ApplyFinalBDT 
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+Processing Run 1 LL Data0
+******************************************
+******************************************
+Input file = rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_withiso1_v0.root
+Output file = rootFiles/dataFiles/JpsiLambda/run1/jpsilambdaLite_LL_withFinalBDT1_iso1_v0.root
+******************************************
+Incoming Entries = 2322179                         : Booking "BDT method" of type "BDT" from dataset/weights/TMVAClassificationLite-JpsiLambdaLL_dataRun1_iso1_v0_BDTconf1.weights.xml.
+<HEADER> DataSetInfo              : [Default] : Added class "Signal"
+<HEADER> DataSetInfo              : [Default] : Added class "Background"
+                         : Booked classifier "BDTconf1" of type: "BDT"
+--- TMVAClassificationApp    : Using input file: rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_withiso1_v0.root
+--- Processing: 2322179 events
+--- ... Processing event: 0
+--- ... Processing event: 50000
+--- ... Processing event: 100000
+--- ... Processing event: 150000
+--- ... Processing event: 200000
+--- ... Processing event: 250000
+--- ... Processing event: 300000
+--- ... Processing event: 350000
+--- ... Processing event: 400000
+--- ... Processing event: 450000
+--- ... Processing event: 500000
+--- ... Processing event: 550000
+--- ... Processing event: 600000
+--- ... Processing event: 650000
+--- ... Processing event: 700000
+--- ... Processing event: 750000
+--- ... Processing event: 800000
+--- ... Processing event: 850000
+--- ... Processing event: 900000
+--- ... Processing event: 950000
+--- ... Processing event: 1000000
+--- ... Processing event: 1050000
+--- ... Processing event: 1100000
+--- ... Processing event: 1150000
+--- ... Processing event: 1200000
+--- ... Processing event: 1250000
+--- ... Processing event: 1300000
+--- ... Processing event: 1350000
+--- ... Processing event: 1400000
+--- ... Processing event: 1450000
+--- ... Processing event: 1500000
+--- ... Processing event: 1550000
+--- ... Processing event: 1600000
+--- ... Processing event: 1650000
+--- ... Processing event: 1700000
+--- ... Processing event: 1750000
+--- ... Processing event: 1800000
+--- ... Processing event: 1850000
+--- ... Processing event: 1900000
+--- ... Processing event: 1950000
+--- ... Processing event: 2000000
+--- ... Processing event: 2050000
+--- ... Processing event: 2100000
+--- ... Processing event: 2150000
+--- ... Processing event: 2200000
+--- ... Processing event: 2250000
+--- ... Processing event: 2300000
+--- End of event loop: --- Created root file: rootFiles/dataFiles/JpsiLambda/run1/jpsilambdaLite_LL_withFinalBDT1_iso1_v0.root containing the MVA output histograms
+==> ApplyFinalBDT is done! Go optimize and fit!: Real time 0:31:10, CP time 1748.080
+***********Starting ApplyFinalBDT***********
+WD = /data1/avenkate/JpsiLambda_RESTART
+Redirect::open: No such file or directory
+******************************************
+Starting ApplyFinalBDT 
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+Processing Run 1 LL Data0zeroTracks
+******************************************
+******************************************
+Input file = rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_cutoutks_LL_ZeroTracks.root
+Output file = rootFiles/dataFiles/JpsiLambda/run1/jpsilambdaLite_zeroTracksLL_withFinalBDT1_iso1_v0.root
+******************************************
+Incoming Entries = 25720                         : Booking "BDT method" of type "BDT" from dataset/weights/TMVAClassificationLite-JpsiLambdaLL_dataRun1_noIso_BDTconf1.weights.xml.
+<HEADER> DataSetInfo              : [Default] : Added class "Signal"
+<HEADER> DataSetInfo              : [Default] : Added class "Background"
+                         : Booked classifier "BDTconf1" of type: "BDT"
+--- TMVAClassificationApp    : Using input file: rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_cutoutks_LL_ZeroTracks.root
+--- Processing: 25720 events
+--- ... Processing event: 0
+--- End of event loop: --- Created root file: rootFiles/dataFiles/JpsiLambda/run1/jpsilambdaLite_zeroTracksLL_withFinalBDT1_iso1_v0.root containing the MVA output histograms
+==> ApplyFinalBDT is done! Go optimize and fit!: Real time 0:00:12, CP time 11.380
+***********Starting ApplyFinalBDT***********
+WD = /data1/avenkate/JpsiLambda_RESTART
+***********Starting ApplyFinalBDT***********
+WD = /data1/avenkate/JpsiLambda_RESTART
+Redirect::open: No such file or directory
+******************************************
+Starting ApplyFinalBDT 
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+Processing Run 1 LL Data0sWeightedzeroTracks
+******************************************
+******************************************
+Input file = rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_withsw_ZeroTracks.root
+Output file = rootFiles/dataFiles/JpsiLambda/run1/jpsilambdaLite_zeroTracksLLsig_withFinalBDT1_iso1_v0.root
+******************************************
+Incoming Entries = 3629                         : Booking "BDT method" of type "BDT" from dataset/weights/TMVAClassificationLite-JpsiLambdaLL_dataRun1_noIso_BDTconf1.weights.xml.
+<HEADER> DataSetInfo              : [Default] : Added class "Signal"
+<HEADER> DataSetInfo              : [Default] : Added class "Background"
+                         : Booked classifier "BDTconf1" of type: "BDT"
+--- TMVAClassificationApp    : Using input file: rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_withsw_ZeroTracks.root
+--- Processing: 3629 events
+--- ... Processing event: 0
+--- End of event loop: --- Created root file: rootFiles/dataFiles/JpsiLambda/run1/jpsilambdaLite_zeroTracksLLsig_withFinalBDT1_iso1_v0.root containing the MVA output histograms
+==> ApplyFinalBDT is done! Go optimize and fit!: Real time 0:00:01, CP time 1.240
+Info in <ACLiC>: unmodified script has already been compiled and loaded
+Info in <ACLiC>: it will be regenerated and reloaded!
+Info in <TUnixSystem::ACLiC>: creating shared library /data1/avenkate/JpsiLambda_RESTART/scripts/./ApplyFinalBDT_C.so
+***********Starting ApplyFinalBDT***********
+WD = /data1/avenkate/JpsiLambda_RESTART
+***********Starting ApplyFinalBDT***********
+WD = /data1/avenkate/JpsiLambda_RESTART
+Redirect::open: No such file or directory
+******************************************
+Starting ApplyFinalBDT 
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+Processing Run 1 LL Data0zeroTracks
+******************************************
+******************************************
+Input file = rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_cutoutks_LL_ZeroTracks.root
+Output file = rootFiles/dataFiles/JpsiLambda/run1/jpsilambdaLite_zeroTracksLL_withFinalBDT2_iso1_v0.root
+******************************************
+Incoming Entries = 25720                         : Booking "BDT method" of type "BDT" from dataset/weights/TMVAClassificationLite-JpsiLambdaLL_dataRun1_noIso_BDTconf2.weights.xml.
+<HEADER> DataSetInfo              : [Default] : Added class "Signal"
+<HEADER> DataSetInfo              : [Default] : Added class "Background"
+                         : Booked classifier "BDTconf2" of type: "BDT"
+--- TMVAClassificationApp    : Using input file: rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_cutoutks_LL_ZeroTracks.root
+--- Processing: 25720 events
+--- ... Processing event: 0
+--- End of event loop: --- Created root file: rootFiles/dataFiles/JpsiLambda/run1/jpsilambdaLite_zeroTracksLL_withFinalBDT2_iso1_v0.root containing the MVA output histograms
+==> ApplyFinalBDT is done! Go optimize and fit!: Real time 0:00:11, CP time 10.530
+***********Starting ApplyFinalBDT***********
+WD = /data1/avenkate/JpsiLambda_RESTART
+***********Starting ApplyFinalBDT***********
+WD = /data1/avenkate/JpsiLambda_RESTART
+Redirect::open: No such file or directory
+******************************************
+Starting ApplyFinalBDT 
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+Processing Run 1 LL Data0sWeightedzeroTracks
+******************************************
+******************************************
+Input file = rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_withsw_ZeroTracks.root
+Output file = rootFiles/dataFiles/JpsiLambda/run1/jpsilambdaLite_zeroTracksLLsig_withFinalBDT2_iso1_v0.root
+******************************************
+Incoming Entries = 3629                         : Booking "BDT method" of type "BDT" from dataset/weights/TMVAClassificationLite-JpsiLambdaLL_dataRun1_noIso_BDTconf2.weights.xml.
+<HEADER> DataSetInfo              : [Default] : Added class "Signal"
+<HEADER> DataSetInfo              : [Default] : Added class "Background"
+                         : Booked classifier "BDTconf2" of type: "BDT"
+--- TMVAClassificationApp    : Using input file: rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_withsw_ZeroTracks.root
+--- Processing: 3629 events
+--- ... Processing event: 0
+--- End of event loop: --- Created root file: rootFiles/dataFiles/JpsiLambda/run1/jpsilambdaLite_zeroTracksLLsig_withFinalBDT2_iso1_v0.root containing the MVA output histograms
+==> ApplyFinalBDT is done! Go optimize and fit!: Real time 0:00:02, CP time 1.360
+Info in <ACLiC>: unmodified script has already been compiled and loaded
+Info in <ACLiC>: it will be regenerated and reloaded!
+Info in <TUnixSystem::ACLiC>: creating shared library /data1/avenkate/JpsiLambda_RESTART/scripts/./ApplyIsolation_C.so
+g++: error: /data1/avenkate/JpsiLambda_RESTART/scripts/ApplyIsolation_C.so: No such file or directory
+Error in <ACLiC>: Compilation failed!
+input_line_97:2:3: error: use of undeclared identifier 'ApplyIsolation'
+ (ApplyIsolation(1, 1, 0, 3, 1, "v0", 2, 1))
+  ^
+terminate called after throwing an instance of 'cling::CompilationException'
+  what():  Error evaluating expression (ApplyIsolation(1, 1, 0, 3, 1, "v0", 2, 1))

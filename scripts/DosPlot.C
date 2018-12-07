@@ -50,6 +50,8 @@ void DosPlot(Int_t run = 1, Int_t trackType = 3, Bool_t logFlag = false)
    trackType = 3 for LL, 5 for DD.
  */
 {
+	cout<<"***********Starting DosPlot***********"<<endl;
+
 	TStopwatch sw;
 	sw.Start();
 

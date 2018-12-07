@@ -21,6 +21,8 @@ void CutOutKs(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcTy
    trackType = 3 for LL, 5 for DD.
  */
 {
+	cout<<"***********Starting CutOutKs***********"<<endl;
+
 	TStopwatch sw;
 	sw.Start();
 
@@ -51,7 +53,7 @@ void CutOutKs(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcTy
 		case 1:         //JpsiLambda
 			if(logFlag)
 			{
-				gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiLambda/run%d/%s",run,logFileName.Data())).Data());
+				gROOT->ProcessLine(TString::Format(".> logs/mc/JpsiLambda/run%d/%s",run,logFileName.Data()).Data());
 			}
 			if(!gSystem->AccessPathName((TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run)).Data()))
 			{
@@ -71,7 +73,7 @@ void CutOutKs(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcTy
 		case 2:         //JpsiSigma
 			if(logFlag)
 			{
-				gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiSigma/run%d/%s",run,logFileName.Data())).Data());
+				gROOT->ProcessLine(TString::Format(".> logs/mc/JpsiSigma/run%d/%s",run,logFileName.Data()).Data());
 			}
 			if(!gSystem->AccessPathName((TString::Format("logs/mc/JpsiSigma/run%d/gen_log.txt",run)).Data()))
 			{
@@ -91,7 +93,7 @@ void CutOutKs(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcTy
 		case 3:         //JpsiXi
 			if(logFlag)
 			{
-				gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiXi/run%d/%s",run,logFileName.Data())).Data());
+				gROOT->ProcessLine(TString::Format(".> logs/mc/JpsiXi/run%d/%s",run,logFileName.Data()).Data());
 			}
 			if(!gSystem->AccessPathName((TString::Format("logs/mc/JpsiXi/run%d/gen_log.txt",run)).Data()))
 			{
@@ -113,7 +115,7 @@ void CutOutKs(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcTy
 	{
 		if(logFlag)
 		{
-			gROOT->ProcessLine((TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName.Data())).Data());
+			gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName.Data()).Data());
 		}
 		fileIn = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_%s_%d.root",run,type,year),"READ");
 		treeIn = (TTree*)fileIn->Get("MyTuple");

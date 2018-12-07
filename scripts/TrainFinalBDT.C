@@ -35,25 +35,30 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString isoVersion = "v1",
    isoFlag = true if you want to use isolation in the final BDT.
  */
 {
+	cout<<"***********Starting TrainFinalBDT***********"<<endl;
+
 	TStopwatch sw;
 	sw.Start();
 
 	TString outfileName = "";
-	const char *logFileName = "", *type = "";
-	TFile *input = nullptr, *outputFile = nullptr;//Signal and Background training files
-	TTree *treeIn = nullptr;
+	const char *type = "";
+	TString logFileName = "";
+	TFile *input = nullptr, *input_iso = nullptr, *outputFile = nullptr;//Signal and Background training files
+	TTree *treeIn = nullptr, *treeIn_iso = nullptr;
 	TCut signalCut = "", bkgCut = "";
 	TMVA::DataLoader *dataloader = nullptr;
 	TMVA::Factory *factory = nullptr;
 	TMVA::Tools::Instance();// This loads the library
 
-	logFileName = (trackType == 3) ? (TString::Format("finalBDTTraining_LL_iso%d_%s_log.txt",isoConf,isoVersion.Data())) : (TString::Format("finalBDTTraining_DD_iso%d_%s_log.txt",isoConf,isoVersion.Data()));
+	type        = (trackType == 3) ? ("LL") : ("DD");
+	if(isoFlag) logFileName = TString::Format("finalBDTTraining_%s_iso%d_%s_log.txt",type,isoConf,isoVersion.Data());
+	else if(!isoFlag) logFileName = TString::Format("finalBDTTraining_%s_noIso_log.txt",type);
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
 	if(logFlag) //set up logging
 	{
-		gROOT->ProcessLine((TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName)).Data());
+		gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName.Data()).Data());
 	}
 	if(trackType == 3)
 	{
@@ -68,6 +73,7 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString isoVersion = "v1",
 
 	cout<<"*****************************"<<endl;
 	cout << "==> Starting TrainFinalBDT: "<<endl;
+	gSystem->Exec("date");
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 	cout<<"*****************************"<<endl;
 
@@ -129,17 +135,24 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString isoVersion = "v1",
 
 	if(isoFlag)
 	{
-		input = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withiso%d_%s.root",run,type,isoConf,isoVersion.Data()));
+		input      = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw_nonZeroTracks.root",run,type),"READ");
+		treeIn     = (TTree*)input->Get("MyTuple");
+		input_iso  = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_iso%d_%s_300.root",run,type,isoConf,isoVersion.Data()));
+		treeIn_iso = (TTree*)input_iso->Get("MyTuple");
 	}
 	else
 	{
-		input = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw.root",run,type));
+		input  = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw.root",run,type));
+		treeIn = (TTree*)input->Get("MyTuple");
 	}
 
 	cout << "--- TMVAClassification       : Using input file: " << input->GetName() << endl;
+	if(isoFlag)
+		cout << "--- TMVAClassification       : Using isolation file: " << input_iso->GetName() << endl;
 	//cout << "--- TMVAClassification       : Using signal input file: " << input->GetName() << endl;
 
-	treeIn = (TTree*)input->Get("MyTuple");
+	// treeIn = (TTree*)input->Get("MyTuple");
+	if(isoFlag) treeIn->AddFriend(treeIn_iso);
 
 	treeIn->SetBranchStatus("*",0);
 	treeIn->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
@@ -180,7 +193,7 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString isoVersion = "v1",
 	treeIn->SetBranchStatus("pi_PT",1);
 	treeIn->SetBranchStatus("pi_ProbNNpi",1);
 
-	if(isoFlag) treeIn->SetBranchStatus(TString::Format("BDTkMin_%s",isoVersion.Data()),1);
+//	if(isoFlag) treeIn->SetBranchStatus(TString::Format("BDTkMin_%s",isoVersion.Data()),1);
 
 	treeIn->SetBranchStatus("SW",1);
 	treeIn->SetBranchStatus("BW",1);
@@ -202,15 +215,19 @@ void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, TString isoVersion = "v1",
 	dataloader->SetBackgroundWeightExpression("BW");
 
 	// Apply additional cuts on the signal and background samples (can be different)
-	TCut mycuts = "Lb_ConsLb_chi2 > 0 && Lb_MINIPCHI2 > 0 && Lb_FD_OWNPV > 0 && L_TAU > 0 && Jpsi_MINIPCHI2 > 0 && Jpsi_M > 0 && L_FDCHI2_ORIVX > 0 && L_FD_ORIVX > 0 && L_MINIPCHI2 > 0 && p_MINIPCHI2 > 0 && p_PT > 0 && pi_MINIPCHI2 > 0 && pi_PT > 0 && Lb_MINIPCHI2 < 5000 && Jpsi_MINIPCHI2 < 5000 && pi_PIDK < 5 && p_PIDp > 5 && pi_MINIPCHI2 < 5000 && L_MINIPCHI2 < 10000 && Lb_DTF_M_JpsiLConstr < 5700";//Maybe add Lbmass < 5700 here? Maybe dtfchi2 cut?
+	TCut mycuts = "Lb_ConsLb_chi2 > 0 && Lb_MINIPCHI2 > 0 && Lb_FD_OWNPV > 0 && L_TAU > 0 && Jpsi_MINIPCHI2 > 0 && Jpsi_M > 0 && L_FDCHI2_ORIVX > 0 && L_FD_ORIVX > 0 && L_MINIPCHI2 > 0 && p_MINIPCHI2 > 0 && p_PT > 0 && pi_MINIPCHI2 > 0 && pi_PT > 0 && Lb_MINIPCHI2 < 5000 && Jpsi_MINIPCHI2 < 5000 && pi_PIDK < 5 && p_PIDp > 5 && pi_MINIPCHI2 < 5000 && L_MINIPCHI2 < 10000 && Lb_DTF_M_JpsiLConstr < 5700";
 	TCut mycutb = "Lb_ConsLb_chi2 > 0 && Lb_MINIPCHI2 > 0 && Lb_FD_OWNPV > 0 && L_TAU > 0 && Jpsi_MINIPCHI2 > 0 && Jpsi_M > 0 && L_FDCHI2_ORIVX > 0 && L_FD_ORIVX > 0 && L_MINIPCHI2 > 0 && p_MINIPCHI2 > 0 && p_PT > 0 && pi_MINIPCHI2 > 0 && pi_PT > 0 && Lb_MINIPCHI2 < 5000 && Jpsi_MINIPCHI2 < 5000 && pi_PIDK < 5 && p_PIDp > 5 && pi_MINIPCHI2 < 5000 && L_MINIPCHI2 < 10000 && Lb_DTF_M_JpsiLConstr > 5700 && Lb_DTF_M_JpsiLConstr < 7000";
-	cout<<"3"<<endl;
+
+	if(isoFlag)
+	{
+		mycuts == mycuts && TString::Format("BDTkMin_%s < 1.0",isoVersion.Data());
+		mycutb == mycutb && TString::Format("BDTkMin_%s < 1.0",isoVersion.Data());
+	}
 	dataloader->PrepareTrainingAndTestTree( mycuts, mycutb, "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V" );
 
-	cout<<"3.5"<<endl;
 	factory->BookMethod(dataloader,TMVA::Types::kBDT, "BDTconf1",
 	                    "!H:!V:NTrees=300:MinNodeSize=1.0%:MaxDepth=5:BoostType=AdaBoost:AdaBoostBeta=0.2:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
-	cout<<"4"<<endl;
+
 	factory->BookMethod(dataloader,TMVA::Types::kBDT, "BDTconf2",
 	                    "!H:!V:NTrees=300:MinNodeSize=0.5%:MaxDepth=5:BoostType=AdaBoost:AdaBoostBeta=0.2:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
 

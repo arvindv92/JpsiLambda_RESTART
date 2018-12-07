@@ -23,6 +23,7 @@ using namespace std;
  */
 void Trigger(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcType = 0, Bool_t testing = false, Bool_t loose = true, Bool_t logFlag = false)
 {
+	cout<<"***********Starting Trigger***********"<<endl;
 	gROOT->ProcessLine(".L CollateFiles.C++");
 	TStopwatch sw;
 	sw.Start();

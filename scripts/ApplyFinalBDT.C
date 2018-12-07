@@ -1,5 +1,5 @@
 /********************************
-   Author : Aravindhan V.
+      Author : Aravindhan V.
  *********************************/
 
 #include <cstdlib>
@@ -41,15 +41,18 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
    zeroFlag = true to apply final BDT on zeroTrack data, false to apply on nonZeroTracks data.
  */
 {
+	cout<<"***********Starting ApplyFinalBDT***********"<<endl;
+
 	TStopwatch sw;
 	sw.Start();
 
 	Int_t entries_init = 0;
 	Bool_t genFlag = false;
-	const char *logFileName = "", *type = "";
+	const char *type = "";
+	TString logFileName = "";
 	TString outfileName = "";
-	TFile *fileIn = nullptr, *fileOut = nullptr;
-	TTree *treeIn = nullptr, *treeOut = nullptr;
+	TFile *fileIn = nullptr, *fileIn_iso = nullptr, *fileOut = nullptr;
+	TTree *treeIn = nullptr, *treeIn_iso = nullptr, *treeOut = nullptr;
 	TMVA::Tools::Instance();// This loads the library
 	TMVA::Reader *reader = nullptr;
 	fstream genFile;
@@ -69,8 +72,9 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 	Double_t piPIDK = 0., piMinIpChi2 = 0., piGhostProb = 0., piPT = 0., piProbNNpi = 0.;
 	Double_t myBDTK = 0., BDT = 0.;
 
-	logFileName = (trackType == 3) ? (TString::Format("finalBDT%dApplication_LL_iso%d_%s.txt",bdtConf,isoConf,isoVersion)) : (TString::Format("finalBDT%dApplication_DD_iso%d_%s.txt",bdtConf,isoConf,isoVersion));
 	type        = (trackType == 3) ? ("LL") : ("DD");
+	logFileName = TString::Format("finalBDT%dApplication_%s_iso%d_%s.txt",bdtConf,type,isoConf,isoVersion).Data();
+	cout<<"logFile = "<<logFileName.Data()<<endl;
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 	cout<<"WD = "<<gSystem->pwd()<<endl;
@@ -81,7 +85,7 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 		switch(mcType)
 		{
 		case 1: //JpsiLambda
-			if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/mc/JpsiLambda/run%d/%s",run,logFileName));
+			if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/mc/JpsiLambda/run%d/%s",run,logFileName.Data()));
 			if(!gSystem->AccessPathName(TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run)))
 			{
 				genFile.open((TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run)).Data());
@@ -91,24 +95,29 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 			{
 				if(!zeroFlag)
 				{
-					fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_%s_withiso%d_%s.root",run,type,isoConf,isoVersion));
-					fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_%s_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
+					fileIn      = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_nonZeroTracks.root",run,type));
+					treeIn      = (TTree*)fileIn->Get("MyTuple");
+					fileIn_iso  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_%s_iso%d_%s.root",run,type,isoConf,isoVersion));
+					treeIn_iso  = (TTree*)fileIn_iso->Get("MyTuple");
+					fileOut     = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_%s_FinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
 				}
 				else
 				{
 					fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_ZeroTracks.root",run,type));
-					fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_zeroTracks%s_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
+					treeIn  = (TTree*)fileIn->Get("MyTuple");
+					fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_zeroTracks%s_FinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
 				}
 			}
 			else
 			{
 				fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s.root",run,type));
-				fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_%s_withFinalBDT%d_noIso.root",run,type,bdtConf),"RECREATE");
+				treeIn  = (TTree*)fileIn->Get("MyTuple");
+				fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_%s_FinalBDT%d_noIso.root",run,type,bdtConf),"RECREATE");
 			}
 			break;
 
 		case 2: //JpsiSigma
-			if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/mc/JpsiSigma/run%d/%s",run,logFileName));
+			if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/mc/JpsiSigma/run%d/%s",run,logFileName.Data()));
 			if(!gSystem->AccessPathName(TString::Format("logs/mc/JpsiSigma/run%d/gen_log.txt",run)))
 			{
 				genFile.open((TString::Format("logs/mc/JpsiSigma/run%d/gen_log.txt",run)).Data());
@@ -118,24 +127,29 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 			{
 				if(!zeroFlag)
 				{
-					fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_%s_withiso%d_%s.root",run,type,isoConf,isoVersion));
-					fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_%s_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
+					fileIn     = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_cutoutks_%s_nonZeroTracks.root",run,type));
+					treeIn     = (TTree*)fileIn->Get("MyTuple");
+					fileIn_iso = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_%s_iso%d_%s.root",run,type,isoConf,isoVersion));
+					treeIn_iso = (TTree*)fileIn_iso->Get("MyTuple");
+					fileOut    = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_%s_FinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
 				}
 				else
 				{
 					fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_cutoutks_%s_ZeroTracks.root",run,type));
-					fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_zeroTracks%s_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
+					treeIn  = (TTree*)fileIn->Get("MyTuple");
+					fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_zeroTracks%s_FinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
 				}
 			}
 			else
 			{
 				fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_cutoutks_%s.root",run,type));
-				fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_%s_withFinalBDT%d_noIso.root",run,type,bdtConf),"RECREATE");
+				treeIn  = (TTree*)fileIn->Get("MyTuple");
+				fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_%s_FinalBDT%d_noIso.root",run,type,bdtConf),"RECREATE");
 			}
 			break;
 
 		case 3: //JpsiXi
-			if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/mc/JpsiXi/run%d/%s",run,logFileName));
+			if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/mc/JpsiXi/run%d/%s",run,logFileName.Data()));
 			if(!gSystem->AccessPathName(TString::Format("logs/mc/JpsiXi/run%d/gen_log.txt",run)))
 			{
 				genFile.open((TString::Format("logs/mc/JpsiXi/run%d/gen_log.txt",run)).Data());
@@ -145,72 +159,91 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 			{
 				if(!zeroFlag)
 				{
-					fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_%s_withiso%d_%s.root",run,type,isoConf,isoVersion));
-					fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_%s_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
+					fileIn      = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_cutoutks_%s_nonZeroTracks.root",run,type));
+					treeIn      = (TTree*)fileIn->Get("MyTuple");
+					fileIn_iso  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_%s_iso%d_%s.root",run,type,isoConf,isoVersion));
+					treeIn_iso  = (TTree*)fileIn_iso->Get("MyTuple");
+					fileOut     = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_%s_FinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
 				}
 				else
 				{
 					fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_cutoutks_%s_ZeroTracks.root",run,type));
-					fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_zeroTracks%s_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
+					treeIn  = (TTree*)fileIn->Get("MyTuple");
+					fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_zeroTracks%s_FinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
 				}
 			}
 			else
 			{
 				fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_cutoutks_%s.root",run,type));
-				fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_%s_withFinalBDT%d_noIso.root",run,type,bdtConf),"RECREATE");
+				treeIn  = (TTree*)fileIn->Get("MyTuple");
+				fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_%s_FinalBDT%d_noIso.root",run,type,bdtConf),"RECREATE");
 			}
 			break;
 		}
 	}//end MC block
 	else // Data
 	{
-		if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/%s.txt",run,logFileName));
+		if(logFlag) gSystem->RedirectOutput(TString::Format("logs/data/JpsiLambda/run%d/%s",run,logFileName.Data()).Data(),"a");
 		if(flag == 1)
 		{
+			//if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName.Data()));
 			if(isoFlag)
 			{
 				if(!zeroFlag)
 				{
-					fileIn  =  TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withiso%d_%s.root",run,type,isoConf,isoVersion));
-					fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambdaLite_%s_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
+					fileIn      = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_nonZeroTracks.root",run,type));
+					treeIn      = (TTree*)fileIn->Get("MyTuple");
+					fileIn_iso  = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_iso%d_%s_300.root",run,type,isoConf,isoVersion));
+					treeIn_iso  = (TTree*)fileIn_iso->Get("MyTuple");
+					fileOut     = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_FinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
 				}
 				else
 				{
-					fileIn  =  TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_ZeroTracks.root",run,type));
-					fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambdaLite_zeroTracks%s_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
+					fileIn  = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_ZeroTracks.root",run,type));
+					treeIn  = (TTree*)fileIn->Get("MyTuple");
+					fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_zeroTracks%s_FinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
 				}
 			}
 			else
 			{
-				fileIn  =  TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s.root",run,type));
-				fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambdaLite_%s_withFinalBDT%d_noIso.root",run,type,bdtConf),"RECREATE");
+				fileIn  = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s.root",run,type));
+				treeIn  = (TTree*)fileIn->Get("MyTuple");
+				fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_FinalBDT%d_noIso.root",run,type,bdtConf),"RECREATE");
+
 			}
 		}
 		else if(flag == 2)
 		{
+			//if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/finalBDT%dApplication_sw_LL_iso%d_%s.txt",run,bdtConf,isoConf,isoVersion));
 			if(isoFlag)
 			{
 				if(!zeroFlag)
 				{
-					fileIn  = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withiso%d_%s.root",run,type,isoConf,isoVersion));
-					fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambdaLite_%ssig_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
+					fileIn     = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw_nonZeroTracks.root",run,type));
+					treeIn     = (TTree*)fileIn->Get("MyTuple");
+					fileIn_iso = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_iso%d_%s_300.root",run,type,isoConf,isoVersion));
+					treeIn_iso = (TTree*)fileIn_iso->Get("MyTuple");
+					fileOut    = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_FinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
 				}
 				else
 				{
-					fileIn = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw_ZeroTracks.root",run,type));
-					fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambdaLite_zeroTracks%ssig_withFinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
+					fileIn  = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw_ZeroTracks.root",run,type));
+					treeIn  = (TTree*)fileIn->Get("MyTuple");
+					fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_zeroTracks%ssig_FinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
 				}
 			}
 			else
 			{
 				fileIn  = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw.root",run,type));
-				fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambdaLite_%ssig_withFinalBDT%d_noIso.root",run,type,bdtConf),"RECREATE");
+				treeIn  = (TTree*)fileIn->Get("MyTuple");
+				fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_FinalBDT%d_noIso.root",run,type,bdtConf),"RECREATE");
 			}
 		}
 	}//end Data block
 	//end setup of input, output, logging
 	cout<<"******************************************"<<endl;
 	cout<<"Starting ApplyFinalBDT "<<endl;
+	gSystem->Exec("date");
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 	cout<<"******************************************"<<endl;
 
@@ -218,8 +251,9 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 	cout<<"Processing Run "<<run<<" "<<type<<((isData) ? (" Data") : (" MC type "))<<mcType<<((flag == 2) ? ("sWeighted") : (""))<<((zeroFlag) ? ("zeroTracks") : (""))<<endl;
 	cout<<"******************************************"<<endl;
 
-	treeIn = (TTree*)fileIn->Get("MyTuple");
-	treeOut = (TTree*)treeIn->CloneTree(0);
+	// treeIn = (TTree*)fileIn->Get("MyTuple");
+	// treeOut = (TTree*)treeIn->CloneTree(0);
+	treeOut = new TTree("MyTuple","");
 
 	cout<<"******************************************"<<endl;
 	cout<<"Input file = "<<fileIn->GetName()<<endl;
@@ -331,7 +365,7 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 	treeIn->SetBranchAddress( "pi_PT", &piPT );
 	treeIn->SetBranchAddress( "pi_ProbNNpi", &piProbNNpi );
 
-	if(isoFlag && !zeroFlag) treeIn->SetBranchAddress( TString::Format("BDTkMin_%s",isoVersion), &myBDTK );
+	if(isoFlag && !zeroFlag) treeIn_iso->SetBranchAddress( TString::Format("BDTkMin_%s",isoVersion), &myBDTK );
 
 	treeOut->Branch( TString::Format("BDT%d",bdtConf), &BDT, TString::Format("BDT%d/D",bdtConf));
 
@@ -342,6 +376,7 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 		if (ievt%50000 == 0) cout << "--- ... Processing event: " << ievt << endl;
 
 		treeIn->GetEntry(ievt);
+		treeIn_iso->GetEntry(ievt);
 
 		log_dtfChi2                   = log10(chi2array[0]);//Lb_ConsLb_chi2
 		log_lbMinIpChi2               = log10(lbMinIpChi2);//Lb_MINIPCHI2
@@ -395,5 +430,6 @@ void ApplyFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t 
 	delete reader;
 
 	cout << "==> ApplyFinalBDT is done! Go optimize and fit!: "; sw.Print();
-	if(logFlag) gROOT->ProcessLine(".>");
+	//if(logFlag) gROOT->ProcessLine(".>");
+	if(logFlag) gSystem->RedirectOutput(0);
 }

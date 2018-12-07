@@ -1,6 +1,6 @@
 /********************************
    Author : Aravindhan V.
-         The purpose of this script is to apply the isolation BDT to data/MC.
+   The purpose of this script is to apply the isolation BDT to data/MC.
  *********************************/
 #include <cstdlib>
 #include <vector>
@@ -37,6 +37,8 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
    isoConf = 1 or 2.
  */
 {
+	cout<<"***********Starting ApplyIsolation***********"<<endl;
+
 	TStopwatch sw;
 	sw.Start();
 
@@ -50,16 +52,18 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 	Float_t ipChi2 = 0., vChi2Dof = 0., log_minIpChi2 = 0., log_PT = 0., log_FD = 0., log_fdChi2 = 0.;
 	Double_t BDTk[Max], BDTkMin = 1.1;
 	Bool_t genFlag = false; //logFlag should be 0 only while testing.
-	const char *type = "", *logFileName = "";
 	TFile *fileIn = nullptr, *fileOut = nullptr;
 	TTree *treeIn = nullptr, *treeOut = nullptr;
 	fstream genFile;
+	const char *type = "";
+	TString logFileName = "";
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 
-	logFileName = (trackType == 3) ? ("isoApplication_LL_log.txt") : ("isoApplication_DD_log.txt");
 	type        = (trackType == 3) ? ("LL") : ("DD");
+	logFileName = TString::Format("isoApplication_%s_%s_conf%d_log.txt",type,isoVersion,isoConf);
+	cout<<"logFile = "<<logFileName.Data()<<endl;
 
 	//set up input, output, logging
 	if(!isData)  // MC
@@ -67,57 +71,61 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 		switch(mcType)
 		{
 		case 1:  //JpsiLambda
-			if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/mc/JpsiLambda/run%d/%s",run,logFileName));
+			if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/mc/JpsiLambda/run%d/%s",run,logFileName.Data()).Data());
 			if(!gSystem->AccessPathName(TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run)))
 			{
 				genFile.open((TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run)).Data());
 				genFlag = 1;
 			}
 			fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_nonZeroTracks.root",run,type));
-			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_%s_withiso%d_%s.root",run,type,isoConf,isoVersion),"RECREATE");
+			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_%s_iso%d_%s.root",run,type,isoConf,isoVersion),"RECREATE");
 			break;
 
 		case 2: //JpsiSigma
-			if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/mc/JpsiSigma/run%d/%s",run,logFileName));
+			if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/mc/JpsiSigma/run%d/%s",run,logFileName.Data()).Data());
 			if(!gSystem->AccessPathName(TString::Format("logs/mc/JpsiSigma/run%d/gen_log.txt",run)))
 			{
 				genFile.open((TString::Format("logs/mc/JpsiSigma/run%d/gen_log.txt",run)).Data());
 				genFlag = 1;
 			}
 			fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_cutoutks_%s_nonZeroTracks.root",run,type));
-			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_%s_withiso%d_%s.root",run,type,isoConf,isoVersion),"RECREATE");
+			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_%s_iso%d_%s.root",run,type,isoConf,isoVersion),"RECREATE");
 			break;
 
 		case 3: //JpsiXi
-			if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/mc/JpsiXi/run%d/%s",run,logFileName));
+			if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/mc/JpsiXi/run%d/%s",run,logFileName.Data()).Data());
 			if(!gSystem->AccessPathName(TString::Format("logs/mc/JpsiXi/run%d/gen_log.txt",run)))
 			{
 				genFile.open((TString::Format("logs/mc/JpsiXi/run%d/gen_log.txt",run)).Data());
 				genFlag = 1;
 			}
 			fileIn  = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_cutoutks_%s_nonZeroTracks.root",run,type));
-			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_%s_withiso%d_%s.root",run,type,isoConf,isoVersion),"RECREATE");
+			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_%s_iso%d_%s.root",run,type,isoConf,isoVersion),"RECREATE");
 			break;
 		}
 	}//end MC block
 	else  // Data
 	{
-		if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/%s.txt",run,logFileName));
+		if(logFlag) gSystem->RedirectOutput(TString::Format("logs/data/JpsiLambda/run%d/%s",run,logFileName.Data()).Data(),"a");
 		if(flag == 1)
 		{
-			fileIn      = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_nonZeroTracks.root",run,type));
-			fileOut     = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withiso%d_%s.root",run,type,isoConf,isoVersion),"RECREATE");
+			//	if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName.Data()).Data());
+			fileIn  = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_nonZeroTracks.root",run,type));
+			fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_iso%d_%s_300.root",run,type,isoConf,isoVersion),"RECREATE");
 		}
 		else if(flag == 2)
 		{
+			//	if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/isoApplication_sw_%s_%s_conf%d_log.txt",run,type,isoVersion,isoConf).Data());
 			fileIn  = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw_nonZeroTracks.root",run,type));
-			fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_withiso%d_%s.root",run,type,isoConf,isoVersion),"RECREATE");
+			fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_iso%d_%s_300.root",run,type,isoConf,isoVersion),"RECREATE");
 		}
 	}
 	//end Data block
 	//end set up of input, output, logging
+	gSystem->Exec("date");
+	cout<<endl;
 	cout<<"******************************************"<<endl;
-	cout<<"Processing Run "<<run<<" "<<type<<((isData) ? (" Data ") : (" MC type "))<<mcType<<((flag == 2) ? ("sWeighted") : (""))<<endl;
+	cout<<"Processing Run "<<run<<" "<<type<<((isData) ? (" Data ") : (" MC type "))<<mcType<<((flag == 2) ? (" sWeighted") : (""))<<endl;
 	cout<<"******************************************"<<endl;
 
 	cout<<"******************************************"<<endl;
@@ -126,7 +134,8 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 	cout<<"******************************************"<<endl;
 
 	treeIn = (TTree*)fileIn->Get("MyTuple");
-	treeOut = (TTree*)treeIn->CloneTree(0);
+	// treeOut = (TTree*)treeIn->CloneTree(0);
+	treeOut = new TTree("MyTuple","");
 
 	cout<<"******************************************"<<endl;
 	cout<<"Input file = "<<fileIn->GetName()<<endl;
@@ -164,10 +173,10 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 	}
 
 	TString dir        = "dataset/weights/";
-	TString prefix     = TString::Format("TMVAClassification-isok%s_dataRun%d_%s",type,run,isoVersion);
+	TString prefix     = TString::Format("TMVAClassification300-isok%s_dataRun%d_%s",type,run,isoVersion);
 	TString methodName = "BDT method";
 
-	TString weightfile = dir + prefix + TString("_") + TString::Format("isoConf%d",isoConf) + TString(".weights.xml");// change  configuration to conf1 or conf5 depending on which is better
+	TString weightfile = dir + prefix + TString("_") + TString::Format("isoConf%d_300",isoConf) + TString(".weights.xml");// change  configuration to conf1 or conf5 depending on which is better
 	reader->BookMVA(methodName, weightfile);
 
 	// treeIn->SetBranchStatus("*",0);
@@ -197,8 +206,8 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 
 	}
 
-	//treeOut->Branch("ntracks",&ntracks,"ntracks/I");
-	treeOut->Branch(TString::Format("BDTk_%s",isoVersion),BDTk,TString::Format("BDTk_%s[Added_n_Particles]/D",isoVersion));
+	// treeOut->Branch("ntracks",&ntracks,"ntracks/I");
+	// treeOut->Branch(TString::Format("BDTk_%s",isoVersion),BDTk,TString::Format("BDTk_%s[Added_n_Particles]/D",isoVersion));
 	treeOut->Branch(TString::Format("BDTkMin_%s",isoVersion),&BDTkMin,TString::Format("BDTkMin_%s/D",isoVersion));
 
 	cout << "--- Processing: " << entries_init << " events" <<endl;
@@ -343,5 +352,6 @@ void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t
 	sw.Stop();// Get elapsed time
 	cout<< "==> End of ApplyIsolation! Isolated forever!: "; sw.Print();
 
-	if(logFlag) gROOT->ProcessLine(".>");
+	if(logFlag) gSystem->RedirectOutput(0); //redirect back to stdout,stderr
+	//if(logFlag) gROOT->ProcessLine(".>");
 }

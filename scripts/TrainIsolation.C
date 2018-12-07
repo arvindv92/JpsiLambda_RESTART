@@ -38,12 +38,14 @@ void TrainIsolation(Int_t run = 1,Int_t trackType = 3, TString isoVersion = "v1"
    isoVersion = "v0","v1","v2","v3"
  */
 {
+	cout<<"***********Starting TrainIsolation***********"<<endl;
+
 	TStopwatch sw;
 	sw.Start();
 
-	TString outfileName = "", fname_sig = "", fname_bkg = "";
+	TString outfileName = "", fname_sig = "", fname_bkg = "", logFileName = "";
 	TCut mycuts = "", mycutb = "";
-	const char *logFileName = "", *type = "";
+	const char *type = "";
 	TFile *outputFile = nullptr, *input_sig = nullptr, *input_bkg = nullptr;
 	TTree *sigTree = nullptr, *bkgTree = nullptr;
 	TMVA::Factory *factory = nullptr;
@@ -51,14 +53,17 @@ void TrainIsolation(Int_t run = 1,Int_t trackType = 3, TString isoVersion = "v1"
 	TMVA::Tools::Instance(); // This loads the library
 
 	logFileName = (trackType == 3) ? (TString::Format("isolationTraining_LL_%s_log.txt",isoVersion.Data())) : (TString::Format("isolationTraining_DD_%s_log.txt",isoVersion.Data()));
+	cout<<"logFile = "<<logFileName.Data()<<endl;
 	type        = (trackType == 3) ? ("LL") : ("DD");
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
 	if(logFlag) //set up logging
 	{
-		gROOT->ProcessLine((TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName)).Data());
+		gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName.Data()).Data());
 	}
+	gSystem->Exec("date");
+	cout<<endl;
 	cout<<"******************************************"<<endl;
 	cout<<"Processing Run "<<run<<" "<<type<<endl;
 	cout<<"******************************************"<<endl;
@@ -68,9 +73,9 @@ void TrainIsolation(Int_t run = 1,Int_t trackType = 3, TString isoVersion = "v1"
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 	cout<<"*****************************"<<endl;
 
-	outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVAtraining/iso/TMVA-isok%s_data_%s.root",run,type,isoVersion.Data());
+	outfileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/TMVAtraining/iso/TMVA300-isok%s_data_%s.root",run,type,isoVersion.Data());
 	outputFile  = TFile::Open(outfileName, "RECREATE");
-	factory     = new TMVA::Factory( TString::Format("TMVAClassification-isok%s_dataRun%d_%s",type,run,isoVersion.Data()), outputFile,
+	factory     = new TMVA::Factory( TString::Format("TMVAClassification300-isok%s_dataRun%d_%s",type,run,isoVersion.Data()), outputFile,
 	                                 "!V:!Silent:Color:!DrawProgressBar:AnalysisType=Classification" );
 
 	dataloader = new TMVA::DataLoader("dataset");
@@ -148,11 +153,11 @@ void TrainIsolation(Int_t run = 1,Int_t trackType = 3, TString isoVersion = "v1"
 	dataloader->PrepareTrainingAndTestTree(mycuts, mycutb,
 	                                       "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V");
 
-	factory->BookMethod(dataloader, TMVA::Types::kBDT, "isoConf1",
-	                    "!H:!V:NTrees=850:MinNodeSize=1.25%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
+	factory->BookMethod(dataloader, TMVA::Types::kBDT, "isoConf1_300",
+	                    "!H:!V:NTrees=300:MinNodeSize=1.25%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
 
-	factory->BookMethod(dataloader, TMVA::Types::kBDT, "isoConf2",
-	                    "!H:!V:NTrees=850:MinNodeSize=0.75%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
+	factory->BookMethod(dataloader, TMVA::Types::kBDT, "isoConf2_300",
+	                    "!H:!V:NTrees=300:MinNodeSize=0.75%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
 
 	/*	factory->BookMethod( TMVA::Types::kBDT, "BDTconf2",
 	   "!H:!V:NTrees=850:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.7:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20" );
