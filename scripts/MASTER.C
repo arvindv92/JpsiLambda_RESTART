@@ -53,18 +53,18 @@ void MASTER()
 	//
 
 	//sWeight data
-	// if(isData)
-	// {
-	//      gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	//      gROOT->ProcessLine(".L DosPlot.C++");
-	//      gROOT->ProcessLine(TString::Format("DosPlot(%d, %d, %d)", run, trackType, logFlag).Data());
-	//      gROOT->Reset();
-	// }
+	if(isData)
+	{
+		gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
+		gROOT->ProcessLine(".L DosPlot.C++");
+		gROOT->ProcessLine(TString::Format("DosPlot(%d, %d, %d)", run, trackType, logFlag).Data());
+		gROOT->Reset();
+	}
 
-	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// gROOT->ProcessLine(".L massCut.C+");
-	// gROOT->ProcessLine(TString::Format("massCut(%d, %d, %d, %d, \"%s\", \"%s\", %d)", run, trackType, massLow, massHigh, inFileName.Data(), outFileName.Data(), logFlag).Data()); //include other versions later
-	// gROOT->Reset();
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
+	gROOT->ProcessLine(".L massCut.C+");
+	gROOT->ProcessLine(TString::Format("massCut(%d, %d, %d, %d, \"%s\", \"%s\", %d)", run, trackType, massLow, massHigh, inFileName.Data(), outFileName.Data(), logFlag).Data()); //include other versions later
+	gROOT->Reset();
 
 	for (Int_t i = 0; i <= 3; i++)//loop over isolation BDT versions.
 	{

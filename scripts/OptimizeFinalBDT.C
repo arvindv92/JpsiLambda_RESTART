@@ -12,17 +12,16 @@ using namespace std;
 
 Double_t getSumOfWeights(Double_t mybdt, TTree *tree, Int_t flag, Int_t bdtConf, Int_t nEntries);
 
-void OptimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* isoVersion = "v1", Int_t isoConf = 1, Int_t bdtConf = 1, Bool_t isoFlag = true, Bool_t logFlag = false)
+void OptimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* isoVersion = "v1", Int_t isoConf = 1, Int_t bdtConf = 1, Bool_t isoFlag = true, Bool_t logFlag = false, Bool_t newFlag = false)
 {
 	TFile *fileIn = nullptr, *fileIn_zeroTracks = nullptr;
 	TTree *treeIn = nullptr, *treeIn_zeroTracks = nullptr, *myTree = nullptr;
 	TH1D *hsig = nullptr, *hbkg = nullptr;
-
+	TString logFileName = "", friendFileName = "", friendFileName_zeroTracks = "", t = "";
 	Int_t nEntries = 0;
-	TString t = "";
-	const char *type = "";
-	TString logFileName = "", friendFileName = "", friendFileName_zeroTracks = "";
+	const char *type = "", *mynew = "";
 
+	if(newFlag) mynew = "_new";
 	if(trackType == 3)
 	{
 		cout<<"Processing LL"<<endl;
@@ -35,10 +34,10 @@ void OptimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* isoVersion
 	}
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
-	logFileName = TString::Format("optimizeFinalBDT%d_%s_iso%d_%s.txt",bdtConf,type,isoConf,isoVersion);
+	logFileName = TString::Format("optimizeFinalBDT%d_%s_iso%d_%s%s.txt",bdtConf,type,isoConf,isoVersion,mynew);
 
 	if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName.Data()).Data());
-	cout<<"logFile = "<<TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName.Data()).Data()<<endl;
+	cout<<"logFile = "<<logFileName<<endl;
 	cout<<"******************************************"<<endl;
 	cout<<"Starting optimizeFinalBDT "<<endl;
 	gSystem->Exec("date");
@@ -47,12 +46,12 @@ void OptimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* isoVersion
 
 	if(isoFlag)
 	{
-		fileIn                    = TFile  ::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_iso%d_%s_300.root",run,type,isoConf,isoVersion),"READ");
+		fileIn                    = TFile  ::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw_nonZeroTracks.root",run,type),"READ");
 		treeIn                    = (TTree*)fileIn->Get("MyTuple");
 		fileIn_zeroTracks         = TFile  ::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw_ZeroTracks.root",run,type),"READ");
 		treeIn_zeroTracks         = (TTree*)fileIn_zeroTracks->Get("MyTuple");
-		friendFileName            = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_FinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion);
-		friendFileName_zeroTracks = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_zeroTracks%ssig_FinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion);
+		friendFileName            = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_FinalBDT%d_iso%d_%s%s.root",run,type,bdtConf,isoConf,isoVersion,mynew);
+		friendFileName_zeroTracks = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_zeroTracks%ssig_FinalBDT%d_iso%d_%s%s.root",run,type,bdtConf,isoConf,isoVersion,mynew);
 		// fileIn                 = TFile  ::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_FinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"READ");
 	}
 	else
