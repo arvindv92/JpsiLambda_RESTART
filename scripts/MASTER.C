@@ -35,19 +35,19 @@ void MASTER()
 	//Data- Run 1
 	//Trigger Cut
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// gROOT->ProcessLine(".L Trigger.C++");
+	// gROOT->ProcessLine(".L Trigger.C+");
 	// gROOT->ProcessLine(TString::Format("Trigger(%d, %d, %d, %d, %d, %d)",run, isData, mcType, testing, loose, logFlag).Data());
 	// gROOT->Reset();
 	//
 	// //Sanity Cuts
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// gROOT->ProcessLine(".L Sanity.C++");
+	// gROOT->ProcessLine(".L Sanity.C+");
 	// gROOT->ProcessLine(TString::Format("Sanity(%d, %d, %d, %d)", run, isData, mcType, logFlag).Data());
 	// gROOT->Reset();
 	//
 	// //Cut Out Ks0
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	// gROOT->ProcessLine(".L CutOutKs.C++");
+	// gROOT->ProcessLine(".L CutOutKs.C+");
 	// gROOT->ProcessLine(TString::Format("CutOutKs(%d, %d, %d, %d, %d)", run, isData, mcType, trackType, logFlag).Data()); //LL
 	// gROOT->Reset();
 	//
@@ -56,8 +56,13 @@ void MASTER()
 	if(isData)
 	{
 		gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-		gROOT->ProcessLine(".L DosPlot.C++");
-		gROOT->ProcessLine(TString::Format("DosPlot(%d, %d, %d)", run, trackType, logFlag).Data());
+		gROOT->ProcessLine(".L DosPlot.C+");
+		gROOT->ProcessLine(TString::Format("DosPlot(%d, %d, %d, true)", run, trackType, logFlag).Data());
+		gROOT->Reset();
+
+		gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
+		gROOT->ProcessLine(".L DosPlot.C+");
+		gROOT->ProcessLine(TString::Format("DosPlot(%d, %d, %d, false)", run, trackType, logFlag).Data());
 		gROOT->Reset();
 	}
 
