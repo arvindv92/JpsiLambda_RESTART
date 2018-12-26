@@ -30,7 +30,7 @@ void massCut(Int_t run = 1, Int_t trackType = 3, Int_t low = 5200, Int_t high = 
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
 
-	masscut = (TString::Format("Lb_DTF_M_JpsiLConstr > %d && Lb_DTF_M_JpsiLConstr < %d",low,high)).Data();
+	masscut = (Form("Lb_DTF_M_JpsiLConstr > %d && Lb_DTF_M_JpsiLConstr < %d",low,high));
 
 	if(trackType == 3)
 	{
@@ -45,11 +45,11 @@ void massCut(Int_t run = 1, Int_t trackType = 3, Int_t low = 5200, Int_t high = 
 
 	if(logFlag)
 	{
-		gROOT->ProcessLine((TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName)).Data());
+		gROOT->ProcessLine((Form(".> logs/data/JpsiLambda/run%d/%s",run,logFileName)));
 	}
 
-	fileIn = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/%s",run,inFileName.Data()),"READ");
-	fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/%s",run,outFileName.Data()),"RECREATE");
+	fileIn = TFile::Open(Form("rootFiles/dataFiles/JpsiLambda/run%d/%s",run,inFileName.Data()),"READ");
+	fileOut = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/%s",run,outFileName.Data()),"RECREATE");
 	treeIn = (TTree*)fileIn->Get("MyTuple");
 
 	cout<<"******************************************"<<endl;

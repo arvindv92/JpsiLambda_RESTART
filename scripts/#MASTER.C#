@@ -32,19 +32,19 @@ void MASTER()
 	//Trigger Cut
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 	// gROOT->ProcessLine(".L Trigger.C++");
-	// gROOT->ProcessLine(TString::Format("Trigger(%d, %d, %d, %d, %d, %d)",run, isData, mcType, testing, loose, logFlag).Data());
+	// gROOT->ProcessLine(Form("Trigger(%d, %d, %d, %d, %d, %d)",run, isData, mcType, testing, loose, logFlag));
 	// gROOT->Reset();
 	//
 	// //Sanity Cuts
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 	// gROOT->ProcessLine(".L Sanity.C++");
-	// gROOT->ProcessLine(TString::Format("Sanity(%d, %d, %d, %d)", run, isData, mcType, logFlag).Data());
+	// gROOT->ProcessLine(Form("Sanity(%d, %d, %d, %d)", run, isData, mcType, logFlag));
 	// gROOT->Reset();
 	//
 	// //Cut Out Ks0
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 	// gROOT->ProcessLine(".L CutOutKs.C++");
-	// gROOT->ProcessLine(TString::Format("CutOutKs(%d, %d, %d, %d, %d)", run, isData, mcType, trackType, logFlag).Data()); //LL
+	// gROOT->ProcessLine(Form("CutOutKs(%d, %d, %d, %d, %d)", run, isData, mcType, trackType, logFlag)); //LL
 	// gROOT->Reset();
 	//
 
@@ -53,24 +53,24 @@ void MASTER()
 	// {
 	//      gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 	//      gROOT->ProcessLine(".L DosPlot.C++");
-	//      gROOT->ProcessLine(TString::Format("DosPlot(%d, %d, %d)", run, trackType, logFlag).Data());
+	//      gROOT->ProcessLine(Form("DosPlot(%d, %d, %d)", run, trackType, logFlag));
 	//      gROOT->Reset();
 	// }
 
 	// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 	// gROOT->ProcessLine(".L massCut.C+");
-	// gROOT->ProcessLine(TString::Format("massCut(%d, %d, %d, %d, \"%s\", \"%s\", %d)", run, trackType, massLow, massHigh, inFileName.Data(), outFileName.Data(), logFlag).Data()); //include other versions later
+	// gROOT->ProcessLine(Form("massCut(%d, %d, %d, %d, \"%s\", \"%s\", %d)", run, trackType, massLow, massHigh, inFileName.Data(), outFileName.Data(), logFlag)); //include other versions later
 	// gROOT->Reset();
 
 	for (Int_t i = 0; i <= 3; i++)//loop over isolation BDT versions.
     	{      
-		isoVersion = (isoVersionArray[i]).Data();
+		isoVersion = (isoVersionArray[i]);
 		//Train Isolation BDT on data
 		// if(isData)
 		// {
 		//      gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 		//      gROOT->ProcessLine(".L TrainIsolation.C+");
-		//      gROOT->ProcessLine(TString::Format("TrainIsolation(%d, %d, \"%s\", %d)", run, trackType, isoVersion, logFlag).Data()); //include other versions later
+		//      gROOT->ProcessLine(Form("TrainIsolation(%d, %d, \"%s\", %d)", run, trackType, isoVersion, logFlag)); //include other versions later
 		//      gROOT->Reset();
 		// }
 
@@ -80,25 +80,25 @@ void MASTER()
 			//Apply isolation BDT on all data/MC
 			// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 			// gROOT->ProcessLine(".L ApplyIsolation.C+");
-			// gROOT->ProcessLine(TString::Format("ApplyIsolation(%d, %d, %d, %d, 1 , \"%s\", %d, %d)", run, isData, mcType, trackType, isoVersion, isoConf, logFlag).Data()); //apply on all data/MC
+			// gROOT->ProcessLine(Form("ApplyIsolation(%d, %d, %d, %d, 1 , \"%s\", %d, %d)", run, isData, mcType, trackType, isoVersion, isoConf, logFlag)); //apply on all data/MC
 			// gROOT->Reset();
 
 			if(isData)
 			{
 				//Apply isolation BDT on sWeighted data/MC
 				// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-				// gROOT->ProcessLine(TString::Format("ApplyIsolation(%d, %d, %d, %d, 2 , \"%s\", %d, %d)", run, isData, mcType, trackType, isoVersion, isoConf, logFlag).Data()); //apply only on sWeighted data
+				// gROOT->ProcessLine(Form("ApplyIsolation(%d, %d, %d, %d, 2 , \"%s\", %d, %d)", run, isData, mcType, trackType, isoVersion, isoConf, logFlag)); //apply only on sWeighted data
 				// gROOT->Reset();
 
 				//Train Final BDT on data w/ isolation (if isoFlag is true)
 				gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 				gROOT->ProcessLine(".L TrainFinalBDT.C+");
-				gROOT->ProcessLine(TString::Format("TrainFinalBDT(%d, %d, \"%s\", %d, %d, %d)", run, trackType, isoVersion, isoConf, isoFlag, logFlag).Data());
+				gROOT->ProcessLine(Form("TrainFinalBDT(%d, %d, \"%s\", %d, %d, %d)", run, trackType, isoVersion, isoConf, isoFlag, logFlag));
 				gROOT->Reset();
 
 				//Train Final BDT on data sans isolation (if isoFlag is true)
 				gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-				gROOT->ProcessLine(TString::Format("TrainFinalBDT(%d, %d, \"%s\", %d, %d, %d)", run, trackType, isoVersion, isoConf, !isoFlag, logFlag).Data());
+				gROOT->ProcessLine(Form("TrainFinalBDT(%d, %d, \"%s\", %d, %d, %d)", run, trackType, isoVersion, isoConf, !isoFlag, logFlag));
 				gROOT->Reset();
 			}
 
@@ -109,13 +109,13 @@ void MASTER()
 				//Apply final BDT on nonZeroTracks data/MC
 				gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 				gROOT->ProcessLine(".L ApplyFinalBDT.C+");
-				gROOT->ProcessLine(TString::Format("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, %d, 1, %d, false, %d)", run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, isoFlag, logFlag).Data());//Apply final conf 1 on all data/MC
+				gROOT->ProcessLine(Form("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, %d, 1, %d, false, %d)", run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, isoFlag, logFlag));//Apply final conf 1 on all data/MC
 				gROOT->Reset();
 
 				//Apply final BDT on zeroTracks data/MC
 				gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 				//gROOT->ProcessLine(".L ApplyFinalBDT.C++");
-				gROOT->ProcessLine(TString::Format("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, %d, 1, %d, true, %d)", run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, isoFlag, logFlag).Data());//Apply final conf 1 on all data/MC
+				gROOT->ProcessLine(Form("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, %d, 1, %d, true, %d)", run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, isoFlag, logFlag));//Apply final conf 1 on all data/MC
 				gROOT->Reset();
 
 				if(isData)
@@ -123,18 +123,18 @@ void MASTER()
 					//Apply final BDT on nonZeroTracks sWeighted data/MC
 					gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 					//gROOT->ProcessLine(".L ApplyFinalBDT.C++");
-					gROOT->ProcessLine(TString::Format("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, %d, 2, %d, false, %d)", run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, isoFlag, logFlag).Data()); //Apply final conf 1 only on weighted data
+					gROOT->ProcessLine(Form("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, %d, 2, %d, false, %d)", run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, isoFlag, logFlag)); //Apply final conf 1 only on weighted data
 					gROOT->Reset();
 
 					//Apply final BDT on zeroTracks sWeighted data/MC
 					gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 					//gROOT->ProcessLine(".L ApplyFinalBDT.C++");
-					gROOT->ProcessLine(TString::Format("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, %d, 2, %d, true, %d)", run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, isoFlag, logFlag).Data()); //Apply final conf 1 only on weighted data
+					gROOT->ProcessLine(Form("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, %d, 2, %d, true, %d)", run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, isoFlag, logFlag)); //Apply final conf 1 only on weighted data
 					gROOT->Reset();
 
 					// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 					// gROOT->ProcessLine(".L OptimizeFinalBDT.C++");
-					// gROOT->ProcessLine(TString::Format("OptimizeFinalBDT(%d, %d, \"%s\", %d, %d, %d, %d)", run, trackType, isoVersion, isoConf, finalBDTconf, isoFlag, logFlag).Data());//finalBDTconf1
+					// gROOT->ProcessLine(Form("OptimizeFinalBDT(%d, %d, \"%s\", %d, %d, %d, %d)", run, trackType, isoVersion, isoConf, finalBDTconf, isoFlag, logFlag));//finalBDTconf1
 					// gROOT->Reset();
 				}
 			}   //end loop on finalBDTconf
@@ -145,50 +145,50 @@ void MASTER()
    {
    gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
    gROOT->ProcessLine(".L TrainFinalBDT.C++");
-   gROOT->ProcessLine(TString::Format("TrainFinalBDT(%d, %d, \"%s\", %d, %d, %d)", run, trackType, isoVersion, isoConf, isoFlag, logFlag).Data());
+   gROOT->ProcessLine(Form("TrainFinalBDT(%d, %d, \"%s\", %d, %d, %d)", run, trackType, isoVersion, isoConf, isoFlag, logFlag));
    gROOT->Reset();
    }
 
    gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
    gROOT->ProcessLine(".L ApplyFinalBDT.C++");
-   gROOT->ProcessLine(TString::Format("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, 1, 1, %d, false, %d)", run, isData, mcType, trackType, isoVersion, isoConf, isoFlag, logFlag).Data());//Apply final conf 1 on all data/MC
+   gROOT->ProcessLine(Form("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, 1, 1, %d, false, %d)", run, isData, mcType, trackType, isoVersion, isoConf, isoFlag, logFlag));//Apply final conf 1 on all data/MC
    gROOT->Reset();
 
    gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
    // gROOT->ProcessLine(".L ApplyFinalBDT.C++");
-   gROOT->ProcessLine(TString::Format("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, 5, 1, %d, false, %d)", run, isData, mcType, trackType, isoVersion, isoConf, isoFlag, logFlag).Data());//Apply final conf 5 on all data/MC
+   gROOT->ProcessLine(Form("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, 5, 1, %d, false, %d)", run, isData, mcType, trackType, isoVersion, isoConf, isoFlag, logFlag));//Apply final conf 5 on all data/MC
    gROOT->Reset();
 
    gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
    gROOT->ProcessLine(".L ApplyFinalBDT.C++");
-   gROOT->ProcessLine(TString::Format("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, 1, 1, %d, true, %d)", run, isData, mcType, trackType, isoVersion, isoConf, isoFlag, logFlag).Data());//Apply final conf 1 on all data/MC
+   gROOT->ProcessLine(Form("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, 1, 1, %d, true, %d)", run, isData, mcType, trackType, isoVersion, isoConf, isoFlag, logFlag));//Apply final conf 1 on all data/MC
    gROOT->Reset();
 
    gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
    // gROOT->ProcessLine(".L ApplyFinalBDT.C++");
-   gROOT->ProcessLine(TString::Format("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, 5, 1, %d, true, %d)", run, isData, mcType, trackType, isoVersion, isoConf, isoFlag, logFlag).Data());//Apply final conf 5 on all data/MC
+   gROOT->ProcessLine(Form("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, 5, 1, %d, true, %d)", run, isData, mcType, trackType, isoVersion, isoConf, isoFlag, logFlag));//Apply final conf 5 on all data/MC
    gROOT->Reset();
 
    if(isData)
    {
    gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
    //gROOT->ProcessLine(".L ApplyFinalBDT.C++");
-   gROOT->ProcessLine(TString::Format("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, 1, 2, %d, false, %d)", run, isData, mcType, trackType, isoVersion, isoConf, isoFlag, logFlag).Data());     //Apply final conf 1 only on weighted data
+   gROOT->ProcessLine(Form("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, 1, 2, %d, false, %d)", run, isData, mcType, trackType, isoVersion, isoConf, isoFlag, logFlag));     //Apply final conf 1 only on weighted data
    gROOT->Reset();
 
    gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
    // gROOT->ProcessLine(".L ApplyFinalBDT.C++");
-   gROOT->ProcessLine(TString::Format("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, 5, 2, %d, false, %d)", run, isData, mcType, trackType, isoVersion, isoConf, isoFlag, logFlag).Data());     //Apply final conf 5 only on weighted data
+   gROOT->ProcessLine(Form("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, 5, 2, %d, false, %d)", run, isData, mcType, trackType, isoVersion, isoConf, isoFlag, logFlag));     //Apply final conf 5 only on weighted data
    gROOT->Reset();
 
    gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
    //gROOT->ProcessLine(".L ApplyFinalBDT.C++");
-   gROOT->ProcessLine(TString::Format("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, 1, 2, %d, true, %d)", run, isData, mcType, trackType, isoVersion, isoConf, isoFlag, logFlag).Data());     //Apply final conf 1 only on weighted data
+   gROOT->ProcessLine(Form("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, 1, 2, %d, true, %d)", run, isData, mcType, trackType, isoVersion, isoConf, isoFlag, logFlag));     //Apply final conf 1 only on weighted data
    gROOT->Reset();
 
    gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
    // gROOT->ProcessLine(".L ApplyFinalBDT.C++");
-   gROOT->ProcessLine(TString::Format("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, 5, 2, %d, false, %d)", run, isData, mcType, trackType, isoVersion, isoConf, isoFlag, logFlag).Data());     //Apply final conf 5 only on weighted data
+   gROOT->ProcessLine(Form("ApplyFinalBDT(%d, %d, %d, %d, \"%s\", %d, 5, 2, %d, false, %d)", run, isData, mcType, trackType, isoVersion, isoConf, isoFlag, logFlag));     //Apply final conf 5 only on weighted data
    gROOT->Reset();
  */
 }

@@ -1,6 +1,8 @@
 /********************************
    Author : Aravindhan V.
    The purpose of this script is to apply loose sanity cuts to triggered data/MC, and then separate out into LL and DD files.
+   Split by year is only done for data, to allow parallel processing of different years.
+   For MC, all years are processed together.
  *********************************/
 #include "TFile.h"
 #include "TTree.h"
@@ -38,7 +40,7 @@ void Sanity(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcType
 	Double_t Lb_TAU = 0.0, Lb_ETA = 0.0;
 	Double_t pi_PIDp = 0.0, pi_PIDK = 0.0, p_PIDp = 0.0, p_PIDK = 0.0, L_TAU = 0.0;
 	Bool_t genFlag = false;
-	TString logFileName = TString::Format("sanity_%d_log.txt",year);
+	TString logFileName = Form("sanity_%d_log.txt",year);
 	TCut dtfCut, lifetimeCut, pidCut, etaCut, tmCut;
 	TFile *fileIn = nullptr, *fileOut_LL = nullptr, *fileOut_DD = nullptr;
 	TTree *treeIn = nullptr, *treeOut_LL = nullptr, *treeOut_DD = nullptr;
@@ -53,48 +55,48 @@ void Sanity(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcType
 	{
 		switch(mcType)
 		{
-		case 1:                 //JpsiLambda
-			if(logFlag) gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiLambda/run%d/%s",run,logFileName.Data())).Data());
-			if(!gSystem->AccessPathName((TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run)).Data()))
+		case 1:                         //JpsiLambda
+			if(logFlag) gROOT->ProcessLine((Form(".> logs/mc/JpsiLambda/run%d/%s",run,logFileName.Data())));
+			if(!gSystem->AccessPathName((Form("logs/mc/JpsiLambda/run%d/gen_log.txt",run))))
 			{
-				genFile.open((TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run)).Data());
+				genFile.open((Form("logs/mc/JpsiLambda/run%d/gen_log.txt",run)));
 				genFlag = true;
 			}
-			fileIn = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_triggered.root",run));
+			fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_triggered.root",run));
 			treeIn = (TTree*)fileIn->Get("MyTuple");
-			fileOut_LL = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_sanity_LL.root",run),"RECREATE");
+			fileOut_LL = new TFile(Form("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_sanity_LL.root",run),"RECREATE");
 			treeOut_LL = (TTree*)treeIn->CloneTree(0);
-			fileOut_DD = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_sanity_DD.root",run),"RECREATE");
+			fileOut_DD = new TFile(Form("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_sanity_DD.root",run),"RECREATE");
 			treeOut_DD = (TTree*)treeIn->CloneTree(0);
 			break;
 
-		case 2: //JpsiSigma
-			if(logFlag) gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiSigma/run%d/%s",run,logFileName.Data())).Data());
-			if(!gSystem->AccessPathName((TString::Format("logs/mc/JpsiSigma/run%d/gen_log.txt",run)).Data()))
+		case 2:         //JpsiSigma
+			if(logFlag) gROOT->ProcessLine((Form(".> logs/mc/JpsiSigma/run%d/%s",run,logFileName.Data())));
+			if(!gSystem->AccessPathName((Form("logs/mc/JpsiSigma/run%d/gen_log.txt",run))))
 			{
-				genFile.open((TString::Format("logs/mc/JpsiSigma/run%d/gen_log.txt",run)).Data());
+				genFile.open((Form("logs/mc/JpsiSigma/run%d/gen_log.txt",run)));
 				genFlag = true;
 			}
-			fileIn = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_triggered.root",run));
+			fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_triggered.root",run));
 			treeIn = (TTree*)fileIn->Get("MyTuple");
-			fileOut_LL = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_sanity_LL.root",run),"RECREATE");
+			fileOut_LL = new TFile(Form("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_sanity_LL.root",run),"RECREATE");
 			treeOut_LL = (TTree*)treeIn->CloneTree(0);
-			fileOut_DD = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_sanity_DD.root",run),"RECREATE");
+			fileOut_DD = new TFile(Form("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_sanity_DD.root",run),"RECREATE");
 			treeOut_DD = (TTree*)treeIn->CloneTree(0);
 			break;
 
-		case 3: //JpsiXi
-			if(logFlag) gROOT->ProcessLine((TString::Format(".> logs/mc/JpsiXi/run%d/%s",run,logFileName.Data())).Data());
-			if(!gSystem->AccessPathName((TString::Format("logs/mc/JpsiXi/run%d/gen_log.txt",run)).Data()))
+		case 3:         //JpsiXi
+			if(logFlag) gROOT->ProcessLine((Form(".> logs/mc/JpsiXi/run%d/%s",run,logFileName.Data())));
+			if(!gSystem->AccessPathName((Form("logs/mc/JpsiXi/run%d/gen_log.txt",run))))
 			{
-				genFile.open((TString::Format("logs/mc/JpsiXi/run%d/gen_log.txt",run)).Data());
+				genFile.open((Form("logs/mc/JpsiXi/run%d/gen_log.txt",run)));
 				genFlag = true;
 			}
-			fileIn = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_triggered.root",run));
+			fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_triggered.root",run));
 			treeIn = (TTree*)fileIn->Get("MyTuple");
-			fileOut_LL = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_sanity_LL.root",run),"RECREATE");
+			fileOut_LL = new TFile(Form("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_sanity_LL.root",run),"RECREATE");
 			treeOut_LL = (TTree*)treeIn->CloneTree(0);
-			fileOut_DD = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_sanity_DD.root",run),"RECREATE");
+			fileOut_DD = new TFile(Form("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_sanity_DD.root",run),"RECREATE");
 			treeOut_DD = (TTree*)treeIn->CloneTree(0);
 			break;
 		}
@@ -102,12 +104,12 @@ void Sanity(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcType
 	} // end MC block
 	else //Data
 	{
-		if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName.Data()).Data());
-		fileIn = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_%d.root",run,year));
+		if(logFlag) gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/%s",run,logFileName.Data()));
+		fileIn = TFile::Open(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_%d.root",run,year));
 		treeIn = (TTree*)fileIn->Get("MyTuple");
-		fileOut_LL = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_LL_%d.root",run,year),"RECREATE");
+		fileOut_LL = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_LL_%d.root",run,year),"RECREATE");
 		treeOut_LL = (TTree*)treeIn->CloneTree(0);
-		fileOut_DD = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_DD_%d.root",run,year),"RECREATE");
+		fileOut_DD = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_DD_%d.root",run,year),"RECREATE");
 		treeOut_DD = (TTree*)treeIn->CloneTree(0);
 	}//end Data block
 	 //end setup of input, output, logging

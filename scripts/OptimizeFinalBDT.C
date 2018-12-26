@@ -1,25 +1,19 @@
-#include "TFile.h"
-#include "TTree.h"
-#include "TH1D.h"
-#include "TString.h"
-#include "TSystem.h"
-#include "TROOT.h"
-#include "TList.h"
-#include "TIterator.h"
-#include <iostream>
+#include "OptimizeFinalBDT.h"
 
-using namespace std;
 
-Double_t getSumOfWeights(Double_t mybdt, TTree *tree, Int_t flag, Int_t bdtConf, Int_t nEntries);
-
-void OptimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* isoVersion = "v1", Int_t isoConf = 1, Int_t bdtConf = 1, Bool_t isoFlag = true, Bool_t logFlag = false, Bool_t newFlag = false)
+void OptimizeFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
+                      Int_t isoConf, Int_t bdtConf, Bool_t isoFlag,
+                      Bool_t logFlag, Bool_t newFlag)
 {
 	TFile *fileIn = nullptr, *fileIn_zeroTracks = nullptr;
 	TTree *treeIn = nullptr, *treeIn_zeroTracks = nullptr, *myTree = nullptr;
+
+	TString logFileName = "", friendFileName = "";
+	TString friendFileName_zeroTracks = "", t = "";
+
 	TH1D *hsig = nullptr, *hbkg = nullptr;
-	TString logFileName = "", friendFileName = "", friendFileName_zeroTracks = "", t = "";
 	Int_t nEntries = 0;
-	const char *type = "", *mynew = "";
+	const char *type = "", *mynew = "", *rootFolder = "";
 
 	if(newFlag) mynew = "_new";
 	if(trackType == 3)
@@ -34,9 +28,15 @@ void OptimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* isoVersion
 	}
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
-	logFileName = TString::Format("optimizeFinalBDT%d_%s_iso%d_%s%s.txt",bdtConf,type,isoConf,isoVersion,mynew);
+	logFileName = Form("optimizeFinalBDT%d_%s_iso%d_%s%s.txt",
+	                   bdtConf,type,isoConf,isoVersion,mynew);
 
-	if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName.Data()).Data());
+	if(logFlag)
+	{
+		gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/%s",
+		                        run,logFileName.Data()));
+	}
+
 	cout<<"logFile = "<<logFileName<<endl;
 	cout<<"******************************************"<<endl;
 	cout<<"Starting optimizeFinalBDT "<<endl;
@@ -44,22 +44,45 @@ void OptimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* isoVersion
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 	cout<<"******************************************"<<endl;
 
+	rootFolder = Form("rootFiles/dataFiles/JpsiLambda/run%d",run);
+
 	if(isoFlag)
 	{
-		fileIn                    = TFile  ::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw_nonZeroTracks.root",run,type),"READ");
+		fileIn                    = TFile::Open(Form("%s/jpsilambda_%s_withsw_nonZeroTracks.root",
+		                                             rootFolder,type),"READ");
+		if (!fileIn)
+		{
+			cout << "ERROR: could not open data file" << endl;
+			exit(1);
+		}
 		treeIn                    = (TTree*)fileIn->Get("MyTuple");
-		fileIn_zeroTracks         = TFile  ::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw_ZeroTracks.root",run,type),"READ");
+		fileIn_zeroTracks         = TFile::Open(Form("%s/jpsilambda_%s_withsw_ZeroTracks.root",
+		                                             rootFolder,type),"READ");
+		if (!fileIn_zeroTracks)
+		{
+			cout << "ERROR: could not open zeroTracks data file" << endl;
+			exit(1);
+		}
 		treeIn_zeroTracks         = (TTree*)fileIn_zeroTracks->Get("MyTuple");
-		friendFileName            = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_FinalBDT%d_iso%d_%s%s.root",run,type,bdtConf,isoConf,isoVersion,mynew);
-		friendFileName_zeroTracks = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_zeroTracks%ssig_FinalBDT%d_iso%d_%s%s.root",run,type,bdtConf,isoConf,isoVersion,mynew);
-		// fileIn                 = TFile  ::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_FinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"READ");
+		friendFileName            = Form("%s/jpsilambda_%ssig_FinalBDT%d_iso%d_%s%s.root",
+		                                 rootFolder,type,bdtConf,isoConf,isoVersion,mynew);
+		friendFileName_zeroTracks = Form("%s/jpsilambda_zeroTracks%ssig_FinalBDT%d_iso%d_%s%s.root",
+		                                 rootFolder,type,bdtConf,isoConf,isoVersion,mynew);
+		// fileIn                 = TFile  ::Open(Form("%s/jpsilambda_%ssig_FinalBDT%d_iso%d_%s.root",rootFolder,type,bdtConf,isoConf,isoVersion),"READ");
 	}
 	else
 	{
-		fileIn = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s.root",run,type));
+		fileIn = TFile::Open(Form("%s/jpsilambda_cutoutks_%s.root",
+		                          rootFolder,type));
+		if (!fileIn)
+		{
+			cout << "ERROR: could not open data file" << endl;
+			exit(1);
+		}
 		treeIn = (TTree*)fileIn->Get("MyTuple");
-		friendFileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_FinalBDT%d_noIso.root",run,type,bdtConf);
-		// fileIn = TFile::Open(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%ssig_FinalBDT%d_noIso.root",run,type,bdtConf),"READ");
+		friendFileName = Form("%s/jpsilambda_%s_FinalBDT%d_noIso.root",
+		                      rootFolder,type,bdtConf);
+		// fileIn = TFile::Open(Form("%s/jpsilambda_%ssig_FinalBDT%d_noIso.root",rootFolder,type,bdtConf),"READ");
 	}
 	treeIn->AddFriend("MyTuple",friendFileName);
 	treeIn_zeroTracks->AddFriend("MyTuple",friendFileName_zeroTracks);
@@ -72,8 +95,10 @@ void OptimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* isoVersion
 	TIterator *iter = (TIterator*)list->MakeIterator();
 	while((myTree = (TTree*)iter->Next()))
 	{
-		Double_t BDT = 0., BDT_max = 0., FOM = 0., FOM_max = 0., sig = 0., bkg = 0., siginit = 0., bkginit = 0.;
-		Double_t eff_sig = 0., eff_sig_max = 0., eff_bkg = 0., eff_bkg_max = 0.;
+		Double_t BDT = 0., BDT_max = 0., FOM = 0., FOM_max = 0.;
+		Double_t sig = 0., bkg = 0., siginit = 0., bkginit = 0.;
+		Double_t eff_sig = 0., eff_sig_max = 0.;
+		Double_t eff_bkg = 0., eff_bkg_max = 0.;
 
 		if(ctr == 0)
 		{
@@ -85,15 +110,15 @@ void OptimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* isoVersion
 		}
 		nEntries = myTree->GetEntries();
 
-		myTree->Draw(TString::Format("BDT%d>>hsig0(200,-1.0,1.0)",bdtConf),"SW","goff");
-		// myTree->Draw(TString::Format("BDT%d>>hsig(90,-0.4,0.5)",bdtConf),"SW*(Lb_DTF_M_JpsiLConstr < 5700)","goff");//Should there be a lower bound as well?
-		// myTree->Draw(TString::Format("BDT%d>>hsig1(90,-0.4,0.5)",bdtConf),"SW*(Lb_DTF_M_JpsiLConstr < 5700 && Lb_DTF_M_JpsiLConstr > 5300)","goff");
-		myTree->Draw(TString::Format("BDT%d>>hbkg(200,-1.0,1.0)",bdtConf),"BW*(Lb_DTF_M_JpsiLConstr > 5700)","goff");
+		myTree->Draw(Form("BDT%d>>hsig0(200,-1.0,1.0)",bdtConf),"SW","goff");
+		// myTree->Draw(Form("BDT%d>>hsig(90,-0.4,0.5)",bdtConf),"SW*(Lb_DTF_M_JpsiLConstr < 5700)","goff");//Should there be a lower bound as well?
+		// myTree->Draw(Form("BDT%d>>hsig1(90,-0.4,0.5)",bdtConf),"SW*(Lb_DTF_M_JpsiLConstr < 5700 && Lb_DTF_M_JpsiLConstr > 5300)","goff");
+		myTree->Draw(Form("BDT%d>>hbkg(200,-1.0,1.0)",bdtConf),"BW*(Lb_DTF_M_JpsiLConstr > 5700)","goff");
 
-		hsig = (TH1D*)gDirectory->Get("hsig0");//play around with this
+		hsig = (TH1D*)gDirectory->Get("hsig0");                                //play around with this
 		hbkg = (TH1D*)gDirectory->Get("hbkg");
 
-		siginit =  (Int_t)getSumOfWeights(-0.5,myTree,1,bdtConf,nEntries);//rounding off happening here
+		siginit =  (Int_t)getSumOfWeights(-0.5,myTree,1,bdtConf,nEntries);                                //rounding off happening here
 		bkginit =  (Int_t)getSumOfWeights(-0.5,myTree,2,bdtConf,nEntries);
 
 		cout<<"siginit = "<<siginit<<endl;
@@ -129,14 +154,17 @@ void OptimizeFinalBDT(Int_t run = 1, Int_t trackType = 3, const char* isoVersion
 				eff_bkg_max = eff_bkg;
 			}
 
-			cout<<"For BDT = "<<BDT<<" FOM = "<<FOM<<" sig_eff = "<<eff_sig*100<<"% bkg_eff = "<<eff_bkg*100<<"%"<<endl;
+			cout<<"For BDT = "<<BDT<<" FOM = "<<FOM<<" sig_eff = "
+			    <<eff_sig*100<<"% bkg_eff = "<<eff_bkg*100<<"%"<<endl;
 		}
-		cout<<"MAXIMUM FOM = "<<FOM_max<<" at BDT = "<<BDT_max<<" with sig_eff = "<<eff_sig_max*100<<"% and bkg_eff = "<<eff_bkg_max*100<<"%"<<endl;
+		cout<<"MAXIMUM FOM = "<<FOM_max<<" at BDT = "<<BDT_max<<" with sig_eff = "
+		    <<eff_sig_max*100<<"% and bkg_eff = "<<eff_bkg_max*100<<"%"<<endl;
 		ctr++;
 	}
 	if(logFlag) gROOT->ProcessLine(".>");
 }
-Double_t getSumOfWeights(Double_t mybdt, TTree *tree, Int_t flag, Int_t bdtConf, Int_t nEntries)
+Double_t getSumOfWeights(Double_t mybdt, TTree *tree, Int_t flag,
+                         Int_t bdtConf, Int_t nEntries)
 {
 	Double_t sum = 0., mybdt1 = 0., bmass = 0.;
 	Float_t myweight = 0.;
@@ -152,7 +180,7 @@ Double_t getSumOfWeights(Double_t mybdt, TTree *tree, Int_t flag, Int_t bdtConf,
 	}
 
 	tree->SetBranchAddress("Lb_DTF_M_JpsiLConstr",&bmass);
-	tree->SetBranchAddress(TString::Format("BDT%d",bdtConf),&mybdt1);
+	tree->SetBranchAddress(Form("BDT%d",bdtConf),&mybdt1);
 
 	for(Int_t i=0; i<nEntries; i++)
 	{

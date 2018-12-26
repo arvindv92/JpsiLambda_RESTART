@@ -1,88 +1,65 @@
 /********************************
    Author : Aravindhan V.
-   The purpose of this script is to sWeight data in 5200-6000 GeV, and write out weighted data.
+   The purpose of this script is to sWeight data in 5200-6000 GeV, and write out weights.
    When running with isoFlag = true, zeroTracks and nonZeroTracks data are sWeighted separately.
-   Input: data from CutOutKs. Output: weights for 5200-6000 GeV, isolation training file.
-   Isolation training file is made only when running over nonZeroTracks data.
-   GO OVER THIS CODE AGAIN. UNDERSTAND FLOW
+   What about running with isoFlag = false? sWeight them separately anyway?
+   INPUT: data from CutOutKs.
+   OUTPUT: weights for 5200-6000 GeV, isolation training file.
  *********************************/
-#ifndef __CINT__
-#include "RooGlobalFunc.h"
-#endif
-#include "RooRealVar.h"
-#include "RooStats/SPlot.h"
-#include "RooDataSet.h"
-#include "RooRealVar.h"
-#include "RooGaussian.h"
-#include "RooExponential.h"
-#include "RooChebychev.h"
-#include "RooAddPdf.h"
-#include "RooProdPdf.h"
-#include "RooAddition.h"
-#include "RooProduct.h"
-#include "TCanvas.h"
-#include "RooAbsPdf.h"
-#include "RooFit.h"
-#include "RooFitResult.h"
-#include "RooWorkspace.h"
-#include "RooConstVar.h"
-#include "TFile.h"
-#include "TTree.h"
-#include "TH1.h"
-#include "TMath.h"
-#include "TROOT.h"
-#include "TSystem.h"
-#include "TBranch.h"
-#include "TPaveLabel.h"
-#include "TStopwatch.h"
+
+#include "DoSWeight.h"
 // use this order for safety on library loading
 using namespace RooFit;
 using namespace RooStats;
 using namespace std;
 
-// see below for implementation
-void AddModel(RooWorkspace*, Int_t, Int_t, Int_t);
-void AddData(RooWorkspace*, Int_t, const char*, TString, TTree*);
-void DoSPlot(RooWorkspace*, Int_t, const char*, TString, TString, TTree*, TTree*, Bool_t);
-void MakePlots(RooWorkspace*);
-
-void DosPlot(Int_t run = 1, Int_t trackType = 3, Bool_t logFlag = false, Bool_t zeroFlag = false)
+void DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 /*
-   run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data.
-   isData = 1 for data, 0 for MC.
-   mcType = 0 when running over data. When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
-   trackType = 3 for LL, 5 for DD.
-   zeroFlag = true when running over zeroTracks data coming out of cutOutKs. false when running over nonZeroTracks data.
+   >run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC.
+   Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data.
+
+   >trackType = 3 for LL, 5 for DD.
+
+   >zeroFlag = true when running over zeroTracks data coming out of cutOutKs.
+   false when running over nonZeroTracks data.
  */
 {
-	cout<<"***********Starting DosPlot***********"<<endl;
+	cout<<"***********Starting DoSWeight***********"<<endl;
 
 	TStopwatch sw;
 	sw.Start();
 
-	const char* logFileName = "", *type = "", *suffix = "";
-	TString inFileName = "", outFileName = "", trainFileName = "";
 	TFile *fileIn = nullptr, *fileOut = nullptr, *fileOut_training = nullptr;
 	TTree *treeIn = nullptr, *treeOut = nullptr, *treeOut_training = nullptr;
-	Int_t entries_init = 0, entries_massWindow = 0, lowRange = 5200, highRange = 6000;
-	Double_t Lb_DTF_M_JpsiLConstr = 0.0;
 
-	type          = (trackType == 3) ? ("LL") : ("DD");
-	logFileName   = TString::Format("sPlot_%s_log.txt",type).Data();
+	const char *logFileName = "", *type       = "";
+	const char *suffix      = "", *rootFolder = "", *logFolder = "";
+	TString inFileName      = "", outFileName = "", trainFileName = "";
+
+	Int_t entries_init = 0, entries_massWindow = 0;
+	Int_t lowRange     = 5200, highRange       = 6000;//5200-6000 MeV window for sWeighting
+	Double_t Lb_Mass   = 0.0;
+
 	suffix        = (zeroFlag) ? ("_ZeroTracks") : ("_nonZeroTracks");
-	inFileName    = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s%s.root",run,type,suffix);
-	outFileName   = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw%s.root",run,type,suffix);
-	if(!zeroFlag)
+	type          = (trackType == 3) ? ("LL")    : ("DD");
+
+	rootFolder    = Form("rootFiles/dataFiles/JpsiLambda/run%d", run);
+	logFolder     = Form("logs/data/JpsiLambda/run%d",run);
+
+	inFileName    = Form("%s/jpsilambda_cutoutks_%s%s.root", rootFolder, type, suffix);
+	outFileName   = Form("%s/jpsilambda_%s_withsw%s.root", rootFolder, type, suffix);
+	trainFileName = Form("%s/jpsilambda_%s_forIsoTraining.root", rootFolder, type);
+	logFileName   = Form("sPlot_%s%s_log.txt", type, suffix);
+
+	if(logFlag)//Redirect output to log file
 	{
-		trainFileName = TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_forIsoTraining.root",run,type);
+		gROOT->ProcessLine(Form(".> %s/%s", logFolder, logFileName));
 	}
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");//This could be problematic when putting all scripts together in a master script.
-	if(logFlag)
-	{
-		gROOT->ProcessLine((TString::Format(".> logs/data/JpsiLambda/run%d/%s",run,logFileName)).Data());
-	}
+
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+
 	cout<<"********************************"<<endl;
-	cout<<"==> Starting DosPlot: "<<endl;
+	cout<<"==> Starting DoSWeight: "<<endl;
 	gSystem->Exec("date");
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 	cout<<"********************************"<<endl;
@@ -91,15 +68,21 @@ void DosPlot(Int_t run = 1, Int_t trackType = 3, Bool_t logFlag = false, Bool_t 
 	cout<<"Processing Run "<<run<<" "<<type<<" "<<suffix<<endl;
 	cout<<"******************************************"<<endl;
 
-	fileIn             = TFile                     ::Open(inFileName,"READ");
-	treeIn             = (TTree*)fileIn->Get("MyTuple");
+	fileIn = TFile::Open(inFileName,"READ");
+	if (!fileIn)
+	{
+		cout << "ERROR: could not open data file" << endl;
+		exit(1);
+	}
+	treeIn = (TTree*)fileIn->Get("MyTuple");
 
 	entries_init       = treeIn->GetEntries();
-	entries_massWindow = treeIn->GetEntries(TString::Format("Lb_DTF_M_JpsiLConstr > %d && Lb_DTF_M_JpsiLConstr < %d",lowRange,highRange));
+	entries_massWindow = treeIn->GetEntries(Form("Lb_DTF_M_JpsiLConstr > %d &&"
+	                                             " Lb_DTF_M_JpsiLConstr < %d",
+	                                             lowRange,highRange));
 
 	fileOut = new TFile(outFileName,"RECREATE");
-	treeOut = new TTree("MyTuple","");
-	//treeOut = (TTree*)treeIn->CloneTree(0);
+	treeOut = treeIn->CloneTree(0);
 
 	if(!zeroFlag)
 	{
@@ -107,9 +90,7 @@ void DosPlot(Int_t run = 1, Int_t trackType = 3, Bool_t logFlag = false, Bool_t 
 		treeOut_training = treeIn->CloneTree(0);
 	}
 
-	//	treeIn->SetBranchStatus("*",0);
-	// treeIn->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-	treeIn->SetBranchAddress("Lb_DTF_M_JpsiLConstr",&Lb_DTF_M_JpsiLConstr);
+	treeIn->SetBranchAddress("Lb_DTF_M_JpsiLConstr",&Lb_Mass);
 	cout<<"Incoming Entries = "<<entries_init<<endl;
 
 	cout<<"******************************************"<<endl;
@@ -117,19 +98,20 @@ void DosPlot(Int_t run = 1, Int_t trackType = 3, Bool_t logFlag = false, Bool_t 
 	cout<<"sWeighted Output file = "<<fileOut->GetName()<<endl;
 	if(!zeroFlag)
 	{
-		cout<<"Isolation Training Output file = "<<trainFileName<<endl;
+		cout<<"Isolation Training Output file = "
+		    <<fileOut_training->GetName()<<endl;
 	}
 	cout<<"******************************************"<<endl;
 
 	cout<<"Making mass cut on "<<entries_init<<" entries"<<endl;
 	for (Int_t i = 0; i < entries_init; i++)
 	{
-		if(i%50000 == 0) cout<<i<<endl;
+		if(i%100000 == 0) cout<<i<<endl;
 		treeIn->GetEntry(i);
-		if(Lb_DTF_M_JpsiLConstr > lowRange && Lb_DTF_M_JpsiLConstr < highRange)
+		if(Lb_Mass > lowRange && Lb_Mass < highRange)
 		{
-			//treeOut->Fill();
-			if(Lb_DTF_M_JpsiLConstr > 5400 && Lb_DTF_M_JpsiLConstr < 5700)
+			treeOut->Fill();
+			if(Lb_Mass > 5400 && Lb_Mass < 5700)//5400-5700 only for training
 			{
 				treeOut_training->Fill();
 			}
@@ -140,18 +122,18 @@ void DosPlot(Int_t run = 1, Int_t trackType = 3, Bool_t logFlag = false, Bool_t 
 	RooWorkspace* wSpace = new RooWorkspace("myWS");
 
 	// add the signal and background models to the workspace.
-	// Inside this function you will find a discription our model.
+	// Inside this function you will find a discription the model.
 	AddModel(wSpace, lowRange, highRange, entries_massWindow);
 
-	// add some toy data to the workspace
-	AddData(wSpace, run, type, inFileName, treeIn);
+	// add data to the workspace
+	AddData(wSpace, run, treeIn);
 
 	// inspect the workspace if you wish
-	//  wSpace->Print();
+	wSpace->Print();
 
 	// do sPlot.
 	//This wil make a new dataset with sWeights added for every event.
-	DoSPlot(wSpace, run, type, outFileName, trainFileName, treeOut, treeOut_training, zeroFlag);
+	DosPlot(wSpace, run, type, treeOut, treeOut_training, zeroFlag);
 
 	fileOut->cd();
 	treeOut->Write("",TObject::kOverwrite);
@@ -165,20 +147,27 @@ void DosPlot(Int_t run = 1, Int_t trackType = 3, Bool_t logFlag = false, Bool_t 
 	delete wSpace;
 
 	sw.Stop();
-	cout << "==> DosPlot is done! Check fit status! sWeights FTW!: "; sw.Print();
-	if(logFlag) gROOT->ProcessLine(".>");
+	cout << "==> DoSWeight is done! Check fit status! sWeights FTW!: ";
+	sw.Print();
+	if(logFlag) gROOT->ProcessLine(".>"); //end redirect
 }
 
-void AddModel(RooWorkspace* ws = nullptr, Int_t lowRange = 5200, Int_t highRange = 6000, Int_t nEntries = 0)
+void AddModel(RooWorkspace *ws, Int_t lowRange, Int_t highRange, Int_t nEntries)
 {
 	cout<<"Starting AddModel()"<<endl;
+
+	Int_t binSize = 4; /*4 MeV bins.
+	                      Bin size only affects visualization and chi square calculation,
+	                      since we are doing an unbinned fit.*/
+
 	// Make models for signal and background
 
 	// make a RooRealVar for the observables
-	RooRealVar Lb_DTF_M_JpsiLConstr("Lb_DTF_M_JpsiLConstr", "M_{J/#psi#Lambda}", lowRange, highRange,"MeV");//discriminating variable
+	RooRealVar Lb_Mass("Lb_DTF_M_JpsiLConstr", "M_{J/#psi#Lambda}",
+	                   lowRange, highRange,"MeV");//discriminating variable
 
-	Int_t nbins = (Int_t)(highRange-lowRange)/4;
-	Lb_DTF_M_JpsiLConstr.setBins(nbins);
+	Int_t nbins = (Int_t)(highRange-lowRange)/binSize;
+	Lb_Mass.setBins(nbins);
 
 	// SIGNAL MODEL
 	cout << "Making signal model" << endl;
@@ -186,8 +175,8 @@ void AddModel(RooWorkspace* ws = nullptr, Int_t lowRange = 5200, Int_t highRange
 	RooRealVar sigma1("sigma1","Gaussian sigma1",7.0,5.0,20.0);
 	RooRealVar sigma2("sigma2","Gaussian sigma2",7.0,3.0,20.0);
 
-	RooGaussian sig1("sig1","Gaussian signal1",Lb_DTF_M_JpsiLConstr,mean,sigma1);
-	RooGaussian sig2("sig2","Gaussian signal2",Lb_DTF_M_JpsiLConstr,mean,sigma2);
+	RooGaussian sig1("sig1","Gaussian signal1",Lb_Mass,mean,sigma1);
+	RooGaussian sig2("sig2","Gaussian signal2",Lb_Mass,mean,sigma2);
 
 	RooRealVar frac1("frac1","Fraction of sig1 in signal",0.5,0.01,1.0);
 
@@ -197,17 +186,19 @@ void AddModel(RooWorkspace* ws = nullptr, Int_t lowRange = 5200, Int_t highRange
 	cout << "Making background model" << endl;
 	// RooRealVar c0("c0","c0",-0.1,-1.0,1.0);
 	// RooRealVar c1("c1","c1",0.1,-1.0,1.0);
-	// RooChebychev bkg("bkg","bkg",Lb_DTF_M_JpsiLConstr,RooArgList(c0,c1));
+	// RooChebychev bkg("bkg","bkg",Lb_Mass,RooArgList(c0,c1));
 
 	RooRealVar tau("tau","tau",-0.0007,-0.01,-0.0000001);
-	RooExponential bkg("bkg","Exponential Bkg",Lb_DTF_M_JpsiLConstr,tau);
+	RooExponential bkg("bkg","Exponential Bkg",Lb_Mass,tau);
 
 	// COMBINED MODEL	cout << "Making full model" << endl;
 
 	RooRealVar sigYield("sigYield","fitted yield for sig",5000,0, 15000);
 	RooRealVar bkgYield("bkgYield","fitted yield for bkg",(nEntries/2),0, nEntries);
 
-	RooAddPdf model("model","signal+background models", RooArgList(sig, bkg), RooArgList(sigYield,bkgYield));
+	RooAddPdf model("model","signal+background models",
+	                RooArgList(sig, bkg),
+	                RooArgList(sigYield,bkgYield));
 
 	cout << "Importing model into workspace" << endl;
 
@@ -217,19 +208,19 @@ void AddModel(RooWorkspace* ws = nullptr, Int_t lowRange = 5200, Int_t highRange
 	cout<<"AddModel() complete"<<endl;
 }
 
-void AddData(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL", TString inFileName = "", TTree *treeIn = nullptr)
+void AddData(RooWorkspace *ws, Int_t run, TTree *treeIn)
 {
 	cout<<"Starting AddData()"<<endl;
 
 	// get what we need out of the workspace to make toy data
 	treeIn->SetBranchStatus("*",0);
 	treeIn->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-	RooRealVar Lb_DTF_M_JpsiLConstr = *(ws->var("Lb_DTF_M_JpsiLConstr"));
+	RooRealVar Lb_Mass = *(ws->var("Lb_DTF_M_JpsiLConstr"));
 
 	//Import the data
 	cout<<"Importing data. This could take a while. Sit tight"<<endl;
 
-	RooArgSet s(Lb_DTF_M_JpsiLConstr);
+	RooArgSet s(Lb_Mass);
 	RooDataSet data("data","dataset with x",treeIn,s);
 
 	ws->import(data, Rename("data"));
@@ -237,30 +228,30 @@ void AddData(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	cout<<"Finishing AddData()"<<endl;
 }
 
-void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL", TString outFileName = "", TString trainFileName = "", TTree *treeOut = nullptr, TTree *treeOut_training = nullptr, Bool_t zeroFlag = false)
+void DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
+             TTree *treeOut_training, Bool_t zeroFlag)
 {
-	// TFile *fileOut_training = nullptr;
-	// TTree *treeOut_training = nullptr;
 	const char *suffix = (zeroFlag) ? ("_ZeroTracks") : ("_nonZeroTracks");
 	Float_t SIGW = 0., BKGW = 0., bMASS = 0.;
-	TBranch *sigW = nullptr, *bkgW = nullptr, *sigW_training = nullptr, *bkgW_training = nullptr;
+	TBranch *sigW = nullptr, *sigW_training = nullptr;
+	TBranch *bkgW = nullptr, *bkgW_training = nullptr;
 
 	cout<<"Starting DoSPlot()"<<endl;
 	cout << "Calculating sWeights" << endl;
 
 	// get what we need out of the workspace to do the fit
-	RooAbsPdf *model                 = ws->pdf("model");
-	RooAbsPdf *sig1                  = ws->pdf("sig1");
-	RooAbsPdf *sig2                  = ws->pdf("sig2");
-	RooAbsPdf *sig                   = ws->pdf("sig");
-	RooAbsPdf *bkg                   = ws->pdf("bkg");
-	RooRealVar *sigYield             = ws->var("sigYield");
-	RooRealVar *bkgYield             = ws->var("bkgYield");
-	RooDataSet *data                 = (RooDataSet*) ws->data("data");
-	RooRealVar *Lb_DTF_M_JpsiLConstr = ws->var("Lb_DTF_M_JpsiLConstr");
+	RooAbsPdf *model     = ws->pdf("model");
+	RooAbsPdf *sig1      = ws->pdf("sig1");
+	RooAbsPdf *sig2      = ws->pdf("sig2");
+	RooAbsPdf *sig       = ws->pdf("sig");
+	RooAbsPdf *bkg       = ws->pdf("bkg");
+	RooRealVar *sigYield = ws->var("sigYield");
+	RooRealVar *bkgYield = ws->var("bkgYield");
+	RooRealVar *Lb_Mass  = ws->var("Lb_DTF_M_JpsiLConstr");
+	RooDataSet *data     = (RooDataSet*) ws->data("data");
 
-	// fit the model to the data.
-	RooFitResult *r = model->fitTo(*data, Extended(), Strategy(2), Save(true)); //unbinned extended ML fit
+	// fit the model to the data. unbinned extended ML fit
+	RooFitResult *r = model->fitTo(*data, Extended(), Strategy(2), Save(true));
 
 	cout<<"Starting MakePlots()"<<endl;
 
@@ -282,9 +273,9 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	gPad->SetTopMargin(0.06);
 	pad1->Update();
 
-	//plot Lb_DTF_M_JpsiLConstr for data with full model and individual componenets overlayed
+	//plot Lb_Mass for data with full model and individual componenets overlayed
 
-	RooPlot* frame = Lb_DTF_M_JpsiLConstr->frame();
+	RooPlot* frame = Lb_Mass->frame();
 	data->plotOn(frame,Name("Hist"),DataError(RooAbsData::SumW2) );
 	model->plotOn(frame,Name("curvetot") );
 	model->plotOn(frame,Components(*sig1),LineStyle(kDotted),LineColor(kMagenta));
@@ -311,7 +302,7 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	pad1->Update();
 
 	// Pull distribution
-	RooPlot *framex2 = Lb_DTF_M_JpsiLConstr->frame();
+	RooPlot *framex2 = Lb_Mass->frame();
 	RooHist* hpull = frame->pullHist("Hist","curvetot");
 	framex2->addPlotable(hpull,"P");
 	hpull->SetLineColor(kBlack);
@@ -333,7 +324,7 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	fitCanvas->cd();
 
 	fitCanvas->Update();
-	fitCanvas->SaveAs(TString::Format("plots/fit_run%d%s%s.pdf",run,type,suffix));
+	fitCanvas->SaveAs(Form("plots/fit_run%d%s%s.pdf",run,type,suffix));
 
 	cout<<"Pull Mean Y = "<<hpull->GetMean(2)<<endl;
 	cout<<"Pull RMS  Y = "<<hpull->GetRMS(2)<<endl;
@@ -353,22 +344,19 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	RooRealVar *sigma1 = ws->var("sigma1");
 	RooRealVar *sigma2 = ws->var("sigma2");
 	RooRealVar *mean   = ws->var("mean");
-	// RooRealVar *c0     = ws->var("c0");
-	// RooRealVar *c1     = ws->var("c1");
 	RooRealVar *tau    = ws->var("tau");
 
 	mean->setConstant(kTRUE);
 	sigma1->setConstant(kTRUE);
 	sigma2->setConstant(kTRUE);
-	// c0->setConstant(kTRUE);
-	// c1->setConstant(kTRUE);
 	tau->setConstant(kTRUE);
 
 	RooMsgService::instance().setSilentMode(true);
 
 	// Now we use the SPlot class to add SWeights to our data set
 	// based on our model and our yield variables
-	RooStats::SPlot* sData = new RooStats::SPlot("sData","An SPlot", *data, model, RooArgList(*sigYield,*bkgYield) );
+	RooStats::SPlot* sData = new RooStats::SPlot("sData","An SPlot", *data, model,
+	                                             RooArgList(*sigYield,*bkgYield) );
 
 	// Check that our weights have the desired properties
 
@@ -407,39 +395,41 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	data->plotOn(frame_sigsw);
 	frame_sigsw->Draw();
 	sWeightCanvas->Update();
-	sWeightCanvas->SaveAs(TString::Format("plots/fit_run%d%s_sWeights%s.pdf",run,type,suffix));
+	sWeightCanvas->SaveAs(Form("plots/fit_run%d%s_sWeights%s.pdf",run,type,suffix));
 
 	TCanvas *sWeightVsMass = new TCanvas();
-	RooPlot* frame_sigsw_x = Lb_DTF_M_JpsiLConstr->frame();
+	RooPlot* frame_sigsw_x = Lb_Mass->frame();
 	frame_sigsw_x->SetTitle("sWeights vs bmass");
 	data->plotOnXY(frame_sigsw_x,YVar(*sigYield_sw),MarkerColor(kBlue));
 	frame_sigsw_x->Draw();
 	sWeightVsMass->Update();
-	sWeightVsMass->SaveAs(TString::Format("plots/fit_run%d%s_sWeightsVsMass%s.pdf",run,type,suffix));
+	sWeightVsMass->SaveAs(Form("plots/fit_run%d%s_sWeightsVsMass%s.pdf",run,type,suffix));
 
 	// create weightfed data set
-	RooDataSet *dataw_sig = new RooDataSet(data->GetName(),data->GetTitle(),data,*data->get(),0,"sigYield_sw");
-	RooDataSet *dataw_bkg = new RooDataSet(data->GetName(),data->GetTitle(),data,*data->get(),0,"bkgYield_sw");
+	RooDataSet *dataw_sig = new RooDataSet(data->GetName(),data->GetTitle(),
+	                                       data,*data->get(),0,"sigYield_sw");
+	RooDataSet *dataw_bkg = new RooDataSet(data->GetName(),data->GetTitle(),
+	                                       data,*data->get(),0,"bkgYield_sw");
 
 	TCanvas *sWeightMass = new TCanvas();
 	sWeightMass->Divide(1,2);
 
 	sWeightMass->cd(1);
 
-	RooPlot* frame2_1 = Lb_DTF_M_JpsiLConstr->frame();
+	RooPlot* frame2_1 = Lb_Mass->frame();
 	dataw_sig->plotOn(frame2_1, DataError(RooAbsData::SumW2));
 	frame2_1->SetTitle("Lb DTF Mass Distribution (SW)");
 	frame2_1->Draw();
 
 	sWeightMass->cd(2);
 
-	RooPlot* frame2_2 = Lb_DTF_M_JpsiLConstr->frame();
+	RooPlot* frame2_2 = Lb_Mass->frame();
 	dataw_bkg->plotOn(frame2_2, DataError(RooAbsData::SumW2));
 	frame2_2->SetTitle("Lb DTF Mass Distribution (BW)");
 	frame2_2->Draw();
 
 	sWeightMass->Update();
-	sWeightMass->SaveAs(TString::Format("plots/fit_run%d%s_sWeightedMass.pdf",run,type));
+	sWeightMass->SaveAs(Form("plots/fit_run%d%s_sWeightedMass.pdf",run,type));
 
 	Int_t dsentries = data->numEntries();
 	cout<<"No. of entries in dataset = "<<dsentries<<endl;
@@ -448,10 +438,11 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	cout<<"Writing output tree with unbinned sweighted data"<<endl;
 	cout<<"************************************************"<<endl;
 
-	// bMass = treeOut->Branch("B_MASS",&B_MASS,"B_MASS/D");
+	//Add SW & BW branches to output tree
 	sigW  = treeOut->Branch("SW",&SIGW,"SIGW/F");
 	bkgW  = treeOut->Branch("BW",&BKGW,"BKGW/F");
 
+	//Add SW & BW branches to isolation training tree
 	sigW_training = treeOut_training->Branch("SW",&SIGW,"SIGW/F");
 	bkgW_training = treeOut_training->Branch("BW",&BKGW,"BKGW/F");
 
@@ -461,7 +452,6 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 		SIGW  = (data->get(i))->getRealValue("sigYield_sw");
 		BKGW  = (data->get(i))->getRealValue("bkgYield_sw");
 
-		// bMass->Fill();
 		sigW->Fill();
 		bkgW->Fill();
 		if (bMASS > 5400 && bMASS < 5700)
@@ -469,37 +459,17 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 			sigW_training->Fill();
 			bkgW_training->Fill();
 		}
-
-		//treeOut->Fill();
 	}
 
-	// treeOut->SetBranchStatus("*",0);
-	// treeOut->SetBranchStatus("SW",1);
-	// treeOut->SetBranchStatus("BW",1);
-	// treeOut->SetBranchStatus("Added_H_PT",1);
-	// treeOut->SetBranchStatus("psi_1S_H_MINIPCHI2",1);
-	// treeOut->SetBranchStatus("psi_1S_H_VERTEXCHI2_NEW",1);
-	// treeOut->SetBranchStatus("psi_1S_H_IPCHI2_NEW",1);//Maybe also use IP_NEW?
-	// treeOut->SetBranchStatus("psi_1S_H_IP_NEW",1);
-	// treeOut->SetBranchStatus("psi_1S_H_FD_NEW",1);
-	// treeOut->SetBranchStatus("psi_1S_H_FDCHI2_NEW",1);
-	// treeOut->SetBranchStatus("psi_1S_H_VERTEX_Z_NEW",1);
-	// treeOut->SetBranchStatus("Added_H_TRACKCHI2",1);
-	// treeOut->SetBranchStatus("Added_H_GHOST",1);
-	// treeOut->SetBranchStatus("Lb_H_OPENING",1);
-	// treeOut->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-
-	//fileOut_training = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_forIsoTraining.root",run,type),"RECREATE");
-	cout<<"Copying tree with s-weights to make signal training file for isolation"<<endl;
-	//treeOut_training = (TTree*)treeOut->CopyTree("Lb_DTF_M_JpsiLConstr > 5400 && Lb_DTF_M_JpsiLConstr < 5700");
-
+	//Activate only necessary branches in isolation training tree.
+	//It only needs to contain training variables + weights
 	treeOut_training->SetBranchStatus("*",0);
 	treeOut_training->SetBranchStatus("SW",1);
 	treeOut_training->SetBranchStatus("BW",1);
 	treeOut_training->SetBranchStatus("Added_H_PT",1);
 	treeOut_training->SetBranchStatus("psi_1S_H_MINIPCHI2",1);
 	treeOut_training->SetBranchStatus("psi_1S_H_VERTEXCHI2_NEW",1);
-	treeOut_training->SetBranchStatus("psi_1S_H_IPCHI2_NEW",1);//Maybe also use IP_NEW?
+	treeOut_training->SetBranchStatus("psi_1S_H_IPCHI2_NEW",1);
 	treeOut_training->SetBranchStatus("psi_1S_H_IP_NEW",1);
 	treeOut_training->SetBranchStatus("psi_1S_H_FD_NEW",1);
 	treeOut_training->SetBranchStatus("psi_1S_H_FDCHI2_NEW",1);
@@ -509,6 +479,7 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	treeOut_training->SetBranchStatus("Lb_H_OPENING",1);
 	treeOut_training->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 
+	//Give aliases to the branches in isolation training tree
 	treeOut_training->SetAlias("PT","Added_H_PT");
 	treeOut_training->SetAlias("MINIPCHI2","psi_1S_H_MINIPCHI2");
 	treeOut_training->SetAlias("VCHI2DOF","psi_1S_H_VERTEXCHI2_NEW");
@@ -519,36 +490,6 @@ void DoSPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL",
 	treeOut_training->SetAlias("TRACKORIVX_Z","psi_1S_H_VERTEXCHI2_NEW");
 	treeOut_training->SetAlias("GHOSTPROB","Added_H_GHOST");
 	treeOut_training->SetAlias("TRACKCHI2DOF","Added_H_TRACKCHI2");
-
-	// treeOut->SetBranchStatus("*",1);
-
-	cout<<"Done writing output tree with unbinned sWeighted data"<<endl;
-
-	//fileOut_training->cd();
-	// treeOut_training->Write();
-	// fileOut_training->Close();
-
-	cout<<"Done writing signal training file for isolation"<<endl;
-
-	// fileOut_nonZeroTracks = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw_nonZeroTracks.root",run,type),"RECREATE");
-	// cout<<"Copying tree with s-weights to make nonZeroTracks file"<<endl;
-	// treeOut_nonZeroTracks = (TTree*)treeOut->CopyTree("Added_n_Particles > 0");
-	//
-	// fileOut_nonZeroTracks->cd();
-	// treeOut_nonZeroTracks->Write();
-	// fileOut_nonZeroTracks->Close();
-	//
-	// cout<<"Done writing output tree with unbinned sWeighted data for nonZeroTracks"<<endl;
-	//
-	// fileOut_ZeroTracks = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_withsw_ZeroTracks.root",run,type),"RECREATE");
-	// cout<<"Copying tree with s-weights to make ZeroTracks file"<<endl;
-	// treeOut_ZeroTracks = (TTree*)treeOut->CopyTree("Added_n_Particles == 0");
-	//
-	// fileOut_ZeroTracks->cd();
-	// treeOut_ZeroTracks->Write();
-	// fileOut_ZeroTracks->Close();
-	//
-	// cout<<"Done writing output tree with unbinned sWeighted data for ZeroTracks"<<endl;
 
 	cout<<"Finishing DoSPlot()"<<endl;
 }

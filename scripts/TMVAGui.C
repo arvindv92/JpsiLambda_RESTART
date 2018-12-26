@@ -103,12 +103,12 @@ void TMVAGui( const char* fName = "TMVA.root" )
    while ((str = (TObjString*)it())) {
       TString tmp   = str->GetString();
       TString title = Form( "Input variables '%s'-transformed (training sample)", 
-                            tmp.ReplaceAll("InputVariables_","").Data() );
+                            tmp.ReplaceAll("InputVariables_","") );
       if (tmp.Contains( "Id" )) title = "Input variables (training sample)";
       ActionButton( cbar, 
                     Form( "(%i%c) %s", ic, ch++, title.Data() ),
-                    Form( ".x variables.C(\"%s\",\"%s\",\"%s\")", fName, str->GetString().Data(), title.Data() ),
-                    Form( "Plots all '%s'-transformed input variables (macro variables.C(...))", str->GetString().Data() ),
+                    Form( ".x variables.C(\"%s\",\"%s\",\"%s\")", fName, str->GetString(), title.Data() ),
+                    Form( "Plots all '%s'-transformed input variables (macro variables.C(...))", str->GetString() ),
                     buttonType, str->GetString() );
    }      
    ic++;
@@ -118,13 +118,13 @@ void TMVAGui( const char* fName = "TMVA.root" )
    while ((str = (TObjString*)it())) {
       TString tmp   = str->GetString();
       TString title = Form( "Input variable correlations '%s'-transformed (scatter profiles)", 
-                            tmp.ReplaceAll("InputVariables_","").Data() );
+                            tmp.ReplaceAll("InputVariables_","") );
       if (tmp.Contains( "Id" )) title = "Input variable correlations (scatter profiles)";
       ActionButton( cbar, 
                     Form( "(%i%c) %s", ic, ch++, title.Data() ),
-                    Form( ".x CorrGui.C(\"%s\",\"%s\",\"%s\")", fName, str->GetString().Data(), title.Data() ),
+                    Form( ".x CorrGui.C(\"%s\",\"%s\",\"%s\")", fName, str->GetString(), title.Data() ),
                     Form( "Plots all correlation profiles between '%s'-transformed input variables (macro CorrGui.C(...))", 
-                          str->GetString().Data() ),
+                          str->GetString() ),
                     buttonType, str->GetString() );
    }      
   

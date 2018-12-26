@@ -48,10 +48,10 @@ void Trigger(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcTyp
 		TChain *h1 = new TChain("Lb2JpsiLTree/MyTuple");
 		TChain *h2 = new TChain("GetIntegratedLuminosity/LumiTuple");
 
-		if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/data/JpsiLambda/run%d/trigger_log.txt",run).Data());
+		if(logFlag) gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/trigger_log.txt",run));
 
 		CollateFiles(run, year, isData, mcType, &h1, &h2, testing, loose, logFlag);//CollateFiles will cd to the massdump folder and then back to JpsiLambda_RESTART
-		fileOut = new TFile(TString::Format("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_%d.root",run,year),"RECREATE");
+		fileOut = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_%d.root",run,year),"RECREATE");
 
 		h2->Draw("IntegratedLuminosity>>lumiHist","","goff");
 		h2->Draw("IntegratedLuminosityErr>>lumiErrHist","","goff");
@@ -76,48 +76,48 @@ void Trigger(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcTyp
 	{
 		if(mcType == 1)//Jpsi Lambda
 		{
-			if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/mc/JpsiLambda/run%d/trigger_log.txt",run).Data());
-			genFile.open(TString::Format("logs/mc/JpsiLambda/run%d/gen_log.txt",run).Data());
+			if(logFlag) gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/run%d/trigger_log.txt",run));
+			genFile.open(Form("logs/mc/JpsiLambda/run%d/gen_log.txt",run));
 
 			cout<<"PROCESSING MC for Run "<<run<<" Jpsi Lambda"<<endl;
 
 			if(collateFlag) CollateFiles(run, year, isData, mcType);
 
-			fileIn = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda.root",run));
+			fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda.root",run));
 			treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
 			treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
 
-			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_triggered.root",run),"RECREATE");
+			fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/run%d/jpsilambda_triggered.root",run),"RECREATE");
 		}
 		if(mcType == 2)//Jpsi Sigma
 		{
-			if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/mc/JpsiSigma/run%d/trigger_log.txt",run).Data());
-			genFile.open(TString::Format("logs/mc/JpsiSigma/run%d/gen_log.txt",run).Data());
+			if(logFlag) gROOT->ProcessLine(Form(".> logs/mc/JpsiSigma/run%d/trigger_log.txt",run));
+			genFile.open(Form("logs/mc/JpsiSigma/run%d/gen_log.txt",run));
 
 			cout<<"PROCESSING MC for Run "<<run<<" Jpsi Lambda"<<endl;
 
 			if(collateFlag) CollateFiles(run, year, isData, mcType);
 
-			fileIn = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma.root",run));
+			fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma.root",run));
 			treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
 			treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
 
-			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_triggered.root",run),"RECREATE");
+			fileOut = new TFile(Form("rootFiles/mcFiles/JpsiSigma/run%d/jpsisigma_triggered.root",run),"RECREATE");
 		}
 		if(mcType == 3)//Jpsi Xi
 		{
-			if(logFlag) gROOT->ProcessLine(TString::Format(".> logs/mc/JpsiXi/run%d/trigger_log.txt",run).Data());
-			genFile.open(TString::Format("logs/mc/JpsiXi/run%d/gen_log.txt",run).Data());
+			if(logFlag) gROOT->ProcessLine(Form(".> logs/mc/JpsiXi/run%d/trigger_log.txt",run));
+			genFile.open(Form("logs/mc/JpsiXi/run%d/gen_log.txt",run));
 
 			cout<<"PROCESSING MC for Run "<<run<<" Jpsi Lambda"<<endl;
 
 			if(collateFlag) CollateFiles(run, year, isData, mcType);
 
-			fileIn = TFile::Open(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi.root",run));
+			fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiXi/run%d/jpsixi.root",run));
 			treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
 			treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
 
-			fileOut = new TFile(TString::Format("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_triggered.root",run),"RECREATE");
+			fileOut = new TFile(Form("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_triggered.root",run),"RECREATE");
 		}
 		entries_gen = treeIn_gen->GetEntries();
 		genFile<<entries_gen<<endl;

@@ -26,18 +26,18 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData, Int_t mcType, TChain** h
 		// }
 		cout<<"WD = "<<gSystem->pwd()<<endl;
 
-		if(logFlag) gROOT->ProcessLine(TString::Format(".> /data1/avenkate/JpsiLambda_RESTART/logs/data/JpsiLambda/run%d/collate_%d_log.txt",run,year).Data());
+		if(logFlag) gROOT->ProcessLine(Form(".> /data1/avenkate/JpsiLambda_RESTART/logs/data/JpsiLambda/run%d/collate_%d_log.txt",run,year));
 		cout<<"Adding Run "<<run<<" Data ROOT files for "<<year<<" to TChain. Sit tight"<<endl;
 
 		if(loose)
 		{
-			gSystem->Exec(TString::Format("ls /data1/avenkate/JpsiLambda/massdump/data/LooseLL/%d_Mag*/*/jpsilambda.root > run%dFiles_%d.txt",year,run,year).Data());
+			gSystem->Exec(Form("ls /data1/avenkate/JpsiLambda/massdump/data/LooseLL/%d_Mag*/*/jpsilambda.root > run%dFiles_%d.txt",year,run,year));
 		}
 		else
 		{
-			gSystem->Exec(TString::Format("ls /data1/avenkate/JpsiLambda/massdump/data/%d_Mag*/*/jpsilambda.root > run%dFiles_%d.txt",year,run,year).Data());
+			gSystem->Exec(Form("ls /data1/avenkate/JpsiLambda/massdump/data/%d_Mag*/*/jpsilambda.root > run%dFiles_%d.txt",year,run,year));
 		}
-		TFileCollection fc_run(TString::Format("run%d",run).Data(),"",TString::Format("run%dFiles_%d.txt",run,year).Data());
+		TFileCollection fc_run(Form("run%d",run),"",Form("run%dFiles_%d.txt",run,year));
 		TCollection *run_list = (TCollection*)fc_run.GetList();
 		if(testing)
 		{
@@ -52,18 +52,18 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData, Int_t mcType, TChain** h
 
 		// if(run == 1)
 		// {
-		//      if(logFlag) gROOT->ProcessLine(TString::Format(".> /data1/avenkate/JpsiLambda_RESTART/logs/data/JpsiLambda/run1/collate_%d_log.txt",year).Data());
+		//      if(logFlag) gROOT->ProcessLine(Form(".> /data1/avenkate/JpsiLambda_RESTART/logs/data/JpsiLambda/run1/collate_%d_log.txt",year));
 		//      cout<<"Adding Run 1 Data ROOT files for "<<year<<" to TChain. Sit tight"<<endl;
 		//
 		//      if(loose)
 		//      {
-		//              gSystem->Exec(TString::Format("ls /data1/avenkate/JpsiLambda/massdump/data/LooseLL/%d_Mag*/*/jpsilambda.root > run1Files_%d.txt",year,year).Data());
+		//              gSystem->Exec(Form("ls /data1/avenkate/JpsiLambda/massdump/data/LooseLL/%d_Mag*/*/jpsilambda.root > run1Files_%d.txt",year,year));
 		//      }
 		//      else
 		//      {
-		//              gSystem->Exec(TString::Format("ls /data1/avenkate/JpsiLambda/massdump/data/%d_Mag*/*/jpsilambda.root > run1Files_%d.txt",year,year).Data());
+		//              gSystem->Exec(Form("ls /data1/avenkate/JpsiLambda/massdump/data/%d_Mag*/*/jpsilambda.root > run1Files_%d.txt",year,year));
 		//      }
-		//      TFileCollection fc_run1("run1","",TString::Format("run1Files_%d.txt",year).Data());
+		//      TFileCollection fc_run1("run1","",Form("run1Files_%d.txt",year));
 		//      TCollection *run1_list = (TCollection*)fc_run1.GetList();
 		//      if(testing)
 		//      {

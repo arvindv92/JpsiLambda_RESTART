@@ -42,7 +42,7 @@ Output file = rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_forIsoTraining_m
 ******************************************
 Incoming entries = 408371
 I am making the following mass cuts. Sit tight
-@Õ	4
+@ï¿½	4ï¿½
 Outgoing entries = 160635
 ==> End of massCut! Cheers!: Real time 0:00:08, CP time 7.470
 Info in <TUnixSystem::ACLiC>: creating shared library /data1/avenkate/JpsiLambda_RESTART/scripts/./TrainIsolation_C.so

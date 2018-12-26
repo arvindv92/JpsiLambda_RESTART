@@ -25,19 +25,19 @@ void MASTER_FIXED(Int_t year)
 		//Trigger Cut
 		gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 		gROOT->ProcessLine(".L Trigger.C++");
-		gROOT->ProcessLine(TString::Format("Trigger(%d, %d, %d, %d, %d, %d, %d)",run, year, isData, mcType, testing, loose, logFlag).Data());
+		gROOT->ProcessLine(Form("Trigger(%d, %d, %d, %d, %d, %d, %d)",run, year, isData, mcType, testing, loose, logFlag));
 		gROOT->Reset();
 
 		//Sanity Cuts
 		gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 		gROOT->ProcessLine(".L Sanity.C++");
-		gROOT->ProcessLine(TString::Format("Sanity(%d, %d, %d, %d, %d)", run, year, isData, mcType, logFlag).Data());
+		gROOT->ProcessLine(Form("Sanity(%d, %d, %d, %d, %d)", run, year, isData, mcType, logFlag));
 		gROOT->Reset();
 
 		//Cut Out Ks0
 		gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 		gROOT->ProcessLine(".L CutOutKs.C++");
-		gROOT->ProcessLine(TString::Format("CutOutKs(%d, %d, %d, %d, %d, %d)", run, year, isData, mcType, trackType, logFlag).Data());
+		gROOT->ProcessLine(Form("CutOutKs(%d, %d, %d, %d, %d, %d)", run, year, isData, mcType, trackType, logFlag));
 		gROOT->Reset();
 
 		//sWeight data
@@ -45,7 +45,7 @@ void MASTER_FIXED(Int_t year)
 		// {
 		//      gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 		//      gROOT->ProcessLine(".L DosPlot.C++");
-		//      gROOT->ProcessLine(TString::Format("DosPlot(%d, %d, %d)", run, trackType, logFlag).Data());
+		//      gROOT->ProcessLine(Form("DosPlot(%d, %d, %d)", run, trackType, logFlag));
 		//      gROOT->Reset();
 		// }
 	}
