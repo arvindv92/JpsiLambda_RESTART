@@ -11,6 +11,8 @@ void MASTER()
 	TStopwatch sw;
 	sw.Start();
 
+	gSystem->Exec("date");
+
 	Bool_t testing         = false; // when true, analysis will only run over a subset of data
 	Bool_t loose           = true;  // when true, analysis will run over data/MC from "loose" stripping line. Only LL
 	Int_t run              = 2;     // Run 1 or Run 2?
@@ -58,16 +60,16 @@ void MASTER()
 	//sWeight data
 	if(isData)
 	{
-		//sWeight zeroTracks data
+		//sWeight nonZeroTracks data
 		gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 		gROOT->ProcessLine(".L DoSWeight.C+");
-		gROOT->ProcessLine(Form("DoSWeight(%d, %d, %d, true)",
+		gROOT->ProcessLine(Form("DoSWeight(%d, %d, %d, false)",
 		                        run, trackType, logFlag));
 		gROOT->Reset();
 
-		//sWeight nonZeroTracks data
+		//sWeight ZeroTracks data
 		gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-		gROOT->ProcessLine(Form("DoSWeight(%d, %d, %d, false)",
+		gROOT->ProcessLine(Form("DoSWeight(%d, %d, %d, true)",
 		                        run, trackType, logFlag));
 		gROOT->Reset();
 	}
