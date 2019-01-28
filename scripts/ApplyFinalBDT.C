@@ -83,8 +83,8 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 		switch(mcType)
 		{
 		case 1: //JpsiLambda
-			logFolder  = Form("logs/mc/JpsiLambda/run%d",run);
-			rootFolder = Form("rootFiles/mcFiles/JpsiLambda/run%d",run);
+			logFolder  = Form("logs/mc/JpsiLambda/JpsiLambda/run%d",run);
+			rootFolder = Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d",run);
 			if(logFlag) gROOT->ProcessLine(Form(".> %s/%s",logFolder,logFileName));
 			if(isoFlag)
 			{
@@ -120,8 +120,8 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 			}
 			break;
 		case 2: //JpsiSigma
-			logFolder  = Form("logs/mc/JpsiSigma/run%d",run);
-			rootFolder = Form("rootFiles/mcFiles/JpsiSigma/run%d",run);
+			logFolder  = Form("logs/mc/JpsiLambda/JpsiSigma/run%d",run);
+			rootFolder = Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d",run);
 			if(logFlag) gROOT->ProcessLine(Form(".> %s/%s",logFolder,logFileName));
 			if(isoFlag)
 			{
@@ -157,8 +157,8 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 			}
 			break;
 		case 3: //JpsiXi
-			logFolder  = Form("logs/mc/JpsiXi/run%d",run);
-			rootFolder = Form("rootFiles/mcFiles/JpsiXi/run%d",run);
+			logFolder  = Form("logs/mc/JpsiLambda/JpsiXi/run%d",run);
+			rootFolder = Form("rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d",run);
 			if(logFlag) gROOT->ProcessLine(Form(".> %s/%s",logFolder,logFileName));
 			if(isoFlag)
 			{

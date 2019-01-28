@@ -1,0 +1,95 @@
+/********************************
+   Author : Aravindhan V.
+ *********************************/
+#include "CollateFiles_JpsiXi.h"
+
+using namespace std;
+
+void CollateFiles_JpsiXi(Int_t run, Int_t year, Bool_t isData, TChain** h1, TChain** h2, Bool_t testing, Bool_t loose, Bool_t logFlag)//defaults provided in header
+/*DOC
+   run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
+   isData = true for data, false for MC
+   testing = true to run only over a subset of data
+   loose = true to run over data from loose stripping line. Only LL for loose stripping line
+ */
+{
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+
+	//Set up logging
+	if(isData && logFlag)
+	{
+		gROOT->ProcessLine(Form(".> logs/data/JpsiXi/run%d/collate_%d_log.txt",run,year));
+	}
+	else if(!isData && logFlag)
+	{
+		gROOT->ProcessLine(Form(".> logs/mc/JpsiXi/run%d/collate_log.txt",run));
+	}
+
+	cout<<"******************************************"<<endl;
+	cout<<"==> Starting JpsiXi CollateFiles: "<<endl;
+	gSystem->Exec("date");
+	cout<<"WD = "<<gSystem->pwd()<<endl;
+	cout<<"******************************************"<<endl;
+
+	if(isData)
+	{
+		cout<<"Adding Run "<<run<<" Data ROOT files for "<<year<<" to TChain. Sit tight"<<endl;
+
+		const char *dir = "/data1/avenkate/JpsiXi/data";
+		if(loose)
+		{
+			gSystem->Exec(Form("ls %s/LooseLL/%d_Mag*/*/jpsixi.root > run%dFiles_Xi_%d.txt",
+			                   dir,year,run,year));
+		}
+		else
+		{
+			gSystem->Exec(Form("ls %s/%d_Mag*/*/jpsixi.root > run%dFiles_Xi_NotLoose_%d.txt",
+			                   dir,year,run,year));
+		}
+		TFileCollection fc_run(Form("run%d",run),"",Form("run%dFiles_Xi_%d.txt",run,year));
+		TCollection *run_list = (TCollection*)fc_run.GetList();
+		if(testing)
+		{
+			(*h1)->AddFileInfoList(run_list,50);//add only files from 50 subjobs for testing purposes
+			(*h2)->AddFileInfoList(run_list,50);
+		}
+		else
+		{
+			(*h1)->AddFileInfoList(run_list);
+			(*h2)->AddFileInfoList(run_list);
+		}
+		cout<<"DONE ATTACHING ROOT FILES"<<endl;
+	}//end Data block
+
+	else //MC
+	{
+		cout<<"Collating MC for ";
+		if(loose)
+		{
+			gSystem->cd("/data1/avenkate/JpsiXi/mc/LooseLL/Pythia8");
+		}
+		else
+		{
+			gSystem->cd("/data1/avenkate/JpsiXi/mc/Pythia8");
+		}
+		cout<<"WD = "<<gSystem->pwd()<<endl;
+
+		cout<<"JpsiXi Run "<<run<<endl;
+		if(run == 1)
+		{
+			gSystem->Exec("hadd -f /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiXi/run1/jpsixi.root 2011*/*/*.root 2012*/*/*.root");
+		}
+		else if(run == 2)
+		{
+			gSystem->Exec("hadd -f /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiXi/run2/jpsixi.root 2015*/*/*.root 2016*/*/*.root");
+		}
+	}//end MC block
+
+	cout<<"DONE COLLATING"<<endl;
+
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	cout<<"WD = "<<gSystem->pwd()<<endl;
+
+	if(logFlag) gROOT->ProcessLine(".>");
+	// gSystem->Exec("cat collate_log.txt");
+}

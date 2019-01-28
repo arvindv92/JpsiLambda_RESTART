@@ -1,6 +1,6 @@
 /********************************
    Author : Aravindhan V.
-   The purpose of this script is to apply trigger cuts on data/MC coming out of DaVinci.
+   The purpose of this script is to apply trigger cuts on Xib -> J/psi Xi data/MC coming out of DaVinci.
  *********************************/
 #include "TFile.h"
 #include "TChain.h"
@@ -9,7 +9,7 @@
 #include "TROOT.h"
 #include "TSystem.h"
 #include "TStopwatch.h"
-#include "CollateFiles.h"
+#include "CollateFiles_JpsiXi.h"
 #include <iostream>
 #include <fstream>
 
@@ -17,33 +17,24 @@ using namespace std;
 /* DOCUMENTATION
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = true for data, false for MC
-   mcType = 0 when running over data. When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
    testing = true to run only over a subset of data
    loose = true to run over data from loose stripping line. Only LL for loose stripping line
  */
-void Trigger(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcType = 0, Bool_t testing = false, Bool_t loose = true, Bool_t logFlag = false)
+void Trigger_JpsiXi(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Bool_t testing = false, Bool_t loose = true, Bool_t logFlag = false)
 {
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
 	//Set up logging
 	if(isData && logFlag)
 	{
-		gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/trigger_%d_log.txt",run,year));
+		gROOT->ProcessLine(Form(".> logs/data/JpsiXi/run%d/trigger_%d_log.txt",run,year));
 	}
-	else if(!isData && logFlag && mcType == 1)
+	else if(!isData && logFlag)
 	{
-		gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiLambda/run%d/trigger_log.txt",run));
-	}
-	else if(!isData && logFlag && mcType == 2)
-	{
-		gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiSigma/run%d/trigger_log.txt",run));
-	}
-	else if(!isData && logFlag && mcType == 3)
-	{
-		gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiXi/run%d/trigger_log.txt",run));
+		gROOT->ProcessLine(Form(".> logs/mc/JpsiXi/run%d/trigger_log.txt",run));
 	}
 
-	TStopwatch sw;
+	TStopwatch sw;//helps times stages
 	sw.Start();
 
 	cout<<"******************************************"<<endl;
@@ -52,7 +43,7 @@ void Trigger(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcTyp
 	gSystem->Exec("date");
 	cout<<"******************************************"<<endl;
 
-	gROOT->ProcessLine(".L scripts/CollateFiles.C++");//Chains/hadds input files
+	gROOT->ProcessLine(".L scripts/CollateFiles_JpsiXi.C++");//Chains/hadds input files
 
 	Int_t entries_init = 0, entries_final = 0, entries_gen = 0;
 	Float_t eff_excl   = 0., eff_excl_err = 0.;
@@ -65,23 +56,23 @@ void Trigger(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcTyp
 	TFile *fileOut = nullptr, *fileIn     = nullptr;
 	TTree *treeIn  = nullptr, *treeIn_gen = nullptr;
 	TTree *treeOut = nullptr, *myTree     = nullptr;
-	const char *triggerCut = "(Lb_Hlt1DiMuonHighMassDecision_TOS==1||Lb_Hlt1TrackMuonDecision_TOS==1||Lb_Hlt1TrackAllL0Decision_TOS==1)&&(Lb_Hlt2DiMuonDetachedJPsiDecision_TOS==1)";
-	ofstream genFile;//The number of generated MC entries in every MC case will be written out to this file, so that it can be accessed for calculating exclusive efficiencies later
+	const char *triggerCut = "(Xib_Hlt1DiMuonHighMassDecision_TOS==1||Xib_Hlt1TrackMuonDecision_TOS==1||Xib_Hlt1TrackAllL0Decision_TOS==1)&&(Xib_Hlt2DiMuonDetachedJPsiDecision_TOS==1)";
+	ofstream genFile;//contains no of generated candidates in MC.
 
 	// Set up input, output
 	if(isData)
 	{
-		Double_t lumi     = 0., lumiErr = 0.;
-		Double_t lumiMean = 0., lumiErrMean = 0.;
+		Double_t lumi     = 0., lumiErr       = 0.;
+		Double_t lumiMean = 0., lumiErrMean   = 0.;
 		Int_t lumiEntries = 0, lumiErrEntries = 0;
 
 		TH1D *lumiHist = nullptr, *lumiErrHist = nullptr;
-		TChain *h1 = new TChain("Lb2JpsiLTree/MyTuple");
+		TChain *h1 = new TChain("Xib2JpsiXiTree/MyTuple");
 		TChain *h2 = new TChain("GetIntegratedLuminosity/LumiTuple");
 
-		CollateFiles(run, year, isData, mcType, &h1, &h2, testing, loose, logFlag);//CollateFiles will cd to the massdump folder and then back to JpsiLambda_RESTART
+		CollateFiles_JpsiXi(run, year, isData, &h1, &h2, testing, loose, logFlag);//CollateFiles will cd to the massdump folder and then back to JpsiLambda_RESTART
 
-		fileOut = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_%d.root",run,year),"RECREATE");
+		fileOut = new TFile(Form("rootFiles/dataFiles/JpsiXi/run%d/jpsixi_triggered_%d.root",run,year),"RECREATE");
 
 		h2->Draw("IntegratedLuminosity>>lumiHist","","goff");
 		h2->Draw("IntegratedLuminosityErr>>lumiErrHist","","goff");
@@ -94,7 +85,7 @@ void Trigger(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcTyp
 		lumiErrMean    = lumiErrHist->GetMean();
 		lumiErrEntries = lumiErrHist->GetEntries();
 
-		lumi = lumiMean*lumiEntries;
+		lumi    = lumiMean*lumiEntries;
 		lumiErr = lumiErrMean*lumiErrEntries;
 
 		cout<<"Processing "<<lumi<<" +/- "<<lumiErr<< "luminosity"<<endl;
@@ -104,48 +95,18 @@ void Trigger(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcTyp
 
 	else //MC
 	{
-		if(mcType == 1)//Jpsi Lambda
-		{
-			genFile.open(Form("logs/mc/JpsiLambda/JpsiLambda/run%d/gen_log.txt",run));
+		genFile.open(Form("logs/mc/JpsiXi/run%d/gen_log.txt",run));
 
-			cout<<"PROCESSING MC for Run "<<run<<" Jpsi Lambda"<<endl;
+		cout<<"PROCESSING MC for Run "<<run<<" Jpsi Xi"<<endl;
 
-			if(collateFlag) CollateFiles(run, year, isData, mcType);
+		if(collateFlag) CollateFiles_JpsiXi(run, year, isData);
 
-			fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda.root",run));
-			treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
-			treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
+		fileIn     = TFile::Open(Form("rootFiles/mcFiles/JpsiXi/run%d/jpsixi.root",run));
+		treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
+		treeIn     = (TTree*)fileIn->Get("Xib2JpsiXiTree/MyTuple");
 
-			fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_triggered.root",run),"RECREATE");
-		}
-		if(mcType == 2)//Jpsi Sigma
-		{
-			genFile.open(Form("logs/mc/JpsiLambda/JpsiSigma/run%d/gen_log.txt",run));
+		fileOut = new TFile(Form("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_triggered.root",run),"RECREATE");
 
-			cout<<"PROCESSING MC for Run "<<run<<" Jpsi Lambda"<<endl;
-
-			if(collateFlag) CollateFiles(run, year, isData, mcType);
-
-			fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma.root",run));
-			treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
-			treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
-
-			fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_triggered.root",run),"RECREATE");
-		}
-		if(mcType == 3)//Jpsi Xi
-		{
-			genFile.open(Form("logs/mc/JpsiLambda/JpsiXi/run%d/gen_log.txt",run));
-
-			cout<<"PROCESSING MC for Run "<<run<<" Jpsi Lambda"<<endl;
-
-			if(collateFlag) CollateFiles(run, year, isData, mcType);
-
-			fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi.root",run));
-			treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
-			treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
-
-			fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi_triggered.root",run),"RECREATE");
-		}
 		entries_gen = treeIn_gen->GetEntries();
 		genFile<<entries_gen<<endl;
 		genFile.close();
@@ -169,10 +130,10 @@ void Trigger(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcTyp
 
 	treeOut = (TTree*)myTree->CloneTree(0);
 
-	myTree->SetBranchAddress("Lb_Hlt1DiMuonHighMassDecision_TOS",&hlt1DiMuonHighMass);
-	myTree->SetBranchAddress("Lb_Hlt1TrackMuonDecision_TOS",&hlt1TrackMuon);
-	myTree->SetBranchAddress("Lb_Hlt1TrackAllL0Decision_TOS",&hlt1TrackAllL0);
-	myTree->SetBranchAddress("Lb_Hlt2DiMuonDetachedJPsiDecision_TOS",&hlt2DiMuonDetached);
+	myTree->SetBranchAddress("Xib_Hlt1DiMuonHighMassDecision_TOS",&hlt1DiMuonHighMass);
+	myTree->SetBranchAddress("Xib_Hlt1TrackMuonDecision_TOS",&hlt1TrackMuon);
+	myTree->SetBranchAddress("Xib_Hlt1TrackAllL0Decision_TOS",&hlt1TrackAllL0);
+	myTree->SetBranchAddress("Xib_Hlt2DiMuonDetachedJPsiDecision_TOS",&hlt2DiMuonDetached);
 
 	cout<<"I am making the following trigger cuts. Sit tight"<<endl;
 	cout<<triggerCut<<endl;
