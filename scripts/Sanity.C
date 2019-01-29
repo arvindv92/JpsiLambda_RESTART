@@ -21,7 +21,8 @@ void Sanity(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcType
    isData = 1 for data, 0 for MC
    mcType = 0 when running over data. When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
  */
-/*
+/***MODIFIED TM CUTS REMOVED. I HATE TM*******
+   /*
    NB: BKGCAT applies to MC, but not data. Read  Steve's analysis and think about exactly what TM condition is to be applied
    Lb_DTF_CTAU_L -> Lb_TAU
    DTFchi2 cut is now 0-50
@@ -86,7 +87,7 @@ void Sanity(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcType
 	{
 		switch(mcType)
 		{
-		case 1:                 //JpsiLambda
+		case 1:                         //JpsiLambda
 			if(!gSystem->AccessPathName((Form("logs/mc/JpsiLambda/JpsiLambda/run%d/gen_log.txt",run))))
 			{
 				genFile.open((Form("logs/mc/JpsiLambda/JpsiLambda/run%d/gen_log.txt",run)));
@@ -102,7 +103,7 @@ void Sanity(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcType
 			treeOut_DD = (TTree*)treeIn->CloneTree(0);
 			break;
 
-		case 2: //JpsiSigma
+		case 2:         //JpsiSigma
 			if(!gSystem->AccessPathName((Form("logs/mc/JpsiLambda/JpsiSigma/run%d/gen_log.txt",run))))
 			{
 				genFile.open((Form("logs/mc/JpsiLambda/JpsiSigma/run%d/gen_log.txt",run)));
@@ -118,7 +119,7 @@ void Sanity(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcType
 			treeOut_DD = (TTree*)treeIn->CloneTree(0);
 			break;
 
-		case 3: //JpsiXi
+		case 3:         //JpsiXi
 			if(!gSystem->AccessPathName((Form("logs/mc/JpsiLambda/JpsiXi/run%d/gen_log.txt",run))))
 			{
 				genFile.open((Form("logs/mc/JpsiLambda/JpsiXi/run%d/gen_log.txt",run)));
@@ -189,21 +190,22 @@ void Sanity(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcType
 	{
 		pidCut = "(pi_PIDp != -1000 && p_PIDp!= -1000)";
 	}
-	if(!isData)
-	{
-		if(mcType == 1)
-		{
-			tmCut  = "(abs(p_MOTHER_ID) == 3122 && abs(pi_MOTHER_ID) == 3122 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 5122)";
-		}
-		if(mcType == 2)
-		{
-			tmCut  = "(abs(p_MOTHER_ID) == 3122 && abs(pi_MOTHER_ID) == 3122 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 3212 && abs(L_GD_MOTHER_ID) == 5122)";
-		}
-		if(mcType == 2)
-		{
-			tmCut  = "(abs(p_MOTHER_ID) == 3122 && abs(pi_MOTHER_ID) == 3122 && abs(Jpsi_MOTHER_ID) == 5132 && abs(L_MOTHER_ID) == 3312 && abs(L_GD_MOTHER_ID) == 5122)";
-		}
-	}
+	// if(!isData)
+	// {
+	//      if(mcType == 1)
+	//      {
+	//              // tmCut  = "(abs(p_MOTHER_ID) == 3122 && abs(pi_MOTHER_ID) == 3122 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 5122)";
+	//              tmCut = "(abs(Lb_TRUEID == 5122) || (Lb_BKGCAT == 60 && abs(Lb_DTF_M_JpsiLConstr - 5620) < 35))";
+	//      }
+	//      if(mcType == 2)
+	//      {
+	//              tmCut  = "(abs(p_MOTHER_ID) == 3122 && abs(pi_MOTHER_ID) == 3122 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 3212 && abs(L_GD_MOTHER_ID) == 5122)";
+	//      }
+	//      if(mcType == 2)
+	//      {
+	//              tmCut  = "(abs(p_MOTHER_ID) == 3122 && abs(pi_MOTHER_ID) == 3122 && abs(Jpsi_MOTHER_ID) == 5132 && abs(L_MOTHER_ID) == 3312 && abs(L_GD_MOTHER_ID) == 5122)";
+	//      }
+	// }
 
 	cout<<"I am making the following sanity cuts, and then separating in LL and DD files. Sit tight"<<endl;
 
@@ -211,7 +213,7 @@ void Sanity(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcType
 	dtfCut.Print();
 	pidCut.Print();
 	accCut.Print();
-	if(!isData) tmCut.Print();
+	//if(!isData) tmCut.Print();
 
 	for(Int_t i = 0; i < entries_init; i++)
 	{
@@ -228,17 +230,17 @@ void Sanity(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcType
 				{
 					if((run == 1 && pi_PIDp != 0 && pi_PIDp != -1000 && pi_PIDK != 0 && p_PIDp !=0 && p_PIDp!= -1000 && p_PIDK !=0)|| (run == 2 && p_PIDp != -1000 && pi_PIDp != -1000))
 					{
-						if(isData == 1 || (isData == 0 && abs(p_MOTHER_ID) == 3122 && abs(pi_MOTHER_ID) == 3122 && (mcType == 1 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 5122) || (mcType == 2 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 3212 && abs(L_GD_MOTHER_ID) == 5122) || (mcType == 3 && abs(Jpsi_MOTHER_ID) == 5132 && abs(L_MOTHER_ID) == 3312 && abs(L_GD_MOTHER_ID) == 5122)))
+						// if( (isData == 1) || (isData == 0 && abs(p_MOTHER_ID) == 3122 && abs(pi_MOTHER_ID) == 3122 && ((mcType == 1 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 5122) || (mcType == 2 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 3212 && abs(L_GD_MOTHER_ID) == 5122) || (mcType == 3 && abs(Jpsi_MOTHER_ID) == 5132 && abs(L_MOTHER_ID) == 3312 && abs(L_GD_MOTHER_ID) == 5122))))
+						// {
+						if(p_TRACK_Type == 3)
 						{
-							if(p_TRACK_Type == 3)
-							{
-								treeOut_LL->Fill();
-							}
-							else
-							{
-								treeOut_DD->Fill();
-							}
+							treeOut_LL->Fill();
 						}
+						else
+						{
+							treeOut_DD->Fill();
+						}
+						// }
 					}
 				}
 			}

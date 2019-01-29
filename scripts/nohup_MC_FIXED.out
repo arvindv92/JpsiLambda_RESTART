@@ -1,0 +1,17 @@
+
+Processing MASTER_FIXED.C...
+*******PROCESSING RUN 1 MC TYPE 1********
+Info in <TUnixSystem::ACLiC>: creating shared library /data1/avenkate/JpsiLambda_RESTART/./scripts/CollateFiles_C.so
+*******PROCESSING RUN 2 MC TYPE 1********
+Info in <ACLiC>: unmodified script has already been compiled and loaded
+Info in <ACLiC>: unmodified script has already been compiled and loaded
+Info in <ACLiC>: it will be regenerated and reloaded!
+Info in <TUnixSystem::ACLiC>: creating shared library /data1/avenkate/JpsiLambda_RESTART/./scripts/CollateFiles_C.so
+g++: error: /data1/avenkate/JpsiLambda_RESTART/scripts/CollateFiles_C.so: No such file or directory
+Error in <ACLiC>: Compilation failed!
+Info in <ACLiC>: unmodified script has already been compiled and loaded
+input_line_81:2:3: error: use of undeclared identifier 'Sanity'
+ (Sanity(2, 2011, 0, 1, 1))
+  ^
+terminate called after throwing an instance of 'cling::CompilationException'
+  what():  Error evaluating expression (Sanity(2, 2011, 0, 1, 1))
