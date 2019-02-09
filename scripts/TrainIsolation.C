@@ -142,22 +142,32 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	dataloader->SetSignalWeightExpression("SW");
 	dataloader->SetBackgroundWeightExpression("SW");
 
-	dataloader->PrepareTrainingAndTestTree(myCut, myCut,
-	                                       "nTrain_Signal=0:nTrain_Background=0:"
-	                                       "SplitMode=Random:NormMode=NumEvents:"
-	                                       "!V");
+	Int_t nEntries_S = sigTree->GetEntries(myCut);
+	Int_t nEntries_B = bkgTree->GetEntries(myCut);
+
+	Int_t nTrain_S = (Int_t)nEntries_S*0.8;// 80/20 split
+	Int_t nTest_S  = nEntries_S - nTrain_S;
+
+	Int_t nTrain_B = (Int_t)nEntries_B*0.8;// 80/20 split
+	Int_t nTest_B  = nEntries_B - nTrain_B;
+
+	dataLoader->PrepareTrainingAndTestTree( myCutS, myCutB,
+	                                        Form("nTrain_Signal=%d:nTest_Signal=%d:"
+	                                             "nTrain_Background=%d:nTest_Background=%d"
+	                                             "SplitMode=Random:NormMode=NumEvents:!V",
+	                                             nTrain_S,nTest_S,nTrain_B,nTest_B));
 
 	factory->BookMethod(dataloader, TMVA::Types::kBDT, "isoConf1_300",
 	                    "!H:!V:NTrees=300:MinNodeSize=1.25%:MaxDepth=3:"
 	                    "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
 	                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
-	                    "nCuts=-1" );
+	                    "nCuts=200" );
 
 	factory->BookMethod(dataloader, TMVA::Types::kBDT, "isoConf2_300",
 	                    "!H:!V:NTrees=300:MinNodeSize=0.75%:MaxDepth=3:"
 	                    "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
 	                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
-	                    "nCuts=-1" );
+	                    "nCuts=200" );
 
 	/*	factory->BookMethod( TMVA::Types::kBDT, "BDTconf2",
 	   "!H:!V:NTrees=850:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.7:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=-1" );

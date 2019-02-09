@@ -2,7 +2,7 @@
    Author : Aravindhan V.
  *********************************/
 #include "TrainFinalBDT.h"
-void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
+void TrainFinalBDT_test(Int_t run, Int_t trackType, const char* isoVersion,
                    Int_t isoConf, Bool_t isoFlag, Bool_t logFlag,
                    Bool_t newFlag)
 /*
@@ -36,12 +36,12 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	type = (trackType == 3) ? ("LL") : ("DD");
 	if(isoFlag)
 	{
-		logFileName = Form("finalBDTTraining_%s_iso%d_%s%s_log.txt",
+		logFileName = Form("finalBDTTraining_%s_iso%d_%s%s_test_log.txt",
 		                   type,isoConf,mynew,isoVersion);
 	}
 	else if(!isoFlag)
 	{
-		logFileName = Form("finalBDTTraining_%s_noIso%s_log.txt",
+		logFileName = Form("finalBDTTraining_%s_noIso%s_test_log.txt",
 		                   type,mynew);
 	}
 
@@ -68,11 +68,11 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	if(isoFlag)
 	{
 		outfileName = Form("%s/TMVAtraining/iso/"
-		                   "TMVALite-JpsiLambda_%s_data_iso%d_%s%s.root",
+		                   "TMVALite-JpsiLambda_%s_data_iso%d_%s%s_test.root",
 		                   rootFolder,type,isoConf,isoVersion,mynew);
 		outputFile  = TFile::Open(outfileName, "RECREATE");
 		factory     = new TMVA::Factory(Form("TMVAClassificationLite-"
-		                                     "JpsiLambda%s_dataRun%d_iso%d_%s%s",
+		                                     "JpsiLambda%s_dataRun%d_iso%d_%s%s_test",
 		                                     type,run,isoConf,isoVersion,mynew),outputFile,
 		                                "!V:!Silent:Color:!DrawProgressBar:"
 		                                "AnalysisType=Classification");
@@ -80,11 +80,11 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	else
 	{
 		outfileName = Form("%s/TMVAtraining/noIso/"
-		                   "TMVALite-JpsiLambda%s_data_noIso%s.root",
+		                   "TMVALite-JpsiLambda%s_data_noIso%s_test.root",
 		                   rootFolder,type,mynew);
 		outputFile  = TFile::Open( outfileName, "RECREATE");
 		factory = new TMVA::Factory( Form("TMVAClassificationLite-"
-		                                  "JpsiLambda%s_dataRun%d_noIso%s",
+		                                  "JpsiLambda%s_dataRun%d_noIso%s_test",
 		                                  type,run,mynew), outputFile,
 		                             "!V:!Silent:Color:!DrawProgressBar:"
 		                             "AnalysisType=Classification" );
@@ -244,22 +244,21 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		myCutB = myCutB && Form("BDTkMin_%s < 1.0",isoVersion);
 	}
 	dataLoader->PrepareTrainingAndTestTree( myCutS, myCutB,
-	                                        Form("nTrain_Signal=%d:nTest_Signal=%d:"
-	                                             "nTrain_Background=%d:nTest_Background=%d"
-	                                             "SplitMode=Random:NormMode=NumEvents:!V",
-	                                             nTrain_S,nTest_S,nTrain_B,nTest_B));
+	                                        "nTrain_Signal=59045:nTest_Signal=59045:"
+						"nTrain_Background=20934:nTest_Background=20934"
+						"SplitMode=Random:NormMode=NumEvents:!V");
 
 	factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf1",
 	                    "!H:!V:NTrees=300:MinNodeSize=1.0%:MaxDepth=5:"
 	                    "BoostType=AdaBoost:AdaBoostBeta=0.2:UseBaggedBoost:"
 	                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
-	                    "nCuts=100" );
+	                    "nCuts=-1" );
 
 	factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf2",
 	                    "!H:!V:NTrees=300:MinNodeSize=0.5%:MaxDepth=5:"
 	                    "BoostType=AdaBoost:AdaBoostBeta=0.2:UseBaggedBoost:"
 	                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
-	                    "nCuts=100" );
+	                    "nCuts=-1" );
 
 	/*factory->BookMethod( TMVA::Types::kBDT, "BDTconf6",
 	   "!H:!V:NTrees=1000:MinNodeSize=0.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.3:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=-1" );

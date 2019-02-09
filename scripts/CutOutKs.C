@@ -14,29 +14,70 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = 1 for data, 0 for MC
-   mcType = 0 when running over data. When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
+   mcType = 0 when running over data.
+   When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
+   mcType = 4 for Bu_JpsiX, 5 for Bd_JpsiX
    trackType = 3 for LL, 5 for DD.
  */
 {
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
-
+	const char *folder = "", *part = "";
+	switch(mcType)
+	{
+	case 0:
+	{
+		folder = "";
+		part = "";
+		break;
+	}
+	case 1:
+	{
+		folder = "JpsiLambda";
+		part = "jpsilambda";
+		break;
+	}
+	case 2:
+	{
+		folder = "JpsiSigma";
+		part = "jpsisigma";
+		break;
+	}
+	case 3:
+	{
+		folder = "JpsiXi";
+		part = "jpsixi";
+		break;
+	}
+	case 4:
+	{
+		folder = "Bu_JpsiX";
+		part = "bu_jpsix";
+		break;
+	}
+	case 5:
+	{
+		folder = "Bd_JpsiX";
+		part = "bd_jpsix";
+		break;
+	}
+	}
 	//Set up logging
 	if(isData && logFlag)
 	{
 		gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/cutoutks_%d_log.txt",run,year));
 	}
-	else if(!isData && logFlag && mcType == 1)
+	else if(!isData && logFlag)
 	{
-		gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiLambda/run%d/cutoutks_log.txt",run));
+		gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/%s/run%d/cutoutks_log.txt",folder,run));
 	}
-	else if(!isData && logFlag && mcType == 2)
-	{
-		gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiSigma/run%d/cutoutks_log.txt",run));
-	}
-	else if(!isData && logFlag && mcType == 3)
-	{
-		gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiXi/run%d/cutoutks_log.txt",run));
-	}
+	// else if(!isData && logFlag && mcType == 2)
+	// {
+	//      gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiSigma/run%d/cutoutks_log.txt",run));
+	// }
+	// else if(!isData && logFlag && mcType == 3)
+	// {
+	//      gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiXi/run%d/cutoutks_log.txt",run));
+	// }
 
 	TStopwatch sw;
 	sw.Start();
@@ -72,78 +113,25 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 	//Setup input and output.
 	if(!isData)  // MC
 	{
-		switch(mcType)
+		logFolder        = Form("logs/mc/JpsiLambda/%s/run%d",folder,run);
+		rootFolder       = Form("rootFiles/mcFiles/JpsiLambda/%s/run%d",folder,run);
+		fileName_nonZero = Form("%s_cutoutks_%s_nonZeroTracks.root",part,type);
+		fileName_Zero    = Form("%s_cutoutks_%s_ZeroTracks.root",part,type);
+
+		if(!gSystem->AccessPathName((Form("%s/gen_log.txt",logFolder))))
 		{
-		case 1:                                         //JpsiLambda
-		{
-			logFolder        = Form("logs/mc/JpsiLambda/JpsiLambda/run%d",run);
-			rootFolder       = Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d",run);
-			fileName_nonZero = Form("jpsilambda_cutoutks_%s_nonZeroTracks.root",type);
-			fileName_Zero    = Form("jpsilambda_cutoutks_%s_ZeroTracks.root",type);
-
-			if(!gSystem->AccessPathName((Form("%s/gen_log.txt",logFolder))))
-			{
-				genFile.open((Form("%s/gen_log.txt",logFolder)));
-				genFlag = true;
-			}
-			else cout<<"*****GenFile not accessible!!*****"<<endl;
-
-			fileIn  = TFile::Open(Form("%s/jpsilambda_sanity_%s.root",rootFolder,type),"READ");
-			treeIn  = (TTree*)fileIn->Get("MyTuple");
-
-			fileOut_nonZero = new TFile(Form("%s/%s",rootFolder,fileName_nonZero),"RECREATE");
-			treeOut_nonZero = (TTree*)treeIn->CloneTree(0);
-			fileOut_Zero    = new TFile(Form("%s/%s",rootFolder,fileName_Zero),"RECREATE");
-			treeOut_Zero    = (TTree*)treeIn->CloneTree(0);
-			break;
+			genFile.open((Form("%s/gen_log.txt",logFolder)));
+			genFlag = true;
 		}
-		case 2:          //JpsiSigma
-		{
-			logFolder        = Form("logs/mc/JpsiLambda/JpsiSigma/run%d",run);
-			rootFolder       = Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d",run);
-			fileName_nonZero = Form("jpsisigma_cutoutks_%s_nonZeroTracks.root",type);
-			fileName_Zero    = Form("jpsisigma_cutoutks_%s_ZeroTracks.root",type);
+		else cout<<"*****GenFile not accessible!!*****"<<endl;
 
-			if(!gSystem->AccessPathName((Form("%s/gen_log.txt",logFolder))))
-			{
-				genFile.open((Form("%s/gen_log.txt",logFolder)));
-				genFlag = 1;
-			}
-			else cout<<"*****GenFile not accessible!!*****"<<endl;
+		fileIn  = TFile::Open(Form("%s/%s_sanity_%s.root",rootFolder,part,type),"READ");
+		treeIn  = (TTree*)fileIn->Get("MyTuple");
 
-			fileIn  = TFile::Open(Form("%s/jpsisigma_sanity_%s.root",rootFolder,type),"READ");
-			treeIn  = (TTree*)fileIn->Get("MyTuple");
-
-			fileOut_nonZero = new TFile(Form("%s/%s",rootFolder,fileName_nonZero),"RECREATE");
-			treeOut_nonZero = (TTree*)treeIn->CloneTree(0);
-			fileOut_Zero    = new TFile(Form("%s/%s",rootFolder,fileName_Zero),"RECREATE");
-			treeOut_Zero    = (TTree*)treeIn->CloneTree(0);
-			break;
-		}
-		case 3:                //JpsiXi
-		{
-			logFolder        = Form("logs/mc/JpsiLambda/JpsiXi/run%d",run);
-			rootFolder       = Form("rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d",run);
-			fileName_nonZero = Form("jpsixi_cutoutks_%s_nonZeroTracks.root",type);
-			fileName_Zero    = Form("jpsixi_cutoutks_%s_ZeroTracks.root",type);
-
-			if(!gSystem->AccessPathName((Form("%s/gen_log.txt",logFolder))))
-			{
-				genFile.open((Form("%s/gen_log.txt",logFolder)));
-				genFlag = true;
-			}
-			else cout<<"*****GenFile not accessible!!*****"<<endl;
-
-			fileIn  = TFile::Open(Form("%s/jpsixi_sanity_%s.root",rootFolder,type),"READ");
-			treeIn  = (TTree*)fileIn->Get("MyTuple");
-
-			fileOut_nonZero = new TFile(Form("%s/%s",rootFolder,fileName_nonZero),"RECREATE");
-			treeOut_nonZero = (TTree*)treeIn->CloneTree(0);
-			fileOut_Zero    = new TFile(Form("%s/%s",rootFolder,fileName_Zero),"RECREATE");
-			treeOut_Zero    = (TTree*)treeIn->CloneTree(0);
-			break;
-		}
-		}
+		fileOut_nonZero = new TFile(Form("%s/%s",rootFolder,fileName_nonZero),"RECREATE");
+		treeOut_nonZero = (TTree*)treeIn->CloneTree(0);
+		fileOut_Zero    = new TFile(Form("%s/%s",rootFolder,fileName_Zero),"RECREATE");
+		treeOut_Zero    = (TTree*)treeIn->CloneTree(0);
 	}
 	else   // Data
 	{

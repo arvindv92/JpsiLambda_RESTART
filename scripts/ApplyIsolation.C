@@ -361,6 +361,6 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	sw.Stop();// Get elapsed time
 	cout<< "==> End of ApplyIsolation! Isolated forever!: "; sw.Print();
 
-	if(logFlag) gSystem->RedirectOutput(0); //redirect back to stdout,stderr
-	//if(logFlag) gROOT->ProcessLine(".>");
+	if(logFlag && isData) gSystem->RedirectOutput(0); //redirect back to stdout,stderr
+	if(logFlag && !isData) gROOT->ProcessLine(".>");
 }

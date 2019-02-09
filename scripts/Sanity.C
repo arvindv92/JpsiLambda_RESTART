@@ -4,25 +4,18 @@
    Split by year is only done for data, to allow parallel processing of different years.
    For MC, all years are processed together.
  *********************************/
-#include "TFile.h"
-#include "TTree.h"
-#include "TCanvas.h"
-#include "TCut.h"
-#include "TROOT.h"
-#include "TSystem.h"
-#include "TStopwatch.h"
-#include <iostream>
-#include <fstream>
-using namespace std;
+#include "Sanity.h"
 
-void Sanity(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcType = 0, Bool_t logFlag = false)
+void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = 1 for data, 0 for MC
-   mcType = 0 when running over data. When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
+         mcType = 0 when running over data.
+   When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
+   mcType = 4 for Bu_JpsiX, 5 for Bd_JpsiX
  */
-/***MODIFIED TM CUTS REMOVED. I HATE TM*******
-   /*
+//***MODIFIED TM CUTS REMOVED. I HATE TM*******
+/*
    NB: BKGCAT applies to MC, but not data. Read  Steve's analysis and think about exactly what TM condition is to be applied
    Lb_DTF_CTAU_L -> Lb_TAU
    DTFchi2 cut is now 0-50
@@ -31,22 +24,55 @@ void Sanity(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcType
 {
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
+	const char *folder = "", *part = "";
+	switch(mcType)
+	{
+	case 0:
+	{
+		folder = "";
+		part = "";
+		break;
+	}
+	case 1:
+	{
+		folder = "JpsiLambda";
+		part = "jpsilambda";
+		break;
+	}
+	case 2:
+	{
+		folder = "JpsiSigma";
+		part = "jpsisigma";
+		break;
+	}
+	case 3:
+	{
+		folder = "JpsiXi";
+		part = "jpsixi";
+		break;
+	}
+	case 4:
+	{
+		folder = "Bu_JpsiX";
+		part = "bu_jpsix";
+		break;
+	}
+	case 5:
+	{
+		folder = "Bd_JpsiX";
+		part = "bd_jpsix";
+		break;
+	}
+	}
+
 	//Set up logging
 	if(isData && logFlag)
 	{
 		gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/sanity_%d_log.txt",run,year));
 	}
-	else if(!isData && logFlag && mcType == 1)
+	else if(!isData && logFlag)
 	{
-		gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiLambda/run%d/sanity_log.txt",run));
-	}
-	else if(!isData && logFlag && mcType == 2)
-	{
-		gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiSigma/run%d/sanity_log.txt",run));
-	}
-	else if(!isData && logFlag && mcType == 3)
-	{
-		gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiXi/run%d/sanity_log.txt",run));
+		gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/%s/run%d/sanity_log.txt",folder,run));
 	}
 
 	TStopwatch sw;
@@ -85,56 +111,20 @@ void Sanity(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcType
 	// Set up input, output
 	if(!isData) // MC
 	{
-		switch(mcType)
+		if(!gSystem->AccessPathName((Form("logs/mc/JpsiLambda/%s/run%d/gen_log.txt",folder,run))))
 		{
-		case 1:                         //JpsiLambda
-			if(!gSystem->AccessPathName((Form("logs/mc/JpsiLambda/JpsiLambda/run%d/gen_log.txt",run))))
-			{
-				genFile.open((Form("logs/mc/JpsiLambda/JpsiLambda/run%d/gen_log.txt",run)));
-				genFlag = true;
-			}
-			fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_triggered.root",run));
-			treeIn = (TTree*)fileIn->Get("MyTuple");
-
-			fileOut_LL = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_sanity_LL.root",run),"RECREATE");
-			treeOut_LL = (TTree*)treeIn->CloneTree(0);
-
-			fileOut_DD = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_sanity_DD.root",run),"RECREATE");
-			treeOut_DD = (TTree*)treeIn->CloneTree(0);
-			break;
-
-		case 2:         //JpsiSigma
-			if(!gSystem->AccessPathName((Form("logs/mc/JpsiLambda/JpsiSigma/run%d/gen_log.txt",run))))
-			{
-				genFile.open((Form("logs/mc/JpsiLambda/JpsiSigma/run%d/gen_log.txt",run)));
-				genFlag = true;
-			}
-			fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_triggered.root",run));
-			treeIn = (TTree*)fileIn->Get("MyTuple");
-
-			fileOut_LL = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_sanity_LL.root",run),"RECREATE");
-			treeOut_LL = (TTree*)treeIn->CloneTree(0);
-
-			fileOut_DD = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_sanity_DD.root",run),"RECREATE");
-			treeOut_DD = (TTree*)treeIn->CloneTree(0);
-			break;
-
-		case 3:         //JpsiXi
-			if(!gSystem->AccessPathName((Form("logs/mc/JpsiLambda/JpsiXi/run%d/gen_log.txt",run))))
-			{
-				genFile.open((Form("logs/mc/JpsiLambda/JpsiXi/run%d/gen_log.txt",run)));
-				genFlag = true;
-			}
-			fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi_triggered.root",run));
-			treeIn = (TTree*)fileIn->Get("MyTuple");
-
-			fileOut_LL = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi_sanity_LL.root",run),"RECREATE");
-			treeOut_LL = (TTree*)treeIn->CloneTree(0);
-
-			fileOut_DD = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi_sanity_DD.root",run),"RECREATE");
-			treeOut_DD = (TTree*)treeIn->CloneTree(0);
-			break;
+			genFile.open((Form("logs/mc/JpsiLambda/%s/run%d/gen_log.txt",folder,run)));
+			genFlag = true;
 		}
+		fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_triggered.root",folder,run,part));
+		treeIn = (TTree*)fileIn->Get("MyTuple");
+
+		fileOut_LL = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_sanity_LL.root",folder,run,part),"RECREATE");
+		treeOut_LL = (TTree*)treeIn->CloneTree(0);
+
+		fileOut_DD = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_sanity_DD.root",folder,run,part),"RECREATE");
+		treeOut_DD = (TTree*)treeIn->CloneTree(0);
+
 		treeIn->SetBranchAddress("Lb_BKGCAT",&Lb_BKGCAT);
 		treeIn->SetBranchAddress("p_MC_MOTHER_ID",&p_MOTHER_ID);
 		treeIn->SetBranchAddress("pi_MC_MOTHER_ID",&pi_MOTHER_ID);

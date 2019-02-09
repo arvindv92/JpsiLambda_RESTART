@@ -2,57 +2,88 @@
    Author : Aravindhan V.
    The purpose of this script is to apply trigger cuts on data/MC coming out of DaVinci.
  *********************************/
-#include "TFile.h"
-#include "TChain.h"
-#include "TCanvas.h"
-#include "TH1D.h"
-#include "TROOT.h"
-#include "TSystem.h"
-#include "TStopwatch.h"
-#include "CollateFiles.h"
-#include <iostream>
-#include <fstream>
-
-using namespace std;
+#include "Trigger.h"
+void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing, Bool_t loose, Bool_t logFlag)
 /* DOCUMENTATION
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = true for data, false for MC
-   mcType = 0 when running over data. When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
+   mcType = 0 when running over data.
+   When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
+   MCType = 4 for Bu_JpsiX, 5 for Bd_JpsiX
    testing = true to run only over a subset of data
    loose = true to run over data from loose stripping line. Only LL for loose stripping line
  */
-void Trigger(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcType = 0, Bool_t testing = false, Bool_t loose = true, Bool_t logFlag = false)
 {
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
+	const char *folder = "", *part = "";
+	switch(mcType)
+	{
+	case 0:
+	{
+		folder = "";
+		part = "";
+		break;
+	}
+	case 1:
+	{
+		folder = "JpsiLambda";
+		part = "jpsilambda";
+		break;
+	}
+	case 2:
+	{
+		folder = "JpsiSigma";
+		part = "jpsisigma";
+		break;
+	}
+	case 3:
+	{
+		folder = "JpsiXi";
+		part = "jpsixi";
+		break;
+	}
+	case 4:
+	{
+		folder = "Bu_JpsiX";
+		part = "bu_jpsix";
+		break;
+	}
+	case 5:
+	{
+		folder = "Bd_JpsiX";
+		part = "bd_jpsix";
+		break;
+	}
+	}
 	//Set up logging
 	if(isData && logFlag)
 	{
 		gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/trigger_%d_log.txt",run,year));
 	}
-	else if(!isData && logFlag && mcType == 1)
+	else if(!isData && logFlag)
 	{
-		gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiLambda/run%d/trigger_log.txt",run));
+		gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/%s/run%d/trigger_log.txt",folder,run));
 	}
-	else if(!isData && logFlag && mcType == 2)
-	{
-		gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiSigma/run%d/trigger_log.txt",run));
-	}
-	else if(!isData && logFlag && mcType == 3)
-	{
-		gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiXi/run%d/trigger_log.txt",run));
-	}
+	// else if(!isData && logFlag && mcType == 2)
+	// {
+	//      gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiSigma/run%d/trigger_log.txt",run));
+	// }
+	// else if(!isData && logFlag && mcType == 3)
+	// {
+	//      gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiXi/run%d/trigger_log.txt",run));
+	// }
 
 	TStopwatch sw;
 	sw.Start();
 
 	cout<<"******************************************"<<endl;
-	cout<<"==> Starting JpsiXi Trigger: "<<endl;
+	cout<<"==> Starting Trigger: "<<endl;
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 	gSystem->Exec("date");
 	cout<<"******************************************"<<endl;
 
-	gROOT->ProcessLine(".L scripts/CollateFiles.C++");//Chains/hadds input files
+	//gROOT->ProcessLine(".L scripts/CollateFiles.C++");//Chains/hadds input files
 
 	Int_t entries_init = 0, entries_final = 0, entries_gen = 0;
 	Float_t eff_excl   = 0., eff_excl_err = 0.;
@@ -60,7 +91,7 @@ void Trigger(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcTyp
 
 	Bool_t hlt1DiMuonHighMass = false, hlt1TrackMuon      = false;
 	Bool_t hlt1TrackAllL0     = false, hlt2DiMuonDetached = false;
-	Bool_t collateFlag        = true;//If you don't want to re-collate MC, set this to zero. For example, if only the trigger condition changes.
+	Bool_t collateFlag        = false;//If you don't want to re-collate MC, set this to zero. For example, if only the trigger condition changes.
 
 	TFile *fileOut = nullptr, *fileIn     = nullptr;
 	TTree *treeIn  = nullptr, *treeIn_gen = nullptr;
@@ -104,48 +135,46 @@ void Trigger(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcTyp
 
 	else //MC
 	{
-		if(mcType == 1)//Jpsi Lambda
-		{
-			genFile.open(Form("logs/mc/JpsiLambda/JpsiLambda/run%d/gen_log.txt",run));
+		genFile.open(Form("logs/mc/JpsiLambda/%s/run%d/gen_log.txt",folder,run));
 
-			cout<<"PROCESSING MC for Run "<<run<<" Jpsi Lambda"<<endl;
+		cout<<"PROCESSING MC for Run "<<run<<" "<<part<<endl;
 
-			if(collateFlag) CollateFiles(run, year, isData, mcType);
+		if(collateFlag) CollateFiles(run, year, isData, mcType);
 
-			fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda.root",run));
-			treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
-			treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
+		fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",folder,run,part));
+		treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
+		treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
 
-			fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_triggered.root",run),"RECREATE");
-		}
-		if(mcType == 2)//Jpsi Sigma
-		{
-			genFile.open(Form("logs/mc/JpsiLambda/JpsiSigma/run%d/gen_log.txt",run));
+		fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_triggered.root",folder,run,part),"RECREATE");
 
-			cout<<"PROCESSING MC for Run "<<run<<" Jpsi Lambda"<<endl;
-
-			if(collateFlag) CollateFiles(run, year, isData, mcType);
-
-			fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma.root",run));
-			treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
-			treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
-
-			fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_triggered.root",run),"RECREATE");
-		}
-		if(mcType == 3)//Jpsi Xi
-		{
-			genFile.open(Form("logs/mc/JpsiLambda/JpsiXi/run%d/gen_log.txt",run));
-
-			cout<<"PROCESSING MC for Run "<<run<<" Jpsi Lambda"<<endl;
-
-			if(collateFlag) CollateFiles(run, year, isData, mcType);
-
-			fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi.root",run));
-			treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
-			treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
-
-			fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi_triggered.root",run),"RECREATE");
-		}
+		// if(mcType == 2)//Jpsi Sigma
+		// {
+		//      genFile.open(Form("logs/mc/JpsiLambda/JpsiSigma/run%d/gen_log.txt",run));
+		//
+		//      cout<<"PROCESSING MC for Run "<<run<<" Jpsi Lambda"<<endl;
+		//
+		//      if(collateFlag) CollateFiles(run, year, isData, mcType);
+		//
+		//      fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma.root",run));
+		//      treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
+		//      treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
+		//
+		//      fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_triggered.root",run),"RECREATE");
+		// }
+		// if(mcType == 3)//Jpsi Xi
+		// {
+		//      genFile.open(Form("logs/mc/JpsiLambda/JpsiXi/run%d/gen_log.txt",run));
+		//
+		//      cout<<"PROCESSING MC for Run "<<run<<" Jpsi Lambda"<<endl;
+		//
+		//      if(collateFlag) CollateFiles(run, year, isData, mcType);
+		//
+		//      fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi.root",run));
+		//      treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
+		//      treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
+		//
+		//      fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi_triggered.root",run),"RECREATE");
+		// }
 		entries_gen = treeIn_gen->GetEntries();
 		genFile<<entries_gen<<endl;
 		genFile.close();

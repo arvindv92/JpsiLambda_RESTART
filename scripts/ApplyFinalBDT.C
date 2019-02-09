@@ -40,13 +40,13 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 
 	Float_t log_lFdChi2_orivX   = 0., logAcos_lDira_orivX = 0., log_lFd_orivX  = 0.;
 	Float_t logAcos_lDira_ownPV = 0., l_dm                = 0., log_lMinIpChi2 = 0., l_pt = 0.;
-	Float_t l_endVertex_Chi2    = 0., l_cosTheta          = 0.;
+	Float_t l_cosTheta          = 0.;
 	Float_t pLambda_lb          = 0., ptLambda_lb         = 0.;
-	Float_t p_PIDp              = 0., log_pMinIpChi2      = 0., p_ghostProb    = 0.;
+	Float_t log_pMinIpChi2      = 0., p_ghostProbNN    = 0.;
 
-	Float_t log_p_pt  = 0., p_probNNp       = 0.;
-	Float_t pi_PIDK   = 0., log_piMinIpChi2 = 0., pi_ghostProb = 0.;
-	Float_t log_pi_pt = 0., pi_probNNpi     = 0.;
+	Float_t log_p_pt  = 0., p_ProbNNp       = 0.;
+	Float_t log_piMinIpChi2 = 0., pi_ghostProbNN = 0.;
+	Float_t log_pi_pt = 0., pi_ProbNNpi     = 0.;
 	Float_t BDTK      = 0.;
 	Float_t chi2array[200] {0.};
 
@@ -57,10 +57,10 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	Double_t lFdChi2_orivX = 0., lDira_orivX  = 0., lFd_orivX    = 0.;
 
 	Double_t lDira_ownPV = 0., lDm            = 0., lMinIpChi2  = 0., lPT = 0.;
-	Double_t lP          = 0., lEndVertexChi2 = 0., lCosTheta   = 0.;
-	Double_t pPIDp       = 0., pMinIpChi2     = 0., pGhostProb  = 0.;
+	Double_t lP          = 0., lCosTheta   = 0.;
+	Double_t pMinIpChi2     = 0., pGhostProbNN  = 0.;
 	Double_t pPT         = 0., pProbNNp       = 0.;
-	Double_t piPIDK      = 0., piMinIpChi2    = 0., piGhostProb = 0.;
+	Double_t piMinIpChi2    = 0., piGhostProbNN = 0.;
 
 	Double_t piPT   = 0., piProbNNpi = 0.;
 	Double_t myBDTK = 0., BDT        = 0.;
@@ -327,20 +327,20 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	reader->AddVariable("L_dm", &l_dm);
 	reader->AddVariable("log_lminipchi2      := log10(L_MINIPCHI2)", &log_lMinIpChi2);
 	//	reader->AddVariable("L_PT", &l_pt);
-	reader->AddVariable("L_ENDVERTEX_CHI2", &l_endVertex_Chi2);
+	//	reader->AddVariable("L_ENDVERTEX_CHI2", &l_endVertex_Chi2);
 	//	reader->AddVariable("L_CosTheta", &l_cosTheta);
 
-	reader->AddVariable("p_PIDp", &p_PIDp);
+	//	reader->AddVariable("p_PIDp", &p_PIDp);
 	reader->AddVariable("log_pminipchi2      := log10(p_MINIPCHI2)", &log_pMinIpChi2);
-	reader->AddVariable("p_TRACK_GhostProb", &p_ghostProb);
+	reader->AddVariable("p_ProbNNghost", &p_ghostProbNN);
 	reader->AddVariable("log_p_PT            := log10(p_PT)", &log_p_pt);
-	reader->AddVariable("p_ProbNNp", &p_probNNp);
+	reader->AddVariable("p_ProbNNp", &p_ProbNNp);
 
-	//	reader->AddVariable("pi_TRACK_GhostProb", &pi_ghostProb);
+	reader->AddVariable("pi_ProbNNghost", &pi_ghostProbNN);
 	//	reader->AddVariable("pi_PIDK", &pi_PIDK);
 	reader->AddVariable("log_piminipchi2     := log10(pi_MINIPCHI2)", &log_piMinIpChi2);
 	reader->AddVariable("log_pi_PT           := log10(pi_PT)", &log_pi_pt);
-	reader->AddVariable("pi_ProbNNpi", &pi_probNNpi);
+	reader->AddVariable("pi_ProbNNpi", &pi_ProbNNpi);
 
 	if(newFlag)
 	{
@@ -400,17 +400,17 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	treeIn->SetBranchAddress("L_MINIPCHI2", &lMinIpChi2);
 	treeIn->SetBranchAddress("L_PT", &lPT);
 	treeIn->SetBranchAddress("L_P", &lP);
-	treeIn->SetBranchAddress("L_ENDVERTEX_CHI2", &lEndVertexChi2);
+	//	treeIn->SetBranchAddress("L_ENDVERTEX_CHI2", &lEndVertexChi2);
 	treeIn->SetBranchAddress("L_CosTheta", &lCosTheta);
 
-	treeIn->SetBranchAddress("p_PIDp", &pPIDp);
+	//	treeIn->SetBranchAddress("p_PIDp", &pPIDp);
 	treeIn->SetBranchAddress("p_MINIPCHI2", &pMinIpChi2);
-	treeIn->SetBranchAddress("p_TRACK_GhostProb", &pGhostProb);
+	treeIn->SetBranchAddress("p_ProbNNghost", &pGhostProbNN);
 	treeIn->SetBranchAddress("p_PT", &pPT);
 	treeIn->SetBranchAddress("p_ProbNNp", &pProbNNp);
 
-	treeIn->SetBranchAddress("pi_TRACK_GhostProb", &piGhostProb);
-	treeIn->SetBranchAddress("pi_PIDK", &piPIDK);
+	treeIn->SetBranchAddress("pi_ProbNNghost", &piGhostProbNN);
+	//	treeIn->SetBranchAddress("pi_PIDK", &piPIDK);
 	treeIn->SetBranchAddress("pi_MINIPCHI2", &piMinIpChi2);
 	treeIn->SetBranchAddress("pi_PT", &piPT);
 	treeIn->SetBranchAddress("pi_ProbNNpi", &piProbNNpi);
@@ -450,20 +450,20 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 		l_dm                 = lDm;
 		log_lMinIpChi2       = log10(lMinIpChi2);
 		//	l_pt             = lPT;
-		l_endVertex_Chi2     = lEndVertexChi2;
+		//		l_endVertex_Chi2     = lEndVertexChi2;
 		//	l_cosTheta       = lCosTheta;
 
-		pPIDp                = p_PIDp;
+		//		pPIDp                = p_PIDp;
 		log_pMinIpChi2       = log10(pMinIpChi2);
-		p_ghostProb          = pGhostProb;
+		p_ghostProbNN        = pGhostProbNN;
 		log_p_pt             = log10(pPT);
-		p_probNNp            = pProbNNp;
+		p_ProbNNp            = pProbNNp;
 
-		// pi_ghostProb      = piGhostProb;
+		pi_ghostProbNN       = piGhostProbNN;
 		//	pi_PIDK          = piPIDK;
 		log_piMinIpChi2      = log10(piMinIpChi2);
 		log_pi_pt            = log10(piPT);
-		pi_probNNpi          = piProbNNpi;
+		pi_ProbNNpi          = piProbNNpi;
 
 		if(isoFlag && !zeroFlag) BDTK = myBDTK;
 
@@ -491,6 +491,6 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	delete reader;
 
 	cout << "==> ApplyFinalBDT is done! Go optimize and fit!: "; sw.Print();
-	//if(logFlag) gROOT->ProcessLine(".>");
-	if(logFlag) gSystem->RedirectOutput(0);
+	if(logFlag) gROOT->ProcessLine(".>");
+	//if(logFlag) gSystem->RedirectOutput(0);
 }

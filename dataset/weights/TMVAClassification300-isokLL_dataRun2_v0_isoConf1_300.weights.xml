@@ -4,11 +4,11 @@
     <Info name="TMVA Release" value="4.2.1 [262657]"/>
     <Info name="ROOT Release" value="6.12/06 [396294]"/>
     <Info name="Creator" value="avenkate"/>
-    <Info name="Date" value="Wed Dec 26 19:14:24 2018"/>
+    <Info name="Date" value="Mon Feb  4 14:42:38 2019"/>
     <Info name="Host" value="Linux lcgapp-slc6-x86-64-3.cern.ch 2.6.32-696.18.7.el6.x86_64 #1 SMP Thu Jan 4 13:27:39 CET 2018 x86_64 x86_64 x86_64 GNU/Linux"/>
     <Info name="Dir" value="/data1/avenkate/JpsiLambda_RESTART"/>
     <Info name="Training events" value="4499715"/>
-    <Info name="TrainingTime" value="1.11788770e+04"/>
+    <Info name="TrainingTime" value="1.06014815e+04"/>
     <Info name="AnalysisType" value="Classification"/>
   </GeneralInfo>
   <Options>
