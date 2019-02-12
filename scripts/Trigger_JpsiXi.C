@@ -27,11 +27,11 @@ void Trigger_JpsiXi(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Bool
 	//Set up logging
 	if(isData && logFlag)
 	{
-		gROOT->ProcessLine(Form(".> logs/data/JpsiXi/run%d/trigger_%d_log.txt",run,year));
+		gSystem->RedirectOutput(Form("logs/data/JpsiXi/run%d/trigger_%d_log.txt",run,year),"w");
 	}
 	else if(!isData && logFlag)
 	{
-		gROOT->ProcessLine(Form(".> logs/mc/JpsiXi/run%d/trigger_log.txt",run));
+		gSystem->RedirectOutput(Form("logs/mc/JpsiXi/run%d/trigger_log.txt",run),"w");
 	}
 
 	TStopwatch sw;//helps times stages
@@ -43,7 +43,7 @@ void Trigger_JpsiXi(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Bool
 	gSystem->Exec("date");
 	cout<<"******************************************"<<endl;
 
-	gROOT->ProcessLine(".L scripts/CollateFiles_JpsiXi.C++");//Chains/hadds input files
+//	gROOT->ProcessLine(".L scripts/CollateFiles_JpsiXi.C++");//Chains/hadds input files
 
 	Int_t entries_init = 0, entries_final = 0, entries_gen = 0;
 	Float_t eff_excl   = 0., eff_excl_err = 0.;
@@ -183,6 +183,6 @@ void Trigger_JpsiXi(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Bool
 	sw.Stop();
 	cout << "==> Trigger is done! Huzzah!: "; sw.Print();
 
-	if(logFlag) gROOT->ProcessLine(".>");
+	if(logFlag) gSystem->RedirectOutput(0);
 	//if(logFlag) gSystem->Exec("cat trigger_log.txt");
 }

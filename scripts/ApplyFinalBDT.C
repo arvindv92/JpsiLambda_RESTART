@@ -21,17 +21,76 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
    zeroFlag = true to apply final BDT on zeroTrack data, false to apply on nonZeroTracks data.
  */
 {
-	cout<<"***********Starting ApplyFinalBDT***********"<<endl;
-
 	TStopwatch sw;
 	sw.Start();
+
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	const char *folder = "", *part = "", *type = "", *mynew = "";
+
+	if(newFlag) mynew = "_new";
+	type        = (trackType == 3) ? ("LL") : ("DD");
+	switch(mcType)
+	{
+	case 0:
+	{
+		folder = "";
+		part = "";
+		break;
+	}
+	case 1:
+	{
+		folder = "JpsiLambda";
+		part = "jpsilambda";
+		break;
+	}
+	case 2:
+	{
+		folder = "JpsiSigma";
+		part = "jpsisigma";
+		break;
+	}
+	case 3:
+	{
+		folder = "JpsiXi";
+		part = "jpsixi";
+		break;
+	}
+	case 4:
+	{
+		folder = "Bu_JpsiX";
+		part = "bu_jpsix";
+		break;
+	}
+	case 5:
+	{
+		folder = "Bd_JpsiX";
+		part = "bd_jpsix";
+		break;
+	}
+	}
+	//Set up logging
+	if(isData && logFlag)
+	{
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/ApplyFinalBDT%d_%s_iso%d_%s%s.txt",
+		                             run,bdtConf,type,isoConf,isoVersion,mynew),"a");
+	}
+	else if(!isData && logFlag)
+	{
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/ApplyFinalBDT%d_%s_iso%d_%s%s.txt",
+		                             folder,run,bdtConf,type,isoConf,isoVersion,mynew),"w");
+	}
+
+	cout<<"******************************************"<<endl;
+	cout<<"Starting ApplyFinalBDT "<<endl;
+	gSystem->Exec("date");
+	cout<<"WD = "<<gSystem->pwd()<<endl;
+	cout<<"******************************************"<<endl;
 
 	TFile *fileIn = nullptr, *fileIn_iso = nullptr, *fileOut = nullptr;
 	TTree *treeIn = nullptr, *treeIn_iso = nullptr, *treeOut = nullptr;
 
-	Int_t entries_init    = 0;
-	const char *type      = "", *mynew = "", *logFileName = "";
-	const char *logFolder = "", *rootFolder = "";
+	Int_t entries_init     = 0;
+	const char *rootFolder = "";
 
 	Float_t log_dtfChi2       = 0., log_lbMinIpChi2 = 0., logAcos_lbDira_ownPV = 0.;
 	Float_t log_lbFd_ownPV    = 0., log_lTau        = 0.;
@@ -68,138 +127,46 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	TMVA::Tools::Instance();// This loads the library
 	TMVA::Reader *reader = nullptr;
 
-	if(newFlag) mynew = "_new";
-	type        = (trackType == 3) ? ("LL") : ("DD");
-	logFileName = Form("finalBDT%dApplication_%s_iso%d_%s%s.txt",
-	                   bdtConf,type,isoConf,isoVersion,mynew);
-	cout<<"logFile = "<<logFileName<<endl;
-
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
-	cout<<"WD = "<<gSystem->pwd()<<endl;
-
-	//set up logging, input, output
+	//set up input, output
 	if(!isData) // MC
 	{
-		switch(mcType)
+		rootFolder = Form("rootFiles/mcFiles/JpsiLambda/%s/run%d",folder,run);
+		if(isoFlag)
 		{
-		case 1: //JpsiLambda
-			logFolder  = Form("logs/mc/JpsiLambda/JpsiLambda/run%d",run);
-			rootFolder = Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d",run);
-			if(logFlag) gROOT->ProcessLine(Form(".> %s/%s",logFolder,logFileName));
-			if(isoFlag)
+			if(!zeroFlag)
 			{
-				if(!zeroFlag)
-				{
-					fileIn      = TFile::Open(Form("%s/jpsilambda_cutoutks_%s_nonZeroTracks.root",
-					                               rootFolder,type));
-					treeIn      = (TTree*)fileIn->Get("MyTuple");
-					fileIn_iso  = TFile::Open(Form("%s/jpsilambda_%s_iso%d_%s.root",
-					                               rootFolder,type,isoConf,isoVersion));
-					treeIn_iso  = (TTree*)fileIn_iso->Get("MyTuple");
-					fileOut     = new TFile(Form("%s/jpsilambda_%s_FinalBDT%d_iso%d_%s%s.root",
-					                             rootFolder,type,bdtConf,isoConf,isoVersion,mynew),
-					                        "RECREATE");
-				}
-				else
-				{
-					fileIn  = TFile::Open(Form("%s/jpsilambda_cutoutks_%s_ZeroTracks.root",
-					                           rootFolder,type));
-					treeIn  = (TTree*)fileIn->Get("MyTuple");
-					fileOut = new TFile(Form("%s/jpsilambda_zeroTracks%s_FinalBDT%d_iso%d_%s%s.root",
-					                         rootFolder,type,bdtConf,isoConf,isoVersion,mynew),
-					                    "RECREATE");
-				}
+				fileIn      = TFile::Open(Form("%s/%s_cutoutks_%s_nonZeroTracks.root",
+				                               rootFolder,part,type));
+				treeIn      = (TTree*)fileIn->Get("MyTuple");
+				fileIn_iso  = TFile::Open(Form("%s/%s_%s_iso%d_%s.root",
+				                               rootFolder,part,type,isoConf,isoVersion));
+				treeIn_iso  = (TTree*)fileIn_iso->Get("MyTuple");
+				fileOut     = new TFile(Form("%s/%s_%s_FinalBDT%d_iso%d_%s%s.root",
+				                             rootFolder,part,type,bdtConf,isoConf,isoVersion,mynew),
+				                        "RECREATE");
 			}
 			else
 			{
-				fileIn  = TFile::Open(Form("%s/jpsilambda_cutoutks_%s.root",
-				                           rootFolder,type));
+				fileIn  = TFile::Open(Form("%s/%s_cutoutks_%s_ZeroTracks.root",
+				                           rootFolder,part,type));
 				treeIn  = (TTree*)fileIn->Get("MyTuple");
-				fileOut = new TFile(Form("%s/jpsilambda_%s_FinalBDT%d_noIso%s.root",
-				                         rootFolder,type,bdtConf,mynew),"RECREATE");
+				fileOut = new TFile(Form("%s/%s_zeroTracks%s_FinalBDT%d%s.root",
+				                         rootFolder,part,type,bdtConf,mynew),
+				                    "RECREATE");
 			}
-			break;
-		case 2: //JpsiSigma
-			logFolder  = Form("logs/mc/JpsiLambda/JpsiSigma/run%d",run);
-			rootFolder = Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d",run);
-			if(logFlag) gROOT->ProcessLine(Form(".> %s/%s",logFolder,logFileName));
-			if(isoFlag)
-			{
-				if(!zeroFlag)
-				{
-					fileIn     = TFile::Open(Form("%s/jpsisigma_cutoutks_%s_nonZeroTracks.root",
-					                              rootFolder,type));
-					treeIn     = (TTree*)fileIn->Get("MyTuple");
-					fileIn_iso = TFile::Open(Form("%s/jpsisigma_%s_iso%d_%s.root",
-					                              rootFolder,type,isoConf,isoVersion));
-					treeIn_iso = (TTree*)fileIn_iso->Get("MyTuple");
-					fileOut    = new TFile(Form("%s/jpsisigma_%s_FinalBDT%d_iso%d_%s%s.root",
-					                            rootFolder,type,bdtConf,isoConf,isoVersion,mynew),
-					                       "RECREATE");
-				}
-				else
-				{
-					fileIn  = TFile::Open(Form("%s/jpsisigma_cutoutks_%s_ZeroTracks.root",
-					                           rootFolder,type));
-					treeIn  = (TTree*)fileIn->Get("MyTuple");
-					fileOut = new TFile(Form("%s/jpsisigma_zeroTracks%s_FinalBDT%d_iso%d_%s%s.root",
-					                         rootFolder,type,bdtConf,isoConf,isoVersion,mynew),
-					                    "RECREATE");
-				}
-			}
-			else
-			{
-				fileIn  = TFile::Open(Form("%s/jpsisigma_cutoutks_%s.root",
-				                           rootFolder,type));
-				treeIn  = (TTree*)fileIn->Get("MyTuple");
-				fileOut = new TFile(Form("%s/jpsisigma_%s_FinalBDT%d_noIso%s.root",
-				                         rootFolder,type,bdtConf,mynew),"RECREATE");
-			}
-			break;
-		case 3: //JpsiXi
-			logFolder  = Form("logs/mc/JpsiLambda/JpsiXi/run%d",run);
-			rootFolder = Form("rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d",run);
-			if(logFlag) gROOT->ProcessLine(Form(".> %s/%s",logFolder,logFileName));
-			if(isoFlag)
-			{
-				if(!zeroFlag)
-				{
-					fileIn      = TFile::Open(Form("%s/jpsixi_cutoutks_%s_nonZeroTracks.root",
-					                               rootFolder,type));
-					treeIn      = (TTree*)fileIn->Get("MyTuple");
-					fileIn_iso  = TFile::Open(Form("%s/jpsixi_%s_iso%d_%s.root",
-					                               rootFolder,type,isoConf,isoVersion));
-					treeIn_iso  = (TTree*)fileIn_iso->Get("MyTuple");
-					fileOut     = new TFile(Form("%s/jpsixi_%s_FinalBDT%d_iso%d_%s%s.root",
-					                             rootFolder,type,bdtConf,isoConf,isoVersion,mynew),
-					                        "RECREATE");
-				}
-				else
-				{
-					fileIn  = TFile::Open(Form("%s/jpsixi_cutoutks_%s_ZeroTracks.root",
-					                           rootFolder,type));
-					treeIn  = (TTree*)fileIn->Get("MyTuple");
-					fileOut = new TFile(Form("%s/jpsixi_zeroTracks%s_FinalBDT%d_iso%d_%s%s.root",
-					                         rootFolder,type,bdtConf,isoConf,isoVersion,mynew),
-					                    "RECREATE");
-				}
-			}
-			else
-			{
-				fileIn  = TFile::Open(Form("%s/jpsixi_cutoutks_%s.root",
-				                           rootFolder,type));
-				treeIn  = (TTree*)fileIn->Get("MyTuple");
-				fileOut = new TFile(Form("%s/jpsixi_%s_FinalBDT%d_noIso%s.root",
-				                         rootFolder,type,bdtConf,mynew),"RECREATE");
-			}
-			break;
+		}
+		else
+		{
+			fileIn  = TFile::Open(Form("%s/%s_cutoutks_%s.root",
+			                           rootFolder,part,type));
+			treeIn  = (TTree*)fileIn->Get("MyTuple");
+			fileOut = new TFile(Form("%s/%s_%s_FinalBDT%d_noIso%s.root",
+			                         rootFolder,part,type,bdtConf,mynew),"RECREATE");
 		}
 	}//end MC block
 	else // Data
 	{
-		logFolder  = Form("logs/data/JpsiLambda/run%d",run);
 		rootFolder = Form("rootFiles/dataFiles/JpsiLambda/run%d",run);
-		if(logFlag) gSystem->RedirectOutput(Form("%s/%s",logFolder,logFileName),"a");
 		if(flag == 1)
 		{
 			if(isoFlag)
@@ -221,8 +188,8 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 					fileIn  = TFile::Open(Form("%s/jpsilambda_cutoutks_%s_ZeroTracks.root",
 					                           rootFolder,type));
 					treeIn  = (TTree*)fileIn->Get("MyTuple");
-					fileOut = new TFile(Form("%s/jpsilambda_zeroTracks%s_FinalBDT%d_iso%d_%s%s.root",
-					                         rootFolder,type,bdtConf,isoConf,isoVersion,mynew),
+					fileOut = new TFile(Form("%s/jpsilambda_zeroTracks%s_FinalBDT%d%s.root",
+					                         rootFolder,type,bdtConf,mynew),
 					                    "RECREATE");
 				}
 			}
@@ -258,8 +225,8 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 					fileIn  = TFile::Open(Form("%s/jpsilambda_%s_withsw_ZeroTracks.root",
 					                           rootFolder,type));
 					treeIn  = (TTree*)fileIn->Get("MyTuple");
-					fileOut = new TFile(Form("%s/jpsilambda_zeroTracks%ssig_FinalBDT%d_iso%d_%s%s.root",
-					                         rootFolder,type,bdtConf,isoConf,isoVersion,mynew),
+					fileOut = new TFile(Form("%s/jpsilambda_zeroTracks%ssig_FinalBDT%d%s.root",
+					                         rootFolder,type,bdtConf,mynew),
 					                    "RECREATE");
 				}
 			}
@@ -273,12 +240,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 			}
 		}
 	}//end Data block
-	//end setup of input, output, logging
-	cout<<"******************************************"<<endl;
-	cout<<"Starting ApplyFinalBDT "<<endl;
-	gSystem->Exec("date");
-	cout<<"WD = "<<gSystem->pwd()<<endl;
-	cout<<"******************************************"<<endl;
+	//end setup of input, output
 	if (!fileIn)
 	{
 		cout << "ERROR: could not open data file" << endl;
@@ -491,6 +453,6 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	delete reader;
 
 	cout << "==> ApplyFinalBDT is done! Go optimize and fit!: "; sw.Print();
-	if(logFlag) gROOT->ProcessLine(".>");
-	//if(logFlag) gSystem->RedirectOutput(0);
+	// if(logFlag) gROOT->ProcessLine(".>");
+	if(logFlag) gSystem->RedirectOutput(0);
 }

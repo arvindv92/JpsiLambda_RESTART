@@ -25,9 +25,9 @@ void Cuts_JpsiXi(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Bool_t 
 
 	//Set up logging
 	if(isData && logFlag)
-		gROOT->ProcessLine(Form(".> logs/data/JpsiXi/run%d/cuts_JpsiXi_%d_log.txt",run,year));
+		gSystem->RedirectOutput(Form("logs/data/JpsiXi/run%d/cuts_JpsiXi_%d_log.txt",run,year),"w");
 	else if(!isData && logFlag)
-		gROOT->ProcessLine((Form(".> logs/mc/JpsiXi/run%d/cuts_JpsiXi_%d_log.txt",run,year)));
+		gSystem->RedirectOutput((Form("logs/mc/JpsiXi/run%d/cuts_JpsiXi_%d_log.txt",run,year)),"w");
 
 	TStopwatch sw;
 	sw.Start();
@@ -182,5 +182,5 @@ void Cuts_JpsiXi(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Bool_t 
 	sw.Stop();
 	cout << "==> Cuts_JpsiXi is done! Mazel Tov!: "; sw.Print();
 
-	if(logFlag) gROOT->ProcessLine(".>");
+	if(logFlag) gSystem->RedirectOutput(0);
 }

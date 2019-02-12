@@ -20,6 +20,9 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
    trackType = 3 for LL, 5 for DD.
  */
 {
+	TStopwatch sw;
+	sw.Start();
+
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 	const char *folder = "", *part = "";
 	switch(mcType)
@@ -64,11 +67,13 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 	//Set up logging
 	if(isData && logFlag)
 	{
-		gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/cutoutks_%d_log.txt",run,year));
+		// gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/cutoutks_%d_log.txt",run,year));
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/cutoutks_%d_log.txt",run,year),"w");
 	}
 	else if(!isData && logFlag)
 	{
-		gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/%s/run%d/cutoutks_log.txt",folder,run));
+		// gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/%s/run%d/cutoutks_log.txt",folder,run));
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/cutoutks_log.txt",folder,run),"w");
 	}
 	// else if(!isData && logFlag && mcType == 2)
 	// {
@@ -78,10 +83,6 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 	// {
 	//      gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiXi/run%d/cutoutks_log.txt",run));
 	// }
-
-	TStopwatch sw;
-	sw.Start();
-
 	cout<<"******************************************"<<endl;
 	cout<<"==> Starting CutOutKs: "<<endl;
 	gSystem->Exec("date");
@@ -135,7 +136,6 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 	}
 	else   // Data
 	{
-		logFolder        = Form("logs/data/JpsiLambda/run%d",run);
 		rootFolder       = Form("rootFiles/dataFiles/JpsiLambda/run%d",run);
 		fileName_nonZero = Form("jpsilambda_cutoutks_%s_%d_nonZeroTracks.root",type,year);
 		fileName_Zero    = Form("jpsilambda_cutoutks_%s_%d_ZeroTracks.root",type,year);
@@ -234,7 +234,6 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 			}
 		}
 	}
-
 	entries_final_nonZero = treeOut_nonZero->GetEntries();
 	entries_final_Zero    = treeOut_Zero->GetEntries();
 	entries_final         = entries_final_nonZero + entries_final_Zero;
@@ -283,5 +282,6 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 	sw.Stop();
 	cout << "==> CutOutKs is done! Death to Ks0!: "; sw.Print();
 
-	if(logFlag) gROOT->ProcessLine(".>");
+	// if(logFlag) gROOT->ProcessLine(".>");
+	if(logFlag) gSystem->RedirectOutput(0);
 }

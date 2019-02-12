@@ -59,11 +59,15 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 	//Set up logging
 	if(isData && logFlag)
 	{
-		gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/trigger_%d_log.txt",run,year));
+		//gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/trigger_%d_log.txt",run,year));
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/trigger_%d_log.txt",
+		                             run,year),"w");
 	}
 	else if(!isData && logFlag)
 	{
-		gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/%s/run%d/trigger_log.txt",folder,run));
+		//gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/%s/run%d/trigger_log.txt",folder,run));
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/trigger_log.txt",
+		                             folder,run),"w");
 	}
 	// else if(!isData && logFlag && mcType == 2)
 	// {
@@ -96,7 +100,10 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 	TFile *fileOut = nullptr, *fileIn     = nullptr;
 	TTree *treeIn  = nullptr, *treeIn_gen = nullptr;
 	TTree *treeOut = nullptr, *myTree     = nullptr;
-	const char *triggerCut = "(Lb_Hlt1DiMuonHighMassDecision_TOS==1||Lb_Hlt1TrackMuonDecision_TOS==1||Lb_Hlt1TrackAllL0Decision_TOS==1)&&(Lb_Hlt2DiMuonDetachedJPsiDecision_TOS==1)";
+	const char *triggerCut = "(Lb_Hlt1DiMuonHighMassDecision_TOS==1||"
+	                         "Lb_Hlt1TrackMuonDecision_TOS==1||"
+	                         "Lb_Hlt1TrackAllL0Decision_TOS==1)"
+	                         "&&(Lb_Hlt2DiMuonDetachedJPsiDecision_TOS==1)";
 	ofstream genFile;//The number of generated MC entries in every MC case will be written out to this file, so that it can be accessed for calculating exclusive efficiencies later
 
 	// Set up input, output
@@ -137,15 +144,17 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 	{
 		genFile.open(Form("logs/mc/JpsiLambda/%s/run%d/gen_log.txt",folder,run));
 
-		cout<<"PROCESSING MC for Run "<<run<<" "<<part<<endl;
-
-		if(collateFlag) CollateFiles(run, year, isData, mcType);
-
-		fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",folder,run,part));
+		if(collateFlag)
+		{
+			CollateFiles(run, year, isData, mcType);
+		}
+		fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",
+		                          folder,run,part));
 		treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
-		treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
+		treeIn     = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
 
-		fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_triggered.root",folder,run,part),"RECREATE");
+		fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_triggered.root",
+		                         folder,run,part),"RECREATE");
 
 		// if(mcType == 2)//Jpsi Sigma
 		// {
@@ -231,7 +240,8 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 			eff_excl_err = sqrt( eff_excl*(100.0-eff_excl)/entries_init);
 		}
 		cout<<"******************************************"<<endl;
-		cout<<"Trigger cut made with exclusive efficiency = "<<eff_excl<<"% +/- " <<eff_excl_err<<" %"<<endl;
+		cout<<"Trigger cut made with exclusive efficiency = "<<
+		        eff_excl<<"% +/- " <<eff_excl_err<<" %"<<endl;
 		cout<<"******************************************"<<endl;
 
 		if(entries_gen != 0)
@@ -240,7 +250,8 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 			eff_incl_err = sqrt( eff_incl*(100.0-eff_incl)/entries_gen);
 		}
 		cout<<"******************************************"<<endl;
-		cout<<"Trigger cut made with inclusive efficiency = "<<eff_incl<<"% +/- " <<eff_incl_err<<" %"<<endl;
+		cout<<"Trigger cut made with inclusive efficiency = "<<
+		        eff_incl<<"% +/- " <<eff_incl_err<<" %"<<endl;
 		cout<<"******************************************"<<endl;
 	}
 
@@ -251,6 +262,7 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 	sw.Stop();
 	cout << "==> Trigger is done! Huzzah!: "; sw.Print();
 
-	if(logFlag) gROOT->ProcessLine(".>");
+	//if(logFlag) gROOT->ProcessLine(".>");
+	if(logFlag) gSystem->RedirectOutput(0);
 	//if(logFlag) gSystem->Exec("cat trigger_log.txt");
 }

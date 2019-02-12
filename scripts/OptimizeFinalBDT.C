@@ -7,16 +7,15 @@ void OptimizeFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 {
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
-	const char *mynew = "";
+	const char *mynew = "", *type = "";
 	if(newFlag) mynew = "_new";
+
+	type = (trackType == 3) ? "LL" : "DD";
 
 	if(logFlag && trackType == 3)
 	{
-		gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/OptimizeFinalBDT%d_LL_iso%d_%s%s.txt",run,bdtConf,isoConf,isoVersion,mynew));
-	}
-	else if(logFlag && trackType == 5)
-	{
-		gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/OptimizeFinalBDT%d_DD_iso%d_%s%s.txt",run,bdtConf,isoConf,isoVersion,mynew));
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/OptimizeFinalBDT%d_%s_iso%d_%s%s.txt",
+		                             run,bdtConf,type,isoConf,isoVersion,mynew),"w");
 	}
 
 	cout<<"******************************************"<<endl;
@@ -28,15 +27,12 @@ void OptimizeFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	TFile *fileIn = nullptr, *fileIn_zeroTracks = nullptr;
 	TTree *treeIn = nullptr, *treeIn_zeroTracks = nullptr, *myTree = nullptr;
 
-	TString logFileName = "", friendFileName = "";
+	TString friendFileName = "";
 	TString friendFileName_zeroTracks = "", t = "";
 
 	TH1D *hsig = nullptr, *hbkg = nullptr;
 	Int_t nEntries = 0;
-	const char *type = "", *rootFolder = "";
-
-	type = (trackType == 3) ? "LL" : "DD";
-	cout<<"Processing "<<type<<endl;
+	const char *rootFolder = "";
 
 	rootFolder = Form("rootFiles/dataFiles/JpsiLambda/run%d",run);
 
@@ -179,7 +175,7 @@ void OptimizeFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		    <<eff_sig_max*100<<"% and bkg_eff = "<<eff_bkg_max*100<<"%"<<endl;
 		ctr++;
 	}
-	if(logFlag) gROOT->ProcessLine(".>");
+	if(logFlag) gSystem->RedirectOutput(0);
 }
 Double_t getSumOfWeights(Double_t mybdt, TTree* tree, Int_t flag,
                          Int_t bdtConf, Int_t nEntries)

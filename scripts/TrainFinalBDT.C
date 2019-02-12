@@ -13,47 +13,26 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
    isoFlag = true if you want to use isolation in the final BDT.
  */
 {
-	cout<<"***********Starting TrainFinalBDT***********"<<endl;
-
 	TStopwatch sw;
 	sw.Start();
 
-	TFile *input        = nullptr, *input_iso  = nullptr, *outputFile = nullptr;
-	TTree *treeIn       = nullptr, *treeIn_iso = nullptr;
-	TString outfileName = "";
-	TCut signalCut      = "", bkgCut           = "";
-	TCut baseCut        = "", myCutS           = "", myCutB           = "";
-
-	const char *type       = "", *logFileName = "", *mynew = "";
-	const char *rootFolder = Form("rootFiles/dataFiles/JpsiLambda/run%d",run);
-
-	if(newFlag) mynew = "_new";
-
-	TMVA::DataLoader *dataLoader = nullptr;
-	TMVA::Factory *factory       = nullptr;
-	TMVA::Tools::Instance();// This loads the library
-
-	type = (trackType == 3) ? ("LL") : ("DD");
-	if(isoFlag)
-	{
-		logFileName = Form("finalBDTTraining_%s_iso%d_%s%s_log.txt",
-		                   type,isoConf,mynew,isoVersion);
-	}
-	else if(!isoFlag)
-	{
-		logFileName = Form("finalBDTTraining_%s_noIso%s_log.txt",
-		                   type,mynew);
-	}
-
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
-	if(logFlag) //set up logging
-	{
-		gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/%s",
-		                        run,logFileName));
-	}
+	const char *mynew = "", *type = "";
 
-	cout<<"Processing "<<type<<endl;
+	if(newFlag) mynew = "_new";
+	type = (trackType == 3) ? ("LL") : ("DD");
+
+	if(isoFlag && logFlag)
+	{
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT_%s_iso%d_%s%s.txt",
+		                             run,type,isoConf,isoVersion,mynew),"w");
+	}
+	else if(!isoFlag && logFlag)
+	{
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT_%s_noIso%s.txt",
+		                             run,type,mynew),"w");
+	}
 
 	cout<<"*****************************"<<endl;
 	cout << "==> Starting TrainFinalBDT: "<<endl;
@@ -61,6 +40,17 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 	cout<<"*****************************"<<endl;
 
+	TFile *input        = nullptr, *input_iso  = nullptr, *outputFile = nullptr;
+	TTree *treeIn       = nullptr, *treeIn_iso = nullptr;
+	TString outfileName = "";
+	TCut signalCut      = "", bkgCut           = "";
+	TCut baseCut        = "", myCutS           = "", myCutB           = "";
+
+	const char *rootFolder = Form("rootFiles/dataFiles/JpsiLambda/run%d",run);
+
+	TMVA::DataLoader *dataLoader = nullptr;
+	TMVA::Factory *factory       = nullptr;
+	TMVA::Tools::Instance();// This loads the library
 
 	gROOT->ProcessLine("(TMVA::gConfig().GetVariablePlotting())."
 	                   "fMaxNumOfAllowedVariablesForScatterPlots = 10;");
@@ -312,7 +302,8 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	sw.Stop();
 	cout << "==> TrainFinalBDT is done! Home streeeeetch!: "; sw.Print();
 
-	if(logFlag) gROOT->ProcessLine(".>");
+	// if(logFlag) gROOT->ProcessLine(".>");
+	if(logFlag) gSystem->RedirectOutput(0);
 	// Launch the GUI for the root macros
 	//   if (!gROOT->IsBatch()) TMVAGui( outfileName );
 }

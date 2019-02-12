@@ -18,19 +18,19 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData, Int_t mcType, TChain** h
 
 	if(isData && logFlag)
 	{
-		gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/collate_%d_log.txt",run,year));
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/collate_%d_log.txt",run,year),"w");
 	}
 	else if(!isData && logFlag && mcType == 1)
 	{
-		gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiLambda/run%d/collate_log.txt",run));
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/JpsiLambda/run%d/collate_log.txt",run),"w");
 	}
 	else if(!isData && logFlag && mcType == 2)
 	{
-		gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiSigma/run%d/collate_log.txt",run));
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/JpsiSigma/run%d/collate_log.txt",run),"w");
 	}
 	else if(!isData && logFlag && mcType == 3)
 	{
-		gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiXi/run%d/collate_log.txt",run));
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/JpsiXi/run%d/collate_log.txt",run),"w");
 	}
 
 	cout<<"******************************************"<<endl;
@@ -124,6 +124,6 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData, Int_t mcType, TChain** h
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 
-	if(logFlag) gROOT->ProcessLine(".>");
+	if(logFlag) gSystem->RedirectOutput(0);
 	// gSystem->Exec("cat collate_log.txt");
 }

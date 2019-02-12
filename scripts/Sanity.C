@@ -22,6 +22,9 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
    PID cuts are applied to reject junk events with PID's of 0 or -1000 for Run1 and reject -1000 for Run2
  */
 {
+	TStopwatch sw;
+	sw.Start();
+
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
 	const char *folder = "", *part = "";
@@ -68,16 +71,16 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 	//Set up logging
 	if(isData && logFlag)
 	{
-		gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/sanity_%d_log.txt",run,year));
+		//gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/sanity_%d_log.txt",run,year));
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/sanity_%d_log.txt",
+		                             run,year),"w");
 	}
 	else if(!isData && logFlag)
 	{
-		gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/%s/run%d/sanity_log.txt",folder,run));
+		//gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/%s/run%d/sanity_log.txt",folder,run));
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/sanity_log.txt",
+		                             folder,run),"w");
 	}
-
-	TStopwatch sw;
-	sw.Start();
-
 	cout<<"******************************************"<<endl;
 	cout<<"==> Starting Sanity: "<<endl;
 	gSystem->Exec("date");
@@ -253,8 +256,10 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 			eff_excl_DD_err = sqrt(eff_excl_DD*(100.0-eff_excl_DD)/entries_init);
 		}
 		cout<<"******************************************"<<endl;
-		cout<<"LL Sanity cuts made with exclusive efficiency = "<<eff_excl_LL<<"% +/- " <<eff_excl_LL_err<<" %"<<endl;
-		cout<<"DD Sanity cuts made with exclusive efficiency = "<<eff_excl_DD<<"% +/- " <<eff_excl_DD_err<<" %"<<endl;
+		cout<<"LL Sanity cuts made with exclusive efficiency = "<<
+		        eff_excl_LL<<"% +/- " <<eff_excl_LL_err<<" %"<<endl;
+		cout<<"DD Sanity cuts made with exclusive efficiency = "<<
+		        eff_excl_DD<<"% +/- " <<eff_excl_DD_err<<" %"<<endl;
 		cout<<"******************************************"<<endl;
 
 		if(genFlag)
@@ -270,8 +275,10 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 				eff_incl_DD_err = sqrt(eff_incl_DD*(100.0-eff_incl_DD)/entries_gen);
 			}
 			cout<<"******************************************"<<endl;
-			cout<<"LL Sanity cuts made with inclusive efficiency = "<<eff_incl_LL<<"% +/- " <<eff_incl_LL_err<<" %"<<endl;
-			cout<<"DD Sanity cuts made with inclusive efficiency = "<<eff_incl_DD<<"% +/- " <<eff_incl_DD_err<<" %"<<endl;
+			cout<<"LL Sanity cuts made with inclusive efficiency = "<<
+			        eff_incl_LL<<"% +/- " <<eff_incl_LL_err<<" %"<<endl;
+			cout<<"DD Sanity cuts made with inclusive efficiency = "<<
+			        eff_incl_DD<<"% +/- " <<eff_incl_DD_err<<" %"<<endl;
 			cout<<"******************************************"<<endl;
 		}
 	}
@@ -285,6 +292,7 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 	sw.Stop();
 	cout << "==> Sanity is done! Mazel Tov!: "; sw.Print();
 
-	if(logFlag) gROOT->ProcessLine(".>");
+	//if(logFlag) gROOT->ProcessLine(".>");
+	if(logFlag) gSystem->RedirectOutput(0);
 	//if(logFlag) gSystem->Exec("cat sanity_log.txt");
 }

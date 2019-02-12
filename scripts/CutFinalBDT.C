@@ -2,140 +2,267 @@
 #include "TTree.h"
 #include "TROOT.h"
 #include "TSystem.h"
+#include "TStopwatch.h"
 #include <iostream>
 #include <fstream>
 
 using namespace std;
 //HAS ERRORS. READ AGAIN
-void CutFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t trackType = 3, const char* isoVersion = "v1", Int_t isoConf = 1, Int_t bdtConf = 1, Float_t bdtCut = -1.0, Bool_t isoFlag = true, Bool_t logFlag = false)
+void CutFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t trackType = 3, const char* isoVersion = "v1", Int_t isoConf = 1, Int_t bdtConf = 1, Float_t bdtCut = -1.0, Float_t bdtCut_ZeroTracks = -1.0, Bool_t isoFlag = true, Bool_t newFlag = false, Bool_t logFlag = false)
 {
-	TFile *fileIn = nullptr, *fileIn_zeroTracks = nullptr, *fileOut = nullptr;
-	TTree *treeIn = nullptr, *treeIn_zeroTracks = nullptr, *treeOut = nullptr;
+	TStopwatch sw;
+	sw.Start();
 
-	const char *type = "";
-	TString logFileName = "";
-	Bool_t genFlag = false;
-	fstream genFile;
-
-	if(trackType == 3)
-	{
-		cout<<"Processing LL"<<endl;
-		type = "LL";
-	}
-	else if(trackType == 5)
-	{
-		cout<<"Processing DD"<<endl;
-		type = "DD";
-	}
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
-	if(isoFlag) logFileName = Form("CutFinalBDT%d_%s_iso%d_%s.txt",bdtConf,type,isoConf,isoVersion);
-	else logFileName = Form("CutFinalBDT%d_%s_noIso.txt",bdtConf,type);
+	const char *folder = "", *part = "", *mynew = "";
+	const char *type = (trackType == 3) ? ("LL") : ("DD");
 
-	if(!isData) // MC
+	if(newFlag) mynew = "_new";
+	switch(mcType)
 	{
-		switch(mcType)
-		{
-		case 1:         //JpsiLambda
-			if(logFlag)
-			{
-				gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiLambda/run%d/%s",run,logFileName.Data()));
-			}
-			if(!gSystem->AccessPathName((Form("logs/mc/JpsiLambda/JpsiLambda/run%d/gen_log.txt",run))))
-			{
-				genFile.open((Form("logs/mc/JpsiLambda/JpsiLambda/run%d/gen_log.txt",run)));
-				genFlag = true;
-			}
-			if(isoFlag)
-			{
-				fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_%s_FinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"READ");
-				treeIn = (TTree*)fileIn->Get("MyTuple");
-				fileIn_zeroTracks = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_zeroTracks%s_FinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"READ");
-				treeIn_zeroTracks = (TTree*)fileIn_zeroTracks->Get("MyTuple");
-				fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/BDTcut/jpsilambda_%s_BDT%dcut_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
-			}
-			else
-			{
-				fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_%s_FinalBDT%d_noIso.root",run,type,bdtConf),"READ");
-				treeIn = (TTree*)fileIn->Get("MyTuple");
-				fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/BDTcut/jpsilambda_%s_BDT%dcut_noIso.root",run,type,bdtConf),"RECREATE");
-			}
-			treeOut = (TTree*)treeIn->CloneTree(0);
-			break;
-
-		case 2:         //JpsiSigma
-			if(logFlag)
-			{
-				gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiSigma/run%d/%s",run,logFileName.Data()));
-			}
-			if(!gSystem->AccessPathName((Form("logs/mc/JpsiLambda/JpsiSigma/run%d/gen_log.txt",run))))
-			{
-				genFile.open((Form("logs/mc/JpsiLambda/JpsiSigma/run%d/gen_log.txt",run)));
-				genFlag = true;
-			}
-			if(isoFlag)
-			{
-				fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_%s_FinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"READ");
-				treeIn = (TTree*)fileIn->Get("MyTuple");
-				fileIn_zeroTracks = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_zeroTracks%s_FinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"READ");
-				treeIn_zeroTracks = (TTree*)fileIn_zeroTracks->Get("MyTuple");
-				fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/BDTcut/jpsisigma_%s_BDT%dcut_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
-			}
-			else
-			{
-				fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_%s_FinalBDT%d_noIso.root",run,type,bdtConf),"READ");
-				treeIn = (TTree*)fileIn->Get("MyTuple");
-				fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/BDTcut/jpsisigma_%s_BDT%dcut_noIso.root",run,type,bdtConf),"RECREATE");
-			}
-			treeOut = (TTree*)treeIn->CloneTree(0);
-			break;
-
-		case 3:         //JpsiXi
-			if(logFlag)
-			{
-				gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiXi/run%d/%s",run,logFileName.Data()));
-			}
-			if(!gSystem->AccessPathName((Form("logs/mc/JpsiLambda/JpsiXi/run%d/gen_log.txt",run))))
-			{
-				genFile.open((Form("logs/mc/JpsiLambda/JpsiXi/run%d/gen_log.txt",run)));
-				genFlag = true;
-			}
-			if(isoFlag)
-			{
-				fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi_%s_FinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"READ");
-				treeIn = (TTree*)fileIn->Get("MyTuple");
-				fileIn_zeroTracks = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi_zeroTracks%s_FinalBDT%d_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"READ");
-				treeIn_zeroTracks = (TTree*)fileIn_zeroTracks->Get("MyTuple");
-				fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/BDTcut/jpsixi_%s_BDT%dcut_iso%d_%s.root",run,type,bdtConf,isoConf,isoVersion),"RECREATE");
-			}
-			else
-			{
-				fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi_%s_FinalBDT%d_noIso.root",run,type,bdtConf),"READ");
-				treeIn = (TTree*)fileIn->Get("MyTuple");
-				fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/BDTcut/jpsixi_%s_BDT%dcut_noIso.root",run,type,bdtConf),"RECREATE");
-			}
-			treeOut = (TTree*)treeIn->CloneTree(0);
-			break;
-		}
+	case 0:
+	{
+		folder = "";
+		part = "";
+		break;
 	}
-	else   // Data
+	case 1:
 	{
-		if(logFlag)
-		{
-			gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/%s",run,logFileName.Data()));
-		}
-		fileIn = TFile::Open(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_%s_%d.root",run,type,year),"READ");
-		treeIn = (TTree*)fileIn->Get("MyTuple");
-		fileOut = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_%d.root",run,type,year),"RECREATE");
-		treeOut = (TTree*)treeIn->CloneTree(0);
-		fileOut_nonZeroTracks = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_%d_nonZeroTracks.root",run,type,year),"RECREATE");
-		treeOut_nonZeroTracks = (TTree*)treeIn->CloneTree(0);
-		fileOut_ZeroTracks = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_%d_ZeroTracks.root",run,type,year),"RECREATE");
-		treeOut_ZeroTracks = (TTree*)treeIn->CloneTree(0);
+		folder = "JpsiLambda";
+		part = "jpsilambda";
+		break;
+	}
+	case 2:
+	{
+		folder = "JpsiSigma";
+		part = "jpsisigma";
+		break;
+	}
+	case 3:
+	{
+		folder = "JpsiXi";
+		part = "jpsixi";
+		break;
+	}
+	case 4:
+	{
+		folder = "Bu_JpsiX";
+		part = "bu_jpsix";
+		break;
+	}
+	case 5:
+	{
+		folder = "Bd_JpsiX";
+		part = "bd_jpsix";
+		break;
+	}
+	}
+	const char* logFileName = "";
+
+	if(isoFlag) logFileName = Form("CutFinalBDT%d_%s_iso%d_%s%s.txt",bdtConf,type,isoConf,isoVersion,mynew);
+	else logFileName = Form("CutFinalBDT%d_%s_noIso%s.txt",bdtConf,type,mynew);
+
+	//****Set up logging*****
+	if(isData && logFlag)
+	{
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/%s",run,logFileName),"w");
+	}
+	else if(!isData && logFlag)
+	{
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/%s",folder,run,logFileName),"w");
 	}
 	cout<<"******************************************"<<endl;
-	cout<<"Starting optimizeFinalBDT "<<endl;
+	cout<<"==> Starting OptimizeFinalBDT: "<<endl;
 	gSystem->Exec("date");
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 	cout<<"******************************************"<<endl;
+
+	TFile *fileIn = nullptr, *fileIn_zeroTracks = nullptr, *fileOut = nullptr;
+	TTree *treeIn = nullptr, *treeIn_zeroTracks = nullptr, *treeOut = nullptr;
+	TTree *myTree = nullptr;
+	Bool_t genFlag = false;
+
+	Float_t eff_excl = 0.0, eff_excl_err = 0.0;
+	Float_t eff_incl = 0.0, eff_incl_err = 0.0;
+
+	Int_t nEntries_nonZero = 0, nEntries_zeroTracks = 0, entries_init = 0, entries_gen;
+	Int_t entries_final = 0;
+	Double_t myBDT = 0., myBDT_zeroTracks = 0.;
+	fstream genFile;
+
+	//*****Set up input, output*****
+	if(!isData) // MC
+	{
+		if(!gSystem->AccessPathName((Form("logs/mc/JpsiLambda/%s/run%d/gen_log.txt",
+		                                  folder,run))))
+		{
+			genFile.open((Form("logs/mc/JpsiLambda/%s/run%d/gen_log.txt",
+			                   folder,run)));
+			genFlag = true;
+		}
+		if(isoFlag)
+		{
+			fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_cutoutks_%s_nonZeroTracks.root",
+			                          folder,run,part,type));
+			treeIn = (TTree*)fileIn->Get("MyTuple");
+
+			// treeIn->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_%s_iso%d_%s.root",
+			//                                  folder,run,part,type,isoConf,isoVersion));
+
+			fileIn_zeroTracks = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_cutoutks_%s_ZeroTracks.root",
+			                                     folder,run,part,type));
+			treeIn_zeroTracks = (TTree*)fileIn_zeroTracks->Get("MyTuple");
+
+			treeIn_zeroTracks->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_zeroTracks%s_FinalBDT%d%s.root",
+			                                            folder,run,part,type,bdtConf,mynew));
+
+			fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/BDTcut/%s_%s_BDT%dcut_iso%d_%s.root",
+			                         folder,run,part,type,bdtConf,isoConf,isoVersion),"RECREATE");
+			treeOut = (TTree*)treeIn->CloneTree(0);
+			treeIn->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_%s_FinalBDT%d_iso%d_%s%s.root",
+			                                 folder,run,part,type,bdtConf,isoConf,isoVersion,mynew));
+
+			treeIn->SetBranchAddress(Form("BDT%d",bdtConf),&myBDT);
+			treeIn_zeroTracks->SetBranchAddress(Form("BDT%d",bdtConf),&myBDT_zeroTracks);
+		}
+		else
+		{
+			fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_cutoutks_%s.root",
+			                          folder,run,part,type));
+			treeIn = (TTree*)fileIn->Get("MyTuple");
+
+			fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/BDTcut/%s_%s_BDT%dcut_noIso.root",
+			                         folder,run,part,type,bdtConf),"RECREATE");
+
+			treeOut = (TTree*)treeIn->CloneTree(0);
+			treeIn->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_%s_FinalBDT%d_noIso.root",
+			                                 folder,run,part,type,bdtConf));
+
+			treeIn->SetBranchAddress(Form("BDT%d",bdtConf),&myBDT);
+		}
+
+	}
+	else   // Data
+	{
+		if(isoFlag)
+		{
+			fileIn = TFile::Open(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_nonZeroTracks.root",
+			                          run,type));
+			treeIn = (TTree*)fileIn->Get("MyTuple");
+
+			fileIn_zeroTracks = TFile::Open(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_ZeroTracks.root",
+			                                     run,type));
+			treeIn_zeroTracks = (TTree*)fileIn_zeroTracks->Get("MyTuple");
+			treeIn_zeroTracks->AddFriend("MyTuple",Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_zeroTracks%s_FinalBDT%d%s.root",
+			                                            run,type,bdtConf,mynew));
+
+			fileOut = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/BDTcut/jpsilambda_%s_BDT%dcut_iso%d_%s.root",
+			                         run,type,bdtConf,isoConf,isoVersion),"RECREATE");
+
+			treeOut = (TTree*)treeIn->CloneTree(0);
+
+			treeIn->AddFriend("MyTuple",Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_FinalBDT%d_iso%d_%s%s.root",
+			                                 run,type,bdtConf,isoConf,isoVersion,mynew));
+
+			treeIn->SetBranchAddress(Form("BDT%d",bdtConf),&myBDT);
+			treeIn_zeroTracks->SetBranchAddress(Form("BDT%d",bdtConf),&myBDT_zeroTracks);
+		}
+		else
+		{
+			fileIn = TFile::Open(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s.root",
+			                          run,type));
+			treeIn = (TTree*)fileIn->Get("MyTuple");
+
+			fileOut = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/BDTcut/jpsilambda_%s_BDT%dcut_noIso.root",
+			                         run,type,bdtConf),"RECREATE");
+
+			treeOut = (TTree*)treeIn->CloneTree(0);
+
+			treeIn->AddFriend("MyTuple",Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_FinalBDT%d_noIso.root",
+			                                 run,type,bdtConf));
+			treeIn->SetBranchAddress(Form("BDT%d",bdtConf),&myBDT);
+		}
+	}
+	nEntries_nonZero = treeIn->GetEntries();
+	if(isoFlag) nEntries_zeroTracks = treeIn_zeroTracks->GetEntries();
+
+	entries_init = nEntries_nonZero + nEntries_zeroTracks;
+
+	for (Int_t i = 0; i < nEntries_nonZero; i++)
+	{
+		//	if(i==200000) break;
+		if(i%100000 == 0)
+		{
+			cout<<i<<endl;
+		}
+		treeIn->GetEntry(i);
+
+		if(myBDT > bdtCut)
+		{
+			treeOut->Fill();
+		}
+	}
+	if(isoFlag)
+	{
+		treeOut->CopyAddresses(treeIn_zeroTracks);
+		for (Int_t i = 0; i < nEntries_zeroTracks; i++)
+		{
+			if(i%100000 == 0)
+			{
+				cout<<i<<endl;
+			}
+			treeIn_zeroTracks->GetEntry(i);
+
+			if(myBDT_zeroTracks > bdtCut_ZeroTracks)
+			{
+				treeOut->Fill();
+			}
+		}
+	}
+
+	entries_final = treeOut->GetEntries();
+
+	cout<<"Outgoing Entries = "<<entries_final<<endl;
+
+	if(!isData)//Calculate inclusive and exclusive efficiencies for MC
+	{
+		if(entries_init != 0)
+		{
+			eff_excl     = (Float_t)entries_final*100/entries_init;
+			eff_excl_err = sqrt(eff_excl*(100.0-eff_excl)/entries_init);
+		}
+		cout<<"******************************************"<<endl;
+		cout<<type<<" CutFinalBDT cuts made with exclusive efficiency = "
+		    <<eff_excl<<"% +/- " <<eff_excl_err<<" %"<<endl;
+		cout<<"******************************************"<<endl;
+
+		if(genFlag)
+		{
+			genFile>>entries_gen;
+			cout<<"Original generated number = "<<entries_gen<<endl;
+			if(entries_gen != 0)
+			{
+				eff_incl     = (Float_t)entries_final*100/entries_gen;
+				eff_incl_err = sqrt(eff_incl*(100.0-eff_incl)/entries_gen);
+			}
+			cout<<"******************************************"<<endl;
+			cout<<type<<" CutFinalBDT cuts made with inclusive efficiency = "
+			    <<eff_incl<<"% +/- " <<eff_incl_err<<" %"<<endl;
+			cout<<"******************************************"<<endl;
+
+			genFile.close();
+		}
+	}
+
+	fileOut->Write();
+	fileOut->Close();
+
+	fileIn->Close();
+	if(isoFlag) fileIn_zeroTracks->Close();
+
+	sw.Stop();
+	cout << "==> CutFinalBDT is done! Death to Background!: "; sw.Print();
+
+	if(logFlag) gSystem->RedirectOutput(0);
 }

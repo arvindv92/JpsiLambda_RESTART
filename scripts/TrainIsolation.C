@@ -17,53 +17,41 @@ void TrainIsolation(Int_t run, Int_t trackType,
 
    >trackType = 3 for LL, 5 for DD.
 
-   >isoVersion = "v0","v1","v2","v3". Different versions correspond
+   >isoVersion = "v0","v1". Different versions correspond
    to different training variables.
 
    v0: IPCHI2, VCHI2DOF, log_MINIPCHI2
    v1: IPCHI2, VCHI2DOF, log_MINIPCHI2, log_PT
-   v2: IPCHI2, VCHI2DOF, log_MINIPCHI2, log_FD, log_FDCHI2
-   v3: IPCHI2, VCHI2DOF, log_MINIPCHI2, log_FD, log_FDCHI2, log_PT
  */
 {
-	cout<<"***********Starting TrainIsolation***********"<<endl;
-
 	TStopwatch sw;
 	sw.Start();
+
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+
+	const char *type = "";
+	type        = (trackType == 3) ? ("LL") : ("DD");
+
+	if(logFlag) //set up logging
+	{
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/isolationTraining_%s_%s_log.txt",
+		                             run,type,isoVersion),"w");
+	}
+	cout<<"*****************************"<<endl;
+	cout<<"==> Starting TrainIsolation: "<<isoVersion<<endl;
+	gSystem->Exec("date");
+	cout<<"WD = "<<gSystem->pwd()<<endl;
+	cout<<"*****************************"<<endl;
 
 	TFile *input_sig = nullptr, *input_bkg = nullptr, *outputFile = nullptr;
 	TTree *sigTree   = nullptr, *bkgTree   = nullptr;
 
 	TString outFileName = "", fname_sig    = "", fname_bkg = "";
 	TCut myCut          = "";
-	const char *type    = "", *logFileName = "";
 
+	TMVA::DataLoader *dataLoader = nullptr;
 	TMVA::Factory *factory       = nullptr;
-	TMVA::DataLoader *dataloader = nullptr;
 	TMVA::Tools::Instance(); // This loads the library
-
-	type        = (trackType == 3) ? ("LL") : ("DD");
-	logFileName = Form("isolationTraining_%s_%s_log.txt",
-	                   type,isoVersion);
-	cout<<"logFile = "<<logFileName<<endl;
-
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
-
-	if(logFlag) //set up logging
-	{
-		gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/%s",
-		                        run,logFileName));
-	}
-	gSystem->Exec("date");
-	cout<<endl;
-	cout<<"******************************************"<<endl;
-	cout<<"Processing Run "<<run<<" "<<type<<endl;
-	cout<<"******************************************"<<endl;
-
-	cout<<"*****************************"<<endl;
-	cout<<"==> Starting TrainIsolation: "<<isoVersion<<endl;
-	cout<<"WD = "<<gSystem->pwd()<<endl;
-	cout<<"*****************************"<<endl;
 
 	outFileName = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
 	                   "TMVAtraining/iso/TMVA300-isok%s_data_%s.root",
@@ -75,35 +63,35 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	                                "!V:!Silent:Color:!DrawProgressBar:"
 	                                "AnalysisType=Classification" );
 
-	dataloader  = new TMVA::DataLoader("dataset");
+	dataLoader  = new TMVA::DataLoader("dataset");
 
-	dataloader->AddVariable("IPCHI2",'F');
-	dataloader->AddVariable("VCHI2DOF",'F');
-	dataloader->AddVariable("log_MINIPCHI2 := log10(MINIPCHI2)",'F');
+	dataLoader->AddVariable("IPCHI2",'F');
+	dataLoader->AddVariable("VCHI2DOF",'F');
+	dataLoader->AddVariable("log_MINIPCHI2 := log10(MINIPCHI2)",'F');
 
 	myCut = "MINIPCHI2 > 0 && VCHI2DOF > 0";
 
 	if(strncmp(isoVersion,"v1",2)==0)
 	{
-		dataloader->AddVariable("log_PT := log10(PT)",'F');
+		dataLoader->AddVariable("log_PT := log10(PT)",'F');
 
 		myCut = myCut && "PT > 0 ";
 	}
-	else if(strncmp(isoVersion,"v2",2)==0)
-	{
-		dataloader->AddVariable("log_FD     := log10(FD)",'F');
-		dataloader->AddVariable("log_FDCHI2 := log10(FDCHI2)",'F');
-
-		myCut = myCut && "FD > 0 && FDCHI2 > 0";
-	}
-	else if(strncmp(isoVersion,"v3",2)==0)
-	{
-		dataloader->AddVariable("log_PT     := log10(PT)",'F');
-		dataloader->AddVariable("log_FD     := log10(FD)",'F');
-		dataloader->AddVariable("log_FDCHI2 := log10(FDCHI2)",'F');
-
-		myCut = myCut && "PT > 0 && FDCHI2 > 0 && FD > 0";
-	}
+	// else if(strncmp(isoVersion,"v2",2)==0)
+	// {
+	//      dataLoader->AddVariable("log_FD     := log10(FD)",'F');
+	//      dataLoader->AddVariable("log_FDCHI2 := log10(FDCHI2)",'F');
+	//
+	//      myCut = myCut && "FD > 0 && FDCHI2 > 0";
+	// }
+	// else if(strncmp(isoVersion,"v3",2)==0)
+	// {
+	//      dataLoader->AddVariable("log_PT     := log10(PT)",'F');
+	//      dataLoader->AddVariable("log_FD     := log10(FD)",'F');
+	//      dataLoader->AddVariable("log_FDCHI2 := log10(FDCHI2)",'F');
+	//
+	//      myCut = myCut && "PT > 0 && FDCHI2 > 0 && FD > 0";
+	// }
 
 	fname_sig = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
 	                 "jpsilambda_%s_forIsoTraining.root",run,type);
@@ -136,11 +124,11 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	bkgTree = (TTree*)input_bkg->Get("MyTuple");
 
 	// global event weights per tree (see below for setting event-wise weights)
-	dataloader->AddSignalTree(sigTree,1.0);
-	dataloader->AddBackgroundTree(bkgTree,1.0);
+	dataLoader->AddSignalTree(sigTree,1.0);
+	dataLoader->AddBackgroundTree(bkgTree,1.0);
 
-	dataloader->SetSignalWeightExpression("SW");
-	dataloader->SetBackgroundWeightExpression("SW");
+	dataLoader->SetSignalWeightExpression("SW");
+	dataLoader->SetBackgroundWeightExpression("SW");
 
 	Int_t nEntries_S = sigTree->GetEntries(myCut);
 	Int_t nEntries_B = bkgTree->GetEntries(myCut);
@@ -151,19 +139,19 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	Int_t nTrain_B = (Int_t)nEntries_B*0.8;// 80/20 split
 	Int_t nTest_B  = nEntries_B - nTrain_B;
 
-	dataLoader->PrepareTrainingAndTestTree( myCutS, myCutB,
+	dataLoader->PrepareTrainingAndTestTree( myCut, myCut,
 	                                        Form("nTrain_Signal=%d:nTest_Signal=%d:"
 	                                             "nTrain_Background=%d:nTest_Background=%d"
 	                                             "SplitMode=Random:NormMode=NumEvents:!V",
 	                                             nTrain_S,nTest_S,nTrain_B,nTest_B));
 
-	factory->BookMethod(dataloader, TMVA::Types::kBDT, "isoConf1_300",
+	factory->BookMethod(dataLoader, TMVA::Types::kBDT, "isoConf1_300",
 	                    "!H:!V:NTrees=300:MinNodeSize=1.25%:MaxDepth=3:"
 	                    "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
 	                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
 	                    "nCuts=200" );
 
-	factory->BookMethod(dataloader, TMVA::Types::kBDT, "isoConf2_300",
+	factory->BookMethod(dataLoader, TMVA::Types::kBDT, "isoConf2_300",
 	                    "!H:!V:NTrees=300:MinNodeSize=0.75%:MaxDepth=3:"
 	                    "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
 	                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
@@ -209,5 +197,7 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	sw.Stop();
 	cout << "==> End of TrainIsolation! Cheers!: "; sw.Print();
 
-	if(logFlag) gROOT->ProcessLine(".>");
+	// if(logFlag) gROOT->ProcessLine(".>");
+	if(logFlag) gSystem->RedirectOutput(0);
+
 }

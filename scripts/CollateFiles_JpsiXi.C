@@ -18,11 +18,11 @@ void CollateFiles_JpsiXi(Int_t run, Int_t year, Bool_t isData, TChain** h1, TCha
 	//Set up logging
 	if(isData && logFlag)
 	{
-		gROOT->ProcessLine(Form(".> logs/data/JpsiXi/run%d/collate_%d_log.txt",run,year));
+		gSystem->RedirectOutput(Form("logs/data/JpsiXi/run%d/collate_%d_log.txt",run,year),"w");
 	}
 	else if(!isData && logFlag)
 	{
-		gROOT->ProcessLine(Form(".> logs/mc/JpsiXi/run%d/collate_log.txt",run));
+		gSystem->RedirectOutput(Form("logs/mc/JpsiXi/run%d/collate_log.txt",run),"w");
 	}
 
 	cout<<"******************************************"<<endl;
@@ -90,6 +90,6 @@ void CollateFiles_JpsiXi(Int_t run, Int_t year, Bool_t isData, TChain** h1, TCha
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 
-	if(logFlag) gROOT->ProcessLine(".>");
+	if(logFlag) gSystem->RedirectOutput(0);
 	// gSystem->Exec("cat collate_log.txt");
 }
