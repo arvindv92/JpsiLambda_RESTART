@@ -12,10 +12,15 @@ void OptimizeFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 
 	type = (trackType == 3) ? "LL" : "DD";
 
-	if(logFlag && trackType == 3)
+	if(logFlag && isoFlag)
 	{
 		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/OptimizeFinalBDT%d_%s_iso%d_%s%s.txt",
 		                             run,bdtConf,type,isoConf,isoVersion,mynew),"w");
+	}
+	if(logFlag && !isoFlag)
+	{
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/OptimizeFinalBDT%d_%s_noIso%s.txt",
+		                             run,bdtConf,type,mynew),"w");
 	}
 
 	cout<<"******************************************"<<endl;
