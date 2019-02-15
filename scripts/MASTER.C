@@ -8,6 +8,7 @@
 #include "TrainFinalBDT.h"
 #include "ApplyFinalBDT.h"
 #include "OptimizeFinalBDT.h"
+#include "CutFinalBDT.h"
 #include <iostream>
 
 using namespace std;
@@ -18,17 +19,21 @@ void MASTER()
 	sw.Start();
 
 	gSystem->Exec("date");
-	// gROOT->ProcessLine(".L TrainIsolation.C+");
-	// gROOT->ProcessLine(".L ApplyIsolation.C+");
+	gROOT->ProcessLine(".L TrainIsolation.C+");
+	gROOT->ProcessLine(".L ApplyIsolation.C+");
 	gROOT->ProcessLine(".L TrainFinalBDT.C+");
 	gROOT->ProcessLine(".L ApplyFinalBDT.C+");
 	gROOT->ProcessLine(".L OptimizeFinalBDT.C+");
+	gROOT->ProcessLine(".L CutFinalBDT.C+");
 
-	// gSystem->Load("TrainIsolation_C.so");
-	// gSystem->Load("ApplyIsolation_C.so");
+	gSystem->Load("TrainIsolation_C.so");
+	gSystem->Load("ApplyIsolation_C.so");
 	gSystem->Load("TrainFinalBDT_C.so");
 	gSystem->Load("ApplyFinalBDT_C.so");
 	gSystem->Load("OptimizeFinalBDT_C.so");
+	gSystem->Load("CutFinalBDT_C.so");
+
+
 
 	Int_t run              = 2;// Run 1 or Run 2?
 	Int_t mcType           = 0;// 0 when running over data. 1, 2, 3 corresponding to J/psi Lambda MC reco'd as J/psi Lambda, J/psi Sigma and J/psi Xi respectively
@@ -41,12 +46,16 @@ void MASTER()
 	Bool_t testing         = false;// when true, analysis will only run over a subset of data
 	Bool_t loose           = true;// when true, analysis will run over data/MC from "loose" stripping line. Only LL
 	Bool_t isData          = true;// Data or MC?
-	Bool_t isoFlag         = true;// when true, isolation will be used in final BDT.
+	Bool_t isoFlag         = false;// when true, isolation will be used in final BDT.
 	Bool_t logFlag         = true;// set to false only while testing.
 	Bool_t newFlag         = false;
 
-	const char* isoVersion = ""; // which version of isolation BDT? changes input variables used in isolation. v0,1,2,3,4 supported.
+	Float_t bdtCut         = 0.0;
+	Float_t bdtCut_ZeroTracks = 0.0;
 
+	const char* isoVersion = ""; // which version of isolation BDT? changes input variables used in isolation. v0,1 supported.
+
+	TString FOM            = "sig";//sig for S/sqrt(S+B), punzi for Punzi FOM with a = 3
 	// TString inFileName  = (trackType == 3) ? ("jpsilambda_LL_forIsoTraining.root") : ("jpsilambda_DD_forIsoTraining.root");
 	// TString outFileName = (trackType == 3) ? ("jpsilambda_LL_forIsoTraining_massCut.root") : ("jpsilambda_DD_forIsoTraining_massCut.root");
 	Int_t runArray[2]          = {1,2};
@@ -55,6 +64,58 @@ void MASTER()
 	Int_t finalBDTconfArray[2] = {1,2};
 	Bool_t newFlagArray[2]     = {false,true};
 
+	Int_t mcTypeArray[5]       = {1,2,3,4,5};
+
+	Float_t cutArray[2][2][2][2][2] = { { { { {}, {} }, { {}, {} } }, { { {}, {} }, { {}, {} } } }, { { { {}, {} }, { {}, {} } }, { { {}, {} }, { {}, {} } } } };
+	Float_t zeroCutArray[2][2][2] = { { {}, {} }, { {}, {} } };
+	cutArray[0][0][0][0][0] = 0.475;
+	cutArray[0][0][0][0][1] = 0.465;
+	cutArray[0][0][0][1][0] = 0.455;
+	cutArray[0][0][0][1][1] = 0.435;
+	cutArray[0][0][1][0][0] = 0.475;
+	cutArray[0][0][1][0][1] = 0.455;
+	cutArray[0][0][1][1][0] = 0.435;
+	cutArray[0][0][1][1][1] = 0.445;
+	cutArray[0][1][0][0][0] = 0.455;
+	cutArray[0][1][0][0][1] = 0.465;
+	cutArray[0][1][0][1][0] = 0.455;
+	cutArray[0][1][0][1][1] = 0.395;
+	cutArray[0][1][1][0][0] = 0.455;
+	cutArray[0][1][1][0][1] = 0.455;
+	cutArray[0][1][1][1][0] = 0.445;
+	cutArray[0][1][1][1][1] = 0.455;
+
+	cutArray[1][0][0][0][0] = 0.475;
+	cutArray[1][0][0][0][1] = 0.485;
+	cutArray[1][0][0][1][0] = 0.445;
+	cutArray[1][0][0][1][1] = 0.435;
+	cutArray[1][0][1][0][0] = 0.505;
+	cutArray[1][0][1][0][1] = 0.495;
+	cutArray[1][0][1][1][0] = 0.485;
+	cutArray[1][0][1][1][1] = 0.455;
+	cutArray[1][1][0][0][0] = 0.495;
+	cutArray[1][1][0][0][1] = 0.475;
+	cutArray[1][1][0][1][0] = 0.465;
+	cutArray[1][1][0][1][1] = 0.435;
+	cutArray[1][1][1][0][0] = 0.485;
+	cutArray[1][1][1][0][1] = 0.485;
+	cutArray[1][1][1][1][0] = 0.475;
+	cutArray[1][1][1][1][1] = 0.475;
+
+	zeroCutArray[0][0][0] = 0.565;
+	zeroCutArray[0][0][1] = 0.485;
+	zeroCutArray[0][1][0] = 0.475;
+	zeroCutArray[0][1][1] = 0.455;
+
+	zeroCutArray[1][0][0] = 0.395;
+	zeroCutArray[1][0][1] = 0.415;
+	zeroCutArray[1][1][0] = 0.445;
+	zeroCutArray[1][1][1] = 0.325;
+
+	// for(Int_t h = 0; h <= 0; h++)
+	// {
+	//      mcType = mcTypeArray[h];
+	//      cout<<"$$$$$$$$$$$ Processing MC Type "<<mcType<< " $$$$$$$$$$$$$$"<<endl;
 	for(Int_t i = 0; i<=1; i++)
 	{
 		run = runArray[i];
@@ -100,89 +161,103 @@ void MASTER()
 			// gROOT->Reset();
 		}
 
-		for (Int_t j = 0; j <= 1; j++)//loop over isolation BDT versions.
+		// for (Int_t j = 0; j <= 1; j++)//loop over isolation BDT versions.
+		// {
+		// isoVersion = (isoVersionArray[j]);
+
+		if(isData)
 		{
-			isoVersion = (isoVersionArray[j]);
-			//Train Isolation BDT on data
-			// cout<<"***TrainIsolation run "<<run<<"isoVersion "<<isoVersion<<"***"<<endl;
+			// Train Isolation BDT on data.Both configs get trained here.
+			// cout<<"***TrainIsolation run "<<run<<" isoVersion "<<isoVersion<<"***"<<endl;
 			// TrainIsolation(run, trackType, isoVersion, logFlag);
+		}
+		// for (Int_t k = 0; k <= 1; k++)//loop over isolation BDT configurations
+		// {
+		// isoConf    = isoConfArray[k];
 
-			for (Int_t k = 0; k <= 1; k++)//loop over isolation BDT configurations
+		//	Apply isolation BDT on all data/MC
+		// cout<<"***ApplyIsolation all data/MC run "<<run<<" isoVersion "<<isoVersion<<
+		//         " isoConf "<<isoConf<<"***"<<endl;
+		//
+		// ApplyIsolation(run, isData, mcType, trackType, 1, isoVersion, isoConf, logFlag);
+
+		if(isData)
+		{
+			//Apply isolation BDT on sWeighted data
+			// cout<<"***ApplyIsolation sWeight data run "<<run<<" isoVersion "<<isoVersion<<
+			//         " isoConf "<<isoConf<<"***"<<endl;
+
+			// ApplyIsolation(run, isData, mcType, trackType, 2, isoVersion, isoConf, logFlag);
+		}
+		for(Int_t l = 0; l <= 1; l++)//loop over new Flag versions
+		{
+			newFlag = newFlagArray[l];
+
+			if(isData && isoFlag)
 			{
-				isoConf    = isoConfArray[k];
+				//Train Final BDT on data w/ isolation (if isoFlag is true)
+				// cout<<"***TrainFinalBDT nonZeroTracks run "<<run<<" isoVersion "<<isoVersion<<
+				//         " isoConf "<<isoConf<<" newFlag "<<newFlag<<"***"<<endl;
+				//
+				// TrainFinalBDT(run, trackType, isoVersion, isoConf, isoFlag, logFlag, newFlag);
 
-				// cout<<"***ApplyIsolation all data run "<<run<<"isoVersion "<<isoVersion<<
-				//         "isoConf "<<isoConf<<"***"<<endl;
+				//Train Final BDT on data sans isolation (if isoFlag is true)
+				// cout<<"***TrainFinalBDT ZeroTracks run "<<run<<" isoVersion "<<isoVersion<<
+				//         " isoConf "<<isoConf<<" newFlag "<<newFlag<<"***"<<endl;
+				//
+				// TrainFinalBDT(run, trackType, isoVersion, isoConf, !isoFlag, logFlag, newFlag);
+			}
+			for(Int_t m = 0; m <= 1; m++) //Loop over final BDT configurations.
+			{
+				finalBDTconf = finalBDTconfArray[m];
 
-				//Apply isolation BDT on all data/MC
-				// ApplyIsolation(run, isData, mcType, trackType, 1, isoVersion, isoConf, logFlag);
+				//Apply final BDT on nonZeroTracks data/MC
+				cout<<"***ApplyFinalBDT all nonZeroTracks run "<<run<<"isoVersion "<<
+				        isoVersion<<" isoConf "<<isoConf<<" newFlag "<<newFlag<<" finalBDTconf "<<
+				        finalBDTconf<<"***"<<endl;
+
+				ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 1, isoFlag, false, logFlag, newFlag);
+
+				//Apply final BDT on zeroTracks data/MC
+				// cout<<"***ApplyFinalBDT all ZeroTracks run "<<run<<" isoVersion "<<
+				//         isoVersion<<" isoConf "<<isoConf<<" newFlag "<<newFlag<<" finalBDTconf "<<
+				//         finalBDTconf<<"***"<<endl;
+				//
+				// ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 1, isoFlag, true, logFlag, newFlag);
 
 				if(isData)
 				{
-					// cout<<"***ApplyIsolation sWeight data run "<<run<<"isoVersion "<<isoVersion<<
-					//         "isoConf "<<isoConf<<"***"<<endl;
-					//Apply isolation BDT on sWeighted data
-					// ApplyIsolation(run, isData, mcType, trackType, 2, isoVersion, isoConf, logFlag);
+					//Apply final BDT on nonZeroTracks sWeighted data/MC
+					cout<<"***ApplyFinalBDT sWeight nonZeroTracks run "<<run<<" isoVersion "<<
+					        isoVersion<<" isoConf "<<isoConf<<" newFlag "<<newFlag<<" finalBDTconf "<<
+					        finalBDTconf<<"***"<<endl;
 
-					for(Int_t l = 1; l<=1; l++)
-					{
-						newFlag = newFlagArray[l];
+					ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 2, isoFlag, false, logFlag, newFlag);
 
-						cout<<"***TrainFinalBDT nonZeroTracks run "<<run<<"isoVersion "<<isoVersion<<
-						        "isoConf "<<isoConf<<"newFlag "<<newFlag<<"***"<<endl;
-						//Train Final BDT on data w/ isolation (if isoFlag is true)
-						TrainFinalBDT(run, trackType, isoVersion, isoConf, isoFlag, logFlag, newFlag);
+					//Apply final BDT on ZeroTracks sWeighted data/MC
+					// cout<<"***ApplyFinalBDT sWeight ZeroTracks run "<<run<<" isoVersion "<<
+					//         isoVersion<<" isoConf "<<isoConf<<" newFlag "<<newFlag<<" finalBDTconf "<<
+					//         finalBDTconf<<"***"<<endl;
+					// ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 2, isoFlag, true, logFlag, newFlag);
 
-						cout<<"***TrainFinalBDT ZeroTracks run "<<run<<"isoVersion "<<isoVersion<<
-						        "isoConf "<<isoConf<<"newFlag "<<newFlag<<"***"<<endl;
-						//Train Final BDT on data sans isolation (if isoFlag is true)
-						TrainFinalBDT(run, trackType, isoVersion, isoConf, !isoFlag, logFlag, newFlag);
-
-						for(Int_t m = 0; m <= 1; m++) //Loop over final BDT configurations.
-						{
-							finalBDTconf = finalBDTconfArray[m];
-
-							cout<<"***ApplyFinalBDT all nonZeroTracks run "<<run<<"isoVersion "<<
-							        isoVersion<<"isoConf "<<isoConf<<"newFlag "<<newFlag<<"finalBDTconf "<<
-							        finalBDTconf<<"***"<<endl;
-
-							//Apply final BDT on nonZeroTracks data/MC
-							ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 1, isoFlag, false, logFlag, newFlag);
-
-							cout<<"***ApplyFinalBDT all ZeroTracks run "<<run<<"isoVersion "<<
-							        isoVersion<<"isoConf "<<isoConf<<"newFlag "<<newFlag<<"finalBDTconf "<<
-							        finalBDTconf<<"***"<<endl;
-
-							//Apply final BDT on zeroTracks data/MC
-							ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 1, isoFlag, true, logFlag, newFlag);
-
-							if(isData)
-							{
-								cout<<"***ApplyFinalBDT sWeight nonZeroTracks run "<<run<<"isoVersion "<<
-								        isoVersion<<"isoConf "<<isoConf<<"newFlag "<<newFlag<<"finalBDTconf "<<
-								        finalBDTconf<<"***"<<endl;
-								//Apply final BDT on nonZeroTracks sWeighted data/MC
-								ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 2, isoFlag, false, logFlag, newFlag);
-
-								cout<<"***ApplyFinalBDT sWeight ZeroTracks run "<<run<<"isoVersion "<<
-								        isoVersion<<"isoConf "<<isoConf<<"newFlag "<<newFlag<<"finalBDTconf "<<
-								        finalBDTconf<<"***"<<endl;
-								//Apply final BDT on ZeroTracks sWeighted data/MC
-								ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 2, isoFlag, true, logFlag, newFlag);
-
-								cout<<"***OptimizeFinalBDT run "<<run<<"isoVersion "<<
-								        isoVersion<<"isoConf "<<isoConf<<"newFlag "<<newFlag<<"finalBDTconf "<<
-								        finalBDTconf<<"***"<<endl;
-								OptimizeFinalBDT(run, trackType, isoVersion, isoConf, finalBDTconf, isoFlag, logFlag, newFlag);
-							}
-						}//end loop on finalBDTconf
-					}
+					cout<<"***OptimizeFinalBDT run "<<run<<" isoVersion "<<
+					        isoVersion<<" isoConf "<<isoConf<<" newFlag "<<newFlag<<" finalBDTconf "<<
+					        finalBDTconf<<" FOM "<<FOM<<"***"<<endl;
+					OptimizeFinalBDT(run, trackType, isoVersion, isoConf, finalBDTconf, isoFlag, logFlag, newFlag, FOM);
 				}
-
-			}//end loop on isoConf
-		}//end loop on isoVersion
-	}
-
+				// bdtCut = cutArray[i][j][k][l][m];
+				// bdtCut_ZeroTracks = zeroCutArray[i][l][m];
+				//
+				// cout<<"***CutFinalBDT run "<<run<<" isoVersion "<<
+				//         isoVersion<<" isoConf "<<isoConf<<" newFlag "<<newFlag<<" finalBDTconf "<<
+				//         finalBDTconf<<" FOM "<<FOM<<"***"<<endl;
+				// CutFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, bdtCut, bdtCut_ZeroTracks, isoFlag, newFlag, logFlag);
+			}//end loop on finalBDTconf
+		}//end loop on newFlag
+		 // }//end loop on isoConf
+		 // }//end loop on isoVersion
+	}//end loop on runs
+	// }//end loop on mcTypes
 	sw.Stop();
 	cout << "==> MASTER is done! Huzzah!: "; sw.Print();
 }

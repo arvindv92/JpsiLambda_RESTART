@@ -69,15 +69,25 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	}
 	}
 	//Set up logging
-	if(isData && logFlag)
+	if(isData && isoFlag && logFlag)
 	{
 		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/ApplyFinalBDT%d_%s_iso%d_%s%s.txt",
 		                             run,bdtConf,type,isoConf,isoVersion,mynew),"a");
 	}
-	else if(!isData && logFlag)
+	else if(!isData && isoFlag && logFlag)
 	{
 		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/ApplyFinalBDT%d_%s_iso%d_%s%s.txt",
 		                             folder,run,bdtConf,type,isoConf,isoVersion,mynew),"w");
+	}
+	else if(isData && !isoFlag && logFlag)
+	{
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/ApplyFinalBDT%d_%s_noIso%s.txt",
+		                             run,bdtConf,type,mynew),"a");
+	}
+	else if(!isData && !isoFlag && logFlag)
+	{
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/ApplyFinalBDT%d_%s_noIso%s.txt",
+		                             folder,run,bdtConf,type,mynew),"w");
 	}
 
 	cout<<"******************************************"<<endl;

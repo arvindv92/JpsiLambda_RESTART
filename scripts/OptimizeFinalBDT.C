@@ -70,7 +70,7 @@ void OptimizeFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	}
 	else
 	{
-		fileIn = TFile::Open(Form("%s/jpsilambda_cutoutks_%s.root",
+		fileIn = TFile::Open(Form("%s/jpsilambda_%s_withsw.root",
 		                          rootFolder,type));
 		if (!fileIn)
 		{
@@ -79,7 +79,7 @@ void OptimizeFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		}
 		treeIn = (TTree*)fileIn->Get("MyTuple");
 
-		friendFileName = Form("%s/jpsilambda_%s_FinalBDT%d_noIso.root",
+		friendFileName = Form("%s/jpsilambda_%ssig_FinalBDT%d_noIso.root",
 		                      rootFolder,type,bdtConf);
 	}
 	treeIn->AddFriend("MyTuple",friendFileName);

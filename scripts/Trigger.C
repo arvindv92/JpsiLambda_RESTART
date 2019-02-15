@@ -60,13 +60,13 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 	if(isData && logFlag)
 	{
 		//gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/trigger_%d_log.txt",run,year));
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/trigger_%d_log.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/Trigger_%d_log.txt",
 		                             run,year),"w");
 	}
 	else if(!isData && logFlag)
 	{
 		//gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/%s/run%d/trigger_log.txt",folder,run));
-		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/trigger_log.txt",
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/Trigger_log.txt",
 		                             folder,run),"w");
 	}
 	// else if(!isData && logFlag && mcType == 2)

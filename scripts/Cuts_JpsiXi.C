@@ -27,7 +27,7 @@ void Cuts_JpsiXi(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Bool_t 
 	if(isData && logFlag)
 		gSystem->RedirectOutput(Form("logs/data/JpsiXi/run%d/cuts_JpsiXi_%d_log.txt",run,year),"w");
 	else if(!isData && logFlag)
-		gSystem->RedirectOutput((Form("logs/mc/JpsiXi/run%d/cuts_JpsiXi_%d_log.txt",run,year)),"w");
+		gSystem->RedirectOutput((Form("logs/mc/JpsiXi/run%d/cuts_JpsiXi_log.txt",run)),"w");
 
 	TStopwatch sw;
 	sw.Start();
@@ -38,9 +38,11 @@ void Cuts_JpsiXi(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Bool_t 
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 	cout<<"******************************************"<<endl;
 
-	Int_t entries_init  = 0, entries_final_LL   = 0, entries_gen = 0;
-	Int_t Xib_BKGCAT    = 0, p_TRACK_Type       = 0;
-	Int_t Xib_TRUEID    = 0, Xib_ENDVERTEX_NDOF = 0;
+	Int_t entries_init      = 0, entries_final_LL   = 0, entries_gen = 0;
+	Int_t Xib_BKGCAT        = 0, p_TRACK_Type       = 0;
+	Int_t Xib_TRUEID        = 0, Xib_ENDVERTEX_NDOF = 0;
+	Int_t BachPi_TRACK_Type = 0;
+
 	Float_t eff_excl_LL = 0., eff_excl_LL_err   = 0.;
 	Float_t eff_incl_LL = 0., eff_incl_LL_err   = 0.;
 
@@ -106,6 +108,7 @@ void Cuts_JpsiXi(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Bool_t 
 	treeIn->SetBranchAddress("Xib_IPCHI2_OWNPV",&Xib_IPCHI2_OWNPV);
 	treeIn->SetBranchAddress("Xib_TAU",&Xib_TAU);
 	treeIn->SetBranchAddress("BachPi_IPCHI2_OWNPV",&BachPi_IPCHI2_OWNPV);
+	treeIn->SetBranchAddress("BachPi_TRACK_Type",&BachPi_TRACK_Type);
 	treeIn->SetBranchAddress("Xi_M",&Xi_M);
 	treeIn->SetBranchAddress("Xi_DIRA_ORIVX",&Xi_DIRA_ORIVX);
 	treeIn->SetBranchAddress("Xi_TAU",&Xi_TAU);
@@ -134,7 +137,10 @@ void Cuts_JpsiXi(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Bool_t 
 							{
 								if(isData == 1 || (isData == 0 && (abs(Xib_TRUEID) == 5132 || (Xib_BKGCAT == 60 && (abs(Xib_DTF_M_JpsiXiLConstr - 5795) < 35))) ))//TM, needs more thought.
 								{
-									treeOut_LL->Fill();
+									if(BachPi_TRACK_Type == 3)//We only want LL Lambdas, so this means long bachelor pions only.
+									{
+										treeOut_LL->Fill();
+									}
 								}
 							}
 						}
@@ -156,7 +162,7 @@ void Cuts_JpsiXi(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Bool_t 
 		}
 		cout<<"******************************************"<<endl;
 		cout<<"LL cuts made with exclusive efficiency = "
-		    <<eff_excl_LL<<"% +/- " <<eff_excl_LL_err<<" %"<<endl;
+		    <<eff_excl_LL<<" % +/- " <<eff_excl_LL_err<<" %"<<endl;
 		cout<<"******************************************"<<endl;
 
 		if(genFlag)
@@ -171,7 +177,7 @@ void Cuts_JpsiXi(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Bool_t 
 			}
 			cout<<"******************************************"<<endl;
 			cout<<"LL cuts made with inclusive efficiency = "
-			    <<eff_incl_LL<<"% +/- " <<eff_incl_LL_err<<" %"<<endl;
+			    <<eff_incl_LL<<" % +/- " <<eff_incl_LL_err<<" %"<<endl;
 			cout<<"******************************************"<<endl;
 		}
 	}

@@ -7,8 +7,10 @@
 #include <fstream>
 
 using namespace std;
-//HAS ERRORS. READ AGAIN
-void CutFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t trackType = 3, const char* isoVersion = "v1", Int_t isoConf = 1, Int_t bdtConf = 1, Float_t bdtCut = -1.0, Float_t bdtCut_ZeroTracks = -1.0, Bool_t isoFlag = true, Bool_t newFlag = false, Bool_t logFlag = false)
+void CutFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
+                 const char* isoVersion, Int_t isoConf, Int_t bdtConf,
+                 Float_t bdtCut, Float_t bdtCut_ZeroTracks, Bool_t isoFlag,
+                 Bool_t newFlag, Bool_t logFlag)
 {
 	TStopwatch sw;
 	sw.Start();
@@ -225,7 +227,7 @@ void CutFinalBDT(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0, Int_t tr
 
 	cout<<"Outgoing Entries = "<<entries_final<<endl;
 
-	if(!isData)//Calculate inclusive and exclusive efficiencies for MC
+	if(!isData && mcType != 4 && mcType != 5)//Calculate inclusive and exclusive efficiencies for MC
 	{
 		if(entries_init != 0)
 		{
