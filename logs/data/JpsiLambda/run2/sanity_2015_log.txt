@@ -1,0 +1,28 @@
+******************************************
+==> Starting Sanity: 
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+Input file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_triggered_2015.root
+LL Output file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_sanity_LL_2015.root
+DD Output file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_sanity_DD_2015.root
+******************************************
+Incoming entries = 917830
+I am making the following sanity cuts, and then separating in LL and DD files. Sit tight
+OBJ: TCut		(Lb_TAU > 0)&&(L_TAU > 0)
+OBJ: TCut		(Lb_ConsLb_chi2/Lb_ConsLb_nDOF > 0 && Lb_ConsLb_chi2/Lb_ConsLb_nDOF < 50)
+OBJ: TCut		(pi_PIDp != -1000 && p_PIDp!= -1000)
+OBJ: TCut		(Lb_ETA > 2 && Lb_ETA < 6)
+0
+100000
+200000
+300000
+400000
+500000
+600000
+700000
+800000
+900000
+Outgoing LL entries = 426783
+Outgoing DD entries = 0
+==> Sanity is done! Mazel Tov!: Real time 0:07:59, CP time 465.710

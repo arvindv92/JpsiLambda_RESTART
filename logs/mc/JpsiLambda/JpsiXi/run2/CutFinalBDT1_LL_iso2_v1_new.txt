@@ -1,0 +1,15 @@
+******************************************
+==> Starting OptimizeFinalBDT: 
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+0
+0
+Outgoing Entries = 2868
+******************************************
+LL CutFinalBDT cuts made with exclusive efficiency = 8.94433% +/- 0.159372 %
+******************************************
+Original generated number = 3555503
+******************************************
+LL CutFinalBDT cuts made with inclusive efficiency = 0.0806637% +/- 0.00150561 %
+******************************************
+==> CutFinalBDT is done! Death to Background!: Real time 0:00:07, CP time 7.170

@@ -1,0 +1,8 @@
+******************************************
+Input file = rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_forIsoTraining.root
+Output file = rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_forIsoTraining_massCut.root
+******************************************
+Incoming entries = 408371
+I am making the following mass cuts. Sit tight
+@ÖR
+Outgoing entries = 160635

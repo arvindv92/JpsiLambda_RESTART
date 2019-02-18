@@ -1,0 +1,6 @@
+******************************************
+==> Starting Trigger: 
+WD = /data1/avenkate/JpsiLambda_RESTART
+Mon Feb  4 17:07:25 EST 2019
+******************************************
+PROCESSING MC for Run 1 jpsilambda

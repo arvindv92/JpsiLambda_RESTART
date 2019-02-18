@@ -1,0 +1,39 @@
+******************************************
+==> Starting CollateFiles: 
+Mon Feb  4 17:04:02 EST 2019
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+Collating MC for WD = /data1/avenkate/JpsiLambda/massdump/mc/LooseLL
+JpsiLambda Run 1
+hadd Target file: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/jpsilambda.root
+hadd compression setting for all ouput: 1
+hadd Source file 1: JpsiLambda/Pythia8/2011_MagDown/1202_0/jpsilambda.root
+hadd Source file 2: JpsiLambda/Pythia8/2011_MagDown/1202_1/jpsilambda.root
+hadd Source file 3: JpsiLambda/Pythia8/2011_MagDown/1202_2/jpsilambda.root
+hadd Source file 4: JpsiLambda/Pythia8/2011_MagDown/1202_3/jpsilambda.root
+hadd Source file 5: JpsiLambda/Pythia8/2011_MagDown/1202_4/jpsilambda.root
+hadd Source file 6: JpsiLambda/Pythia8/2011_MagUp/1203_0/jpsilambda.root
+hadd Source file 7: JpsiLambda/Pythia8/2011_MagUp/1203_1/jpsilambda.root
+hadd Source file 8: JpsiLambda/Pythia8/2011_MagUp/1203_2/jpsilambda.root
+hadd Source file 9: JpsiLambda/Pythia8/2011_MagUp/1203_3/jpsilambda.root
+hadd Source file 10: JpsiLambda/Pythia8/2011_MagUp/1203_4/jpsilambda.root
+hadd Source file 11: JpsiLambda/Pythia8/2012_MagDown/1204_0/jpsilambda.root
+hadd Source file 12: JpsiLambda/Pythia8/2012_MagDown/1204_1/jpsilambda.root
+hadd Source file 13: JpsiLambda/Pythia8/2012_MagDown/1204_2/jpsilambda.root
+hadd Source file 14: JpsiLambda/Pythia8/2012_MagDown/1204_3/jpsilambda.root
+hadd Source file 15: JpsiLambda/Pythia8/2012_MagDown/1204_4/jpsilambda.root
+hadd Source file 16: JpsiLambda/Pythia8/2012_MagDown/1204_5/jpsilambda.root
+hadd Source file 17: JpsiLambda/Pythia8/2012_MagDown/1204_6/jpsilambda.root
+hadd Source file 18: JpsiLambda/Pythia8/2012_MagDown/1204_7/jpsilambda.root
+hadd Source file 19: JpsiLambda/Pythia8/2012_MagUp/1205_0/jpsilambda.root
+hadd Source file 20: JpsiLambda/Pythia8/2012_MagUp/1205_1/jpsilambda.root
+hadd Source file 21: JpsiLambda/Pythia8/2012_MagUp/1205_2/jpsilambda.root
+hadd Source file 22: JpsiLambda/Pythia8/2012_MagUp/1205_3/jpsilambda.root
+hadd Source file 23: JpsiLambda/Pythia8/2012_MagUp/1205_4/jpsilambda.root
+hadd Source file 24: JpsiLambda/Pythia8/2012_MagUp/1205_5/jpsilambda.root
+hadd Source file 25: JpsiLambda/Pythia8/2012_MagUp/1205_6/jpsilambda.root
+hadd Source file 26: JpsiLambda/Pythia8/2012_MagUp/1205_7/jpsilambda.root
+hadd Sources and Target have different compression levels
+hadd merging will be slower
+hadd Target path: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/jpsilambda.root:/
+hadd Target path: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/jpsilambda.root:/EventTuple

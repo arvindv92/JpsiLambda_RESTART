@@ -1,0 +1,21 @@
+******************************************
+Starting ApplyFinalBDT 
+Wed Feb 13 13:13:30 EST 2019
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+Processing Run 1 LL MC type 2zeroTracks
+******************************************
+******************************************
+Input file = rootFiles/mcFiles/JpsiLambda/JpsiSigma/run1/jpsisigma_cutoutks_LL_ZeroTracks.root
+Output file = rootFiles/mcFiles/JpsiLambda/JpsiSigma/run1/jpsisigma_zeroTracksLL_FinalBDT1_new.root
+******************************************
+Incoming Entries = 398                         : Booking "BDT method" of type "BDT" from dataset/weights/TMVAClassificationLite-JpsiLambdaLL_dataRun1_noIso_new_BDTconf1.weights.xml.
+<HEADER> DataSetInfo              : [Default] : Added class "Signal"
+<HEADER> DataSetInfo              : [Default] : Added class "Background"
+                         : Booked classifier "BDTconf1" of type: "BDT"
+--- TMVAClassificationApp    : Using input file: rootFiles/mcFiles/JpsiLambda/JpsiSigma/run1/jpsisigma_cutoutks_LL_ZeroTracks.root
+--- Processing: 398 events
+--- ... Processing event: 0
+--- End of event loop: --- Created root file: rootFiles/mcFiles/JpsiLambda/JpsiSigma/run1/jpsisigma_zeroTracksLL_FinalBDT1_new.root containing the MVA output histograms
+==> ApplyFinalBDT is done! Go optimize and fit!: Real time 0:00:00, CP time 0.170

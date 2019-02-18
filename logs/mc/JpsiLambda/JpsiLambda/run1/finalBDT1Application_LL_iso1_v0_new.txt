@@ -1,0 +1,14 @@
+******************************************
+Starting ApplyFinalBDT 
+Mon Feb  4 10:37:41 EST 2019
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+Processing Run 1 LL MC type 1
+******************************************
+******************************************
+Input file = rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/jpsilambda_cutoutks_LL_nonZeroTracks.root
+Output file = rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/jpsilambda_LL_FinalBDT1_iso1_v0_new.root
+******************************************
+Incoming Entries = 17595<FATAL>                          : <BookMVA> fatal error: unable to open input weight file: dataset/weights/TMVAClassificationLite-JpsiLambdaLL_dataRun1_iso1_v0_new_BDTconf1.weights.xml
+***> abort program execution

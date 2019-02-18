@@ -1,0 +1,33 @@
+******************************************
+==> Starting CollateFiles: 
+Tue Jan 29 11:59:30 EST 2019
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+Collating MC for WD = /data1/avenkate/JpsiLambda/massdump/mc/LooseLL
+JpsiSigma Run 1
+hadd Target file: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma/run1/jpsisigma.root
+hadd compression setting for all ouput: 1
+hadd Source file 1: JpsiSigma/Pythia8/2012_MagDown/1174_0/jpsilambda.root
+hadd Source file 2: JpsiSigma/Pythia8/2012_MagDown/1174_1/jpsilambda.root
+hadd Source file 3: JpsiSigma/Pythia8/2012_MagDown/1174_2/jpsilambda.root
+hadd Source file 4: JpsiSigma/Pythia8/2012_MagDown/1174_3/jpsilambda.root
+hadd Source file 5: JpsiSigma/Pythia8/2012_MagDown/1174_4/jpsilambda.root
+hadd Source file 6: JpsiSigma/Pythia8/2012_MagDown/1174_5/jpsilambda.root
+hadd Source file 7: JpsiSigma/Pythia8/2012_MagDown/1174_6/jpsilambda.root
+hadd Source file 8: JpsiSigma/Pythia8/2012_MagDown/1174_7/jpsilambda.root
+hadd Source file 9: JpsiSigma/Pythia8/2012_MagUp/1175_0/jpsilambda.root
+hadd Source file 10: JpsiSigma/Pythia8/2012_MagUp/1175_1/jpsilambda.root
+hadd Source file 11: JpsiSigma/Pythia8/2012_MagUp/1175_2/jpsilambda.root
+hadd Source file 12: JpsiSigma/Pythia8/2012_MagUp/1175_3/jpsilambda.root
+hadd Source file 13: JpsiSigma/Pythia8/2012_MagUp/1175_4/jpsilambda.root
+hadd Source file 14: JpsiSigma/Pythia8/2012_MagUp/1175_5/jpsilambda.root
+hadd Source file 15: JpsiSigma/Pythia8/2012_MagUp/1175_6/jpsilambda.root
+hadd Source file 16: JpsiSigma/Pythia8/2012_MagUp/1175_7/jpsilambda.root
+hadd Sources and Target have different compression levels
+hadd merging will be slower
+hadd Target path: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma/run1/jpsisigma.root:/
+hadd Target path: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma/run1/jpsisigma.root:/EventTuple
+hadd Target path: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma/run1/jpsisigma.root:/MCTuple
+hadd Target path: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma/run1/jpsisigma.root:/Lb2JpsiLTree
+DONE COLLATING
+WD = /data1/avenkate/JpsiLambda_RESTART

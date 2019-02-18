@@ -1,0 +1,5 @@
+eff_2011_md = 0.1897
+err_eff_2011_md = 0.000719
+eff_2011_mu = 0.1881
+err_eff_2011_mu = 0.000727
+2012 effs missing for Pythia 8

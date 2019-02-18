@@ -1,0 +1,27 @@
+******************************************
+==> Starting Trigger: 
+WD = /data1/avenkate/JpsiLambda_RESTART
+Mon Feb  4 17:22:18 EST 2019
+******************************************
+PROCESSING MC for Run 1 bd_jpsix
+******************************************
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+Input file = rootFiles/mcFiles/JpsiLambda/Bd_JpsiX/run1/bd_jpsix.root
+Output file = rootFiles/mcFiles/JpsiLambda/Bd_JpsiX/run1/bd_jpsix_triggered.root
+******************************************
+Incoming entries = 285677
+I am making the following trigger cuts. Sit tight
+(Lb_Hlt1DiMuonHighMassDecision_TOS==1||Lb_Hlt1TrackMuonDecision_TOS==1||Lb_Hlt1TrackAllL0Decision_TOS==1)&&(Lb_Hlt2DiMuonDetachedJPsiDecision_TOS==1)
+0
+100000
+200000
+Outgoing entries = 221273
+******************************************
+Trigger cut made with exclusive efficiency = 77.4557% +/- 0.0781822 %
+******************************************
+******************************************
+Trigger cut made with inclusive efficiency = 2.45859e+06% +/- -nan %
+******************************************
+==> Trigger is done! Huzzah!: Real time 0:02:36, CP time 151.700

@@ -1,0 +1,380 @@
+********************************
+==> Starting DosPlot: 
+WD = /data1/avenkate/JpsiLambda_RESTART
+********************************
+******************************************
+Processing Run 1 LL
+******************************************
+Incoming Entries = 2347899
+******************************************
+Input file = rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_cutoutks_LL.root
+sWeighted Output file = rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_withsw.root
+Training Output file = rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_forIsoTraining.root
+******************************************
+Making mass cut on 2347899 entries
+0
+50000
+100000
+150000
+200000
+250000
+300000
+350000
+400000
+450000
+500000
+550000
+600000
+650000
+700000
+750000
+800000
+850000
+900000
+950000
+1000000
+1050000
+1100000
+1150000
+1200000
+1250000
+1300000
+1350000
+1400000
+1450000
+1500000
+1550000
+1600000
+1650000
+1700000
+1750000
+1800000
+1850000
+1900000
+1950000
+2000000
+2050000
+2100000
+2150000
+2200000
+2250000
+2300000
+Starting AddModel()
+Making signal model
+Making background model
+Importing model into workspace
+[#1] INFO:ObjectHandling -- RooWorkspace::import(myWS) importing RooAddPdf::model
+[#1] INFO:ObjectHandling -- RooWorkspace::import(myWS) importing RooAddPdf::sig
+[#1] INFO:ObjectHandling -- RooWorkspace::import(myWS) importing RooGaussian::sig1
+[#1] INFO:ObjectHandling -- RooWorkspace::import(myWS) importing RooRealVar::Lb_DTF_M_JpsiLConstr
+[#1] INFO:ObjectHandling -- RooWorkspace::import(myWS) importing RooRealVar::mean
+[#1] INFO:ObjectHandling -- RooWorkspace::import(myWS) importing RooRealVar::sigma1
+[#1] INFO:ObjectHandling -- RooWorkspace::import(myWS) importing RooRealVar::frac1
+[#1] INFO:ObjectHandling -- RooWorkspace::import(myWS) importing RooGaussian::sig2
+[#1] INFO:ObjectHandling -- RooWorkspace::import(myWS) importing RooRealVar::sigma2
+[#1] INFO:ObjectHandling -- RooWorkspace::import(myWS) importing RooRealVar::sigYield
+[#1] INFO:ObjectHandling -- RooWorkspace::import(myWS) importing RooExponential::bkg
+[#1] INFO:ObjectHandling -- RooWorkspace::import(myWS) importing RooRealVar::tau
+[#1] INFO:ObjectHandling -- RooWorkspace::import(myWS) importing RooRealVar::bkgYield
+
+RooWorkspace(myWS) myWS contents
+
+variables
+---------
+(Lb_DTF_M_JpsiLConstr,bkgYield,frac1,mean,sigYield,sigma1,sigma2,tau)
+
+p.d.f.s
+-------
+RooExponential::bkg[ x=Lb_DTF_M_JpsiLConstr c=tau ] = 0.0198411
+RooAddPdf::model[ sigYield * sig + bkgYield * bkg ] = 0.0198763
+RooAddPdf::sig[ frac1 * sig1 + [%] * sig2 ] = 0.0213153
+RooGaussian::sig1[ x=Lb_DTF_M_JpsiLConstr mean=mean sigma=sigma1 ] = 0.0213153
+RooGaussian::sig2[ x=Lb_DTF_M_JpsiLConstr mean=mean sigma=sigma2 ] = 0.0213153
+
+AddModel() complete
+Starting AddData()
+Importing data. This could take a while. Sit tight
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data) Ignored 1939528 out of range events
+[#1] INFO:ObjectHandling -- RooWorkspace::import(myWS) importing dataset data
+[#1] INFO:ObjectHandling -- RooWorkSpace::import(myWS) changing name of dataset from  data to data
+
+RooWorkspace(myWS) myWS contents
+
+variables
+---------
+(Lb_DTF_M_JpsiLConstr,bkgYield,frac1,mean,sigYield,sigma1,sigma2,tau)
+
+p.d.f.s
+-------
+RooExponential::bkg[ x=Lb_DTF_M_JpsiLConstr c=tau ] = 0.0198411
+RooAddPdf::model[ sigYield * sig + bkgYield * bkg ] = 0.0198763
+RooAddPdf::sig[ frac1 * sig1 + [%] * sig2 ] = 0.0213153
+RooGaussian::sig1[ x=Lb_DTF_M_JpsiLConstr mean=mean sigma=sigma1 ] = 0.0213153
+RooGaussian::sig2[ x=Lb_DTF_M_JpsiLConstr mean=mean sigma=sigma2 ] = 0.0213153
+
+datasets
+--------
+RooDataSet::data(Lb_DTF_M_JpsiLConstr)
+
+Finishing AddData()
+Starting DoSPlot()
+Calculating sWeights
+[#1] INFO:Minization -- createNLL: caching constraint set under name CONSTR_OF_PDF_model_FOR_OBS_Lb_DTF_M_JpsiLConstr with 0 entries
+[#1] INFO:Minization -- RooMinimizer::optimizeConst: activating const optimization
+[#1] INFO:Minization --  The following expressions will be evaluated in cache-and-track mode: (sig1,sig2,bkg)
+ **********
+ **    1 **SET PRINT           1
+ **********
+ **********
+ **    2 **SET NOGRAD
+ **********
+ PARAMETER DEFINITIONS:
+    NO.   NAME         VALUE      STEP SIZE      LIMITS
+     1 bkgYield     2.04185e+05  4.08371e+04    0.00000e+00  4.08371e+05
+     2 frac1        5.00000e-01  9.90000e-02    1.00000e-02  1.00000e+00
+     3 mean         5.61942e+03  2.00000e-01    5.61900e+03  5.62100e+03
+     4 sigYield     5.00000e+03  1.50000e+03    0.00000e+00  1.50000e+04
+     5 sigma1       7.00000e+00  1.00000e+00    5.00000e+00  2.00000e+01
+     6 sigma2       7.00000e+00  1.70000e+00    3.00000e+00  2.00000e+01
+     7 tau         -7.00000e-04  3.49950e-04   -1.00000e-02 -1.00000e-07
+ **********
+ **    3 **SET ERR         0.5
+ **********
+ **********
+ **    4 **SET PRINT           1
+ **********
+ **********
+ **    5 **SET STR           2
+ **********
+ NOW USING STRATEGY  2: MAKE SURE MINIMUM TRUE, ERRORS CORRECT  
+ **********
+ **    6 **MIGRAD        3500           1
+ **********
+ FIRST CALL TO USER FUNCTION AT NEW START POINT, WITH IFLAG=4.
+ START MIGRAD MINIMIZATION.  STRATEGY  2.  CONVERGENCE WHEN EDM .LT. 1.00e-03
+ MINUIT WARNING IN HESSE
+ ============== Second derivative zero for parameter2
+  MNHESS FAILS AND WILL RETURN DIAGONAL MATRIX. 
+ FCN=-2.07755e+06 FROM HESSE     STATUS=FAILED         11 CALLS          12 TOTAL
+                     EDM=194706    STRATEGY= 2  ERROR MATRIX UNCERTAINTY 100.0 per cent
+  EXT PARAMETER                APPROXIMATE        STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  bkgYield     2.04185e+05   3.24652e+02   5.06499e-02  -1.96225e+05
+   2  frac1        5.00000e-01   7.02412e-02   2.01369e-01   9.93203e+00
+   3  mean         5.61942e+03   1.44637e-01   2.52435e-01   7.92284e+00
+   4  sigYield     5.00000e+03   1.06791e+03   2.14402e-01   9.32826e+00
+   5  sigma1       7.00000e+00   7.27597e-01   2.02490e-01   9.87702e+00
+   6  sigma2       7.00000e+00   1.22237e+00   2.40891e-01   8.30252e+00
+   7  tau         -7.00000e-04   2.55369e-04   1.41792e-01   1.41052e+01
+                               ERR DEF= 0.5
+ MIGRAD FAILS TO FIND IMPROVEMENT
+ MACHINE ACCURACY LIMITS FURTHER IMPROVEMENT.
+ MIGRAD MINIMIZATION HAS CONVERGED.
+ MIGRAD WILL VERIFY CONVERGENCE AND ERROR MATRIX.
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-2.15472e+06 FROM HESSE     STATUS=OK             68 CALLS         458 TOTAL
+                     EDM=0.00473106    STRATEGY= 2      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  bkgYield     4.01434e+05   6.58723e+02   1.22394e-02   2.04155e+00
+   2  frac1        6.24724e-01   8.80935e-02   5.94991e-02   3.43055e-01
+   3  mean         5.61937e+03   1.91858e-01   2.51140e-01  -3.06422e-01
+   4  sigYield     6.95358e+03   2.00316e+02   1.98470e-02  -9.30576e-01
+   5  sigma1       1.04324e+01   1.21643e+00   6.34611e-02   1.65479e-01
+   6  sigma2       4.50088e+00   4.02910e-01   4.68090e-02  -1.74722e-01
+   7  tau         -1.22683e-03   7.03905e-06   2.16423e-03   3.07388e+00
+                               ERR DEF= 0.5
+ MINUIT WARNING IN MIGRAD  
+ ============== Negative diagonal element 2 in Error Matrix
+ MINUIT WARNING IN MIGRAD  
+ ============== Negative diagonal element 3 in Error Matrix
+ MINUIT WARNING IN MIGRAD  
+ ============== Negative diagonal element 5 in Error Matrix
+ MINUIT WARNING IN MIGRAD  
+ ============== Negative diagonal element 6 in Error Matrix
+ MINUIT WARNING IN MIGRAD  
+ ============== 1.32162 added to diagonal of error matrix
+ MIGRAD FAILS TO FIND IMPROVEMENT
+ MACHINE ACCURACY LIMITS FURTHER IMPROVEMENT.
+ MIGRAD MINIMIZATION HAS CONVERGED.
+ MIGRAD WILL VERIFY CONVERGENCE AND ERROR MATRIX.
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-2.15472e+06 FROM MIGRAD    STATUS=CONVERGED     580 CALLS         581 TOTAL
+                     EDM=0.000358416    STRATEGY= 2      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  bkgYield     4.01423e+05   6.58666e+02   1.22246e-02   7.43307e-01
+   2  frac1        6.13226e-01   9.07165e-02   5.95496e-02   3.19069e-02
+   3  mean         5.61939e+03   1.90693e-01   2.46470e-01  -2.09919e-02
+   4  sigYield     6.95325e+03   2.00991e+02   1.98417e-02  -6.94500e-02
+   5  sigma1       1.05257e+01   1.27070e+00   6.52251e-02  -8.23522e-02
+   6  sigma2       4.56082e+00   4.07834e-01   4.61885e-02   1.02433e-01
+   7  tau         -1.22688e-03   7.03937e-06   2.16416e-03   1.24422e-01
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  7    ERR DEF=0.5
+  4.339e+05  5.697e+00 -1.606e-02  3.288e+04 -1.386e+02 -2.234e+01  1.352e-04 
+  5.697e+00  8.328e-03 -1.907e-04  5.787e+00 -1.017e-01 -3.019e-02  2.396e-08 
+ -1.606e-02 -1.907e-04  3.709e-02 -1.489e-02  3.578e-03  9.536e-04 -1.118e-08 
+  3.288e+04  5.787e+00 -1.489e-02  4.041e+04 -1.409e+02 -2.271e+01  1.377e-04 
+ -1.386e+02 -1.017e-01  3.578e-03 -1.409e+02  1.632e+00  3.258e-01 -5.822e-07 
+ -2.234e+01 -3.019e-02  9.536e-04 -2.271e+01  3.258e-01  1.667e-01 -9.397e-08 
+  1.352e-04  2.396e-08 -1.118e-08  1.377e-04 -5.822e-07 -9.397e-08  4.955e-11 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL      1      2      3      4      5      6      7
+        1  0.25284   1.000  0.095 -0.000  0.248 -0.165 -0.083  0.029
+        2  0.95008   0.095  1.000 -0.011  0.315 -0.872 -0.810  0.037
+        3  0.02408  -0.000 -0.011  1.000 -0.000  0.015  0.012 -0.008
+        4  0.68494   0.248  0.315 -0.000  1.000 -0.549 -0.277  0.097
+        5  0.93120  -0.165 -0.872  0.015 -0.549  1.000  0.625 -0.065
+        6  0.84117  -0.083 -0.810  0.012 -0.277  0.625  1.000 -0.033
+        7  0.09953   0.029  0.037 -0.008  0.097 -0.065 -0.033  1.000
+ **********
+ **    7 **SET ERR         0.5
+ **********
+ **********
+ **    8 **SET PRINT           1
+ **********
+ **********
+ **    9 **HESSE        3500
+ **********
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-2.15472e+06 FROM HESSE     STATUS=OK             50 CALLS         631 TOTAL
+                     EDM=0.000360181    STRATEGY= 2      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                INTERNAL      INTERNAL  
+  NO.   NAME      VALUE            ERROR       STEP SIZE       VALUE   
+   1  bkgYield     4.01423e+05   6.62283e+02   9.77967e-05   1.30918e+00
+   2  frac1        6.13226e-01   1.40128e-01   4.76397e-04   2.20419e-01
+   3  mean         5.61939e+03   1.89623e-01   1.97176e-03  -6.59433e-01
+   4  sigYield     6.95325e+03   2.09696e+02   1.58734e-04   9.49774e+00
+   5  sigma1       1.05257e+01   1.56992e+00   5.21801e-04  -2.66378e-01
+   6  sigma2       4.56082e+00   7.18375e-01   1.84754e-03   5.32808e+00
+   7  tau         -1.22688e-03   7.04333e-06   1.73133e-05   8.55108e-01
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  7    ERR DEF=0.5
+  4.386e+05  1.009e+01  7.254e-02  3.704e+04 -1.818e+02 -4.974e+01  1.521e-04 
+  1.009e+01  2.021e-02 -1.041e-04  1.008e+01 -2.055e-01 -9.671e-02  4.148e-08 
+  7.254e-02 -1.041e-04  3.667e-02  7.252e-02  1.802e-03 -2.300e-04 -9.837e-09 
+  3.704e+04  1.008e+01  7.252e-02  4.398e+04 -1.817e+02 -4.973e+01  1.520e-04 
+ -1.818e+02 -2.055e-01  1.802e-03 -1.817e+02  2.504e+00  9.398e-01 -7.469e-07 
+ -4.974e+01 -9.671e-02 -2.300e-04 -4.973e+01  9.398e-01  5.198e-01 -2.043e-07 
+  1.521e-04  4.148e-08 -9.837e-09  1.520e-04 -7.469e-07 -2.043e-07  4.961e-11 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL      1      2      3      4      5      6      7
+        1  0.27131   1.000  0.107  0.001  0.267 -0.173 -0.104  0.033
+        2  0.97976   0.107  1.000 -0.004  0.338 -0.913 -0.943  0.041
+        3  0.01876   0.001 -0.004  1.000  0.002  0.006 -0.002 -0.007
+        4  0.71579   0.267  0.338  0.002  1.000 -0.548 -0.329  0.103
+        5  0.95574  -0.173 -0.913  0.006 -0.548  1.000  0.824 -0.067
+        6  0.95209  -0.104 -0.943 -0.002 -0.329  0.824  1.000 -0.040
+        7  0.10503   0.033  0.041 -0.007  0.103 -0.067 -0.040  1.000
+[#1] INFO:Minization -- RooMinimizer::optimizeConst: deactivating const optimization
+Starting MakePlots()
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model) directly selected PDF components: (sig1)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model) indirectly selected PDF components: (sig)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model) directly selected PDF components: (sig2)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model) indirectly selected PDF components: (sig)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model) directly selected PDF components: (sig)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model) indirectly selected PDF components: (sig1,sig2)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model) directly selected PDF components: (bkg)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model) indirectly selected PDF components: ()
+chi square1 = 1.06329
+RooArgSet::parameters = (bkgYield,frac1,mean,sigYield,sigma1,sigma2,tau)
+chi square2 = 1.10185
+Pull Mean Y = -0.00909643
+Pull RMS  Y = 1.03265
+***************
+
+  RooFitResult: minimized FCN value: -2.15472e+06, estimated distance to minimum: 0.000360181
+                covariance matrix quality: Full, accurate covariance matrix
+                Status : MINIMIZE=0 HESSE=0 
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+              bkgYield    2.0418e+05    4.0142e+05 +/-  6.62e+02  <none>
+                 frac1    5.0000e-01    6.1323e-01 +/-  1.40e-01  <none>
+                  mean    5.6194e+03    5.6194e+03 +/-  1.90e-01  <none>
+              sigYield    5.0000e+03    6.9533e+03 +/-  2.10e+02  <none>
+                sigma1    7.0000e+00    1.0526e+01 +/-  1.57e+00  <none>
+                sigma2    7.0000e+00    4.5608e+00 +/-  7.18e-01  <none>
+                   tau   -7.0000e-04   -1.2269e-03 +/-  7.04e-06  <none>
+
+***************
+covQual = 3
+numStatusHistory = 2
+0 MINIMIZE
+0 HESSE
+[#1] INFO:Minization -- createNLL picked up cached consraints from workspace with 0 entries
+[#1] INFO:Minization -- RooMinimizer::optimizeConst: activating const optimization
+[#1] INFO:Minization --  The following expressions have been identified as constant and will be precalculated and cached: (sig,bkg)
+[#1] INFO:Fitting -- RooAbsPdf::fitTo(model) Calculating sum-of-weights-squared correction matrix for covariance matrix
+[#1] INFO:Minization -- RooMinimizer::optimizeConst: deactivating const optimization
+[#1] INFO:InputArguments -- Printing Yields
+RooArgList:: = (sigYield,bkgYield)
+[#1] INFO:InputArguments -- yield in pdf: sigYield 6953.26
+[#1] INFO:InputArguments -- yield in pdf: bkgYield 401418
+[#1] INFO:Eval -- Checking Likelihood normalization:  
+[#1] INFO:Eval -- Yield of specie  Sum of Row in Matrix   Norm
+[#1] INFO:Eval -- 6953.26 6953.25 1
+[#1] INFO:Eval -- 401418 401418 1
+[#1] INFO:Eval -- Calculating sWeight
+Check SWeights:
+
+Yield of signal is 6953.26.  From sWeights it is 6953.26
+Yield of background is 401418.  From sWeights it is 401418
+
+Signal Weight   -0.0374615   Background Weight   1.03746  Total Weight   1
+Signal Weight   -0.0317349   Background Weight   1.03173  Total Weight   1
+Signal Weight   -0.0371545   Background Weight   1.03715  Total Weight   1
+Signal Weight   -0.0374615   Background Weight   1.03746  Total Weight   1
+Signal Weight   -0.0374615   Background Weight   1.03746  Total Weight   1
+Signal Weight   -0.0330214   Background Weight   1.03302  Total Weight   1
+Signal Weight   -0.0374615   Background Weight   1.03746  Total Weight   1
+Signal Weight   -0.0374615   Background Weight   1.03746  Total Weight   1
+Signal Weight   0.420966   Background Weight   0.579034  Total Weight   1
+Signal Weight   -0.0374615   Background Weight   1.03746  Total Weight   1
+
+import new dataset with sWeights
+[#1] INFO:ObjectHandling -- RooWorkspace::import(myWS) importing dataset data
+[#1] INFO:ObjectHandling -- RooWorkSpace::import(myWS) changing name of dataset from  data to dataWithSWeights
+[#1] INFO:ObjectHandling -- RooWorkspace::import(myWS) importing RooRealVar::sigYield_sw
+[#1] INFO:ObjectHandling -- RooWorkspace::import(myWS) importing RooRealVar::L_sigYield
+[#1] INFO:ObjectHandling -- RooWorkspace::import(myWS) importing RooRealVar::bkgYield_sw
+[#1] INFO:ObjectHandling -- RooWorkspace::import(myWS) importing RooRealVar::L_bkgYield
+ after splot import data set looks like
+
+RooWorkspace(myWS) myWS contents
+
+variables
+---------
+(L_bkgYield,L_sigYield,Lb_DTF_M_JpsiLConstr,bkgYield,bkgYield_sw,frac1,mean,sigYield,sigYield_sw,sigma1,sigma2,tau)
+
+p.d.f.s
+-------
+RooExponential::bkg[ x=Lb_DTF_M_JpsiLConstr c=tau ] = 0.000753981/0.864077
+RooAddPdf::model[ sigYield * sig + bkgYield * bkg ] = 0.000857728/1
+RooAddPdf::sig[ frac1 * sig1 + [%] * sig2 ] = 2.57851e-116/1
+RooGaussian::sig1[ x=Lb_DTF_M_JpsiLConstr mean=mean sigma=sigma1 ] = 1.1094e-114/26.384
+RooGaussian::sig2[ x=Lb_DTF_M_JpsiLConstr mean=mean sigma=sigma2 ] = 0/11.4323
+
+datasets
+--------
+RooDataSet::data(Lb_DTF_M_JpsiLConstr,sigYield_sw,L_sigYield,bkgYield_sw,L_bkgYield)
+RooDataSet::dataWithSWeights(Lb_DTF_M_JpsiLConstr,sigYield_sw,L_sigYield,bkgYield_sw,L_bkgYield)
+
+named sets
+----------
+
+reduceEng varSubset = (sigYield_sw) _wgtVar = 
+No. of entries in dataset = 408371
+************************************************
+Writing output tree with unbinned sweighted data
+************************************************
+Copying tree with s-weights to make signal training file for isolation
+Done writing output tree with unbinned sWeighted data
+Done writing signal training file for isolation
+Copying tree with s-weights to make nonZeroTracks file
+Done writing output tree with unbinned sWeighted data for nonZeroTracks
+Copying tree with s-weights to make ZeroTracks file
+Done writing output tree with unbinned sWeighted data for ZeroTracks
+Finishing DoSPlot()
+==> DosPlot is done! Check fit status! sWeights FTW!: Real time 0:18:44, CP time 1100.410

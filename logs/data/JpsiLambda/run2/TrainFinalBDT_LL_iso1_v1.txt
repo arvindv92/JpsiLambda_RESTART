@@ -1,0 +1,566 @@
+*****************************
+==> Starting TrainFinalBDT: 
+WD = /data1/avenkate/JpsiLambda_RESTART
+*****************************
+--- TMVAClassification : Using input file: rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_LL_withsw_nonZeroTracks.root
+--- TMVAClassification : Using isolation file: rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_LLsig_iso1_v1.root
+DataSetInfo              : [dataset] : Added class "Signal"
+                         : Add Tree MyTuple of type Signal with 1183155 events
+DataSetInfo              : [dataset] : Added class "Background"
+                         : Add Tree MyTuple of type Background with 1183155 events
+Factory                  : Booking method: [1mBDTconf1[0m
+                         : 
+DataSetFactory           : [dataset] : Number of events in input trees
+                         : Dataset[dataset] :     Signal     requirement: "(Lb_ConsLb_chi2 > 0 && Lb_MINIPCHI2 > 0 && Lb_FD_OWNPV > 0 &&L_TAU > 0 && Jpsi_MINIPCHI2 > 0 && Jpsi_M > 0 &&L_FDCHI2_ORIVX > 0 && L_FD_ORIVX > 0 && L_MINIPCHI2 > 0 &&p_MINIPCHI2 > 0 && p_PT > 0 && pi_MINIPCHI2 > 0 &&pi_PT > 0)&&(BDTkMin_v1 < 1.0)"
+                         : Dataset[dataset] :     Signal          -- number of events passed: 1183155  / sum of weights: 14881.5
+                         : Dataset[dataset] :     Signal          -- efficiency             : 1     
+                         : Dataset[dataset] :     Background requirement: "((Lb_ConsLb_chi2 > 0 && Lb_MINIPCHI2 > 0 && Lb_FD_OWNPV > 0 &&L_TAU > 0 && Jpsi_MINIPCHI2 > 0 && Jpsi_M > 0 &&L_FDCHI2_ORIVX > 0 && L_FD_ORIVX > 0 && L_MINIPCHI2 > 0 &&p_MINIPCHI2 > 0 && p_PT > 0 && pi_MINIPCHI2 > 0 &&pi_PT > 0)&&(Lb_DTF_M_JpsiLConstr > 5700))&&(BDTkMin_v1 < 1.0)"
+                         : Dataset[dataset] :     Background      -- number of events passed: 299169  / sum of weights: 308331
+                         : Dataset[dataset] :     Background      -- efficiency             : 0.268257
+                         : 
+                         : Dataset[dataset] :  you have opted for interpreting the requested number of training/testing events
+                         :  to be the number of events AFTER your preselection cuts
+                         : 
+                         : Number of training and testing events
+                         : ---------------------------------------------------------------------------
+                         : Signal     -- training events            : 946524
+                         : Signal     -- testing events             : 236631
+                         : Signal     -- training and testing events: 1183155
+                         : Background -- training events            : 239335
+                         : Background -- testing events             : 59834
+                         : Background -- training and testing events: 299169
+                         : Dataset[dataset] : Background -- due to the preselection a scaling factor has been applied to the numbers of requested events: 0.252857
+                         : 
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (0, 2) = -0.0124184
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (0, 3) = -0.0123875
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (0, 4) = -0.0461415
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (0, 5) = -3.8901e-07
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (0, 6) = -0.0768627
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (0, 8) = -0.0100935
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (0, 9) = -0.0225933
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (0, 11) = -0.0527189
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (0, 12) = -0.0217593
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (0, 13) = -0.000214725
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (0, 14) = -0.00127275
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (0, 17) = -0.0138937
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (0, 18) = -0.00312859
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (0, 20) = -0.000724675
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (1, 2) = -0.0084096
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (1, 3) = -0.00838869
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (1, 4) = -0.0312466
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (1, 5) = -2.63434e-07
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (1, 6) = -0.0520507
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (1, 8) = -0.00683521
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (1, 9) = -0.0153
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (1, 11) = -0.0357008
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (1, 12) = -0.0147352
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (1, 13) = -0.00014541
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (1, 14) = -0.000861895
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (1, 17) = -0.00940868
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (1, 18) = -0.00211865
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (1, 20) = -0.000490744
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (2, 0) = -0.0124184
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (2, 1) = -0.0084096
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (2, 7) = -0.0354429
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (2, 10) = -2.18591
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (2, 15) = -0.00323315
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (2, 16) = -0.00197048
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (2, 19) = -0.0006173
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (3, 0) = -0.0123875
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (3, 1) = -0.00838869
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (3, 7) = -0.0353548
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (3, 10) = -2.18047
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (3, 15) = -0.00322511
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (3, 16) = -0.00196558
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (3, 19) = -0.000615765
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (4, 0) = -0.0461415
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (4, 1) = -0.0312466
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (4, 7) = -0.131691
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (4, 10) = -8.12194
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (4, 15) = -0.0120131
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (4, 16) = -0.00732151
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (4, 19) = -0.00229363
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (5, 0) = -3.8901e-07
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (5, 1) = -2.63434e-07
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (5, 7) = -1.11026e-06
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (5, 10) = -6.84744e-05
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (5, 15) = -1.0128e-07
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (5, 16) = -6.17261e-08
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (5, 19) = -1.93371e-08
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (6, 0) = -0.0768627
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (6, 1) = -0.0520507
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (6, 7) = -0.219372
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (6, 10) = -13.5295
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (6, 15) = -0.0200114
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (6, 16) = -0.0121962
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (6, 19) = -0.00382074
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (7, 2) = -0.0354429
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (7, 3) = -0.0353548
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (7, 4) = -0.131691
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (7, 5) = -1.11026e-06
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (7, 6) = -0.219372
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (7, 8) = -0.0288075
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (7, 9) = -0.0644831
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (7, 11) = -0.150464
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (7, 12) = -0.0621028
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (7, 13) = -0.000612841
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (7, 14) = -0.00363253
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (7, 17) = -0.0396536
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (7, 18) = -0.00892923
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (7, 20) = -0.00206828
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (8, 0) = -0.0100935
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (8, 1) = -0.00683521
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (8, 7) = -0.0288075
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (8, 10) = -1.77668
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (8, 15) = -0.00262786
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (8, 16) = -0.00160158
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (8, 19) = -0.000501733
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (9, 0) = -0.0225933
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (9, 1) = -0.0153
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (9, 7) = -0.0644831
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (9, 10) = -3.97693
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (9, 15) = -0.00588223
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (9, 16) = -0.003585
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (9, 19) = -0.00112308
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (10, 2) = -2.18591
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (10, 3) = -2.18047
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (10, 4) = -8.12194
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (10, 5) = -6.84744e-05
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (10, 6) = -13.5295
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (10, 8) = -1.77668
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (10, 9) = -3.97693
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (10, 11) = -9.27971
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (10, 12) = -3.83013
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (10, 13) = -0.0377963
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (10, 14) = -0.224032
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (10, 17) = -2.4456
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (10, 18) = -0.550702
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (10, 20) = -0.127559
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (11, 0) = -0.0527189
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (11, 1) = -0.0357008
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (11, 7) = -0.150464
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (11, 10) = -9.27971
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (11, 15) = -0.0137255
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (11, 16) = -0.00836518
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (11, 19) = -0.00262059
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (12, 0) = -0.0217593
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (12, 1) = -0.0147352
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (12, 7) = -0.0621028
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (12, 10) = -3.83013
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (12, 15) = -0.0056651
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (12, 16) = -0.00345266
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (12, 19) = -0.00108163
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (13, 0) = -0.000214725
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (13, 1) = -0.00014541
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (13, 7) = -0.000612841
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (13, 10) = -0.0377963
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (13, 15) = -5.59041e-05
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (13, 16) = -3.40715e-05
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (13, 19) = -1.06737e-05
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (14, 0) = -0.00127275
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (14, 1) = -0.000861895
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (14, 7) = -0.00363253
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (14, 10) = -0.224032
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (14, 15) = -0.000331364
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (14, 16) = -0.000201954
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (14, 19) = -6.32667e-05
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (15, 2) = -0.00323315
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (15, 3) = -0.00322511
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (15, 4) = -0.0120131
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (15, 5) = -1.0128e-07
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (15, 6) = -0.0200114
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (15, 8) = -0.00262786
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (15, 9) = -0.00588223
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (15, 11) = -0.0137255
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (15, 12) = -0.0056651
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (15, 13) = -5.59041e-05
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (15, 14) = -0.000331364
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (15, 17) = -0.00361726
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (15, 18) = -0.000814537
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (15, 20) = -0.000188671
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (16, 2) = -0.00197048
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (16, 3) = -0.00196558
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (16, 4) = -0.00732151
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (16, 5) = -6.17261e-08
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (16, 6) = -0.0121962
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (16, 8) = -0.00160158
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (16, 9) = -0.003585
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (16, 11) = -0.00836518
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (16, 12) = -0.00345266
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (16, 13) = -3.40715e-05
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (16, 14) = -0.000201954
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (16, 17) = -0.00220458
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (16, 18) = -0.000496429
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (16, 20) = -0.000114988
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (17, 0) = -0.0138937
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (17, 1) = -0.00940868
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (17, 7) = -0.0396536
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (17, 10) = -2.4456
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (17, 15) = -0.00361726
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (17, 16) = -0.00220458
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (17, 19) = -0.000690636
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (18, 0) = -0.00312859
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (18, 1) = -0.00211865
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (18, 7) = -0.00892923
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (18, 10) = -0.550702
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (18, 15) = -0.000814537
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (18, 16) = -0.000496429
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (18, 19) = -0.000155518
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (19, 2) = -0.0006173
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (19, 3) = -0.000615765
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (19, 4) = -0.00229363
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (19, 5) = -1.93371e-08
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (19, 6) = -0.00382074
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (19, 8) = -0.000501733
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (19, 9) = -0.00112308
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (19, 11) = -0.00262059
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (19, 12) = -0.00108163
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (19, 13) = -1.06737e-05
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (19, 14) = -6.32667e-05
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (19, 17) = -0.000690636
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (19, 18) = -0.000155518
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (19, 20) = -3.60226e-05
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (20, 0) = -0.000724675
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (20, 1) = -0.000490744
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (20, 7) = -0.00206828
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (20, 10) = -0.127559
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (20, 15) = -0.000188671
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (20, 16) = -0.000114988
+<WARNING>                : Dataset[Default] : <GetCorrelationMatrix> Zero variances for variables (20, 19) = -3.60226e-05
+DataSetInfo              : Correlation matrix (Signal):
+                         : ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                         :                             log10(Lb_ConsLb_chi2) log10(Lb_MINIPCHI2) log10(acos(Lb_DIRA_OWNPV)) log10(Lb_FD_OWNPV) log10(Jpsi_MINIPCHI2) log10(Jpsi_M) log10(L_FDCHI2_ORIVX) log10(acos(L_DIRA_ORIVX)) log10(L_FD_ORIVX) log10(acos(L_DIRA_OWNPV))    L_dm log10(L_MINIPCHI2) log10(p_MINIPCHI2) p_ProbNNghost log10(p_PT) p_ProbNNp pi_ProbNNghost log10(pi_MINIPCHI2) log10(pi_PT) pi_ProbNNpi BDTkMin_v1
+                         :      log10(Lb_ConsLb_chi2):                +1.000              -2.714                     +0.000             +0.000                +0.000        +0.000                +0.000                    -1.460            +0.000                    +0.000  -1.257             +0.000             +0.000        +0.000      +0.000    +2.474         -1.750              +0.000       +0.000      +3.303     +0.000
+                         :        log10(Lb_MINIPCHI2):                -2.714              +1.000                     +0.000             +0.000                +0.000        +0.000                +0.000                    -2.688            +0.000                    +0.000  -1.775             +0.000             +0.000        +0.000      +0.000    +4.128         -2.877              +0.000       +0.000      +5.254     +0.000
+                         : log10(acos(Lb_DIRA_OWNPV)):                +0.000              +0.000                     +1.000             -1.117                -0.490        +0.030                +1.153                    +0.000            +0.315                    -0.946  +0.000             -0.221             +0.215        -1.634      +2.198    +0.000         +0.000              +0.753       +1.102      +0.000     +0.409
+                         :         log10(Lb_FD_OWNPV):                +0.000              +0.000                     -1.117             +1.000                +0.658        -0.001                -0.006                    +0.000            +0.243                    +0.502  +0.000             +0.796             +0.370        -0.035      +0.029    +0.000         +0.000              +0.131       +0.012      +0.000     +0.850
+                         :      log10(Jpsi_MINIPCHI2):                +0.000              +0.000                     -0.490             +0.658                +1.000        -0.010                -0.525                    +0.000            -0.248                    +0.761  +0.000             +0.507             +0.190        +0.543      -0.555    +0.000         +0.000              -0.205       -0.323      +0.000     +0.247
+                         :              log10(Jpsi_M):                +0.000              +0.000                     +0.030             -0.001                -0.010        +1.000                -0.034                    +0.000            -0.063                    +0.045  +0.000             -0.048             -0.015        +0.043      -0.087    +0.000         +0.000              -0.041       -0.020      +0.000     +0.008
+                         :      log10(L_FDCHI2_ORIVX):                +0.000              +0.000                     +1.153             -0.006                -0.525        -0.034                +1.000                    +0.000            +0.735                    -0.205  +0.000             -0.627             -0.393        +1.402      -2.763    +0.000         +0.000              +0.378       -1.448      +0.000     -1.400
+                         :  log10(acos(L_DIRA_ORIVX)):                -1.460              -2.688                     +0.000             +0.000                +0.000        +0.000                +0.000                    +1.000            +0.000                    +0.000  -1.073             +0.000             +0.000        +0.000      +0.000    +2.138         -1.521              +0.000       +0.000      +2.833     +0.000
+                         :          log10(L_FD_ORIVX):                +0.000              +0.000                     +0.315             +0.243                -0.248        -0.063                +0.735                    +0.000            +1.000                    -0.898  +0.000             -0.839             -0.538        +0.477      -1.747    +0.000         +0.000              -0.270       -0.846      +0.000     -0.678
+                         :  log10(acos(L_DIRA_OWNPV)):                +0.000              +0.000                     -0.946             +0.502                +0.761        +0.045                -0.205                    +0.000            -0.898                    +1.000  +0.000             +1.380             +0.941        -0.564      +0.676    +0.000         +0.000              +0.427       +0.429      +0.000     +0.867
+                         :                       L_dm:                -1.257              -1.775                     +0.000             +0.000                +0.000        +0.000                +0.000                    -1.073            +0.000                    +0.000  +1.000             +0.000             +0.000        +0.000      +0.000    +1.495         -1.022              +0.000       +0.000      +1.980     +0.000
+                         :         log10(L_MINIPCHI2):                +0.000              +0.000                     -0.221             +0.796                +0.507        -0.048                -0.627                    +0.000            -0.839                    +1.380  +0.000             +1.000             +0.332        +0.893      -1.206    +0.000         +0.000              -0.207       -0.549      +0.000     -0.219
+                         :         log10(p_MINIPCHI2):                +0.000              +0.000                     +0.215             +0.370                +0.190        -0.015                -0.393                    +0.000            -0.538                    +0.941  +0.000             +0.332             +1.000        +1.054      -1.571    +0.000         +0.000              -0.179       -0.988      +0.000     -0.509
+                         :              p_ProbNNghost:                +0.000              +0.000                     -1.634             -0.035                +0.543        +0.043                +1.402                    +0.000            +0.477                    -0.564  +0.000             +0.893             +1.054        +1.000      +3.759    +0.000         +0.000              +0.968       +2.031      +0.000     +1.829
+                         :                log10(p_PT):                +0.000              +0.000                     +2.198             +0.029                -0.555        -0.087                -2.763                    +0.000            -1.747                    +0.676  +0.000             -1.206             -1.571        +3.759      +1.000    +0.000         +0.000              -1.806       +0.366      +0.000     -2.328
+                         :                  p_ProbNNp:                +2.474              +4.128                     +0.000             +0.000                +0.000        +0.000                +0.000                    +2.138            +0.000                    +0.000  +1.495             +0.000             +0.000        +0.000      +0.000    +1.000         +2.106              +0.000       +0.000      -3.687     +0.000
+                         :             pi_ProbNNghost:                -1.750              -2.877                     +0.000             +0.000                +0.000        +0.000                +0.000                    -1.521            +0.000                    +0.000  -1.022             +0.000             +0.000        +0.000      +0.000    +2.106         +1.000              +0.000       +0.000      +1.645     +0.000
+                         :        log10(pi_MINIPCHI2):                +0.000              +0.000                     +0.753             +0.131                -0.205        -0.041                +0.378                    +0.000            -0.270                    +0.427  +0.000             -0.207             -0.179        +0.968      -1.806    +0.000         +0.000              +1.000       -0.725      +0.000     -1.028
+                         :               log10(pi_PT):                +0.000              +0.000                     +1.102             +0.012                -0.323        -0.020                -1.448                    +0.000            -0.846                    +0.429  +0.000             -0.549             -0.988        +2.031      +0.366    +0.000         +0.000              -0.725       +1.000      +0.000     -1.250
+                         :                pi_ProbNNpi:                +3.303              +5.254                     +0.000             +0.000                +0.000        +0.000                +0.000                    +2.833            +0.000                    +0.000  +1.980             +0.000             +0.000        +0.000      +0.000    -3.687         +1.645              +0.000       +0.000      +1.000     +0.000
+                         :                 BDTkMin_v1:                +0.000              +0.000                     +0.409             +0.850                +0.247        +0.008                -1.400                    +0.000            -0.678                    +0.867  +0.000             -0.219             -0.509        +1.829      -2.328    +0.000         +0.000              -1.028       -1.250      +0.000     +1.000
+                         : ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+DataSetInfo              : Correlation matrix (Background):
+                         : ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                         :                             log10(Lb_ConsLb_chi2) log10(Lb_MINIPCHI2) log10(acos(Lb_DIRA_OWNPV)) log10(Lb_FD_OWNPV) log10(Jpsi_MINIPCHI2) log10(Jpsi_M) log10(L_FDCHI2_ORIVX) log10(acos(L_DIRA_ORIVX)) log10(L_FD_ORIVX) log10(acos(L_DIRA_OWNPV))    L_dm log10(L_MINIPCHI2) log10(p_MINIPCHI2) p_ProbNNghost log10(p_PT) p_ProbNNp pi_ProbNNghost log10(pi_MINIPCHI2) log10(pi_PT) pi_ProbNNpi BDTkMin_v1
+                         :      log10(Lb_ConsLb_chi2):                +1.000              +0.086                     -0.064             +0.157                +0.065        -0.034                -0.371                    +0.304            -0.113                    +0.322  +0.698             +0.262             -0.153        +0.110      -0.115    -0.347         +0.236              -0.093       -0.111      -0.237     -0.030
+                         :        log10(Lb_MINIPCHI2):                +0.086              +1.000                     +0.591             +0.283                +0.515        -0.003                -0.049                    +0.042            +0.098                    +0.056  +0.045             +0.117             +0.057        +0.075      -0.068    -0.089         +0.095              +0.122       -0.066      -0.089     -0.169
+                         : log10(acos(Lb_DIRA_OWNPV)):                -0.064              +0.591                     +1.000             -0.561                +0.077        +0.006                +0.184                    -0.119            +0.121                    -0.139  -0.038             -0.150             -0.059        -0.032      +0.138    +0.125         -0.077              +0.079       +0.077      +0.083     -0.040
+                         :         log10(Lb_FD_OWNPV):                +0.157              +0.283                     -0.561             +1.000                +0.418        -0.013                -0.269                    +0.162            -0.025                    +0.206  +0.091             +0.297             +0.141        +0.104      -0.197    -0.224         +0.174              +0.050       -0.137      -0.176     -0.106
+                         :      log10(Jpsi_MINIPCHI2):                +0.065              +0.515                     +0.077             +0.418                +1.000        -0.019                -0.112                    +0.045            -0.002                    +0.077  +0.048             +0.171             +0.127        +0.026      -0.010    -0.066         +0.062              +0.064       -0.031      -0.061     -0.071
+                         :              log10(Jpsi_M):                -0.034              -0.003                     +0.006             -0.013                -0.019        +1.000                +0.007                    -0.001            +0.005                    -0.005  +0.000             -0.007             -0.007        +0.002      -0.005    +0.002         -0.005              -0.003       -0.004      +0.004     +0.006
+                         :      log10(L_FDCHI2_ORIVX):                -0.371              -0.049                     +0.184             -0.269                -0.112        +0.007                +1.000                    -0.561            +0.543                    -0.670  -0.390             -0.454             +0.307        -0.088      +0.074    +0.494         -0.218              +0.442       +0.049      +0.233     +0.036
+                         :  log10(acos(L_DIRA_ORIVX)):                +0.304              +0.042                     -0.119             +0.162                +0.045        -0.001                -0.561                    +1.000            -0.618                    +0.826  +0.266             +0.370             -0.242        +0.076      -0.312    -0.350         +0.126              -0.383       -0.145      -0.134     -0.036
+                         :          log10(L_FD_ORIVX):                -0.113              +0.098                     +0.121             -0.025                -0.002        +0.005                +0.543                    -0.618            +1.000                    -0.663  -0.280             -0.497             +0.187        +0.111      +0.007    +0.203         +0.157              +0.642       -0.174      -0.131     -0.010
+                         :  log10(acos(L_DIRA_OWNPV)):                +0.322              +0.056                     -0.139             +0.206                +0.077        -0.005                -0.670                    +0.826            -0.663                    +1.000  +0.354             +0.705             -0.210        +0.064      -0.230    -0.436         +0.133              -0.451       -0.076      -0.146     -0.026
+                         :                       L_dm:                +0.698              +0.045                     -0.038             +0.091                +0.048        +0.000                -0.390                    +0.266            -0.280                    +0.354  +1.000             +0.308             -0.210        +0.043      -0.028    -0.330         +0.175              -0.253       -0.098      -0.181     -0.008
+                         :         log10(L_MINIPCHI2):                +0.262              +0.117                     -0.150             +0.297                +0.171        -0.007                -0.454                    +0.370            -0.497                    +0.705  +0.308             +1.000             +0.050        -0.016      +0.033    -0.332         +0.059              -0.277       +0.058      -0.071     -0.023
+                         :         log10(p_MINIPCHI2):                -0.153              +0.057                     -0.059             +0.141                +0.127        -0.007                +0.307                    -0.242            +0.187                    -0.210  -0.210             +0.050             +1.000        -0.070      +0.260    +0.260         -0.131              +0.334       +0.134      +0.135     +0.003
+                         :              p_ProbNNghost:                +0.110              +0.075                     -0.032             +0.104                +0.026        +0.002                -0.088                    +0.076            +0.111                    +0.064  +0.043             -0.016             -0.070        +1.000      -0.263    -0.184         +0.211              +0.001       -0.166      -0.210     -0.055
+                         :                log10(p_PT):                -0.115              -0.068                     +0.138             -0.197                -0.010        -0.005                +0.074                    -0.312            +0.007                    -0.230  -0.028             +0.033             +0.260        -0.263      +1.000    +0.317         -0.260              +0.159       +0.536      +0.252     +0.072
+                         :                  p_ProbNNp:                -0.347              -0.089                     +0.125             -0.224                -0.066        +0.002                +0.494                    -0.350            +0.203                    -0.436  -0.330             -0.332             +0.260        -0.184      +0.317    +1.000         -0.298              +0.220       +0.213      +0.304     +0.053
+                         :             pi_ProbNNghost:                +0.236              +0.095                     -0.077             +0.174                +0.062        -0.005                -0.218                    +0.126            +0.157                    +0.133  +0.175             +0.059             -0.131        +0.211      -0.260    -0.298         +1.000              +0.028       -0.473      -0.934     -0.064
+                         :        log10(pi_MINIPCHI2):                -0.093              +0.122                     +0.079             +0.050                +0.064        -0.003                +0.442                    -0.383            +0.642                    -0.451  -0.253             -0.277             +0.334        +0.001      +0.159    +0.220         +0.028              +1.000       +0.007      -0.002     -0.038
+                         :               log10(pi_PT):                -0.111              -0.066                     +0.077             -0.137                -0.031        -0.004                +0.049                    -0.145            -0.174                    -0.076  -0.098             +0.058             +0.134        -0.166      +0.536    +0.213         -0.473              +0.007       +1.000      +0.450     +0.051
+                         :                pi_ProbNNpi:                -0.237              -0.089                     +0.083             -0.176                -0.061        +0.004                +0.233                    -0.134            -0.131                    -0.146  -0.181             -0.071             +0.135        -0.210      +0.252    +0.304         -0.934              -0.002       +0.450      +1.000     +0.062
+                         :                 BDTkMin_v1:                -0.030              -0.169                     -0.040             -0.106                -0.071        +0.006                +0.036                    -0.036            -0.010                    -0.026  -0.008             -0.023             +0.003        -0.055      +0.072    +0.053         -0.064              -0.038       +0.051      +0.062     +1.000
+                         : ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+DataSetFactory           : [dataset] :  
+                         : 
+Factory                  : Booking method: [1mBDTconf2[0m
+                         : 
+Factory                  : [1mTrain all methods[0m
+Factory                  : [dataset] : Create Transformation "I" with events from all classes.
+                         : 
+                         : Transformation, Variable selection : 
+                         : Input : variable 'log_dtfchi2' <---> Output : variable 'log_dtfchi2'
+                         : Input : variable 'log_lbminipchi2' <---> Output : variable 'log_lbminipchi2'
+                         : Input : variable 'logacos_lbdira' <---> Output : variable 'logacos_lbdira'
+                         : Input : variable 'log_lbfd_ownpv' <---> Output : variable 'log_lbfd_ownpv'
+                         : Input : variable 'log_jpsiminipchi2' <---> Output : variable 'log_jpsiminipchi2'
+                         : Input : variable 'log_jpsimass' <---> Output : variable 'log_jpsimass'
+                         : Input : variable 'log_lfdchi2' <---> Output : variable 'log_lfdchi2'
+                         : Input : variable 'logacos_ldira_orivx' <---> Output : variable 'logacos_ldira_orivx'
+                         : Input : variable 'log_lfd_orivx' <---> Output : variable 'log_lfd_orivx'
+                         : Input : variable 'logacos_ldira_ownpv' <---> Output : variable 'logacos_ldira_ownpv'
+                         : Input : variable 'L_dm' <---> Output : variable 'L_dm'
+                         : Input : variable 'log_lminipchi2' <---> Output : variable 'log_lminipchi2'
+                         : Input : variable 'log_pminipchi2' <---> Output : variable 'log_pminipchi2'
+                         : Input : variable 'p_ProbNNghost' <---> Output : variable 'p_ProbNNghost'
+                         : Input : variable 'log_p_PT' <---> Output : variable 'log_p_PT'
+                         : Input : variable 'p_ProbNNp' <---> Output : variable 'p_ProbNNp'
+                         : Input : variable 'pi_ProbNNghost' <---> Output : variable 'pi_ProbNNghost'
+                         : Input : variable 'log_piminipchi2' <---> Output : variable 'log_piminipchi2'
+                         : Input : variable 'log_pi_PT' <---> Output : variable 'log_pi_PT'
+                         : Input : variable 'pi_ProbNNpi' <---> Output : variable 'pi_ProbNNpi'
+                         : Input : variable 'BDTkMin_v1' <---> Output : variable 'BDTkMin_v1'
+TFHandler_Factory        :            Variable                   Mean                   RMS           [        Min                   Max ]
+                         : ------------------------------------------------------------------------------------------------------------------
+                         :         log_dtfchi2:              0.82736              0.37098   [              -1.1905               2.4771 ]
+                         :     log_lbminipchi2:              0.18430              0.70938   [              -4.9395               5.8145 ]
+                         :      logacos_lbdira:              -2.5123              0.52766   [              -5.0401              0.49355 ]
+                         :      log_lbfd_ownpv:              0.82688              0.34923   [              0.17609               2.9168 ]
+                         :   log_jpsiminipchi2:               1.8996              0.73326   [              -4.3422               5.8032 ]
+                         :        log_jpsimass:               3.4909            0.0019693   [               3.4818               3.5007 ]
+                         :         log_lfdchi2:               3.6526               1.1783   [              -2.9107               7.2008 ]
+                         : logacos_ldira_orivx:              -3.6226              0.44494   [              -6.1412              0.49715 ]
+                         :       log_lfd_orivx:               2.1527              0.42839   [              -2.3495               3.5126 ]
+                         : logacos_ldira_ownpv:              -2.6436              0.57021   [              -6.7568              0.49713 ]
+                         :                L_dm:               1.5169               2.8970   [           2.0778e-06               30.000 ]
+                         :      log_lminipchi2:               1.8771              0.85448   [              -6.6002               5.4609 ]
+                         :      log_pminipchi2:               2.3536              0.55678   [              0.95424               5.6778 ]
+                         :       p_ProbNNghost:             0.065537              0.15219   [           2.2972e-05              0.99916 ]
+                         :            log_p_PT:               3.1695              0.23885   [              0.32825               4.3339 ]
+                         :           p_ProbNNp:              0.80000              0.27375   [           2.7829e-08              0.99997 ]
+                         :      pi_ProbNNghost:              0.11105              0.21129   [           5.1171e-05              0.99999 ]
+                         :     log_piminipchi2:               2.5016              0.54446   [              0.95425               6.7984 ]
+                         :           log_pi_PT:               2.5151              0.25258   [            -0.058561               3.7184 ]
+                         :         pi_ProbNNpi:              0.82761              0.22610   [           7.6229e-06              0.99970 ]
+                         :          BDTkMin_v1:             0.044309              0.17036   [             -0.96640              0.34859 ]
+                         : ------------------------------------------------------------------------------------------------------------------
+                         : [32m
+                         : <PlotVariables> Will not produce scatter plots ==> 
+                         : |  The number of 21 input variables and 0 target values would require 210 two-dimensional
+                         : |  histograms, which would occupy the computer's memory. Note that this
+                         : |  suppression does not have any consequences for your analysis, other
+                         : |  than not disposing of these scatter plots. You can modify the maximum
+                         : |  number of input variables allowed to generate scatter plots in your
+                         : |  script via the command line:
+                         : |  "(TMVA::gConfig().GetVariablePlotting()).fMaxNumOfAllowedVariablesForScatterPlots = <some int>;"[0m
+                         : 
+                         : Some more output
+                         : Ranking input variables (method unspecific)...
+IdTransformation         : Ranking result (top variable is best ranked)
+                         : --------------------------------------------
+                         : Rank : Variable            : Separation
+                         : --------------------------------------------
+                         :    1 : log_dtfchi2         : 9.569e-01
+                         :    2 : log_lbminipchi2     : 9.184e-01
+                         :    3 : logacos_ldira_orivx : 8.750e-01
+                         :    4 : p_ProbNNp           : 7.809e-01
+                         :    5 : L_dm                : 6.538e-01
+                         :    6 : logacos_lbdira      : 6.226e-01
+                         :    7 : log_lfdchi2         : 5.376e-01
+                         :    8 : log_p_PT            : 5.282e-01
+                         :    9 : log_pi_PT           : 5.268e-01
+                         :   10 : pi_ProbNNpi         : 4.647e-01
+                         :   11 : pi_ProbNNghost      : 4.355e-01
+                         :   12 : log_lminipchi2      : 3.813e-01
+                         :   13 : log_piminipchi2     : 3.716e-01
+                         :   14 : BDTkMin_v1          : 3.372e-01
+                         :   15 : log_pminipchi2      : 3.066e-01
+                         :   16 : log_lfd_orivx       : 2.611e-01
+                         :   17 : log_jpsiminipchi2   : 2.140e-01
+                         :   18 : p_ProbNNghost       : 1.597e-01
+                         :   19 : logacos_ldira_ownpv : 1.093e-01
+                         :   20 : log_lbfd_ownpv      : 6.793e-02
+                         :   21 : log_jpsimass        : 2.649e-02
+                         : --------------------------------------------
+Factory                  : Train method: BDTconf1 for Classification
+                         : 
+<WARNING>                : Events with negative event weights are USED during the BDT training. This might cause problems with small node sizes or with the boosting. Please remove negative events from training using the option *IgnoreEventsWithNegWeightsInTraining* in case you observe problems with the boosting
+BDTconf1                 : #events: (reweighted) sig: 592930 bkg: 592930
+                         : #events: (unweighted) sig: 946524 bkg: 239335
+                         : Training 300 Decision Trees ... patience please
+                         : Elapsed time for training with 1185859 events: 621 sec         
+BDTconf1                 : [dataset] : Evaluation of BDTconf1 on training sample (1185859 events)
+                         : Elapsed time for evaluation of 1185859 events: 151 sec       
+                         : Creating xml weight file: [0;36mdataset/weights/TMVAClassificationLite-JpsiLambdaLL_dataRun2_iso1_v1_BDTconf1.weights.xml[0m
+                         : Creating standalone class: [0;36mdataset/weights/TMVAClassificationLite-JpsiLambdaLL_dataRun2_iso1_v1_BDTconf1.class.C[0m
+Factory                  : Training finished
+                         : 
+Factory                  : Train method: BDTconf2 for Classification
+                         : 
+<WARNING>                : Events with negative event weights are USED during the BDT training. This might cause problems with small node sizes or with the boosting. Please remove negative events from training using the option *IgnoreEventsWithNegWeightsInTraining* in case you observe problems with the boosting
+BDTconf2                 : #events: (reweighted) sig: 592930 bkg: 592930
+                         : #events: (unweighted) sig: 946524 bkg: 239335
+                         : Training 300 Decision Trees ... patience please
+                         : Elapsed time for training with 1185859 events: 623 sec         
+BDTconf2                 : [dataset] : Evaluation of BDTconf2 on training sample (1185859 events)
+                         : Elapsed time for evaluation of 1185859 events: 94.5 sec       
+                         : Creating xml weight file: [0;36mdataset/weights/TMVAClassificationLite-JpsiLambdaLL_dataRun2_iso1_v1_BDTconf2.weights.xml[0m
+                         : Creating standalone class: [0;36mdataset/weights/TMVAClassificationLite-JpsiLambdaLL_dataRun2_iso1_v1_BDTconf2.class.C[0m
+Factory                  : Training finished
+                         : 
+                         : Ranking input variables (method specific)...
+BDTconf1                 : Ranking result (top variable is best ranked)
+                         : -----------------------------------------------------
+                         : Rank : Variable            : Variable Importance
+                         : -----------------------------------------------------
+                         :    1 : log_dtfchi2         : 2.128e-01
+                         :    2 : logacos_ldira_orivx : 1.297e-01
+                         :    3 : log_lminipchi2      : 1.270e-01
+                         :    4 : logacos_lbdira      : 1.088e-01
+                         :    5 : log_lbminipchi2     : 1.014e-01
+                         :    6 : p_ProbNNp           : 6.875e-02
+                         :    7 : log_lfdchi2         : 3.709e-02
+                         :    8 : log_jpsiminipchi2   : 3.567e-02
+                         :    9 : log_pi_PT           : 3.213e-02
+                         :   10 : BDTkMin_v1          : 2.557e-02
+                         :   11 : L_dm                : 2.425e-02
+                         :   12 : logacos_ldira_ownpv : 1.827e-02
+                         :   13 : log_piminipchi2     : 1.347e-02
+                         :   14 : log_p_PT            : 1.206e-02
+                         :   15 : log_lfd_orivx       : 1.003e-02
+                         :   16 : pi_ProbNNpi         : 8.341e-03
+                         :   17 : log_pminipchi2      : 7.992e-03
+                         :   18 : log_lbfd_ownpv      : 7.638e-03
+                         :   19 : log_jpsimass        : 7.091e-03
+                         :   20 : pi_ProbNNghost      : 6.920e-03
+                         :   21 : p_ProbNNghost       : 5.052e-03
+                         : -----------------------------------------------------
+BDTconf2                 : Ranking result (top variable is best ranked)
+                         : -----------------------------------------------------
+                         : Rank : Variable            : Variable Importance
+                         : -----------------------------------------------------
+                         :    1 : log_dtfchi2         : 2.424e-01
+                         :    2 : log_lminipchi2      : 1.463e-01
+                         :    3 : log_lbminipchi2     : 1.279e-01
+                         :    4 : logacos_ldira_orivx : 9.739e-02
+                         :    5 : logacos_lbdira      : 8.179e-02
+                         :    6 : p_ProbNNp           : 7.545e-02
+                         :    7 : log_lfdchi2         : 5.343e-02
+                         :    8 : log_jpsiminipchi2   : 3.006e-02
+                         :    9 : L_dm                : 2.398e-02
+                         :   10 : log_pi_PT           : 1.797e-02
+                         :   11 : BDTkMin_v1          : 1.777e-02
+                         :   12 : logacos_ldira_ownpv : 1.430e-02
+                         :   13 : log_piminipchi2     : 1.195e-02
+                         :   14 : pi_ProbNNpi         : 9.338e-03
+                         :   15 : log_p_PT            : 8.737e-03
+                         :   16 : log_lfd_orivx       : 7.877e-03
+                         :   17 : log_pminipchi2      : 7.632e-03
+                         :   18 : log_lbfd_ownpv      : 7.025e-03
+                         :   19 : log_jpsimass        : 6.816e-03
+                         :   20 : pi_ProbNNghost      : 6.250e-03
+                         :   21 : p_ProbNNghost       : 5.654e-03
+                         : -----------------------------------------------------
+Factory                  : === Destroy and recreate all methods via weight files for testing ===
+                         : 
+Factory                  : [1mTest all methods[0m
+Factory                  : Test method: BDTconf1 for Classification performance
+                         : 
+BDTconf1                 : [dataset] : Evaluation of BDTconf1 on testing sample (296465 events)
+                         : Elapsed time for evaluation of 296465 events: 25.5 sec       
+Factory                  : Test method: BDTconf2 for Classification performance
+                         : 
+BDTconf2                 : [dataset] : Evaluation of BDTconf2 on testing sample (296465 events)
+                         : Elapsed time for evaluation of 296465 events: 11.8 sec       
+Factory                  : [1mEvaluate all methods[0m
+Factory                  : Evaluate classifier: BDTconf1
+                         : 
+BDTconf1                 : [dataset] : Loop over test events and fill histograms with classifier response...
+                         : 
+TFHandler_BDTconf1       :            Variable                   Mean                   RMS           [        Min                   Max ]
+                         : ------------------------------------------------------------------------------------------------------------------
+                         :         log_dtfchi2:               1.6344              0.49930   [             -0.90966               2.4771 ]
+                         :     log_lbminipchi2:               1.4095              0.86875   [              -4.7998               5.8145 ]
+                         :      logacos_lbdira:              -1.8116              0.52953   [              -4.8990              0.49310 ]
+                         :      log_lbfd_ownpv:              0.76381              0.40493   [              0.17611               2.7854 ]
+                         :   log_jpsiminipchi2:               1.3921              0.83545   [              -3.8357               5.8032 ]
+                         :        log_jpsimass:               3.4908            0.0023521   [               3.4828               3.4981 ]
+                         :         log_lfdchi2:               2.2539               1.2520   [              -2.7070               7.0171 ]
+                         : logacos_ldira_orivx:              -2.5540              0.83420   [              -6.4193              0.49714 ]
+                         :       log_lfd_orivx:               2.0870              0.72594   [              -2.2646               3.5257 ]
+                         : logacos_ldira_ownpv:              -2.5091              0.88673   [              -6.2330              0.49712 ]
+                         :                L_dm:               8.0741               7.6949   [           5.3456e-06               30.000 ]
+                         :      log_lminipchi2:               1.0233              0.89607   [              -5.1746               5.4609 ]
+                         :      log_pminipchi2:               1.8752              0.67533   [              0.95424               5.4567 ]
+                         :       p_ProbNNghost:              0.19347              0.28614   [           3.3842e-05              0.99745 ]
+                         :            log_p_PT:               2.8412              0.30133   [              0.46277               4.3453 ]
+                         :           p_ProbNNp:              0.28146              0.35058   [           1.2481e-07              0.99996 ]
+                         :      pi_ProbNNghost:              0.43392              0.38153   [           8.4147e-05              0.99969 ]
+                         :     log_piminipchi2:               2.0600              0.83737   [              0.95424               6.2949 ]
+                         :           log_pi_PT:               2.2019              0.27243   [             -0.32005               3.5115 ]
+                         :         pi_ProbNNpi:              0.49679              0.35237   [           7.6229e-06              0.99977 ]
+                         :          BDTkMin_v1:             -0.14901              0.25684   [             -0.96640              0.33512 ]
+                         : ------------------------------------------------------------------------------------------------------------------
+                         : [32m
+                         : <PlotVariables> Will not produce scatter plots ==> 
+                         : |  The number of 21 input variables and 0 target values would require 210 two-dimensional
+                         : |  histograms, which would occupy the computer's memory. Note that this
+                         : |  suppression does not have any consequences for your analysis, other
+                         : |  than not disposing of these scatter plots. You can modify the maximum
+                         : |  number of input variables allowed to generate scatter plots in your
+                         : |  script via the command line:
+                         : |  "(TMVA::gConfig().GetVariablePlotting()).fMaxNumOfAllowedVariablesForScatterPlots = <some int>;"[0m
+                         : 
+                         : Some more output
+Factory                  : Evaluate classifier: BDTconf2
+                         : 
+BDTconf2                 : [dataset] : Loop over test events and fill histograms with classifier response...
+                         : 
+TFHandler_BDTconf2       :            Variable                   Mean                   RMS           [        Min                   Max ]
+                         : ------------------------------------------------------------------------------------------------------------------
+                         :         log_dtfchi2:               1.6344              0.49930   [             -0.90966               2.4771 ]
+                         :     log_lbminipchi2:               1.4095              0.86875   [              -4.7998               5.8145 ]
+                         :      logacos_lbdira:              -1.8116              0.52953   [              -4.8990              0.49310 ]
+                         :      log_lbfd_ownpv:              0.76381              0.40493   [              0.17611               2.7854 ]
+                         :   log_jpsiminipchi2:               1.3921              0.83545   [              -3.8357               5.8032 ]
+                         :        log_jpsimass:               3.4908            0.0023521   [               3.4828               3.4981 ]
+                         :         log_lfdchi2:               2.2539               1.2520   [              -2.7070               7.0171 ]
+                         : logacos_ldira_orivx:              -2.5540              0.83420   [              -6.4193              0.49714 ]
+                         :       log_lfd_orivx:               2.0870              0.72594   [              -2.2646               3.5257 ]
+                         : logacos_ldira_ownpv:              -2.5091              0.88673   [              -6.2330              0.49712 ]
+                         :                L_dm:               8.0741               7.6949   [           5.3456e-06               30.000 ]
+                         :      log_lminipchi2:               1.0233              0.89607   [              -5.1746               5.4609 ]
+                         :      log_pminipchi2:               1.8752              0.67533   [              0.95424               5.4567 ]
+                         :       p_ProbNNghost:              0.19347              0.28614   [           3.3842e-05              0.99745 ]
+                         :            log_p_PT:               2.8412              0.30133   [              0.46277               4.3453 ]
+                         :           p_ProbNNp:              0.28146              0.35058   [           1.2481e-07              0.99996 ]
+                         :      pi_ProbNNghost:              0.43392              0.38153   [           8.4147e-05              0.99969 ]
+                         :     log_piminipchi2:               2.0600              0.83737   [              0.95424               6.2949 ]
+                         :           log_pi_PT:               2.2019              0.27243   [             -0.32005               3.5115 ]
+                         :         pi_ProbNNpi:              0.49679              0.35237   [           7.6229e-06              0.99977 ]
+                         :          BDTkMin_v1:             -0.14901              0.25684   [             -0.96640              0.33512 ]
+                         : ------------------------------------------------------------------------------------------------------------------
+                         : [32m
+                         : <PlotVariables> Will not produce scatter plots ==> 
+                         : |  The number of 21 input variables and 0 target values would require 210 two-dimensional
+                         : |  histograms, which would occupy the computer's memory. Note that this
+                         : |  suppression does not have any consequences for your analysis, other
+                         : |  than not disposing of these scatter plots. You can modify the maximum
+                         : |  number of input variables allowed to generate scatter plots in your
+                         : |  script via the command line:
+                         : |  "(TMVA::gConfig().GetVariablePlotting()).fMaxNumOfAllowedVariablesForScatterPlots = <some int>;"[0m
+                         : 
+                         : Some more output
+                         : 
+                         : Evaluation results ranked by best signal efficiency and purity (area)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : DataSet       MVA                       
+                         : Name:         Method:          ROC-integ
+                         : dataset       BDTconf2       : 1.087
+                         : dataset       BDTconf1       : 1.094
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : 
+                         : Testing efficiency compared to training efficiency (overtraining check)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : DataSet              MVA              Signal efficiency: from test sample (from training sample) 
+                         : Name:                Method:          @B=0.01             @B=0.10            @B=0.30   
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : dataset              BDTconf2       : 0.835 (0.835)       0.836 (0.836)      0.838 (0.838)
+                         : dataset              BDTconf1       : 0.825 (0.825)       0.826 (0.826)      0.828 (0.828)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : 
+Dataset:dataset          : Created tree 'TestTree' with 296465 events
+                         : 
+Dataset:dataset          : Created tree 'TrainTree' with 1185859 events
+                         : 
+Factory                  : [1mThank you for using TMVA![0m
+                         : [1mFor citation information, please visit: http://tmva.sf.net/citeTMVA.html[0m
+==> Wrote root file: rootFiles/dataFiles/JpsiLambda/run2/TMVAtraining/iso/TMVALite-JpsiLambda_LL_data_iso1_v1.root
+==> TMVAClassification is done!
+==> TrainFinalBDT is done! Home streeeeetch!: Real time 0:30:24, CP time 1821.650

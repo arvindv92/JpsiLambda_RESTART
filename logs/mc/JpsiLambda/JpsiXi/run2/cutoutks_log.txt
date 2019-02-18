@@ -1,0 +1,33 @@
+******************************************
+==> Starting CutOutKs: 
+Tue Jan 29 12:40:49 EST 2019
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+==> Starting CutOutKs: 
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+Processing Run 2 YEAR 2011 LL MC type 3
+******************************************
+******************************************
+Input file = rootFiles/mcFiles/JpsiLambda/JpsiXi/run2/jpsixi_sanity_LL.root
+nonZeroTracks Output file = rootFiles/mcFiles/JpsiLambda/JpsiXi/run2/jpsixi_cutoutks_LL_nonZeroTracks.root
+ZeroTracks Output file = rootFiles/mcFiles/JpsiLambda/JpsiXi/run2/jpsixi_cutoutks_LL_ZeroTracks.root
+******************************************
+Incoming entries = 38928
+Making LL file
+I am making the following cutoutks cuts only on events within 480-520 MeV in Lb_DTF_L_WMpipi_JpsiConstr. Events outside this window aren't cut on. Sit tight
+L_dm < 7.5
+p_PIDp > 10
+0
+Outgoing Entries with nonZeroTracks = 31037
+Outgoing Entries with ZeroTracks = 1028
+******************************************
+LL CutOutKs cuts made with exclusive efficiency = 82.37% +/- 0.193143 %
+******************************************
+Original generated number = 3555503
+******************************************
+LL CutOutKs cuts made with inclusive efficiency = 0.901841% +/- 0.00501357 %
+******************************************
+==> CutOutKs is done! Death to Ks0!: Real time 0:00:22, CP time 22.210

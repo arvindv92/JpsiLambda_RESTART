@@ -1,0 +1,181 @@
+*****************************
+==> Starting TrainIsolation: v1
+WD = /data1/avenkate/JpsiLambda_RESTART
+*****************************
+--- TMVAClassification : Using background input file: /data1/avenkate/B+toJpsiK+/RealData_AllKaons/total_run2/splot/maketuples/jpsik_forTMVAisoTraining.root
+--- TMVAClassification : Using signal input file: rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_LL_forIsoTraining.root
+DataSetInfo              : [dataset] : Added class "Signal"
+                         : Add Tree MyTuple of type Signal with 466520 events
+DataSetInfo              : [dataset] : Added class "Background"
+                         : Add Tree MyTuple of type Background with 1441293 events
+Factory                  : Booking method: [1misoConf1_300[0m
+                         : 
+DataSetFactory           : [dataset] : Number of events in input trees
+                         : Dataset[dataset] :     Signal     requirement: "(MINIPCHI2 > 0 && VCHI2DOF > 0)&&(PT > 0 )"
+                         : Dataset[dataset] :     Signal          -- number of events passed: 7558138  / sum of weights: 518278
+                         : Dataset[dataset] :     Signal          -- efficiency             : 1     
+                         : Dataset[dataset] :     Background requirement: "(MINIPCHI2 > 0 && VCHI2DOF > 0)&&(PT > 0 )"
+                         : Dataset[dataset] :     Background      -- number of events passed: 1441293  / sum of weights: 434460
+                         : Dataset[dataset] :     Background      -- efficiency             : 1     
+                         : 
+                         : 
+                         : Number of training and testing events
+                         : ---------------------------------------------------------------------------
+                         : Signal     -- training events            : 373216
+                         : Signal     -- testing events             : 93304
+                         : Signal     -- training and testing events: 466520
+                         : Background -- training events            : 1153034
+                         : Background -- testing events             : 288259
+                         : Background -- training and testing events: 1441293
+                         : 
+DataSetInfo              : Correlation matrix (Signal):
+                         : -------------------------------------------------------------
+                         :                    IPCHI2 VCHI2DOF log10(MINIPCHI2) log10(PT)
+                         :           IPCHI2:  +1.000   +0.809           +0.109    +0.016
+                         :         VCHI2DOF:  +0.809   +1.000           +0.099    +0.215
+                         : log10(MINIPCHI2):  +0.109   +0.099           +1.000    +0.271
+                         :        log10(PT):  +0.016   +0.215           +0.271    +1.000
+                         : -------------------------------------------------------------
+DataSetInfo              : Correlation matrix (Background):
+                         : -------------------------------------------------------------
+                         :                    IPCHI2 VCHI2DOF log10(MINIPCHI2) log10(PT)
+                         :           IPCHI2:  +1.000   +0.695           +0.006    -0.082
+                         :         VCHI2DOF:  +0.695   +1.000           +0.048    +0.079
+                         : log10(MINIPCHI2):  +0.006   +0.048           +1.000    -0.102
+                         :        log10(PT):  -0.082   +0.079           -0.102    +1.000
+                         : -------------------------------------------------------------
+DataSetFactory           : [dataset] :  
+                         : 
+Factory                  : Booking method: [1misoConf2_300[0m
+                         : 
+Factory                  : [1mTrain all methods[0m
+Factory                  : [dataset] : Create Transformation "I" with events from all classes.
+                         : 
+                         : Transformation, Variable selection : 
+                         : Input : variable 'IPCHI2' <---> Output : variable 'IPCHI2'
+                         : Input : variable 'VCHI2DOF' <---> Output : variable 'VCHI2DOF'
+                         : Input : variable 'log_MINIPCHI2' <---> Output : variable 'log_MINIPCHI2'
+                         : Input : variable 'log_PT' <---> Output : variable 'log_PT'
+TFHandler_Factory        :      Variable             Mean             RMS     [        Min             Max ]
+                         : ------------------------------------------------------------------------------------
+                         :        IPCHI2:         2.0675         3.3029   [     3.3597e-07         31.969 ]
+                         :      VCHI2DOF:         1.6147         1.6580   [     1.8698e-05         10.000 ]
+                         : log_MINIPCHI2:         1.8394         1.3179   [        -6.7042         5.4272 ]
+                         :        log_PT:         3.0933        0.49737   [        0.73243         4.8014 ]
+                         : ------------------------------------------------------------------------------------
+                         : Ranking input variables (method unspecific)...
+IdTransformation         : Ranking result (top variable is best ranked)
+                         : --------------------------------------
+                         : Rank : Variable      : Separation
+                         : --------------------------------------
+                         :    1 : log_MINIPCHI2 : 7.474e-01
+                         :    2 : log_PT        : 7.205e-01
+                         :    3 : IPCHI2        : 3.516e-01
+                         :    4 : VCHI2DOF      : 1.730e-01
+                         : --------------------------------------
+Factory                  : Train method: isoConf1_300 for Classification
+                         : 
+<WARNING>                : Events with negative event weights are USED during the BDT training. This might cause problems with small node sizes or with the boosting. Please remove negative events from training using the option *IgnoreEventsWithNegWeightsInTraining* in case you observe problems with the boosting
+isoConf1_300             : #events: (reweighted) sig: 763125 bkg: 763125
+                         : #events: (unweighted) sig: 373216 bkg: 1153034
+                         : Training 300 Decision Trees ... patience please
+                         : Elapsed time for training with 1526250 events: 459 sec         
+isoConf1_300             : [dataset] : Evaluation of isoConf1_300 on training sample (1526250 events)
+                         : Elapsed time for evaluation of 1526250 events: 123 sec       
+                         : Creating xml weight file: [0;36mdataset/weights/TMVAClassification300-isokLL_dataRun2_v1_isoConf1_300.weights.xml[0m
+                         : Creating standalone class: [0;36mdataset/weights/TMVAClassification300-isokLL_dataRun2_v1_isoConf1_300.class.C[0m
+Factory                  : Training finished
+                         : 
+Factory                  : Train method: isoConf2_300 for Classification
+                         : 
+<WARNING>                : Events with negative event weights are USED during the BDT training. This might cause problems with small node sizes or with the boosting. Please remove negative events from training using the option *IgnoreEventsWithNegWeightsInTraining* in case you observe problems with the boosting
+isoConf2_300             : #events: (reweighted) sig: 763125 bkg: 763125
+                         : #events: (unweighted) sig: 373216 bkg: 1153034
+                         : Training 300 Decision Trees ... patience please
+                         : Elapsed time for training with 1526250 events: 459 sec         
+isoConf2_300             : [dataset] : Evaluation of isoConf2_300 on training sample (1526250 events)
+                         : Elapsed time for evaluation of 1526250 events: 118 sec       
+                         : Creating xml weight file: [0;36mdataset/weights/TMVAClassification300-isokLL_dataRun2_v1_isoConf2_300.weights.xml[0m
+                         : Creating standalone class: [0;36mdataset/weights/TMVAClassification300-isokLL_dataRun2_v1_isoConf2_300.class.C[0m
+Factory                  : Training finished
+                         : 
+                         : Ranking input variables (method specific)...
+isoConf1_300             : Ranking result (top variable is best ranked)
+                         : -----------------------------------------------
+                         : Rank : Variable      : Variable Importance
+                         : -----------------------------------------------
+                         :    1 : log_PT        : 3.728e-01
+                         :    2 : log_MINIPCHI2 : 3.326e-01
+                         :    3 : IPCHI2        : 1.594e-01
+                         :    4 : VCHI2DOF      : 1.351e-01
+                         : -----------------------------------------------
+isoConf2_300             : Ranking result (top variable is best ranked)
+                         : -----------------------------------------------
+                         : Rank : Variable      : Variable Importance
+                         : -----------------------------------------------
+                         :    1 : log_PT        : 3.632e-01
+                         :    2 : log_MINIPCHI2 : 3.528e-01
+                         :    3 : IPCHI2        : 1.563e-01
+                         :    4 : VCHI2DOF      : 1.276e-01
+                         : -----------------------------------------------
+Factory                  : === Destroy and recreate all methods via weight files for testing ===
+                         : 
+Factory                  : [1mTest all methods[0m
+Factory                  : Test method: isoConf1_300 for Classification performance
+                         : 
+isoConf1_300             : [dataset] : Evaluation of isoConf1_300 on testing sample (381563 events)
+                         : Elapsed time for evaluation of 381563 events: 31.2 sec       
+Factory                  : Test method: isoConf2_300 for Classification performance
+                         : 
+isoConf2_300             : [dataset] : Evaluation of isoConf2_300 on testing sample (381563 events)
+                         : Elapsed time for evaluation of 381563 events: 27.9 sec       
+Factory                  : [1mEvaluate all methods[0m
+Factory                  : Evaluate classifier: isoConf1_300
+                         : 
+isoConf1_300             : [dataset] : Loop over test events and fill histograms with classifier response...
+                         : 
+TFHandler_isoConf1_300   :      Variable             Mean             RMS     [        Min             Max ]
+                         : ------------------------------------------------------------------------------------
+                         :        IPCHI2:         1.3267         2.2659   [     2.0376e-06         32.579 ]
+                         :      VCHI2DOF:         1.3542         1.4010   [     0.00025665         10.000 ]
+                         : log_MINIPCHI2:         2.2453         1.0578   [        -5.4512         5.1488 ]
+                         :        log_PT:         3.2506        0.37868   [         1.2754         4.5994 ]
+                         : ------------------------------------------------------------------------------------
+Factory                  : Evaluate classifier: isoConf2_300
+                         : 
+isoConf2_300             : [dataset] : Loop over test events and fill histograms with classifier response...
+                         : 
+TFHandler_isoConf2_300   :      Variable             Mean             RMS     [        Min             Max ]
+                         : ------------------------------------------------------------------------------------
+                         :        IPCHI2:         1.3267         2.2659   [     2.0376e-06         32.579 ]
+                         :      VCHI2DOF:         1.3542         1.4010   [     0.00025665         10.000 ]
+                         : log_MINIPCHI2:         2.2453         1.0578   [        -5.4512         5.1488 ]
+                         :        log_PT:         3.2506        0.37868   [         1.2754         4.5994 ]
+                         : ------------------------------------------------------------------------------------
+                         : 
+                         : Evaluation results ranked by best signal efficiency and purity (area)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : DataSet       MVA                       
+                         : Name:         Method:          ROC-integ
+                         : dataset       isoConf1_300   : 0.988
+                         : dataset       isoConf2_300   : 0.987
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : 
+                         : Testing efficiency compared to training efficiency (overtraining check)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : DataSet              MVA              Signal efficiency: from test sample (from training sample) 
+                         : Name:                Method:          @B=0.01             @B=0.10            @B=0.30   
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : dataset              isoConf1_300   : 0.860 (0.860)       0.976 (0.975)      0.990 (0.990)
+                         : dataset              isoConf2_300   : 0.877 (0.881)       0.976 (0.976)      0.990 (0.990)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : 
+Dataset:dataset          : Created tree 'TestTree' with 381563 events
+                         : 
+Dataset:dataset          : Created tree 'TrainTree' with 1526250 events
+                         : 
+Factory                  : [1mThank you for using TMVA![0m
+                         : [1mFor citation information, please visit: http://tmva.sf.net/citeTMVA.html[0m
+==> Wrote root file: rootFiles/dataFiles/JpsiLambda/run2/TMVAtraining/iso/TMVA300-isokLL_data_v1.root
+==> TMVAClassification is done!
+==> End of TrainIsolation! Cheers!: Real time 0:26:02, CP time 1538.700

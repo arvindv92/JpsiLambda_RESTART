@@ -1,0 +1,13 @@
+********************************
+==> Starting DoSWeight: 
+Mon Feb 18 12:37:23 EST 2019
+WD = /data1/avenkate/JpsiLambda_RESTART
+********************************
+Incoming Entries = 6877096
+******************************************
+Input file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL_nonZeroTracks.root
+sWeighted Output file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_LL_withsw_nonZeroTracks.root
+Isolation Training Output file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_LL_forIsoTraining.root
+******************************************
+Making mass cut on 6877096 entries
+0

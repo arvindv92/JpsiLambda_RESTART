@@ -1,0 +1,7 @@
+==> Starting JpsiXi CollateFiles: 
+Fri Jan 25 17:21:23 EST 2019
+WD = /data1/avenkate/JpsiLambda_RESTART
+Adding Run 2 Data ROOT files for 2017 to TChain. Sit tight
+DONE ATTACHING ROOT FILES
+DONE COLLATING
+WD = /data1/avenkate/JpsiLambda_RESTART
