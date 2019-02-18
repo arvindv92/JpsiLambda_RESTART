@@ -1,12 +1,15 @@
 #include "OptimizeFinalBDT.h"
 
+Double_t getSumOfWeights(Double_t mybdt = 0., TTree* tree = nullptr,
+                         Int_t flag = 1, Int_t bdtConf = 1, Int_t nEntries = 0);
 
-void OptimizeFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
-                      Int_t isoConf, Int_t bdtConf, Bool_t isoFlag,
-                      Bool_t logFlag, Bool_t newFlag, TString FOM)
+std::vector <Double_t> OptimizeFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
+                                        Int_t isoConf, Int_t bdtConf, Bool_t isoFlag,
+                                        Bool_t logFlag, Bool_t newFlag, TString FOM)
 {
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
+	std::vector <Double_t> cuts = {-1.0};
 	const char *mynew = "", *type = "";
 	if(newFlag) mynew = "_new";
 
@@ -119,14 +122,14 @@ void OptimizeFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		// myTree->Draw(Form("BDT%d>>hsig1(90,-0.4,0.5)",bdtConf),"SW*(Lb_DTF_M_JpsiLConstr < 5700 && Lb_DTF_M_JpsiLConstr > 5300)","goff");
 		// myTree->Draw(Form("BDT%d>>hbkg(200,-1.0,1.0)",bdtConf),"BW*(Lb_DTF_M_JpsiLConstr > 5700)","goff");
 
-		hsig = (TH1D*)gDirectory->Get("hsig0");                      //play around with this
+		hsig = (TH1D*)gDirectory->Get("hsig0");  //play around with this
 		//      hbkg = (TH1D*)gDirectory->Get("hbkg");
 
 		TFile *tempFile = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/tempFile.root",run),"RECREATE");
 		TTree *tempTree = (TTree*)myTree->CopyTree("");
 
 		bkginit = myTree->GetEntries("Lb_DTF_M_JpsiLConstr > 5700")*26/30;
-		siginit =  (Int_t)getSumOfWeights(-0.5,tempTree,1,bdtConf,nEntries);                    //rounding off happening here
+		siginit =  (Int_t)getSumOfWeights(-0.5,tempTree,1,bdtConf,nEntries);//rounding off happening here
 		//siginit = 6575;
 		//      bkginit =  (Int_t)getSumOfWeights(-0.5,myTree,2,bdtConf,nEntries);
 		cout<<"siginit = "<<siginit<<endl;
@@ -178,9 +181,11 @@ void OptimizeFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		}
 		cout<<"MAXIMUM FOM = "<<myFOM_max<<" at BDT = "<<BDT_max<<" with sig_eff = "
 		    <<eff_sig_max*100<<"% and bkg_eff = "<<eff_bkg_max*100<<"%"<<endl;
+		cuts.push_back(BDT_max);
 		ctr++;
 	}
 	if(logFlag) gSystem->RedirectOutput(0);
+	return cuts;
 }
 Double_t getSumOfWeights(Double_t mybdt, TTree* tree, Int_t flag,
                          Int_t bdtConf, Int_t nEntries)

@@ -13,7 +13,13 @@ using namespace RooFit;
 using namespace RooStats;
 using namespace std;
 
-void DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
+void AddModel(RooWorkspace *ws = nullptr, Int_t lowRange = 5200, Int_t highRange = 6000, Int_t nEntries = 0);
+
+void AddData(RooWorkspace *ws = nullptr, Int_t run = 1, TTree *treeIn = nullptr);
+
+Double_t DosPlot(RooWorkspace *ws = nullptr, Int_t run = 1, const char *type = "LL", TTree *treeOut = nullptr, TTree *treeOut_training = nullptr, Bool_t zeroFlag = false);
+
+Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 /*
    >run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC.
    Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data.
@@ -36,7 +42,7 @@ void DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 
 	if(logFlag)//Redirect output to log file
 	{
-		gSystem->RedirectOutupt(Form("logs/data/JpsiLambda/run%d/sPlot_%s%s_log.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/sPlot_%s%s_log.txt",
 		                             run, type, suffix),"w");
 	}
 	cout<<"********************************"<<endl;
@@ -107,16 +113,16 @@ void DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 			treeOut->Fill();
 			if(!zeroFlag)
 			{
-				if(Lb_Mass > 5400 && Lb_Mass < 5700)//5400-5700 only for training
-				{
-					treeOut_training->Fill();
-				}
+				// if(Lb_Mass > 5400 && Lb_Mass < 5700)//5400-5700 only for training
+				//      {
+				treeOut_training->Fill();
+				//	}
 			}
 		}
 	}
 
 	// Create a new workspace to manage the project.
-	RooWorkspace* wSpace = new RooWorkspace("myWS");
+	RooWorkspace *wSpace = new RooWorkspace("myWS");
 
 	// add the signal and background models to the workspace.
 	// Inside this function you will find a discription the model.
@@ -130,7 +136,7 @@ void DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 
 	// do sPlot.
 	//This wil make a new dataset with sWeights added for every event.
-	DosPlot(wSpace, run, type, treeOut, treeOut_training, zeroFlag);
+	Double_t myChi2 = DosPlot(wSpace, run, type, treeOut, treeOut_training, zeroFlag);
 
 	fileOut->cd();
 	treeOut->Write("",TObject::kOverwrite);
@@ -151,6 +157,7 @@ void DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 	// if(logFlag) gROOT->ProcessLine(".>"); //end redirect
 	if(logFlag) gSystem->RedirectOutput(0); //end redirect
 
+	return myChi2;
 }
 
 void AddModel(RooWorkspace *ws, Int_t lowRange, Int_t highRange, Int_t nEntries)
@@ -194,7 +201,7 @@ void AddModel(RooWorkspace *ws, Int_t lowRange, Int_t highRange, Int_t nEntries)
 
 	// COMBINED MODEL	cout << "Making full model" << endl;
 
-	RooRealVar sigYield("sigYield","fitted yield for sig",5000,0, 15000);
+	RooRealVar sigYield("sigYield","fitted yield for sig",5000,0, 30000);
 	RooRealVar bkgYield("bkgYield","fitted yield for bkg",(nEntries/2),0, nEntries);
 
 	RooAddPdf model("model","signal+background models",
@@ -229,8 +236,8 @@ void AddData(RooWorkspace *ws, Int_t run, TTree *treeIn)
 	cout<<"Finishing AddData()"<<endl;
 }
 
-void DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
-             TTree *treeOut_training, Bool_t zeroFlag)
+Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
+                 TTree *treeOut_training, Bool_t zeroFlag)
 {
 	const char *suffix = (zeroFlag) ? ("_ZeroTracks") : ("_nonZeroTracks");
 	Float_t SIGW = 0., BKGW = 0., bMASS = 0.;
@@ -500,4 +507,6 @@ void DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 		treeOut_training->SetAlias("TRACKCHI2DOF","Added_H_TRACKCHI2");
 	}
 	cout<<"Finishing DoSPlot()"<<endl;
+
+	return chi2;
 }

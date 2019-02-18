@@ -27,7 +27,10 @@
 using namespace RooFit;
 using namespace std;
 
-void fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag = 1, Int_t xibflag = 1, Int_t sigmaflag = 1, Int_t type = 1, Int_t Lst1405_rwtype = 2, Int_t mylow = 4700, Int_t constraintflag = 1)
+void Fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag = 1,
+               Int_t xibflag = 1, Int_t sigmaflag = 1, Int_t type = 1,
+               Int_t Lst1405_rwtype = 2, Int_t mylow = 4700, Int_t constraintflag = 1)
+
 {/*Set LstXXXXflag = 1 to include the shapes for these decays in the final fit
 	Set xibflag = 1 to include Xib background shape.
 	Set sigmaflag = 1 to include J/psi Sigma signla shape.
@@ -42,13 +45,16 @@ void fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag =
 	Double_t xibminus_norm_LL = 42.5; //37.5;//comes from fit to xib data
 	Double_t xibminus_norm_LL_stat = 8.2; //7.7;//statistical error, omes from fit to xib data
 	Double_t xibminus_norm_LL_syst = 0.02*xibminus_norm_LL; //conservative 2% systematic, based on f(Xib-) analysis //=0.85
-	Double_t eff_xib_jpsixi_LL = 0.030734; //add errors for these effs
+	Double_t eff_xib_jpsixi_LL = 0.030734;                                  //add errors for these effs
 	Double_t eff_xib_jpsil_LL = 0.024539;
 
 	Double_t xibminus_norm_LL_err = sqrt(pow(xibminus_norm_LL_stat,2) + pow(xibminus_norm_LL_syst,2) ); //adding stat. and syst. errors in quadrature // = 8.244
 
-	Double_t xibnorm_LL = (xibminus_norm_LL/eff_xib_jpsixi_LL)*eff_xib_jpsil_LL*2.0; //2.0 to account for xib0 as well  //=67.8667
-	Double_t xibnorm_LL_err = (xibminus_norm_LL_err/eff_xib_jpsixi_LL)*eff_xib_jpsil_LL*sqrt(2.0); //sqrt because I'm adding the errors in quadrature // = 9.309
+	// Double_t xibnorm_LL = (xibminus_norm_LL/eff_xib_jpsixi_LL)*eff_xib_jpsil_LL*2.0; //2.0 to account for xib0 as well  //=67.8667
+	// Double_t xibnorm_LL_err = (xibminus_norm_LL_err/eff_xib_jpsixi_LL)*eff_xib_jpsil_LL*sqrt(2.0); //sqrt because I'm adding the errors in quadrature // = 9.309
+
+	Double_t xibnorm_LL = 35.3;//41.9;
+	Double_t xibnorm_LL_err = 7.7;//9.1;
 
 	cout<<"The LL Xib normalization is "<<xibnorm_LL<<" +/- "<<xibnorm_LL_err<<endl;
 
@@ -78,7 +84,7 @@ void fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag =
 	RooRealVar alpha1("alpha1","alpha1",1.028, 0.8,1.3);
 	RooRealVar alpha2("alpha2","alpha2",-1.097,-1.4,-0.7);
 	//  RooRealVar sigma("sigma","Crystal Ball sigma",7.069);//,6.4,7.8);
-	RooRealVar sigma("sigma","Crystal Ball sigma",0.,20.);//,6.4,7.8);
+	RooRealVar sigma("sigma","Crystal Ball sigma",10.,0.,20.);//,6.4,7.8);
 	RooRealVar CBn("CBn","Crystal Ball n",10.0);//fixed in both sim fit and here
 
 	//RooGaussian mean_constraint("mean_constraint","CB mean constraint",mean,RooFit::RooConst(5620.09),RooFit::RooConst(0.107));
@@ -248,14 +254,15 @@ void fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag =
 	//******************Get shape from Xib background******************************************************
 	// RooRealVar xibmass("Lb_DTF_M_JpsiLConstr","xibmass",5200.,5740.);
 
-	TFile *filein_xib = TFile::Open("/data1/avenkate/JpsiLambda_restart/mc/JpsiXi/total_run1/jpsixi_DD.root");
+	TFile *filein_xib = TFile::Open("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/BDTcut/jpsixi_LL_BDT1cut_iso1_v0.root");
 	TTree *treein_xib = (TTree*)filein_xib->Get("MyTuple");
 
 	treein_xib->SetBranchStatus("*",0);
 	treein_xib->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+	treein_xib->SetBranchStatus("Lb_BKGCAT",1);
 
 	//  RooDataSet ds_xib("ds_xib","ds_xib",treein_xib,xibmass);
-	treein_xib->Draw(Form("Lb_DTF_M_JpsiLConstr>>hxib(%d,%d,%d)",nbins,low,high),"","goff");
+	treein_xib->Draw(Form("Lb_DTF_M_JpsiLConstr>>hxib(%d,%d,%d)",nbins,low,high),"Lb_BKGCAT==40","goff");
 
 	TH1D *hxib = (TH1D*)gDirectory->Get("hxib");
 	TH1D *hxib_smooth = (TH1D*)hxib->Clone("hxib_smooth");
@@ -283,7 +290,7 @@ void fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag =
 	//******************Get shape from Jpsi Sigma signal***********************************************
 	//  RooRealVar sigmamass("Lb_DTF_M_JpsiLConstr","sigmamass",5200.,5740.);
 
-	TFile *filein_sigma = TFile::Open("/data1/avenkate/JpsiLambda_restart/mc/JpsiSigma/total_run1/jpsisigma_DD.root");//WHY AM I USING THE DD SHAPE HERE, TO FIT LL?
+	TFile *filein_sigma = TFile::Open("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma/run1/BDTcut/jpsisigma_LL_BDT1cut_iso1_v0.root");//WHY AM I USING THE DD SHAPE HERE, TO FIT LL?
 	TTree *treein_sigma = (TTree*)filein_sigma->Get("MyTuple");
 
 	treein_sigma->SetBranchStatus("*",0);
@@ -319,22 +326,22 @@ void fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag =
 	//*****************************************************************************************************
 
 	//*********Input Data*********************************************************************************
-	TFile *filein = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_withiso1_v0_300.root","READ");
+	TFile *filein = TFile::Open("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run1/BDTcut/jpsilambda_LL_BDT1cut_iso1_v0.root","READ");
 	// else if(type == 2)
 	//   filein = TFile::Open("../jpsilambda_DD.root","READ");
 
 	TTree *treein = (TTree*)filein->Get("MyTuple");
 
-	treein->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_FinalBDT1_iso1_v0.root");
+	// treein->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_FinalBDT1_iso1_v0.root");
 	treein->SetBranchStatus("*",0);
 	treein->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-	treein->SetBranchStatus("BDT1",1);
-	treein->SetBranchStatus("BDTkMin_v0",1);
+	// treein->SetBranchStatus("BDT1",1);
+	// treein->SetBranchStatus("BDTkMin_v0",1);
 
 	Int_t nentries = treein->GetEntries();
 	cout<<"nentries = "<<nentries<<endl;
 
-	treein->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist(%d,%d,%d)",nbins,low,high),"BDT1 > 0.285","goff");
+	treein->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist(%d,%d,%d)",nbins,low,high),"","goff");
 	//  treein->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist1(%d,%d,%d)",nbins,low,high),"BDT1 > 0.065","goff");
 
 	TH1D *myhist = (TH1D*)gDirectory->Get("myhist");
@@ -400,25 +407,25 @@ void fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag =
 	cout<<"stage1.2"<<endl;
 
 	// if(lstflag == 0 && xibflag == 0 && sigmaflag == 0)
-	//   model = RooAddPdf("model","model",RooArgList(sig,bkg),RooArgList(nsig,nbkg));
+	//      model = RooAddPdf("model","model",RooArgList(sig,bkg),RooArgList(nsig,nbkg));
 	// else if(lstflag == 1 && xibflag == 0 && sigmaflag == 0)
-	//   model = RooAddPdf("model","model",RooArgList(sig,bkg,lstshape),RooArgList(nsig,nbkg,nlst));
+	//      model = RooAddPdf("model","model",RooArgList(sig,bkg,lstshape),RooArgList(nsig,nbkg,nlst));
 	// else if(lstflag == 0 && xibflag == 1 && sigmaflag == 0)
-	//   model = RooAddPdf("model","model",RooArgList(sig,bkg,xibshape),RooArgList(nsig,nbkg,nxib));
+	//      model = RooAddPdf("model","model",RooArgList(sig,bkg,xibshape),RooArgList(nsig,nbkg,nxib));
 	// else if(lstflag == 0 && xibflag == 0 && sigmaflag == 1)
-	//   model = RooAddPdf("model","model",RooArgList(sig,bkg,sigmashape),RooArgList(nsig,nbkg,nsigma));
+	//      model = RooAddPdf("model","model",RooArgList(sig,bkg,sigmashape),RooArgList(nsig,nbkg,nsigma));
 	// else if(lstflag == 0 && xibflag == 1 && sigmaflag == 1)
-	//   model = RooAddPdf("model","model",RooArgList(sig,bkg,xibshape,sigmashape),RooArgList(nsig,nbkg,nxib,nsigma));
+	//      model = RooAddPdf("model","model",RooArgList(sig,bkg,xibshape,sigmashape),RooArgList(nsig,nbkg,nxib,nsigma));
 	// else if(lstflag == 1 && xibflag == 0 && sigmaflag == 1)
-	//   model = RooAddPdf("model","model",RooArgList(sig,bkg,sigmashape,lstshape),RooArgList(nsig,nbkg,nsigma,nlst));
+	//      model = RooAddPdf("model","model",RooArgList(sig,bkg,sigmashape,lstshape),RooArgList(nsig,nbkg,nsigma,nlst));
 	// else if(lstflag == 1 && xibflag == 1 && sigmaflag == 0)
-	//   model = RooAddPdf("model","model",RooArgList(sig,bkg,xibshape,lstshape),RooArgList(nsig,nbkg,nxib,nlst));
+	//      model = RooAddPdf("model","model",RooArgList(sig,bkg,xibshape,lstshape),RooArgList(nsig,nbkg,nxib,nlst));
 	// else if(lstflag == 1 && xibflag == 1 && sigmaflag == 1)
-	//  RooAddPdf model("model","model",RooArgList(sig,bkg,xibshape,sigmashape,lstshape,misclstshape),RooArgList(nsig,nbkg,nxib,nsigma,nlst,nmisclst));
+	//      RooAddPdf model("model","model",RooArgList(sig,bkg,xibshape,sigmashape,lstshape,misclstshape),RooArgList(nsig,nbkg,nxib,nsigma,nlst,nmisclst));
 	// if(sigmaflag == 0)
-	//   RooAddPdf model("model","model",RooArgList(sig,bkg,lstshape_smooth,misclstshape,xibshape_smooth,sigmashape_smooth),RooArgList(nsig,nbkg,nlst,nmisclst,nxib,nsigma));
+	RooAddPdf model("model","model",RooArgList(sig,bkg,lst1405shape_smooth,misclstshape,xibshape_smooth,sigmashape_smooth),RooArgList(*nsig,nbkg,nlst1405,nmisclst,*nxib,nsigma));
 	// else
-	RooAddPdf model("model","model",RooArgList(sig,bkg),RooArgList(*nsig,nbkg));
+	//      RooAddPdf model("model","model",RooArgList(sig,bkg),RooArgList(*nsig,nbkg));
 
 	//RooProdPdf modelc("modelc","model with Gaussian constraint(s)",RooArgSet(model,nxib_constraint,mean_constraint));
 
@@ -449,10 +456,11 @@ void fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag =
 	model.plotOn(frame,Components(bkg),LineColor(kRed),Name("bkg"));
 	//  if(xibflag!=0)
 	model.plotOn(frame,Components(xibshape_smooth),LineColor(kGreen),Name("xib"));
-	// if(lstflag!=0)
-	model.plotOn(frame,Components(lst1405shape),LineColor(kGreen+2),LineStyle(kDashed),Name("lst1405"));
-	model.plotOn(frame,Components(lst1520shape),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1520"));
-	model.plotOn(frame,Components(lst1810shape),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1810"));
+	if(lst1405flag!=0)
+		model.plotOn(frame,Components(lst1405shape_smooth),LineColor(kGreen+2),LineStyle(kDashed),Name("lst1405"));
+	if(lst1520flag!=0)
+		model.plotOn(frame,Components(lst1520shape_smooth),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1520"));
+	//model.plotOn(frame,Components(lst1810shape),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1810"));
 	// if(sigmaflag!=0)
 	model.plotOn(frame,Components(sigmashape_smooth),LineColor(kBlack),Name("sigma"));
 	model.plotOn(frame,Components(misclstshape),LineColor(kRed+2),LineStyle(kDashed),Name("misclst"));

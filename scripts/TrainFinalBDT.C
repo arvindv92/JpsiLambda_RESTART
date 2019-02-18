@@ -58,10 +58,10 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	if(isoFlag)
 	{
 		outfileName = Form("%s/TMVAtraining/iso/"
-		                   "TMVALite-JpsiLambda_%s_data_iso%d_%s%s.root",
+		                   "TMVA-JpsiLambda_%s_data_iso%d_%s%s.root",
 		                   rootFolder,type,isoConf,isoVersion,mynew);
 		outputFile  = TFile::Open(outfileName, "RECREATE");
-		factory     = new TMVA::Factory(Form("TMVAClassificationLite-"
+		factory     = new TMVA::Factory(Form("TMVAClassification-"
 		                                     "JpsiLambda%s_dataRun%d_iso%d_%s%s",
 		                                     type,run,isoConf,isoVersion,mynew),outputFile,
 		                                "!V:!Silent:Color:!DrawProgressBar:"
@@ -70,10 +70,10 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	else
 	{
 		outfileName = Form("%s/TMVAtraining/noIso/"
-		                   "TMVALite-JpsiLambda%s_data_noIso%s.root",
+		                   "TMVA-JpsiLambda%s_data_noIso%s.root",
 		                   rootFolder,type,mynew);
 		outputFile  = TFile::Open( outfileName, "RECREATE");
-		factory = new TMVA::Factory( Form("TMVAClassificationLite-"
+		factory = new TMVA::Factory( Form("TMVAClassification-"
 		                                  "JpsiLambda%s_dataRun%d_noIso%s",
 		                                  type,run,mynew), outputFile,
 		                             "!V:!Silent:Color:!DrawProgressBar:"
@@ -240,14 +240,14 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	                                             nTrain_S,nTest_S,nTrain_B,nTest_B));
 
 	factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf1",
-	                    "!H:!V:NTrees=300:MinNodeSize=1.0%:MaxDepth=5:"
-	                    "BoostType=AdaBoost:AdaBoostBeta=0.2:UseBaggedBoost:"
+	                    "!H:!V:NTrees=500:MinNodeSize=1.0%:MaxDepth=4:"
+	                    "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
 	                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
 	                    "nCuts=100" );
 
 	factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf2",
-	                    "!H:!V:NTrees=300:MinNodeSize=0.5%:MaxDepth=5:"
-	                    "BoostType=AdaBoost:AdaBoostBeta=0.2:UseBaggedBoost:"
+	                    "!H:!V:NTrees=500:MinNodeSize=0.5%:MaxDepth=4:"
+	                    "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
 	                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
 	                    "nCuts=100" );
 

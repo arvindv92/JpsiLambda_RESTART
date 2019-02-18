@@ -206,11 +206,11 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	{
 		treeIn->SetBranchAddress("Added_H_PT", PT);
 	}
-	if(strncmp(isoVersion,"v2",2) == 0 || strncmp(isoVersion,"v3",2) == 0)
-	{
-		treeIn->SetBranchAddress("psi_1S_H_FD_NEW", FD);
-		treeIn->SetBranchAddress("psi_1S_H_FDCHI2_NEW", FDCHI2);
-	}
+	// if(strncmp(isoVersion,"v2",2) == 0 || strncmp(isoVersion,"v3",2) == 0)
+	// {
+	//      treeIn->SetBranchAddress("psi_1S_H_FD_NEW", FD);
+	//      treeIn->SetBranchAddress("psi_1S_H_FDCHI2_NEW", FDCHI2);
+	// }
 
 	treeOut->Branch(Form("BDTkMin_%s",isoVersion),&BDTkMin,
 	                Form("BDTkMin_%s/D",isoVersion));

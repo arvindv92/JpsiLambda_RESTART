@@ -18,7 +18,7 @@
 
 using namespace RooFit;
 using namespace std;
-void fitscript_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
+void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 {
 	TStopwatch sw;
 	sw.Start();

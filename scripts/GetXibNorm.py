@@ -4,6 +4,8 @@ import math
 def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf=1, newFlag=True):
     if newFlag:
         myNew = "_new"
+    else:
+        myNew = ""
     xibDataLog = open("../logs/data/JpsiXi/run" + str(run)
                       + "/Fit_JpsiXi_log.txt")
     lines = xibDataLog.readlines()

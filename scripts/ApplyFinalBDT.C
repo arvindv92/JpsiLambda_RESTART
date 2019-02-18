@@ -332,12 +332,12 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	TString prefix;
 	if(isoFlag && !zeroFlag)
 	{
-		prefix = Form("TMVAClassificationLite-JpsiLambda%s_dataRun%d_iso%d_%s%s",
+		prefix = Form("TMVAClassification-JpsiLambda%s_dataRun%d_iso%d_%s%s",
 		              type,run,isoConf,isoVersion,mynew);
 	}
 	else if(!isoFlag || (isoFlag && zeroFlag))
 	{
-		prefix = Form("TMVAClassificationLite-JpsiLambda%s_dataRun%d_noIso%s",
+		prefix = Form("TMVAClassification-JpsiLambda%s_dataRun%d_noIso%s",
 		              type,run,mynew);
 	}
 	TString methodName = TString("BDT method");

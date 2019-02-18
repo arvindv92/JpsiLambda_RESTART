@@ -28,10 +28,4 @@
 #include "TPaveLabel.h"
 #include "TStopwatch.h"
 
-void DoSWeight(Int_t run = 1, Int_t trackType = 3, Bool_t logFlag = false, Bool_t zeroFlag = false);
-
-void AddModel(RooWorkspace* ws = nullptr, Int_t lowRange = 5200, Int_t highRange = 6000, Int_t nEntries = 0);
-
-void AddData(RooWorkspace* ws = nullptr, Int_t run = 1, TTree *treeIn = nullptr);
-
-void DosPlot(RooWorkspace* ws = nullptr, Int_t run = 1, const char* type = "LL", TTree *treeOut = nullptr, TTree *treeOut_training = nullptr, Bool_t zeroFlag = false);
+Double_t DoSWeight(Int_t run = 1, Int_t trackType = 3, Bool_t logFlag = false, Bool_t zeroFlag = false);
