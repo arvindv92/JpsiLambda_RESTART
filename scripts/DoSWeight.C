@@ -42,7 +42,7 @@ Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 
 	if(logFlag)//Redirect output to log file
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/sPlot_%s%s_log.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/sPlot_%s%s.txt",
 		                             run, type, suffix),"w");
 	}
 	cout<<"********************************"<<endl;

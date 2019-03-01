@@ -34,7 +34,7 @@ void TrainIsolation(Int_t run, Int_t trackType,
 
 	if(logFlag) //set up logging
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/isolationTraining_%s_%s_log.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainIsolation_%s_%s.txt",
 		                             run,type,isoVersion),"w");
 	}
 	cout<<"*****************************"<<endl;

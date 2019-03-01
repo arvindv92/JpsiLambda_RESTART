@@ -3,8 +3,7 @@
  *********************************/
 #include "TrainFinalBDT.h"
 void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
-                   Int_t isoConf, Bool_t isoFlag, Bool_t logFlag,
-                   Bool_t newFlag)
+                   Int_t isoConf, Bool_t isoFlag, Bool_t logFlag)
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    trackType = 3 for LL, 5 for DD.
@@ -18,20 +17,19 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
-	const char *mynew = "", *type = "";
+	const char *type = "";
 
-	if(newFlag) mynew = "_new";
 	type = (trackType == 3) ? ("LL") : ("DD");
 
 	if(isoFlag && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT_%s_iso%d_%s%s.txt",
-		                             run,type,isoConf,isoVersion,mynew),"w");
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT_%s_iso%d_%s_lite.txt",
+		                             run,type,isoConf,isoVersion),"w");
 	}
 	else if(!isoFlag && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT_%s_noIso%s.txt",
-		                             run,type,mynew),"w");
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT_%s_noIso_lite.txt",
+		                             run,type),"w");
 	}
 
 	cout<<"*****************************"<<endl;
@@ -58,24 +56,24 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	if(isoFlag)
 	{
 		outfileName = Form("%s/TMVAtraining/iso/"
-		                   "TMVA-JpsiLambda_%s_data_iso%d_%s%s.root",
-		                   rootFolder,type,isoConf,isoVersion,mynew);
+		                   "TMVA-JpsiLambda_%s_data_iso%d_%s_lite.root",
+		                   rootFolder,type,isoConf,isoVersion);
 		outputFile  = TFile::Open(outfileName, "RECREATE");
 		factory     = new TMVA::Factory(Form("TMVAClassification-"
-		                                     "JpsiLambda%s_dataRun%d_iso%d_%s%s",
-		                                     type,run,isoConf,isoVersion,mynew),outputFile,
+		                                     "JpsiLambda%s_dataRun%d_iso%d_%s_lite",
+		                                     type,run,isoConf,isoVersion),outputFile,
 		                                "!V:!Silent:Color:!DrawProgressBar:"
 		                                "AnalysisType=Classification");
 	}
 	else
 	{
 		outfileName = Form("%s/TMVAtraining/noIso/"
-		                   "TMVA-JpsiLambda%s_data_noIso%s.root",
-		                   rootFolder,type,mynew);
+		                   "TMVA-JpsiLambda%s_data_noIso_lite.root",
+		                   rootFolder,type);
 		outputFile  = TFile::Open( outfileName, "RECREATE");
 		factory = new TMVA::Factory( Form("TMVAClassification-"
-		                                  "JpsiLambda%s_dataRun%d_noIso%s",
-		                                  type,run,mynew), outputFile,
+		                                  "JpsiLambda%s_dataRun%d_noIso_lite",
+		                                  type,run), outputFile,
 		                             "!V:!Silent:Color:!DrawProgressBar:"
 		                             "AnalysisType=Classification" );
 	}
@@ -106,23 +104,15 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 
 	//	dataLoader->AddVariable("p_PIDp",'F');
 	dataLoader->AddVariable("log_pminipchi2      := log10(p_MINIPCHI2)",'F');
-	dataLoader->AddVariable("p_ProbNNghost",'F');
+	// dataLoader->AddVariable("p_ProbNNghost",'F');
 	dataLoader->AddVariable("log_p_PT            := log10(p_PT)",'F');
 	dataLoader->AddVariable("p_ProbNNp",'F');
 
-	dataLoader->AddVariable("pi_ProbNNghost",'F');
+	// dataLoader->AddVariable("pi_ProbNNghost",'F');
 	//	dataLoader->AddVariable("pi_PIDK",'F');
 	dataLoader->AddVariable("log_piminipchi2     := log10(pi_MINIPCHI2)",'F');
 	dataLoader->AddVariable("log_pi_PT           := log10(pi_PT)",'F');
-	dataLoader->AddVariable("pi_ProbNNpi",'F');
-
-	if(newFlag)
-	{
-		dataLoader->AddVariable("pJpsi_lb    := (Jpsi_P/Lb_P)",'F');
-		dataLoader->AddVariable("pLambda_lb  := (L_P/Lb_P)",'F');
-		dataLoader->AddVariable("ptJpsi_lb   := (Jpsi_PT/Lb_PT)",'F');
-		dataLoader->AddVariable("ptLambda_lb := (L_PT/Lb_PT)",'F');
-	}
+	// dataLoader->AddVariable("pi_ProbNNpi",'F');
 
 	if(isoFlag) dataLoader->AddVariable(Form("BDTkMin_%s",isoVersion),'F');
 
@@ -186,15 +176,15 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 
 	//	treeIn->SetBranchStatus("p_PIDp",1);
 	treeIn->SetBranchStatus("p_MINIPCHI2",1);
-	treeIn->SetBranchStatus("p_ProbNNghost",1);
+	// treeIn->SetBranchStatus("p_ProbNNghost",1);
 	treeIn->SetBranchStatus("p_PT",1);
 	treeIn->SetBranchStatus("p_ProbNNp",1);
 
 	//	treeIn->SetBranchStatus("pi_PIDK",1);
 	treeIn->SetBranchStatus("pi_MINIPCHI2",1);
-	treeIn->SetBranchStatus("pi_ProbNNghost",1);
+	// treeIn->SetBranchStatus("pi_ProbNNghost",1);
 	treeIn->SetBranchStatus("pi_PT",1);
-	treeIn->SetBranchStatus("pi_ProbNNpi",1);
+	// treeIn->SetBranchStatus("pi_ProbNNpi",1);
 
 	//	if(isoFlag) treeIn->SetBranchStatus(Form("BDTkMin_%s",isoVersion),1);
 

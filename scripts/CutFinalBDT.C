@@ -10,17 +10,16 @@ using namespace std;
 void CutFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
                  const char* isoVersion, Int_t isoConf, Int_t bdtConf,
                  Float_t bdtCut, Float_t bdtCut_ZeroTracks, Bool_t isoFlag,
-                 Bool_t newFlag, Bool_t logFlag)
+                 Bool_t logFlag, const char *FOM, const char *Part)
 {
 	TStopwatch sw;
 	sw.Start();
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
-	const char *folder = "", *part = "", *mynew = "";
+	const char *folder = "", *part = "";
 	const char *type = (trackType == 3) ? ("LL") : ("DD");
 
-	if(newFlag) mynew = "_new";
 	switch(mcType)
 	{
 	case 0:
@@ -62,20 +61,20 @@ void CutFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	}
 	const char* logFileName = "";
 
-	if(isoFlag) logFileName = Form("CutFinalBDT%d_%s_iso%d_%s%s.txt",bdtConf,type,isoConf,isoVersion,mynew);
-	else logFileName = Form("CutFinalBDT%d_%s_noIso%s.txt",bdtConf,type,mynew);
+	if(isoFlag) logFileName = Form("CutFinalBDT%d_%s_iso%d_%s_lite.txt",bdtConf,type,isoConf,isoVersion);
+	else logFileName = Form("CutFinalBDT%d_%s_noIso_lite.txt",bdtConf,type);
 
 	//****Set up logging*****
 	if(isData && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/%s",run,logFileName),"w");
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/%s",run,logFileName),"a");
 	}
 	else if(!isData && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/%s",folder,run,logFileName),"w");
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/%s",folder,run,logFileName),"a");
 	}
 	cout<<"******************************************"<<endl;
-	cout<<"==> Starting OptimizeFinalBDT: "<<endl;
+	cout<<"==> Starting CutFinalBDT: "<<endl;
 	gSystem->Exec("date");
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 	cout<<"******************************************"<<endl;
@@ -116,14 +115,14 @@ void CutFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 			                                     folder,run,part,type));
 			treeIn_zeroTracks = (TTree*)fileIn_zeroTracks->Get("MyTuple");
 
-			treeIn_zeroTracks->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_zeroTracks%s_FinalBDT%d%s.root",
-			                                            folder,run,part,type,bdtConf,mynew));
+			treeIn_zeroTracks->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_zeroTracks%s_FinalBDT%d.root",
+			                                            folder,run,part,type,bdtConf));
 
-			fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/BDTcut/%s_%s_BDT%dcut_iso%d_%s%s.root",
-			                         folder,run,part,type,bdtConf,isoConf,isoVersion,mynew),"RECREATE");
+			fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/BDTcut/%s_%s/%s_%s_BDT%dcut_iso%d_%s_lite.root",
+			                         folder,run,FOM,Part,part,type,bdtConf,isoConf,isoVersion),"RECREATE");
 			treeOut = (TTree*)treeIn->CloneTree(0);
-			treeIn->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_%s_FinalBDT%d_iso%d_%s%s.root",
-			                                 folder,run,part,type,bdtConf,isoConf,isoVersion,mynew));
+			treeIn->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_%s_FinalBDT%d_iso%d_%s.root",
+			                                 folder,run,part,type,bdtConf,isoConf,isoVersion));
 
 			treeIn->SetBranchAddress(Form("BDT%d",bdtConf),&myBDT);
 			treeIn_zeroTracks->SetBranchAddress(Form("BDT%d",bdtConf),&myBDT_zeroTracks);
@@ -134,8 +133,8 @@ void CutFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 			                          folder,run,part,type));
 			treeIn = (TTree*)fileIn->Get("MyTuple");
 
-			fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/BDTcut/%s_%s_BDT%dcut_noIso%s.root",
-			                         folder,run,part,type,bdtConf,mynew),"RECREATE");
+			fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/BDTcut/%s_%s/%s_%s_BDT%dcut_noIso_lite.root",
+			                         folder,run,FOM,Part,part,type,bdtConf),"RECREATE");
 
 			treeOut = (TTree*)treeIn->CloneTree(0);
 			treeIn->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_%s_FinalBDT%d_noIso.root",
@@ -156,16 +155,16 @@ void CutFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 			fileIn_zeroTracks = TFile::Open(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s_ZeroTracks.root",
 			                                     run,type));
 			treeIn_zeroTracks = (TTree*)fileIn_zeroTracks->Get("MyTuple");
-			treeIn_zeroTracks->AddFriend("MyTuple",Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_zeroTracks%s_FinalBDT%d%s.root",
-			                                            run,type,bdtConf,mynew));
+			treeIn_zeroTracks->AddFriend("MyTuple",Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_zeroTracks%s_FinalBDT%d.root",
+			                                            run,type,bdtConf));
 
-			fileOut = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/BDTcut/jpsilambda_%s_BDT%dcut_iso%d_%s%s.root",
-			                         run,type,bdtConf,isoConf,isoVersion,mynew),"RECREATE");
+			fileOut = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/BDTcut/%s_%s/jpsilambda_%s_BDT%dcut_iso%d_%s_lite.root",
+			                         run,FOM,Part,type,bdtConf,isoConf,isoVersion),"RECREATE");
 
 			treeOut = (TTree*)treeIn->CloneTree(0);
 
-			treeIn->AddFriend("MyTuple",Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_FinalBDT%d_iso%d_%s%s.root",
-			                                 run,type,bdtConf,isoConf,isoVersion,mynew));
+			treeIn->AddFriend("MyTuple",Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_FinalBDT%d_iso%d_%s.root",
+			                                 run,type,bdtConf,isoConf,isoVersion));
 
 			treeIn->SetBranchAddress(Form("BDT%d",bdtConf),&myBDT);
 			treeIn_zeroTracks->SetBranchAddress(Form("BDT%d",bdtConf),&myBDT_zeroTracks);
@@ -176,8 +175,8 @@ void CutFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 			                          run,type));
 			treeIn = (TTree*)fileIn->Get("MyTuple");
 
-			fileOut = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/BDTcut/jpsilambda_%s_BDT%dcut_noIso%s.root",
-			                         run,type,bdtConf,mynew),"RECREATE");
+			fileOut = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/BDTcut/%s_%s/jpsilambda_%s_BDT%dcut_noIso_lite.root",
+			                         run,FOM,Part,type,bdtConf),"RECREATE");
 
 			treeOut = (TTree*)treeIn->CloneTree(0);
 

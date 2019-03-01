@@ -1,6 +1,6 @@
 #ifndef TrainFinalBDT_H
 #define TrainFinalBDT_H
-#endif
+
 #include <cstdlib>
 #include <iostream>
 #include <map>
@@ -25,4 +25,8 @@
 #endif
 
 using namespace std;
-void TrainFinalBDT(Int_t run = 1,Int_t trackType = 3, const char* isoVersion = "v1", Int_t isoConf = 1, Bool_t isoFlag = true, Bool_t logFlag = false, Bool_t newFlag = false);
+void TrainFinalBDT(Int_t run = 1, Int_t trackType = 3,
+                   const char* isoVersion = "v1", Int_t isoConf = 1,
+                   Bool_t isoFlag = true, Bool_t logFlag = false);
+
+#endif

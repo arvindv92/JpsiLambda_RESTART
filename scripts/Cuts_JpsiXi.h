@@ -1,6 +1,5 @@
-#ifndef Sanity_H
-#define Sanity_H
-
+#ifndef Cuts_JpsiXi_H
+#define Cuts_JpsiXi_H
 #include "TFile.h"
 #include "TTree.h"
 #include "TCanvas.h"
@@ -12,5 +11,6 @@
 #include <fstream>
 using namespace std;
 
-void Sanity(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Int_t mcType = 0, Bool_t logFlag = false);
+void Cuts_JpsiXi(Int_t run = 1, Int_t year = 2011, Bool_t isData = true,
+                 Bool_t logFlag = false);
 #endif

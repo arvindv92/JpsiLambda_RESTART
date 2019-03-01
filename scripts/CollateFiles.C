@@ -5,7 +5,9 @@
 
 using namespace std;
 
-void CollateFiles(Int_t run, Int_t year, Bool_t isData, Int_t mcType, TChain** h1, TChain** h2, Bool_t testing, Bool_t loose, Bool_t logFlag)//defaults provided in header
+void CollateFiles(Int_t run, Int_t year, Bool_t isData,
+                  Int_t mcType, TChain** h1, TChain** h2, Bool_t testing,
+                  Bool_t loose, Bool_t logFlag)//defaults provided in header
 /*DOC
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = true for data, false for MC
@@ -39,6 +41,46 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData, Int_t mcType, TChain** h
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 	cout<<"******************************************"<<endl;
 
+	const char *folder = "", *part = "";
+	switch(mcType)
+	{
+	case 0:
+	{
+		folder = "";
+		part = "";
+		break;
+	}
+	case 1:
+	{
+		folder = "JpsiLambda";
+		part = "jpsilambda";
+		break;
+	}
+	case 2:
+	{
+		folder = "JpsiSigma";
+		part = "jpsisigma";
+		break;
+	}
+	case 3:
+	{
+		folder = "JpsiXi";
+		part = "jpsixi";
+		break;
+	}
+	case 4:
+	{
+		folder = "Bu_JpsiX";
+		part = "bu_jpsix";
+		break;
+	}
+	case 5:
+	{
+		folder = "Bd_JpsiX";
+		part = "bd_jpsix";
+		break;
+	}
+	}
 	if(isData)
 	{
 		cout<<"Adding Run "<<run<<" Data ROOT files for "<<year<<" to TChain. Sit tight"<<endl;
@@ -124,6 +166,14 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData, Int_t mcType, TChain** h
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 
-	if(logFlag) gSystem->RedirectOutput(0);
-	// gSystem->Exec("cat collate_log.txt");
+	if(logFlag && isData)
+	{
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/Trigger_%d_log.txt",
+		                             run,year),"a");
+	}
+	else if(logFlag && !isData)
+	{
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/Trigger_log.txt",
+		                             folder,run),"a");
+	}
 }

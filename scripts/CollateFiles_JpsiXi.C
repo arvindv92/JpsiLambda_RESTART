@@ -5,7 +5,9 @@
 
 using namespace std;
 
-void CollateFiles_JpsiXi(Int_t run, Int_t year, Bool_t isData, TChain** h1, TChain** h2, Bool_t testing, Bool_t loose, Bool_t logFlag)//defaults provided in header
+void CollateFiles_JpsiXi(Int_t run, Int_t year, Bool_t isData, TChain** h1,
+                         TChain** h2, Bool_t testing, Bool_t loose,
+                         Bool_t logFlag)
 /*DOC
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = true for data, false for MC
@@ -18,11 +20,13 @@ void CollateFiles_JpsiXi(Int_t run, Int_t year, Bool_t isData, TChain** h1, TCha
 	//Set up logging
 	if(isData && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiXi/run%d/collate_%d_log.txt",run,year),"w");
+		gSystem->RedirectOutput(Form("logs/data/JpsiXi/run%d/Collate_%d_log.txt",
+		                             run,year),"w");
 	}
 	else if(!isData && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/mc/JpsiXi/run%d/collate_log.txt",run),"w");
+		gSystem->RedirectOutput(Form("logs/mc/JpsiXi/run%d/Collate_log.txt",
+		                             run),"w");
 	}
 
 	cout<<"******************************************"<<endl;
@@ -33,7 +37,8 @@ void CollateFiles_JpsiXi(Int_t run, Int_t year, Bool_t isData, TChain** h1, TCha
 
 	if(isData)
 	{
-		cout<<"Adding Run "<<run<<" Data ROOT files for "<<year<<" to TChain. Sit tight"<<endl;
+		cout<<"Adding Run "<<run<<" Data ROOT files for "<<year
+		    <<" to TChain. Sit tight"<<endl;
 
 		const char *dir = "/data1/avenkate/JpsiXi/data";
 		if(loose)
@@ -46,11 +51,13 @@ void CollateFiles_JpsiXi(Int_t run, Int_t year, Bool_t isData, TChain** h1, TCha
 			gSystem->Exec(Form("ls %s/%d_Mag*/*/jpsixi.root > run%dFiles_Xi_NotLoose_%d.txt",
 			                   dir,year,run,year));
 		}
-		TFileCollection fc_run(Form("run%d",run),"",Form("run%dFiles_Xi_%d.txt",run,year));
+		TFileCollection fc_run(Form("run%d",run),"",Form("run%dFiles_Xi_%d.txt",
+		                                                 run,year));
 		TCollection *run_list = (TCollection*)fc_run.GetList();
 		if(testing)
 		{
-			(*h1)->AddFileInfoList(run_list,50);//add only files from 50 subjobs for testing purposes
+			//add only files from 50 subjobs for testing purposes
+			(*h1)->AddFileInfoList(run_list,50);
 			(*h2)->AddFileInfoList(run_list,50);
 		}
 		else
@@ -60,7 +67,6 @@ void CollateFiles_JpsiXi(Int_t run, Int_t year, Bool_t isData, TChain** h1, TCha
 		}
 		cout<<"DONE ATTACHING ROOT FILES"<<endl;
 	}//end Data block
-
 	else //MC
 	{
 		cout<<"Collating MC for ";
@@ -77,11 +83,15 @@ void CollateFiles_JpsiXi(Int_t run, Int_t year, Bool_t isData, TChain** h1, TCha
 		cout<<"JpsiXi Run "<<run<<endl;
 		if(run == 1)
 		{
-			gSystem->Exec("hadd -f /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiXi/run1/jpsixi.root 2011*/*/*.root 2012*/*/*.root");
+			gSystem->Exec("hadd -f /data1/avenkate/JpsiLambda_RESTART/rootFiles/"
+			              "mcFiles/JpsiXi/run1/jpsixi.root 2011*/*/*.root 2012*/"
+			              "*/*.root");
 		}
 		else if(run == 2)
 		{
-			gSystem->Exec("hadd -f /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiXi/run2/jpsixi.root 2015*/*/*.root 2016*/*/*.root");
+			gSystem->Exec("hadd -f /data1/avenkate/JpsiLambda_RESTART/rootFiles/"
+			              "mcFiles/JpsiXi/run2/jpsixi.root 2015*/*/*.root"
+			              "2016*/*/*.root");
 		}
 	}//end MC block
 
@@ -90,6 +100,14 @@ void CollateFiles_JpsiXi(Int_t run, Int_t year, Bool_t isData, TChain** h1, TCha
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 
-	if(logFlag) gSystem->RedirectOutput(0);
-	// gSystem->Exec("cat collate_log.txt");
+	if(isData && logFlag)
+	{
+		gSystem->RedirectOutput(Form("logs/data/JpsiXi/run%d/Trigger_%d_log.txt",
+		                             run,year),"a");
+	}
+	else if(!isData && logFlag)
+	{
+		gSystem->RedirectOutput(Form("logs/mc/JpsiXi/run%d/Trigger_log.txt",
+		                             run),"a");
+	}
 }

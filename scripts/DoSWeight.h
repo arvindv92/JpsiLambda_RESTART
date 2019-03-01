@@ -1,6 +1,6 @@
 #ifndef DoSWeight_H
 #define DoSWeight_H
-#endif
+
 #ifndef __CINT__
 #include "RooGlobalFunc.h"
 #endif
@@ -29,3 +29,4 @@
 #include "TStopwatch.h"
 
 Double_t DoSWeight(Int_t run = 1, Int_t trackType = 3, Bool_t logFlag = false, Bool_t zeroFlag = false);
+#endif

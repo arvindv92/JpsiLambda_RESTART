@@ -1,6 +1,6 @@
 #ifndef TrainIsolation_H
 #define TrainIsolation_H
-#endif
+
 #include <cstdlib>
 #include <iostream>
 #include <map>
@@ -27,3 +27,4 @@
 using namespace std;
 
 void TrainIsolation(Int_t run = 1,Int_t trackType = 3, const char* isoVersion = "v1", Bool_t logFlag = false);
+#endif

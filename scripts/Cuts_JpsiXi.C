@@ -4,18 +4,9 @@
    Split by year is only done for data, to allow parallel processing of different years.
    For MC, all years for a given run are processed together.
  *********************************/
-#include "TFile.h"
-#include "TTree.h"
-#include "TCanvas.h"
-#include "TCut.h"
-#include "TROOT.h"
-#include "TSystem.h"
-#include "TStopwatch.h"
-#include <iostream>
-#include <fstream>
-using namespace std;
+#include "Cuts_JpsiXi.h"
 
-void Cuts_JpsiXi(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Bool_t logFlag = false)
+void Cuts_JpsiXi(Int_t run, Int_t year, Bool_t isData, Bool_t logFlag)
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = 1 for data, 0 for MC
@@ -25,12 +16,16 @@ void Cuts_JpsiXi(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Bool_t 
 
 	//Set up logging
 	if(isData && logFlag)
-		gSystem->RedirectOutput(Form("logs/data/JpsiXi/run%d/cuts_JpsiXi_%d_log.txt",run,year),"w");
-	else if(!isData && logFlag)
-		gSystem->RedirectOutput((Form("logs/mc/JpsiXi/run%d/cuts_JpsiXi_log.txt",run)),"w");
+	{
+		gSystem->RedirectOutput(Form("logs/data/JpsiXi/run%d/Cuts_JpsiXi_%d_log.txt",
+		                             run,year),"w");
+	}
 
-	TStopwatch sw;
-	sw.Start();
+	else if(!isData && logFlag)
+	{
+		gSystem->RedirectOutput((Form("logs/mc/JpsiXi/run%d/Cuts_JpsiXi_log.txt",
+		                              run)),"w");
+	}
 
 	cout<<"******************************************"<<endl;
 	cout<<"==> Starting Cuts_JpsiXi: "<<endl;
@@ -38,8 +33,11 @@ void Cuts_JpsiXi(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Bool_t 
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 	cout<<"******************************************"<<endl;
 
+	TStopwatch sw;
+	sw.Start();
+
 	Int_t entries_init      = 0, entries_final_LL   = 0, entries_gen = 0;
-	Int_t Xib_BKGCAT        = 0, p_TRACK_Type       = 0;
+	Int_t Xib_BKGCAT        = 0;
 	Int_t Xib_TRUEID        = 0, Xib_ENDVERTEX_NDOF = 0;
 	Int_t BachPi_TRACK_Type = 0;
 
@@ -70,10 +68,12 @@ void Cuts_JpsiXi(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Bool_t 
 			genFile.open((Form("logs/mc/JpsiXi/run%d/gen_log.txt",run)));
 			genFlag = true;
 		}
-		fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_triggered.root",run));
+		fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_triggered.root",
+		                          run));
 		treeIn = (TTree*)fileIn->Get("MyTuple");
 
-		fileOut_LL = new TFile(Form("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_cut_LL.root",run),"RECREATE");
+		fileOut_LL = new TFile(Form("rootFiles/mcFiles/JpsiXi/run%d/jpsixi_cut_LL.root",
+		                            run),"RECREATE");
 		treeOut_LL = (TTree*)treeIn->CloneTree(0);
 
 		treeIn->SetBranchAddress("Xib_BKGCAT",&Xib_BKGCAT);
@@ -81,10 +81,12 @@ void Cuts_JpsiXi(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Bool_t 
 	} // end MC block
 	else //Data
 	{
-		fileIn = TFile::Open(Form("rootFiles/dataFiles/JpsiXi/run%d/jpsixi_triggered_%d.root",run,year));
+		fileIn = TFile::Open(Form("rootFiles/dataFiles/JpsiXi/run%d/jpsixi_triggered_%d.root",
+		                          run,year));
 		treeIn = (TTree*)fileIn->Get("MyTuple");
 
-		fileOut_LL = new TFile(Form("rootFiles/dataFiles/JpsiXi/run%d/jpsixi_cut_LL_%d.root",run,year),"RECREATE");
+		fileOut_LL = new TFile(Form("rootFiles/dataFiles/JpsiXi/run%d/jpsixi_cut_LL_%d.root",
+		                            run,year),"RECREATE");
 		treeOut_LL = (TTree*)treeIn->CloneTree(0);
 	}//end Data block
 	 //end setup of input, output
@@ -125,7 +127,7 @@ void Cuts_JpsiXi(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Bool_t 
 		treeIn->GetEntry(i);
 		if(Xib_TAU > 0.0002 && Xi_TAU > 0 && L_TAU > 0) //require lifetimes to be positive, universal
 		{
-			if(abs(L_M-1115.7) < 8 && abs(Xi_M - L_M -206.2) < 10)
+			if(fabs(L_M-1115.7) < 8 && fabs(Xi_M - L_M -206.2) < 10)
 			{
 				if((L_FD_OWNPV/L_ENDVERTEX_ZERR) > 5 && BachPi_IPCHI2_OWNPV > 16 && Xib_IPCHI2_OWNPV < 12)
 				{
@@ -135,7 +137,7 @@ void Cuts_JpsiXi(Int_t run = 1, Int_t year = 2011, Bool_t isData = true, Bool_t 
 						{
 							if(Xib_ETA > 2 && Xib_ETA < 6 && Xib_PT < 20000) //acceptance cut, universal
 							{
-								if(isData == 1 || (isData == 0 && (abs(Xib_TRUEID) == 5132 || (Xib_BKGCAT == 60 && (abs(Xib_DTF_M_JpsiXiLConstr - 5795) < 35))) ))//TM, needs more thought.
+								if(isData == 1 || (isData == 0 && (abs(Xib_TRUEID) == 5132 || (Xib_BKGCAT == 60 && (fabs(Xib_DTF_M_JpsiXiLConstr - 5795) < 35))) ))
 								{
 									if(BachPi_TRACK_Type == 3)//We only want LL Lambdas, so this means long bachelor pions only.
 									{

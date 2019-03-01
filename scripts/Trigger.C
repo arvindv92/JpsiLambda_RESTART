@@ -3,7 +3,9 @@
    The purpose of this script is to apply trigger cuts on data/MC coming out of DaVinci.
  *********************************/
 #include "Trigger.h"
-void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing, Bool_t loose, Bool_t logFlag)
+
+void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
+             Bool_t loose, Bool_t logFlag)
 /* DOCUMENTATION
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = true for data, false for MC
@@ -95,7 +97,9 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 
 	Bool_t hlt1DiMuonHighMass = false, hlt1TrackMuon      = false;
 	Bool_t hlt1TrackAllL0     = false, hlt2DiMuonDetached = false;
-	Bool_t collateFlag        = false;//If you don't want to re-collate MC, set this to zero. For example, if only the trigger condition changes.
+	Bool_t collateFlag        = false;
+	/*f you don't want to re-collate MC, set this to zero.
+	   For example, if only the trigger condition changes.*/
 
 	TFile *fileOut = nullptr, *fileIn     = nullptr;
 	TTree *treeIn  = nullptr, *treeIn_gen = nullptr;
@@ -104,7 +108,11 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 	                         "Lb_Hlt1TrackMuonDecision_TOS==1||"
 	                         "Lb_Hlt1TrackAllL0Decision_TOS==1)"
 	                         "&&(Lb_Hlt2DiMuonDetachedJPsiDecision_TOS==1)";
-	ofstream genFile;//The number of generated MC entries in every MC case will be written out to this file, so that it can be accessed for calculating exclusive efficiencies later
+
+	/*The number of generated MC entries in every MC case will be written out to
+	   this file, so that it can be accessed for calculating exclusive efficiencies
+	   later*/
+	ofstream genFile;
 
 	// Set up input, output
 	if(isData)
@@ -117,9 +125,11 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 		TChain *h1 = new TChain("Lb2JpsiLTree/MyTuple");
 		TChain *h2 = new TChain("GetIntegratedLuminosity/LumiTuple");
 
-		CollateFiles(run, year, isData, mcType, &h1, &h2, testing, loose, logFlag);//CollateFiles will cd to the massdump folder and then back to JpsiLambda_RESTART
+		//CollateFiles will cd to the massdump folder and then back to JpsiLambda_RESTART
+		CollateFiles(run, year, isData, mcType, &h1, &h2, testing, loose, logFlag);
 
-		fileOut = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_%d.root",run,year),"RECREATE");
+		fileOut = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_%d.root",
+		                         run,year),"RECREATE");
 
 		h2->Draw("IntegratedLuminosity>>lumiHist","","goff");
 		h2->Draw("IntegratedLuminosityErr>>lumiErrHist","","goff");
@@ -139,7 +149,6 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 
 		myTree = (TTree*)h1;
 	}//end Data block
-
 	else //MC
 	{
 		genFile.open(Form("logs/mc/JpsiLambda/%s/run%d/gen_log.txt",folder,run));
@@ -148,7 +157,7 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 		{
 			CollateFiles(run, year, isData, mcType);
 		}
-		fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",
+		fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_pidgen.root",
 		                          folder,run,part));
 		treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
 		treeIn     = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");

@@ -68,12 +68,12 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 	if(isData && logFlag)
 	{
 		// gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/cutoutks_%d_log.txt",run,year));
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/cutoutks_%d_log.txt",run,year),"w");
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/CutOutKs_%d.txt",run,year),"w");
 	}
 	else if(!isData && logFlag)
 	{
 		// gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/%s/run%d/cutoutks_log.txt",folder,run));
-		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/cutoutks_log.txt",folder,run),"w");
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/CutOutKs.txt",folder,run),"w");
 	}
 	// else if(!isData && logFlag && mcType == 2)
 	// {
@@ -169,9 +169,17 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 	cout<<"Incoming entries = "<<entries_init<<endl;
 
 	treeIn->SetBranchAddress("L_dm",&L_dm);
-	treeIn->SetBranchAddress("p_PIDp",&p_PIDp);
 	treeIn->SetBranchAddress("Lb_DTF_L_WMpipi_JpsiConstr",&WMpipi);
 	treeIn->SetBranchAddress("Added_n_Particles",&nTracks);
+
+	if(isData)
+	{
+		treeIn->SetBranchAddress("p_PIDp",&p_PIDp);
+	}
+	else
+	{
+		treeIn->SetBranchAddress("p_PIDp_corr",&p_PIDp);
+	}
 
 	if(trackType == 3)
 	{
