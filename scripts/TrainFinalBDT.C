@@ -23,12 +23,12 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 
 	if(isoFlag && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT_%s_iso%d_%s_lite.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT_%s_iso%d_%s.txt",
 		                             run,type,isoConf,isoVersion),"w");
 	}
 	else if(!isoFlag && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT_%s_noIso_lite.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT_%s_noIso.txt",
 		                             run,type),"w");
 	}
 
@@ -56,11 +56,11 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	if(isoFlag)
 	{
 		outfileName = Form("%s/TMVAtraining/iso/"
-		                   "TMVA-JpsiLambda_%s_data_iso%d_%s_lite.root",
+		                   "TMVA-JpsiLambda_%s_data_iso%d_%s.root",
 		                   rootFolder,type,isoConf,isoVersion);
 		outputFile  = TFile::Open(outfileName, "RECREATE");
 		factory     = new TMVA::Factory(Form("TMVAClassification-"
-		                                     "JpsiLambda%s_dataRun%d_iso%d_%s_lite",
+		                                     "JpsiLambda%s_dataRun%d_iso%d_%s",
 		                                     type,run,isoConf,isoVersion),outputFile,
 		                                "!V:!Silent:Color:!DrawProgressBar:"
 		                                "AnalysisType=Classification");
@@ -68,11 +68,11 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	else
 	{
 		outfileName = Form("%s/TMVAtraining/noIso/"
-		                   "TMVA-JpsiLambda%s_data_noIso_lite.root",
+		                   "TMVA-JpsiLambda%s_data_noIso.root",
 		                   rootFolder,type);
 		outputFile  = TFile::Open( outfileName, "RECREATE");
 		factory = new TMVA::Factory( Form("TMVAClassification-"
-		                                  "JpsiLambda%s_dataRun%d_noIso_lite",
+		                                  "JpsiLambda%s_dataRun%d_noIso",
 		                                  type,run), outputFile,
 		                             "!V:!Silent:Color:!DrawProgressBar:"
 		                             "AnalysisType=Classification" );
@@ -104,15 +104,15 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 
 	//	dataLoader->AddVariable("p_PIDp",'F');
 	dataLoader->AddVariable("log_pminipchi2      := log10(p_MINIPCHI2)",'F');
-	// dataLoader->AddVariable("p_ProbNNghost",'F');
+	dataLoader->AddVariable("p_ProbNNghost",'F');
 	dataLoader->AddVariable("log_p_PT            := log10(p_PT)",'F');
 	dataLoader->AddVariable("p_ProbNNp",'F');
 
-	// dataLoader->AddVariable("pi_ProbNNghost",'F');
+	dataLoader->AddVariable("pi_ProbNNghost",'F');
 	//	dataLoader->AddVariable("pi_PIDK",'F');
 	dataLoader->AddVariable("log_piminipchi2     := log10(pi_MINIPCHI2)",'F');
 	dataLoader->AddVariable("log_pi_PT           := log10(pi_PT)",'F');
-	// dataLoader->AddVariable("pi_ProbNNpi",'F');
+	dataLoader->AddVariable("pi_ProbNNpi",'F');
 
 	if(isoFlag) dataLoader->AddVariable(Form("BDTkMin_%s",isoVersion),'F');
 
@@ -176,17 +176,15 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 
 	//	treeIn->SetBranchStatus("p_PIDp",1);
 	treeIn->SetBranchStatus("p_MINIPCHI2",1);
-	// treeIn->SetBranchStatus("p_ProbNNghost",1);
+	treeIn->SetBranchStatus("p_ProbNNghost",1);
 	treeIn->SetBranchStatus("p_PT",1);
 	treeIn->SetBranchStatus("p_ProbNNp",1);
 
 	//	treeIn->SetBranchStatus("pi_PIDK",1);
 	treeIn->SetBranchStatus("pi_MINIPCHI2",1);
-	// treeIn->SetBranchStatus("pi_ProbNNghost",1);
+	treeIn->SetBranchStatus("pi_ProbNNghost",1);
 	treeIn->SetBranchStatus("pi_PT",1);
-	// treeIn->SetBranchStatus("pi_ProbNNpi",1);
-
-	//	if(isoFlag) treeIn->SetBranchStatus(Form("BDTkMin_%s",isoVersion),1);
+	treeIn->SetBranchStatus("pi_ProbNNpi",1);
 
 	treeIn->SetBranchStatus("SW",1);
 	treeIn->SetBranchStatus("BW",1);
@@ -197,7 +195,7 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	dataLoader->SetInputTrees(treeIn, signalCut, bkgCut);
 
 	dataLoader->SetSignalWeightExpression("SW");
-	dataLoader->SetBackgroundWeightExpression("BW");
+	//	dataLoader->SetBackgroundWeightExpression("BW");
 
 	// Apply additional cuts on the signal and background samples (can be different)
 	baseCut = "Lb_ConsLb_chi2 > 0 && Lb_MINIPCHI2 > 0 && Lb_FD_OWNPV > 0 &&"

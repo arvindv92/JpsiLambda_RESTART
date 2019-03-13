@@ -61,7 +61,8 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 		alpha1_mc = 1.03411e+00;
 		alpha2_mc = -1.15930e+00;
 	}
-	RooRealVar Xib_DTF_M_JpsiXiLConstr("Xib_DTF_M_JpsiXiLConstr","Xib_DTF_M_JpsiXiLConstr",5500.,6100.,"MeV");
+	RooRealVar Xib_DTF_M_JpsiXiLConstr("Xib_DTF_M_JpsiXiLConstr",
+	                                   "Xib_DTF_M_JpsiXiLConstr",5500.,6100.,"MeV");
 
 	// RooRealVar mean("mean","Gaussian Mean",5795.0,5790.0,5800.0);
 	// RooRealVar sigma1("sigma1","Gaussian sigma1",10.0,1.0,50.0);
@@ -117,7 +118,7 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 
 	if(isData)
 	{
-		fileIn = TFile::Open(Form("rootFiles/dataFiles/JpsiXi/run%d/jpsixi_cut_Run%d_BachPiLL.root",run,run),"READ");
+		fileIn = TFile::Open(Form("rootFiles/dataFiles/JpsiXi/run%d/jpsixi_cut_Run%d.root",run,run),"READ");
 	}
 	else
 	{

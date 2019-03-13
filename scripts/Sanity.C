@@ -166,20 +166,10 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 	treeIn->SetBranchAddress("Lb_ETA",&Lb_ETA);
 	treeIn->SetBranchAddress("p_TRACK_Type",&p_TRACK_Type);
 
-	if(isData)
-	{
-		treeIn->SetBranchAddress("pi_PIDp",&pi_PIDp);
-		treeIn->SetBranchAddress("pi_PIDK",&pi_PIDK);
-		treeIn->SetBranchAddress("p_PIDp",&p_PIDp);
-		treeIn->SetBranchAddress("p_PIDK",&p_PIDK);
-	}
-	else
-	{
-		treeIn->SetBranchAddress("pi_PIDp_corr",&pi_PIDp);
-		treeIn->SetBranchAddress("pi_PIDK_corr",&pi_PIDK);
-		treeIn->SetBranchAddress("p_PIDp_corr",&p_PIDp);
-		treeIn->SetBranchAddress("p_PIDK_corr",&p_PIDK);
-	}
+	treeIn->SetBranchAddress("pi_PIDp",&pi_PIDp);
+	treeIn->SetBranchAddress("pi_PIDK",&pi_PIDK);
+	treeIn->SetBranchAddress("p_PIDp",&p_PIDp);
+	treeIn->SetBranchAddress("p_PIDK",&p_PIDK);
 
 	lifetimeCut = "(Lb_TAU > 0)&&(L_TAU > 0)";
 	dtfCut = "(Lb_ConsLb_chi2/Lb_ConsLb_nDOF > 0 && Lb_ConsLb_chi2/Lb_ConsLb_nDOF < 50)";

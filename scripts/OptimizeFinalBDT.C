@@ -18,12 +18,12 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, Int_t trackType,
 
 	if(logFlag && isoFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/OptimizeFinalBDT%d_%s_iso%d_%s_%s_%s_lite.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/OptimizeFinalBDT%d_%s_iso%d_%s_%s_%s.txt",
 		                             run,bdtConf,type,isoConf,isoVersion, FOM, part),"w");
 	}
 	if(logFlag && !isoFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/OptimizeFinalBDT%d_%s_noIso_%s_%s_lite.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/OptimizeFinalBDT%d_%s_noIso_%s_%s.txt",
 		                             run,bdtConf,type, FOM, part),"w");
 	}
 
@@ -154,6 +154,8 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, Int_t trackType,
 			mcTree = treeIn_mc;
 			if(run == 1)
 				siginit = 6569;
+			if(run == 2)
+				siginit = 24741;
 		}
 		else if(ctr == 1)
 		{
@@ -161,6 +163,8 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, Int_t trackType,
 			mcTree = treeIn_zeroTracks_mc;
 			if(run == 1)
 				siginit = 407;
+			if(run == 2)
+				siginit = 1195;
 		}
 		nEntries = myTree->GetEntries();
 		cout<<"nEntries= "<<nEntries<<endl;
@@ -207,7 +211,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, Int_t trackType,
 			{
 				if(N > 0)
 				{
-					myFOM = (Double_t)sig/sqrt(N);
+					myFOM = (Double_t)sig/sqrt((double)N);
 				}
 				else
 				{

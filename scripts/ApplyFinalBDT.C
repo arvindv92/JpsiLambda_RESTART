@@ -69,22 +69,22 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	//Set up logging
 	if(isData && isoFlag && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/ApplyFinalBDT%d_%s_iso%d_%s_lite.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/ApplyFinalBDT%d_%s_iso%d_%s.txt",
 		                             run,bdtConf,type,isoConf,isoVersion),"a");
 	}
 	else if(!isData && isoFlag && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/ApplyFinalBDT%d_%s_iso%d_%s_lite.txt",
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/ApplyFinalBDT%d_%s_iso%d_%s.txt",
 		                             folder,run,bdtConf,type,isoConf,isoVersion),"w");
 	}
 	else if(isData && !isoFlag && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/ApplyFinalBDT%d_%s_noIso_lite.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/ApplyFinalBDT%d_%s_noIso.txt",
 		                             run,bdtConf,type),"a");
 	}
 	else if(!isData && !isoFlag && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/ApplyFinalBDT%d_%s_noIso_lite.txt",
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/ApplyFinalBDT%d_%s_noIso.txt",
 		                             folder,run,bdtConf,type),"w");
 	}
 
@@ -148,7 +148,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 				fileIn_iso  = TFile::Open(Form("%s/%s_%s_iso%d_%s.root",
 				                               rootFolder,part,type,isoConf,isoVersion));
 				treeIn_iso  = (TTree*)fileIn_iso->Get("MyTuple");
-				fileOut     = new TFile(Form("%s/%s_%s_FinalBDT%d_iso%d_%s_lite.root",
+				fileOut     = new TFile(Form("%s/%s_%s_FinalBDT%d_iso%d_%s.root",
 				                             rootFolder,part,type,bdtConf,isoConf,isoVersion),
 				                        "RECREATE");
 			}
@@ -157,7 +157,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 				fileIn  = TFile::Open(Form("%s/%s_cutoutks_%s_ZeroTracks.root",
 				                           rootFolder,part,type));
 				treeIn  = (TTree*)fileIn->Get("MyTuple");
-				fileOut = new TFile(Form("%s/%s_zeroTracks%s_FinalBDT%d_lite.root",
+				fileOut = new TFile(Form("%s/%s_zeroTracks%s_FinalBDT%d.root",
 				                         rootFolder,part,type,bdtConf),
 				                    "RECREATE");
 			}
@@ -167,7 +167,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 			fileIn  = TFile::Open(Form("%s/%s_cutoutks_%s.root",
 			                           rootFolder,part,type));
 			treeIn  = (TTree*)fileIn->Get("MyTuple");
-			fileOut = new TFile(Form("%s/%s_%s_FinalBDT%d_noIso_lite.root",
+			fileOut = new TFile(Form("%s/%s_%s_FinalBDT%d_noIso.root",
 			                         rootFolder,part,type,bdtConf),"RECREATE");
 		}
 	}//end MC block
@@ -186,7 +186,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 					fileIn_iso  = TFile::Open(Form("%s/jpsilambda_%s_iso%d_%s.root",
 					                               rootFolder,type,isoConf,isoVersion));
 					treeIn_iso  = (TTree*)fileIn_iso->Get("MyTuple");
-					fileOut     = new TFile(Form("%s/jpsilambda_%s_FinalBDT%d_iso%d_%s_lite.root",
+					fileOut     = new TFile(Form("%s/jpsilambda_%s_FinalBDT%d_iso%d_%s.root",
 					                             rootFolder,type,bdtConf,isoConf,isoVersion),
 					                        "RECREATE");
 				}
@@ -195,7 +195,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 					fileIn  = TFile::Open(Form("%s/jpsilambda_cutoutks_%s_ZeroTracks.root",
 					                           rootFolder,type));
 					treeIn  = (TTree*)fileIn->Get("MyTuple");
-					fileOut = new TFile(Form("%s/jpsilambda_zeroTracks%s_FinalBDT%d_lite.root",
+					fileOut = new TFile(Form("%s/jpsilambda_zeroTracks%s_FinalBDT%d.root",
 					                         rootFolder,type,bdtConf),
 					                    "RECREATE");
 				}
@@ -206,7 +206,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 				                           rootFolder,type));
 				//has to be hadded file doesnt exist
 				treeIn  = (TTree*)fileIn->Get("MyTuple");
-				fileOut = new TFile(Form("%s/jpsilambda_%s_FinalBDT%d_noIso_lite.root",
+				fileOut = new TFile(Form("%s/jpsilambda_%s_FinalBDT%d_noIso.root",
 				                         rootFolder,type,bdtConf),
 				                    "RECREATE");
 			}
@@ -223,7 +223,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 					fileIn_iso = TFile::Open(Form("%s/jpsilambda_%ssig_iso%d_%s.root",
 					                              rootFolder,type,isoConf,isoVersion));
 					treeIn_iso = (TTree*)fileIn_iso->Get("MyTuple");
-					fileOut    = new TFile(Form("%s/jpsilambda_%ssig_FinalBDT%d_iso%d_%s_lite.root",
+					fileOut    = new TFile(Form("%s/jpsilambda_%ssig_FinalBDT%d_iso%d_%s.root",
 					                            rootFolder,type,bdtConf,isoConf,isoVersion),
 					                       "RECREATE");
 				}
@@ -232,7 +232,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 					fileIn  = TFile::Open(Form("%s/jpsilambda_%s_withsw_ZeroTracks.root",
 					                           rootFolder,type));
 					treeIn  = (TTree*)fileIn->Get("MyTuple");
-					fileOut = new TFile(Form("%s/jpsilambda_zeroTracks%ssig_FinalBDT%d_lite.root",
+					fileOut = new TFile(Form("%s/jpsilambda_zeroTracks%ssig_FinalBDT%d.root",
 					                         rootFolder,type,bdtConf),
 					                    "RECREATE");
 				}
@@ -242,7 +242,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 				fileIn  = TFile::Open(Form("%s/jpsilambda_%s_withsw.root",
 				                           rootFolder,type));
 				treeIn  = (TTree*)fileIn->Get("MyTuple");
-				fileOut = new TFile(Form("%s/jpsilambda_%ssig_FinalBDT%d_noIso_lite.root",
+				fileOut = new TFile(Form("%s/jpsilambda_%ssig_FinalBDT%d_noIso.root",
 				                         rootFolder,type,bdtConf),"RECREATE");
 			}
 		}
@@ -301,15 +301,15 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 
 	//	reader->AddVariable("p_PIDp", &p_PIDp);
 	reader->AddVariable("log_pminipchi2      := log10(p_MINIPCHI2)", &log_pMinIpChi2);
-	// reader->AddVariable("p_ProbNNghost", &p_ghostProbNN);
+	reader->AddVariable("p_ProbNNghost", &p_ghostProbNN);
 	reader->AddVariable("log_p_PT            := log10(p_PT)", &log_p_pt);
 	reader->AddVariable("p_ProbNNp", &p_ProbNNp);
 
-	// reader->AddVariable("pi_ProbNNghost", &pi_ghostProbNN);
+	reader->AddVariable("pi_ProbNNghost", &pi_ghostProbNN);
 	//	reader->AddVariable("pi_PIDK", &pi_PIDK);
 	reader->AddVariable("log_piminipchi2     := log10(pi_MINIPCHI2)", &log_piMinIpChi2);
 	reader->AddVariable("log_pi_PT           := log10(pi_PT)", &log_pi_pt);
-	// reader->AddVariable("pi_ProbNNpi", &pi_ProbNNpi);
+	reader->AddVariable("pi_ProbNNpi", &pi_ProbNNpi);
 
 	if(isoFlag && !zeroFlag)
 	{
@@ -321,12 +321,12 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	TString prefix;
 	if(isoFlag && !zeroFlag)
 	{
-		prefix = Form("TMVAClassification-JpsiLambda%s_dataRun%d_iso%d_%s_lite",
+		prefix = Form("TMVAClassification-JpsiLambda%s_dataRun%d_iso%d_%s",
 		              type,run,isoConf,isoVersion);
 	}
 	else if(!isoFlag || (isoFlag && zeroFlag))
 	{
-		prefix = Form("TMVAClassification-JpsiLambda%s_dataRun%d_noIso_lite",
+		prefix = Form("TMVAClassification-JpsiLambda%s_dataRun%d_noIso",
 		              type,run);
 	}
 	TString methodName = TString("BDT method");
@@ -366,31 +366,17 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 
 	//	treeIn->SetBranchAddress("p_PIDp", &pPIDp);
 	treeIn->SetBranchAddress("p_MINIPCHI2", &pMinIpChi2);
-	// treeIn->SetBranchAddress("p_ProbNNghost", &pGhostProbNN);
+	treeIn->SetBranchAddress("p_ProbNNghost", &pGhostProbNN);
 	treeIn->SetBranchAddress("p_PT", &pPT);
 
-	if(isData)
-	{
-		treeIn->SetBranchAddress("p_ProbNNp", &pProbNNp);
-	}
-	else
-	{
-		treeIn->SetBranchAddress("p_ProbNNp_corr", &pProbNNp);
-	}
+	treeIn->SetBranchAddress("p_ProbNNp", &pProbNNp);
 
-	// treeIn->SetBranchAddress("pi_ProbNNghost", &piGhostProbNN);
+	treeIn->SetBranchAddress("pi_ProbNNghost", &piGhostProbNN);
 	//	treeIn->SetBranchAddress("pi_PIDK", &piPIDK);
 	treeIn->SetBranchAddress("pi_MINIPCHI2", &piMinIpChi2);
 	treeIn->SetBranchAddress("pi_PT", &piPT);
 
-	// if(isData)
-	// {
-	//      treeIn->SetBranchAddress("pi_ProbNNpi", &piProbNNpi);
-	// }
-	// else
-	// {
-	//      treeIn->SetBranchAddress("pi_ProbNNpi_corr", &piProbNNpi);
-	// }
+	treeIn->SetBranchAddress("pi_ProbNNpi", &piProbNNpi);
 
 	if(isoFlag && !zeroFlag)
 	{
@@ -432,15 +418,15 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 
 		//		pPIDp                = p_PIDp;
 		log_pMinIpChi2       = log10(pMinIpChi2);
-		// p_ghostProbNN        = pGhostProbNN;
+		p_ghostProbNN        = pGhostProbNN;
 		log_p_pt             = log10(pPT);
 		p_ProbNNp            = pProbNNp;
 
-		// pi_ghostProbNN       = piGhostProbNN;
+		pi_ghostProbNN       = piGhostProbNN;
 		//	pi_PIDK          = piPIDK;
 		log_piMinIpChi2      = log10(piMinIpChi2);
 		log_pi_pt            = log10(piPT);
-		// pi_ProbNNpi          = piProbNNpi;
+		pi_ProbNNpi          = piProbNNpi;
 
 		if(isoFlag && !zeroFlag) BDTK = myBDTK;
 

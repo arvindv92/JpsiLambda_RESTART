@@ -13,11 +13,15 @@ using namespace RooFit;
 using namespace RooStats;
 using namespace std;
 
-void AddModel(RooWorkspace *ws = nullptr, Int_t lowRange = 5200, Int_t highRange = 6000, Int_t nEntries = 0);
+void AddModel(RooWorkspace *ws = nullptr, Int_t lowRange = 5200,
+              Int_t highRange = 6000, Int_t nEntries = 0);
 
-void AddData(RooWorkspace *ws = nullptr, Int_t run = 1, TTree *treeIn = nullptr);
+void AddData(RooWorkspace *ws = nullptr, Int_t run = 1,
+             TTree *treeIn = nullptr);
 
-Double_t DosPlot(RooWorkspace *ws = nullptr, Int_t run = 1, const char *type = "LL", TTree *treeOut = nullptr, TTree *treeOut_training = nullptr, Bool_t zeroFlag = false);
+Double_t DosPlot(RooWorkspace *ws = nullptr, Int_t run = 1,
+                 const char *type = "LL", TTree *treeOut = nullptr,
+                 TTree *treeOut_training = nullptr, Bool_t zeroFlag = false);
 
 Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 /*
@@ -159,7 +163,6 @@ Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 
 	return myChi2;
 }
-
 void AddModel(RooWorkspace *ws, Int_t lowRange, Int_t highRange, Int_t nEntries)
 {
 	cout<<"Starting AddModel()"<<endl;
@@ -201,7 +204,7 @@ void AddModel(RooWorkspace *ws, Int_t lowRange, Int_t highRange, Int_t nEntries)
 
 	// COMBINED MODEL	cout << "Making full model" << endl;
 
-	RooRealVar sigYield("sigYield","fitted yield for sig",5000,0, 30000);
+	RooRealVar sigYield("sigYield","fitted yield for sig",5000,0, 100000);
 	RooRealVar bkgYield("bkgYield","fitted yield for bkg",(nEntries/2),0, nEntries);
 
 	RooAddPdf model("model","signal+background models",

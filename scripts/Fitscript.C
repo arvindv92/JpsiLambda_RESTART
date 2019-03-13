@@ -1,60 +1,60 @@
-#include "TFile.h"
-#include "TTree.h"
-#include "TString.h"
-#include "TLegend.h"
-#include "RooGaussian.h"
-#include "RooCBShape.h"
-#include "RooPlot.h"
-#include "RooRealVar.h"
-#include "RooDataSet.h"
-//#include "RooChebychev.h"
-#include "RooExponential.h"
-#include "RooAddPdf.h"
-#include "RooProdPdf.h"
-#include "RooKeysPdf.h"
-#include "TCanvas.h"
-#include "TPad.h"
-#include "TPaveText.h"
-#include "RooHist.h"
-#include "TAxis.h"
-#include "TH1D.h"
-#include "RooDataHist.h"
-#include "TError.h"
-#include "RooFitResult.h"
-#include "RooHistPdf.h"
-#include "RooDataHist.h"
-#include "RooConstVar.h"
-using namespace RooFit;
-using namespace std;
+#include "Fitscript.h"
 
-void Fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag = 1,
-               Int_t xibflag = 1, Int_t sigmaflag = 1, Int_t type = 1,
-               Int_t Lst1405_rwtype = 2, Int_t mylow = 4700, Int_t constraintflag = 1)
+// void Fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag = 1,
+//                Int_t xibflag = 1, Int_t sigmaflag = 1, Int_t type = 1,
+//                Int_t Lst1405_rwtype = 2, Int_t mylow = 4700, Int_t constraintflag = 1,
+//                Float_t bdtCut_nonZero = 0.375, Float_t bdtCut_Zero = 0.575)
+std::vector <Float_t> Fitscript( Int_t run, Int_t finalBDTConf, Int_t isoConf,
+                                 const char *isoVersion,
+                                 Int_t mylow, Int_t constraintflag,
+                                 Float_t bdtCut_nonZero, Float_t bdtCut_Zero)
+/*Set LstXXXXflag = 1 to include the shapes for these decays in the final fit
+   Set xibflag = 1 to include Xib background shape.
+   Set sigmaflag = 1 to include J/psi Sigma signla shape.
+   Set type = 1 to fit LL data, type = 2 to fit DD data.
+   Set Lst1405_rwtype = 0 to use raw Lst(1405) shape, Lst1405_rwtype = 1 for MV and 2 for BONN reweighting schemes respectively
+   mylow determines the lower limit of the fit range
+   Set constraintflag = 0 to fit with Gaussian constraint only on Xib yield, constraintflag = 1 includes(on top of Xib constraint), a Gaussian constraint on the Lb mean */
 
-{/*Set LstXXXXflag = 1 to include the shapes for these decays in the final fit
-	Set xibflag = 1 to include Xib background shape.
-	Set sigmaflag = 1 to include J/psi Sigma signla shape.
-	Set type = 1 to fit LL data, type = 2 to fit DD data.
-	Set Lst1405_rwtype = 0 to use raw Lst(1405) shape, Lst1405_rwtype = 1 for MV and 2 for BONN reweighting schemes respectively
-	mylow determines the lower limit of the fit range
-	Set constraintflag = 0 to fit with Gaussian constraint only on Xib yield, constraintflag = 1 includes(on top of Xib constraint), a Gaussian constraint on the Lb mean */
+{
 	RooMsgService::instance().setGlobalKillBelow(RooFit::ERROR);
+
+	//*****Run script to get Xib normalization*********
+	gSystem->Exec(Form("python -c \'from GetXibNorm import GetNorm; GetNorm(%d, \"%s\", %d, %d, %f, %f)\'",
+	                   run,isoVersion,isoConf,finalBDTConf,bdtCut_nonZero,bdtCut_Zero));
+
+	ifstream infile(Form("../logs/mc/JpsiXi/run%d/xibNorm_log.txt",run));
+
+	Double_t xibnorm_LL = 37.3;//8.28;
+	Double_t xibnorm_LL_err = 4.04;//1.83;
+
+	infile>>xibnorm_LL;
+	infile>>xibnorm_LL_err;
+
+	xibnorm_LL = xibnorm_LL*2; //ACCOUNT FOR XIB0
+	xibnorm_LL_err = xibnorm_LL_err * 1.414;//ACCOUNT FOR XIB0
+	//************************************************
+
+	Int_t lst1405flag = 1;
+	Int_t lst1520flag = 0;
+	Int_t lst1810flag = 0;
+	Int_t xibflag = 1;
+	Int_t sigmaflag = 1;
+	Int_t type = 1;
+	Int_t Lst1405_rwtype = 2;
 
 	Int_t low = mylow, high = 7000; //Define range in which fit is performed
 
-	Double_t xibminus_norm_LL = 42.5; //37.5;//comes from fit to xib data
-	Double_t xibminus_norm_LL_stat = 8.2; //7.7;//statistical error, omes from fit to xib data
-	Double_t xibminus_norm_LL_syst = 0.02*xibminus_norm_LL; //conservative 2% systematic, based on f(Xib-) analysis //=0.85
-	Double_t eff_xib_jpsixi_LL = 0.030734;                                  //add errors for these effs
-	Double_t eff_xib_jpsil_LL = 0.024539;
+	// Double_t xibminus_norm_LL = 42.5; //37.5;//comes from fit to xib data
+	// Double_t xibminus_norm_LL_stat = 8.2; //7.7;//statistical error, omes from fit to xib data
+	// Double_t xibminus_norm_LL_syst = 0.02*xibminus_norm_LL; //conservative 2% systematic, based on f(Xib-) analysis //=0.85
+	// Double_t eff_xib_jpsixi_LL = 0.030734;                              //add errors for these effs
+	// Double_t eff_xib_jpsil_LL = 0.024539;
 
-	Double_t xibminus_norm_LL_err = sqrt(pow(xibminus_norm_LL_stat,2) + pow(xibminus_norm_LL_syst,2) ); //adding stat. and syst. errors in quadrature // = 8.244
+	// Double_t xibminus_norm_LL_err = sqrt(pow(xibminus_norm_LL_stat,2) + pow(xibminus_norm_LL_syst,2) ); //adding stat. and syst. errors in quadrature // = 8.244
 
 	// Double_t xibnorm_LL = (xibminus_norm_LL/eff_xib_jpsixi_LL)*eff_xib_jpsil_LL*2.0; //2.0 to account for xib0 as well  //=67.8667
 	// Double_t xibnorm_LL_err = (xibminus_norm_LL_err/eff_xib_jpsixi_LL)*eff_xib_jpsil_LL*sqrt(2.0); //sqrt because I'm adding the errors in quadrature // = 9.309
-
-	Double_t xibnorm_LL = 35.3;//41.9;
-	Double_t xibnorm_LL_err = 7.7;//9.1;
 
 	cout<<"The LL Xib normalization is "<<xibnorm_LL<<" +/- "<<xibnorm_LL_err<<endl;
 
@@ -65,22 +65,23 @@ void Fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag =
 	Int_t nbins = (Int_t)(high-low)/binwidth;
 	Lb_DTF_M_JpsiLConstr.setBins(nbins);
 
+	std::vector <Float_t> yields;
 	//*********Double Gaussian signal shape for Lambda_b0**************************************************
 	/*  //  RooRealVar mean("mean","Gaussian Mean",5619.0,5500.0,5700.0);
-	    RooRealVar mean("mean","Gaussian Mean",5619.0,5618.0,5620.0,"MeV");//pretty tight
-	    RooRealVar sigma1("sigma1","Gaussian sigma1",7.5,1.0,50.0,"MeV");
-	    RooRealVar sigma2("sigma2","Gaussian sigma2",10.0,1.0,50.0,"MeV");
+	   RooRealVar mean("mean","Gaussian Mean",5619.0,5618.0,5620.0,"MeV");//pretty tight
+	   RooRealVar sigma1("sigma1","Gaussian sigma1",7.5,1.0,50.0,"MeV");
+	   RooRealVar sigma2("sigma2","Gaussian sigma2",10.0,1.0,50.0,"MeV");
 
-	    RooGaussian sig1("sig1","Gaussian signal1",Lb_DTF_M_JpsiLConstr,mean,sigma1);//Gaussian 1
-	    RooGaussian sig2("sig2","Gaussian signal2",Lb_DTF_M_JpsiLConstr,mean,sigma2);//Gaussian 2
+	   RooGaussian sig1("sig1","Gaussian signal1",Lb_DTF_M_JpsiLConstr,mean,sigma1);//Gaussian 1
+	   RooGaussian sig2("sig2","Gaussian signal2",Lb_DTF_M_JpsiLConstr,mean,sigma2);//Gaussian 2
 
-	    RooRealVar frac1("frac1","Fraction of sig1 in signal",0.3,0.1,1.0);//Relative fraction of Gaussian 1 in total Gaussian
+	   RooRealVar frac1("frac1","Fraction of sig1 in signal",0.3,0.1,1.0);//Relative fraction of Gaussian 1 in total Gaussian
 
-	    RooAddPdf sig("sig","Gaussian signal",RooArgList(sig1,sig2),frac1);//total double gaussian pdf*/
+	   RooAddPdf sig("sig","Gaussian signal",RooArgList(sig1,sig2),frac1);//total double gaussian pdf*/
 	//*****************************************************************************************************
 
 	//*********Double Crystal Ball signal shape for Lambda_b0 (pars extracted from simulation)**************************************************
-	RooRealVar mean("mean","Crystal Ball Mean",5619.6,5618,5622);
+	RooRealVar mean("mean","Crystal Ball Mean",5619.6,5619,5621);
 	RooRealVar alpha1("alpha1","alpha1",1.028, 0.8,1.3);
 	RooRealVar alpha2("alpha2","alpha2",-1.097,-1.4,-0.7);
 	//  RooRealVar sigma("sigma","Crystal Ball sigma",7.069);//,6.4,7.8);
@@ -109,7 +110,7 @@ void Fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag =
 
 	//********Gaussian Lump for misc. Lambda*'s ***********************************************************
 	//  RooRealVar misclstmass("misclstmass","misclst MASS",4500.,5500.);
-	RooRealVar misclstmean("misclstmean","Misc. Lst. Gaussian Mean",5000.,4950.,5050.,"MeV");
+	RooRealVar misclstmean("misclstmean","Misc. Lst. Gaussian Mean",5009.,4980.,5050.,"MeV");
 	RooRealVar misclstsigma("misclstsigma","Misc. Lst. Gaussian Sigma",60.,20.,100.,"MeV");
 	RooGaussian misclstshape("misclstshape","Misc #Lambda^{*}",Lb_DTF_M_JpsiLConstr,misclstmean,misclstsigma);
 
@@ -169,8 +170,8 @@ void Fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag =
 	ds_lst1405->plotOn(framelst1405,Name("lst1405data"));
 	lst1405shape.plotOn(framelst1405,Name("lst1405fit"),LineColor(kBlue));
 	lst1405shape_smooth.plotOn(framelst1405,Name("lst1405fitsmooth"),LineColor(kRed),LineStyle(kDashed));
-	new TCanvas();
-	framelst1405->Draw();
+	// new TCanvas();
+	// framelst1405->Draw();
 	//*****************************************************************************************************
 
 	//*********Get shape from Lambda*(1520) background******************************************************
@@ -208,8 +209,8 @@ void Fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag =
 	ds_lst1520->plotOn(framelst1520,Name("lst1520data"));
 	lst1520shape.plotOn(framelst1520,Name("lst1520fit"),LineColor(kBlue));
 	lst1520shape_smooth.plotOn(framelst1520,Name("lst1520fitsmooth"),LineColor(kRed),LineStyle(kDashed));
-	new TCanvas();
-	framelst1520->Draw();
+	// new TCanvas();
+	// framelst1520->Draw();
 	//*****************************************************************************************************
 
 	//*********Get shape from Lambda*(1810) background******************************************************
@@ -247,26 +248,37 @@ void Fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag =
 	ds_lst1810->plotOn(framelst1810,Name("lst1810data"));
 	lst1810shape.plotOn(framelst1810,Name("lst1810fit"),LineColor(kBlue));
 	lst1810shape_smooth.plotOn(framelst1810,Name("lst1810fitsmooth"),LineColor(kRed),LineStyle(kDashed));
-	new TCanvas();
-	framelst1810->Draw();
+	// new TCanvas();
+	// framelst1810->Draw();
 	//*****************************************************************************************************
 
 	//******************Get shape from Xib background******************************************************
 	// RooRealVar xibmass("Lb_DTF_M_JpsiLConstr","xibmass",5200.,5740.);
 
-	TFile *filein_xib = TFile::Open("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/BDTcut/jpsixi_LL_BDT1cut_iso1_v0.root");
-	TTree *treein_xib = (TTree*)filein_xib->Get("MyTuple");
+	TFile *filein_xi_nonZero = TFile::Open(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi_cutoutks_LL_nonZeroTracks.root",run));
+	TTree *treein_xi_nonZero = (TTree*)filein_xi_nonZero->Get("MyTuple");
 
-	treein_xib->SetBranchStatus("*",0);
-	treein_xib->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-	treein_xib->SetBranchStatus("Lb_BKGCAT",1);
+	TFile *filein_xi_Zero = TFile::Open(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi_cutoutks_LL_ZeroTracks.root",run));
+	TTree *treein_xi_Zero = (TTree*)filein_xi_Zero->Get("MyTuple");
 
-	//  RooDataSet ds_xib("ds_xib","ds_xib",treein_xib,xibmass);
-	treein_xib->Draw(Form("Lb_DTF_M_JpsiLConstr>>hxib(%d,%d,%d)",nbins,low,high),"Lb_BKGCAT==40","goff");
+	treein_xi_nonZero->AddFriend("MyTuple",Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi_LL_FinalBDT%d_iso%d_%s.root",
+	                                            run,finalBDTConf,isoConf,isoVersion));
+	treein_xi_Zero->AddFriend("MyTuple",Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi_zeroTracksLL_FinalBDT%d.root",
+	                                         run,finalBDTConf));
+	// treein_xi->SetBranchStatus("*",0);
+	// treein_xi->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+	//RooDataSet ds_xi("ds_xi","ds_xi",treein_xi,ximass);
+	treein_xi_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hxib_nonZero(%d,%d,%d)",nbins,low,high),
+	                        Form("Lb_BKGCAT==40 && BDT%d > %f",finalBDTConf,bdtCut_nonZero),"goff");//TRUTH MATCHING HERE
+	treein_xi_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hxib_Zero(%d,%d,%d)",nbins,low,high),
+	                     Form("Lb_BKGCAT==40 && BDT%d > %f",finalBDTConf,bdtCut_Zero),"goff");//TRUTH MATCHING HERE
 
-	TH1D *hxib = (TH1D*)gDirectory->Get("hxib");
+	TH1D *hxib_nonZero = (TH1D*)gDirectory->Get("hxib_nonZero");
+	TH1D *hxib_Zero = (TH1D*)gDirectory->Get("hxib_Zero");
+	TH1D *hxib = new TH1D("hxib","",nbins,low,high);
+	hxib->Add(hxib_nonZero,hxib_Zero);
 	TH1D *hxib_smooth = (TH1D*)hxib->Clone("hxib_smooth");
-	hxib_smooth->Smooth(2);
+	hxib_smooth->Smooth(4);
 
 	RooDataHist *ds_xib = new RooDataHist("ds_xib","ds_xib",Lb_DTF_M_JpsiLConstr,hxib);
 	RooDataHist *ds_xib_smooth = new RooDataHist("ds_xib_smooth","ds_xib_smooth",Lb_DTF_M_JpsiLConstr,hxib_smooth);
@@ -283,23 +295,37 @@ void Fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag =
 	xibshape.plotOn(framexib,Name("xibfit"),LineColor(kBlue));
 	xibshape_smooth.plotOn(framexib,Name("xibfitsmooth"),LineColor(kRed),LineStyle(kDashed));
 	//  xibshape1.plotOn(framexib,Name("xibfit1"),LineColor(kRed));
-	new TCanvas();
-	framexib->Draw();
+	// new TCanvas();
+	// framexib->Draw();
 	//****************************************************************************************************
 
 	//******************Get shape from Jpsi Sigma signal***********************************************
 	//  RooRealVar sigmamass("Lb_DTF_M_JpsiLConstr","sigmamass",5200.,5740.);
 
-	TFile *filein_sigma = TFile::Open("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma/run1/BDTcut/jpsisigma_LL_BDT1cut_iso1_v0.root");//WHY AM I USING THE DD SHAPE HERE, TO FIT LL?
-	TTree *treein_sigma = (TTree*)filein_sigma->Get("MyTuple");
+	TFile *filein_sigma_nonZero = TFile::Open(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_cutoutks_LL_nonZeroTracks.root",run));
+	TTree *treein_sigma_nonZero = (TTree*)filein_sigma_nonZero->Get("MyTuple");
 
-	treein_sigma->SetBranchStatus("*",0);
-	treein_sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+	TFile *filein_sigma_Zero = TFile::Open(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_cutoutks_LL_ZeroTracks.root",run));
+	TTree *treein_sigma_Zero = (TTree*)filein_sigma_Zero->Get("MyTuple");
+
+	treein_sigma_nonZero->AddFriend("MyTuple",Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_LL_FinalBDT%d_iso%d_%s.root",
+	                                               run,finalBDTConf,isoConf,isoVersion));
+	treein_sigma_Zero->AddFriend("MyTuple",Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_zeroTracksLL_FinalBDT%d.root",
+	                                            run,finalBDTConf));
+	// treein_sigma->SetBranchStatus("*",0);
+	// treein_sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 
 	//RooDataSet ds_sigma("ds_sigma","ds_sigma",treein_sigma,sigmamass);
-	treein_sigma->Draw(Form("Lb_DTF_M_JpsiLConstr>>hsigma(%d,%d,%d)",nbins,low,high),"","goff");
+	treein_sigma_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hsigma_nonZero(%d,%d,%d)",nbins,low,high),
+	                           Form("BDT%d > %f",finalBDTConf,bdtCut_nonZero),"goff");//Not TRUTH MATCHING HERE!
 
-	TH1D *hsigma = (TH1D*)gDirectory->Get("hsigma");
+	treein_sigma_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hsigma_Zero(%d,%d,%d)",nbins,low,high),
+	                        Form("BDT%d > %f",finalBDTConf,bdtCut_Zero),"goff");//Not TRUTH MATCHING HERE!
+
+	TH1D *hsigma_nonZero = (TH1D*)gDirectory->Get("hsigma_nonZero");
+	TH1D *hsigma_Zero = (TH1D*)gDirectory->Get("hsigma_Zero");
+	TH1D *hsigma = new TH1D("hsigma","",nbins,low,high);
+	hsigma->Add(hsigma_nonZero,hsigma_Zero);
 	TH1D *hsigma_smooth = (TH1D*)hsigma->Clone("hsigma_smooth");
 	hsigma_smooth->Smooth(2);
 
@@ -321,30 +347,39 @@ void Fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag =
 	sigmashape_smooth.plotOn(framesigma,Name("sigmafitsmooth"),LineColor(kRed),LineStyle(kDashed));
 	//  sigmashape1.plotOn(framesigma,Name("sigmafit1"),LineColor(kRed));
 
-	new TCanvas();
-	framesigma->Draw();
+	// new TCanvas();
+	// framesigma->Draw();
 	//*****************************************************************************************************
 
 	//*********Input Data*********************************************************************************
-	TFile *filein = TFile::Open("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run1/BDTcut/jpsilambda_LL_BDT1cut_iso1_v0.root","READ");
-	// else if(type == 2)
-	//   filein = TFile::Open("../jpsilambda_DD.root","READ");
+	TFile *filein_nonZero = TFile::Open(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_LL_nonZeroTracks.root",run),"READ");
+	TTree *treein_nonZero = (TTree*)filein_nonZero->Get("MyTuple");
 
-	TTree *treein = (TTree*)filein->Get("MyTuple");
+	TFile *filein_Zero = TFile::Open(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_LL_ZeroTracks.root",run),"READ");
+	TTree *treein_Zero = (TTree*)filein_Zero->Get("MyTuple");
 
-	// treein->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_FinalBDT1_iso1_v0.root");
-	treein->SetBranchStatus("*",0);
-	treein->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+	treein_nonZero->AddFriend("MyTuple",Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s.root",
+	                                         run,finalBDTConf,isoConf,isoVersion));
+	treein_Zero->AddFriend("MyTuple",Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_zeroTracksLL_FinalBDT%d.root",
+	                                      run,finalBDTConf));
+	// treein->SetBranchStatus("*",0);
+	// treein->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 	// treein->SetBranchStatus("BDT1",1);
 	// treein->SetBranchStatus("BDTkMin_v0",1);
 
-	Int_t nentries = treein->GetEntries();
+	Int_t nentries = treein_nonZero->GetEntries() + treein_Zero->GetEntries();
 	cout<<"nentries = "<<nentries<<endl;
 
-	treein->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist(%d,%d,%d)",nbins,low,high),"","goff");
+	treein_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist_nonzero(%d,%d,%d)",nbins,low,high),Form("BDT%d > %f",finalBDTConf,bdtCut_nonZero),"goff");
+	treein_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist_zero(%d,%d,%d)",nbins,low,high),Form("BDT%d > %f",finalBDTConf,bdtCut_Zero),"goff");
 	//  treein->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist1(%d,%d,%d)",nbins,low,high),"BDT1 > 0.065","goff");
 
-	TH1D *myhist = (TH1D*)gDirectory->Get("myhist");
+	TH1D *myhist_nonzero = (TH1D*)gDirectory->Get("myhist_nonzero");
+	TH1D *myhist_zero = (TH1D*)gDirectory->Get("myhist_zero");
+
+	TH1D *myhist = new TH1D("myhist","",nbins,low,high);
+
+	myhist->Add(myhist_zero,myhist_nonzero);
 
 	RooDataHist ds("ds","ds",Lb_DTF_M_JpsiLConstr,myhist); //Fit to binned histogram
 	//  RooDataSet ds("ds","ds",treein,Lb_DTF_M_JpsiLConstr);
@@ -359,7 +394,7 @@ void Fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag =
 	RooRealVar *nxib = (RooRealVar*)malloc(sizeof(*nxib));
 
 	if(type == 1) {
-		nsig = new RooRealVar("nsig","nsig",1,10000);
+		nsig = new RooRealVar("nsig","nsig",0,16000);
 		nxib = new RooRealVar("nxib","nxib",xibnorm_LL,xibnorm_LL-xibnorm_LL_err,xibnorm_LL+xibnorm_LL_err);
 		//    nxib = new RooRealVar("nxib","nxib",64);
 	}
@@ -372,15 +407,22 @@ void Fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag =
 	//   nxib = RooRealVar("nxib","nxib", 1114,1054,1174);
 	// }
 	//********Gaussian Constraint on xib yield****************
-	RooGaussian nxib_constraint("nxib_constraint","Xib yield constraint",*nxib,RooFit::RooConst(xibnorm_LL),RooFit::RooConst(xibnorm_LL_err)); //find a way to put the variables in here rather than hard coding it
+	RooGaussian nxib_constraint("nxib_constraint","Xib yield constraint",*nxib,
+	                            RooFit::RooConst(xibnorm_LL),
+	                            RooFit::RooConst(xibnorm_LL_err));
 	//********************************************************
 
-	RooRealVar nlst1405("nlst1405","nlst1405",1,5000);//Lst(1405) yield
-	RooRealVar nlst1520("nlst1520","nlst1520",1,5000);//Lst(1520) yiel
-	RooRealVar nlst1810("nlst1810","nlst1810",1,5000);//Lst(1520) yield
-	RooRealVar nmisclst("nmisclst","nmisclst",1,10000);//Misc. lst yield
-	RooRealVar nsigma("nsigma","nsigma",1,5000);//J/psi Sigma yield
+	RooRealVar nlst1405("nlst1405","nlst1405",1.,5000.);//Lst(1405) yield
+	RooRealVar nlst1520("nlst1520","nlst1520",1.,5000.);//Lst(1520) yiel
+	RooRealVar nlst1810("nlst1810","nlst1810",1.,5000.);//Lst(1520) yield
+	RooRealVar nmisclst("nmisclst","nmisclst",1.,10000.);//Misc. lst yield
+//	RooRealVar nsigma("nsigma","nsigma",0.,10.);//J/psi Sigma yield
 	RooRealVar nbkg("nbkg","nbkg",1,nentries);//Comb. bkg yield
+
+
+	RooRealVar logR("logR","logR",-15.0,-2.0);
+	RooFormulaVar nsigma("nsigma","pow(10,logR)*nsig",RooArgSet(logR,*nsig));
+
 	//*****************************************************************************************************
 
 	cout<<"stage1.1"<<endl;
@@ -400,10 +442,10 @@ void Fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag =
 		nxib->setVal(0.0);
 		nxib->setConstant();
 	}
-	if(sigmaflag == 0) {
-		nsigma.setVal(0.0);
-		nsigma.setConstant();
-	}
+	// if(sigmaflag == 0) {
+	//      nsigma.setVal(0.0);
+	//      nsigma.setConstant();
+	// }
 	cout<<"stage1.2"<<endl;
 
 	// if(lstflag == 0 && xibflag == 0 && sigmaflag == 0)
@@ -530,8 +572,55 @@ void Fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag =
 	cout<<"Pull RMS Y = "<<hpull->GetRMS(2)<<endl;
 	nsig->Print();
 	nbkg.Print();
-	//  nxib.Print();
-	// Lb_DTF_M_JpsiLConstr.setRange("signal_window",5520.0,5720.0);
+	nxib->Print();
+	Lb_DTF_M_JpsiLConstr.setRange("signal_window",5350.0,5600.0);
+	RooAbsReal* lambdaInt = sig.createIntegral(Lb_DTF_M_JpsiLConstr,NormSet(Lb_DTF_M_JpsiLConstr),Range("signal_window"));
+	RooAbsReal* xibInt = xibshape_smooth.createIntegral(Lb_DTF_M_JpsiLConstr,NormSet(Lb_DTF_M_JpsiLConstr),Range("signal_window"));
+	RooAbsReal* combInt = bkg.createIntegral(Lb_DTF_M_JpsiLConstr,NormSet(Lb_DTF_M_JpsiLConstr),Range("signal_window"));
+	RooAbsReal* lst1405Int = lst1405shape_smooth.createIntegral(Lb_DTF_M_JpsiLConstr,NormSet(Lb_DTF_M_JpsiLConstr),Range("signal_window"));
+
+	lambdaInt->Print();
+	xibInt->Print();
+	combInt->Print();
+	lst1405Int->Print();
+
+	Double_t myErr = 0;
+	Double_t totEntries = myhist->IntegralAndError(163,225,myErr);
+
+	cout<<"totEntries = "<<totEntries<<" +/- "<<myErr<<endl;
+
+	Double_t lambdaBKG = lambdaInt->getValV()*nsig->getValV();
+	Double_t combBKG   = combInt->getValV()*nbkg.getValV();
+	Double_t xibBKG    = xibInt->getValV()*nxib->getValV();
+	Double_t lstBKG    = lst1405Int->getValV()*nlst1405.getValV();
+
+	Double_t lambdaBKGERR = lambdaInt->getValV()*nsig->getError();
+	Double_t combBKGERR   = combInt->getValV()*nbkg.getError();
+	Double_t xibBKGERR    = xibInt->getValV()*nxib->getError();
+	Double_t lstBKGERR    = lst1405Int->getValV()*nlst1405.getError();
+
+	cout<<"Lambda_b background in signal region = "<<lambdaBKG<<" +/- "
+	    <<lambdaBKGERR<<endl;
+	cout<<"Combinatorial background in signal region = "<<combBKG<<" +/- "
+	    <<combBKGERR<<endl;
+	cout<<"Xib background in signal region = "<<xibBKG<<" +/- "
+	    <<xibBKGERR<<endl;
+	cout<<"Lst(1405) background in signal region = "<<lstBKG<<" +/- "
+	    <<lstBKGERR<<endl;
+
+	Double_t totBKG    = lambdaBKG + combBKG + xibBKG + lstBKG;
+	Double_t totBKGERR = sqrt(lambdaBKGERR*lambdaBKGERR + combBKGERR*combBKGERR
+	                          + xibBKGERR*xibBKGERR + lstBKGERR*lstBKGERR);
+
+	cout<<"totBKG = "<<totBKG<<" +/- "<<totBKGERR<<endl;
+	TRolke t;
+	t.SetGaussBkgKnownEff(totEntries,totBKG,totBKGERR,1.0);
+	cout<<"Upper Limit = "<<t.GetUpperLimit()<<endl;
+
+	TRolke t1;
+	t1.SetPoissonBkgKnownEff(totEntries,totBKG,1,1.0);
+	cout<<"Upper Limit = "<<t1.GetUpperLimit()<<endl;
+
 	// Lb_DTF_M_JpsiLConstr.setRange("signal_window1",5570.0,5670.0);
 
 	// RooAbsReal* myint = sig.createIntegral(Lb_DTF_M_JpsiLConstr,NormSet(Lb_DTF_M_JpsiLConstr),Range("signal_window1"));
@@ -551,10 +640,22 @@ void Fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag =
 	legend->AddEntry("sig","J/#psi #Lambda shape","l");
 	legend->AddEntry("sigma","J/#psi #Sigma shape","l");
 	legend->AddEntry("xib","J/#psi #Xi shape","l");
-	legend->AddEntry("lst1405","J/#psi #Lambda(1405) shape","l");
-	legend->AddEntry("lst1520","J/#psi #Lambda(1520) shape","l");
-	legend->AddEntry("lst1810","J/#psi #Lambda(1810) shape","l");
+	if(lst1405flag)
+		legend->AddEntry("lst1405","J/#psi #Lambda(1405) shape","l");
+	if(lst1520flag)
+		legend->AddEntry("lst1520","J/#psi #Lambda(1520) shape","l");
+	if(lst1810flag)
+		legend->AddEntry("lst1810","J/#psi #Lambda(1810) shape","l");
 	legend->AddEntry("misclst","misc. J/#psi #Lambda* shapes","l");
 	legend->AddEntry("bkg","Comb. Bkg. shape","l");
 	legend->Draw("same");
+
+	Float_t ratio_yields = nsig->getValV()/nsigma.getValV();
+	// Float_t ratio_yields_err = ratio_yields*sqrt( pow((nsigma.getError()/nsigma.getValV()),2) + pow((nsig->getError()/nsig->getValV()),2));
+
+	yields.push_back(ratio_yields);
+	// yields.push_back(ratio_yields_err);
+
+	return yields;
+
 }
