@@ -1,7 +1,7 @@
 import glob
 
 isoFlag = True
-files = glob.glob("../logs/data/JpsiLambda/run2/OptimizeFinalBDT*_Punzi_sigma.txt")
+files = glob.glob("../logs/data/JpsiLambda/run1/OptimizeFinalBDT*_Punzi.txt")
 ctr = 0
 myFOM_nonZero = 0.0
 myFOM_Zero = 0.0

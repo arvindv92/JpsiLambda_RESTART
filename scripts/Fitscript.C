@@ -1,11 +1,12 @@
 #include "Fitscript.h"
 
+#define Open TFile::Open
 // void Fitscript(Int_t lst1405flag = 1, Int_t lst1520flag = 1, Int_t lst1810flag = 1,
 //                Int_t xibflag = 1, Int_t sigmaflag = 1, Int_t type = 1,
 //                Int_t Lst1405_rwtype = 2, Int_t mylow = 4700, Int_t constraintflag = 1,
 //                Float_t bdtCut_nonZero = 0.375, Float_t bdtCut_Zero = 0.575)
-std::vector <Float_t> Fitscript( Int_t run, Int_t finalBDTConf, Int_t isoConf,
-                                 const char *isoVersion,
+std::vector <Float_t> Fitscript( Int_t run, Int_t finalBDTConf_nonZero, Int_t finalBDTConf_Zero,
+                                 Int_t isoConf, const char *isoVersion,
                                  Int_t mylow, Int_t constraintflag,
                                  Float_t bdtCut_nonZero, Float_t bdtCut_Zero)
 /*Set LstXXXXflag = 1 to include the shapes for these decays in the final fit
@@ -17,22 +18,79 @@ std::vector <Float_t> Fitscript( Int_t run, Int_t finalBDTConf, Int_t isoConf,
    Set constraintflag = 0 to fit with Gaussian constraint only on Xib yield, constraintflag = 1 includes(on top of Xib constraint), a Gaussian constraint on the Lb mean */
 
 {
+
 	RooMsgService::instance().setGlobalKillBelow(RooFit::ERROR);
 
 	//*****Run script to get Xib normalization*********
-	gSystem->Exec(Form("python -c \'from GetXibNorm import GetNorm; GetNorm(%d, \"%s\", %d, %d, %f, %f)\'",
-	                   run,isoVersion,isoConf,finalBDTConf,bdtCut_nonZero,bdtCut_Zero));
+	gSystem->Exec(Form("python -c \'from GetXibNorm import GetNorm;"
+	                   " GetNorm(%d, \"%s\", %d, %d, %d, %f, %f)\'",
+	                   run,isoVersion,isoConf,finalBDTConf_nonZero,
+	                   finalBDTConf_Zero,bdtCut_nonZero,bdtCut_Zero));
 
 	ifstream infile(Form("../logs/mc/JpsiXi/run%d/xibNorm_log.txt",run));
 
-	Double_t xibnorm_LL = 37.3;//8.28;
-	Double_t xibnorm_LL_err = 4.04;//1.83;
+	Double_t xibnorm_LL = 0.0;
+	Double_t xibnorm_LL_err = 0.0;
 
 	infile>>xibnorm_LL;
 	infile>>xibnorm_LL_err;
 
 	xibnorm_LL = xibnorm_LL*2; //ACCOUNT FOR XIB0
 	xibnorm_LL_err = xibnorm_LL_err * 1.414;//ACCOUNT FOR XIB0
+	//************************************************
+	//****Get J/psi Lambda efficiencies from MC*******
+	const char* path = "../rootFiles/mcFiles/JpsiLambda/JpsiLambda";
+
+	TFile *mcFileIn_nonZero_Lambda = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_nonZeroTracks.root",
+	                                           path,run));
+	TTree *mcTreeIn_nonZero_Lambda = (TTree*)mcFileIn_nonZero_Lambda->Get("MyTuple");
+
+	TFile *mcFileIn_Zero_Lambda = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_ZeroTracks.root",
+	                                        path,run));
+	TTree *mcTreeIn_Zero_Lambda = (TTree*)mcFileIn_Zero_Lambda->Get("MyTuple");
+
+	mcTreeIn_nonZero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s.root",
+	                                                  path,run,finalBDTConf_nonZero,
+	                                                  isoConf,isoVersion));
+	mcTreeIn_Zero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d.root",
+	                                               path,run,finalBDTConf_Zero));
+	fstream genFile_Lambda;
+	genFile_Lambda.open((Form("../logs/mc/JpsiLambda/JpsiLambda/run%d/gen_log.txt",run)));
+	Int_t nGen_Lambda = 0;
+
+	genFile_Lambda>>nGen_Lambda;
+
+	Int_t num_Lambda = mcTreeIn_nonZero_Lambda->GetEntries(Form("BDT%d > %f", finalBDTConf_nonZero,bdtCut_nonZero))
+	                   + mcTreeIn_Zero_Lambda->GetEntries(Form("BDT%d > %f", finalBDTConf_Zero,bdtCut_Zero));
+
+	Double_t eff_Lambda = num_Lambda*1.0/nGen_Lambda;
+	Double_t eff_Lambda_err = eff_Lambda*0.05;// nominally assigning 5% uncertainty
+	//************************************************
+	//****Get J/psi Sigma efficiencies from MC*******
+	path = "../rootFiles/mcFiles/JpsiLambda/JpsiSigma";
+	TFile *mcFileIn_nonZero_Sigma = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_nonZeroTracks.root",
+	                                          path,run));
+	TTree *mcTreeIn_nonZero_Sigma = (TTree*)mcFileIn_nonZero_Sigma->Get("MyTuple");
+
+	TFile *mcFileIn_Zero_Sigma = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_ZeroTracks.root",
+	                                       path,run));
+	TTree *mcTreeIn_Zero_Sigma = (TTree*)mcFileIn_Zero_Sigma->Get("MyTuple");
+
+	mcTreeIn_nonZero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_LL_FinalBDT%d_iso%d_%s.root",
+	                                                 path,run,finalBDTConf_nonZero,isoConf,isoVersion));
+	mcTreeIn_Zero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_zeroTracksLL_FinalBDT%d.root",
+	                                              path,run,finalBDTConf_Zero));
+	fstream genFile_Sigma;
+	genFile_Sigma.open((Form("../logs/mc/JpsiLambda/JpsiSigma/run%d/gen_log.txt",run)));
+	Int_t nGen_Sigma = 0;
+
+	genFile_Sigma>>nGen_Sigma;
+
+	Int_t num_Sigma = mcTreeIn_nonZero_Sigma->GetEntries(Form("BDT%d > %f", finalBDTConf_nonZero,bdtCut_nonZero)) +
+	                  mcTreeIn_Zero_Sigma->GetEntries(Form("BDT%d > %f", finalBDTConf_Zero,bdtCut_Zero));
+
+	Double_t eff_Sigma = num_Sigma*1.0/nGen_Sigma;
+	Double_t eff_Sigma_err = eff_Sigma*0.05;// nominally assigning 5% uncertainty
 	//************************************************
 
 	Int_t lst1405flag = 1;
@@ -59,6 +117,12 @@ std::vector <Float_t> Fitscript( Int_t run, Int_t finalBDTConf, Int_t isoConf,
 	cout<<"The LL Xib normalization is "<<xibnorm_LL<<" +/- "<<xibnorm_LL_err<<endl;
 
 	RooRealVar Lb_DTF_M_JpsiLConstr("Lb_DTF_M_JpsiLConstr","Fit to J/#psi #Lambda inv. mass",low, high,"MeV"); //MASTER VARIABLE
+
+	RooRealVar lambdaEff("lambdaEff","lambdaEff",eff_Lambda,eff_Lambda-eff_Lambda_err,eff_Lambda+eff_Lambda_err);
+	// lambdaEff.setError(eff_Lambda_err);
+
+	RooRealVar sigmaEff("sigmaEff","sigmaEff",eff_Sigma,eff_Sigma-eff_Sigma_err,eff_Sigma+eff_Sigma_err);
+	// sigmaEff.setError(eff_Sigma_err);
 
 	Int_t binwidth = 4; //Final fit is a binned fit with this binning
 
@@ -122,7 +186,7 @@ std::vector <Float_t> Fitscript( Int_t run, Int_t finalBDTConf, Int_t isoConf,
 	TString lst1405wtexp = "";
 
 	if(Lst1405_rwtype == 0) {
-		filein_lst1405 = TFile::Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1405/Lst1405_total_MVrw.root");
+		filein_lst1405 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1405/Lst1405_total_MVrw.root");
 		treein_lst1405 = (TTree*)filein_lst1405->Get("MCDecayTree");
 		treein_lst1405->SetBranchStatus("*",0);
 		treein_lst1405->SetBranchStatus("JpsiLmass",1);
@@ -130,7 +194,7 @@ std::vector <Float_t> Fitscript( Int_t run, Int_t finalBDTConf, Int_t isoConf,
 
 	}
 	else if(Lst1405_rwtype == 1) {
-		filein_lst1405 = TFile::Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1405/Lst1405_total_MVrw.root");
+		filein_lst1405 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1405/Lst1405_total_MVrw.root");
 		lst1405wtexp = "MVweight";
 		treein_lst1405 = (TTree*)filein_lst1405->Get("MCDecayTree");
 		treein_lst1405->SetBranchStatus("*",0);
@@ -138,7 +202,7 @@ std::vector <Float_t> Fitscript( Int_t run, Int_t finalBDTConf, Int_t isoConf,
 		treein_lst1405->SetBranchStatus("MVweight",1);
 	}
 	else if(Lst1405_rwtype == 2) {
-		filein_lst1405 = TFile::Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1405/Lst1405_total_BONNrw.root");
+		filein_lst1405 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1405/Lst1405_total_BONNrw.root");
 		lst1405wtexp = "BONNweight";
 		treein_lst1405 = (TTree*)filein_lst1405->Get("MCDecayTree");
 		treein_lst1405->SetBranchStatus("*",0);
@@ -180,7 +244,7 @@ std::vector <Float_t> Fitscript( Int_t run, Int_t finalBDTConf, Int_t isoConf,
 	TFile *filein_lst1520;
 	TTree *treein_lst1520 = (TTree*)malloc(sizeof(*treein_lst1520));
 
-	filein_lst1520 = TFile::Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1520/Lst1520_total_jpsil.root");
+	filein_lst1520 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1520/Lst1520_total_jpsil.root");
 	treein_lst1520 = (TTree*)filein_lst1520->Get("MCDecayTree");
 	treein_lst1520->SetBranchStatus("*",0);
 	treein_lst1520->SetBranchStatus("JpsiLmass",1);
@@ -219,7 +283,7 @@ std::vector <Float_t> Fitscript( Int_t run, Int_t finalBDTConf, Int_t isoConf,
 	TFile *filein_lst1810;
 	TTree *treein_lst1810 = (TTree*)malloc(sizeof(*treein_lst1810));
 
-	filein_lst1810 = TFile::Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1810/Lst1810_total_jpsil.root");
+	filein_lst1810 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1810/Lst1810_total_jpsil.root");
 	treein_lst1810 = (TTree*)filein_lst1810->Get("MCDecayTree");
 	treein_lst1810->SetBranchStatus("*",0);
 	treein_lst1810->SetBranchStatus("JpsiLmass",1);
@@ -255,23 +319,23 @@ std::vector <Float_t> Fitscript( Int_t run, Int_t finalBDTConf, Int_t isoConf,
 	//******************Get shape from Xib background******************************************************
 	// RooRealVar xibmass("Lb_DTF_M_JpsiLConstr","xibmass",5200.,5740.);
 
-	TFile *filein_xi_nonZero = TFile::Open(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi_cutoutks_LL_nonZeroTracks.root",run));
+	TFile *filein_xi_nonZero = Open(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi_cutoutks_LL_nonZeroTracks.root",run));
 	TTree *treein_xi_nonZero = (TTree*)filein_xi_nonZero->Get("MyTuple");
 
-	TFile *filein_xi_Zero = TFile::Open(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi_cutoutks_LL_ZeroTracks.root",run));
+	TFile *filein_xi_Zero = Open(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi_cutoutks_LL_ZeroTracks.root",run));
 	TTree *treein_xi_Zero = (TTree*)filein_xi_Zero->Get("MyTuple");
 
 	treein_xi_nonZero->AddFriend("MyTuple",Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi_LL_FinalBDT%d_iso%d_%s.root",
-	                                            run,finalBDTConf,isoConf,isoVersion));
+	                                            run,finalBDTConf_nonZero,isoConf,isoVersion));
 	treein_xi_Zero->AddFriend("MyTuple",Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi_zeroTracksLL_FinalBDT%d.root",
-	                                         run,finalBDTConf));
+	                                         run,finalBDTConf_Zero));
 	// treein_xi->SetBranchStatus("*",0);
 	// treein_xi->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 	//RooDataSet ds_xi("ds_xi","ds_xi",treein_xi,ximass);
 	treein_xi_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hxib_nonZero(%d,%d,%d)",nbins,low,high),
-	                        Form("Lb_BKGCAT==40 && BDT%d > %f",finalBDTConf,bdtCut_nonZero),"goff");//TRUTH MATCHING HERE
+	                        Form("Lb_BKGCAT==40 && BDT%d > %f",finalBDTConf_nonZero,bdtCut_nonZero),"goff");//TRUTH MATCHING HERE
 	treein_xi_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hxib_Zero(%d,%d,%d)",nbins,low,high),
-	                     Form("Lb_BKGCAT==40 && BDT%d > %f",finalBDTConf,bdtCut_Zero),"goff");//TRUTH MATCHING HERE
+	                     Form("Lb_BKGCAT==40 && BDT%d > %f",finalBDTConf_Zero,bdtCut_Zero),"goff");//TRUTH MATCHING HERE
 
 	TH1D *hxib_nonZero = (TH1D*)gDirectory->Get("hxib_nonZero");
 	TH1D *hxib_Zero = (TH1D*)gDirectory->Get("hxib_Zero");
@@ -302,25 +366,25 @@ std::vector <Float_t> Fitscript( Int_t run, Int_t finalBDTConf, Int_t isoConf,
 	//******************Get shape from Jpsi Sigma signal***********************************************
 	//  RooRealVar sigmamass("Lb_DTF_M_JpsiLConstr","sigmamass",5200.,5740.);
 
-	TFile *filein_sigma_nonZero = TFile::Open(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_cutoutks_LL_nonZeroTracks.root",run));
+	TFile *filein_sigma_nonZero = Open(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_cutoutks_LL_nonZeroTracks.root",run));
 	TTree *treein_sigma_nonZero = (TTree*)filein_sigma_nonZero->Get("MyTuple");
 
-	TFile *filein_sigma_Zero = TFile::Open(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_cutoutks_LL_ZeroTracks.root",run));
+	TFile *filein_sigma_Zero = Open(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_cutoutks_LL_ZeroTracks.root",run));
 	TTree *treein_sigma_Zero = (TTree*)filein_sigma_Zero->Get("MyTuple");
 
 	treein_sigma_nonZero->AddFriend("MyTuple",Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_LL_FinalBDT%d_iso%d_%s.root",
-	                                               run,finalBDTConf,isoConf,isoVersion));
+	                                               run,finalBDTConf_nonZero,isoConf,isoVersion));
 	treein_sigma_Zero->AddFriend("MyTuple",Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_zeroTracksLL_FinalBDT%d.root",
-	                                            run,finalBDTConf));
+	                                            run,finalBDTConf_Zero));
 	// treein_sigma->SetBranchStatus("*",0);
 	// treein_sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 
 	//RooDataSet ds_sigma("ds_sigma","ds_sigma",treein_sigma,sigmamass);
 	treein_sigma_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hsigma_nonZero(%d,%d,%d)",nbins,low,high),
-	                           Form("BDT%d > %f",finalBDTConf,bdtCut_nonZero),"goff");//Not TRUTH MATCHING HERE!
+	                           Form("BDT%d > %f",finalBDTConf_nonZero,bdtCut_nonZero),"goff");//Not TRUTH MATCHING HERE!
 
 	treein_sigma_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hsigma_Zero(%d,%d,%d)",nbins,low,high),
-	                        Form("BDT%d > %f",finalBDTConf,bdtCut_Zero),"goff");//Not TRUTH MATCHING HERE!
+	                        Form("BDT%d > %f",finalBDTConf_Zero,bdtCut_Zero),"goff");//Not TRUTH MATCHING HERE!
 
 	TH1D *hsigma_nonZero = (TH1D*)gDirectory->Get("hsigma_nonZero");
 	TH1D *hsigma_Zero = (TH1D*)gDirectory->Get("hsigma_Zero");
@@ -352,16 +416,24 @@ std::vector <Float_t> Fitscript( Int_t run, Int_t finalBDTConf, Int_t isoConf,
 	//*****************************************************************************************************
 
 	//*********Input Data*********************************************************************************
-	TFile *filein_nonZero = TFile::Open(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_LL_nonZeroTracks.root",run),"READ");
+	TFile *filein_nonZero = Open(Form("/data1/avenkate/JpsiLambda_RESTART/"
+	                                  "rootFiles/dataFiles/JpsiLambda/run%d/"
+	                                  "jpsilambda_cutoutks_LL_nonZeroTracks.root",run),"READ");
 	TTree *treein_nonZero = (TTree*)filein_nonZero->Get("MyTuple");
 
-	TFile *filein_Zero = TFile::Open(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_LL_ZeroTracks.root",run),"READ");
+	TFile *filein_Zero = Open(Form("/data1/avenkate/JpsiLambda_RESTART/"
+	                               "rootFiles/dataFiles/JpsiLambda/run%d/"
+	                               "jpsilambda_cutoutks_LL_ZeroTracks.root",run),"READ");
 	TTree *treein_Zero = (TTree*)filein_Zero->Get("MyTuple");
 
-	treein_nonZero->AddFriend("MyTuple",Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s.root",
-	                                         run,finalBDTConf,isoConf,isoVersion));
-	treein_Zero->AddFriend("MyTuple",Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_zeroTracksLL_FinalBDT%d.root",
-	                                      run,finalBDTConf));
+	treein_nonZero->AddFriend("MyTuple",Form("/data1/avenkate/JpsiLambda_RESTART/"
+	                                         "rootFiles/dataFiles/JpsiLambda/run%d/"
+	                                         "jpsilambda_LL_FinalBDT%d_iso%d_%s.root",
+	                                         run,finalBDTConf_nonZero,isoConf,isoVersion));
+	treein_Zero->AddFriend("MyTuple",Form("/data1/avenkate/JpsiLambda_RESTART/"
+	                                      "rootFiles/dataFiles/JpsiLambda/run%d/"
+	                                      "jpsilambda_zeroTracksLL_FinalBDT%d.root",
+	                                      run,finalBDTConf_Zero));
 	// treein->SetBranchStatus("*",0);
 	// treein->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 	// treein->SetBranchStatus("BDT1",1);
@@ -370,8 +442,8 @@ std::vector <Float_t> Fitscript( Int_t run, Int_t finalBDTConf, Int_t isoConf,
 	Int_t nentries = treein_nonZero->GetEntries() + treein_Zero->GetEntries();
 	cout<<"nentries = "<<nentries<<endl;
 
-	treein_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist_nonzero(%d,%d,%d)",nbins,low,high),Form("BDT%d > %f",finalBDTConf,bdtCut_nonZero),"goff");
-	treein_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist_zero(%d,%d,%d)",nbins,low,high),Form("BDT%d > %f",finalBDTConf,bdtCut_Zero),"goff");
+	treein_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist_nonzero(%d,%d,%d)",nbins,low,high),Form("BDT%d > %f",finalBDTConf_nonZero,bdtCut_nonZero),"goff");
+	treein_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist_zero(%d,%d,%d)",nbins,low,high),Form("BDT%d > %f",finalBDTConf_Zero,bdtCut_Zero),"goff");
 	//  treein->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist1(%d,%d,%d)",nbins,low,high),"BDT1 > 0.065","goff");
 
 	TH1D *myhist_nonzero = (TH1D*)gDirectory->Get("myhist_nonzero");
@@ -421,7 +493,7 @@ std::vector <Float_t> Fitscript( Int_t run, Int_t finalBDTConf, Int_t isoConf,
 
 
 	RooRealVar logR("logR","logR",-15.0,-2.0);
-	RooFormulaVar nsigma("nsigma","pow(10,logR)*nsig",RooArgSet(logR,*nsig));
+	RooFormulaVar nsigma("nsigma","pow(10,logR)*nsig*sigmaEff/(lambdaEff*0.52)",RooArgSet(logR,*nsig,sigmaEff,lambdaEff));
 
 	//*****************************************************************************************************
 
@@ -573,6 +645,10 @@ std::vector <Float_t> Fitscript( Int_t run, Int_t finalBDTConf, Int_t isoConf,
 	nsig->Print();
 	nbkg.Print();
 	nxib->Print();
+
+	sigmaEff.Print();
+	lambdaEff.Print();
+
 	Lb_DTF_M_JpsiLConstr.setRange("signal_window",5350.0,5600.0);
 	RooAbsReal* lambdaInt = sig.createIntegral(Lb_DTF_M_JpsiLConstr,NormSet(Lb_DTF_M_JpsiLConstr),Range("signal_window"));
 	RooAbsReal* xibInt = xibshape_smooth.createIntegral(Lb_DTF_M_JpsiLConstr,NormSet(Lb_DTF_M_JpsiLConstr),Range("signal_window"));

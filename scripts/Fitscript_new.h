@@ -31,17 +31,21 @@
 #include "RooMinuit.h"
 #include "RooFormulaVar.h"
 #include "RooOneSidedProfileLL.h"
+#include "RooStats/ModelConfig.h"
+#include "RooStats/AsymptoticCalculator.h"
+#include "RooStats/HypoTestInverter.h"
+#include "RooStats/HypoTestInverterPlot.h"
+#include "RooMinimizer.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
 #include <TRolke.h>
 #include "TROOT.h"
-using namespace RooFit;
-using namespace std;
+#include "TIterator.h"
 
-std::vector <Float_t> Fitscript( Int_t run = 2, Int_t finalBDTConf_nonZero = 1, Int_t finalBDTConf_Zero = 1,
-                                 Int_t isoConf = 2, const char *isoVersion = "v0",
-                                 Int_t mylow = 4700, Int_t constraintflag = 1,
-                                 Float_t bdtCut_nonZero = 0.535, Float_t bdtCut_Zero = 0.415);
+std::vector <Float_t> Fitscript_new( Int_t run = 2, Int_t finalBDTConf_nonZero = 1, Int_t finalBDTConf_Zero = 1,
+                                     Int_t isoConf = 2, const char *isoVersion = "v0",
+                                     Int_t mylow = 4700, Int_t constraintflag = 1,
+                                     Float_t bdtCut_nonZero = 0.535, Float_t bdtCut_Zero = 0.415);
 
 #endif
