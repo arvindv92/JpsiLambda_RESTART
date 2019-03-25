@@ -1,7 +1,16 @@
 import glob
+import argparse
+
+parser = argparse.ArgumentParser(description='Get Best Config')
+
+parser.add_argument('-run', '--RUN', type=int, nargs=1,
+                    help='Which run do you want best config for?')
+
+args = parser.parse_args()
+run = args.RUN
 
 isoFlag = True
-files = glob.glob("../logs/data/JpsiLambda/run1/OptimizeFinalBDT*_Punzi.txt")
+files = glob.glob("../logs/data/JpsiLambda/run{}/OptimizeFinalBDT*_Punzi_Sigma.txt".format(run))
 ctr = 0
 myFOM_nonZero = 0.0
 myFOM_Zero = 0.0

@@ -1,5 +1,5 @@
-#ifndef Fitscript_new_H
-#define Fitscript_new_H
+#ifndef Fitscript_simul_H
+#define Fitscript_simul_H
 #include "TFile.h"
 #include "TTree.h"
 #include "TString.h"
@@ -36,6 +36,8 @@
 #include "RooStats/HypoTestInverter.h"
 #include "RooStats/HypoTestInverterPlot.h"
 #include "RooMinimizer.h"
+#include "RooCategory.h"
+#include "RooSimultaneous.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -43,9 +45,8 @@
 #include "TROOT.h"
 #include "TIterator.h"
 
-std::vector <Float_t> Fitscript_new( Int_t run = 2, Int_t finalBDTConf_nonZero = 1, Int_t finalBDTConf_Zero = 1,
-                                     Int_t isoConf = 2, const char *isoVersion = "v0",
-                                     Int_t mylow = 4700, Int_t constraintflag = 1,
-                                     Float_t bdtCut_nonZero = 0.535, Float_t bdtCut_Zero = 0.415);
+void Fitscript_simul(Int_t finalBDTConf_nonZero = 1, Int_t finalBDTConf_Zero = 1,
+                     Int_t isoConf = 2, const char *isoVersion = "v0",
+                     Float_t bdtCut_nonZero = 0.535, Float_t bdtCut_Zero = 0.415);
 
 #endif
