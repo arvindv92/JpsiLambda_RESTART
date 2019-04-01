@@ -33,8 +33,13 @@
 #include "RooOneSidedProfileLL.h"
 #include "RooStats/ModelConfig.h"
 #include "RooStats/AsymptoticCalculator.h"
+#include "RooStats/FrequentistCalculator.h"
 #include "RooStats/HypoTestInverter.h"
 #include "RooStats/HypoTestInverterPlot.h"
+#include "RooStats/TestStatSampler.h"
+#include "RooStats/ProfileLikelihoodTestStat.h"
+#include "RooStats/TestStatistic.h"
+#include "RooHypatia2.h"
 #include "RooMinimizer.h"
 #include "RooCategory.h"
 #include "RooSimultaneous.h"
@@ -44,9 +49,12 @@
 #include <TRolke.h>
 #include "TROOT.h"
 #include "TIterator.h"
+#include "TLatex.h"
 
-void Fitscript_simul(Int_t finalBDTConf_nonZero = 1, Int_t finalBDTConf_Zero = 1,
-                     Int_t isoConf = 2, const char *isoVersion = "v0",
-                     Float_t bdtCut_nonZero = 0.535, Float_t bdtCut_Zero = 0.415);
+void Fitscript_simul(const char *option = "best", Int_t myLow = 4700, Int_t myHigh = 6000);
+
+// void Fitscript_simul(Int_t finalBDTConf_nonZero = 1, Int_t finalBDTConf_Zero = 1,
+//                      Int_t isoConf = 2, const char *isoVersion = "v0",
+//                      Float_t bdtCut_nonZero = 0.535, Float_t bdtCut_Zero = 0.415);
 
 #endif

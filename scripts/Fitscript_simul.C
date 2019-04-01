@@ -8,8 +8,16 @@ using namespace RooStats;
 // std::vector <Float_t> Fitscript_simul(Int_t bdtConf_nonZero, Int_t bdtConf_Zero,
 //                                       Int_t isoConf[i], const char *isoVersion,
 //                                       Float_t bdtCut_nonZero, Float_t bdtCut_Zero[i])
-void Fitscript_simul(const char *option = "best")
+void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 {
+
+	gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/UpperLimit/Fit_HypatiaSig_ExpBkg_%d_%d.txt",
+	                             myLow,myHigh),"w");
+
+	gSystem->Exec("date");
+
+	gSystem->Load("RooHypatia2_cpp.so");
+
 	Float_t bdtCut_nonZero[2] = {0.0,0.0};
 
 	Float_t bdtCut_Zero[2] = {0.0,0.0};
@@ -19,6 +27,8 @@ void Fitscript_simul(const char *option = "best")
 	Int_t bdtConf_Zero[2] = {0,0};
 
 	Int_t isoConf[2] = {0,0};
+
+	Bool_t calcUL = true;
 
 	const char *isoVersion[2] = {"",""};
 
@@ -45,8 +55,10 @@ void Fitscript_simul(const char *option = "best")
 
 	std::vector <Float_t> yields;
 
-	Double_t xibnorm_LL[2]     = {0.0,0.0};
-	Double_t xibnorm_LL_err[2] = {0.0,0.0};
+	Double_t xibnorm_LL[2]         = {0.0,0.0};
+	Double_t xibnorm_LL_staterr[2] = {0.0,0.0};
+	Double_t xibnorm_LL_systerr[2] = {0.0,0.0};
+	Double_t xibnorm_LL_err[2]     = {0.0,0.0};
 
 	Double_t eff_Lambda_rec[2]     = {0.0,0.0};
 	Double_t eff_Sigma_rec[2]     = {0.0,0.0};
@@ -74,7 +86,7 @@ void Fitscript_simul(const char *option = "best")
 	Int_t sigmaflag   = 1;
 	Int_t Lst1405_rwtype = 2;
 
-	Int_t low      = 4700, high = 7000; //Define range in which fit is performed
+	Int_t low      = myLow, high = myHigh; //Define range in which fit is performed
 	Int_t binwidth = 4; //Final fit is a binned fit with this binning
 	Int_t nbins    = (Int_t)(high-low)/binwidth;
 
@@ -89,7 +101,7 @@ void Fitscript_simul(const char *option = "best")
 	w.var("bMass")->setBins((Int_t)(high-low)/binwidth);
 	//***********************E******************************************
 
-	RooMsgService::instance().setGlobalKillBelow(RooFit::WARNING);
+	RooMsgService::instance().setGlobalKillBelow(RooFit::ERROR);
 
 	//*****Run script to get Xib normalization*********
 	for(Int_t run = 1; run<=2; run++) {
@@ -102,11 +114,16 @@ void Fitscript_simul(const char *option = "best")
 		ifstream infile(Form("../logs/mc/JpsiXi/run%d/xibNorm_log.txt",run));
 
 		infile>>xibnorm_LL[i];
-		infile>>xibnorm_LL_err[i];
+		infile>>xibnorm_LL_staterr[i];
+
+		xibnorm_LL_systerr[i] = xibnorm_LL[i]*0.0; //Assigning 2% systematic error for now
+
+		xibnorm_LL_err[i] = sqrt(pow(xibnorm_LL_staterr[i],2) + pow(xibnorm_LL_systerr[i],2));//Combining stat and syst in quadrature
+
 
 		xibnorm_LL[i] = xibnorm_LL[i]*2; //ACCOUNT FOR XIB0
-
 		xibnorm_LL_err[i] = xibnorm_LL_err[i] * 1.414;//ACCOUNT FOR XIB0
+
 		cout<<"The LL Xib normalization is "<<xibnorm_LL[i]<<" +/- "
 		    <<xibnorm_LL_err[i]<<endl;
 	}
@@ -420,21 +437,47 @@ void Fitscript_simul(const char *option = "best")
 
 	//*********Double Crystal Ball signal shape for Lambda_b0************
 
-	w.factory("RooCBShape::Lb1_Run1(bMass,mean_Run1[5619.6,5619,5621],"
-	          "sigma_Run1[10.,0.,20.], alpha1_Run1[1.028, 0.8,1.3], 10.0)" );
-	w.factory("RooCBShape::Lb2_Run1(bMass,mean_Run1,sigma_Run1,alpha2_Run1[-1.097,-1.4,-0.7], 10.0)");
-	w.factory("SUM::Lb_Run1(0.5*Lb1_Run1 , 0.5*Lb2_Run1)");
-
-	w.factory("RooCBShape::Lb1_Run2(bMass,mean_Run2[5619.6,5619,5621],"
-	          "sigma_Run2[10.,0.,20.], alpha1_Run2[1.028, 0.8,1.3], 10.0)" );
-	w.factory("RooCBShape::Lb2_Run2(bMass,mean_Run2,sigma_Run2,alpha2_Run2[-1.097,-1.4,-0.7], 10.0)");
-	w.factory("SUM::Lb_Run2(0.5*Lb1_Run2 , 0.5*Lb2_Run2)");
+	// w.factory("RooCBShape::Lb1_Run1(bMass,mean_Run1[5619.6,5619,5621],"
+	//           "sigma_Run1[10.,0.,20.], alpha1_Run1[1.028, 0.8,1.3], 10.0)" );
+	// w.factory("RooCBShape::Lb2_Run1(bMass,mean_Run1,sigma_Run1,alpha2_Run1[-1.097,-1.4,-0.7], 10.0)");
+	// w.factory("SUM::Lb_Run1(0.5*Lb1_Run1 , 0.5*Lb2_Run1)");
+	//
+	// w.factory("RooCBShape::Lb1_Run2(bMass,mean_Run2[5619.6,5619,5621],"
+	//           "sigma_Run2[10.,0.,20.], alpha1_Run2[1.028, 0.8,1.3], 10.0)" );
+	// w.factory("RooCBShape::Lb2_Run2(bMass,mean_Run2,sigma_Run2,alpha2_Run2[-1.097,-1.4,-0.7], 10.0)");
+	// w.factory("SUM::Lb_Run2(0.5*Lb1_Run2 , 0.5*Lb2_Run2)");
 	//*******************************************************************
 
-	//*********Exponential shape for continuum backgruond****************
-	w.factory("Exponential::Bkg_Run1(bMass,tau_Run1[-0.0007,-0.01,-0.0000001])");
+	//*********Hypatia signal shape for Lambda_b0************************
+	// w.factory("RooHypatia2::Lb_Run1(bMass,lambda_Run1[-2.0,-3.0,0.0],0,0,"
+	//           "sigma_Run1[10.,0.,20.], mean_Run1[5619.6,5619,5621], a1_Run1[1.7,1.0,3.0],"
+	//           "2 ,a2_Run1[1.8,1.0,3.0], 2)");
+	//
+	// w.factory("RooHypatia2::Lb_Run2(bMass,lambda_Run2[-2.0,-3.0,0.0],0,0,"
+	//           "sigma_Run2[10.,0.,20.], mean_Run2[5619.6,5619,5621], a1_Run2[1.5,1.0,3.0],"
+	//           "2 ,a2_Run2[1.5,1.0,3.0], 2)");
 
-	w.factory("Exponential::Bkg_Run2(bMass,tau_Run2[-0.0007,-0.01,-0.0000001])");
+	w.factory("RooHypatia2::Lb_Run1(bMass,lambda_Run1[-2.0,-3.0,0.0],0,0,"
+	          "sigma_Run1[10.,0.,20.], mean_Run1[5619.6,5619,5621], a1_Run1[1.7,1.0,3.0],"
+	          "2 ,a2_Run1[1.8,1.0,3.0], 2)");
+
+	w.factory("RooHypatia2::Lb_Run2(bMass,lambda_Run2[-2.0,-5.0,0.0],0,0,"
+	          "sigma_Run2[10.,0.,20.], mean_Run2[5619.6,5619,5621], a1_Run2[1.5,1.0,5.0],"
+	          "2 ,a2_Run2[1.5,1.0,3.0], 2)");
+
+	//*********Exponential shape for continuum backgruond****************
+	// w.factory("Exponential::Bkg_Run1(bMass,tau_Run1[-0.0007,-0.01,-0.0000001])");
+	// w.factory("Exponential::Bkg_Run2(bMass,tau_Run2[-0.0007,-0.01,-0.0000001])");
+
+	w.factory("Exponential::Bkg_Run1(bMass,tau_Run1[-0.001,-0.01,-0.0000001])");
+	w.factory("Exponential::Bkg_Run2(bMass,tau_Run2[-0.001,-0.01,-0.0000001])");
+
+	// w.factory("Chebychev::Bkg_Run1(bMass, {a0_Run1[-1.44,-1.6,-1.0], a1_Run1[0.59,0.0,1.0], a2_Run1[-0.13,-0.5,0.0]})");
+	// w.factory("Chebychev::Bkg_Run2(bMass, {a0_Run2[-1.46,-1.6,-1.0], a1_Run2[0.64,0.0,1.0], a2_Run2[-0.19,-0.5,0.0]})");
+
+	// w.factory("Chebychev::Bkg_Run1(bMass, {c0_Run1[-0.5,-2.0,2.0], c1_Run1[0.5,-1.0,1.0]})");
+	// w.factory("Chebychev::Bkg_Run2(bMass, {c0_Run2[-0.5,-2.0,2.0], c1_Run2[-0.5,-1.0,1.0]})");
+
 	//*******************************************************************
 
 	//*********Gaussian Lump for misc. Lambda*'s ************************
@@ -498,10 +541,10 @@ void Fitscript_simul(const char *option = "best")
 	//*******************************************************************
 
 	//************************MAKE COMBINED MODEL************************
-	// w.factory("logR[-6.0,-10.0,0.0]"); //logR is the parameter of interest  This is shared b/w Run1 and Run2
-	// w.var("logR")->setError(0.1);
+	// w.factory("R[-6.0,-10.0,0.0]"); //R is the parameter of interest  This is shared b/w Run1 and Run2
+	// w.var("R")->setError(0.1);
 
-	w.factory("logR[200,0,10000]"); //R*10^5 is the parameter of interest  This is shared b/w Run1 and Run2
+	w.factory("R[200,0,10000]"); //R*10^5 is the parameter of interest  This is shared b/w Run1 and Run2
 	// w.var("R")->setError(0.1);
 
 	// w.factory(Form("sigmaEff1[%f,0.00001,0.005]",eff_Sigma[0]));
@@ -555,16 +598,19 @@ void Fitscript_simul(const char *option = "best")
 	w.var("gnXib1")->setConstant();
 	w.var("gnXib2")->setConstant();
 
-	// w.factory("expr::nSigma1('pow(10,logR)*nLb_Run1*sigmaEff1/(lambdaEff1)',logR,nLb_Run1,sigmaEff1,lambdaEff1)");
-	// w.factory("expr::nSigma2('pow(10,logR)*nLb_Run2*sigmaEff2/(lambdaEff2)',logR,nLb_Run2,sigmaEff2,lambdaEff2)");
+	// w.factory("expr::nSigma1('pow(10,R)*nLb_Run1*sigmaEff1/(lambdaEff1)',R,nLb_Run1,sigmaEff1,lambdaEff1)");
+	// w.factory("expr::nSigma2('pow(10,R)*nLb_Run2*sigmaEff2/(lambdaEff2)',R,nLb_Run2,sigmaEff2,lambdaEff2)");
 
-	w.factory("expr::nSigma1('pow(10,-5)*logR*nLb_Run1*sigmaEff1/(lambdaEff1)',logR,nLb_Run1,sigmaEff1,lambdaEff1)");
-	w.factory("expr::nSigma2('pow(10,-5)*logR*nLb_Run2*sigmaEff2/(lambdaEff2)',logR,nLb_Run2,sigmaEff2,lambdaEff2)");
+	w.factory("expr::nSigma1('pow(10,-5)*R*nLb_Run1*sigmaEff1/(lambdaEff1)',R,nLb_Run1,sigmaEff1,lambdaEff1)");
+	w.factory("expr::nSigma2('pow(10,-5)*R*nLb_Run2*sigmaEff2/(lambdaEff2)',R,nLb_Run2,sigmaEff2,lambdaEff2)");
 
-	// w.factory("expr::nSigma('pow(10,logR)*nLb',logR,nLb)");//TAKING EFFICIENCIES OUT OF PICTURE FOR NOW. TESTING.
+	// w.factory("expr::nSigma('pow(10,R)*nLb',R,nLb)");//TAKING EFFICIENCIES OUT OF PICTURE FOR NOW. TESTING.
 
-	w.factory(Form("SUM:model1(nSigma1*SIG1 , nLb_Run1*Lb_Run1 , nXib1*XIB1 , n1405_Run1[1500,1,5000]*LST1405 , n1520_Run1[3000,1,5000]*LST1520 , nMiscLst_Run1[2500,1,5000]*lstLump_Run1 , nBkg_Run1[2000,1,%d]*Bkg_Run1)",nentries[0]));
-	w.factory(Form("SUM:model2(nSigma2*SIG2 , nLb_Run2*Lb_Run2 , nXib2*XIB2 , n1405_Run2[1500,1,5000]*LST1405 , n1520_Run2[3000,1,5000]*LST1520 , nMiscLst_Run2[2500,1,5000]*lstLump_Run2 , nBkg_Run2[2000,1,%d]*Bkg_Run2)",nentries[1]));
+	// w.factory(Form("SUM:model1(nSigma1*SIG1 , nLb_Run1*Lb_Run1 , nXib1*XIB1 , n1405_Run1[1500,1,5000]*LST1405 , n1520_Run1[3000,1,5000]*LST1520 , nMiscLst_Run1[2500,1,5000]*lstLump_Run1 , nBkg_Run1[2000,1,%d]*Bkg_Run1)",nentries[0]));
+	// w.factory(Form("SUM:model2(nSigma2*SIG2 , nLb_Run2*Lb_Run2 , nXib2*XIB2 , n1405_Run2[1500,1,5000]*LST1405 , n1520_Run2[3000,1,5000]*LST1520 , nMiscLst_Run2[2500,1,5000]*lstLump_Run2 , nBkg_Run2[2000,1,%d]*Bkg_Run2)",nentries[1]));
+
+	w.factory(Form("SUM:model1(nSigma1*SIG1 , nLb_Run1*Lb_Run1 , nXib1*XIB1 , n1405_Run1[1500,50,10000]*LST1405 , n1520_Run1[3000,1,10000]*LST1520 , nMiscLst_Run1[2500,1,5000]*lstLump_Run1 , nBkg_Run1[2000,1,%d]*Bkg_Run1)",nentries[0]));
+	w.factory(Form("SUM:model2(nSigma2*SIG2 , nLb_Run2*Lb_Run2 , nXib2*XIB2 , n1405_Run2[1500,50,10000]*LST1405 , n1520_Run2[3000,1,10000]*LST1520 , nMiscLst_Run2[2500,1,5000]*lstLump_Run2 , nBkg_Run2[2000,1,%d]*Bkg_Run2)",nentries[1]));
 
 	if(!lst1520flag)
 	{
@@ -580,10 +626,20 @@ void Fitscript_simul(const char *option = "best")
 	RooAbsPdf* model_const1 = w.pdf("model_const1"); // get the model
 	RooAbsPdf* model_const2 = w.pdf("model_const2"); // get the model
 
-	w.defineSet("poi","logR"); //parameters of interest
+	w.defineSet("poi","R"); //parameters of interest
 
-	w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,alpha1_Run1,alpha2_Run1,nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1");// define set of nuisance parameters
-	w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,alpha1_Run2,alpha2_Run2,nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,n1520_Run2");
+	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,lambda_Run1,a1_Run1,a2_Run1,nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1");// define set of nuisance parameters
+	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,lambda_Run2,a1_Run2,a2_Run2,nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,sigmaEff1,lambdaEff1,nXib1,n1405_Run2,n1520_Run2");
+
+	w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,lambda_Run1,a1_Run1,a2_Run1,nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1");// define set of nuisance parameters
+	w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,lambda_Run2,a1_Run2,a2_Run2,nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,sigmaEff1,lambdaEff1,nXib1,n1405_Run2,n1520_Run2");
+
+	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,alpha1_Run1,alpha2_Run1,nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1");// define set of nuisance parameters
+	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,alpha1_Run2,alpha2_Run2,nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,n1520_Run2");
+
+	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,alpha1_Run1,alpha2_Run1,nBkg_Run1,a0_Run1,a1_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1");// define set of nuisance parameters
+	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,alpha1_Run2,alpha2_Run2,nBkg_Run2,a0_Run2,a1_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,n1520_Run2");
+
 	w.defineSet("globObs","gsigmaEff1,glambdaEff1,gnXib1,gsigmaEff2,glambdaEff2,gnXib2");//define set of global observables
 	//*******************************************************************
 
@@ -614,7 +670,7 @@ void Fitscript_simul(const char *option = "best")
 	// RooAbsReal* nll = w.pdf("model_const")->createNLL(ds);
 	//
 	// new TCanvas();
-	// RooPlot* frame = w.var("logR")->frame();
+	// RooPlot* frame = w.var("R")->frame();
 	//
 	// nll->plotOn(frame,ShiftToZero()); //the ShiftToZero option puts the minimum at 0 on the y-axis
 	// frame->Draw();
@@ -635,18 +691,18 @@ void Fitscript_simul(const char *option = "best")
 	// RooFitResult* res = mini.save("myResult","My Result");
 	// cout<<"STATUS = "<<res->status()<<endl; //should be 0 for success!
 	//
-	// cout<<"MIN "<<w.var("logR")->getVal()<<" ERR LO"<<w.var("logR")->getErrorLo()<<" ERR HI"<<w.var("logR")->getErrorHi()<<endl;
+	// cout<<"MIN "<<w.var("R")->getVal()<<" ERR LO"<<w.var("R")->getErrorLo()<<" ERR HI"<<w.var("R")->getErrorHi()<<endl;
 	//
 	// RooFormulaVar p_mu("p_mu","p_{#mu} using asymptotic formulae","TMath::Prob(2*@0,1.)",RooArgList(*pll));
 	//
 	// TCanvas *c2 = new TCanvas();
-	// RooPlot* frame1 = w.var("logR")->frame();
+	// RooPlot* frame1 = w.var("R")->frame();
 	// p_mu.plotOn(frame1,LineColor(kGreen));
 	// // frame1->Draw();
 	//
 	// c2->cd();
 	//
-	// Double_t limit = p_mu.findRoot(*(w.var("logR")),-5.0,0.0,0.05);
+	// Double_t limit = p_mu.findRoot(*(w.var("R")),-5.0,0.0,0.05);
 	// cout<<"UL ="<<limit<<endl;
 	//
 	// RooOneSidedProfileLL opll("opll","opll",*pll); //pll is the pointer to your profilell function made earlier
@@ -661,7 +717,7 @@ void Fitscript_simul(const char *option = "best")
 	// TLine l; l.SetLineStyle(2);
 	// l.DrawLine(-10,0.05,0,0.05);
 	//
-	// Double_t limit1 = p_mu_q.findRoot(*(w.var("logR")),-5.0,0.0,0.05);
+	// Double_t limit1 = p_mu_q.findRoot(*(w.var("R")),-5.0,0.0,0.05);
 	// cout<<"One sided UL ="<<limit1<<endl;
 	//
 	// yields.push_back(0.0);
@@ -674,12 +730,15 @@ void Fitscript_simul(const char *option = "best")
 	//*********************PLOTTING STUFF*********************************************
 	TCanvas* c_run1 = new TCanvas("Run1","Run1", 1200, 800);
 
-	RooPlot *frame_run1 = new RooPlot(*(w.var("bMass")),low,5800,100);
-	combData.plotOn(frame_run1,Name("data_Run1"),Cut("sample==sample::run1"));
+	RooPlot *frame_run1 = new RooPlot(*(w.var("bMass")),low,high,100);
+	frame_run1->SetTitle("Run1 Fit");
+	// frame_run1->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
+
+	combData.plotOn(frame_run1,Name("data_Run1"),Cut("sample==sample::run1"),DataError(RooAbsData::Poisson));
 	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,combData),Name("fit_Run1"));
 	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,combData),Components(*(w.pdf("Lb_Run1"))),Name("lb_Run1"),LineColor(kMagenta+2));
-	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,combData),Components(*(w.pdf("Lb1_Run1"))),LineStyle(kDotted),LineColor(kMagenta));
-	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,combData),Components(*(w.pdf("Lb2_Run1"))),LineStyle(kDotted),LineColor(kMagenta));
+	// simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,combData),Components(*(w.pdf("Lb1_Run1"))),LineStyle(kDotted),LineColor(kMagenta));
+	// simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,combData),Components(*(w.pdf("Lb2_Run1"))),LineStyle(kDotted),LineColor(kMagenta));
 	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,combData),Components(*(w.pdf("Bkg_Run1"))),LineColor(kRed),Name("bkg_Run1"));
 	//  if(xibflag!=0)
 	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,combData),Components(*(w.pdf("XIB1"))),LineColor(kGreen),Name("xib_Run1"));
@@ -692,70 +751,52 @@ void Fitscript_simul(const char *option = "best")
 	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,combData),Components(*(w.pdf("SIG1"))),LineColor(kBlack),Name("sig_Run1"));
 	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,combData),Components(*(w.pdf("lstLump_Run1"))),LineColor(kRed+2),LineStyle(kDashed),Name("misclst_Run1"));
 
+	frame_run1->GetYaxis()->SetRangeUser(0,60);
+
 	// Double_t chiSquare1 = frame_run1->chiSquare("fit_run1","data_Run1");
 	// cout<<"chi square1/dof = "<<chiSquare1<<endl;
-	// RooArgSet *floatpar_run1 = simPdf.getParameters(ds[0]);
-	// floatpar_run1->Print();
-	// int floatpars_run1 = (floatpar_run1->selectByAttrib("Constant",kFALSE))->getSize();
-	// cout<<"float pars = "<<floatpars_run1<<endl;
-	// Double_t chi2_run1 = frame_run1->chiSquare("fit","data",floatpars_run1);
-	// cout<<"chi square2/dof = "<<chi2_run1<<endl;
+	RooArgSet *allpar_run1 = simPdf.getParameters(*(ds[0]));
+	RooArgSet *floatpar_run1 = (RooArgSet*)allpar_run1->selectByAttrib("Constant",kFALSE);
+	floatpar_run1->Print();
+	int floatpars_run1 = (floatpar_run1->selectByAttrib("Constant",kFALSE))->getSize() - 1;//-1 because sample also gets included in this list
+	cout<<"run1 float pars = "<<floatpars_run1<<endl;
+	Double_t chi2_run1 = frame_run1->chiSquare("fit_Run1","data_Run1",floatpars_run1);
+	cout<<"chi square2/dof = "<<chi2_run1<<endl;
 
-	// Int_t fit_ndof = nbins - floatpars;
-	// cout<<"chi square2 = "<<chi2*fit_ndof<<endl;
+	Int_t fit_ndof_run1 = nbins - floatpars_run1;
+	cout<<"chi square2 = "<<chi2_run1*fit_ndof_run1<<endl;
 
-	// ///////////
-	// TPad *pad1 = new TPad("pad1","pad1",0.0,0.3,1.0,1.0);
-	// TPad *pad2 = new TPad("pad2","pad2",0.0,0.0,1.0,0.3);
-	// //  pad1->SetBottomMargin(0);
-	// pad2->SetTopMargin(0);
-	// pad2->SetBottomMargin(0.5);
-	// pad2->SetBorderMode(0);
-	// pad1->SetBorderMode(0);
-	// c->SetBorderMode(0);
-	// pad2->Draw();
-	// pad1->Draw();
-	// pad1->cd();
-	//
-	// gPad->SetTopMargin(0.06);
-	// pad1->Update();
+	///////////
+	TPad *pad1 = new TPad("pad1","pad1",0.0,0.2,1.0,1.0);
+	TPad *pad2 = new TPad("pad2","pad2",0.0,0.0,1.0,0.2);
+
+	pad1->SetGridx();
+	pad1->SetGridy();
+	pad2->SetGridx();
+	pad2->SetGridy();
+
+	pad1->SetBottomMargin(0.04);
+	pad2->SetTopMargin(0);
+	pad2->SetBottomMargin(0.3);
+	pad2->SetBorderMode(0);
+	pad1->SetBorderMode(0);
+	c_run1->SetBorderMode(0);
+	pad2->Draw();
+	pad1->Draw();
+	pad1->cd();
+	gPad->SetTopMargin(0.06);
+	pad1->Update();
 
 	frame_run1->Draw();
 
-	//  TPaveText *pt = (TPaveText*)pad1->GetListOfPrimitives()->FindObject("model_paramBox");
-
-	// pt->AddText(Form("#chi^{2}/dof = %f",chi2));
+	TLatex l_run1;
+	l_run1.SetTextSize(0.025);
+	l_run1.DrawLatexNDC(0.8,0.6,Form("#chi^{2}/ndf = %f",chi2_run1));
 
 	c_run1->Modified();
 
-	// Pull distribution
-	//  RooPlot *frame_run1x2 = Lb_DTF_M_JpsiLConstr.frame_run1();
-	// RooPlot *framex2 = new RooPlot(*(w.var("bMass")), low,5800,100);
-	// RooHist* hpull = frame->pullHist("data","fit");
-	// framex2->addPlotable(hpull,"P");
-	// hpull->SetLineColor(kBlack);
-	// hpull->SetMarkerColor(kBlack);
-	// framex2->SetTitle(0);
-	// framex2->GetYaxis()->SetTitle("Pull");
-	// framex2->GetYaxis()->SetTitleSize(0.15);
-	// framex2->GetYaxis()->SetLabelSize(0.15);
-	// framex2->GetXaxis()->SetTitleSize(0.2);
-	// framex2->GetXaxis()->SetLabelSize(0.15);
-	// framex2->GetYaxis()->CenterTitle();
-	// framex2->GetYaxis()->SetTitleOffset(0.25);
-	// framex2->GetXaxis()->SetTitleOffset(1.1);
-	// framex2->GetYaxis()->SetNdivisions(505);
-	// framex2->GetYaxis()->SetRangeUser(-8.8,8.8);
-	// pad2->cd();
-	// framex2->Draw();
-
-	// c_run1->cd();
-	// pad1->cd();
-
-	// cout<<"Pull Mean Y = "<<hpull->GetMean(2)<<endl;
-	// cout<<"Pull RMS Y = "<<hpull->GetRMS(2)<<endl;
-
-	auto legend_run1 = new TLegend(0.5,0.7,0.9,0.9);
+	auto legend_run1 = new TLegend(0.1,0.7,0.3,0.9);
+	legend_run1->SetTextSize(0.025);
 	legend_run1->AddEntry("data_Run1","Data","lp");
 	legend_run1->AddEntry("fit_Run1","Total Fit","l");
 	legend_run1->AddEntry("lb_Run1","J/#psi #Lambda shape","l");
@@ -777,14 +818,45 @@ void Fitscript_simul(const char *option = "best")
 
 	c_run1->Update();
 
-	TCanvas* c_run2 = new TCanvas("run2","run2", 1200, 800);
+	// Pull distribution
+	RooPlot *frame_run1x2 = (w.var("bMass"))->frame();
+	// RooPlot *framex2 = new RooPlot(*(w.var("bMass")), low,5800,100);
+	RooHist* hpull_run1 = frame_run1->pullHist("data_Run1","fit_Run1");
+	frame_run1x2->addPlotable(hpull_run1,"P");
+	hpull_run1->SetLineColor(kBlack);
+	hpull_run1->SetMarkerColor(kBlack);
+	frame_run1x2->SetTitle(0);
+	frame_run1x2->GetYaxis()->SetTitle("Pull");
+	frame_run1x2->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
+	frame_run1x2->GetYaxis()->SetTitleSize(0.15);
+	frame_run1x2->GetYaxis()->SetLabelSize(0.15);
+	frame_run1x2->GetXaxis()->SetTitleSize(0.15);
+	frame_run1x2->GetXaxis()->SetLabelSize(0.15);
+	frame_run1x2->GetYaxis()->CenterTitle();
+	frame_run1x2->GetYaxis()->SetTitleOffset(0.25);
+	frame_run1x2->GetXaxis()->SetTitleOffset(0.75);
+	frame_run1x2->GetYaxis()->SetNdivisions(505);
+	frame_run1x2->GetYaxis()->SetRangeUser(-5.0,5.0);
+	pad2->cd();
+	frame_run1x2->Draw();
 
-	RooPlot *frame_run2 = new RooPlot(*(w.var("bMass")),low,5800,100);
-	combData.plotOn(frame_run2,Name("data_run2"),Cut("sample==sample::run2"));
+	c_run1->cd();
+	// pad1->cd();
+
+	cout<<"Run1 Pull Mean Y = "<<hpull_run1->GetMean(2)<<endl;
+	cout<<"Run1 Pull RMS Y = "<<hpull_run1->GetRMS(2)<<endl;
+
+	TCanvas* c_run2 = new TCanvas("Run2","Run2", 1200, 800);
+
+	RooPlot *frame_run2 = new RooPlot(*(w.var("bMass")),low,high,100);
+
+	frame_run2->SetTitle("Run2 Fit");
+	frame_run2->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
+	combData.plotOn(frame_run2,Name("data_Run2"),Cut("sample==sample::run2"),DataError(RooAbsData::Poisson));
 	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,combData),Name("fit_Run2"));
 	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,combData),Components(*(w.pdf("Lb_Run2"))),Name("lb_Run2"),LineColor(kMagenta+2));
-	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,combData),Components(*(w.pdf("Lb1_Run2"))),LineStyle(kDotted),LineColor(kMagenta));
-	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,combData),Components(*(w.pdf("Lb2_Run2"))),LineStyle(kDotted),LineColor(kMagenta));
+	// simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,combData),Components(*(w.pdf("Lb1_Run2"))),LineStyle(kDotted),LineColor(kMagenta));
+	// simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,combData),Components(*(w.pdf("Lb2_Run2"))),LineStyle(kDotted),LineColor(kMagenta));
 	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,combData),Components(*(w.pdf("Bkg_Run2"))),LineColor(kRed),Name("bkg_Run2"));
 	//  if(xibflag!=0)
 	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,combData),Components(*(w.pdf("XIB2"))),LineColor(kGreen),Name("xib_Run2"));
@@ -797,19 +869,46 @@ void Fitscript_simul(const char *option = "best")
 	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,combData),Components(*(w.pdf("SIG2"))),LineColor(kBlack),Name("sig_Run2"));
 	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,combData),Components(*(w.pdf("lstLump_Run2"))),LineColor(kRed+2),LineStyle(kDashed),Name("misclst_Run2"));
 
+	frame_run2->GetYaxis()->SetRangeUser(0,160);
+
 	// Double_t chiSquare1 = frame_run2->chiSquare("fit_run2","data_run2");
 	// cout<<"chi square1/dof = "<<chiSquare1<<endl;
-	// RooArgSet *floatpar_run2 = simPdf.getParameters(ds[0]);
-	// floatpar_run2->Print();
-	// int floatpars_run2 = (floatpar_run2->selectByAttrib("Constant",kFALSE))->getSize();
-	// cout<<"float pars = "<<floatpars_run2<<endl;
-	// Double_t chi2_run2 = frame_run2->chiSquare("fit","data",floatpars_run2);
-	// cout<<"chi square2/dof = "<<chi2_run2<<endl;
+	RooArgSet *floatpar_run2 = simPdf.getParameters(*(ds[1]));
+	floatpar_run2->Print();
+	int floatpars_run2 = (floatpar_run2->selectByAttrib("Constant",kFALSE))->getSize() -1;//-1 because sample also gets included in this list
+	cout<<"run2 float pars = "<<floatpars_run2<<endl;
+	Double_t chi2_run2 = frame_run2->chiSquare("fit_Run2","data_Run2",floatpars_run2);
+	cout<<"chi square2/dof = "<<chi2_run2<<endl;
+
+	Int_t fit_ndof_run2 = nbins - floatpars_run2;
+	cout<<"chi square2 = "<<chi2_run2*fit_ndof_run2<<endl;
+
+	///////////
+	TPad *pad3 = new TPad("pad3","pad3",0.0,0.2,1.0,1.0);
+	TPad *pad4 = new TPad("pad4","pad4",0.0,0.0,1.0,0.2);
+
+	pad3->SetGridx();
+	pad3->SetGridy();
+	pad4->SetGridx();
+	pad4->SetGridy();
+
+	pad3->SetBottomMargin(0.04);
+	pad4->SetTopMargin(0);
+	pad4->SetBottomMargin(0.3);
+	pad4->SetBorderMode(0);
+	pad3->SetBorderMode(0);
+	c_run1->SetBorderMode(0);
+	pad4->Draw();
+	pad3->Draw();
+	pad3->cd();
+	gPad->SetTopMargin(0.06);
+	pad3->Update();
 
 	frame_run2->Draw();
 	// c_run2->cd();
 
-	auto legend_run2 = new TLegend(0.5,0.7,0.9,0.9);
+	auto legend_run2 = new TLegend(0.1,0.7,0.3,0.9);
+	legend_run2->SetTextSize(0.025);
 	legend_run2->AddEntry("data_Run2","Data","lp");
 	legend_run2->AddEntry("fit_Run2","Total Fit","l");
 	legend_run2->AddEntry("lb_Run2","J/#psi #Lambda shape","l");
@@ -829,111 +928,171 @@ void Fitscript_simul(const char *option = "best")
 	legend_run2->AddEntry("bkg_Run2","Comb. Bkg. shape","l");
 	legend_run2->Draw("same");
 
+	TLatex l_run2;
+	l_run2.SetTextSize(0.025);
+	l_run2.DrawLatexNDC(0.8,0.6,Form("#chi^{2}/ndf = %f",chi2_run2));
+
 	c_run2->Update();
 
-	//*************ROOSTATS MODEL CONFIG*********************************
+	// Pull distribution
+	RooPlot *frame_run2x2 = (w.var("bMass"))->frame();
+	// RooPlot *framex2 = new RooPlot(*(w.var("bMass")), low,5800,100);
+	RooHist* hpull_run2 = frame_run2->pullHist("data_Run2","fit_Run2");
+	frame_run2x2->addPlotable(hpull_run2,"P");
+	hpull_run2->SetLineColor(kBlack);
+	hpull_run2->SetMarkerColor(kBlack);
+	frame_run2x2->SetTitle(0);
+	frame_run2x2->GetYaxis()->SetTitle("Pull");
 
-	cout<<"Starting Model Config"<<endl;
-	RooStats::ModelConfig mc("ModelConfig",&w);
-	mc.SetPdf(*(w.pdf("simPdf")));
-	mc.SetParametersOfInterest(*w.set("poi"));
-	mc.SetObservables(*w.set("obs"));
-	mc.SetGlobalObservables(*w.set("globObs"));
-	mc.SetNuisanceParameters(*w.set("nuisParams"));
+	frame_run2x2->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
+	frame_run2x2->GetYaxis()->SetTitleSize(0.15);
+	frame_run2x2->GetYaxis()->SetLabelSize(0.15);
+	frame_run2x2->GetXaxis()->SetTitleSize(0.15);
+	frame_run2x2->GetXaxis()->SetLabelSize(0.15);
+	frame_run2x2->GetYaxis()->CenterTitle();
+	frame_run2x2->GetYaxis()->SetTitleOffset(0.25);
+	frame_run2x2->GetXaxis()->SetTitleOffset(0.75);
+	frame_run2x2->GetYaxis()->SetNdivisions(505);
+	frame_run2x2->GetYaxis()->SetRangeUser(-5.0,5.0);
+	pad4->cd();
+	frame_run2x2->Draw();
 
-	// import model in the workspace
-	w.import(mc);
-	//*******************************************************************
+	c_run2->cd();
 
-	//***************ASIMOV DATASET*************************************
-	cout<<"Starting Asimov Dataset"<<endl;
-	RooDataSet *asimovData = (RooDataSet*)RooStats::AsymptoticCalculator::GenerateAsimovData(*(mc.GetPdf()),*(mc.GetObservables()));
-	RooPlot *frame_asim = new RooPlot(*(w.var("bMass")), low,5800,100);
+	Double_t chi2_global = chi2_run1*fit_ndof_run1 + chi2_run2*fit_ndof_run2;
+	Int_t ndof_global = fit_ndof_run1 + fit_ndof_run2;
 
-	TCanvas *asim = new TCanvas();
-	asimovData->plotOn(frame_asim);
-	frame_asim->Draw();
+	Double_t chi2_ndof_global = chi2_global/ndof_global;
 
-	mc.SetSnapshot(*(w.var("logR")));
+	cout<<"****************************"<<endl;
+	cout<<"Global Fit chi2/dof = "<<chi2_ndof_global<<endl;
+	cout<<"****************************"<<endl;
 
-	RooStats::ModelConfig *bkgOnlyModel = mc.Clone();
-	bkgOnlyModel->SetName("bkgOnlyModel");
-	Double_t oldval = w.var("logR")->getVal();
-	// w.var("logR")->setVal(-10);//What value should I set for the background only hypothesis? log of 0 is -inf
+	if(calcUL) {
+		//*************ROOSTATS MODEL CONFIG*********************************
 
-	w.var("logR")->setVal(0);//What value should I set for the background only hypothesis? log of 0 is -inf
-	bkgOnlyModel->SetSnapshot(*(w.var("logR")));
+		cout<<"Starting Model Config"<<endl;
+		RooStats::ModelConfig mc("ModelConfig",&w);
+		mc.SetPdf(*(w.pdf("simPdf")));
+		mc.SetParametersOfInterest(*w.set("poi"));
+		mc.SetObservables(*w.set("obs"));
+		mc.SetGlobalObservables(*w.set("globObs"));
+		mc.SetNuisanceParameters(*w.set("nuisParams"));
 
-	w.var("logR")->setVal(oldval);
+		// import model in the workspace
+		w.import(mc);
+		//*******************************************************************
 
-	w.import(*bkgOnlyModel);
-	// w.Write();
-	//*******************************************************************
+		//***************ASIMOV DATASET*************************************
+		cout<<"Starting Asimov Dataset"<<endl;
+		RooDataSet *asimovData = (RooDataSet*)RooStats::AsymptoticCalculator::GenerateAsimovData(*(mc.GetPdf()),*(mc.GetObservables()));
+		RooPlot *frame_asim = new RooPlot(*(w.var("bMass")), low,5800,100);
 
-	//**************Fit like Matt****************************************
+		TCanvas *asim = new TCanvas();
+		asimovData->plotOn(frame_asim);
+		frame_asim->Draw();
 
-	cout<<"Starting Fit like Matt"<<endl;
-	RooAbsReal* nll = w.pdf("simPdf")->createNLL(combData);
-	RooMinimizer min_nll(*nll);
-	min_nll.setErrorLevel(0.5);
-	min_nll.setStrategy(2);
+		mc.SetSnapshot(*(w.var("R")));
 
-	Double_t initnll = nll->getVal();
+		RooStats::ModelConfig *bkgOnlyModel = mc.Clone();
+		bkgOnlyModel->SetName("bkgOnlyModel");
+		Double_t oldval = w.var("R")->getVal();
+		// w.var("R")->setVal(-10);//What value should I set for the background only hypothesis? log of 0 is -inf
 
-	RooArgSet *pars = w.pdf("simPdf")->getParameters( combData );
-	// RooArgSet *initpars = (RooArgSet*)pars->snapshot();
-	// cout<<"YYYY"<<pars<<endl;
-	// print "YYYY", initpars
+		w.var("R")->setVal(0);//What value should I set for the background only hypothesis? log of 0 is -inf
+		bkgOnlyModel->SetSnapshot(*(w.var("R")));
 
-	// TIterator *it = initpars->createIterator();
-	// RooRealVar *par = (RooRealVar*)it->Next();
-	// cout<<"YYYY All par list"<<endl;
-	// while(par)
-	// {
-	//      cout<<"YYYY"<<par<<par->GetName()<<par->getVal()<<par->getError()<<endl;
-	//      par = (RooRealVar*)it->Next();
-	// }
-	min_nll.minimize("Minuit","Migrad");
+		w.var("R")->setVal(oldval);
 
-	min_nll.minos(*(w.var("logR")));
+		w.import(*bkgOnlyModel);
+		// w.Write();
+		//*******************************************************************
 
-	RooFitResult *res1 = min_nll.save();
+		//**************Fit like Matt****************************************
 
-	Double_t finalnll = nll->getVal();
+/*	cout<<"Starting Fit like Matt"<<endl;
+        RooAbsReal* nll = w.pdf("simPdf")->createNLL(combData);
+        RooMinimizer min_nll(*nll);
+        min_nll.setErrorLevel(0.5);
+        min_nll.setStrategy(2);
 
-	Double_t origval = w.var("logR")->getVal();
-	Double_t errhi   = w.var("logR")->getErrorHi();
-	Double_t errlo   = w.var("logR")->getErrorLo();
+        Double_t initnll = nll->getVal();
 
-	//**************Upper Limit Calculation****************************************
+        RooArgSet *pars = w.pdf("simPdf")->getParameters( combData );
+        // RooArgSet *initpars = (RooArgSet*)pars->snapshot();
+        // cout<<"YYYY"<<pars<<endl;
+        // print "YYYY", initpars
 
-	cout<<"Starting Upper Limit Calculation"<<endl;
-	RooStats::AsymptoticCalculator hc(combData, *bkgOnlyModel, mc, true);
-	hc.SetOneSided(true);
-	RooStats::HypoTestInverter calc(hc);
+        // TIterator *it = initpars->createIterator();
+        // RooRealVar *par = (RooRealVar*)it->Next();
+        // cout<<"YYYY All par list"<<endl;
+        // while(par)
+        // {
+        //      cout<<"YYYY"<<par<<par->GetName()<<par->getVal()<<par->getError()<<endl;
+        //      par = (RooRealVar*)it->Next();
+        // }
+        min_nll.minimize("Minuit","Migrad");
 
-	calc.SetConfidenceLevel(0.95);
-	// calc.SetFixedScan(100,-7, -1);
-	calc.SetFixedScan(100,0, 1000);
-	calc.UseCLs(true);
-	// calc.SetVerbose(true);
-	HypoTestInverterResult *r = calc.GetInterval();
+        min_nll.minos(*(w.var("R")));
 
-	cout<<"origval = "<<origval<<" error high = "
-	    <<errhi<<" error low = "<<errlo<<endl;
-	cout<<"UL = "<<r->UpperLimit()<<" +/- "<<r->UpperLimitEstimatedError()<<endl;
+        RooFitResult *res1 = min_nll.save();
 
-	new TCanvas();
-	RooStats::HypoTestInverterPlot plot("hti_plot", "hti_plot", r);
-	plot.Draw("CLb 2CL");
+        Double_t finalnll = nll->getVal();*/
 
+		Double_t origval = w.var("R")->getVal();
+		Double_t errhi   = w.var("R")->getErrorHi();
+		Double_t errlo   = w.var("R")->getErrorLo();
+
+		//**************Upper Limit Calculation*****************************
+
+		// cout<<"Starting Upper Limit Calculation"<<endl;
+
+		//**************AsymptoticCalculator********************************
+		// RooStats::AsymptoticCalculator hc(combData, *bkgOnlyModel, mc, true);
+		// hc.SetOneSided(true);
+		// RooStats::HypoTestInverter calc(hc);
+		//
+		// calc.SetConfidenceLevel(0.95);
+		// // calc.SetFixedScan(100,-7, -1);
+		// calc.SetFixedScan(20,0, 1000);
+		// calc.UseCLs(true);
+		// // calc.SetVerbose(true);
+		// HypoTestInverterResult *r = calc.GetInterval();
+		//
+		// cout<<"origval = "<<origval<<" error high = "
+		//     <<errhi<<" error low = "<<errlo<<endl;
+		// cout<<"UL = "<<r->UpperLimit()<<" +/- "<<r->UpperLimitEstimatedError()<<endl;
+		//
+		// new TCanvas();
+		// RooStats::HypoTestInverterPlot plot("hti_plot", "hti_plot", r);
+		// plot.Draw("CLb 2CL");
+
+		//******************************************************************
+
+		//**************FrequentistCalculator*******************************
+		// RooStats::FrequentistCalculator hc(combData, *bkgOnlyModel, mc);
+		// TestStatSampler *toymcs = hc.GetTestStatSampler();
+		//
+		// RooStats::ProfileLikelihoodTestStat teststat(*(mc.GetPdf()));
+		// teststat.SetOneSided(true);
+		//
+		// teststat.SetPrintLevel(1);
+		// teststat.SetStrategy(0);
+		//
+		// toymcs->SetTestStatistic(teststat);
+		// toymcs->SetGenerateBinned(false);
+		// toymcs->SetUseMultiGen(false);
+	}
+	//Save Canvases
+	c_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_HypatiaSig_ExpBkg_%d_%d.pdf",low,high));
+	c_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_HypatiaSig_ExpBkg_%d_%d.pdf",low,high));
 
 	// write the workspace in the file
-	// TString fileName = "MyModelConfig.root";
-	// w.writeToFile(fileName,true);
-	// cout << "workspace written to file " << fileName << endl;
+	TString fileName = Form("../rootFiles/dataFiles/JpsiLambda/ModelConfigs/MyModel_HypatiaSig_ExpBkg_%d_%d.root",low,high);
+	w.writeToFile(fileName,true);
+	cout << "workspace written to file " << fileName << endl;
 
-
+	gSystem->RedirectOutput(0);
 
 	// yields.push_back(0.0);
 	// return yields;
