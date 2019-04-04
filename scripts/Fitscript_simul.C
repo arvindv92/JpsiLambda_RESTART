@@ -9,9 +9,14 @@ using namespace RooStats;
 void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 //option = "best" to fit to data with best BDT cuts
 {
+	// Fit params
+	Int_t low      = myLow, high = myHigh; //Define range in which fit is performed
+	Int_t binwidth = 4; // If final fit is a binned fit ,it will use this binning (MeV)
+	                    // If it is an unbinned it, it will just use the binning for visualization
+	Int_t nbins    = (Int_t)(high-low)/binwidth;
 
-	// gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/UpperLimit/Fit_HypatiaSig_ExpoBkg_%d_%d.txt",
-	//                              myLow,myHigh),"w");
+	gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/UpperLimit/Fit_HypatiaSig_ExpoBkg_%d_%d_%dMeVBins.txt",
+	                             myLow,myHigh,binwidth),"w");
 
 	gSystem->Exec("date");
 	gSystem->Load("RooHypatia2_cpp.so"); //Load library for Hypatia shape
@@ -32,7 +37,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	Int_t bdtConf_Zero[2]    = {0,0};
 	Int_t isoConf[2]         = {0,0};
 
-	Bool_t calcUL = true;
+	Bool_t calcUL   = true;
+	Bool_t isBinned = true; //set to false if you want unbinned ML fit.
 
 	const char *isoVersion[2] = {"",""};
 
@@ -89,7 +95,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 
 	// Systematics put in by hand
 	Float_t xib_syst       = 0.02;
-	Float_t eff_ratio_syst = 0.05;
+	Float_t eff_ratio_syst = 0.02;
 	// Flags controlling shapes
 	Int_t lst1405flag    = 1;
 	Int_t lst1520flag    = 1;
@@ -97,11 +103,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	Int_t xibflag        = 1;
 	Int_t sigmaflag      = 1;
 	Int_t Lst1405_rwtype = 2;
-
-	// Fit params
-	Int_t low      = myLow, high = myHigh; //Define range in which fit is performed
-	Int_t binwidth = 4; //Final fit is a binned fit with this binning (MeV)
-	Int_t nbins    = (Int_t)(high-low)/binwidth;
 
 	RooWorkspace w("w");
 
@@ -457,7 +458,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	//*******************************************************************
 
 	RooHistPdf* SIG[2];
-	RooKeysPdf* SIGMA_KEYS[2];
+	RooKeysPdf* SIG_KEYS[2];
 	RooDataSet* ds_sig[2];
 
 	//******************Get shape from Jpsi Sigma signal*****************
@@ -501,37 +502,40 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 		ds_sig[i] = new RooDataSet("ds_sig","ds_sig",combTree_sig,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))));
 		ds_sig[i]->Print();
 
-		treein_sigma_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hsigma_nonZero%d(%d,%d,%d)",run,nbins,low,high),
-		                           Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");        //Not TRUTH MATCHING HERE!
+		SIG_KEYS[i] = new RooKeysPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_sig[i]),RooKeysPdf::MirrorBoth,1);
 
-		treein_sigma_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hsigma_Zero%d(%d,%d,%d)",run,nbins,low,high),
-		                        Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");        //Not TRUTH MATCHING HERE!
-
-		TH1D *hsigma_nonZero = (TH1D*)gDirectory->Get(Form("hsigma_nonZero%d",run));
-		TH1D *hsigma_Zero    = (TH1D*)gDirectory->Get(Form("hsigma_Zero%d",run));
-		TH1D *hsigma         = new TH1D(Form("hsigma%d",run),"",nbins,low,high);
-
-		hsigma->Add(hsigma_nonZero,hsigma_Zero);
-		TH1D *hsigma_smooth  = (TH1D*)hsigma->Clone(Form("hsigma_smooth%d",run));
-		hsigma_smooth->Smooth(2);
-
-		RooDataHist *ds_sigma        = new RooDataHist(Form("ds_sigma%d",run),Form("ds_sigma%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),hsigma);
-		RooDataHist *ds_sigma_smooth = new RooDataHist(Form("ds_sigma_smooth%d",run),Form("ds_sigma_smooth%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),hsigma_smooth);
-
-		ds_sigma->Print();
-
-		RooHistPdf sigmashape(Form("sigmashape%d",run),Form("sigmashape%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_sigma,0);
-		SIG[i] = new RooHistPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_sigma_smooth,0);
+		// treein_sigma_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hsigma_nonZero%d(%d,%d,%d)",run,nbins,low,high),
+		//                            Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");        //Not TRUTH MATCHING HERE!
+		//
+		// treein_sigma_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hsigma_Zero%d(%d,%d,%d)",run,nbins,low,high),
+		//                         Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");        //Not TRUTH MATCHING HERE!
+		//
+		// TH1D *hsigma_nonZero = (TH1D*)gDirectory->Get(Form("hsigma_nonZero%d",run));
+		// TH1D *hsigma_Zero    = (TH1D*)gDirectory->Get(Form("hsigma_Zero%d",run));
+		// TH1D *hsigma         = new TH1D(Form("hsigma%d",run),"",nbins,low,high);
+		//
+		// hsigma->Add(hsigma_nonZero,hsigma_Zero);
+		// TH1D *hsigma_smooth  = (TH1D*)hsigma->Clone(Form("hsigma_smooth%d",run));
+		// hsigma_smooth->Smooth(2);
+		//
+		// RooDataHist *ds_sigma        = new RooDataHist(Form("ds_sigma%d",run),Form("ds_sigma%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),hsigma);
+		// RooDataHist *ds_sigma_smooth = new RooDataHist(Form("ds_sigma_smooth%d",run),Form("ds_sigma_smooth%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),hsigma_smooth);
+		//
+		// ds_sigma->Print();
+		//
+		// RooHistPdf sigmashape(Form("sigmashape%d",run),Form("sigmashape%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_sigma,0);
+		// SIG[i] = new RooHistPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_sigma_smooth,0);
 
 		RooPlot *framesigma = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
 		framesigma->SetTitle("J/#psi #Sigma");
-		ds_sigma->plotOn(framesigma,Name("sigmadata"));
+		// ds_sigma->plotOn(framesigma,Name("sigmadata"));
+		ds_sig[i]->plotOn(framesigma,Name("sigmadata"));
 		// sigmashape.plotOn(framesigma,Name("sigmafit"),LineColor(kBlue));
-		(*(SIG[i])).plotOn(framesigma,Name("sigmafitsmooth"),LineColor(kRed),LineStyle(kDashed));
+		(*(SIG_KEYS[i])).plotOn(framesigma,Name("sigmafitsmooth"),LineColor(kRed),LineStyle(kDashed));
 
 		TCanvas *csigma = new TCanvas(Form("JpsiSigma%d",run),Form("JpsiSigma%d",run));
 		framesigma->Draw();
-		w.import(*(SIG[i]));
+		w.import(*(SIG_KEYS[i]));
 
 		cout<<"Done importing Jpsi Sigma shape"<<endl;
 	}
@@ -558,7 +562,11 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	          "sigma_Run1[10.,1.,20.], mean_Run1[5619.6,5619,5621], a1_Run1[1.7,1.0,3.0],"
 	          "2 ,a2_Run1[2.0,1.0,3.0], 2)");
 
-	w.factory("RooHypatia2::Lb_Run2(Lb_DTF_M_JpsiLConstr,lambda_Run2[-2.5,-3.0,0.0],0,0,"
+	// w.factory("RooHypatia2::Lb_Run2(Lb_DTF_M_JpsiLConstr,lambda_Run2[-2.5,-3.0,0.0],0,0,"
+	//           "sigma_Run2[10.,1.,20.], mean_Run2[5619.6,5619,5621], a1_Run2[1.5,1.0,3.0],"
+	//           "2 ,a2_Run2[1.5,1.0,3.0], 2)");
+
+	w.factory("RooHypatia2::Lb_Run2(Lb_DTF_M_JpsiLConstr,lambda_Run2[-2.5,-4.0,0.0],0,0,"
 	          "sigma_Run2[10.,1.,20.], mean_Run2[5619.6,5619,5621], a1_Run2[1.5,1.0,3.0],"
 	          "2 ,a2_Run2[1.5,1.0,3.0], 2)");
 
@@ -591,6 +599,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	//*******************************************************************
 
 	RooDataHist *ds[2];
+	RooDataSet *ds_unb[2];
 	Int_t nentries[2];
 	TH1D *myhist[2];
 
@@ -647,28 +656,51 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 		treein_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d.root",
 		                                      dataPath,run,bdtConf_Zero[i]));
 
-		treein_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist_nonzero%d(%d,%d,%d)",run,nbins,low,high),
-		                     Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+		if(!isBinned)
+		{
+			TFile *tempFile_data = new TFile("tempFile_data.root","RECREATE");
 
-		treein_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist_zero%d(%d,%d,%d)",run,nbins,low,high),
-		                  Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+			TTree* treein_Zero_cut    = (TTree*)treein_Zero->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));                                                                                                                                                //Not TRUTH MATCHING HERE!
+			TTree* treein_nonZero_cut = (TTree*)treein_nonZero->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));                                                                                                                                                //Not TRUTH MATCHING HERE!
 
-		TH1D *myhist_nonzero = (TH1D*)gDirectory->Get(Form("myhist_nonzero%d",run));
-		TH1D *myhist_zero = (TH1D*)gDirectory->Get(Form("myhist_zero%d",run));
+			TList *list_data = new TList;
+			list_data->Add(treein_Zero_cut);
+			list_data->Add(treein_nonZero_cut);
 
-		myhist[i] = new TH1D(Form("myhist%d",run),"",nbins,low,high);
+			TTree *combTree_data = TTree::MergeTrees(list_data);
+			combTree_data->SetName("combTree_data");
+			nentries[i] = combTree_data->GetEntries();
+			cout<<"Run "<<run<<" nentries = "<<nentries[i]<<endl;
 
-		myhist[i]->Add(myhist_zero,myhist_nonzero);
+			ds_unb[i] = new RooDataSet(Form("ds%d",run),Form("ds%d",run),combTree_data,*(w.var("Lb_DTF_M_JpsiLConstr")));
+			(ds_unb[i])->Print();
+			w.import(*(ds_unb[i]));
+		}
+		else
+		{
+			treein_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist_nonzero%d(%d,%d,%d)",run,nbins,low,high),
+			                     Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
 
-		nentries[i] = myhist[i]->Integral();
-		cout<<"Run "<<run<<" nentries = "<<nentries[i]<<endl;
+			treein_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist_zero%d(%d,%d,%d)",run,nbins,low,high),
+			                  Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 
-		ds[i] = new RooDataHist(Form("ds%d",run),Form("ds%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),myhist[i]);
-		//  RooDataSet ds("ds","ds",treein,Lb_DTF_M_JpsiLConstr);
-		cout<<"Done making RooDataHist"<<endl;
-		(ds[i])->Print();
+			TH1D *myhist_nonzero = (TH1D*)gDirectory->Get(Form("myhist_nonzero%d",run));
+			TH1D *myhist_zero = (TH1D*)gDirectory->Get(Form("myhist_zero%d",run));
 
-		w.import(*(ds[i]));
+			myhist[i] = new TH1D(Form("myhist%d",run),"",nbins,low,high);
+
+			myhist[i]->Add(myhist_zero,myhist_nonzero);
+
+			nentries[i] = myhist[i]->Integral();
+			cout<<"Run "<<run<<" nentries = "<<nentries[i]<<endl;
+
+			ds[i] = new RooDataHist(Form("ds%d",run),Form("ds%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),myhist[i]);
+
+			cout<<"Done making RooDataHist"<<endl;
+			(ds[i])->Print();
+
+			w.import(*(ds[i]));
+		}
 
 		cout<<"Done importing Run "<<run<<" data"<<endl;
 	}
@@ -773,28 +805,26 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	//             "miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,"
 	//             "n1520_Run2");// define set of nuisance parameters
 
-	if(strncmp(option,"mcFit",5))//Define nuisance params if not MC fit
-	{
-		// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,"
-		//             "nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,"
-		//             "miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,"
-		//             "n1520_Run1");
-		// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,"
-		//             "nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,"
-		//             "miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,"
-		//             "n1520_Run2");// define set of nuisance parameters
 
-		w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,"
-		            "lambda_Run1,a1_Run1,a2_Run1,"
-		            "nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,"
-		            "miscLstSigma_Run1,eff_ratio1,nXib1,n1405_Run1,"
-		            "n1520_Run1");
-		w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,"
-		            "lambda_Run2,a1_Run2,a2_Run2,"
-		            "nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,"
-		            "miscLstSigma_Run2,eff_ratio2,nXib2,n1405_Run2,"
-		            "n1520_Run2");// define set of nuisance parameters
-	}
+	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,"
+	//             "nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,"
+	//             "miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,"
+	//             "n1520_Run1");
+	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,"
+	//             "nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,"
+	//             "miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,"
+	//             "n1520_Run2");// define set of nuisance parameters
+
+	w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,"
+	            "lambda_Run1,a1_Run1,a2_Run1,"
+	            "nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,"
+	            "miscLstSigma_Run1,eff_ratio1,nXib1,n1405_Run1,"
+	            "n1520_Run1");
+	w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,"
+	            "lambda_Run2,a1_Run2,a2_Run2,"
+	            "nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,"
+	            "miscLstSigma_Run2,eff_ratio2,nXib2,n1405_Run2,"
+	            "n1520_Run2");        // define set of nuisance parameters
 	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,alpha1_Run1,alpha2_Run1,nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1");// define set of nuisance parameters
 	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,alpha1_Run2,alpha2_Run2,nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,n1520_Run2");
 
@@ -813,12 +843,22 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	RooCategory sample("sample","sample");
 	sample.defineType("run1");
 	sample.defineType("run2");
-	RooDataHist *combData;
-	// Construct combined dataset in (x,sample)
 
-	combData = new RooDataHist("combData","combined data",*(w.var("Lb_DTF_M_JpsiLConstr")),
-	                           Index(sample),Import("run1",*myhist[0]),
-	                           Import("run2",*myhist[1]));
+	RooAbsData *combData;
+	if(isBinned)
+	{
+		// Construct combined dataset in (x,sample)
+		combData = new RooDataHist("combData","combined data",*(w.var("Lb_DTF_M_JpsiLConstr")),
+		                           Index(sample),Import("run1",*myhist[0]),
+		                           Import("run2",*myhist[1]));
+	}
+	else
+	{
+		// Construct combined dataset in (x,sample)
+		combData = new RooDataSet("combData","combined data",*(w.var("Lb_DTF_M_JpsiLConstr")),
+		                          Index(sample),Import("run1",*ds_unb[0]),
+		                          Import("run2",*ds_unb[1]));
+	}
 
 	combData->Print();
 	// Construct a simultaneous pdf using category sample as index
@@ -898,7 +938,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	//*********************PLOTTING STUFF*********************************************
 	TCanvas* c_run1 = new TCanvas("Run1","Run1", 1200, 800);
 
-	RooPlot *frame_run1 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),low,high,100);
+	RooPlot *frame_run1 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),low,high,nbins);
 	frame_run1->SetTitle("Run1 Fit");
 	// frame_run1->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
 
@@ -992,7 +1032,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	c_run1->Update();
 
 	// Pull distribution
-	RooPlot *frame_run1x2 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+	RooPlot *frame_run1x2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),low,high,nbins);
 	// RooPlot *framex2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")), low,5800,100);
 	RooHist* hpull_run1 = frame_run1->pullHist("data_Run1","fit_Run1");
 	frame_run1x2->addPlotable(hpull_run1,"P");
@@ -1021,7 +1061,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 
 	TCanvas* c_run2 = new TCanvas("Run2","Run2", 1200, 800);
 
-	RooPlot *frame_run2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),low,high,100);
+	RooPlot *frame_run2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),low,high,nbins);
 
 	frame_run2->SetTitle("Run2 Fit");
 	frame_run2->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
@@ -1112,7 +1152,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	c_run2->Update();
 
 	// Pull distribution
-	RooPlot *frame_run2x2 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+	RooPlot *frame_run2x2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),low,high,nbins);
 	// RooPlot *framex2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")), low,5800,100);
 	RooHist* hpull_run2 = frame_run2->pullHist("data_Run2","fit_Run2");
 	frame_run2x2->addPlotable(hpull_run2,"P");
@@ -1145,7 +1185,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	cout<<"Global Fit chi2/dof = "<<chi2_ndof_global<<endl;
 	cout<<"****************************"<<endl;
 
-	if(calcUL) {
+	if(calcUL)
+	{
 		//*************ROOSTATS MODEL CONFIG*********************************
 
 		cout<<"Starting Model Config"<<endl;
@@ -1163,7 +1204,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 		//***************ASIMOV DATASET*************************************
 		cout<<"Starting Asimov Dataset"<<endl;
 		RooDataSet *asimovData = (RooDataSet*)RooStats::AsymptoticCalculator::GenerateAsimovData(*(mc.GetPdf()),*(mc.GetObservables()));
-		RooPlot *frame_asim = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")), low,5800,100);
+		RooPlot *frame_asim = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")), low,high,nbins);
 
 		TCanvas *asim = new TCanvas();
 		asimovData->plotOn(frame_asim);
@@ -1174,9 +1215,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 		RooStats::ModelConfig *bkgOnlyModel = mc.Clone();
 		bkgOnlyModel->SetName("bkgOnlyModel");
 		Double_t oldval = w.var("R")->getVal();
-		// w.var("R")->setVal(-10);//What value should I set for the background only hypothesis? log of 0 is -inf
 
-		w.var("R")->setVal(0);//What value should I set for the background only hypothesis? log of 0 is -inf
+		w.var("R")->setVal(0);
 		bkgOnlyModel->SetSnapshot(*(w.var("R")));
 
 		w.var("R")->setVal(oldval);
@@ -1262,16 +1302,32 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	}
 
 	//Save Canvases
-	c_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_HypatiaSig_ExpBkg_%d_%d.pdf",low,high));
-	c_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_HypatiaSig_ExpBkg_%d_%d.pdf",low,high));
+
+	if(isBinned)
+	{
+		c_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_HypatiaSig_ExpBkg_%d_%d_%dMeVBins.pdf",low,high,binwidth));
+		c_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_HypatiaSig_ExpBkg_%d_%d_%dMeVBins.pdf",low,high,binwidth));
+	}
+	else
+	{
+		c_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_HypatiaSig_ExpBkg_%d_%d_unbinned.pdf",low,high));
+		c_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_HypatiaSig_ExpBkg_%d_%d_unbinned.pdf",low,high));
+	}
 
 	// write the workspace in the file
-	TString fileName = Form("../rootFiles/dataFiles/JpsiLambda/ModelConfigs/MyModel_HypatiaSig_ExpBkg_%d_%d.root",low,high);
+	TString fileName;
+
+	if(isBinned)
+	{
+		fileName = Form("../rootFiles/dataFiles/JpsiLambda/ModelConfigs/MyModel_HypatiaSig_ExpBkg_%d_%d_%dMeVBins.root",low,high,binwidth);
+	}
+	else
+	{
+		fileName = Form("../rootFiles/dataFiles/JpsiLambda/ModelConfigs/MyModel_HypatiaSig_ExpBkg_%d_%d_unbinned.root",low,high);
+	}
+
 	w.writeToFile(fileName,true);
 	cout << "workspace written to file " << fileName << endl;
 
-	// gSystem->RedirectOutput(0);
-
-	// yields.push_back(0.0);
-	// return yields;
+	gSystem->RedirectOutput(0);
 }
