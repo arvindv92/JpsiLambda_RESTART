@@ -52,13 +52,13 @@ bkgOnlyModel__snapshot = (R=0 +/- (-147.663,149.12))
 named sets
 ----------
 ModelConfig_GlobalObservables:(geff_ratio1,gnXib1,geff_ratio2,gnXib2)
-ModelConfig_NuisParams:(nLb_Run1,mean_Run1,sigma_Run1,nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,eff_ratio1,nXib1,n1405_Run1,n1520_Run1,nLb_Run2,mean_Run2,sigma_Run2,nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,eff_ratio2,nXib2,n1405_Run2,n1520_Run2)
+ModelConfig_NuisParams:(nLb_Run1,mean_Run1,sigma_Run1,lambda_Run1,a1_Run1,a2_Run1,nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,eff_ratio1,nXib1,n1405_Run1,n1520_Run1,nLb_Run2,mean_Run2,sigma_Run2,lambda_Run2,a1_Run2,a2_Run2,nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,eff_ratio2,nXib2,n1405_Run2,n1520_Run2)
 ModelConfig_Observables:(Lb_DTF_M_JpsiLConstr,sample)
 ModelConfig_POI:(R)
 ModelConfig__snapshot:(R)
 bkgOnlyModel__snapshot:(R)
 globObs:(geff_ratio1,gnXib1,geff_ratio2,gnXib2)
-nuisParams:(nLb_Run1,mean_Run1,sigma_Run1,nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,eff_ratio1,nXib1,n1405_Run1,n1520_Run1,nLb_Run2,mean_Run2,sigma_Run2,nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,eff_ratio2,nXib2,n1405_Run2,n1520_Run2)
+nuisParams:(nLb_Run1,mean_Run1,sigma_Run1,lambda_Run1,a1_Run1,a2_Run1,nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,eff_ratio1,nXib1,n1405_Run1,n1520_Run1,nLb_Run2,mean_Run2,sigma_Run2,lambda_Run2,a1_Run2,a2_Run2,nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,eff_ratio2,nXib2,n1405_Run2,n1520_Run2)
 obs:(Lb_DTF_M_JpsiLConstr,sample)
 poi:(R)
 
@@ -270,7 +270,7 @@ Doing a fixed scan  in interval : 0 , 1000
 	CLsplusb = 6.05088e-10 +/- 0
 
 Time to perform limit scan 
-Real time 0:00:32, CP time 31.430
+Real time 0:00:31, CP time 31.390
 The computed lower limit is: -1000 +/- 0
 The computed upper limit is: 219.548 +/- 0
 Expected upper limits, using the B (alternate) model : 

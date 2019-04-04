@@ -3,5 +3,5 @@
 *.pcm
 *.d
 *.nfs*
-*.txt*
 rootFiles/
+dataset/*
