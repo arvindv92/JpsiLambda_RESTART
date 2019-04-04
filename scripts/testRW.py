@@ -8,20 +8,20 @@ from hep_ml.metrics_utils import ks_2samp_weighted
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_auc_score
 
-#WHY NOT JUST RW IN ALL THE VARIABLES. SINCE WE DON'T CARE ABOUT QC AFTER
-
-# columns = ['log10(Lb_ConsLb_chi2)', 'p_PIDp', 'L_dm', 'log10(Lb_MINIPCHI2)',
-#            'log10(acos(Lb_DIRA_OWNPV))',
-#            'log10(Lb_FD_OWNPV)', 'log10(Jpsi_MINIPCHI2)', 'log10(Jpsi_M)',
-#            'log10(p_MINIPCHI2)', 'p_PT', 'p_ProbNNp',
-#            'log10(L_FDCHI2_ORIVX)',
-#            'log10(L_FD_ORIVX)', 'log10(acos(L_DIRA_OWNPV))',
-#            'log10(L_MINIPCHI2)',
-#            'log10(pi_MINIPCHI2)', 'log10(pi_PT)', 'Lb_PT', 'Lb_P', 'Lb_ETA',
-#            'SW']#,
-#
 columns = ['Lb_PT', 'Lb_P', '(Jpsi_P/Lb_P)', '(p_P-pi_P)/(p_P+pi_P)',
-           'p_ProbNNp', 'pi_ProbNNpi', 'ntracks', 'SW']
+           'p_ProbNNp', 'pi_ProbNNpi', 'ntracks',
+           'log10(Lb_ConsLb_chi2)', 'p_PIDp', 'L_dm', 'log10(Lb_MINIPCHI2)',
+           'log10(acos(Lb_DIRA_OWNPV))',
+           'log10(Lb_FD_OWNPV)', 'log10(Jpsi_MINIPCHI2)', 'log10(Jpsi_M)',
+           'log10(p_MINIPCHI2)', 'log10(p_PT)',
+           'log10(L_FDCHI2_ORIVX)', 'log10(acos(L_DIRA_ORIVX))',
+           'log10(L_FD_ORIVX)', 'log10(acos(L_DIRA_OWNPV))',
+           'log10(L_MINIPCHI2)', 'p_ProbNNghost', 'pi_ProbNNghost',
+           'log10(pi_MINIPCHI2)', 'log10(pi_PT)',
+           'SW']
+
+# columns = ['Lb_PT', 'Lb_P', '(Jpsi_P/Lb_P)', '(p_P-pi_P)/(p_P+pi_P)',
+#            'p_ProbNNp', 'pi_ProbNNpi', 'ntracks', 'SW']
 
 # columns = ['Lb_PT', 'Lb_P', 'Jpsi_P', 'Jpsi_PT', 'L_P', 'L_PT',
 #            'p_P', 'p_PT', 'pi_P', 'pi_PT',
@@ -77,10 +77,10 @@ def draw_distributions(myoriginal, mytarget, new_original_weights, targetwts):
                                  weights1=new_original_weights,
                                  weights2=targetwts)
         sum_ks = sum_ks + myks
-        print('KS over ', column, ' = ', myks)
+        # print('KS over ', column, ' = ', myks)
     plt.draw()
     plt.figure(figsize=[15, 7])
-    for id, column in enumerate(columns[6:7], 1):
+    for id, column in enumerate(columns[6:12], 1):
         xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
                                 [0.01, 99.99])
         plt.subplot(2, 3, id)
@@ -93,83 +93,115 @@ def draw_distributions(myoriginal, mytarget, new_original_weights, targetwts):
                                  weights1=new_original_weights,
                                  weights2=targetwts)
         sum_ks = sum_ks + myks
-        print('KS over ', column, ' = ', myks)
+        # print('KS over ', column, ' = ', myks)
     plt.draw()
-    # plt.figure(figsize=[15, 7])
-    # for id, column in enumerate(columns[12:13], 1):
-    #     xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
-    #                             [0.01, 99.99])
-    #     plt.subplot(2, 3, id)
-    #     plt.hist(myoriginal[column], weights=new_original_weights, range=xlim,
-    #              **hist_settings)
-    #     plt.hist(mytarget[column], weights=targetwts, range=xlim,
-    #              **hist_settings)
-    #     plt.title(column)
-    #     myks = ks_2samp_weighted(myoriginal[column], mytarget[column],
-    #                              weights1=new_original_weights,
-    #                              weights2=targetwts)
-    #     sum_ks = sum_ks + myks
-    #     print('KS over ', column, ' = ', myks)
-    # plt.draw()
+    plt.figure(figsize=[15, 7])
+    for id, column in enumerate(columns[12:18], 1):
+        xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
+                                [0.01, 99.99])
+        plt.subplot(2, 3, id)
+        plt.hist(myoriginal[column], weights=new_original_weights, range=xlim,
+                 **hist_settings)
+        plt.hist(mytarget[column], weights=targetwts, range=xlim,
+                 **hist_settings)
+        plt.title(column)
+        myks = ks_2samp_weighted(myoriginal[column], mytarget[column],
+                                 weights1=new_original_weights,
+                                 weights2=targetwts)
+        sum_ks = sum_ks + myks
+        # print('KS over ', column, ' = ', myks)
+    plt.draw()
+    plt.figure(figsize=[15, 7])
+    for id, column in enumerate(columns[18:24], 1):
+        xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
+                                [0.01, 99.99])
+        plt.subplot(2, 3, id)
+        plt.hist(myoriginal[column], weights=new_original_weights, range=xlim,
+                 **hist_settings)
+        plt.hist(mytarget[column], weights=targetwts, range=xlim,
+                 **hist_settings)
+        plt.title(column)
+        myks = ks_2samp_weighted(myoriginal[column], mytarget[column],
+                                 weights1=new_original_weights,
+                                 weights2=targetwts)
+        sum_ks = sum_ks + myks
+        # print('KS over ', column, ' = ', myks)
+    plt.draw()
+    plt.figure(figsize=[15, 7])
+    for id, column in enumerate(columns[24:26], 1):
+        xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
+                                [0.01, 99.99])
+        plt.subplot(2, 3, id)
+        plt.hist(myoriginal[column], weights=new_original_weights, range=xlim,
+                 **hist_settings)
+        plt.hist(mytarget[column], weights=targetwts, range=xlim,
+                 **hist_settings)
+        plt.title(column)
+        myks = ks_2samp_weighted(myoriginal[column], mytarget[column],
+                                 weights1=new_original_weights,
+                                 weights2=targetwts)
+        sum_ks = sum_ks + myks
+        # print('KS over ', column, ' = ', myks)
+    plt.draw()
     avg_ks = sum_ks / ctr
     print('average of KS distances = ', avg_ks)
-    # plt.figure(figsize=[15, 7])
-    # for id, column in enumerate(columns[18:20], 1):
-    #     xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
-    #                             [0.01, 99.99])
-    #     plt.subplot(2, 3, id)
-    #     plt.hist(myoriginal[column], weights=new_original_weights, range=xlim,
-    #              **hist_settings)
-    #     plt.hist(mytarget[column], weights=targetwts, range=xlim,
-    #              **hist_settings)
-    #     plt.title(column)
-    #     print('KS over ', column, ' = ',
-    #           ks_2samp_weighted(myoriginal[column], mytarget[column],
-    #                             weights1=new_original_weights,
-    #                             weights2=targetwts))
-    # plt.draw()
+    return avg_ks
 
 
 print 'Original'
-draw_distributions(original.iloc[:, :-1], target.iloc[:, :-1],
-                   original_weights, target_weights)
+avgks_orig = draw_distributions(original.iloc[:, :-1], target.iloc[:, :-1],
+                                original_weights, target_weights)
 
 # **********Binned Re-weighting****************
 # bins_reweighter = reweight.BinsReweighter(n_bins=30, n_neighs=2.)
 # bins_reweighter.fit(original_train.iloc[:,:-1], target_train.iloc[:,:-1],
 # original_weights_train, target_weights_train)
-
+#
 # bins_weights_test = bins_reweighter.predict_weights(original_test.iloc[:,:-1])
 # # validate reweighting rule on the test part comparing 1d projections
-
+#
 # print 'After binned re-weighting'
 # draw_distributions(original_test.iloc[:,:-1], target_test.iloc[:,:-1], bins_weights_test, target_weights_test)
 # **********************************************
 
 # *********Gradient Boosted Re-weighting********
-reweighter = reweight.GBReweighter(n_estimators=100, learning_rate=0.2,
-                                   max_depth=3, min_samples_leaf=100,
-                                   gb_args={'subsample': 0.2,
-                                            'random_state': 42})
+
+# This is currently the best config for large no of variables
+# reweighter_base = reweight.GBReweighter(n_estimators=200, learning_rate=0.1,
+#                                         max_depth=4, min_samples_leaf=100,
+#                                         gb_args={'subsample': 0.2,
+#                                                  'random_state': 42})
+
+reweighter_base = reweight.GBReweighter(n_estimators=40, learning_rate=0.1,
+                                        max_depth=3, min_samples_leaf=50,
+                                        gb_args={'subsample': 0.5,
+                                                 'random_state': 42})
+reweighter = reweight.FoldingReweighter(reweighter_base, n_folds=3)
+
+# This is what worked with the small no of variables
 # reweighter = reweight.GBReweighter(n_estimators=100, learning_rate=0.1,
 #                                    max_depth=4, min_samples_leaf=100,
 #                                    gb_args={'subsample': 0.2,
 #                                             'random_state': 42})
-reweighter.fit(original_train.iloc[:, :-1], target_train.iloc[:, :-1],
-               original_weights_train, target_weights_train)
 
-gb_weights_test = reweighter.predict_weights(original_test.iloc[:, :-1])
+# reweighter.fit(original_train.iloc[:, :-1], target_train.iloc[:, :-1],
+#                original_weights_train, target_weights_train)
+reweighter.fit(original.iloc[:, :-1], target.iloc[:, :-1],
+               original_weights, target_weights)
+
+# gb_weights_test = reweighter.predict_weights(original_test.iloc[:, :-1])
 gb_weights = reweighter.predict_weights(original.iloc[:, :-1])
-gb_weights_noTM = reweighter.predict_weights(original_noTM.iloc[:, :-1])
 
-gb_weights_noTM.dtype = [('gb_wts', 'float64')]
+# gb_weights_noTM = reweighter.predict_weights(original_noTM.iloc[:, :-1])
+
+# gb_weights_noTM.dtype = [('gb_wts', 'float64')]
 # validate reweighting rule on the test part comparing 1d projections
-print 'After GB reweighting on test sample'
-draw_distributions(original_test.iloc[:, :-1], target_test.iloc[:, :-1],
-                   gb_weights_test, target_weights_test)
+# print 'After GB reweighting on test sample'
+# draw_distributions(original_test.iloc[:, :-1], target_test.iloc[:, :-1],
+#                    gb_weights_test, target_weights_test)
 print 'After GB reweighting on all'
-draw_distributions(original.iloc[:, :-1], target.iloc[:, :-1],
-                   gb_weights, target_weights)
+avgks_rw = draw_distributions(original.iloc[:, :-1], target.iloc[:, :-1],
+                              gb_weights, target_weights)
 
 # root_numpy.array2root(gb_weights_noTM,
 #                       mcPath + 'jpsilambda_sanity_LL_weighted.root',
