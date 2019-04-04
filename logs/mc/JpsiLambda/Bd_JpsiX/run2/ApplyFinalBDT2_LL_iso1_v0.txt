@@ -1,5 +1,6 @@
 ******************************************
 Starting ApplyFinalBDT 
+Tue Mar  5 18:44:17 EST 2019
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
 ******************************************
@@ -9,7 +10,7 @@ Processing Run 2 LL MC type 5zeroTracks
 Input file = rootFiles/mcFiles/JpsiLambda/Bd_JpsiX/run2/bd_jpsix_cutoutks_LL_ZeroTracks.root
 Output file = rootFiles/mcFiles/JpsiLambda/Bd_JpsiX/run2/bd_jpsix_zeroTracksLL_FinalBDT2.root
 ******************************************
-Incoming Entries = 1118                         : Booking "BDT method" of type "BDT" from dataset/weights/TMVAClassificationLite-JpsiLambdaLL_dataRun2_noIso_BDTconf2.weights.xml.
+Incoming Entries = 1118                         : Booking "BDT method" of type "BDT" from dataset/weights/TMVAClassification-JpsiLambdaLL_dataRun2_noIso_BDTconf2.weights.xml.
 <HEADER> DataSetInfo              : [Default] : Added class "Signal"
 <HEADER> DataSetInfo              : [Default] : Added class "Background"
                          : Booked classifier "BDTconf2" of type: "BDT"
@@ -17,4 +18,4 @@ Incoming Entries = 1118                         : Booking "BDT method" of type "
 --- Processing: 1118 events
 --- ... Processing event: 0
 --- End of event loop: --- Created root file: rootFiles/mcFiles/JpsiLambda/Bd_JpsiX/run2/bd_jpsix_zeroTracksLL_FinalBDT2.root containing the MVA output histograms
-==> ApplyFinalBDT is done! Go optimize and fit!: Real time 0:00:00, CP time 0.340
+==> ApplyFinalBDT is done! Go optimize and fit!: Real time 0:00:00, CP time 0.550

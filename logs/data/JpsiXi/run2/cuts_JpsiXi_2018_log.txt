@@ -1,13 +1,13 @@
 ******************************************
 ==> Starting Cuts_JpsiXi: 
-Sat Jan 26 03:07:45 EST 2019
+Fri Mar  1 21:53:04 EST 2019
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
 ******************************************
 Input file = rootFiles/dataFiles/JpsiXi/run2/jpsixi_triggered_2018.root
 LL Output file = rootFiles/dataFiles/JpsiXi/run2/jpsixi_cut_LL_2018.root
 ******************************************
-Incoming entries = 11082872
+Incoming entries = 8251614
 0
 100000
 200000
@@ -91,33 +91,5 @@ Incoming entries = 11082872
 8000000
 8100000
 8200000
-8300000
-8400000
-8500000
-8600000
-8700000
-8800000
-8900000
-9000000
-9100000
-9200000
-9300000
-9400000
-9500000
-9600000
-9700000
-9800000
-9900000
-10000000
-10100000
-10200000
-10300000
-10400000
-10500000
-10600000
-10700000
-10800000
-10900000
-11000000
-Outgoing LL entries = 2180
-==> Cuts_JpsiXi is done! Mazel Tov!: Real time 0:41:01, CP time 2399.570
+Outgoing LL entries = 1981
+==> Cuts_JpsiXi is done! Mazel Tov!: Real time 0:37:48, CP time 2049.920

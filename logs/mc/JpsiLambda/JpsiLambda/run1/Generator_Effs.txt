@@ -2,4 +2,10 @@ eff_2011_md = 0.1897
 err_eff_2011_md = 0.000719
 eff_2011_mu = 0.1881
 err_eff_2011_mu = 0.000727
-2012 effs missing for Pythia 8
+eff_2012_md = 0.19283
+err_eff_2012_md = 0.00070
+eff_2012_mu = 0.19275
+err_eff_2012_mu = 0.00070
+
+eff_run1 = 0.192
+err_eff_run1 = 0.0008

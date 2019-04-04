@@ -1,0 +1,116 @@
+******************************************
+==> Starting CutOutKs: 
+Sat Mar  2 16:51:50 EST 2019
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+==> Starting CutOutKs: 
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+Processing Run 2 YEAR 2018 LL Data0
+******************************************
+******************************************
+Input file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_sanity_LL.root
+nonZeroTracks Output file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL_nonZeroTracks.root
+ZeroTracks Output file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL_ZeroTracks.root
+******************************************
+Incoming entries = 9033558
+Making LL file
+I am making the following cutoutks cuts only on events within 480-520 MeV in Lb_DTF_L_WMpipi_JpsiConstr. Events outside this window aren't cut on. Sit tight
+L_dm < 7.5
+p_PIDp > 10
+0
+100000
+200000
+300000
+400000
+500000
+600000
+700000
+800000
+900000
+1000000
+1100000
+1200000
+1300000
+1400000
+1500000
+1600000
+1700000
+1800000
+1900000
+2000000
+2100000
+2200000
+2300000
+2400000
+2500000
+2600000
+2700000
+2800000
+2900000
+3000000
+3100000
+3200000
+3300000
+3400000
+3500000
+3600000
+3700000
+3800000
+3900000
+4000000
+4100000
+4200000
+4300000
+4400000
+4500000
+4600000
+4700000
+4800000
+4900000
+5000000
+5100000
+5200000
+5300000
+5400000
+5500000
+5600000
+5700000
+5800000
+5900000
+6000000
+6100000
+6200000
+6300000
+6400000
+6500000
+6600000
+6700000
+6800000
+6900000
+7000000
+7100000
+7200000
+7300000
+7400000
+7500000
+7600000
+7700000
+7800000
+7900000
+8000000
+8100000
+8200000
+8300000
+8400000
+8500000
+8600000
+8700000
+8800000
+8900000
+9000000
+Outgoing Entries with nonZeroTracks = 7090740
+Outgoing Entries with ZeroTracks = 81528
+==> CutOutKs is done! Death to Ks0!: Real time 1:49:50, CP time 6243.000

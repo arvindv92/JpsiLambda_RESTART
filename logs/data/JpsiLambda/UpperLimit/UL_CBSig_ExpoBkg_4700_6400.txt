@@ -1,0 +1,352 @@
+Info in <StandardHypoTestInvDemo>: Model ModelConfig has no snapshot  - make one using model poi
+Info in <StandardHypoTestInvDemo>: Using Minuit as minimizer for computing the test statistic
+Info in <StandardHypoTestInvDemo>:  Doing a first fit to the observed data 
+Info in <StandardHypoTestInvDemo>: HypoTestInverterResult has been written in the file Asym_CLs_grid_ts3_iqueCloneOf_!anaList
+Warning in <TCanvas::Constructor>: Deleting canvas with same name: Asymptotic_Scan
+Warning in <TROOT::Append>: Replacing existing TH1: CLs_observed (Potential memory leak).
+Warning in <TROOT::Append>: Replacing existing TH1: CLb_observed (Potential memory leak).
+Warning in <TROOT::Append>: Replacing existing TH1: CLs+b_observed (Potential memory leak).
+Info in <TCanvas::Print>: pdf file ../plots/data/JpsiLambda/UpperLimit/Asymptotic/CLs_CBSig_ExpoBkg_4700_6400.pdf has been created
+n1 sigma=sigma_Run1 alpha=alpha1_Run1 n=10 ] = 1.11333e-12
+RooCBShape::Lb1_Run2[ m=bMass m0=mean_Run2 sigma=sigma_Run2 alpha=alpha1_Run2 n=10 ] = 7.47203e-13
+RooCBShape::Lb2_Run1[ m=bMass m0=mean_Run1 sigma=sigma_Run1 alpha=alpha2_Run1 n=10 ] = 0
+RooCBShape::Lb2_Run2[ m=bMass m0=mean_Run2 sigma=sigma_Run2 alpha=alpha2_Run2 n=10 ] = 0
+RooAddPdf::Lb_Run1[ 0.5 * Lb1_Run1 + 0.5 * Lb2_Run1 ] = 5.56667e-13
+RooAddPdf::Lb_Run2[ 0.5 * Lb1_Run2 + 0.5 * Lb2_Run2 ] = 3.73601e-13
+RooHistPdf::SIG1[ pdfObs=(bMass) ] = 0
+RooHistPdf::SIG2[ pdfObs=(bMass) ] = 0
+RooHistPdf::XIB1[ pdfObs=(bMass) ] = 0
+RooHistPdf::XIB2[ pdfObs=(bMass) ] = 0
+RooGaussian::lambdaEff_constraint1[ x=glambdaEff1 mean=lambdaEff1 sigma=2.3e-05 ] = 1
+RooGaussian::lambdaEff_constraint2[ x=glambdaEff2 mean=lambdaEff2 sigma=2.5e-05 ] = 1
+RooGaussian::lstLump_Run1[ x=bMass mean=miscLstMean_Run1 sigma=miscLstSigma_Run1 ] = 3.18292e-07
+RooGaussian::lstLump_Run2[ x=bMass mean=miscLstMean_Run2 sigma=miscLstSigma_Run2 ] = 3.07455e-06
+RooAddPdf::model1[ nSigma1 * SIG1 + nLb_Run1 * Lb_Run1 + nXib1 * XIB1 + n1405_Run1 * LST1405 + n1520_Run1 * LST1520 + nMiscLst_Run1 * lstLump_Run1 + nBkg_Run1 * Bkg_Run1 ] = 19.1379
+RooAddPdf::model2[ nSigma2 * SIG2 + nLb_Run2 * Lb_Run2 + nXib2 * XIB2 + n1405_Run2 * LST1405 + n1520_Run2 * LST1520 + nMiscLst_Run2 * lstLump_Run2 + nBkg_Run2 * Bkg_Run2 ] = 16.2865
+RooProdPdf::model_const1[ model1 * sigmaEff_constraint1 * lambdaEff_constraint1 * nXib_constraint1 ] = 18.9993
+RooProdPdf::model_const2[ model2 * sigmaEff_constraint2 * lambdaEff_constraint2 * nXib_constraint2 ] = 16.0897
+RooGaussian::nXib_constraint1[ x=gnXib1 mean=nXib1 sigma=2.58423 ] = 0.992756
+RooGaussian::nXib_constraint2[ x=gnXib2 mean=nXib2 sigma=5.71937 ] = 0.987915
+RooGaussian::sigmaEff_constraint1[ x=gsigmaEff1 mean=sigmaEff1 sigma=2e-05 ] = 1
+RooGaussian::sigmaEff_constraint2[ x=gsigmaEff2 mean=sigmaEff2 sigma=2.3e-05 ] = 1
+RooSimultaneous::simPdf[ indexCat=sample run1=model_const1 run2=model_const2 ] = 12.2131
+
+functions
+--------
+RooFormulaVar::nSigma1[ actualVars=(R,nLb_Run1,sigmaEff1,lambdaEff1) formula="pow(10,-5)*R*nLb_Run1*sigmaEff1/(lambdaEff1)" ] = 0.000276665
+RooFormulaVar::nSigma2[ actualVars=(R,nLb_Run2,sigmaEff2,lambdaEff2) formula="pow(10,-5)*R*nLb_Run2*sigmaEff2/(lambdaEff2)" ] = 0.00104935
+
+datasets
+--------
+RooDataHist::ds1(bMass)
+RooDataHist::ds2(bMass)
+RooDataHist::combData(sample,bMass)
+
+embedded datasets (in pdfs and functions)
+-----------------------------------------
+RooDataHist::ds_lst1405_smooth(bMass)
+RooDataHist::ds_lst1520_smooth(bMass)
+RooDataHist::ds_xib_smooth1(bMass)
+RooDataHist::ds_xib_smooth2(bMass)
+RooDataHist::ds_sigma_smooth1(bMass)
+RooDataHist::ds_sigma_smooth2(bMass)
+
+parameter snapshots
+-------------------
+ModelConfig__snapshot = (R=0.00707826 +/- (0,93.8431))
+bkgOnlyModel__snapshot = (R=0 +/- (0,93.8431))
+
+named sets
+----------
+ModelConfig_GlobalObservables:(gsigmaEff1,glambdaEff1,gnXib1,gsigmaEff2,glambdaEff2,gnXib2)
+ModelConfig_NuisParams:(nLb_Run1,mean_Run1,sigma_Run1,alpha1_Run1,alpha2_Run1,nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1,nLb_Run2,mean_Run2,sigma_Run2,alpha1_Run2,alpha2_Run2,nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,n1520_Run2)
+ModelConfig_Observables:(bMass,sample)
+ModelConfig_POI:(R)
+ModelConfig__snapshot:(R)
+bkgOnlyModel__snapshot:(R)
+globObs:(gsigmaEff1,glambdaEff1,gnXib1,gsigmaEff2,glambdaEff2,gnXib2)
+nuisParams:(nLb_Run1,mean_Run1,sigma_Run1,alpha1_Run1,alpha2_Run1,nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1,nLb_Run2,mean_Run2,sigma_Run2,alpha1_Run2,alpha2_Run2,nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,n1520_Run2)
+obs:(bMass,sample)
+poi:(R)
+
+generic objects
+---------------
+RooStats::ModelConfig::ModelConfig
+RooStats::ModelConfig::bkgOnlyModel
+
+Using data set combData
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+StandardHypoTestInvDemo : POI initial value:   R = 0.00707826
+[#1] INFO:Minization -- p.d.f. provides expected number of events, including extended term in likelihood.
+[#1] INFO:Minization -- createNLL: caching constraint set under name CONSTR_OF_PDF_simPdf_FOR_OBS_bMass:sample with 6 entries
+[#1] INFO:Minization --  Including the following contraint terms in minimization: (sigmaEff_constraint1,lambdaEff_constraint1,nXib_constraint1,sigmaEff_constraint2,lambdaEff_constraint2,nXib_constraint2)
+RooAbsTestStatistic::initSimMode: creating slave calculator #0 for state run1 (425 dataset entries)
+RooAbsTestStatistic::initSimMode: creating slave calculator #1 for state run2 (425 dataset entries)
+[#1] INFO:Fitting -- RooAbsTestStatistic::initSimMode: created 2 slave calculators.
+[#1] INFO:Fitting -- RooAddition::defaultErrorLevel(nll_simPdf_combData_with_constr) Summation contains a RooNLLVar, using its error level
+[#1] INFO:Minization -- RooMinimizer::optimizeConst: activating const optimization
+[#1] INFO:Minization --  The following expressions have been identified as constant and will be precalculated and cached: (SIG1,XIB1,LST1405,LST1520)
+[#1] INFO:Minization --  The following expressions will be evaluated in cache-and-track mode: (Lb1_Run1,Lb2_Run1,lstLump_Run1,Bkg_Run1)
+[#1] INFO:Minization --  The following expressions have been identified as constant and will be precalculated and cached: (SIG2,XIB2,LST1405,LST1520)
+[#1] INFO:Minization --  The following expressions will be evaluated in cache-and-track mode: (Lb1_Run2,Lb2_Run2,lstLump_Run2,Bkg_Run2)
+ **********
+ **    1 **SET PRINT           0
+ **********
+ **********
+ **    2 **SET NOGRAD
+ **********
+ PARAMETER DEFINITIONS:
+    NO.   NAME         VALUE      STEP SIZE      LIMITS
+     1 R            7.07826e-03  1.88762e+02    0.00000e+00  1.00000e+04
+ MINUIT WARNING IN PARAMETR
+ ============== VARIABLE1 BROUGHT BACK INSIDE LIMITS.
+     2 alpha1_Run1   1.00456e+00  4.22497e-02    8.00000e-01  1.30000e+00
+     3 alpha1_Run2   1.05261e+00  2.51027e-02    8.00000e-01  1.30000e+00
+     4 alpha2_Run1  -1.03617e+00  4.11662e-02   -1.40000e+00 -7.00000e-01
+     5 alpha2_Run2  -1.10638e+00  2.64250e-02   -1.40000e+00 -7.00000e-01
+     6 lambdaEff1   1.17101e-03  2.30000e-05    0.00000e+00  1.00000e+00
+     7 lambdaEff2   1.24300e-03  2.50002e-05    0.00000e+00  1.00000e+00
+     8 mean_Run1    5.61957e+03  1.20159e-01    5.61900e+03  5.62100e+03
+     9 mean_Run2    5.61986e+03  6.61592e-02    5.61900e+03  5.62100e+03
+    10 miscLstMean_Run1   5.01877e+03  3.82738e+00    4.98000e+03  5.05000e+03
+    11 miscLstMean_Run2   5.01682e+03  2.40881e+00    4.98000e+03  5.05000e+03
+    12 miscLstSigma_Run1   5.79107e+01  4.08888e+00    2.00000e+01  1.00000e+02
+    13 miscLstSigma_Run2   6.24848e+01  2.50747e+00    2.00000e+01  1.00000e+02
+    14 n1405_Run1   4.25314e+02  1.10676e+02    1.00000e+00  1.00000e+04
+    15 n1405_Run2   1.62172e+03  1.92808e+02    1.00000e+00  1.00000e+04
+    16 n1520_Run1   1.17094e+03  2.11414e+02    1.00000e+00  1.00000e+04
+    17 n1520_Run2   3.08931e+03  3.70200e+02    1.00000e+00  1.00000e+04
+    18 nBkg_Run1    1.16683e+03  7.58758e+01    1.00000e+00  8.35400e+03
+    19 nBkg_Run2    2.87806e+03  1.24724e+02    1.00000e+00  2.63190e+04
+    20 nLb_Run1     4.65628e+03  6.85584e+01    0.00000e+00  5.00000e+03
+    21 nLb_Run2     1.58996e+04  1.26531e+02    0.00000e+00  1.70000e+04
+    22 nMiscLst_Run1   9.18152e+02  7.74606e+01    1.00000e+00  5.00000e+03
+    23 nMiscLst_Run2   2.75827e+03  1.40090e+02    1.00000e+00  5.00000e+03
+    24 nXib1        1.68803e+01  2.55924e+00    0.00000e+00  2.00000e+02
+    25 nXib2        7.37131e+01  5.64298e+00    0.00000e+00  2.00000e+02
+    26 sigmaEff1    9.82986e-04  2.00001e-05    0.00000e+00  1.00000e+00
+    27 sigmaEff2    1.15899e-03  2.30002e-05    0.00000e+00  1.00000e+00
+    28 sigma_Run1   6.57967e+00  1.21965e-01    0.00000e+00  2.00000e+01
+    29 sigma_Run2   6.64067e+00  6.79675e-02    0.00000e+00  2.00000e+01
+    30 tau_Run1    -3.51350e-03  1.46922e-04   -1.00000e-02 -1.00000e-07
+    31 tau_Run2    -3.50079e-03  9.51573e-05   -1.00000e-02 -1.00000e-07
+ **********
+ **    3 **SET ERR         0.5
+ **********
+ **********
+ **    4 **SET PRINT           0
+ **********
+ **********
+ **    5 **SET STR           0
+ **********
+ **********
+ **    6 **MIGRAD    1.55e+04           1
+ **********
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(run1) first = 0 last = 425 Likelihood offset now set to -14533.6
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(run2) first = 0 last = 425 Likelihood offset now set to -80542.8
+ MIGRAD MINIMIZATION HAS CONVERGED.
+ FCN=-34.5505 FROM MIGRAD    STATUS=CONVERGED     249 CALLS         250 TOTAL
+                     EDM=4.37342e-05    STRATEGY= 0      NO ERROR MATRIX       
+  EXT PARAMETER               CURRENT GUESS       STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  R            4.89689e-05   1.88762e+02  -1.40760e-04** at limit **
+   2  alpha1_Run1   1.00426e+00   4.22497e-02  -1.43695e-05   1.07662e-02
+   3  alpha1_Run2   1.05258e+00   2.51027e-02   6.25139e-05   6.92007e-03
+   4  alpha2_Run1  -1.03628e+00   4.11662e-02   2.49269e-05  -8.89754e-03
+   5  alpha2_Run2  -1.10645e+00   2.64250e-02  -5.77084e-05  -4.44835e-03
+   6  lambdaEff1   1.17100e-03   2.30000e-05  -1.38566e-08  -3.11520e-02
+   7  lambdaEff2   1.24300e-03   2.50002e-05  -4.13676e-09  -7.24821e-03
+   8  mean_Run1    5.61957e+03   1.20159e-01   3.67280e-04  -1.44712e-04
+   9  mean_Run2    5.61986e+03   6.61592e-02   8.59723e-05   1.54452e-03
+  10  miscLstMean_Run1   5.01877e+03   3.82738e+00   1.52039e-05  -1.59164e-03
+  11  miscLstMean_Run2   5.01681e+03   2.40881e+00  -1.20221e-04   3.25509e-03
+  12  miscLstSigma_Run1   5.78861e+01   4.08888e+00  -1.13151e-04   1.66345e-02
+  13  miscLstSigma_Run2   6.24770e+01   2.50747e+00  -3.55710e-05   1.75528e-02
+  14  n1405_Run1   4.25298e+02   1.10676e+02  -2.60416e-05  -7.35180e-02
+  15  n1405_Run2   1.62212e+03   1.92808e+02   3.17036e-05  -3.62226e-02
+  16  n1520_Run1   1.17108e+03   2.11414e+02   3.56096e-06  -2.32191e-01
+  17  n1520_Run2   3.08937e+03   3.70200e+02   1.35833e-05   3.81237e-03
+  18  nBkg_Run1    1.16688e+03   7.58758e+01  -5.72556e-06  -1.26269e-01
+  19  nBkg_Run2    2.87773e+03   1.24724e+02  -4.90182e-06   6.08394e-02
+  20  nLb_Run1     4.65494e+03   6.85584e+01  -6.79023e-05  -2.72876e-02
+  21  nLb_Run2     1.58999e+04   1.26531e+02  -1.35502e-07   5.32243e-03
+  22  nMiscLst_Run1   9.17922e+02   7.74606e+01  -1.11074e-04  -5.01684e-03
+  23  nMiscLst_Run2   2.75805e+03   1.40090e+02  -4.93230e-05   2.64589e-02
+  24  nXib1        1.68661e+01   2.55924e+00  -3.13766e-05  -1.21462e-02
+  25  nXib2        7.37734e+01   5.64298e+00   3.28891e-05   1.05930e-02
+  26  sigmaEff1    9.83001e-04   2.00001e-05   3.81549e-08   9.42480e-02
+  27  sigmaEff2    1.15900e-03   2.30002e-05   3.08664e-08   6.65508e-02
+  28  sigma_Run1   6.57937e+00   1.21965e-01  -2.79015e-05  -3.17389e-03
+  29  sigma_Run2   6.64070e+00   6.79675e-02  -1.44440e-06  -1.76591e-01
+  30  tau_Run1    -3.51355e-03   1.46922e-04   6.14903e-06  -1.92717e-02
+  31  tau_Run2    -3.50079e-03   9.51573e-05  -3.97463e-05   4.44167e-03
+                               ERR DEF= 0.5
+[#1] INFO:Minization -- RooMinimizer::optimizeConst: deactivating const optimization
+StandardHypoTestInvDemo - Best Fit value : R = 4.89689e-05 +/- 188.762
+Time for fitting : Real time 0:00:00, CP time 0.050
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+StandardHypoTestInvo: snapshot of S+B Model ModelConfig is set to the best fit value
+[#0] PROGRESS:Eval -- AsymptoticCalculator::Initialize....
+[#0] PROGRESS:Eval -- AsymptoticCalculator::Initialize - Find  best unconditional NLL on observed data
+[#0] PROGRESS:Eval -- Best fitted POI value = 0.000417642 +/- 188.762
+[#0] PROGRESS:Eval -- AsymptoticCalculator: Building Asimov data Set
+[#1] INFO:InputArguments -- AsymptoticCalculator: Asimov data will be generated using fitted nuisance parameter values
+[#0] PROGRESS:Eval -- AsymptoticCalculator::Initialize Find  best conditional NLL on ASIMOV data set for given alt POI ( R ) = 0
+[#1] INFO:InputArguments -- HypoTestInverter ---- Input models: 
+		 using as S+B (null) model     : ModelConfig
+		 using as B (alternate) model  : bkgOnlyModel
+
+Doing a fixed scan  in interval : 0 , 2000
+[#1] INFO:Eval -- HypoTestInverter::GetInterval - run a fixed scan
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+[#0] PROGRESS:Eval -- Running for R = 0
+[#1] INFO:InputArguments -- Minimum of POI is 0 corresponds to alt  snapshot   - using qtilde asymptotic formulae  
+[#1] INFO:Eval -- Using one-sided qmu - setting qmu to zero  muHat = 0.000417642 muTest = 0
+[#0] PROGRESS:Eval -- P values for  R =  0
+	CLs      = 1 +/- 0
+	CLb      = 0.5 +/- 0
+	CLsplusb = 0.5 +/- 0
+
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+[#0] PROGRESS:Eval -- Running for R = 105.263
+[#0] PROGRESS:Eval -- P values for  R =  105.263
+	CLs      = 0.328435 +/- 0
+	CLb      = 0.396849 +/- 0
+	CLsplusb = 0.130339 +/- 0
+
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+[#0] PROGRESS:Eval -- Running for R = 210.526
+[#0] PROGRESS:Eval -- P values for  R =  210.526
+	CLs      = 0.0649396 +/- 0
+	CLb      = 0.395233 +/- 0
+	CLsplusb = 0.0256663 +/- 0
+
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+[#0] PROGRESS:Eval -- Running for R = 315.789
+[#0] PROGRESS:Eval -- P values for  R =  315.789
+	CLs      = 0.00753904 +/- 0
+	CLb      = 0.394509 +/- 0
+	CLsplusb = 0.00297422 +/- 0
+
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+[#0] PROGRESS:Eval -- Running for R = 421.053
+[#0] PROGRESS:Eval -- P values for  R =  421.053
+	CLs      = 0.000522728 +/- 0
+	CLb      = 0.393973 +/- 0
+	CLsplusb = 0.000205941 +/- 0
+
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+[#0] PROGRESS:Eval -- Running for R = 526.316
+[#0] PROGRESS:Eval -- P values for  R =  526.316
+	CLs      = 2.22528e-05 +/- 0
+	CLb      = 0.393481 +/- 0
+	CLsplusb = 8.75606e-06 +/- 0
+
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+[#0] PROGRESS:Eval -- Running for R = 631.579
+[#0] PROGRESS:Eval -- P values for  R =  631.579
+	CLs      = 6.00512e-07 +/- 0
+	CLb      = 0.392997 +/- 0
+	CLsplusb = 2.35999e-07 +/- 0
+
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+[#0] PROGRESS:Eval -- Running for R = 736.842
+[#0] PROGRESS:Eval -- P values for  R =  736.842
+	CLs      = 1.06133e-08 +/- 0
+	CLb      = 0.392477 +/- 0
+	CLsplusb = 4.16547e-09 +/- 0
+
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+[#0] PROGRESS:Eval -- Running for R = 842.105
+[#0] PROGRESS:Eval -- P values for  R =  842.105
+	CLs      = 1.26866e-10 +/- 0
+	CLb      = 0.391941 +/- 0
+	CLsplusb = 4.97241e-11 +/- 0
+
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+[#0] PROGRESS:Eval -- Running for R = 947.368
+[#0] PROGRESS:Eval -- P values for  R =  947.368
+	CLs      = 1.05759e-12 +/- 0
+	CLb      = 0.39138 +/- 0
+	CLsplusb = 4.13919e-13 +/- 0
+
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+[#0] PROGRESS:Eval -- Running for R = 1052.63
+[#0] PROGRESS:Eval -- P values for  R =  1052.63
+	CLs      = 6.32846e-15 +/- 0
+	CLb      = 0.390801 +/- 0
+	CLsplusb = 2.47317e-15 +/- 0
+
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+[#0] PROGRESS:Eval -- Running for R = 1157.89
+[#0] PROGRESS:Eval -- P values for  R =  1157.89
+	CLs      = 2.79115e-17 +/- 0
+	CLb      = 0.390201 +/- 0
+	CLsplusb = 1.08911e-17 +/- 0
+
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+[#0] PROGRESS:Eval -- Running for R = 1263.16
+[#0] PROGRESS:Eval -- P values for  R =  1263.16
+	CLs      = 9.30097e-20 +/- 0
+	CLb      = 0.389587 +/- 0
+	CLsplusb = 3.62354e-20 +/- 0
+
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+[#0] PROGRESS:Eval -- Running for R = 1368.42
+[#0] PROGRESS:Eval -- P values for  R =  1368.42
+	CLs      = 2.3957e-22 +/- 0
+	CLb      = 0.388914 +/- 0
+	CLsplusb = 9.31721e-23 +/- 0
+
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+[#0] PROGRESS:Eval -- Running for R = 1473.68
+[#0] PROGRESS:Eval -- P values for  R =  1473.68
+	CLs      = 4.86943e-25 +/- 0
+	CLb      = 0.38828 +/- 0
+	CLsplusb = 1.8907e-25 +/- 0
+
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+[#0] PROGRESS:Eval -- Running for R = 1578.95
+[#0] PROGRESS:Eval -- P values for  R =  1578.95
+	CLs      = 7.96178e-28 +/- 0
+	CLb      = 0.387642 +/- 0
+	CLsplusb = 3.08632e-28 +/- 0
+
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+[#0] PROGRESS:Eval -- Running for R = 1684.21
+[#0] PROGRESS:Eval -- P values for  R =  1684.21
+	CLs      = 1.06574e-30 +/- 0
+	CLb      = 0.387003 +/- 0
+	CLsplusb = 4.12443e-31 +/- 0
+
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+[#0] PROGRESS:Eval -- Running for R = 1789.47
+[#0] PROGRESS:Eval -- P values for  R =  1789.47
+	CLs      = 1.18699e-33 +/- 0
+	CLb      = 0.38637 +/- 0
+	CLsplusb = 4.58617e-34 +/- 0
+
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+[#0] PROGRESS:Eval -- Running for R = 1894.74
+[#0] PROGRESS:Eval -- P values for  R =  1894.74
+	CLs      = 1.11609e-36 +/- 0
+	CLb      = 0.385737 +/- 0
+	CLsplusb = 4.30518e-37 +/- 0
+
+[#1] INFO:ObjectHandling -- RooWorkspace::saveSnaphot(w) replacing previous snapshot with name ModelConfig__snapshot
+[#0] PROGRESS:Eval -- Running for R = 2000
+[#0] PROGRESS:Eval -- P values for  R =  2000
+	CLs      = 8.98156e-40 +/- 0
+	CLb      = 0.385109 +/- 0
+	CLsplusb = 3.45888e-40 +/- 0
+
+Time to perform limit scan 
+Real time 0:00:06, CP time 6.460
+The computed upper limit is: 237.923 +/- 0
+Expected upper limits, using the B (alternate) model : 
+ expected limit (median) 266.743
+ expected limit (-1 sig) 194.165
+ expected limit (+1 sig) 365.392
+ expected limit (-2 sig) 156.212
+ expected limit (+2 sig) 491.052
+***********6400

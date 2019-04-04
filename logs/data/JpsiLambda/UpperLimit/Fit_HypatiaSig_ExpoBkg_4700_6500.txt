@@ -1,0 +1,94 @@
+Error in <TFile::TFile>: file[?1034hThe LL Xib normalization for Run 1 is 602.945 +/- 92.4939
+[?1034hThe LL Xib normalization for Run 2 is 4706.33 +/- 335.346
+Run 1 Lambda Generator Effs = 19.2 % +/- 0.08 %
+Run 1 Lambda Recons. Effs = 1.33921 %
+Run 1 Jpsi Lambda Eff = 0.257129 % +/- 0.00514258 %
+[0mRoot > ootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_LL_FinalBDT0_iso0_.root has less entries 937 than its parent Tree: 17795
+Error in <TFile::TFile>: file ../rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_zeroTracksLL_FinalBDT0.root does not exist
+Error in <TFile::TFile>: file ../rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_zeroTracksLL_FinalBDT0.root does not exist
+Error in <TTreeFormula::Compile>:  Bad numerical expression : "BDT0"
+Error in <TTreeFormula::Compile>:  Bad numerical expression : "BDT0"
+Error in <TFile::TFile>: file ../rootFiles/mcFiles/JpsiLambda/JpsiXi/run2/jpsixi_LL_FinalBDT0_iso0_.root does not exist
+Error in <TFile::TFile>: file ../rootFiles/mcFiles/JpsiLambda/JpsiXi/run2/jpsixi_LL_FinalBDT0_iso0_.root does not exist
+TTree::AddFriend:0: RuntimeWarning: FriendElement MyTuple in file ../rootFiles/mcFiles/JpsiLambda/JpsiXi/run2/jpsixi_LL_FinalBDT0_iso0_.root has less entries 1028 than its parent Tree: 31037
+Error in <TFile::TFile>: file ../rootFiles/mcFiles/JpsiLambda/JpsiXi/run2/jpsixi_zeroTracksLL_FinalBDT0.root does not exist
+Error in <TFile::TFile>: file ../rootFiles/mcFiles/JpsiLambda/JpsiXi/run2/jpsixi_zeroTracksLL_FinalBDT0.root does not exist
+Error in <TTreeFormula::Compile>:  Bad numerical expression : "BDT0"
+Error in <TTreeFormula::Compile>:  Bad numerical expression : "BDT0"
+Error in <TFile::TFile>: file ../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/jpsilambda_LL_FinalBDT0_iso0_.root does not exist
+Error in <TFile::TFile>: file ../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/jpsilambda_LL_FinalBDT0_iso0_.root does not exist
+Warning in <TTree::AddFriend>: FriendElement MyTuple in file ../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/jpsilambda_LL_FinalBDT0_iso0_.root has less entries 1157 than its parent Tree: 17595
+Error in <TFile::TFile>: file ../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/jpsilambda_zeroTracksLL_FinalBDT0.root does not exist
+Error in <TFile::TFile>: file ../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/jpsilambda_zeroTracksLL_FinalBDT0.root does not exist
+Error in <TTreeFormula::Compile>:  Bad numerical expression : "BDT0"
+Error in <TTreeFormula::Compile>:  Bad numerical expression : "BDT0"
+Error in <TTreeFormula::Compile>:  Bad numerical expression : "BDT0"
+Error in <TTreeFormula::Compile>:  Bad numerical expression : "BDT0"
+Error in <TList::AddLast>: argument is a null pointer
+Error in <TList::AddLast>: argument is a null pointer
+
+ *** Break *** segmentation violation
+
+
+
+===========================================================
+There was a crash.
+This is the entire stack trace of all threads:
+===========================================================
+#0  0x00000032c88ac5de in waitpid () from /lib64/libc.so.6
+#1  0x00000032c883e619 in do_system () from /lib64/libc.so.6
+#2  0x00007f1dee91e568 in TUnixSystem::StackTrace() () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCore.so
+#3  0x00007f1dee920a6c in TUnixSystem::DispatchSignals(ESignals) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCore.so
+#4  <signal handler called>
+#5  0x00007f1ddee33bfb in Fitscript_simul(char const*, int, int) () from /data1/avenkate/JpsiLambda_RESTART/scripts/Fitscript_simul_C.so
+#6  0x00007f1de38e2085 in ?? ()
+#7  0x00007fff8774c5d0 in ?? ()
+#8  0x00007f1ddee32c20 in ?? () from /data1/avenkate/JpsiLambda_RESTART/scripts/Fitscript_simul_C.so
+#9  0x0000000100fa9e58 in ?? ()
+#10 0x0000000000c706f0 in ?? ()
+#11 0x00007f1deab86c30 in ?? () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#12 0x00007fff8774ca40 in ?? ()
+#13 0x0000000001569a60 in ?? ()
+#14 0x00007f1deab106b4 in cling::Interpreter::RunFunction(clang::FunctionDecl const*, cling::Value*) [clone .part.312] () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#15 0x00007f1deab14afd in cling::Interpreter::EvaluateInternal(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, cling::CompilationOptions, cling::Value*, cling::Transaction**, unsigned long) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#16 0x00007f1deab14cc1 in cling::Interpreter::process(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, cling::Value*, cling::Transaction**, bool) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#17 0x00007f1deaba941f in cling::MetaProcessor::process(llvm::StringRef, cling::Interpreter::CompilationResult&, cling::Value*, bool) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#18 0x00007f1deaa9573a in HandleInterpreterException(cling::MetaProcessor*, char const*, cling::Interpreter::CompilationResult&, cling::Value*) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#19 0x00007f1deaaa61ab in TCling::ProcessLine(char const*, TInterpreter::EErrorCode*) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#20 0x00007f1dee7eb402 in TApplication::ProcessLine(char const*, bool, int*) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCore.so
+#21 0x00007f1deecb08ee in TRint::ProcessLineNr(char const*, char const*, int*) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libRint.so
+#22 0x00007f1deecb0c3f in TRint::HandleTermInput() () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libRint.so
+#23 0x00007f1dee91ffbd in TUnixSystem::CheckDescriptors() () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCore.so
+#24 0x00007f1dee9212fb in TUnixSystem::DispatchOneEvent(bool) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCore.so
+#25 0x00007f1dee852774 in TSystem::InnerLoop() () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCore.so
+#26 0x00007f1dee8514df in TSystem::Run() () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCore.so
+#27 0x00007f1dee7e7c7f in TApplication::Run(bool) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCore.so
+#28 0x00007f1deecb2162 in TRint::Run(bool) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libRint.so
+#29 0x0000000000400cdc in main ()
+===========================================================
+
+
+The lines below might hint at the cause of the crash.
+You may get help by asking at the ROOT forum http://root.cern.ch/forum.
+Only if you are really convinced it is a bug in ROOT then please submit a
+report at http://root.cern.ch/bugs. Please post the ENTIRE stack trace
+from above as an attachment in addition to anything else
+that might help us fixing this issue.
+===========================================================
+#5  0x00007f1ddee33bfb in Fitscript_simul(char const*, int, int) () from /data1/avenkate/JpsiLambda_RESTART/scripts/Fitscript_simul_C.so
+#6  0x00007f1de38e2085 in ?? ()
+#7  0x00007fff8774c5d0 in ?? ()
+#8  0x00007f1ddee32c20 in ?? () from /data1/avenkate/JpsiLambda_RESTART/scripts/Fitscript_simul_C.so
+#9  0x0000000100fa9e58 in ?? ()
+#10 0x0000000000c706f0 in ?? ()
+#11 0x00007f1deab86c30 in ?? () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#12 0x00007fff8774ca40 in ?? ()
+#13 0x0000000001569a60 in ?? ()
+#14 0x00007f1deab106b4 in cling::Interpreter::RunFunction(clang::FunctionDecl const*, cling::Value*) [clone .part.312] () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#15 0x00007f1deab14afd in cling::Interpreter::EvaluateInternal(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, cling::CompilationOptions, cling::Value*, cling::Transaction**, unsigned long) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#16 0x00007f1deab14cc1 in cling::Interpreter::process(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, cling::Value*, cling::Transaction**, bool) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#17 0x00007f1deaba941f in cling::MetaProcessor::process(llvm::StringRef, cling::Interpreter::CompilationResult&, cling::Value*, bool) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#18 0x00007f1deaa9573a in HandleInterpreterException(cling::MetaProcessor*, char const*, cling::Interpreter::CompilationResult&, cling::Value*) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+===========================================================
+
+

@@ -1,0 +1,5 @@
+********************************
+==> Starting DoSWeight: 
+Tue Mar  5 18:27:01 EST 2019
+WD = /data1/avenkate/JpsiLambda_RESTART
+********************************
