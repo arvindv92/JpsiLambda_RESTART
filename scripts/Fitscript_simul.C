@@ -82,6 +82,42 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 	Double_t eff_Lambda[2]         = {0.0,0.0}; // Overall Eff.
 	Double_t eff_Lambda_staterr[2] = {0.0,0.0}; // Overall Eff. Stat. Err.
 
+	// Lb->J/psi 1405 MC eff & errs
+	Int_t nGen_1405[2]            = {0,0};
+	Double_t eff_1405_gen[2]      = {0.0,0.0};
+	Double_t eff_1405_gen_err[2]  = {0.0,0.0};
+	Double_t eff_1405_rec[2]      = {0.0,0.0};
+	Double_t eff_1405_rec_err[2]  = {0.0,0.0};
+	Double_t eff_1405[2]          = {0.0,0.0};
+	Double_t eff_1405_staterr[2]  = {0.0,0.0};
+
+	// Lb->J/psi 1520 MC eff & errs
+	Int_t nGen_1520[2]            = {0,0};
+	Double_t eff_1520_gen[2]      = {0.0,0.0};
+	Double_t eff_1520_gen_err[2]  = {0.0,0.0};
+	Double_t eff_1520_rec[2]      = {0.0,0.0};
+	Double_t eff_1520_rec_err[2]  = {0.0,0.0};
+	Double_t eff_1520[2]          = {0.0,0.0};
+	Double_t eff_1520_staterr[2]  = {0.0,0.0};
+
+	// Lb->J/psi 1600 MC eff & errs
+	Int_t nGen_1600[2]            = {0,0};
+	Double_t eff_1600_gen[2]      = {0.0,0.0};
+	Double_t eff_1600_gen_err[2]  = {0.0,0.0};
+	Double_t eff_1600_rec[2]      = {0.0,0.0};
+	Double_t eff_1600_rec_err[2]  = {0.0,0.0};
+	Double_t eff_1600[2]          = {0.0,0.0};
+	Double_t eff_1600_staterr[2]  = {0.0,0.0};
+
+	// Lb->chiC1 Lambda MC eff & errs
+	Int_t nGen_chic1[2]            = {0,0};
+	Double_t eff_chic1_gen[2]      = {0.0,0.0};
+	Double_t eff_chic1_gen_err[2]  = {0.0,0.0};
+	Double_t eff_chic1_rec[2]      = {0.0,0.0};
+	Double_t eff_chic1_rec_err[2]  = {0.0,0.0};
+	Double_t eff_chic1[2]          = {0.0,0.0};
+	Double_t eff_chic1_staterr[2]  = {0.0,0.0};
+
 	// Lb->J/psi Sigma MC eff & errs
 	Int_t nGen_Sigma[2]            = {0,0};
 	Double_t eff_Sigma_gen[2]      = {0.0,0.0};
@@ -97,14 +133,44 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 	Double_t eff_ratio_systerr[2]  = {0.0,0.0};
 	Double_t eff_ratio_err[2]      = {0.0,0.0};
 
-	// Systematics put in by hand
-	Float_t xib_syst       = 0.1;
-	Float_t eff_ratio_syst = 0.1;
+	// eff(Lb -> J/psi LAMBDA(1405)) / eff(Lb -> J/psi Lambda)
+	Double_t eff_ratio_1405[2]          = {0.0,0.0};
+	Double_t eff_ratio_staterr_1405[2]  = {0.0,0.0};
+	Double_t eff_ratio_systerr_1405[2]  = {0.0,0.0};
+	Double_t eff_ratio_err_1405[2]      = {0.0,0.0};
+
+	// eff(Lb -> J/psi LAMBDA(1520)) / eff(Lb -> J/psi Lambda)
+	Double_t eff_ratio_1520[2]          = {0.0,0.0};
+	Double_t eff_ratio_staterr_1520[2]  = {0.0,0.0};
+	Double_t eff_ratio_systerr_1520[2]  = {0.0,0.0};
+	Double_t eff_ratio_err_1520[2]      = {0.0,0.0};
+
+	// eff(Lb -> J/psi LAMBDA(1600)) / eff(Lb -> J/psi Lambda)
+	Double_t eff_ratio_1600[2]          = {0.0,0.0};
+	Double_t eff_ratio_staterr_1600[2]  = {0.0,0.0};
+	Double_t eff_ratio_systerr_1600[2]  = {0.0,0.0};
+	Double_t eff_ratio_err_1600[2]      = {0.0,0.0};
+
+	// eff(Lb -> chiC1 Lambda) / eff(Lb -> J/psi Lambda)
+	Double_t eff_ratio_chic1[2]          = {0.0,0.0};
+	Double_t eff_ratio_staterr_chic1[2]  = {0.0,0.0};
+	Double_t eff_ratio_systerr_chic1[2]  = {0.0,0.0};
+	Double_t eff_ratio_err_chic1[2]      = {0.0,0.0};
+
+	// ***************Systematics put in by hand ************************
+	Float_t xib_syst       = 0.05;
+	Float_t eff_ratio_syst = 0.02;
+	Float_t eff_ratio_syst_1405 = 0.02;
+	Float_t eff_ratio_syst_1520 = 0.02;
+	Float_t eff_ratio_syst_1600 = 0.02;
+	Float_t eff_ratio_syst_chic1 = 0.02;
+	// ******************************************************************
 	// Flags controlling shapes
 	Int_t lst1405flag    = 1;
 	Int_t lst1520flag    = 1;
 	Int_t lst1600flag    = 1;
 	Int_t lst1810flag    = 0;
+	Int_t chic1flag      = 1;
 	Int_t xibflag        = 1;
 	Int_t sigmaflag      = 1;
 	Int_t Lst1405_rwtype = 2;
@@ -212,9 +278,11 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 		// fileOut_cut->Close();
 	}
 	//************************************************
+
 	RooHistPdf* SIG[2];
 	RooKeysPdf* SIG_KEYS[2];
 	RooDataSet* ds_sig[2];
+
 	//****Get J/psi Sigma efficiencies and shape from MC*******
 	const char* sigmaPath = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma";
 
@@ -277,24 +345,28 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 		//******************************************************************
 
 		//****************Shape*********************************************
-		treein_sigma_Zero->SetBranchStatus("*",0);
-		treein_sigma_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		treein_sigma_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
-		treein_sigma_Zero->SetBranchStatus("Lb_BKGCAT",1);
+		cout<<"***************************************"<<endl;
+		cout<<"Get J/psi Sigma shape from MC"<<endl;
+		cout<<"***************************************"<<endl;
 
-		treein_sigma_nonZero->SetBranchStatus("*",0);
-		treein_sigma_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		treein_sigma_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
-		treein_sigma_nonZero->SetBranchStatus("Lb_BKGCAT",1);
+		mcTreeIn_Zero_Sigma->SetBranchStatus("*",0);
+		mcTreeIn_Zero_Sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		mcTreeIn_Zero_Sigma->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+		mcTreeIn_Zero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
+
+		mcTreeIn_nonZero_Sigma->SetBranchStatus("*",0);
+		mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		mcTreeIn_nonZero_Sigma->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+		mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
 
 		TFile *tempFile = new TFile("tempFile_sig.root","RECREATE");
 
-		TTree* treein_sigma_Zero_cut    = (TTree*)treein_sigma_Zero->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//Not TRUTH MATCHING HERE!
-		TTree* treein_sigma_nonZero_cut = (TTree*)treein_sigma_nonZero->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//Not TRUTH MATCHING HERE!
+		TTree* mcTreeIn_Zero_Sigma_cut    = (TTree*)mcTreeIn_Zero_Sigma->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//Not TRUTH MATCHING HERE!
+		TTree* mcTreeIn_nonZero_Sigma_cut = (TTree*)mcTreeIn_nonZero_Sigma->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//Not TRUTH MATCHING HERE!
 
 		TList *list_sig = new TList;
-		list_sig->Add(treein_sigma_Zero_cut);
-		list_sig->Add(treein_sigma_nonZero_cut);
+		list_sig->Add(mcTreeIn_Zero_Sigma_cut);
+		list_sig->Add(mcTreeIn_nonZero_Sigma_cut);
 
 		TTree *combTree_sig = TTree::MergeTrees(list_sig);
 		combTree_sig->SetName("combTree_sig");
@@ -319,100 +391,102 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 	}
 	//********************************************************************
 
-	//****Get J/psi Lst(1405) efficiencies from MC*******
+	RooDataSet* ds_1405[2];
+	RooKeysPdf* KEYS_1405[2];
+
+	//****Get J/psi Lst(1405) efficiencies and shape from MC*******
 	const char* Lst1405Path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/Lst1405";
 
 	for(Int_t run = 1; run<=2; run++)
 	{
 		Int_t i = run-1;
-		TFile *mcFileIn_nonZero_Sigma = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_nonZeroTracks.root",
-		                                          sigmaPath,run));
-		TTree *mcTreeIn_nonZero_Sigma = (TTree*)mcFileIn_nonZero_Sigma->Get("MyTuple");
+		TFile *mcFileIn_nonZero_1405 = Open(Form("%s/run%d/lst1405_cutoutks_LL_nonZeroTracks.root",
+		                                         Lst1405Path,run));
+		TTree *mcTreeIn_nonZero_1405 = (TTree*)mcFileIn_nonZero_1405->Get("MyTuple");
 
-		TFile *mcFileIn_Zero_Sigma    = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_ZeroTracks.root",
-		                                          sigmaPath,run));
-		TTree *mcTreeIn_Zero_Sigma    = (TTree*)mcFileIn_Zero_Sigma->Get("MyTuple");
+		TFile *mcFileIn_Zero_1405    = Open(Form("%s/run%d/lst1405_cutoutks_LL_ZeroTracks.root",
+		                                         Lst1405Path,run));
+		TTree *mcTreeIn_Zero_1405    = (TTree*)mcFileIn_Zero_1405->Get("MyTuple");
 
-		mcTreeIn_nonZero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_LL_FinalBDT%d_iso%d_%s.root",
-		                                                 sigmaPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-		mcTreeIn_Zero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_zeroTracksLL_FinalBDT%d.root",
-		                                              sigmaPath,run,bdtConf_Zero[i]));
-		fstream genFile_Sigma;
-		genFile_Sigma.open((Form("../logs/mc/JpsiLambda/JpsiSigma/run%d/gen_log.txt",run)));
+		mcTreeIn_nonZero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_LL_FinalBDT%d_iso%d_%s.root",
+		                                                Lst1405Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+		mcTreeIn_Zero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_zeroTracksLL_FinalBDT%d.root",
+		                                             Lst1405Path,run,bdtConf_Zero[i]));
+		fstream genFile_1405;
+		genFile_1405.open((Form("../logs/mc/JpsiLambda/Lst1405/run%d/gen_log.txt",run)));
 
-		genFile_Sigma>>nGen_Sigma[i]; // Get number of generated events
+		genFile_1405>>nGen_1405[i]; // Get number of generated events
 
-		fstream genEffFile_Sigma;
-		genEffFile_Sigma.open(Form("../logs/mc/JpsiLambda/JpsiSigma/run%d/Generator_Effs_Combined.txt",run));
 
-		genEffFile_Sigma>>eff_Sigma_gen[i]; // Get generator efficiency
-		genEffFile_Sigma>>eff_Sigma_gen_err[i]; // and error on above
+		//***** DONT HAVE GENERATOR EFFS FOR LST(1405) YET
+		// fstream genEffFile_1405;
+		// genEffFile_1405.open(Form("../logs/mc/JpsiLambda/Lst1405/run%d/Generator_Effs_Combined.txt",run));
+		//
+		// genEffFile_1405>>eff_1405_gen[i]; // Get generator efficiency
+		// genEffFile_1405>>eff_1405_gen_err[i]; // and error on above
+		//
+		// cout<<"Run "<<run<<" Lst1405 Generator Effs = "<<eff_1405_gen[i]*100
+		//     <<" % +/- "<<eff_1405_gen_err[i]*100<<" %"<<endl;
 
-		cout<<"Run "<<run<<" Sigma Generator Effs = "<<eff_Sigma_gen[i]*100
-		    <<" % +/- "<<eff_Sigma_gen_err[i]*100<<" %"<<endl;
+		//FOR NOW, EFF RATIO IS JUST RATIO OF RECO EFFS. ONCE I GET GENERATOR EFFS, I'LL PUT THEM IN
 
-		Int_t num_Sigma = mcTreeIn_nonZero_Sigma->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
-		                  mcTreeIn_Zero_Sigma->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+		Int_t num_1405 = mcTreeIn_nonZero_1405->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
+		                 mcTreeIn_Zero_1405->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TM HERE
 
-		eff_Sigma_rec[i]     = num_Sigma*1.0/nGen_Sigma[i]; // Calc. reco. eff.
-		eff_Sigma_rec_err[i] = sqrt(eff_Sigma_rec[i]*(1-eff_Sigma_rec[i])/nGen_Sigma[i]); //stat error on recon. eff.
+		eff_1405_rec[i]     = num_1405*1.0/nGen_1405[i]; // Calc. reco. eff.
+		eff_1405_rec_err[i] = sqrt(eff_1405_rec[i]*(1-eff_1405_rec[i])/nGen_1405[i]); //stat error on recon. eff.
 
-		cout<<"Run "<<run<<" Sigma Recons. Effs = "
-		    <<eff_Sigma_rec[i]*100<<" % +/- "<<eff_Sigma_rec_err[i]*100<<" %"<<endl;
+		cout<<"Run "<<run<<" Lst1405 Recons. Effs = "
+		    <<eff_1405_rec[i]*100<<" % +/- "<<eff_1405_rec_err[i]*100<<" %"<<endl;
 
-		eff_Sigma[i] = eff_Sigma_gen[i] * eff_Sigma_rec[i]; // Calc overall eff.
-		eff_Sigma_staterr[i] = eff_Sigma[i]*sqrt(pow((eff_Sigma_gen_err[i]/eff_Sigma_gen[i]),2) +
-		                                         pow((eff_Sigma_rec_err[i]/eff_Sigma_rec[i]),2)); // and stat. error on above
+		eff_1405[i] = eff_1405_rec[i]; //TEMPORARY
+		eff_1405_staterr[i] = eff_1405_rec_err[i]; //TEMPORARY
 
-		cout<<"Run "<<run<<" Jpsi Sigma Eff = "<<eff_Sigma[i]*100<<" % +/- "<<eff_Sigma_staterr[i]*100<<" %"<<endl;
+		// eff_1405[i] = eff_1405_gen[i] * eff_1405_rec[i]; // Calc overall eff.
+		// eff_1405_staterr[i] = eff_1405[i]*sqrt(pow((eff_1405_gen_err[i]/eff_1405_gen[i]),2) +
+		//                                        pow((eff_1405_rec_err[i]/eff_1405_rec[i]),2));   // and stat. error on above
 
-		eff_ratio[i]         = eff_Sigma[i]/eff_Lambda[i]; // Calc eff ratio.
-		eff_ratio_staterr[i] = eff_ratio[i]*sqrt(pow((eff_Sigma_staterr[i]/eff_Sigma[i]),2)+pow((eff_Lambda_staterr[i]/eff_Lambda[i]),2)); // stat err on ratio
-		eff_ratio_systerr[i] = eff_ratio[i]*eff_ratio_syst;
+		cout<<"Run "<<run<<" Jpsi Lst1405 Eff = "<<eff_1405[i]*100<<" % +/- "<<eff_1405_staterr[i]*100<<" %"<<endl;
 
-		eff_ratio_err[i] = sqrt(pow(eff_ratio_staterr[i],2) + pow(eff_ratio_systerr[i],2));//combine in quadrature
+		// eff_ratio[i]         = eff_1405[i]/eff_Lambda[i]; // Calc eff ratio.
+
+		eff_ratio_1405[i] = eff_1405[i]/eff_Lambda_rec[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
+		// eff_ratio_staterr_1405[i] = eff_ratio_1405[i]*sqrt(pow((eff_1405_staterr[i]/eff_1405[i]),2)+pow((eff_Lambda_staterr[i]/eff_Lambda[i]),2)); // stat err on ratio
+		eff_ratio_staterr_1405[i] = eff_ratio_1405[i]*sqrt(pow((eff_1405_staterr[i]/eff_1405[i]),2)+pow((eff_Lambda_rec_err[i]/eff_Lambda_rec[i]),2)); // TEMPORARY
+
+		eff_ratio_systerr_1405[i] = eff_ratio_1405[i]*eff_ratio_syst_1405;
+
+		eff_ratio_err_1405[i] = sqrt(pow(eff_ratio_staterr_1405[i],2) + pow(eff_ratio_systerr_1405[i],2));//combine in quadrature
 
 		cout<<"***************************************"<<endl;
-		cout<<"The efficiency ratio for Run "<<run<<" is "<<eff_ratio[i]<<" +/- "<<eff_ratio_err[i]<<endl;
+		cout<<"The 1405/Lb efficiency ratio for Run "<<run<<" is "<<eff_ratio_1405[i]<<" +/- "<<eff_ratio_err_1405[i]<<endl;
 		cout<<"***************************************"<<endl;
-	}
-	//*******************************************************************
 
-	RooDataSet* ds_1405[2];
-	RooKeysPdf* KEYS_1405[2];
-	//*********Get shape from Lambda*(1405) background*******************
+		//*******************************************************************
 
-	for(Int_t run = 1; run<=2; run++) {
-		Int_t i = run-1;
-		TFile *filein_1405_nonZero = Open(Form("%s/run%d/lst1405_cutoutks_LL_nonZeroTracks.root",Lst1405Path,run));
-		TTree *treein_1405_nonZero = (TTree*)filein_1405_nonZero->Get("MyTuple");
+		//****************Shape*********************************************
+		cout<<"***************************************"<<endl;
+		cout<<"Get J/psi Lambda(1405) shape from MC"<<endl;
+		cout<<"***************************************"<<endl;
 
-		TFile *filein_1405_Zero = Open(Form("%s/run%d/lst1405_cutoutks_LL_ZeroTracks.root",Lst1405Path,run));
-		TTree *treein_1405_Zero = (TTree*)filein_1405_Zero->Get("MyTuple");
+		mcTreeIn_Zero_1405->SetBranchStatus("*",0);
+		mcTreeIn_Zero_1405->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		mcTreeIn_Zero_1405->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+		mcTreeIn_Zero_1405->SetBranchStatus("Lb_BKGCAT",1);
 
-		treein_1405_nonZero->AddFriend("MyTuple",Form("%s/run%d/lst1405_LL_FinalBDT%d_iso%d_%s.root",
-		                                              Lst1405Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-		treein_1405_Zero->AddFriend("MyTuple",Form("%s/run%d/lst1405_zeroTracksLL_FinalBDT%d.root",
-		                                           Lst1405Path,run,bdtConf_Zero[i]));
-
-		treein_1405_Zero->SetBranchStatus("*",0);
-		treein_1405_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		treein_1405_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
-		treein_1405_Zero->SetBranchStatus("Lb_BKGCAT",1);
-
-		treein_1405_nonZero->SetBranchStatus("*",0);
-		treein_1405_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		treein_1405_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
-		treein_1405_nonZero->SetBranchStatus("Lb_BKGCAT",1);
+		mcTreeIn_nonZero_1405->SetBranchStatus("*",0);
+		mcTreeIn_nonZero_1405->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		mcTreeIn_nonZero_1405->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+		mcTreeIn_nonZero_1405->SetBranchStatus("Lb_BKGCAT",1);
 
 		TFile *tempFile_1405 = new TFile("tempFile_1405.root","RECREATE");
 
-		TTree* treein_1405_Zero_cut    = (TTree*)treein_1405_Zero->CopyTree(Form("Lb_BKGCAT==50 && BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//TRUTH MATCHING HERE!
-		TTree* treein_1405_nonZero_cut = (TTree*)treein_1405_nonZero->CopyTree(Form("Lb_BKGCAT==50 && BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//TRUTH MATCHING HERE!
+		TTree* mcTreeIn_Zero_1405_cut    = (TTree*)mcTreeIn_Zero_1405->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TRUTH MATCHING HERE!
+		TTree* mcTreeIn_nonZero_1405_cut = (TTree*)mcTreeIn_nonZero_1405->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//NOTE NO TRUTH MATCHING HERE!
 
 		TList *list_1405 = new TList;
-		list_1405->Add(treein_1405_Zero_cut);
-		list_1405->Add(treein_1405_nonZero_cut);
+		list_1405->Add(mcTreeIn_Zero_1405_cut);
+		list_1405->Add(mcTreeIn_nonZero_1405_cut);
 
 		TTree *combTree_1405 = TTree::MergeTrees(list_1405);
 		combTree_1405->SetName("combTree_1405");
@@ -422,10 +496,10 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 
 		KEYS_1405[i] = new RooKeysPdf(Form("LST1405_Run%d",run),Form("LST1405_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1405[i]),RooKeysPdf::MirrorBoth,1);
 
-		// treein_1405_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1405_nonZero%d(%d,%d,%d)",run,nbins,low,high),
+		// mcTreeIn_nonZero_1405->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1405_nonZero%d(%d,%d,%d)",run,nbins,low,high),
 		//                            Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");        //Not TRUTH MATCHING HERE!
 		//
-		// treein_1405_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1405_Zero%d(%d,%d,%d)",run,nbins,low,high),
+		// mcTreeIn_Zero_1405->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1405_Zero%d(%d,%d,%d)",run,nbins,low,high),
 		//                         Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");        //Not TRUTH MATCHING HERE!
 		//
 		// TH1D *h1405_nonZero = (TH1D*)gDirectory->Get(Form("h1405_nonZero%d",run));
@@ -457,106 +531,104 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 
 		cout<<"Done importing Jpsi Lst(1405) shape"<<endl;
 	}
-
-	// TFile *filein_lst1405 = nullptr;
-	// TTree *treein_lst1405 = (TTree*)malloc(sizeof(*treein_lst1405));
-	// TString lst1405wtexp  = "";
-	// //  RooRealVar MVweight("MVweight","MVweight",0.,10.);
-	//
-	// if(Lst1405_rwtype == 0)
-	// {
-	//      filein_lst1405 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1405/Lst1405_total_MVrw.root");
-	//      treein_lst1405 = (TTree*)filein_lst1405->Get("MCDecayTree");
-	//      treein_lst1405->SetBranchStatus("*",0);
-	//      treein_lst1405->SetBranchStatus("JpsiLmass",1);
-	//      lst1405wtexp = "";
-	// }
-	// else if(Lst1405_rwtype == 1)
-	// {
-	//      filein_lst1405 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1405/Lst1405_total_MVrw.root");
-	//      lst1405wtexp = "MVweight";
-	//      treein_lst1405 = (TTree*)filein_lst1405->Get("MCDecayTree");
-	//      treein_lst1405->SetBranchStatus("*",0);
-	//      treein_lst1405->SetBranchStatus("JpsiLmass",1);
-	//      treein_lst1405->SetBranchStatus("MVweight",1);
-	// }
-	// else if(Lst1405_rwtype == 2)
-	// {
-	//      filein_lst1405 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1405/Lst1405_total_BONNrw.root");
-	//      lst1405wtexp = "BONNweight";
-	//      treein_lst1405 = (TTree*)filein_lst1405->Get("MCDecayTree");
-	//      treein_lst1405->SetBranchStatus("*",0);
-	//      treein_lst1405->SetBranchStatus("JpsiLmass",1);
-	//      treein_lst1405->SetBranchStatus("BONNweight",1);
-	// }
-	//
-	// treein_lst1405->Draw(Form("JpsiLmass>>hlst1405(%d,%d,%d)",nbins,low,high),
-	//                      lst1405wtexp,"goff");
-	//
-	// TH1D *hlst1405 = (TH1D*)gDirectory->Get("hlst1405");
-	// TH1D *hlst1405_smooth = (TH1D*)hlst1405->Clone("hlst1405_smooth");
-	// hlst1405_smooth->Smooth(2);        //TODO TWEAK THIS
-	// RooDataHist *ds_lst1405 = new RooDataHist("ds_lst1405","ds_lst1405",
-	//                                           *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1405);
-	// RooDataHist *ds_lst1405_smooth = new RooDataHist("ds_lst1405_smooth","ds_lst1405_smooth",
-	//                                                  *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1405_smooth);
-	//
-	// ds_lst1405->Print();
-	// //  RooKeysPdf lstshape("lstshape","lstshape",lstmass,ds_lst);
-	// RooHistPdf lst1405shape("lst1405shape","lst1405shape",*(w.var("Lb_DTF_M_JpsiLConstr")),
-	//                         *ds_lst1405,0);
-	// RooHistPdf LST1405("LST1405","LST1405",
-	//                    *(w.var("Lb_DTF_M_JpsiLConstr")),*ds_lst1405_smooth,0);
-	// RooPlot *framelst1405 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
-	// framelst1405->SetTitle("J/#psi #Lambda^{*} (1405)");
-	// ds_lst1405->plotOn(framelst1405,Name("lst1405data"));
-	// lst1405shape.plotOn(framelst1405,Name("lst1405fit"),LineColor(kBlue));
-	// LST1405.plotOn(framelst1405,Name("lst1405fitsmooth"),LineColor(kRed),LineStyle(kDashed));
-	//
-	// TCanvas *c1405 = new TCanvas("Lambda(1405)","Lambda(1405)");
-	// framelst1405->Draw();
-	//
-	// w.import(LST1405);
-	//
-	// cout<<"Done importing Lambda(1405) shape"<<endl;
 	//*******************************************************************
+
 	RooDataSet* ds_1520[2];
 	RooKeysPdf* KEYS_1520[2];
-	//*********Get shape from Lambda*(1520) background*******************
 
+	//****Get J/psi Lst(1520) efficiencies and shape from MC*******
 	const char* Lst1520Path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/Lst1520";
 
-	for(Int_t run = 1; run<=2; run++) {
+	for(Int_t run = 1; run<=2; run++)
+	{
 		Int_t i = run-1;
-		TFile *filein_1520_nonZero = Open(Form("%s/run%d/lst1520_cutoutks_LL_nonZeroTracks.root",Lst1520Path,run));
-		TTree *treein_1520_nonZero = (TTree*)filein_1520_nonZero->Get("MyTuple");
+		TFile *mcFileIn_nonZero_1520 = Open(Form("%s/run%d/lst1520_cutoutks_LL_nonZeroTracks.root",
+		                                         Lst1520Path,run));
+		TTree *mcTreeIn_nonZero_1520 = (TTree*)mcFileIn_nonZero_1520->Get("MyTuple");
 
-		TFile *filein_1520_Zero = Open(Form("%s/run%d/lst1520_cutoutks_LL_ZeroTracks.root",Lst1520Path,run));
-		TTree *treein_1520_Zero = (TTree*)filein_1520_Zero->Get("MyTuple");
+		TFile *mcFileIn_Zero_1520    = Open(Form("%s/run%d/lst1520_cutoutks_LL_ZeroTracks.root",
+		                                         Lst1520Path,run));
+		TTree *mcTreeIn_Zero_1520    = (TTree*)mcFileIn_Zero_1520->Get("MyTuple");
 
-		treein_1520_nonZero->AddFriend("MyTuple",Form("%s/run%d/lst1520_LL_FinalBDT%d_iso%d_%s.root",
-		                                              Lst1520Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-		treein_1520_Zero->AddFriend("MyTuple",Form("%s/run%d/lst1520_zeroTracksLL_FinalBDT%d.root",
-		                                           Lst1520Path,run,bdtConf_Zero[i]));
+		mcTreeIn_nonZero_1520->AddFriend("MyTuple",Form("%s/run%d/lst1520_LL_FinalBDT%d_iso%d_%s.root",
+		                                                Lst1520Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+		mcTreeIn_Zero_1520->AddFriend("MyTuple",Form("%s/run%d/lst1520_zeroTracksLL_FinalBDT%d.root",
+		                                             Lst1520Path,run,bdtConf_Zero[i]));
+		fstream genFile_1520;
+		genFile_1520.open((Form("../logs/mc/JpsiLambda/Lst1520/run%d/gen_log.txt",run)));
 
-		treein_1520_Zero->SetBranchStatus("*",0);
-		treein_1520_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		treein_1520_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
-		treein_1520_Zero->SetBranchStatus("Lb_BKGCAT",1);
+		genFile_1520>>nGen_1520[i]; // Get number of generated events
 
-		treein_1520_nonZero->SetBranchStatus("*",0);
-		treein_1520_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		treein_1520_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
-		treein_1520_nonZero->SetBranchStatus("Lb_BKGCAT",1);
+
+		//***** DONT HAVE GENERATOR EFFS FOR LST(1520) YET
+		// fstream genEffFile_1520;
+		// genEffFile_1520.open(Form("../logs/mc/JpsiLambda/Lst1520/run%d/Generator_Effs_Combined.txt",run));
+		//
+		// genEffFile_1520>>eff_1520_gen[i]; // Get generator efficiency
+		// genEffFile_1520>>eff_1520_gen_err[i]; // and error on above
+		//
+		// cout<<"Run "<<run<<" Lst1520 Generator Effs = "<<eff_1520_gen[i]*100
+		//     <<" % +/- "<<eff_1520_gen_err[i]*100<<" %"<<endl;
+
+		//FOR NOW, EFF RATIO IS JUST RATIO OF RECO EFFS. ONCE I GET GENERATOR EFFS, I'LL PUT THEM IN
+
+		Int_t num_1520 = mcTreeIn_nonZero_1520->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
+		                 mcTreeIn_Zero_1520->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));                                                //NOTE NO TM HERE
+
+		eff_1520_rec[i]     = num_1520*1.0/nGen_1520[i]; // Calc. reco. eff.
+		eff_1520_rec_err[i] = sqrt(eff_1520_rec[i]*(1-eff_1520_rec[i])/nGen_1520[i]); //stat error on recon. eff.
+
+		cout<<"Run "<<run<<" Lst1520 Recons. Effs = "
+		    <<eff_1520_rec[i]*100<<" % +/- "<<eff_1520_rec_err[i]*100<<" %"<<endl;
+
+		eff_1520[i] = eff_1520_rec[i]; //TEMPORARY
+		eff_1520_staterr[i] = eff_1520_rec_err[i]; //TEMPORARY
+
+		// eff_1520[i] = eff_1520_gen[i] * eff_1520_rec[i]; // Calc overall eff.
+		// eff_1520_staterr[i] = eff_1520[i]*sqrt(pow((eff_1520_gen_err[i]/eff_1520_gen[i]),2) +
+		//                                        pow((eff_1520_rec_err[i]/eff_1520_rec[i]),2));   // and stat. error on above
+
+		cout<<"Run "<<run<<" Jpsi Lst1520 Eff = "<<eff_1520[i]*100<<" % +/- "<<eff_1520_staterr[i]*100<<" %"<<endl;
+
+		// eff_ratio[i]         = eff_1520[i]/eff_Lambda[i]; // Calc eff ratio.
+
+		eff_ratio_1520[i] = eff_1520[i]/eff_Lambda_rec[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
+		// eff_ratio_staterr_1520[i] = eff_ratio_1520[i]*sqrt(pow((eff_1520_staterr[i]/eff_1520[i]),2)+pow((eff_Lambda_staterr[i]/eff_Lambda[i]),2)); // stat err on ratio
+		eff_ratio_staterr_1520[i] = eff_ratio_1520[i]*sqrt(pow((eff_1520_staterr[i]/eff_1520[i]),2)+pow((eff_Lambda_rec_err[i]/eff_Lambda_rec[i]),2)); // TEMPORARY
+
+		eff_ratio_systerr_1520[i] = eff_ratio_1520[i]*eff_ratio_syst_1520;
+
+		eff_ratio_err_1520[i] = sqrt(pow(eff_ratio_staterr_1520[i],2) + pow(eff_ratio_systerr_1520[i],2));//combine in quadrature
+
+		cout<<"***************************************"<<endl;
+		cout<<"The 1520/Lb efficiency ratio for Run "<<run<<" is "<<eff_ratio_1520[i]<<" +/- "<<eff_ratio_err_1520[i]<<endl;
+		cout<<"***************************************"<<endl;
+
+		//*******************************************************************
+
+		//****************Shape*********************************************
+		cout<<"***************************************"<<endl;
+		cout<<"Get J/psi Lambda(1520) shape from MC"<<endl;
+		cout<<"***************************************"<<endl;
+
+		mcTreeIn_Zero_1520->SetBranchStatus("*",0);
+		mcTreeIn_Zero_1520->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		mcTreeIn_Zero_1520->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+		mcTreeIn_Zero_1520->SetBranchStatus("Lb_BKGCAT",1);
+
+		mcTreeIn_nonZero_1520->SetBranchStatus("*",0);
+		mcTreeIn_nonZero_1520->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		mcTreeIn_nonZero_1520->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+		mcTreeIn_nonZero_1520->SetBranchStatus("Lb_BKGCAT",1);
 
 		TFile *tempFile_1520 = new TFile("tempFile_1520.root","RECREATE");
 
-		TTree* treein_1520_Zero_cut    = (TTree*)treein_1520_Zero->CopyTree(Form("Lb_BKGCAT==50 && BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));        //TRUTH MATCHING HERE!
-		TTree* treein_1520_nonZero_cut = (TTree*)treein_1520_nonZero->CopyTree(Form("Lb_BKGCAT==50 && BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));        //TRUTH MATCHING HERE!
+		TTree* mcTreeIn_Zero_1520_cut    = (TTree*)mcTreeIn_Zero_1520->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TRUTH MATCHING HERE!
+		TTree* mcTreeIn_nonZero_1520_cut = (TTree*)mcTreeIn_nonZero_1520->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//NOTE NO TRUTH MATCHING HERE!
 
 		TList *list_1520 = new TList;
-		list_1520->Add(treein_1520_Zero_cut);
-		list_1520->Add(treein_1520_nonZero_cut);
+		list_1520->Add(mcTreeIn_Zero_1520_cut);
+		list_1520->Add(mcTreeIn_nonZero_1520_cut);
 
 		TTree *combTree_1520 = TTree::MergeTrees(list_1520);
 		combTree_1520->SetName("combTree_1520");
@@ -566,10 +638,10 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 
 		KEYS_1520[i] = new RooKeysPdf(Form("LST1520_Run%d",run),Form("LST1520_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1520[i]),RooKeysPdf::MirrorBoth,1);
 
-		// treein_1520_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1520_nonZero%d(%d,%d,%d)",run,nbins,low,high),
+		// mcTreeIn_nonZero_1520->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1520_nonZero%d(%d,%d,%d)",run,nbins,low,high),
 		//                            Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");        //Not TRUTH MATCHING HERE!
 		//
-		// treein_1520_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1520_Zero%d(%d,%d,%d)",run,nbins,low,high),
+		// mcTreeIn_Zero_1520->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1520_Zero%d(%d,%d,%d)",run,nbins,low,high),
 		//                         Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");        //Not TRUTH MATCHING HERE!
 		//
 		// TH1D *h1520_nonZero = (TH1D*)gDirectory->Get(Form("h1520_nonZero%d",run));
@@ -601,85 +673,104 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 
 		cout<<"Done importing Jpsi Lst(1520) shape"<<endl;
 	}
-
-	// TFile *filein_lst1520;
-	// TTree *treein_lst1520 = (TTree*)malloc(sizeof(*treein_lst1520));
-	//
-	// filein_lst1520 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1520/Lst1520_total_jpsil.root");
-	// treein_lst1520 = (TTree*)filein_lst1520->Get("MCDecayTree");
-	// treein_lst1520->SetBranchStatus("*",0);
-	// treein_lst1520->SetBranchStatus("JpsiLmass",1);
-	//
-	// //  RooDataSet ds_lst("ds_lst","ds_lst",treein_lst,RooArgSet(lstmass,MVweight),"MVweight");
-	// treein_lst1520->Draw(Form("JpsiLmass>>hlst1520(%d,%d,%d)",nbins,low,high),"","goff");
-	//
-	// TH1D *hlst1520        = (TH1D*)gDirectory->Get("hlst1520");
-	// TH1D *hlst1520_smooth = (TH1D*)hlst1520->Clone("hlst1520_smooth");
-	// hlst1520_smooth->Smooth(2);        //TODO TWEAK THIS
-	//
-	// //  RooDataHist *ds_lst1 = ds_lst.binnedClone();
-	// RooDataHist *ds_lst1520 = new RooDataHist("ds_lst1520","ds_lst1520",
-	//                                           *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1520);
-	// RooDataHist *ds_lst1520_smooth = new RooDataHist("ds_lst1520_smooth","ds_lst1520_smooth",
-	//                                                  *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1520_smooth);
-	//
-	// ds_lst1520->Print();
-	//
-	// //  RooKeysPdf lstshape("lstshape","lstshape",lstmass,ds_lst);
-	// RooHistPdf lst1520shape("lst1520shape","lst1520shape",*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_lst1520,0);
-	// RooHistPdf LST1520("LST1520","LST1520",*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_lst1520_smooth,0);
-	//
-	// RooPlot *framelst1520 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
-	// framelst1520->SetTitle("J/#psi Lambda^{*} (1520)");
-	// ds_lst1520->plotOn(framelst1520,Name("lst1520data"));
-	// lst1520shape.plotOn(framelst1520,Name("lst1520fit"),LineColor(kBlue));
-	// LST1520.plotOn(framelst1520,Name("lst1520fitsmooth"),LineColor(kRed),LineStyle(kDashed));
-	//
-	// TCanvas *c1520 =  new TCanvas("Lambda(1520)","Lambda(1520)");
-	// framelst1520->Draw();
-	//
-	// w.import(LST1520);
-	//
-	// cout<<"Done importing Lambda(1520) shape"<<endl;
 	//*******************************************************************
 
 	RooDataSet* ds_1600[2];
 	RooKeysPdf* KEYS_1600[2];
-	//*********Get shape from Lambda*(1600) background*******************
 
+	//****Get J/psi Lst(1600) efficiencies and shape from MC*******
 	const char* Lst1600Path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/Lst1600";
 
-	for(Int_t run = 1; run<=2; run++) {
+	for(Int_t run = 1; run<=2; run++)
+	{
 		Int_t i = run-1;
-		TFile *filein_1600_nonZero = Open(Form("%s/run%d/lst1600_cutoutks_LL_nonZeroTracks.root",Lst1600Path,run));
-		TTree *treein_1600_nonZero = (TTree*)filein_1600_nonZero->Get("MyTuple");
+		TFile *mcFileIn_nonZero_1600 = Open(Form("%s/run%d/lst1600_cutoutks_LL_nonZeroTracks.root",
+		                                         Lst1600Path,run));
+		TTree *mcTreeIn_nonZero_1600 = (TTree*)mcFileIn_nonZero_1600->Get("MyTuple");
 
-		TFile *filein_1600_Zero = Open(Form("%s/run%d/lst1600_cutoutks_LL_ZeroTracks.root",Lst1600Path,run));
-		TTree *treein_1600_Zero = (TTree*)filein_1600_Zero->Get("MyTuple");
+		TFile *mcFileIn_Zero_1600    = Open(Form("%s/run%d/lst1600_cutoutks_LL_ZeroTracks.root",
+		                                         Lst1600Path,run));
+		TTree *mcTreeIn_Zero_1600    = (TTree*)mcFileIn_Zero_1600->Get("MyTuple");
 
-		treein_1600_nonZero->AddFriend("MyTuple",Form("%s/run%d/lst1600_LL_FinalBDT%d_iso%d_%s.root",
-		                                              Lst1600Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-		treein_1600_Zero->AddFriend("MyTuple",Form("%s/run%d/lst1600_zeroTracksLL_FinalBDT%d.root",
-		                                           Lst1600Path,run,bdtConf_Zero[i]));
+		mcTreeIn_nonZero_1600->AddFriend("MyTuple",Form("%s/run%d/lst1600_LL_FinalBDT%d_iso%d_%s.root",
+		                                                Lst1600Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+		mcTreeIn_Zero_1600->AddFriend("MyTuple",Form("%s/run%d/lst1600_zeroTracksLL_FinalBDT%d.root",
+		                                             Lst1600Path,run,bdtConf_Zero[i]));
+		fstream genFile_1600;
+		genFile_1600.open((Form("../logs/mc/JpsiLambda/Lst1600/run%d/gen_log.txt",run)));
 
-		treein_1600_Zero->SetBranchStatus("*",0);
-		treein_1600_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		treein_1600_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
-		treein_1600_Zero->SetBranchStatus("Lb_BKGCAT",1);
+		genFile_1600>>nGen_1600[i]; // Get number of generated events
 
-		treein_1600_nonZero->SetBranchStatus("*",0);
-		treein_1600_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		treein_1600_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
-		treein_1600_nonZero->SetBranchStatus("Lb_BKGCAT",1);
+
+		//***** DONT HAVE GENERATOR EFFS FOR LST(1600) YET
+		// fstream genEffFile_1600;
+		// genEffFile_1600.open(Form("../logs/mc/JpsiLambda/Lst1600/run%d/Generator_Effs_Combined.txt",run));
+		//
+		// genEffFile_1600>>eff_1600_gen[i]; // Get generator efficiency
+		// genEffFile_1600>>eff_1600_gen_err[i]; // and error on above
+		//
+		// cout<<"Run "<<run<<" Lst1600 Generator Effs = "<<eff_1600_gen[i]*100
+		//     <<" % +/- "<<eff_1600_gen_err[i]*100<<" %"<<endl;
+
+		//FOR NOW, EFF RATIO IS JUST RATIO OF RECO EFFS. ONCE I GET GENERATOR EFFS, I'LL PUT THEM IN
+
+		Int_t num_1600 = mcTreeIn_nonZero_1600->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
+		                 mcTreeIn_Zero_1600->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));                                                //NOTE NO TM HERE
+
+		eff_1600_rec[i]     = num_1600*1.0/nGen_1600[i]; // Calc. reco. eff.
+		eff_1600_rec_err[i] = sqrt(eff_1600_rec[i]*(1-eff_1600_rec[i])/nGen_1600[i]); //stat error on recon. eff.
+
+		cout<<"Run "<<run<<" Lst1600 Recons. Effs = "
+		    <<eff_1600_rec[i]*100<<" % +/- "<<eff_1600_rec_err[i]*100<<" %"<<endl;
+
+		eff_1600[i] = eff_1600_rec[i]; //TEMPORARY
+		eff_1600_staterr[i] = eff_1600_rec_err[i]; //TEMPORARY
+
+		// eff_1600[i] = eff_1600_gen[i] * eff_1600_rec[i]; // Calc overall eff.
+		// eff_1600_staterr[i] = eff_1600[i]*sqrt(pow((eff_1600_gen_err[i]/eff_1600_gen[i]),2) +
+		//                                        pow((eff_1600_rec_err[i]/eff_1600_rec[i]),2));   // and stat. error on above
+
+		cout<<"Run "<<run<<" Jpsi Lst1600 Eff = "<<eff_1600[i]*100<<" % +/- "<<eff_1600_staterr[i]*100<<" %"<<endl;
+
+		// eff_ratio[i]         = eff_1600[i]/eff_Lambda[i]; // Calc eff ratio.
+
+		eff_ratio_1600[i] = eff_1600[i]/eff_Lambda_rec[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
+		// eff_ratio_staterr_1600[i] = eff_ratio_1600[i]*sqrt(pow((eff_1600_staterr[i]/eff_1600[i]),2)+pow((eff_Lambda_staterr[i]/eff_Lambda[i]),2)); // stat err on ratio
+		eff_ratio_staterr_1600[i] = eff_ratio_1600[i]*sqrt(pow((eff_1600_staterr[i]/eff_1600[i]),2)+pow((eff_Lambda_rec_err[i]/eff_Lambda_rec[i]),2)); // TEMPORARY
+
+		eff_ratio_systerr_1600[i] = eff_ratio_1600[i]*eff_ratio_syst_1600;
+
+		eff_ratio_err_1600[i] = sqrt(pow(eff_ratio_staterr_1600[i],2) + pow(eff_ratio_systerr_1600[i],2));//combine in quadrature
+
+		cout<<"***************************************"<<endl;
+		cout<<"The 1600/Lb efficiency ratio for Run "<<run<<" is "<<eff_ratio_1600[i]<<" +/- "<<eff_ratio_err_1600[i]<<endl;
+		cout<<"***************************************"<<endl;
+
+		//*******************************************************************
+
+		//****************Shape*********************************************
+		cout<<"***************************************"<<endl;
+		cout<<"Get J/psi Lambda(1600) shape from MC"<<endl;
+		cout<<"***************************************"<<endl;
+
+		mcTreeIn_Zero_1600->SetBranchStatus("*",0);
+		mcTreeIn_Zero_1600->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		mcTreeIn_Zero_1600->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+		mcTreeIn_Zero_1600->SetBranchStatus("Lb_BKGCAT",1);
+
+		mcTreeIn_nonZero_1600->SetBranchStatus("*",0);
+		mcTreeIn_nonZero_1600->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		mcTreeIn_nonZero_1600->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+		mcTreeIn_nonZero_1600->SetBranchStatus("Lb_BKGCAT",1);
 
 		TFile *tempFile_1600 = new TFile("tempFile_1600.root","RECREATE");
 
-		TTree* treein_1600_Zero_cut    = (TTree*)treein_1600_Zero->CopyTree(Form("Lb_BKGCAT==50 && BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));        //TRUTH MATCHING HERE!
-		TTree* treein_1600_nonZero_cut = (TTree*)treein_1600_nonZero->CopyTree(Form("Lb_BKGCAT==50 && BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));        //TRUTH MATCHING HERE!
+		TTree* mcTreeIn_Zero_1600_cut    = (TTree*)mcTreeIn_Zero_1600->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TRUTH MATCHING HERE!
+		TTree* mcTreeIn_nonZero_1600_cut = (TTree*)mcTreeIn_nonZero_1600->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//NOTE NO TRUTH MATCHING HERE!
 
 		TList *list_1600 = new TList;
-		list_1600->Add(treein_1600_Zero_cut);
-		list_1600->Add(treein_1600_nonZero_cut);
+		list_1600->Add(mcTreeIn_Zero_1600_cut);
+		list_1600->Add(mcTreeIn_nonZero_1600_cut);
 
 		TTree *combTree_1600 = TTree::MergeTrees(list_1600);
 		combTree_1600->SetName("combTree_1600");
@@ -689,10 +780,10 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 
 		KEYS_1600[i] = new RooKeysPdf(Form("LST1600_Run%d",run),Form("LST1600_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1600[i]),RooKeysPdf::MirrorBoth,1);
 
-		// treein_1600_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1600_nonZero%d(%d,%d,%d)",run,nbins,low,high),
+		// mcTreeIn_nonZero_1600->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1600_nonZero%d(%d,%d,%d)",run,nbins,low,high),
 		//                            Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");        //Not TRUTH MATCHING HERE!
 		//
-		// treein_1600_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1600_Zero%d(%d,%d,%d)",run,nbins,low,high),
+		// mcTreeIn_Zero_1600->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1600_Zero%d(%d,%d,%d)",run,nbins,low,high),
 		//                         Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");        //Not TRUTH MATCHING HERE!
 		//
 		// TH1D *h1600_nonZero = (TH1D*)gDirectory->Get(Form("h1600_nonZero%d",run));
@@ -724,48 +815,540 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 
 		cout<<"Done importing Jpsi Lst(1600) shape"<<endl;
 	}
-
-	// TFile *filein_lst1600;
-	// TTree *treein_lst1600 = (TTree*)malloc(sizeof(*treein_lst1600));
-	//
-	// filein_lst1600 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1600/Lst1600_total_jpsil.root");
-	// treein_lst1600 = (TTree*)filein_lst1600->Get("MCDecayTree");
-	// treein_lst1600->SetBranchStatus("*",0);
-	// treein_lst1600->SetBranchStatus("JpsiLmass",1);
-	//
-	// //  RooDataSet ds_lst("ds_lst","ds_lst",treein_lst,RooArgSet(lstmass,MVweight),"MVweight");
-	// treein_lst1600->Draw(Form("JpsiLmass>>hlst1600(%d,%d,%d)",nbins,low,high),"","goff");
-	//
-	// TH1D *hlst1600        = (TH1D*)gDirectory->Get("hlst1600");
-	// TH1D *hlst1600_smooth = (TH1D*)hlst1600->Clone("hlst1600_smooth");
-	// hlst1600_smooth->Smooth(2);        //TODO TWEAK THIS
-	//
-	// //  RooDataHist *ds_lst1 = ds_lst.binnedClone();
-	// RooDataHist *ds_lst1600 = new RooDataHist("ds_lst1600","ds_lst1600",
-	//                                           *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1600);
-	// RooDataHist *ds_lst1600_smooth = new RooDataHist("ds_lst1600_smooth","ds_lst1600_smooth",
-	//                                                  *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1600_smooth);
-	//
-	// ds_lst1600->Print();
-	//
-	// //  RooKeysPdf lstshape("lstshape","lstshape",lstmass,ds_lst);
-	// RooHistPdf lst1600shape("lst1600shape","lst1600shape",*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_lst1600,0);
-	// RooHistPdf LST1600("LST1600","LST1600",*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_lst1600_smooth,0);
-	//
-	// RooPlot *framelst1600 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
-	// framelst1600->SetTitle("J/#psi Lambda^{*} (1600)");
-	// ds_lst1600->plotOn(framelst1600,Name("lst1600data"));
-	// lst1600shape.plotOn(framelst1600,Name("lst1600fit"),LineColor(kBlue));
-	// LST1600.plotOn(framelst1600,Name("lst1600fitsmooth"),LineColor(kRed),LineStyle(kDashed));
-	//
-	// TCanvas *c1600 =  new TCanvas("Lambda(1600)","Lambda(1600)");
-	// framelst1600->Draw();
-	//
-	// w.import(LST1600);
-	//
-	// cout<<"Done importing Lambda(1600) shape"<<endl;
 	//*******************************************************************
 
+	RooDataSet* ds_chic1[2];
+	RooKeysPdf* KEYS_chic1[2];
+
+	//****Get chiC1 Lambda efficiencies and shape from MC*******
+	const char* chiC1Path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/chiC1";
+
+	for(Int_t run = 1; run<=2; run++)
+	{
+		Int_t i = run-1;
+		TFile *mcFileIn_nonZero_chic1 = Open(Form("%s/run%d/chic1_cutoutks_LL_nonZeroTracks.root",
+		                                          chiC1Path,run));
+		TTree *mcTreeIn_nonZero_chic1 = (TTree*)mcFileIn_nonZero_chic1->Get("MyTuple");
+
+		TFile *mcFileIn_Zero_chic1    = Open(Form("%s/run%d/chic1_cutoutks_LL_ZeroTracks.root",
+		                                          chiC1Path,run));
+		TTree *mcTreeIn_Zero_chic1    = (TTree*)mcFileIn_Zero_chic1->Get("MyTuple");
+
+		mcTreeIn_nonZero_chic1->AddFriend("MyTuple",Form("%s/run%d/chic1_LL_FinalBDT%d_iso%d_%s.root",
+		                                                 chiC1Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+		mcTreeIn_Zero_chic1->AddFriend("MyTuple",Form("%s/run%d/chic1_zeroTracksLL_FinalBDT%d.root",
+		                                              chiC1Path,run,bdtConf_Zero[i]));
+		fstream genFile_chic1;
+		genFile_chic1.open((Form("../logs/mc/JpsiLambda/chiC1/run%d/gen_log.txt",run)));
+
+		genFile_chic1>>nGen_chic1[i]; // Get number of generated events
+
+
+		//***** DONT HAVE GENERATOR EFFS FOR chic1 YET
+		// fstream genEffFile_chic1;
+		// genEffFile_chic1.open(Form("../logs/mc/JpsiLambda/chiC1/run%d/Generator_Effs_Combined.txt",run));
+		//
+		// genEffFile_chic1>>eff_chic1_gen[i]; // Get generator efficiency
+		// genEffFile_chic1>>eff_chic1_gen_err[i]; // and error on above
+		//
+		// cout<<"Run "<<run<<" chic1 Generator Effs = "<<eff_chic1_gen[i]*100
+		//     <<" % +/- "<<eff_chic1_gen_err[i]*100<<" %"<<endl;
+
+		//FOR NOW, EFF RATIO IS JUST RATIO OF RECO EFFS. ONCE I GET GENERATOR EFFS, I'LL PUT THEM IN
+
+		Int_t num_chic1 = mcTreeIn_nonZero_chic1->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
+		                  mcTreeIn_Zero_chic1->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));                                               //NOTE NO TM HERE
+
+		eff_chic1_rec[i]     = num_chic1*1.0/nGen_chic1[i]; // Calc. reco. eff.
+		eff_chic1_rec_err[i] = sqrt(eff_chic1_rec[i]*(1-eff_chic1_rec[i])/nGen_chic1[i]); //stat error on recon. eff.
+
+		cout<<"Run "<<run<<" chic1 Recons. Effs = "
+		    <<eff_chic1_rec[i]*100<<" % +/- "<<eff_chic1_rec_err[i]*100<<" %"<<endl;
+
+		eff_chic1[i] = eff_chic1_rec[i]; //TEMPORARY
+		eff_chic1_staterr[i] = eff_chic1_rec_err[i]; //TEMPORARY
+
+		// eff_chic1[i] = eff_chic1_gen[i] * eff_chic1_rec[i]; // Calc overall eff.
+		// eff_chic1_staterr[i] = eff_chic1[i]*sqrt(pow((eff_chic1_gen_err[i]/eff_chic1_gen[i]),2) +
+		//                                        pow((eff_chic1_rec_err[i]/eff_chic1_rec[i]),2));   // and stat. error on above
+
+		cout<<"Run "<<run<<" chic1 Lambda Eff = "<<eff_chic1[i]*100<<" % +/- "<<eff_chic1_staterr[i]*100<<" %"<<endl;
+
+		// eff_ratio[i]         = eff_chic1[i]/eff_Lambda[i]; // Calc eff ratio.
+
+		eff_ratio_chic1[i] = eff_chic1[i]/eff_Lambda_rec[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
+		// eff_ratio_staterr_chic1[i] = eff_ratio_chic1[i]*sqrt(pow((eff_chic1_staterr[i]/eff_chic1[i]),2)+pow((eff_Lambda_staterr[i]/eff_Lambda[i]),2)); // stat err on ratio
+		eff_ratio_staterr_chic1[i] = eff_ratio_chic1[i]*sqrt(pow((eff_chic1_staterr[i]/eff_chic1[i]),2)+pow((eff_Lambda_rec_err[i]/eff_Lambda_rec[i]),2)); // TEMPORARY
+
+		eff_ratio_systerr_chic1[i] = eff_ratio_chic1[i]*eff_ratio_syst_chic1;
+
+		eff_ratio_err_chic1[i] = sqrt(pow(eff_ratio_staterr_chic1[i],2) + pow(eff_ratio_systerr_chic1[i],2));//combine in quadrature
+
+		cout<<"***************************************"<<endl;
+		cout<<"The chic1/Lb efficiency ratio for Run "<<run<<" is "<<eff_ratio_chic1[i]<<" +/- "<<eff_ratio_err_chic1[i]<<endl;
+		cout<<"***************************************"<<endl;
+
+		//*******************************************************************
+
+		//****************Shape*********************************************
+		cout<<"***************************************"<<endl;
+		cout<<"Get J/psi Lambda(chic1) shape from MC"<<endl;
+		cout<<"***************************************"<<endl;
+
+		mcTreeIn_Zero_chic1->SetBranchStatus("*",0);
+		mcTreeIn_Zero_chic1->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		mcTreeIn_Zero_chic1->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+		mcTreeIn_Zero_chic1->SetBranchStatus("Lb_BKGCAT",1);
+
+		mcTreeIn_nonZero_chic1->SetBranchStatus("*",0);
+		mcTreeIn_nonZero_chic1->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		mcTreeIn_nonZero_chic1->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+		mcTreeIn_nonZero_chic1->SetBranchStatus("Lb_BKGCAT",1);
+
+		TFile *tempFile_chic1 = new TFile("tempFile_chic1.root","RECREATE");
+
+		TTree* mcTreeIn_Zero_chic1_cut    = (TTree*)mcTreeIn_Zero_chic1->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TRUTH MATCHING HERE!
+		TTree* mcTreeIn_nonZero_chic1_cut = (TTree*)mcTreeIn_nonZero_chic1->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//NOTE NO TRUTH MATCHING HERE!
+
+		TList *list_chic1 = new TList;
+		list_chic1->Add(mcTreeIn_Zero_chic1_cut);
+		list_chic1->Add(mcTreeIn_nonZero_chic1_cut);
+
+		TTree *combTree_chic1 = TTree::MergeTrees(list_chic1);
+		combTree_chic1->SetName("combTree_chic1");
+
+		ds_chic1[i] = new RooDataSet("ds_chic1","ds_chic1",combTree_chic1,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))));
+		ds_chic1[i]->Print();
+
+		KEYS_chic1[i] = new RooKeysPdf(Form("chic1_Run%d",run),Form("chic1_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_chic1[i]),RooKeysPdf::MirrorBoth,1);
+
+		// mcTreeIn_nonZero_chic1->Draw(Form("Lb_DTF_M_JpsiLConstr>>hchic1_nonZero%d(%d,%d,%d)",run,nbins,low,high),
+		//                            Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");        //Not TRUTH MATCHING HERE!
+		//
+		// mcTreeIn_Zero_chic1->Draw(Form("Lb_DTF_M_JpsiLConstr>>hchic1_Zero%d(%d,%d,%d)",run,nbins,low,high),
+		//                         Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");        //Not TRUTH MATCHING HERE!
+		//
+		// TH1D *hchic1_nonZero = (TH1D*)gDirectory->Get(Form("hchic1_nonZero%d",run));
+		// TH1D *hchic1_Zero    = (TH1D*)gDirectory->Get(Form("hchic1_Zero%d",run));
+		// TH1D *hchic1         = new TH1D(Form("hchic1%d",run),"",nbins,low,high);
+		//
+		// hchic1->Add(hchic1_nonZero,hchic1_Zero);
+		// TH1D *hchic1_smooth  = (TH1D*)hchic1->Clone(Form("hchic1_smooth%d",run));
+		// hchic1_smooth->Smooth(2);
+		//
+		// RooDataHist *ds_chic1        = new RooDataHist(Form("ds_chic1%d",run),Form("ds_chic1%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),hchic1);
+		// RooDataHist *ds_chic1_smooth = new RooDataHist(Form("ds_chic1_smooth%d",run),Form("ds_chic1_smooth%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),hchic1_smooth);
+		//
+		// ds_chic1->Print();
+		//
+		// RooHistPdf chic1shape(Form("chic1shape%d",run),Form("chic1shape%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_chic1,0);
+		// SIG[i] = new RooHistPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_chic1_smooth,0);
+
+		RooPlot *framechic1 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+		framechic1->SetTitle("#chi_{C1} #Lambda");
+		// ds_chic1->plotOn(framechic1,Name("chic1data"));
+		ds_chic1[i]->plotOn(framechic1,Name("chiC1data"));
+		// chic1shape.plotOn(framechic1,Name("chic1fit"),LineColor(kBlue));
+		(*(KEYS_chic1[i])).plotOn(framechic1,Name("chiC1fitsmooth"),LineColor(kRed),LineStyle(kDashed));
+
+		TCanvas *cchic1 = new TCanvas(Form("chic1_Run%d",run),Form("chic1_Run%d",run));
+		framechic1->Draw();
+		w.import(*(KEYS_chic1[i]));
+
+		cout<<"Done importing chiC1 Lambda shape"<<endl;
+	}
+	//*******************************************************************
+
+	// //*********Get shape from Lambda*(1405) background*******************
+	//
+	// for(Int_t run = 1; run<=2; run++) {
+	//      Int_t i = run-1;
+	//      TFile *filein_1405_nonZero = Open(Form("%s/run%d/lst1405_cutoutks_LL_nonZeroTracks.root",Lst1405Path,run));
+	//      TTree *treein_1405_nonZero = (TTree*)filein_1405_nonZero->Get("MyTuple");
+	//
+	//      TFile *filein_1405_Zero = Open(Form("%s/run%d/lst1405_cutoutks_LL_ZeroTracks.root",Lst1405Path,run));
+	//      TTree *treein_1405_Zero = (TTree*)filein_1405_Zero->Get("MyTuple");
+	//
+	//      treein_1405_nonZero->AddFriend("MyTuple",Form("%s/run%d/lst1405_LL_FinalBDT%d_iso%d_%s.root",
+	//                                                    Lst1405Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+	//      treein_1405_Zero->AddFriend("MyTuple",Form("%s/run%d/lst1405_zeroTracksLL_FinalBDT%d.root",
+	//                                                 Lst1405Path,run,bdtConf_Zero[i]));
+	//
+	//      treein_1405_Zero->SetBranchStatus("*",0);
+	//      treein_1405_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+	//      treein_1405_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+	//      treein_1405_Zero->SetBranchStatus("Lb_BKGCAT",1);
+	//
+	//      treein_1405_nonZero->SetBranchStatus("*",0);
+	//      treein_1405_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+	//      treein_1405_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+	//      treein_1405_nonZero->SetBranchStatus("Lb_BKGCAT",1);
+	//
+	//      TFile *tempFile_1405 = new TFile("tempFile_1405.root","RECREATE");
+	//
+	//      TTree* treein_1405_Zero_cut    = (TTree*)treein_1405_Zero->CopyTree(Form("Lb_BKGCAT==50 && BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//TRUTH MATCHING HERE!
+	//      TTree* treein_1405_nonZero_cut = (TTree*)treein_1405_nonZero->CopyTree(Form("Lb_BKGCAT==50 && BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//TRUTH MATCHING HERE!
+	//
+	//      TList *list_1405 = new TList;
+	//      list_1405->Add(treein_1405_Zero_cut);
+	//      list_1405->Add(treein_1405_nonZero_cut);
+	//
+	//      TTree *combTree_1405 = TTree::MergeTrees(list_1405);
+	//      combTree_1405->SetName("combTree_1405");
+	//
+	//      ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))));
+	//      ds_1405[i]->Print();
+	//
+	//      KEYS_1405[i] = new RooKeysPdf(Form("LST1405_Run%d",run),Form("LST1405_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1405[i]),RooKeysPdf::MirrorBoth,1);
+	//
+	//      // treein_1405_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1405_nonZero%d(%d,%d,%d)",run,nbins,low,high),
+	//      //                            Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");        //Not TRUTH MATCHING HERE!
+	//      //
+	//      // treein_1405_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1405_Zero%d(%d,%d,%d)",run,nbins,low,high),
+	//      //                         Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");        //Not TRUTH MATCHING HERE!
+	//      //
+	//      // TH1D *h1405_nonZero = (TH1D*)gDirectory->Get(Form("h1405_nonZero%d",run));
+	//      // TH1D *h1405_Zero    = (TH1D*)gDirectory->Get(Form("h1405_Zero%d",run));
+	//      // TH1D *h1405         = new TH1D(Form("h1405%d",run),"",nbins,low,high);
+	//      //
+	//      // h1405->Add(h1405_nonZero,h1405_Zero);
+	//      // TH1D *h1405_smooth  = (TH1D*)h1405->Clone(Form("h1405_smooth%d",run));
+	//      // h1405_smooth->Smooth(2);
+	//      //
+	//      // RooDataHist *ds_1405        = new RooDataHist(Form("ds_1405%d",run),Form("ds_1405%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),h1405);
+	//      // RooDataHist *ds_1405_smooth = new RooDataHist(Form("ds_1405_smooth%d",run),Form("ds_1405_smooth%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),h1405_smooth);
+	//      //
+	//      // ds_1405->Print();
+	//      //
+	//      // RooHistPdf 1405shape(Form("1405shape%d",run),Form("1405shape%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_1405,0);
+	//      // SIG[i] = new RooHistPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_1405_smooth,0);
+	//
+	//      RooPlot *frame1405 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+	//      frame1405->SetTitle("J/#psi #Lambda(1405)");
+	//      // ds_1405->plotOn(frame1405,Name("1405data"));
+	//      ds_1405[i]->plotOn(frame1405,Name("1405data"));
+	//      // 1405shape.plotOn(frame1405,Name("1405fit"),LineColor(kBlue));
+	//      (*(KEYS_1405[i])).plotOn(frame1405,Name("1405fitsmooth"),LineColor(kRed),LineStyle(kDashed));
+	//
+	//      TCanvas *c1405 = new TCanvas(Form("JpsiLst(1405)%d",run),Form("JpsiLst(1405)%d",run));
+	//      frame1405->Draw();
+	//      w.import(*(KEYS_1405[i]));
+	//
+	//      cout<<"Done importing Jpsi Lst(1405) shape"<<endl;
+	// }
+	//
+	// // TFile *filein_lst1405 = nullptr;
+	// // TTree *treein_lst1405 = (TTree*)malloc(sizeof(*treein_lst1405));
+	// // TString lst1405wtexp  = "";
+	// // //  RooRealVar MVweight("MVweight","MVweight",0.,10.);
+	// //
+	// // if(Lst1405_rwtype == 0)
+	// // {
+	// //      filein_lst1405 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1405/Lst1405_total_MVrw.root");
+	// //      treein_lst1405 = (TTree*)filein_lst1405->Get("MCDecayTree");
+	// //      treein_lst1405->SetBranchStatus("*",0);
+	// //      treein_lst1405->SetBranchStatus("JpsiLmass",1);
+	// //      lst1405wtexp = "";
+	// // }
+	// // else if(Lst1405_rwtype == 1)
+	// // {
+	// //      filein_lst1405 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1405/Lst1405_total_MVrw.root");
+	// //      lst1405wtexp = "MVweight";
+	// //      treein_lst1405 = (TTree*)filein_lst1405->Get("MCDecayTree");
+	// //      treein_lst1405->SetBranchStatus("*",0);
+	// //      treein_lst1405->SetBranchStatus("JpsiLmass",1);
+	// //      treein_lst1405->SetBranchStatus("MVweight",1);
+	// // }
+	// // else if(Lst1405_rwtype == 2)
+	// // {
+	// //      filein_lst1405 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1405/Lst1405_total_BONNrw.root");
+	// //      lst1405wtexp = "BONNweight";
+	// //      treein_lst1405 = (TTree*)filein_lst1405->Get("MCDecayTree");
+	// //      treein_lst1405->SetBranchStatus("*",0);
+	// //      treein_lst1405->SetBranchStatus("JpsiLmass",1);
+	// //      treein_lst1405->SetBranchStatus("BONNweight",1);
+	// // }
+	// //
+	// // treein_lst1405->Draw(Form("JpsiLmass>>hlst1405(%d,%d,%d)",nbins,low,high),
+	// //                      lst1405wtexp,"goff");
+	// //
+	// // TH1D *hlst1405 = (TH1D*)gDirectory->Get("hlst1405");
+	// // TH1D *hlst1405_smooth = (TH1D*)hlst1405->Clone("hlst1405_smooth");
+	// // hlst1405_smooth->Smooth(2);        //TODO TWEAK THIS
+	// // RooDataHist *ds_lst1405 = new RooDataHist("ds_lst1405","ds_lst1405",
+	// //                                           *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1405);
+	// // RooDataHist *ds_lst1405_smooth = new RooDataHist("ds_lst1405_smooth","ds_lst1405_smooth",
+	// //                                                  *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1405_smooth);
+	// //
+	// // ds_lst1405->Print();
+	// // //  RooKeysPdf lstshape("lstshape","lstshape",lstmass,ds_lst);
+	// // RooHistPdf lst1405shape("lst1405shape","lst1405shape",*(w.var("Lb_DTF_M_JpsiLConstr")),
+	// //                         *ds_lst1405,0);
+	// // RooHistPdf LST1405("LST1405","LST1405",
+	// //                    *(w.var("Lb_DTF_M_JpsiLConstr")),*ds_lst1405_smooth,0);
+	// // RooPlot *framelst1405 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+	// // framelst1405->SetTitle("J/#psi #Lambda^{*} (1405)");
+	// // ds_lst1405->plotOn(framelst1405,Name("lst1405data"));
+	// // lst1405shape.plotOn(framelst1405,Name("lst1405fit"),LineColor(kBlue));
+	// // LST1405.plotOn(framelst1405,Name("lst1405fitsmooth"),LineColor(kRed),LineStyle(kDashed));
+	// //
+	// // TCanvas *c1405 = new TCanvas("Lambda(1405)","Lambda(1405)");
+	// // framelst1405->Draw();
+	// //
+	// // w.import(LST1405);
+	// //
+	// // cout<<"Done importing Lambda(1405) shape"<<endl;
+	// //*******************************************************************
+
+	//*******************************************************************
+	// RooDataSet* ds_1520[2];
+	// RooKeysPdf* KEYS_1520[2];
+	// //*********Get shape from Lambda*(1520) background*******************
+	//
+	// const char* Lst1520Path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/Lst1520";
+	//
+	// for(Int_t run = 1; run<=2; run++) {
+	//      Int_t i = run-1;
+	//      TFile *filein_1520_nonZero = Open(Form("%s/run%d/lst1520_cutoutks_LL_nonZeroTracks.root",Lst1520Path,run));
+	//      TTree *treein_1520_nonZero = (TTree*)filein_1520_nonZero->Get("MyTuple");
+	//
+	//      TFile *filein_1520_Zero = Open(Form("%s/run%d/lst1520_cutoutks_LL_ZeroTracks.root",Lst1520Path,run));
+	//      TTree *treein_1520_Zero = (TTree*)filein_1520_Zero->Get("MyTuple");
+	//
+	//      treein_1520_nonZero->AddFriend("MyTuple",Form("%s/run%d/lst1520_LL_FinalBDT%d_iso%d_%s.root",
+	//                                                    Lst1520Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+	//      treein_1520_Zero->AddFriend("MyTuple",Form("%s/run%d/lst1520_zeroTracksLL_FinalBDT%d.root",
+	//                                                 Lst1520Path,run,bdtConf_Zero[i]));
+	//
+	//      treein_1520_Zero->SetBranchStatus("*",0);
+	//      treein_1520_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+	//      treein_1520_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+	//      treein_1520_Zero->SetBranchStatus("Lb_BKGCAT",1);
+	//
+	//      treein_1520_nonZero->SetBranchStatus("*",0);
+	//      treein_1520_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+	//      treein_1520_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+	//      treein_1520_nonZero->SetBranchStatus("Lb_BKGCAT",1);
+	//
+	//      TFile *tempFile_1520 = new TFile("tempFile_1520.root","RECREATE");
+	//
+	//      TTree* treein_1520_Zero_cut    = (TTree*)treein_1520_Zero->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i])); //NOTE NO TRUTH MATCHING HERE!
+	//      TTree* treein_1520_nonZero_cut = (TTree*)treein_1520_nonZero->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//NOTE NO TRUTH MATCHING HERE!
+	//
+	//      TList *list_1520 = new TList;
+	//      list_1520->Add(treein_1520_Zero_cut);
+	//      list_1520->Add(treein_1520_nonZero_cut);
+	//
+	//      TTree *combTree_1520 = TTree::MergeTrees(list_1520);
+	//      combTree_1520->SetName("combTree_1520");
+	//
+	//      ds_1520[i] = new RooDataSet("ds_1520","ds_1520",combTree_1520,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))));
+	//      ds_1520[i]->Print();
+	//
+	//      KEYS_1520[i] = new RooKeysPdf(Form("LST1520_Run%d",run),Form("LST1520_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1520[i]),RooKeysPdf::MirrorBoth,1);
+	//
+	//      // treein_1520_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1520_nonZero%d(%d,%d,%d)",run,nbins,low,high),
+	//      //                            Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");        //Not TRUTH MATCHING HERE!
+	//      //
+	//      // treein_1520_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1520_Zero%d(%d,%d,%d)",run,nbins,low,high),
+	//      //                         Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");        //Not TRUTH MATCHING HERE!
+	//      //
+	//      // TH1D *h1520_nonZero = (TH1D*)gDirectory->Get(Form("h1520_nonZero%d",run));
+	//      // TH1D *h1520_Zero    = (TH1D*)gDirectory->Get(Form("h1520_Zero%d",run));
+	//      // TH1D *h1520         = new TH1D(Form("h1520%d",run),"",nbins,low,high);
+	//      //
+	//      // h1520->Add(h1520_nonZero,h1520_Zero);
+	//      // TH1D *h1520_smooth  = (TH1D*)h1520->Clone(Form("h1520_smooth%d",run));
+	//      // h1520_smooth->Smooth(2);
+	//      //
+	//      // RooDataHist *ds_1520        = new RooDataHist(Form("ds_1520%d",run),Form("ds_1520%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),h1520);
+	//      // RooDataHist *ds_1520_smooth = new RooDataHist(Form("ds_1520_smooth%d",run),Form("ds_1520_smooth%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),h1520_smooth);
+	//      //
+	//      // ds_1520->Print();
+	//      //
+	//      // RooHistPdf 1520shape(Form("1520shape%d",run),Form("1520shape%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_1520,0);
+	//      // SIG[i] = new RooHistPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_1520_smooth,0);
+	//
+	//      RooPlot *frame1520 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+	//      frame1520->SetTitle("J/#psi #Lambda(1520)");
+	//      // ds_1520->plotOn(frame1520,Name("1520data"));
+	//      ds_1520[i]->plotOn(frame1520,Name("1520data"));
+	//      // 1520shape.plotOn(frame1520,Name("1520fit"),LineColor(kBlue));
+	//      (*(KEYS_1520[i])).plotOn(frame1520,Name("1520fitsmooth"),LineColor(kRed),LineStyle(kDashed));
+	//
+	//      TCanvas *c1520 = new TCanvas(Form("JpsiLst(1520)%d",run),Form("JpsiLst(1520)%d",run));
+	//      frame1520->Draw();
+	//      w.import(*(KEYS_1520[i]));
+	//
+	//      cout<<"Done importing Jpsi Lst(1520) shape"<<endl;
+	// }
+	//
+	// // TFile *filein_lst1520;
+	// // TTree *treein_lst1520 = (TTree*)malloc(sizeof(*treein_lst1520));
+	// //
+	// // filein_lst1520 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1520/Lst1520_total_jpsil.root");
+	// // treein_lst1520 = (TTree*)filein_lst1520->Get("MCDecayTree");
+	// // treein_lst1520->SetBranchStatus("*",0);
+	// // treein_lst1520->SetBranchStatus("JpsiLmass",1);
+	// //
+	// // //  RooDataSet ds_lst("ds_lst","ds_lst",treein_lst,RooArgSet(lstmass,MVweight),"MVweight");
+	// // treein_lst1520->Draw(Form("JpsiLmass>>hlst1520(%d,%d,%d)",nbins,low,high),"","goff");
+	// //
+	// // TH1D *hlst1520        = (TH1D*)gDirectory->Get("hlst1520");
+	// // TH1D *hlst1520_smooth = (TH1D*)hlst1520->Clone("hlst1520_smooth");
+	// // hlst1520_smooth->Smooth(2);        //TODO TWEAK THIS
+	// //
+	// // //  RooDataHist *ds_lst1 = ds_lst.binnedClone();
+	// // RooDataHist *ds_lst1520 = new RooDataHist("ds_lst1520","ds_lst1520",
+	// //                                           *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1520);
+	// // RooDataHist *ds_lst1520_smooth = new RooDataHist("ds_lst1520_smooth","ds_lst1520_smooth",
+	// //                                                  *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1520_smooth);
+	// //
+	// // ds_lst1520->Print();
+	// //
+	// // //  RooKeysPdf lstshape("lstshape","lstshape",lstmass,ds_lst);
+	// // RooHistPdf lst1520shape("lst1520shape","lst1520shape",*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_lst1520,0);
+	// // RooHistPdf LST1520("LST1520","LST1520",*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_lst1520_smooth,0);
+	// //
+	// // RooPlot *framelst1520 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+	// // framelst1520->SetTitle("J/#psi Lambda^{*} (1520)");
+	// // ds_lst1520->plotOn(framelst1520,Name("lst1520data"));
+	// // lst1520shape.plotOn(framelst1520,Name("lst1520fit"),LineColor(kBlue));
+	// // LST1520.plotOn(framelst1520,Name("lst1520fitsmooth"),LineColor(kRed),LineStyle(kDashed));
+	// //
+	// // TCanvas *c1520 =  new TCanvas("Lambda(1520)","Lambda(1520)");
+	// // framelst1520->Draw();
+	// //
+	// // w.import(LST1520);
+	// //
+	// // cout<<"Done importing Lambda(1520) shape"<<endl;
+	// //*******************************************************************
+	//
+	// //*******************************************************************
+	// RooDataSet* ds_1600[2];
+	// RooKeysPdf* KEYS_1600[2];
+	// //*********Get shape from Lambda*(1600) background*******************
+	//
+	// const char* Lst1600Path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/Lst1600";
+	//
+	// for(Int_t run = 1; run<=2; run++) {
+	//      Int_t i = run-1;
+	//      TFile *filein_1600_nonZero = Open(Form("%s/run%d/lst1600_cutoutks_LL_nonZeroTracks.root",Lst1600Path,run));
+	//      TTree *treein_1600_nonZero = (TTree*)filein_1600_nonZero->Get("MyTuple");
+	//
+	//      TFile *filein_1600_Zero = Open(Form("%s/run%d/lst1600_cutoutks_LL_ZeroTracks.root",Lst1600Path,run));
+	//      TTree *treein_1600_Zero = (TTree*)filein_1600_Zero->Get("MyTuple");
+	//
+	//      treein_1600_nonZero->AddFriend("MyTuple",Form("%s/run%d/lst1600_LL_FinalBDT%d_iso%d_%s.root",
+	//                                                    Lst1600Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+	//      treein_1600_Zero->AddFriend("MyTuple",Form("%s/run%d/lst1600_zeroTracksLL_FinalBDT%d.root",
+	//                                                 Lst1600Path,run,bdtConf_Zero[i]));
+	//
+	//      treein_1600_Zero->SetBranchStatus("*",0);
+	//      treein_1600_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+	//      treein_1600_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+	//      treein_1600_Zero->SetBranchStatus("Lb_BKGCAT",1);
+	//
+	//      treein_1600_nonZero->SetBranchStatus("*",0);
+	//      treein_1600_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+	//      treein_1600_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+	//      treein_1600_nonZero->SetBranchStatus("Lb_BKGCAT",1);
+	//
+	//      TFile *tempFile_1600 = new TFile("tempFile_1600.root","RECREATE");
+	//
+	//      TTree* treein_1600_Zero_cut    = (TTree*)treein_1600_Zero->CopyTree(Form("Lb_BKGCAT==50 && BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));        //TRUTH MATCHING HERE!
+	//      TTree* treein_1600_nonZero_cut = (TTree*)treein_1600_nonZero->CopyTree(Form("Lb_BKGCAT==50 && BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));        //TRUTH MATCHING HERE!
+	//
+	//      TList *list_1600 = new TList;
+	//      list_1600->Add(treein_1600_Zero_cut);
+	//      list_1600->Add(treein_1600_nonZero_cut);
+	//
+	//      TTree *combTree_1600 = TTree::MergeTrees(list_1600);
+	//      combTree_1600->SetName("combTree_1600");
+	//
+	//      ds_1600[i] = new RooDataSet("ds_1600","ds_1600",combTree_1600,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))));
+	//      ds_1600[i]->Print();
+	//
+	//      KEYS_1600[i] = new RooKeysPdf(Form("LST1600_Run%d",run),Form("LST1600_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1600[i]),RooKeysPdf::MirrorBoth,1);
+	//
+	//      // treein_1600_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1600_nonZero%d(%d,%d,%d)",run,nbins,low,high),
+	//      //                            Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");        //Not TRUTH MATCHING HERE!
+	//      //
+	//      // treein_1600_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1600_Zero%d(%d,%d,%d)",run,nbins,low,high),
+	//      //                         Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");        //Not TRUTH MATCHING HERE!
+	//      //
+	//      // TH1D *h1600_nonZero = (TH1D*)gDirectory->Get(Form("h1600_nonZero%d",run));
+	//      // TH1D *h1600_Zero    = (TH1D*)gDirectory->Get(Form("h1600_Zero%d",run));
+	//      // TH1D *h1600         = new TH1D(Form("h1600%d",run),"",nbins,low,high);
+	//      //
+	//      // h1600->Add(h1600_nonZero,h1600_Zero);
+	//      // TH1D *h1600_smooth  = (TH1D*)h1600->Clone(Form("h1600_smooth%d",run));
+	//      // h1600_smooth->Smooth(2);
+	//      //
+	//      // RooDataHist *ds_1600        = new RooDataHist(Form("ds_1600%d",run),Form("ds_1600%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),h1600);
+	//      // RooDataHist *ds_1600_smooth = new RooDataHist(Form("ds_1600_smooth%d",run),Form("ds_1600_smooth%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),h1600_smooth);
+	//      //
+	//      // ds_1600->Print();
+	//      //
+	//      // RooHistPdf 1600shape(Form("1600shape%d",run),Form("1600shape%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_1600,0);
+	//      // SIG[i] = new RooHistPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_1600_smooth,0);
+	//
+	//      RooPlot *frame1600 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+	//      frame1600->SetTitle("J/#psi #Lambda(1600)");
+	//      // ds_1600->plotOn(frame1600,Name("1600data"));
+	//      ds_1600[i]->plotOn(frame1600,Name("1600data"));
+	//      // 1600shape.plotOn(frame1600,Name("1600fit"),LineColor(kBlue));
+	//      (*(KEYS_1600[i])).plotOn(frame1600,Name("1600fitsmooth"),LineColor(kRed),LineStyle(kDashed));
+	//
+	//      TCanvas *c1600 = new TCanvas(Form("JpsiLst(1600)%d",run),Form("JpsiLst(1600)%d",run));
+	//      frame1600->Draw();
+	//      w.import(*(KEYS_1600[i]));
+	//
+	//      cout<<"Done importing Jpsi Lst(1600) shape"<<endl;
+	// }
+	//
+	// // TFile *filein_lst1600;
+	// // TTree *treein_lst1600 = (TTree*)malloc(sizeof(*treein_lst1600));
+	// //
+	// // filein_lst1600 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1600/Lst1600_total_jpsil.root");
+	// // treein_lst1600 = (TTree*)filein_lst1600->Get("MCDecayTree");
+	// // treein_lst1600->SetBranchStatus("*",0);
+	// // treein_lst1600->SetBranchStatus("JpsiLmass",1);
+	// //
+	// // //  RooDataSet ds_lst("ds_lst","ds_lst",treein_lst,RooArgSet(lstmass,MVweight),"MVweight");
+	// // treein_lst1600->Draw(Form("JpsiLmass>>hlst1600(%d,%d,%d)",nbins,low,high),"","goff");
+	// //
+	// // TH1D *hlst1600        = (TH1D*)gDirectory->Get("hlst1600");
+	// // TH1D *hlst1600_smooth = (TH1D*)hlst1600->Clone("hlst1600_smooth");
+	// // hlst1600_smooth->Smooth(2);        //TODO TWEAK THIS
+	// //
+	// // //  RooDataHist *ds_lst1 = ds_lst.binnedClone();
+	// // RooDataHist *ds_lst1600 = new RooDataHist("ds_lst1600","ds_lst1600",
+	// //                                           *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1600);
+	// // RooDataHist *ds_lst1600_smooth = new RooDataHist("ds_lst1600_smooth","ds_lst1600_smooth",
+	// //                                                  *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1600_smooth);
+	// //
+	// // ds_lst1600->Print();
+	// //
+	// // //  RooKeysPdf lstshape("lstshape","lstshape",lstmass,ds_lst);
+	// // RooHistPdf lst1600shape("lst1600shape","lst1600shape",*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_lst1600,0);
+	// // RooHistPdf LST1600("LST1600","LST1600",*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_lst1600_smooth,0);
+	// //
+	// // RooPlot *framelst1600 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+	// // framelst1600->SetTitle("J/#psi Lambda^{*} (1600)");
+	// // ds_lst1600->plotOn(framelst1600,Name("lst1600data"));
+	// // lst1600shape.plotOn(framelst1600,Name("lst1600fit"),LineColor(kBlue));
+	// // LST1600.plotOn(framelst1600,Name("lst1600fitsmooth"),LineColor(kRed),LineStyle(kDashed));
+	// //
+	// // TCanvas *c1600 =  new TCanvas("Lambda(1600)","Lambda(1600)");
+	// // framelst1600->Draw();
+	// //
+	// // w.import(LST1600);
+	// //
+	// // cout<<"Done importing Lambda(1600) shape"<<endl;
+	// //*******************************************************************
+	//
+	// //*******************************************************************
 	RooHistPdf* XIB[2];
 	RooKeysPdf* XIB_KEYS[2];
 	RooDataSet* ds_xi[2];
@@ -854,81 +1437,81 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 
 	//******************Get shape from Jpsi Sigma signal*****************
 
-	for(Int_t run = 1; run<=2; run++) {
-		Int_t i = run-1;
-		TFile *filein_sigma_nonZero = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_nonZeroTracks.root",sigmaPath,run));
-		TTree *treein_sigma_nonZero = (TTree*)filein_sigma_nonZero->Get("MyTuple");
-
-		TFile *filein_sigma_Zero = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_ZeroTracks.root",sigmaPath,run));
-		TTree *treein_sigma_Zero = (TTree*)filein_sigma_Zero->Get("MyTuple");
-
-		treein_sigma_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_LL_FinalBDT%d_iso%d_%s.root",
-		                                               sigmaPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-		treein_sigma_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_zeroTracksLL_FinalBDT%d.root",
-		                                            sigmaPath,run,bdtConf_Zero[i]));
-
-		treein_sigma_Zero->SetBranchStatus("*",0);
-		treein_sigma_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		treein_sigma_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
-		treein_sigma_Zero->SetBranchStatus("Lb_BKGCAT",1);
-
-		treein_sigma_nonZero->SetBranchStatus("*",0);
-		treein_sigma_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		treein_sigma_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
-		treein_sigma_nonZero->SetBranchStatus("Lb_BKGCAT",1);
-
-		TFile *tempFile = new TFile("tempFile_sig.root","RECREATE");
-
-		TTree* treein_sigma_Zero_cut    = (TTree*)treein_sigma_Zero->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//Not TRUTH MATCHING HERE!
-		TTree* treein_sigma_nonZero_cut = (TTree*)treein_sigma_nonZero->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//Not TRUTH MATCHING HERE!
-
-		TList *list_sig = new TList;
-		list_sig->Add(treein_sigma_Zero_cut);
-		list_sig->Add(treein_sigma_nonZero_cut);
-
-		TTree *combTree_sig = TTree::MergeTrees(list_sig);
-		combTree_sig->SetName("combTree_sig");
-
-		ds_sig[i] = new RooDataSet("ds_sig","ds_sig",combTree_sig,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))));
-		ds_sig[i]->Print();
-
-		SIG_KEYS[i] = new RooKeysPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_sig[i]),RooKeysPdf::MirrorBoth,1);
-
-		// treein_sigma_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hsigma_nonZero%d(%d,%d,%d)",run,nbins,low,high),
-		//                            Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");        //Not TRUTH MATCHING HERE!
-		//
-		// treein_sigma_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hsigma_Zero%d(%d,%d,%d)",run,nbins,low,high),
-		//                         Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");        //Not TRUTH MATCHING HERE!
-		//
-		// TH1D *hsigma_nonZero = (TH1D*)gDirectory->Get(Form("hsigma_nonZero%d",run));
-		// TH1D *hsigma_Zero    = (TH1D*)gDirectory->Get(Form("hsigma_Zero%d",run));
-		// TH1D *hsigma         = new TH1D(Form("hsigma%d",run),"",nbins,low,high);
-		//
-		// hsigma->Add(hsigma_nonZero,hsigma_Zero);
-		// TH1D *hsigma_smooth  = (TH1D*)hsigma->Clone(Form("hsigma_smooth%d",run));
-		// hsigma_smooth->Smooth(2);
-		//
-		// RooDataHist *ds_sigma        = new RooDataHist(Form("ds_sigma%d",run),Form("ds_sigma%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),hsigma);
-		// RooDataHist *ds_sigma_smooth = new RooDataHist(Form("ds_sigma_smooth%d",run),Form("ds_sigma_smooth%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),hsigma_smooth);
-		//
-		// ds_sigma->Print();
-		//
-		// RooHistPdf sigmashape(Form("sigmashape%d",run),Form("sigmashape%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_sigma,0);
-		// SIG[i] = new RooHistPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_sigma_smooth,0);
-
-		RooPlot *framesigma = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
-		framesigma->SetTitle("J/#psi #Sigma");
-		// ds_sigma->plotOn(framesigma,Name("sigmadata"));
-		ds_sig[i]->plotOn(framesigma,Name("sigmadata"));
-		// sigmashape.plotOn(framesigma,Name("sigmafit"),LineColor(kBlue));
-		(*(SIG_KEYS[i])).plotOn(framesigma,Name("sigmafitsmooth"),LineColor(kRed),LineStyle(kDashed));
-
-		TCanvas *csigma = new TCanvas(Form("JpsiSigma%d",run),Form("JpsiSigma%d",run));
-		framesigma->Draw();
-		w.import(*(SIG_KEYS[i]));
-
-		cout<<"Done importing Jpsi Sigma shape"<<endl;
-	}
+	// for(Int_t run = 1; run<=2; run++) {
+	//      Int_t i = run-1;
+	//      TFile *filein_sigma_nonZero = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_nonZeroTracks.root",sigmaPath,run));
+	//      TTree *treein_sigma_nonZero = (TTree*)filein_sigma_nonZero->Get("MyTuple");
+	//
+	//      TFile *filein_sigma_Zero = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_ZeroTracks.root",sigmaPath,run));
+	//      TTree *treein_sigma_Zero = (TTree*)filein_sigma_Zero->Get("MyTuple");
+	//
+	//      treein_sigma_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_LL_FinalBDT%d_iso%d_%s.root",
+	//                                                     sigmaPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+	//      treein_sigma_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_zeroTracksLL_FinalBDT%d.root",
+	//                                                  sigmaPath,run,bdtConf_Zero[i]));
+	//
+	//      treein_sigma_Zero->SetBranchStatus("*",0);
+	//      treein_sigma_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+	//      treein_sigma_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+	//      treein_sigma_Zero->SetBranchStatus("Lb_BKGCAT",1);
+	//
+	//      treein_sigma_nonZero->SetBranchStatus("*",0);
+	//      treein_sigma_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+	//      treein_sigma_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+	//      treein_sigma_nonZero->SetBranchStatus("Lb_BKGCAT",1);
+	//
+	//      TFile *tempFile = new TFile("tempFile_sig.root","RECREATE");
+	//
+	//      TTree* treein_sigma_Zero_cut    = (TTree*)treein_sigma_Zero->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//Not TRUTH MATCHING HERE!
+	//      TTree* treein_sigma_nonZero_cut = (TTree*)treein_sigma_nonZero->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//Not TRUTH MATCHING HERE!
+	//
+	//      TList *list_sig = new TList;
+	//      list_sig->Add(treein_sigma_Zero_cut);
+	//      list_sig->Add(treein_sigma_nonZero_cut);
+	//
+	//      TTree *combTree_sig = TTree::MergeTrees(list_sig);
+	//      combTree_sig->SetName("combTree_sig");
+	//
+	//      ds_sig[i] = new RooDataSet("ds_sig","ds_sig",combTree_sig,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))));
+	//      ds_sig[i]->Print();
+	//
+	//      SIG_KEYS[i] = new RooKeysPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_sig[i]),RooKeysPdf::MirrorBoth,1);
+	//
+	//      // treein_sigma_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hsigma_nonZero%d(%d,%d,%d)",run,nbins,low,high),
+	//      //                            Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");        //Not TRUTH MATCHING HERE!
+	//      //
+	//      // treein_sigma_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hsigma_Zero%d(%d,%d,%d)",run,nbins,low,high),
+	//      //                         Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");        //Not TRUTH MATCHING HERE!
+	//      //
+	//      // TH1D *hsigma_nonZero = (TH1D*)gDirectory->Get(Form("hsigma_nonZero%d",run));
+	//      // TH1D *hsigma_Zero    = (TH1D*)gDirectory->Get(Form("hsigma_Zero%d",run));
+	//      // TH1D *hsigma         = new TH1D(Form("hsigma%d",run),"",nbins,low,high);
+	//      //
+	//      // hsigma->Add(hsigma_nonZero,hsigma_Zero);
+	//      // TH1D *hsigma_smooth  = (TH1D*)hsigma->Clone(Form("hsigma_smooth%d",run));
+	//      // hsigma_smooth->Smooth(2);
+	//      //
+	//      // RooDataHist *ds_sigma        = new RooDataHist(Form("ds_sigma%d",run),Form("ds_sigma%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),hsigma);
+	//      // RooDataHist *ds_sigma_smooth = new RooDataHist(Form("ds_sigma_smooth%d",run),Form("ds_sigma_smooth%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),hsigma_smooth);
+	//      //
+	//      // ds_sigma->Print();
+	//      //
+	//      // RooHistPdf sigmashape(Form("sigmashape%d",run),Form("sigmashape%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_sigma,0);
+	//      // SIG[i] = new RooHistPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_sigma_smooth,0);
+	//
+	//      RooPlot *framesigma = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+	//      framesigma->SetTitle("J/#psi #Sigma");
+	//      // ds_sigma->plotOn(framesigma,Name("sigmadata"));
+	//      ds_sig[i]->plotOn(framesigma,Name("sigmadata"));
+	//      // sigmashape.plotOn(framesigma,Name("sigmafit"),LineColor(kBlue));
+	//      (*(SIG_KEYS[i])).plotOn(framesigma,Name("sigmafitsmooth"),LineColor(kRed),LineStyle(kDashed));
+	//
+	//      TCanvas *csigma = new TCanvas(Form("JpsiSigma%d",run),Form("JpsiSigma%d",run));
+	//      framesigma->Draw();
+	//      w.import(*(SIG_KEYS[i]));
+	//
+	//      cout<<"Done importing Jpsi Sigma shape"<<endl;
+	// }
 	//*******************************************************************
 
 	//*********Double Crystal Ball signal shape for Lambda_b0************
@@ -1103,6 +1686,11 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 	// R*10^5 =  [N(Jpsi Sigma)/N(Jpsi Lambda)] * [eff(Jpsi Lambda)/eff(Jpsi Sigma)]
 	// w.var("R")->setError(0.1);
 
+	w.factory("R_1405[0.1,0.0,1.0]"); //R_1405 = N_corr(Lb -> Jpsi Lambda(1405)) / N_corr(Lb -> Jpsi Lambda)
+	w.factory("R_1520[0.2,0.0,1.0]"); //R_1520 = N_corr(Lb -> Jpsi Lambda(1520)) / N_corr(Lb -> Jpsi Lambda)
+	w.factory("R_1600[0.2,0.0,1.0]"); //R_1600 = N_corr(Lb -> Jpsi Lambda(1600)) / N_corr(Lb -> Jpsi Lambda)
+	w.factory("R_chic1[0.1,0.0,0.5]"); //R_chic1 = N_corr(Lb -> chic1 Lambda / N_corr(Lb -> Jpsi Lambda)
+
 	// w.factory(Form("sigmaEff1[%f,0,1]",eff_Sigma[0]));
 	// w.factory(Form("lambdaEff1[%f,0,1]",eff_Lambda[0]));
 	// w.factory(Form("sigmaEff2[%f,0,1]",eff_Sigma[1]));
@@ -1120,6 +1708,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 	// w.var("gsigmaEff2")->setConstant();
 	// w.var("glambdaEff2")->setConstant();
 
+
+	//**************** Sigma/Lb Efficiency Ratio*************************
 	w.factory(Form("eff_ratio1[%f,0.,1.]",eff_ratio[0])); //eff(Lb -> Jpsi Sigma)/eff(Lb -> Jpsi Lambda)
 	w.factory(Form("eff_ratio2[%f,0.,1.]",eff_ratio[1]));
 
@@ -1128,19 +1718,61 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 
 	w.var("geff_ratio1")->setConstant();
 	w.var("geff_ratio2")->setConstant();
+	//*******************************************************************
 
-	// w.factory("nLb_Run1[0,5000]");
-	// w.factory("nLb_Run2[0,17000]");
+	//**************** 1405/Lb Efficiency Ratio**************************
+	w.factory(Form("eff_ratio_1405_1[%f,0.,1.]",eff_ratio_1405[0])); //eff(Lb -> Jpsi Lambda(1405))/eff(Lb -> Jpsi Lambda)
+	w.factory(Form("eff_ratio_1405_2[%f,0.,1.]",eff_ratio_1405[1]));
+
+	w.factory(Form("Gaussian::eff_ratio_1405_constraint1(geff_ratio_1405_1[%f,0,1],eff_ratio_1405_1,%f)",eff_ratio_1405[0],eff_ratio_err_1405[0]));
+	w.factory(Form("Gaussian::eff_ratio_1405_constraint2(geff_ratio_1405_2[%f,0,1],eff_ratio_1405_2,%f)",eff_ratio_1405[1],eff_ratio_err_1405[1]));
+
+	w.var("geff_ratio_1405_1")->setConstant();
+	w.var("geff_ratio_1405_2")->setConstant();
+	//*******************************************************************
+
+	//**************** 1520/Lb Efficiency Ratio**************************
+	w.factory(Form("eff_ratio_1520_1[%f,0.,1.]",eff_ratio_1520[0])); //eff(Lb -> Jpsi Lambda(1520))/eff(Lb -> Jpsi Lambda)
+	w.factory(Form("eff_ratio_1520_2[%f,0.,1.]",eff_ratio_1520[1]));
+
+	w.factory(Form("Gaussian::eff_ratio_1520_constraint1(geff_ratio_1520_1[%f,0,1],eff_ratio_1520_1,%f)",eff_ratio_1520[0],eff_ratio_err_1520[0]));
+	w.factory(Form("Gaussian::eff_ratio_1520_constraint2(geff_ratio_1520_2[%f,0,1],eff_ratio_1520_2,%f)",eff_ratio_1520[1],eff_ratio_err_1520[1]));
+
+	w.var("geff_ratio_1520_1")->setConstant();
+	w.var("geff_ratio_1520_2")->setConstant();
+	//*******************************************************************
+
+	//**************** 1600/Lb Efficiency Ratio**************************
+	w.factory(Form("eff_ratio_1600_1[%f,0.,1.]",eff_ratio_1600[0])); //eff(Lb -> Jpsi Lambda(1600))/eff(Lb -> Jpsi Lambda)
+	w.factory(Form("eff_ratio_1600_2[%f,0.,1.]",eff_ratio_1600[1]));
+
+	w.factory(Form("Gaussian::eff_ratio_1600_constraint1(geff_ratio_1600_1[%f,0,1],eff_ratio_1600_1,%f)",eff_ratio_1600[0],eff_ratio_err_1600[0]));
+	w.factory(Form("Gaussian::eff_ratio_1600_constraint2(geff_ratio_1600_2[%f,0,1],eff_ratio_1600_2,%f)",eff_ratio_1600[1],eff_ratio_err_1600[1]));
+
+	w.var("geff_ratio_1600_1")->setConstant();
+	w.var("geff_ratio_1600_2")->setConstant();
+	//*******************************************************************
+
+	//**************** chic1/Lb Efficiency Ratio**************************
+	w.factory(Form("eff_ratio_chic1_1[%f,0.,1.]",eff_ratio_chic1[0])); //eff(Lb -> Jpsi Lambda(chic1))/eff(Lb -> Jpsi Lambda)
+	w.factory(Form("eff_ratio_chic1_2[%f,0.,1.]",eff_ratio_chic1[1]));
+
+	w.factory(Form("Gaussian::eff_ratio_chic1_constraint1(geff_ratio_chic1_1[%f,0,1],eff_ratio_chic1_1,%f)",eff_ratio_chic1[0],eff_ratio_err_chic1[0]));
+	w.factory(Form("Gaussian::eff_ratio_chic1_constraint2(geff_ratio_chic1_2[%f,0,1],eff_ratio_chic1_2,%f)",eff_ratio_chic1[1],eff_ratio_err_chic1[1]));
+
+	w.var("geff_ratio_chic1_1")->setConstant();
+	w.var("geff_ratio_chic1_2")->setConstant();
+	//*******************************************************************
 
 	w.factory("nLb_Run1[5000,1000,7000]");
 	w.factory("nLb_Run2[17000,1000,20000]");
 
-	w.factory("n1405_Run1[500,1,5000]");
-	w.factory("n1405_Run2[500,1,5000]");
-	w.factory("n1520_Run1[3000,1,5000]");
-	w.factory("n1520_Run2[3000,1,5000]");
-	w.factory("n1600_Run1[3000,1,10000]");
-	w.factory("n1600_Run2[3000,1,10000]");
+	// w.factory("n1405_Run1[500,1,5000]");
+	// w.factory("n1405_Run2[500,1,5000]");
+	// w.factory("n1520_Run1[3000,1,5000]");
+	// w.factory("n1520_Run2[3000,1,5000]");
+	// w.factory("n1600_Run1[3000,1,10000]");
+	// w.factory("n1600_Run2[3000,1,10000]");
 	w.factory("nMiscLst_Run1[2500,1,5000]");
 	// w.factory("nMiscLst_Run2[2500,1,5000]");
 	w.factory("nMiscLst_Run2[2500,1,10000]");
@@ -1159,6 +1791,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 	// Double_t xibHigh_run2    = 200;
 	Double_t xibHigh_run2    = 400;
 
+	//****************Xib Bkg Yield**************************************
 	w.factory(Form("nXib1[%f,%f,%f]",xibCentral_run1,xibLow_run1,xibHigh_run1));
 	w.factory(Form("nXib2[%f,%f,%f]",xibCentral_run2,xibLow_run2,xibHigh_run2));
 
@@ -1167,50 +1800,65 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 
 	w.var("gnXib1")->setConstant();
 	w.var("gnXib2")->setConstant();
-
+	//*******************************************************************
 	// w.factory("expr::nSigma1('pow(10,-5)*R*nLb_Run1*sigmaEff1/(lambdaEff1)',R,nLb_Run1,sigmaEff1,lambdaEff1)");
 	// w.factory("expr::nSigma2('pow(10,-5)*R*nLb_Run2*sigmaEff2/(lambdaEff2)',R,nLb_Run2,sigmaEff2,lambdaEff2)");
 
+	//*****************Jpsi Sigma yield**********************************
 	w.factory("expr::nSigma1('pow(10,-5)*R*nLb_Run1*eff_ratio1',R,nLb_Run1,eff_ratio1)");
 	w.factory("expr::nSigma2('pow(10,-5)*R*nLb_Run2*eff_ratio2',R,nLb_Run2,eff_ratio2)");
+	//*******************************************************************
 
+	//*****************Jpsi Lambda(1405) yield***************************
+	w.factory("expr::n1405_Run1('R_1405*nLb_Run1*eff_ratio_1405_1',R_1405,nLb_Run1,eff_ratio_1405_1)");
+	w.factory("expr::n1405_Run2('R_1405*nLb_Run2*eff_ratio_1405_2',R_1405,nLb_Run2,eff_ratio_1405_2)");
+	//*******************************************************************
+
+	//*****************Jpsi Lambda(1520) yield***************************
+	w.factory("expr::n1520_Run1('R_1520*nLb_Run1*eff_ratio_1520_1',R_1520,nLb_Run1,eff_ratio_1520_1)");
+	w.factory("expr::n1520_Run2('R_1520*nLb_Run2*eff_ratio_1520_2',R_1520,nLb_Run2,eff_ratio_1520_2)");
+	//*******************************************************************
+
+	//*****************Jpsi Lambda(1600) yield***************************
+	w.factory("expr::n1600_Run1('R_1600*nLb_Run1*eff_ratio_1600_1',R_1600,nLb_Run1,eff_ratio_1600_1)");
+	w.factory("expr::n1600_Run2('R_1600*nLb_Run2*eff_ratio_1600_2',R_1600,nLb_Run2,eff_ratio_1600_2)");
+	//*******************************************************************
+
+	//*****************chic1 Lambda yield***************************
+	w.factory("expr::nchic1_Run1('R_chic1*nLb_Run1*eff_ratio_chic1_1',R_chic1,nLb_Run1,eff_ratio_chic1_1)");
+	w.factory("expr::nchic1_Run2('R_chic1*nLb_Run2*eff_ratio_chic1_2',R_chic1,nLb_Run2,eff_ratio_chic1_2)");
+	//*******************************************************************
 	w.factory("SUM:model1(nSigma1*SIG1 , nLb_Run1*Lb_Run1 , nXib1*XIB1 , n1405_Run1*LST1405_Run1 ,"
-	          " n1520_Run1*LST1520_Run1 , n1600_Run1*LST1600_Run1 , nMiscLst_Run1*lstLump_Run1 , nBkg_Run1*Bkg_Run1)");
+	          " n1520_Run1*LST1520_Run1 , n1600_Run1*LST1600_Run1 , nMiscLst_Run1*lstLump_Run1 , nchic1_Run1*chic1_Run1, nBkg_Run1*Bkg_Run1)");
 	w.factory("SUM:model2(nSigma2*SIG2 , nLb_Run2*Lb_Run2 , nXib2*XIB2 , n1405_Run2*LST1405_Run2 ,"
-	          " n1520_Run2*LST1520_Run2 , n1600_Run2*LST1600_Run2 , nMiscLst_Run2*lstLump_Run2 , nBkg_Run2*Bkg_Run2)");
+	          " n1520_Run2*LST1520_Run2 , n1600_Run2*LST1600_Run2 , nMiscLst_Run2*lstLump_Run2 , nchic1_Run2*chic1_Run2, nBkg_Run2*Bkg_Run2)");
 
 	if(!lst1405flag)
 	{
-		w.var("n1405_Run1")->setVal(0);
-		w.var("n1405_Run1")->setConstant();
-
-		w.var("n1405_Run2")->setVal(0);
-		w.var("n1405_Run2")->setConstant();
+		w.var("R_1405")->setVal(0);
+		w.var("R_1405")->setConstant();
 	}
-
 	if(!lst1520flag)
 	{
-		w.var("n1520_Run1")->setVal(0);
-		w.var("n1520_Run1")->setConstant();
-
-		w.var("n1520_Run2")->setVal(0);
-		w.var("n1520_Run2")->setConstant();
+		w.var("R_1520")->setVal(0);
+		w.var("R_1520")->setConstant();
 	}
-
 	if(!lst1600flag)
 	{
-		w.var("n1600_Run1")->setVal(0);
-		w.var("n1600_Run1")->setConstant();
-
-		w.var("n1600_Run2")->setVal(0);
-		w.var("n1600_Run2")->setConstant();
+		w.var("R_1600")->setVal(0);
+		w.var("R_1600")->setConstant();
+	}
+	if(!chic1flag)
+	{
+		w.var("R_chic1")->setVal(0);
+		w.var("R_chic1")->setConstant();
 	}
 
 	// w.factory("PROD::model_const1(model1,sigmaEff_constraint1,lambdaEff_constraint1,nXib_constraint1)");//Multiply model by constraint terms
 	// w.factory("PROD::model_const2(model2,sigmaEff_constraint2,lambdaEff_constraint2,nXib_constraint2)");//Multiply model by constraint terms
 
-	w.factory("PROD::model_const1(model1,eff_ratio_constraint1,nXib_constraint1)");        //Multiply model by constraint terms
-	w.factory("PROD::model_const2(model2,eff_ratio_constraint2,nXib_constraint2)");        //Multiply model by constraint terms
+	w.factory("PROD::model_const1(model1,eff_ratio_constraint1,nXib_constraint1,eff_ratio_1405_constraint1,eff_ratio_1520_constraint1,eff_ratio_1600_constraint1,eff_ratio_chic1_constraint1)");        //Multiply model by constraint terms
+	w.factory("PROD::model_const2(model2,eff_ratio_constraint2,nXib_constraint2,eff_ratio_1405_constraint2,eff_ratio_1520_constraint2,eff_ratio_1600_constraint2,eff_ratio_chic1_constraint2)");        //Multiply model by constraint terms
 
 	RooAbsPdf* model_const1 = w.pdf("model_const1"); // get the model
 	RooAbsPdf* model_const2 = w.pdf("model_const2"); // get the model
@@ -1242,13 +1890,13 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 	w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,"
 	            "lambda_Run1,a1_Run1,a2_Run1,"
 	            "nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,"
-	            "miscLstSigma_Run1,eff_ratio1,nXib1,n1405_Run1,"
-	            "n1520_Run1,n1600_Run1");
+	            "miscLstSigma_Run1,eff_ratio1,nXib1,eff_ratio_1405_1,"
+	            "eff_ratio_1520_1,eff_ratio_1600_1,eff_ratio_chic1_1");
 	w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,"
 	            "lambda_Run2,a1_Run2,a2_Run2,"
 	            "nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,"
-	            "miscLstSigma_Run2,eff_ratio2,nXib2,n1405_Run2,"
-	            "n1520_Run2,n1600_Run2");        // define set of nuisance parameters
+	            "miscLstSigma_Run2,eff_ratio2,nXib2,eff_ratio_1405_2,"
+	            "eff_ratio_1520_2,eff_ratio_1600_2,eff_ratio_chic1_2");        // define set of nuisance parameters
 	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,alpha1_Run1,alpha2_Run1,nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1");// define set of nuisance parameters
 	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,alpha1_Run2,alpha2_Run2,nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,n1520_Run2");
 
@@ -1260,7 +1908,10 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 		// w.defineSet("globObs","gsigmaEff1,glambdaEff1,gnXib1,gsigmaEff2,"
 		//             "glambdaEff2,gnXib2"); //define set of global observables
 		w.defineSet("globObs","geff_ratio1,gnXib1,geff_ratio2,"
-		            "gnXib2"); //define set of global observables
+		            "gnXib2,geff_ratio_1405_1,geff_ratio_1405_2,"
+		            "geff_ratio_1520_1,geff_ratio_1520_2,"
+		            "geff_ratio_1600_1,geff_ratio_1600_2,"
+		            "geff_ratio_chic1_1,geff_ratio_chic1_2");   //define set of global observables
 	}
 	//*******************************************************************
 	//***********************MAKE COMBINED DATASET************************************
@@ -1354,9 +2005,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 	// return yields;
 
 	//************************DO THE FIT***********************
-
-	RooFitResult *res = simPdf.fitTo(*combData,Minos(*w.set("poi")),Extended(), Save(), Hesse(false), Strategy(1));
-
+	RooFitResult *res = simPdf.fitTo(*combData,Minos(*w.set("poi")),Extended(), Save(), Hesse(false), Strategy(1), PrintLevel(0));
 	//*******************************************************************
 
 	//*********************PLOTTING STUFF*********************************************
@@ -1382,6 +2031,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 			simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("LST1520_Run1"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1520_Run1"));
 		if(lst1600flag)
 			simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("LST1600_Run1"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1600_Run1"));
+		if(chic1flag)
+			simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("chic1_Run1"))),LineColor(kMagenta+2),LineStyle(kDashed),Name("chic1_Run1"));
 		//simPdf.plotOn(frame_run1,Components(lst1810shape),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1810"));
 		// if(sigmaflag!=0)
 		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("SIG1"))),LineColor(kBlack),Name("sig_Run1"));
@@ -1453,6 +2104,10 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 		{
 			legend_run1->AddEntry("lst1600_Run1","J/#psi #Lambda(1600) shape","l");
 		}
+		if(chic1flag)
+		{
+			legend_run1->AddEntry("chic1_Run1","#chi_{c1} #Lambda shape","l");
+		}
 		// if(lst1810flag)
 		//      legend_run1->AddEntry("lst1810","J/#psi #Lambda(1810) shape","l");
 		legend_run1->AddEntry("misclst_Run1","misc. J/#psi #Lambda* shapes","l");
@@ -1511,6 +2166,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 			simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("LST1520_Run2"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1520_Run2"));
 		if(lst1600flag)
 			simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("LST1600_Run2"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1600_Run2"));
+		if(chic1flag)
+			simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("chic1_Run2"))),LineColor(kMagenta+2),LineStyle(kDashed),Name("chic1_Run2"));
 		//simPdf.plotOn(frame_run2,Components(lst1810shape),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1810"));
 		// if(sigmaflag!=0)
 		simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("SIG2"))),LineColor(kBlack),Name("sig_Run2"));
@@ -1574,6 +2231,10 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 		if(lst1600flag)
 		{
 			legend_run2->AddEntry("lst1600_Run2","J/#psi #Lambda(1600) shape","l");
+		}
+		if(chic1flag)
+		{
+			legend_run2->AddEntry("chic1_Run2","#chi_{c1} #Lambda shape","l");
 		}
 		// if(lst1810flag)
 		//      legend_run2->AddEntry("lst1810","J/#psi #Lambda(1810) shape","l");
