@@ -48,6 +48,12 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, Int_t trackType,
 	const char *rootFolder = "";
 	std::vector <Double_t> cuts;
 
+	Float_t bdtArray_nonZero[199];
+	Float_t fomArray_nonZero[199];
+
+	Float_t bdtArray_Zero[199];
+	Float_t fomArray_Zero[199];
+
 	rootFolder = Form("rootFiles/dataFiles/JpsiLambda/run%d",run);
 
 	if(isoFlag)//Using isolation
@@ -190,6 +196,9 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, Int_t trackType,
 
 			BDT = hsig->GetBinCenter(i);
 
+			if(ctr == 0) bdtArray_nonZero[i-1] = BDT;
+			else if(ctr == 1) bdtArray_Zero[i-1] = BDT;
+
 			eff_sig = mcTree->GetEntries(Form("(Lb_BKGCAT==0||Lb_BKGCAT==50) && BDT%d > %f",bdtConf,BDT))*1.0/denom;
 
 			sig = siginit*eff_sig;
@@ -223,6 +232,10 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, Int_t trackType,
 			{
 				myFOM = (Double_t)sig/(sqrt(bkg) + 1.5);//a  = 3 chosen
 			}
+
+			if(ctr == 0) fomArray_nonZero[i-1] = myFOM;
+			else if(ctr == 1) fomArray_Zero[i-1] = myFOM;
+
 			if(myFOM > myFOM_max) {
 				myFOM_max = myFOM;
 				BDT_max = BDT;
@@ -237,6 +250,17 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, Int_t trackType,
 		cuts.push_back(BDT_max);
 		ctr++;
 	}
+	TCanvas *c1 = new TCanvas();
+	TGraph *gr_nonZero = new TGraph(199,bdtArray_nonZero,fomArray_nonZero);
+	gr_nonZero->Draw("AC*");
+
+	TCanvas *c2 = new TCanvas();
+	TGraph *gr_Zero = new TGraph(199,bdtArray_Zero,fomArray_Zero);
+	gr_Zero->Draw("AC*");
+
+	c1->SaveAs(Form("plots/FOM_run%d_nonZeroTracks_bdtConf%d_iso%d_%s.pdf",run,bdtConf,isoConf,isoVersion));
+	c2->SaveAs(Form("plots/FOM_run%d_ZeroTracks_bdtConf%d.pdf",run,bdtConf));
+
 	if(logFlag) gSystem->RedirectOutput(0);
 	return cuts;
 }

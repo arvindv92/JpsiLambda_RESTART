@@ -75,6 +75,30 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 		part = "bd_jpsix";
 		break;
 	}
+	case 6:
+	{
+		folder = "Lst1405";
+		part = "lst1405";
+		break;
+	}
+	case 7:
+	{
+		folder = "Lst1520";
+		part = "lst1520";
+		break;
+	}
+	case 8:
+	{
+		folder = "Lst1600";
+		part = "lst1600";
+		break;
+	}
+	case 9:
+	{
+		folder = "chiC1";
+		part = "chic1";
+		break;
+	}
 	}
 
 	if(!isData && logFlag)
@@ -286,75 +310,6 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 			treeOut->Fill();
 		}//end of v1 for loop
 	}
-	// else if(strncmp(isoVersion,"v2",2) == 0)
-	// {
-	//      for (Long64_t ievt = 0; ievt < entries_init; ievt++)
-	//      {
-	//              if (ievt%50000 == 0) cout << "--- ... Processing event: " << ievt << endl;
-	//
-	//              treeIn->GetEntry(ievt);
-	//              BDTkMin = 1.1;
-	//
-	//              //Loop over all the added tracks in a given event
-	//              for(Int_t j = 0; j < nTracks; j++)
-	//              {
-	//                      ipChi2   = IPCHI2[j];
-	//                      vChi2Dof = VCHI2DOF[j];
-	//
-	//                      if((MINIPCHI2[j] < 0) || (FD[j] < 0) || (FDCHI2[j] < 0))
-	//                      {
-	//                              BDTk[j] = 1.1;
-	//                      }
-	//                      else
-	//                      {
-	//                              log_minIpChi2 = log10(MINIPCHI2[j]);
-	//                              log_FD        = log10(FD[j]);
-	//                              log_fdChi2    = log10(FDCHI2[j]);
-	//                              BDTk[j]       = reader->EvaluateMVA(methodName);
-	//                      }
-	//                      if(BDTk[j] < BDTkMin)
-	//                      {
-	//                              BDTkMin = BDTk[j];
-	//                      }
-	//              }
-	//              treeOut->Fill();
-	//      }//end of v2 for loop
-	// }
-	// else if(strncmp(isoVersion,"v3",2) == 0)
-	// {
-	//      for (Long64_t ievt = 0; ievt < entries_init; ievt++)
-	//      {
-	//              if (ievt%50000 == 0) cout << "--- ... Processing event: " << ievt << endl;
-	//
-	//              treeIn->GetEntry(ievt);
-	//              BDTkMin = 1.1;
-	//
-	//              //Loop over all the added tracks in a given event
-	//              for(Int_t j = 0; j < nTracks; j++)
-	//              {
-	//                      ipChi2   = IPCHI2[j];
-	//                      vChi2Dof = VCHI2DOF[j];
-	//
-	//                      if((MINIPCHI2[j] < 0) || (PT[j] < 0) || (FD[j] < 0) || (FDCHI2[j] < 0))
-	//                      {
-	//                              BDTk[j] = 1.1;
-	//                      }
-	//                      else
-	//                      {
-	//                              log_minIpChi2 = log10(MINIPCHI2[j]);
-	//                              log_PT        = log10(PT[j]);
-	//                              log_FD        = log10(FD[j]);
-	//                              log_fdChi2    = log10(FDCHI2[j]);
-	//                              BDTk[j]       = reader->EvaluateMVA(methodName);
-	//                      }
-	//                      if(BDTk[j] < BDTkMin)
-	//                      {
-	//                              BDTkMin = BDTk[j];
-	//                      }
-	//              }
-	//              treeOut->Fill();
-	//      }//end of v3 for loop
-	// }
 
 	fileOut->cd();
 	treeOut->Write();

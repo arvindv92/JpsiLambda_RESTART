@@ -18,23 +18,6 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
 {
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
-	if(isData && logFlag)
-	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/collate_%d_log.txt",run,year),"w");
-	}
-	else if(!isData && logFlag && mcType == 1)
-	{
-		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/JpsiLambda/run%d/collate_log.txt",run),"w");
-	}
-	else if(!isData && logFlag && mcType == 2)
-	{
-		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/JpsiSigma/run%d/collate_log.txt",run),"w");
-	}
-	else if(!isData && logFlag && mcType == 3)
-	{
-		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/JpsiXi/run%d/collate_log.txt",run),"w");
-	}
-
 	cout<<"******************************************"<<endl;
 	cout<<"==> Starting CollateFiles: "<<endl;
 	gSystem->Exec("date");
@@ -80,7 +63,41 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
 		part = "bd_jpsix";
 		break;
 	}
+	case 6:
+	{
+		folder = "Lst1405";
+		part = "lst1405";
+		break;
 	}
+	case 7:
+	{
+		folder = "Lst1520";
+		part = "lst1520";
+		break;
+	}
+	case 8:
+	{
+		folder = "Lst1600";
+		part = "lst1600";
+		break;
+	}
+	case 9:
+	{
+		folder = "chiC1";
+		part = "chic1";
+		break;
+	}
+	}
+
+	if(isData && logFlag)
+	{
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/collate_%d_log.txt",run,year),"w");
+	}
+	else if(!isData && logFlag)
+	{
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/collate_log.txt",folder,run),"w");
+	}
+
 	if(isData)
 	{
 		cout<<"Adding Run "<<run<<" Data ROOT files for "<<year<<" to TChain. Sit tight"<<endl;
@@ -113,7 +130,7 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
 
 	else //MC
 	{
-		cout<<"Collating MC for ";
+		cout<<"Collating MC for "<<folder<< "run "<<run<<endl;
 		if(loose)
 		{
 			gSystem->cd("/data1/avenkate/JpsiLambda/massdump/mc/LooseLL");
@@ -126,7 +143,6 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
 		const char *path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda";
 		if(mcType == 1)//Jpsi Lambda MC
 		{
-			cout<<"JpsiLambda Run "<<run<<endl;
 			if(run == 1)
 			{
 				gSystem->Exec(Form("hadd -f %s/JpsiLambda/run1/jpsilambda.root JpsiLambda/Pythia8/2011*/*/*.root JpsiLambda/Pythia8/2012*/*/*.root",path));
@@ -138,7 +154,6 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
 		}
 		else if(mcType == 2)//Jpsi Sigma MC
 		{
-			cout<<"JpsiSigma Run "<<run<<endl;
 			if(run == 1)
 			{
 				gSystem->Exec(Form("hadd -f %s/JpsiSigma/run1/jpsisigma.root JpsiSigma/Pythia8/2012*/*/*.root",path));
@@ -150,7 +165,6 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
 		}
 		else if(mcType == 3)//Jpsi Xi MC
 		{
-			cout<<"JpsiXi Run "<<run<<endl;
 			if(run == 1)
 			{
 				gSystem->Exec(Form("hadd -f %s/JpsiXi/run1/jpsixi.root JpsiXi/Pythia8/2011*/*/*.root JpsiXi/Pythia8/2012*/*/*.root",path));
@@ -158,6 +172,17 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
 			else if(run == 2)
 			{
 				gSystem->Exec(Form("hadd -f %s/JpsiXi/run2/jpsixi.root JpsiXi/Pythia8/2015*/*/*.root JpsiXi/Pythia8/2016*/*/*.root",path));
+			}
+		}
+		else if(mcType == 6||mcType==7||mcType==8||mcType==9) //Lambda* and chiC1 MC
+		{
+			if(run == 1)
+			{
+				gSystem->Exec(Form("hadd -f %s/%s/run1/%s.root %s/2011*/*/*.root %s/2012*/*/*.root",path,folder,part,folder,folder));
+			}
+			else if(run == 2)
+			{
+				gSystem->Exec(Form("hadd -f %s/%s/run2/%s.root %s/2015*/*/*.root %s/2016*/*/*.root",path,folder,part,folder,folder));
 			}
 		}
 	}//end MC loop

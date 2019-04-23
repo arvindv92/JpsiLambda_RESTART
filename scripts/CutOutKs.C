@@ -63,6 +63,30 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 		part = "bd_jpsix";
 		break;
 	}
+	case 6:
+	{
+		folder = "Lst1405";
+		part = "lst1405";
+		break;
+	}
+	case 7:
+	{
+		folder = "Lst1520";
+		part = "lst1520";
+		break;
+	}
+	case 8:
+	{
+		folder = "Lst1600";
+		part = "lst1600";
+		break;
+	}
+	case 9:
+	{
+		folder = "chiC1";
+		part = "chic1";
+		break;
+	}
 	}
 	//Set up logging
 	if(isData && logFlag)
@@ -243,12 +267,12 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 		{
 			eff_excl     = (Float_t)entries_final*100/entries_init;
 			eff_excl_err = sqrt(eff_excl*(100.0-eff_excl)/entries_init);
-		}
-		cout<<"******************************************"<<endl;
-		cout<<type<<" CutOutKs cuts made with exclusive efficiency = "
-		    <<eff_excl<<"% +/- " <<eff_excl_err<<" %"<<endl;
-		cout<<"******************************************"<<endl;
 
+			cout<<"******************************************"<<endl;
+			cout<<type<<" CutOutKs cuts made with exclusive efficiency = "
+			    <<eff_excl<<"% +/- " <<eff_excl_err<<" %"<<endl;
+			cout<<"******************************************"<<endl;
+		}
 		if(genFlag)
 		{
 			genFile>>entries_gen;
@@ -257,12 +281,12 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 			{
 				eff_incl     = (Float_t)entries_final*100/entries_gen;
 				eff_incl_err = sqrt(eff_incl*(100.0-eff_incl)/entries_gen);
-			}
-			cout<<"******************************************"<<endl;
-			cout<<type<<" CutOutKs cuts made with inclusive efficiency = "
-			    <<eff_incl<<"% +/- " <<eff_incl_err<<" %"<<endl;
-			cout<<"******************************************"<<endl;
 
+				cout<<"******************************************"<<endl;
+				cout<<type<<" CutOutKs cuts made with inclusive efficiency = "
+				    <<eff_incl<<"% +/- " <<eff_incl_err<<" %"<<endl;
+				cout<<"******************************************"<<endl;
+			}
 			genFile.close();
 		}
 	}

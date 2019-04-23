@@ -7,6 +7,7 @@
 #include "RooRealVar.h"
 #include "RooStats/SPlot.h"
 #include "RooDataSet.h"
+#include "RooDataHist.h"
 #include "RooRealVar.h"
 #include "RooGaussian.h"
 #include "RooExponential.h"
@@ -29,5 +30,5 @@
 #include "TStopwatch.h"
 
 Double_t DoSWeight_Sanity(Int_t run = 1, Int_t trackType = 3,
-                          Bool_t logFlag = false, Bool_t zeroFlag = false);
+                          Bool_t logFlag = false);
 #endif

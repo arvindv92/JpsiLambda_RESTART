@@ -137,7 +137,7 @@ RunInverter(RooWorkspace * w,
 
 
 
-void
+double
 AnalyzeResult( HypoTestInverterResult * r,
                int calculatorType,
                int testStatType,
@@ -281,7 +281,7 @@ RooStats::HypoTestInvTool::SetParameter(const char * name, const char * value){
 
 
 
-void
+double
 StandardHypoTestInvDemo(const char * infile = 0,
                         const char * wsName = "combined",
                         const char * modelSBName = "ModelConfig",
@@ -344,8 +344,8 @@ StandardHypoTestInvDemo(const char * infile = 0,
 
  */
 
-	gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/UpperLimit/UL_HypatiaSig_ExpoBkg_%d_%d.txt",
-	                             myLow,myHigh),"w");
+	// gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/UpperLimit/UL_HypatiaSig_ExpoBkg_%d_%d_4MeVBins_BDT0.50.txt",
+	//                              myLow,myHigh),"w");
 	gSystem->Load("RooHypatia2_cpp.so");
 
 	TString filename(infile);
@@ -377,7 +377,7 @@ StandardHypoTestInvDemo(const char * infile = 0,
 	// if input file was specified byt not found, quit
 	if(!file ) {
 		cout <<"StandardRooStatsDemoMacro: Input file " << filename << " is not found" << endl;
-		return;
+		return 0.0;
 	}
 
 
@@ -420,7 +420,7 @@ StandardHypoTestInvDemo(const char * infile = 0,
 		                     ntoys, useNumberCounting, nuisPriorName );
 		if (!r) {
 			std::cerr << "Error running the HypoTestInverter - Exit " << std::endl;
-			return;
+			return 0.0;
 		}
 	}
 	else {
@@ -431,19 +431,19 @@ StandardHypoTestInvDemo(const char * infile = 0,
 			std::cerr << "File " << filename << " does not contain a workspace or an HypoTestInverterResult - Exit "
 			          << std::endl;
 			file->ls();
-			return;
+			return 0.0;
 		}
 	}
 
-	calc.AnalyzeResult( r, calculatorType, testStatType, useCLs, npoints, infile, myLow, myHigh);
+	double myUL = calc.AnalyzeResult( r, calculatorType, testStatType, useCLs, npoints, infile, myLow, myHigh);
 
-	gSystem->RedirectOutput(0);
-	return;
+	// gSystem->RedirectOutput(0);
+	return myUL;
 }
 
 
 
-void
+double
 RooStats::HypoTestInvTool::AnalyzeResult( HypoTestInverterResult * r,
                                           int calculatorType,
                                           int testStatType,
@@ -555,7 +555,7 @@ RooStats::HypoTestInvTool::AnalyzeResult( HypoTestInverterResult * r,
 
 	plot->Draw("CLb 2CL"); // plot all and Clb
 
-	c1->SaveAs(Form("../plots/data/JpsiLambda/UpperLimit/Asymptotic/CLs_HypatiaSig_ExpoBkg_%d_%d.pdf",myLow,myHigh));
+	// c1->SaveAs(Form("../plots/data/JpsiLambda/UpperLimit/Asymptotic/CLs_HypatiaSig_ExpoBkg_%d_%d.pdf",myLow,myHigh));
 
 	// if (useCLs)
 	//    plot->Draw("CLb 2CL");  // plot all and Clb
@@ -581,6 +581,7 @@ RooStats::HypoTestInvTool::AnalyzeResult( HypoTestInverterResult * r,
 	}
 	gPad = c1;
 
+	return upperLimit;
 }
 
 

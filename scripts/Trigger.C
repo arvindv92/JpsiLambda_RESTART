@@ -57,6 +57,30 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 		part = "bd_jpsix";
 		break;
 	}
+	case 6:
+	{
+		folder = "Lst1405";
+		part = "lst1405";
+		break;
+	}
+	case 7:
+	{
+		folder = "Lst1520";
+		part = "lst1520";
+		break;
+	}
+	case 8:
+	{
+		folder = "Lst1600";
+		part = "lst1600";
+		break;
+	}
+	case 9:
+	{
+		folder = "chiC1";
+		part = "chic1";
+		break;
+	}
 	}
 	//Set up logging
 	if(isData && logFlag)
@@ -97,8 +121,8 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 
 	Bool_t hlt1DiMuonHighMass = false, hlt1TrackMuon      = false;
 	Bool_t hlt1TrackAllL0     = false, hlt2DiMuonDetached = false;
-	Bool_t collateFlag        = false;
-	/*f you don't want to re-collate MC, set this to zero.
+	Bool_t collateFlag        = true;
+	/*f you don't want to re-collate MC, set this to false.
 	   For example, if only the trigger condition changes.*/
 
 	TFile *fileOut = nullptr, *fileIn     = nullptr;
@@ -157,7 +181,7 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 		{
 			CollateFiles(run, year, isData, mcType);
 		}
-		fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_pidgen.root",
+		fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",
 		                          folder,run,part));
 		treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
 		treeIn     = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
@@ -165,34 +189,6 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 		fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_triggered.root",
 		                         folder,run,part),"RECREATE");
 
-		// if(mcType == 2)//Jpsi Sigma
-		// {
-		//      genFile.open(Form("logs/mc/JpsiLambda/JpsiSigma/run%d/gen_log.txt",run));
-		//
-		//      cout<<"PROCESSING MC for Run "<<run<<" Jpsi Lambda"<<endl;
-		//
-		//      if(collateFlag) CollateFiles(run, year, isData, mcType);
-		//
-		//      fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma.root",run));
-		//      treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
-		//      treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
-		//
-		//      fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_triggered.root",run),"RECREATE");
-		// }
-		// if(mcType == 3)//Jpsi Xi
-		// {
-		//      genFile.open(Form("logs/mc/JpsiLambda/JpsiXi/run%d/gen_log.txt",run));
-		//
-		//      cout<<"PROCESSING MC for Run "<<run<<" Jpsi Lambda"<<endl;
-		//
-		//      if(collateFlag) CollateFiles(run, year, isData, mcType);
-		//
-		//      fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi.root",run));
-		//      treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
-		//      treeIn = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
-		//
-		//      fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/JpsiXi/run%d/jpsixi_triggered.root",run),"RECREATE");
-		// }
 		entries_gen = treeIn_gen->GetEntries();
 		genFile<<entries_gen<<endl;
 		genFile.close();
@@ -247,21 +243,22 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 		{
 			eff_excl = (Float_t)entries_final*100/entries_init;
 			eff_excl_err = sqrt( eff_excl*(100.0-eff_excl)/entries_init);
-		}
-		cout<<"******************************************"<<endl;
-		cout<<"Trigger cut made with exclusive efficiency = "<<
-		        eff_excl<<"% +/- " <<eff_excl_err<<" %"<<endl;
-		cout<<"******************************************"<<endl;
 
+			cout<<"******************************************"<<endl;
+			cout<<"Trigger cut made with exclusive efficiency = "<<
+			        eff_excl<<"% +/- " <<eff_excl_err<<" %"<<endl;
+			cout<<"******************************************"<<endl;
+		}
 		if(entries_gen != 0)
 		{
 			eff_incl = (Float_t)entries_final*100/entries_gen;
 			eff_incl_err = sqrt( eff_incl*(100.0-eff_incl)/entries_gen);
+
+			cout<<"******************************************"<<endl;
+			cout<<"Trigger cut made with inclusive efficiency = "<<
+			        eff_incl<<"% +/- " <<eff_incl_err<<" %"<<endl;
+			cout<<"******************************************"<<endl;
 		}
-		cout<<"******************************************"<<endl;
-		cout<<"Trigger cut made with inclusive efficiency = "<<
-		        eff_incl<<"% +/- " <<eff_incl_err<<" %"<<endl;
-		cout<<"******************************************"<<endl;
 	}
 
 	fileOut->cd();

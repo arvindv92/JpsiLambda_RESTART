@@ -66,6 +66,30 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 		part = "bd_jpsix";
 		break;
 	}
+	case 6:
+	{
+		folder = "Lst1405";
+		part = "lst1405";
+		break;
+	}
+	case 7:
+	{
+		folder = "Lst1520";
+		part = "lst1520";
+		break;
+	}
+	case 8:
+	{
+		folder = "Lst1600";
+		part = "lst1600";
+		break;
+	}
+	case 9:
+	{
+		folder = "chiC1";
+		part = "chic1";
+		break;
+	}
 	}
 
 	//Set up logging
@@ -255,13 +279,14 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 
 			eff_excl_DD = (Float_t)entries_final_DD*100/entries_init;
 			eff_excl_DD_err = sqrt(eff_excl_DD*(100.0-eff_excl_DD)/entries_init);
+
+			cout<<"******************************************"<<endl;
+			cout<<"LL Sanity cuts made with exclusive efficiency = "<<
+			        eff_excl_LL<<"% +/- " <<eff_excl_LL_err<<" %"<<endl;
+			cout<<"DD Sanity cuts made with exclusive efficiency = "<<
+			        eff_excl_DD<<"% +/- " <<eff_excl_DD_err<<" %"<<endl;
+			cout<<"******************************************"<<endl;
 		}
-		cout<<"******************************************"<<endl;
-		cout<<"LL Sanity cuts made with exclusive efficiency = "<<
-		        eff_excl_LL<<"% +/- " <<eff_excl_LL_err<<" %"<<endl;
-		cout<<"DD Sanity cuts made with exclusive efficiency = "<<
-		        eff_excl_DD<<"% +/- " <<eff_excl_DD_err<<" %"<<endl;
-		cout<<"******************************************"<<endl;
 
 		if(genFlag)
 		{
@@ -274,13 +299,14 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 
 				eff_incl_DD = (Float_t)entries_final_DD*100/entries_gen;
 				eff_incl_DD_err = sqrt(eff_incl_DD*(100.0-eff_incl_DD)/entries_gen);
+
+				cout<<"******************************************"<<endl;
+				cout<<"LL Sanity cuts made with inclusive efficiency = "<<
+				        eff_incl_LL<<"% +/- " <<eff_incl_LL_err<<" %"<<endl;
+				cout<<"DD Sanity cuts made with inclusive efficiency = "<<
+				        eff_incl_DD<<"% +/- " <<eff_incl_DD_err<<" %"<<endl;
+				cout<<"******************************************"<<endl;
 			}
-			cout<<"******************************************"<<endl;
-			cout<<"LL Sanity cuts made with inclusive efficiency = "<<
-			        eff_incl_LL<<"% +/- " <<eff_incl_LL_err<<" %"<<endl;
-			cout<<"DD Sanity cuts made with inclusive efficiency = "<<
-			        eff_incl_DD<<"% +/- " <<eff_incl_DD_err<<" %"<<endl;
-			cout<<"******************************************"<<endl;
 		}
 	}
 

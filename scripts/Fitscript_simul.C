@@ -6,18 +6,25 @@ using namespace RooStats;
 
 #define Open TFile::Open
 
-void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
+void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtCut)
 //option = "best" to fit to data with best BDT cuts
+//myLow and myHigh define the fit range
 {
+	Bool_t calcUL   = true;
+	Bool_t isBinned = true; //set to false if you want unbinned ML fit.
+
 	// Fit params
+	// If final fit is a binned fit ,it will use binwidth for binning (MeV)
+	// If it is an unbinned it, it will just use the binning for visualization
 	Int_t low      = myLow, high = myHigh; //Define range in which fit is performed
-	Int_t binwidth = 4; // If final fit is a binned fit ,it will use this binning (MeV)
-	                    // If it is an unbinned it, it will just use the binning for visualization
+	Int_t binwidth = 4;
 	Int_t nbins    = (Int_t)(high-low)/binwidth;
 
-	gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/UpperLimit/Fit_HypatiaSig_ExpoBkg_%d_%d_%dMeVBins.txt",
-	                             myLow,myHigh,binwidth),"w");
+	Float_t myBDT = bdtCut;
+	// gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/UpperLimit/Fit_HypatiaSig_ExpoBkg_%d_%d_%dMeVBins.txt",
+	//                              myLow,myHigh,binwidth),"w");
 
+	// gSystem->RedirectOutput("tempLog.txt","a");
 	gSystem->Exec("date");
 	gSystem->Load("RooHypatia2_cpp.so"); //Load library for Hypatia shape
 
@@ -33,12 +40,9 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	Float_t bdtCut_nonZero[2] = {0.0,0.0};
 	Float_t bdtCut_Zero[2]    = {0.0,0.0};
 
-	Int_t bdtConf_nonZero[2] = {0,0};
-	Int_t bdtConf_Zero[2]    = {0,0};
-	Int_t isoConf[2]         = {0,0};
-
-	Bool_t calcUL   = true;
-	Bool_t isBinned = true; //set to false if you want unbinned ML fit.
+	Int_t bdtConf_nonZero[2]  = {0,0};
+	Int_t bdtConf_Zero[2]     = {0,0};
+	Int_t isoConf[2]          = {0,0};
 
 	const char *isoVersion[2] = {"",""};
 
@@ -94,11 +98,12 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	Double_t eff_ratio_err[2]      = {0.0,0.0};
 
 	// Systematics put in by hand
-	Float_t xib_syst       = 0.02;
-	Float_t eff_ratio_syst = 0.02;
+	Float_t xib_syst       = 0.1;
+	Float_t eff_ratio_syst = 0.1;
 	// Flags controlling shapes
 	Int_t lst1405flag    = 1;
 	Int_t lst1520flag    = 1;
+	Int_t lst1600flag    = 1;
 	Int_t lst1810flag    = 0;
 	Int_t xibflag        = 1;
 	Int_t sigmaflag      = 1;
@@ -207,25 +212,131 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 		// fileOut_cut->Close();
 	}
 	//************************************************
-
-	//****Get J/psi Sigma efficiencies from MC*******
-	const char *sigmaMCPath = "../rootFiles/mcFiles/JpsiLambda/JpsiSigma";
+	RooHistPdf* SIG[2];
+	RooKeysPdf* SIG_KEYS[2];
+	RooDataSet* ds_sig[2];
+	//****Get J/psi Sigma efficiencies and shape from MC*******
+	const char* sigmaPath = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma";
 
 	for(Int_t run = 1; run<=2; run++)
 	{
 		Int_t i = run-1;
 		TFile *mcFileIn_nonZero_Sigma = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_nonZeroTracks.root",
-		                                          sigmaMCPath,run));
+		                                          sigmaPath,run));
 		TTree *mcTreeIn_nonZero_Sigma = (TTree*)mcFileIn_nonZero_Sigma->Get("MyTuple");
 
 		TFile *mcFileIn_Zero_Sigma    = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_ZeroTracks.root",
-		                                          sigmaMCPath,run));
+		                                          sigmaPath,run));
 		TTree *mcTreeIn_Zero_Sigma    = (TTree*)mcFileIn_Zero_Sigma->Get("MyTuple");
 
 		mcTreeIn_nonZero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_LL_FinalBDT%d_iso%d_%s.root",
-		                                                 sigmaMCPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+		                                                 sigmaPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
 		mcTreeIn_Zero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_zeroTracksLL_FinalBDT%d.root",
-		                                              sigmaMCPath,run,bdtConf_Zero[i]));
+		                                              sigmaPath,run,bdtConf_Zero[i]));
+
+		//***************Efficiency***************************************
+		fstream genFile_Sigma;
+		genFile_Sigma.open((Form("../logs/mc/JpsiLambda/JpsiSigma/run%d/gen_log.txt",run)));
+
+		genFile_Sigma>>nGen_Sigma[i]; // Get number of generated events
+
+		fstream genEffFile_Sigma;
+		genEffFile_Sigma.open(Form("../logs/mc/JpsiLambda/JpsiSigma/run%d/Generator_Effs_Combined.txt",run));
+
+		genEffFile_Sigma>>eff_Sigma_gen[i]; // Get generator efficiency
+		genEffFile_Sigma>>eff_Sigma_gen_err[i]; // and error on above
+
+		cout<<"Run "<<run<<" Sigma Generator Effs = "<<eff_Sigma_gen[i]*100
+		    <<" % +/- "<<eff_Sigma_gen_err[i]*100<<" %"<<endl;
+
+		Int_t num_Sigma = mcTreeIn_nonZero_Sigma->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
+		                  mcTreeIn_Zero_Sigma->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+
+		eff_Sigma_rec[i]     = num_Sigma*1.0/nGen_Sigma[i]; // Calc. reco. eff.
+		eff_Sigma_rec_err[i] = sqrt(eff_Sigma_rec[i]*(1-eff_Sigma_rec[i])/nGen_Sigma[i]); //stat error on recon. eff.
+
+		cout<<"Run "<<run<<" Sigma Recons. Effs = "
+		    <<eff_Sigma_rec[i]*100<<" % +/- "<<eff_Sigma_rec_err[i]*100<<" %"<<endl;
+
+		eff_Sigma[i] = eff_Sigma_gen[i] * eff_Sigma_rec[i]; // Calc overall eff.
+		eff_Sigma_staterr[i] = eff_Sigma[i]*sqrt(pow((eff_Sigma_gen_err[i]/eff_Sigma_gen[i]),2) +
+		                                         pow((eff_Sigma_rec_err[i]/eff_Sigma_rec[i]),2)); // and stat. error on above
+
+		cout<<"Run "<<run<<" Jpsi Sigma Eff = "<<eff_Sigma[i]*100<<" % +/- "<<eff_Sigma_staterr[i]*100<<" %"<<endl;
+
+		eff_ratio[i]         = eff_Sigma[i]/eff_Lambda[i]; // Calc eff ratio.
+		eff_ratio_staterr[i] = eff_ratio[i]*sqrt(pow((eff_Sigma_staterr[i]/eff_Sigma[i]),2)+pow((eff_Lambda_staterr[i]/eff_Lambda[i]),2)); // stat err on ratio
+		eff_ratio_systerr[i] = eff_ratio[i]*eff_ratio_syst;
+
+		eff_ratio_err[i] = sqrt(pow(eff_ratio_staterr[i],2) + pow(eff_ratio_systerr[i],2));//combine in quadrature
+
+		cout<<"***************************************"<<endl;
+		cout<<"The efficiency ratio for Run "<<run<<" is "<<eff_ratio[i]<<" +/- "<<eff_ratio_err[i]<<endl;
+		cout<<"***************************************"<<endl;
+
+		//******************************************************************
+
+		//****************Shape*********************************************
+		treein_sigma_Zero->SetBranchStatus("*",0);
+		treein_sigma_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		treein_sigma_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+		treein_sigma_Zero->SetBranchStatus("Lb_BKGCAT",1);
+
+		treein_sigma_nonZero->SetBranchStatus("*",0);
+		treein_sigma_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		treein_sigma_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+		treein_sigma_nonZero->SetBranchStatus("Lb_BKGCAT",1);
+
+		TFile *tempFile = new TFile("tempFile_sig.root","RECREATE");
+
+		TTree* treein_sigma_Zero_cut    = (TTree*)treein_sigma_Zero->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//Not TRUTH MATCHING HERE!
+		TTree* treein_sigma_nonZero_cut = (TTree*)treein_sigma_nonZero->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//Not TRUTH MATCHING HERE!
+
+		TList *list_sig = new TList;
+		list_sig->Add(treein_sigma_Zero_cut);
+		list_sig->Add(treein_sigma_nonZero_cut);
+
+		TTree *combTree_sig = TTree::MergeTrees(list_sig);
+		combTree_sig->SetName("combTree_sig");
+
+		ds_sig[i] = new RooDataSet("ds_sig","ds_sig",combTree_sig,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))));
+		ds_sig[i]->Print();
+
+		SIG_KEYS[i] = new RooKeysPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_sig[i]),RooKeysPdf::MirrorBoth,1);
+
+		RooPlot *framesigma = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+		framesigma->SetTitle("J/#psi #Sigma");
+		// ds_sigma->plotOn(framesigma,Name("sigmadata"));
+		ds_sig[i]->plotOn(framesigma,Name("sigmadata"));
+		// sigmashape.plotOn(framesigma,Name("sigmafit"),LineColor(kBlue));
+		(*(SIG_KEYS[i])).plotOn(framesigma,Name("sigmafitsmooth"),LineColor(kRed),LineStyle(kDashed));
+
+		TCanvas *csigma = new TCanvas(Form("JpsiSigma%d",run),Form("JpsiSigma%d",run));
+		framesigma->Draw();
+		w.import(*(SIG_KEYS[i]));
+
+		cout<<"Done importing Jpsi Sigma shape"<<endl;
+	}
+	//********************************************************************
+
+	//****Get J/psi Lst(1405) efficiencies from MC*******
+	const char* Lst1405Path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/Lst1405";
+
+	for(Int_t run = 1; run<=2; run++)
+	{
+		Int_t i = run-1;
+		TFile *mcFileIn_nonZero_Sigma = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_nonZeroTracks.root",
+		                                          sigmaPath,run));
+		TTree *mcTreeIn_nonZero_Sigma = (TTree*)mcFileIn_nonZero_Sigma->Get("MyTuple");
+
+		TFile *mcFileIn_Zero_Sigma    = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_ZeroTracks.root",
+		                                          sigmaPath,run));
+		TTree *mcTreeIn_Zero_Sigma    = (TTree*)mcFileIn_Zero_Sigma->Get("MyTuple");
+
+		mcTreeIn_nonZero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_LL_FinalBDT%d_iso%d_%s.root",
+		                                                 sigmaPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+		mcTreeIn_Zero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_zeroTracksLL_FinalBDT%d.root",
+		                                              sigmaPath,run,bdtConf_Zero[i]));
 		fstream genFile_Sigma;
 		genFile_Sigma.open((Form("../logs/mc/JpsiLambda/JpsiSigma/run%d/gen_log.txt",run)));
 
@@ -267,110 +378,392 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	}
 	//*******************************************************************
 
+	RooDataSet* ds_1405[2];
+	RooKeysPdf* KEYS_1405[2];
 	//*********Get shape from Lambda*(1405) background*******************
-	TFile *filein_lst1405 = nullptr;
-	TTree *treein_lst1405 = (TTree*)malloc(sizeof(*treein_lst1405));
-	TString lst1405wtexp  = "";
-	//  RooRealVar MVweight("MVweight","MVweight",0.,10.);
 
-	if(Lst1405_rwtype == 0)
-	{
-		filein_lst1405 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1405/Lst1405_total_MVrw.root");
-		treein_lst1405 = (TTree*)filein_lst1405->Get("MCDecayTree");
-		treein_lst1405->SetBranchStatus("*",0);
-		treein_lst1405->SetBranchStatus("JpsiLmass",1);
-		lst1405wtexp = "";
+	for(Int_t run = 1; run<=2; run++) {
+		Int_t i = run-1;
+		TFile *filein_1405_nonZero = Open(Form("%s/run%d/lst1405_cutoutks_LL_nonZeroTracks.root",Lst1405Path,run));
+		TTree *treein_1405_nonZero = (TTree*)filein_1405_nonZero->Get("MyTuple");
+
+		TFile *filein_1405_Zero = Open(Form("%s/run%d/lst1405_cutoutks_LL_ZeroTracks.root",Lst1405Path,run));
+		TTree *treein_1405_Zero = (TTree*)filein_1405_Zero->Get("MyTuple");
+
+		treein_1405_nonZero->AddFriend("MyTuple",Form("%s/run%d/lst1405_LL_FinalBDT%d_iso%d_%s.root",
+		                                              Lst1405Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+		treein_1405_Zero->AddFriend("MyTuple",Form("%s/run%d/lst1405_zeroTracksLL_FinalBDT%d.root",
+		                                           Lst1405Path,run,bdtConf_Zero[i]));
+
+		treein_1405_Zero->SetBranchStatus("*",0);
+		treein_1405_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		treein_1405_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+		treein_1405_Zero->SetBranchStatus("Lb_BKGCAT",1);
+
+		treein_1405_nonZero->SetBranchStatus("*",0);
+		treein_1405_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		treein_1405_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+		treein_1405_nonZero->SetBranchStatus("Lb_BKGCAT",1);
+
+		TFile *tempFile_1405 = new TFile("tempFile_1405.root","RECREATE");
+
+		TTree* treein_1405_Zero_cut    = (TTree*)treein_1405_Zero->CopyTree(Form("Lb_BKGCAT==50 && BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//TRUTH MATCHING HERE!
+		TTree* treein_1405_nonZero_cut = (TTree*)treein_1405_nonZero->CopyTree(Form("Lb_BKGCAT==50 && BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//TRUTH MATCHING HERE!
+
+		TList *list_1405 = new TList;
+		list_1405->Add(treein_1405_Zero_cut);
+		list_1405->Add(treein_1405_nonZero_cut);
+
+		TTree *combTree_1405 = TTree::MergeTrees(list_1405);
+		combTree_1405->SetName("combTree_1405");
+
+		ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))));
+		ds_1405[i]->Print();
+
+		KEYS_1405[i] = new RooKeysPdf(Form("LST1405_Run%d",run),Form("LST1405_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1405[i]),RooKeysPdf::MirrorBoth,1);
+
+		// treein_1405_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1405_nonZero%d(%d,%d,%d)",run,nbins,low,high),
+		//                            Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");        //Not TRUTH MATCHING HERE!
+		//
+		// treein_1405_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1405_Zero%d(%d,%d,%d)",run,nbins,low,high),
+		//                         Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");        //Not TRUTH MATCHING HERE!
+		//
+		// TH1D *h1405_nonZero = (TH1D*)gDirectory->Get(Form("h1405_nonZero%d",run));
+		// TH1D *h1405_Zero    = (TH1D*)gDirectory->Get(Form("h1405_Zero%d",run));
+		// TH1D *h1405         = new TH1D(Form("h1405%d",run),"",nbins,low,high);
+		//
+		// h1405->Add(h1405_nonZero,h1405_Zero);
+		// TH1D *h1405_smooth  = (TH1D*)h1405->Clone(Form("h1405_smooth%d",run));
+		// h1405_smooth->Smooth(2);
+		//
+		// RooDataHist *ds_1405        = new RooDataHist(Form("ds_1405%d",run),Form("ds_1405%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),h1405);
+		// RooDataHist *ds_1405_smooth = new RooDataHist(Form("ds_1405_smooth%d",run),Form("ds_1405_smooth%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),h1405_smooth);
+		//
+		// ds_1405->Print();
+		//
+		// RooHistPdf 1405shape(Form("1405shape%d",run),Form("1405shape%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_1405,0);
+		// SIG[i] = new RooHistPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_1405_smooth,0);
+
+		RooPlot *frame1405 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+		frame1405->SetTitle("J/#psi #Lambda(1405)");
+		// ds_1405->plotOn(frame1405,Name("1405data"));
+		ds_1405[i]->plotOn(frame1405,Name("1405data"));
+		// 1405shape.plotOn(frame1405,Name("1405fit"),LineColor(kBlue));
+		(*(KEYS_1405[i])).plotOn(frame1405,Name("1405fitsmooth"),LineColor(kRed),LineStyle(kDashed));
+
+		TCanvas *c1405 = new TCanvas(Form("JpsiLst(1405)%d",run),Form("JpsiLst(1405)%d",run));
+		frame1405->Draw();
+		w.import(*(KEYS_1405[i]));
+
+		cout<<"Done importing Jpsi Lst(1405) shape"<<endl;
 	}
-	else if(Lst1405_rwtype == 1)
-	{
-		filein_lst1405 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1405/Lst1405_total_MVrw.root");
-		lst1405wtexp = "MVweight";
-		treein_lst1405 = (TTree*)filein_lst1405->Get("MCDecayTree");
-		treein_lst1405->SetBranchStatus("*",0);
-		treein_lst1405->SetBranchStatus("JpsiLmass",1);
-		treein_lst1405->SetBranchStatus("MVweight",1);
+
+	// TFile *filein_lst1405 = nullptr;
+	// TTree *treein_lst1405 = (TTree*)malloc(sizeof(*treein_lst1405));
+	// TString lst1405wtexp  = "";
+	// //  RooRealVar MVweight("MVweight","MVweight",0.,10.);
+	//
+	// if(Lst1405_rwtype == 0)
+	// {
+	//      filein_lst1405 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1405/Lst1405_total_MVrw.root");
+	//      treein_lst1405 = (TTree*)filein_lst1405->Get("MCDecayTree");
+	//      treein_lst1405->SetBranchStatus("*",0);
+	//      treein_lst1405->SetBranchStatus("JpsiLmass",1);
+	//      lst1405wtexp = "";
+	// }
+	// else if(Lst1405_rwtype == 1)
+	// {
+	//      filein_lst1405 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1405/Lst1405_total_MVrw.root");
+	//      lst1405wtexp = "MVweight";
+	//      treein_lst1405 = (TTree*)filein_lst1405->Get("MCDecayTree");
+	//      treein_lst1405->SetBranchStatus("*",0);
+	//      treein_lst1405->SetBranchStatus("JpsiLmass",1);
+	//      treein_lst1405->SetBranchStatus("MVweight",1);
+	// }
+	// else if(Lst1405_rwtype == 2)
+	// {
+	//      filein_lst1405 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1405/Lst1405_total_BONNrw.root");
+	//      lst1405wtexp = "BONNweight";
+	//      treein_lst1405 = (TTree*)filein_lst1405->Get("MCDecayTree");
+	//      treein_lst1405->SetBranchStatus("*",0);
+	//      treein_lst1405->SetBranchStatus("JpsiLmass",1);
+	//      treein_lst1405->SetBranchStatus("BONNweight",1);
+	// }
+	//
+	// treein_lst1405->Draw(Form("JpsiLmass>>hlst1405(%d,%d,%d)",nbins,low,high),
+	//                      lst1405wtexp,"goff");
+	//
+	// TH1D *hlst1405 = (TH1D*)gDirectory->Get("hlst1405");
+	// TH1D *hlst1405_smooth = (TH1D*)hlst1405->Clone("hlst1405_smooth");
+	// hlst1405_smooth->Smooth(2);        //TODO TWEAK THIS
+	// RooDataHist *ds_lst1405 = new RooDataHist("ds_lst1405","ds_lst1405",
+	//                                           *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1405);
+	// RooDataHist *ds_lst1405_smooth = new RooDataHist("ds_lst1405_smooth","ds_lst1405_smooth",
+	//                                                  *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1405_smooth);
+	//
+	// ds_lst1405->Print();
+	// //  RooKeysPdf lstshape("lstshape","lstshape",lstmass,ds_lst);
+	// RooHistPdf lst1405shape("lst1405shape","lst1405shape",*(w.var("Lb_DTF_M_JpsiLConstr")),
+	//                         *ds_lst1405,0);
+	// RooHistPdf LST1405("LST1405","LST1405",
+	//                    *(w.var("Lb_DTF_M_JpsiLConstr")),*ds_lst1405_smooth,0);
+	// RooPlot *framelst1405 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+	// framelst1405->SetTitle("J/#psi #Lambda^{*} (1405)");
+	// ds_lst1405->plotOn(framelst1405,Name("lst1405data"));
+	// lst1405shape.plotOn(framelst1405,Name("lst1405fit"),LineColor(kBlue));
+	// LST1405.plotOn(framelst1405,Name("lst1405fitsmooth"),LineColor(kRed),LineStyle(kDashed));
+	//
+	// TCanvas *c1405 = new TCanvas("Lambda(1405)","Lambda(1405)");
+	// framelst1405->Draw();
+	//
+	// w.import(LST1405);
+	//
+	// cout<<"Done importing Lambda(1405) shape"<<endl;
+	//*******************************************************************
+	RooDataSet* ds_1520[2];
+	RooKeysPdf* KEYS_1520[2];
+	//*********Get shape from Lambda*(1520) background*******************
+
+	const char* Lst1520Path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/Lst1520";
+
+	for(Int_t run = 1; run<=2; run++) {
+		Int_t i = run-1;
+		TFile *filein_1520_nonZero = Open(Form("%s/run%d/lst1520_cutoutks_LL_nonZeroTracks.root",Lst1520Path,run));
+		TTree *treein_1520_nonZero = (TTree*)filein_1520_nonZero->Get("MyTuple");
+
+		TFile *filein_1520_Zero = Open(Form("%s/run%d/lst1520_cutoutks_LL_ZeroTracks.root",Lst1520Path,run));
+		TTree *treein_1520_Zero = (TTree*)filein_1520_Zero->Get("MyTuple");
+
+		treein_1520_nonZero->AddFriend("MyTuple",Form("%s/run%d/lst1520_LL_FinalBDT%d_iso%d_%s.root",
+		                                              Lst1520Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+		treein_1520_Zero->AddFriend("MyTuple",Form("%s/run%d/lst1520_zeroTracksLL_FinalBDT%d.root",
+		                                           Lst1520Path,run,bdtConf_Zero[i]));
+
+		treein_1520_Zero->SetBranchStatus("*",0);
+		treein_1520_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		treein_1520_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+		treein_1520_Zero->SetBranchStatus("Lb_BKGCAT",1);
+
+		treein_1520_nonZero->SetBranchStatus("*",0);
+		treein_1520_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		treein_1520_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+		treein_1520_nonZero->SetBranchStatus("Lb_BKGCAT",1);
+
+		TFile *tempFile_1520 = new TFile("tempFile_1520.root","RECREATE");
+
+		TTree* treein_1520_Zero_cut    = (TTree*)treein_1520_Zero->CopyTree(Form("Lb_BKGCAT==50 && BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));        //TRUTH MATCHING HERE!
+		TTree* treein_1520_nonZero_cut = (TTree*)treein_1520_nonZero->CopyTree(Form("Lb_BKGCAT==50 && BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));        //TRUTH MATCHING HERE!
+
+		TList *list_1520 = new TList;
+		list_1520->Add(treein_1520_Zero_cut);
+		list_1520->Add(treein_1520_nonZero_cut);
+
+		TTree *combTree_1520 = TTree::MergeTrees(list_1520);
+		combTree_1520->SetName("combTree_1520");
+
+		ds_1520[i] = new RooDataSet("ds_1520","ds_1520",combTree_1520,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))));
+		ds_1520[i]->Print();
+
+		KEYS_1520[i] = new RooKeysPdf(Form("LST1520_Run%d",run),Form("LST1520_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1520[i]),RooKeysPdf::MirrorBoth,1);
+
+		// treein_1520_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1520_nonZero%d(%d,%d,%d)",run,nbins,low,high),
+		//                            Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");        //Not TRUTH MATCHING HERE!
+		//
+		// treein_1520_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1520_Zero%d(%d,%d,%d)",run,nbins,low,high),
+		//                         Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");        //Not TRUTH MATCHING HERE!
+		//
+		// TH1D *h1520_nonZero = (TH1D*)gDirectory->Get(Form("h1520_nonZero%d",run));
+		// TH1D *h1520_Zero    = (TH1D*)gDirectory->Get(Form("h1520_Zero%d",run));
+		// TH1D *h1520         = new TH1D(Form("h1520%d",run),"",nbins,low,high);
+		//
+		// h1520->Add(h1520_nonZero,h1520_Zero);
+		// TH1D *h1520_smooth  = (TH1D*)h1520->Clone(Form("h1520_smooth%d",run));
+		// h1520_smooth->Smooth(2);
+		//
+		// RooDataHist *ds_1520        = new RooDataHist(Form("ds_1520%d",run),Form("ds_1520%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),h1520);
+		// RooDataHist *ds_1520_smooth = new RooDataHist(Form("ds_1520_smooth%d",run),Form("ds_1520_smooth%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),h1520_smooth);
+		//
+		// ds_1520->Print();
+		//
+		// RooHistPdf 1520shape(Form("1520shape%d",run),Form("1520shape%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_1520,0);
+		// SIG[i] = new RooHistPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_1520_smooth,0);
+
+		RooPlot *frame1520 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+		frame1520->SetTitle("J/#psi #Lambda(1520)");
+		// ds_1520->plotOn(frame1520,Name("1520data"));
+		ds_1520[i]->plotOn(frame1520,Name("1520data"));
+		// 1520shape.plotOn(frame1520,Name("1520fit"),LineColor(kBlue));
+		(*(KEYS_1520[i])).plotOn(frame1520,Name("1520fitsmooth"),LineColor(kRed),LineStyle(kDashed));
+
+		TCanvas *c1520 = new TCanvas(Form("JpsiLst(1520)%d",run),Form("JpsiLst(1520)%d",run));
+		frame1520->Draw();
+		w.import(*(KEYS_1520[i]));
+
+		cout<<"Done importing Jpsi Lst(1520) shape"<<endl;
 	}
-	else if(Lst1405_rwtype == 2)
-	{
-		filein_lst1405 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1405/Lst1405_total_BONNrw.root");
-		lst1405wtexp = "BONNweight";
-		treein_lst1405 = (TTree*)filein_lst1405->Get("MCDecayTree");
-		treein_lst1405->SetBranchStatus("*",0);
-		treein_lst1405->SetBranchStatus("JpsiLmass",1);
-		treein_lst1405->SetBranchStatus("BONNweight",1);
-	}
 
-	treein_lst1405->Draw(Form("JpsiLmass>>hlst1405(%d,%d,%d)",nbins,low,high),
-	                     lst1405wtexp,"goff");
-
-	TH1D *hlst1405 = (TH1D*)gDirectory->Get("hlst1405");
-	TH1D *hlst1405_smooth = (TH1D*)hlst1405->Clone("hlst1405_smooth");
-	hlst1405_smooth->Smooth(2);        //TODO TWEAK THIS
-	RooDataHist *ds_lst1405 = new RooDataHist("ds_lst1405","ds_lst1405",
-	                                          *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1405);
-	RooDataHist *ds_lst1405_smooth = new RooDataHist("ds_lst1405_smooth","ds_lst1405_smooth",
-	                                                 *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1405_smooth);
-
-	ds_lst1405->Print();
-	//  RooKeysPdf lstshape("lstshape","lstshape",lstmass,ds_lst);
-	RooHistPdf lst1405shape("lst1405shape","lst1405shape",*(w.var("Lb_DTF_M_JpsiLConstr")),
-	                        *ds_lst1405,0);
-	RooHistPdf LST1405("LST1405","LST1405",
-	                   *(w.var("Lb_DTF_M_JpsiLConstr")),*ds_lst1405_smooth,0);
-	RooPlot *framelst1405 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
-	framelst1405->SetTitle("J/#psi #Lambda^{*} (1405)");
-	ds_lst1405->plotOn(framelst1405,Name("lst1405data"));
-	lst1405shape.plotOn(framelst1405,Name("lst1405fit"),LineColor(kBlue));
-	LST1405.plotOn(framelst1405,Name("lst1405fitsmooth"),LineColor(kRed),LineStyle(kDashed));
-
-	TCanvas *c1405 = new TCanvas("Lambda(1405)","Lambda(1405)");
-	framelst1405->Draw();
-
-	w.import(LST1405);
-
-	cout<<"Done importing Lambda(1405) shape"<<endl;
+	// TFile *filein_lst1520;
+	// TTree *treein_lst1520 = (TTree*)malloc(sizeof(*treein_lst1520));
+	//
+	// filein_lst1520 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1520/Lst1520_total_jpsil.root");
+	// treein_lst1520 = (TTree*)filein_lst1520->Get("MCDecayTree");
+	// treein_lst1520->SetBranchStatus("*",0);
+	// treein_lst1520->SetBranchStatus("JpsiLmass",1);
+	//
+	// //  RooDataSet ds_lst("ds_lst","ds_lst",treein_lst,RooArgSet(lstmass,MVweight),"MVweight");
+	// treein_lst1520->Draw(Form("JpsiLmass>>hlst1520(%d,%d,%d)",nbins,low,high),"","goff");
+	//
+	// TH1D *hlst1520        = (TH1D*)gDirectory->Get("hlst1520");
+	// TH1D *hlst1520_smooth = (TH1D*)hlst1520->Clone("hlst1520_smooth");
+	// hlst1520_smooth->Smooth(2);        //TODO TWEAK THIS
+	//
+	// //  RooDataHist *ds_lst1 = ds_lst.binnedClone();
+	// RooDataHist *ds_lst1520 = new RooDataHist("ds_lst1520","ds_lst1520",
+	//                                           *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1520);
+	// RooDataHist *ds_lst1520_smooth = new RooDataHist("ds_lst1520_smooth","ds_lst1520_smooth",
+	//                                                  *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1520_smooth);
+	//
+	// ds_lst1520->Print();
+	//
+	// //  RooKeysPdf lstshape("lstshape","lstshape",lstmass,ds_lst);
+	// RooHistPdf lst1520shape("lst1520shape","lst1520shape",*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_lst1520,0);
+	// RooHistPdf LST1520("LST1520","LST1520",*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_lst1520_smooth,0);
+	//
+	// RooPlot *framelst1520 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+	// framelst1520->SetTitle("J/#psi Lambda^{*} (1520)");
+	// ds_lst1520->plotOn(framelst1520,Name("lst1520data"));
+	// lst1520shape.plotOn(framelst1520,Name("lst1520fit"),LineColor(kBlue));
+	// LST1520.plotOn(framelst1520,Name("lst1520fitsmooth"),LineColor(kRed),LineStyle(kDashed));
+	//
+	// TCanvas *c1520 =  new TCanvas("Lambda(1520)","Lambda(1520)");
+	// framelst1520->Draw();
+	//
+	// w.import(LST1520);
+	//
+	// cout<<"Done importing Lambda(1520) shape"<<endl;
 	//*******************************************************************
 
-	//*********Get shape from Lambda*(1520) background*******************
-	TFile *filein_lst1520;
-	TTree *treein_lst1520 = (TTree*)malloc(sizeof(*treein_lst1520));
+	RooDataSet* ds_1600[2];
+	RooKeysPdf* KEYS_1600[2];
+	//*********Get shape from Lambda*(1600) background*******************
 
-	filein_lst1520 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1520/Lst1520_total_jpsil.root");
-	treein_lst1520 = (TTree*)filein_lst1520->Get("MCDecayTree");
-	treein_lst1520->SetBranchStatus("*",0);
-	treein_lst1520->SetBranchStatus("JpsiLmass",1);
+	const char* Lst1600Path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/Lst1600";
 
-	//  RooDataSet ds_lst("ds_lst","ds_lst",treein_lst,RooArgSet(lstmass,MVweight),"MVweight");
-	treein_lst1520->Draw(Form("JpsiLmass>>hlst1520(%d,%d,%d)",nbins,low,high),"","goff");
+	for(Int_t run = 1; run<=2; run++) {
+		Int_t i = run-1;
+		TFile *filein_1600_nonZero = Open(Form("%s/run%d/lst1600_cutoutks_LL_nonZeroTracks.root",Lst1600Path,run));
+		TTree *treein_1600_nonZero = (TTree*)filein_1600_nonZero->Get("MyTuple");
 
-	TH1D *hlst1520        = (TH1D*)gDirectory->Get("hlst1520");
-	TH1D *hlst1520_smooth = (TH1D*)hlst1520->Clone("hlst1520_smooth");
-	hlst1520_smooth->Smooth(2);        //TODO TWEAK THIS
+		TFile *filein_1600_Zero = Open(Form("%s/run%d/lst1600_cutoutks_LL_ZeroTracks.root",Lst1600Path,run));
+		TTree *treein_1600_Zero = (TTree*)filein_1600_Zero->Get("MyTuple");
 
-	//  RooDataHist *ds_lst1 = ds_lst.binnedClone();
-	RooDataHist *ds_lst1520 = new RooDataHist("ds_lst1520","ds_lst1520",
-	                                          *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1520);
-	RooDataHist *ds_lst1520_smooth = new RooDataHist("ds_lst1520_smooth","ds_lst1520_smooth",
-	                                                 *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1520_smooth);
+		treein_1600_nonZero->AddFriend("MyTuple",Form("%s/run%d/lst1600_LL_FinalBDT%d_iso%d_%s.root",
+		                                              Lst1600Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+		treein_1600_Zero->AddFriend("MyTuple",Form("%s/run%d/lst1600_zeroTracksLL_FinalBDT%d.root",
+		                                           Lst1600Path,run,bdtConf_Zero[i]));
 
-	ds_lst1520->Print();
+		treein_1600_Zero->SetBranchStatus("*",0);
+		treein_1600_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		treein_1600_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+		treein_1600_Zero->SetBranchStatus("Lb_BKGCAT",1);
 
-	//  RooKeysPdf lstshape("lstshape","lstshape",lstmass,ds_lst);
-	RooHistPdf lst1520shape("lst1520shape","lst1520shape",*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_lst1520,0);
-	RooHistPdf LST1520("LST1520","LST1520",*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_lst1520_smooth,0);
+		treein_1600_nonZero->SetBranchStatus("*",0);
+		treein_1600_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		treein_1600_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+		treein_1600_nonZero->SetBranchStatus("Lb_BKGCAT",1);
 
-	RooPlot *framelst1520 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
-	framelst1520->SetTitle("J/#psi Lambda^{*} (1520)");
-	ds_lst1520->plotOn(framelst1520,Name("lst1520data"));
-	lst1520shape.plotOn(framelst1520,Name("lst1520fit"),LineColor(kBlue));
-	LST1520.plotOn(framelst1520,Name("lst1520fitsmooth"),LineColor(kRed),LineStyle(kDashed));
+		TFile *tempFile_1600 = new TFile("tempFile_1600.root","RECREATE");
 
-	TCanvas *c1520 =  new TCanvas("Lambda(1520)","Lambda(1520)");
-	framelst1520->Draw();
+		TTree* treein_1600_Zero_cut    = (TTree*)treein_1600_Zero->CopyTree(Form("Lb_BKGCAT==50 && BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));        //TRUTH MATCHING HERE!
+		TTree* treein_1600_nonZero_cut = (TTree*)treein_1600_nonZero->CopyTree(Form("Lb_BKGCAT==50 && BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));        //TRUTH MATCHING HERE!
 
-	w.import(LST1520);
+		TList *list_1600 = new TList;
+		list_1600->Add(treein_1600_Zero_cut);
+		list_1600->Add(treein_1600_nonZero_cut);
 
-	cout<<"Done importing Lambda(1520) shape"<<endl;
+		TTree *combTree_1600 = TTree::MergeTrees(list_1600);
+		combTree_1600->SetName("combTree_1600");
+
+		ds_1600[i] = new RooDataSet("ds_1600","ds_1600",combTree_1600,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))));
+		ds_1600[i]->Print();
+
+		KEYS_1600[i] = new RooKeysPdf(Form("LST1600_Run%d",run),Form("LST1600_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1600[i]),RooKeysPdf::MirrorBoth,1);
+
+		// treein_1600_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1600_nonZero%d(%d,%d,%d)",run,nbins,low,high),
+		//                            Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");        //Not TRUTH MATCHING HERE!
+		//
+		// treein_1600_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1600_Zero%d(%d,%d,%d)",run,nbins,low,high),
+		//                         Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");        //Not TRUTH MATCHING HERE!
+		//
+		// TH1D *h1600_nonZero = (TH1D*)gDirectory->Get(Form("h1600_nonZero%d",run));
+		// TH1D *h1600_Zero    = (TH1D*)gDirectory->Get(Form("h1600_Zero%d",run));
+		// TH1D *h1600         = new TH1D(Form("h1600%d",run),"",nbins,low,high);
+		//
+		// h1600->Add(h1600_nonZero,h1600_Zero);
+		// TH1D *h1600_smooth  = (TH1D*)h1600->Clone(Form("h1600_smooth%d",run));
+		// h1600_smooth->Smooth(2);
+		//
+		// RooDataHist *ds_1600        = new RooDataHist(Form("ds_1600%d",run),Form("ds_1600%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),h1600);
+		// RooDataHist *ds_1600_smooth = new RooDataHist(Form("ds_1600_smooth%d",run),Form("ds_1600_smooth%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),h1600_smooth);
+		//
+		// ds_1600->Print();
+		//
+		// RooHistPdf 1600shape(Form("1600shape%d",run),Form("1600shape%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_1600,0);
+		// SIG[i] = new RooHistPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_1600_smooth,0);
+
+		RooPlot *frame1600 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+		frame1600->SetTitle("J/#psi #Lambda(1600)");
+		// ds_1600->plotOn(frame1600,Name("1600data"));
+		ds_1600[i]->plotOn(frame1600,Name("1600data"));
+		// 1600shape.plotOn(frame1600,Name("1600fit"),LineColor(kBlue));
+		(*(KEYS_1600[i])).plotOn(frame1600,Name("1600fitsmooth"),LineColor(kRed),LineStyle(kDashed));
+
+		TCanvas *c1600 = new TCanvas(Form("JpsiLst(1600)%d",run),Form("JpsiLst(1600)%d",run));
+		frame1600->Draw();
+		w.import(*(KEYS_1600[i]));
+
+		cout<<"Done importing Jpsi Lst(1600) shape"<<endl;
+	}
+
+	// TFile *filein_lst1600;
+	// TTree *treein_lst1600 = (TTree*)malloc(sizeof(*treein_lst1600));
+	//
+	// filein_lst1600 = Open("/data1/avenkate/JpsiLambda_restart/mc/Lst1600/Lst1600_total_jpsil.root");
+	// treein_lst1600 = (TTree*)filein_lst1600->Get("MCDecayTree");
+	// treein_lst1600->SetBranchStatus("*",0);
+	// treein_lst1600->SetBranchStatus("JpsiLmass",1);
+	//
+	// //  RooDataSet ds_lst("ds_lst","ds_lst",treein_lst,RooArgSet(lstmass,MVweight),"MVweight");
+	// treein_lst1600->Draw(Form("JpsiLmass>>hlst1600(%d,%d,%d)",nbins,low,high),"","goff");
+	//
+	// TH1D *hlst1600        = (TH1D*)gDirectory->Get("hlst1600");
+	// TH1D *hlst1600_smooth = (TH1D*)hlst1600->Clone("hlst1600_smooth");
+	// hlst1600_smooth->Smooth(2);        //TODO TWEAK THIS
+	//
+	// //  RooDataHist *ds_lst1 = ds_lst.binnedClone();
+	// RooDataHist *ds_lst1600 = new RooDataHist("ds_lst1600","ds_lst1600",
+	//                                           *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1600);
+	// RooDataHist *ds_lst1600_smooth = new RooDataHist("ds_lst1600_smooth","ds_lst1600_smooth",
+	//                                                  *(w.var("Lb_DTF_M_JpsiLConstr")),hlst1600_smooth);
+	//
+	// ds_lst1600->Print();
+	//
+	// //  RooKeysPdf lstshape("lstshape","lstshape",lstmass,ds_lst);
+	// RooHistPdf lst1600shape("lst1600shape","lst1600shape",*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_lst1600,0);
+	// RooHistPdf LST1600("LST1600","LST1600",*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_lst1600_smooth,0);
+	//
+	// RooPlot *framelst1600 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+	// framelst1600->SetTitle("J/#psi Lambda^{*} (1600)");
+	// ds_lst1600->plotOn(framelst1600,Name("lst1600data"));
+	// lst1600shape.plotOn(framelst1600,Name("lst1600fit"),LineColor(kBlue));
+	// LST1600.plotOn(framelst1600,Name("lst1600fitsmooth"),LineColor(kRed),LineStyle(kDashed));
+	//
+	// TCanvas *c1600 =  new TCanvas("Lambda(1600)","Lambda(1600)");
+	// framelst1600->Draw();
+	//
+	// w.import(LST1600);
+	//
+	// cout<<"Done importing Lambda(1600) shape"<<endl;
 	//*******************************************************************
 
 	RooHistPdf* XIB[2];
@@ -457,12 +850,9 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	}
 	//*******************************************************************
 
-	RooHistPdf* SIG[2];
-	RooKeysPdf* SIG_KEYS[2];
-	RooDataSet* ds_sig[2];
+
 
 	//******************Get shape from Jpsi Sigma signal*****************
-	const char* sigmaPath = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma";
 
 	for(Int_t run = 1; run<=2; run++) {
 		Int_t i = run-1;
@@ -558,13 +948,13 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 
 	//*********Hypatia signal shape for Lambda_b0************************
 
-	w.factory("RooHypatia2::Lb_Run1(Lb_DTF_M_JpsiLConstr,lambda_Run1[-2.0,-3.0,0.0],0,0,"
-	          "sigma_Run1[10.,1.,20.], mean_Run1[5619.6,5619,5621], a1_Run1[1.7,1.0,3.0],"
-	          "2 ,a2_Run1[2.0,1.0,3.0], 2)");
+	// w.factory("RooHypatia2::Lb_Run1(Lb_DTF_M_JpsiLConstr,lambda_Run1[-2.0,-4.0,0.0],0,0,"
+	//           "sigma_Run1[10.,1.,20.], mean_Run1[5619.6,5619,5621], a1_Run1[1.7,1.0,3.0],"
+	//           "2 ,a2_Run1[2.0,1.0,3.0], 2)");
 
-	// w.factory("RooHypatia2::Lb_Run2(Lb_DTF_M_JpsiLConstr,lambda_Run2[-2.5,-3.0,0.0],0,0,"
-	//           "sigma_Run2[10.,1.,20.], mean_Run2[5619.6,5619,5621], a1_Run2[1.5,1.0,3.0],"
-	//           "2 ,a2_Run2[1.5,1.0,3.0], 2)");
+	w.factory("RooHypatia2::Lb_Run1(Lb_DTF_M_JpsiLConstr,lambda_Run1[-2.0,-4.0,0.0],0,0,"
+	          "sigma_Run1[10.,1.,20.], mean_Run1[5619.6,5619,5621], a1_Run1[1.7,1.0,4.0],"
+	          "2 ,a2_Run1[2.0,1.0,3.0], 2)");
 
 	w.factory("RooHypatia2::Lb_Run2(Lb_DTF_M_JpsiLConstr,lambda_Run2[-2.5,-4.0,0.0],0,0,"
 	          "sigma_Run2[10.,1.,20.], mean_Run2[5619.6,5619,5621], a1_Run2[1.5,1.0,3.0],"
@@ -739,19 +1129,35 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	w.var("geff_ratio1")->setConstant();
 	w.var("geff_ratio2")->setConstant();
 
-	w.factory("nLb_Run1[0,5000]");
-	w.factory("nLb_Run2[0,17000]");
+	// w.factory("nLb_Run1[0,5000]");
+	// w.factory("nLb_Run2[0,17000]");
+
+	w.factory("nLb_Run1[5000,1000,7000]");
+	w.factory("nLb_Run2[17000,1000,20000]");
+
+	w.factory("n1405_Run1[500,1,5000]");
+	w.factory("n1405_Run2[500,1,5000]");
+	w.factory("n1520_Run1[3000,1,5000]");
+	w.factory("n1520_Run2[3000,1,5000]");
+	w.factory("n1600_Run1[3000,1,10000]");
+	w.factory("n1600_Run2[3000,1,10000]");
+	w.factory("nMiscLst_Run1[2500,1,5000]");
+	// w.factory("nMiscLst_Run2[2500,1,5000]");
+	w.factory("nMiscLst_Run2[2500,1,10000]");
+	w.factory(Form("nBkg_Run1[2000,1,%d]",nentries[0]));
+	w.factory(Form("nBkg_Run2[2000,1,%d]",nentries[1]));
 
 	//What should the limits on nXib be?
 	Double_t xibCentral_run1 = xibnorm_LL[0];
 	Double_t xibErr_run1     = xibnorm_LL_err[0];
-	Double_t xibLow_run1     = 0; //xibCentral_run1 - 2*xibErr_run1;
-	Double_t xibHigh_run1    = 200; //xibCentral_run1 + 2*xibErr_run1;
+	Double_t xibLow_run1     = 0;
+	Double_t xibHigh_run1    = 200;
 
 	Double_t xibCentral_run2 = xibnorm_LL[1];
 	Double_t xibErr_run2     = xibnorm_LL_err[1];
-	Double_t xibLow_run2     = 0; //xibCentral_run2 - 2*xibErr_run2;
-	Double_t xibHigh_run2    = 200; //xibCentral_run2 + 2*xibErr_run2;
+	Double_t xibLow_run2     = 0;
+	// Double_t xibHigh_run2    = 200;
+	Double_t xibHigh_run2    = 400;
 
 	w.factory(Form("nXib1[%f,%f,%f]",xibCentral_run1,xibLow_run1,xibHigh_run1));
 	w.factory(Form("nXib2[%f,%f,%f]",xibCentral_run2,xibLow_run2,xibHigh_run2));
@@ -768,10 +1174,19 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	w.factory("expr::nSigma1('pow(10,-5)*R*nLb_Run1*eff_ratio1',R,nLb_Run1,eff_ratio1)");
 	w.factory("expr::nSigma2('pow(10,-5)*R*nLb_Run2*eff_ratio2',R,nLb_Run2,eff_ratio2)");
 
-	w.factory(Form("SUM:model1(nSigma1*SIG1 , nLb_Run1*Lb_Run1 , nXib1*XIB1 , n1405_Run1[1500,50,10000]*LST1405 ,"
-	               " n1520_Run1[3000,1,10000]*LST1520 , nMiscLst_Run1[2500,1,5000]*lstLump_Run1 , nBkg_Run1[2000,1,%d]*Bkg_Run1)",nentries[0]));
-	w.factory(Form("SUM:model2(nSigma2*SIG2 , nLb_Run2*Lb_Run2 , nXib2*XIB2 , n1405_Run2[1500,50,10000]*LST1405 ,"
-	               " n1520_Run2[3000,1,10000]*LST1520 , nMiscLst_Run2[2500,1,5000]*lstLump_Run2 , nBkg_Run2[2000,1,%d]*Bkg_Run2)",nentries[1]));
+	w.factory("SUM:model1(nSigma1*SIG1 , nLb_Run1*Lb_Run1 , nXib1*XIB1 , n1405_Run1*LST1405_Run1 ,"
+	          " n1520_Run1*LST1520_Run1 , n1600_Run1*LST1600_Run1 , nMiscLst_Run1*lstLump_Run1 , nBkg_Run1*Bkg_Run1)");
+	w.factory("SUM:model2(nSigma2*SIG2 , nLb_Run2*Lb_Run2 , nXib2*XIB2 , n1405_Run2*LST1405_Run2 ,"
+	          " n1520_Run2*LST1520_Run2 , n1600_Run2*LST1600_Run2 , nMiscLst_Run2*lstLump_Run2 , nBkg_Run2*Bkg_Run2)");
+
+	if(!lst1405flag)
+	{
+		w.var("n1405_Run1")->setVal(0);
+		w.var("n1405_Run1")->setConstant();
+
+		w.var("n1405_Run2")->setVal(0);
+		w.var("n1405_Run2")->setConstant();
+	}
 
 	if(!lst1520flag)
 	{
@@ -780,6 +1195,15 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 
 		w.var("n1520_Run2")->setVal(0);
 		w.var("n1520_Run2")->setConstant();
+	}
+
+	if(!lst1600flag)
+	{
+		w.var("n1600_Run1")->setVal(0);
+		w.var("n1600_Run1")->setConstant();
+
+		w.var("n1600_Run2")->setVal(0);
+		w.var("n1600_Run2")->setConstant();
 	}
 
 	// w.factory("PROD::model_const1(model1,sigmaEff_constraint1,lambdaEff_constraint1,nXib_constraint1)");//Multiply model by constraint terms
@@ -819,12 +1243,12 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	            "lambda_Run1,a1_Run1,a2_Run1,"
 	            "nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,"
 	            "miscLstSigma_Run1,eff_ratio1,nXib1,n1405_Run1,"
-	            "n1520_Run1");
+	            "n1520_Run1,n1600_Run1");
 	w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,"
 	            "lambda_Run2,a1_Run2,a2_Run2,"
 	            "nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,"
 	            "miscLstSigma_Run2,eff_ratio2,nXib2,n1405_Run2,"
-	            "n1520_Run2");        // define set of nuisance parameters
+	            "n1520_Run2,n1600_Run2");        // define set of nuisance parameters
 	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,alpha1_Run1,alpha2_Run1,nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1");// define set of nuisance parameters
 	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,alpha1_Run2,alpha2_Run2,nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,n1520_Run2");
 
@@ -952,10 +1376,12 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	if(strncmp(option,"mcFit",5))//if not MC fit
 	{
 		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("XIB1"))),LineColor(kGreen),Name("xib_Run1"));
-		if(lst1405flag!=0)
-			simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("LST1405"))),LineColor(kGreen+2),LineStyle(kDashed),Name("lst1405_Run1"));
-		if(lst1520flag!=0)
-			simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("LST1520"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1520_Run1"));
+		if(lst1405flag)
+			simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("LST1405_Run1"))),LineColor(kGreen+2),LineStyle(kDashed),Name("lst1405_Run1"));
+		if(lst1520flag)
+			simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("LST1520_Run1"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1520_Run1"));
+		if(lst1600flag)
+			simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("LST1600_Run1"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1600_Run1"));
 		//simPdf.plotOn(frame_run1,Components(lst1810shape),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1810"));
 		// if(sigmaflag!=0)
 		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("SIG1"))),LineColor(kBlack),Name("sig_Run1"));
@@ -1023,6 +1449,10 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 		{
 			legend_run1->AddEntry("lst1520_Run1","J/#psi #Lambda(1520) shape","l");
 		}
+		if(lst1600flag)
+		{
+			legend_run1->AddEntry("lst1600_Run1","J/#psi #Lambda(1600) shape","l");
+		}
 		// if(lst1810flag)
 		//      legend_run1->AddEntry("lst1810","J/#psi #Lambda(1810) shape","l");
 		legend_run1->AddEntry("misclst_Run1","misc. J/#psi #Lambda* shapes","l");
@@ -1075,10 +1505,12 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	{
 		//  if(xibflag!=0)
 		simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("XIB2"))),LineColor(kGreen),Name("xib_Run2"));
-		if(lst1405flag!=0)
-			simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("LST1405"))),LineColor(kGreen+2),LineStyle(kDashed),Name("lst1405_Run2"));
-		if(lst1520flag!=0)
-			simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("LST1520"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1520_Run2"));
+		if(lst1405flag)
+			simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("LST1405_Run2"))),LineColor(kGreen+2),LineStyle(kDashed),Name("lst1405_Run2"));
+		if(lst1520flag)
+			simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("LST1520_Run2"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1520_Run2"));
+		if(lst1600flag)
+			simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("LST1600_Run2"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1600_Run2"));
 		//simPdf.plotOn(frame_run2,Components(lst1810shape),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1810"));
 		// if(sigmaflag!=0)
 		simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("SIG2"))),LineColor(kBlack),Name("sig_Run2"));
@@ -1138,6 +1570,10 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 		if(lst1520flag)
 		{
 			legend_run2->AddEntry("lst1520_Run2","J/#psi #Lambda(1520) shape","l");
+		}
+		if(lst1600flag)
+		{
+			legend_run2->AddEntry("lst1600_Run2","J/#psi #Lambda(1600) shape","l");
 		}
 		// if(lst1810flag)
 		//      legend_run2->AddEntry("lst1810","J/#psi #Lambda(1810) shape","l");
@@ -1302,32 +1738,34 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh)
 	}
 
 	//Save Canvases
-
-	if(isBinned)
-	{
-		c_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_HypatiaSig_ExpBkg_%d_%d_%dMeVBins.pdf",low,high,binwidth));
-		c_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_HypatiaSig_ExpBkg_%d_%d_%dMeVBins.pdf",low,high,binwidth));
-	}
-	else
-	{
-		c_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_HypatiaSig_ExpBkg_%d_%d_unbinned.pdf",low,high));
-		c_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_HypatiaSig_ExpBkg_%d_%d_unbinned.pdf",low,high));
-	}
+	//
+	// if(isBinned)
+	// {
+	//      c_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_HypatiaSig_ExpBkg_%d_%d_%dMeVBins.pdf",low,high,binwidth));
+	//      c_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_HypatiaSig_ExpBkg_%d_%d_%dMeVBins.pdf",low,high,binwidth));
+	// }
+	// else
+	// {
+	//      c_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_HypatiaSig_ExpBkg_%d_%d_unbinned.pdf",low,high));
+	//      c_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_HypatiaSig_ExpBkg_%d_%d_unbinned.pdf",low,high));
+	// }
 
 	// write the workspace in the file
 	TString fileName;
 
-	if(isBinned)
-	{
-		fileName = Form("../rootFiles/dataFiles/JpsiLambda/ModelConfigs/MyModel_HypatiaSig_ExpBkg_%d_%d_%dMeVBins.root",low,high,binwidth);
-	}
-	else
-	{
-		fileName = Form("../rootFiles/dataFiles/JpsiLambda/ModelConfigs/MyModel_HypatiaSig_ExpBkg_%d_%d_unbinned.root",low,high);
-	}
+	// if(isBinned)
+	// {
+	//      fileName = Form("../rootFiles/dataFiles/JpsiLambda/ModelConfigs/MyModel_HypatiaSig_ExpBkg_%d_%d_%dMeVBins.root",low,high,binwidth);
+	// }
+	// else
+	// {
+	//      fileName = Form("../rootFiles/dataFiles/JpsiLambda/ModelConfigs/MyModel_HypatiaSig_ExpBkg_%d_%d_unbinned.root",low,high);
+	// }
+
+	fileName = "tempModel.root";
 
 	w.writeToFile(fileName,true);
 	cout << "workspace written to file " << fileName << endl;
 
-	gSystem->RedirectOutput(0);
+	// gSystem->RedirectOutput(0);
 }

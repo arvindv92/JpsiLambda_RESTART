@@ -21,10 +21,9 @@ void AddData(RooWorkspace *ws = nullptr, Int_t run = 1,
 
 Double_t DosPlot(RooWorkspace *ws = nullptr, Int_t run = 1,
                  const char *type = "LL", TTree *treeOut = nullptr,
-                 TTree *treeOut_training = nullptr, Bool_t zeroFlag = false);
+                 TH1D *hMass = nullptr);
 
-Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag,
-                          Bool_t zeroFlag)
+Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 /*
    >run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC.
    Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data.
@@ -40,14 +39,14 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag,
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
-	const char *type       = "", *suffix = "";
+	const char *type       = "";
 
-	suffix        = (zeroFlag) ? ("_ZeroTracks") : ("_nonZeroTracks");
+	// suffix        = (zeroFlag) ? ("_ZeroTracks") : ("_nonZeroTracks");
 	type          = (trackType == 3) ? ("LL")    : ("DD");
 
 	if(logFlag)//Redirect output to log file
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/sPlot_Sanity_%s_log.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/sPlot_Sanity_%s_new_log.txt",
 		                             run, type),"w");
 	}
 	cout<<"********************************"<<endl;
@@ -56,8 +55,8 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag,
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 	cout<<"********************************"<<endl;
 
-	TFile *fileIn = nullptr, *fileOut = nullptr, *fileOut_training = nullptr;
-	TTree *treeIn = nullptr, *treeOut = nullptr, *treeOut_training = nullptr;
+	TFile *fileIn = nullptr, *fileOut = nullptr;
+	TTree *treeIn = nullptr, *treeOut = nullptr;
 
 
 	const char *rootFolder = "";
@@ -65,12 +64,13 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag,
 
 	Int_t entries_init = 0, entries_massWindow = 0;
 	Int_t lowRange     = 5200, highRange       = 6000;//5200-6000 MeV window for sWeighting
+	Int_t nBins = (Int_t)(highRange-lowRange)/4;
 	Double_t Lb_Mass   = 0.0;
 
 	rootFolder    = Form("rootFiles/dataFiles/JpsiLambda/run%d", run);
 
 	inFileName    = Form("%s/jpsilambda_sanity_%s.root", rootFolder, type);
-	outFileName   = Form("%s/sWeightSanity/jpsilambda_%s_sanity_withsw.root", rootFolder, type);
+	outFileName   = Form("%s/sWeightSanity/jpsilambda_%s_sanity_withsw_new.root", rootFolder, type);
 	// trainFileName = Form("%s/jpsilambda_%s_forIsoTraining.root", rootFolder, type);
 
 	fileIn = TFile::Open(inFileName,"READ");
@@ -81,6 +81,9 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag,
 	}
 	treeIn = (TTree*)fileIn->Get("MyTuple");
 
+	treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nBins,lowRange,highRange),"","goff");
+	TH1D *hMass = (TH1D*)gDirectory->Get("hMass");
+
 	entries_init       = treeIn->GetEntries();
 	entries_massWindow = treeIn->GetEntries(Form("Lb_DTF_M_JpsiLConstr > %d &&"
 	                                             " Lb_DTF_M_JpsiLConstr < %d",
@@ -89,11 +92,11 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag,
 	fileOut = new TFile(outFileName,"RECREATE");
 	treeOut = treeIn->CloneTree(0);
 
-	if(!zeroFlag)
-	{
-		fileOut_training = new TFile(trainFileName,"RECREATE");
-		treeOut_training = treeIn->CloneTree(0);
-	}
+	// if(!zeroFlag)
+	// {
+	//      fileOut_training = new TFile(trainFileName,"RECREATE");
+	//      treeOut_training = treeIn->CloneTree(0);
+	// }
 
 	treeIn->SetBranchAddress("Lb_DTF_M_JpsiLConstr",&Lb_Mass);
 	cout<<"Incoming Entries = "<<entries_init<<endl;
@@ -101,12 +104,30 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag,
 	cout<<"******************************************"<<endl;
 	cout<<"Input file = "<<fileIn->GetName()<<endl;
 	cout<<"sWeighted Output file = "<<fileOut->GetName()<<endl;
-	if(!zeroFlag)
-	{
-		cout<<"Isolation Training Output file = "
-		    <<fileOut_training->GetName()<<endl;
-	}
+	// if(!zeroFlag)
+	// {
+	//      cout<<"Isolation Training Output file = "
+	//          <<fileOut_training->GetName()<<endl;
+	// }
 	cout<<"******************************************"<<endl;
+
+	cout<<"Making mass cut on "<<entries_init<<" entries"<<endl;
+	for (Int_t i = 0; i < entries_init; i++)
+	{
+		if(i%100000 == 0) cout<<i<<endl;
+		treeIn->GetEntry(i);
+		if(Lb_Mass > lowRange && Lb_Mass < highRange)
+		{
+			treeOut->Fill();
+			// if(!zeroFlag)
+			// {
+			//      // if(Lb_Mass > 5400 && Lb_Mass < 5700)//5400-5700 only for training
+			//      //      {
+			//      // treeOut_training->Fill();
+			//      //	}
+			// }
+		}
+	}
 
 	// Create a new workspace to manage the project.
 	RooWorkspace* wSpace = new RooWorkspace("myWS");
@@ -123,18 +144,18 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag,
 
 	// do sPlot.
 	//This wil make a new dataset with sWeights added for every event.
-	Double_t myChi2 = DosPlot(wSpace, run, type, treeOut, treeOut_training, zeroFlag);
+	Double_t myChi2 = DosPlot(wSpace, run, type, treeOut, hMass);
 
 	fileOut->cd();
 	treeOut->Write("",TObject::kOverwrite);
 	fileOut->Close();
 
-	if(!zeroFlag)
-	{
-		fileOut_training->cd();
-		treeOut_training->Write("",TObject::kOverwrite);
-		fileOut_training->Close();
-	}
+	// if(!zeroFlag)
+	// {
+	//      fileOut_training->cd();
+	//      treeOut_training->Write("",TObject::kOverwrite);
+	//      fileOut_training->Close();
+	// }
 	// cleanup
 	delete wSpace;
 
@@ -187,7 +208,7 @@ void AddModel(RooWorkspace *ws, Int_t lowRange, Int_t highRange, Int_t nEntries)
 
 	// COMBINED MODEL	cout << "Making full model" << endl;
 
-	RooRealVar sigYield("sigYield","fitted yield for sig",5000,0, 20000);
+	RooRealVar sigYield("sigYield","fitted yield for sig",5000,0, 30000);
 	RooRealVar bkgYield("bkgYield","fitted yield for bkg",(nEntries/2),0, nEntries);
 
 	RooAddPdf model("model","signal+background models",
@@ -221,12 +242,12 @@ void AddData(RooWorkspace *ws, Int_t run, TTree *treeIn)
 	cout<<"Finishing AddData()"<<endl;
 }
 Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
-                 TTree *treeOut_training, Bool_t zeroFlag)
+                 TH1D *hMass)
 {
-	const char *suffix = (zeroFlag) ? ("_ZeroTracks") : ("_nonZeroTracks");
+	// const char *suffix = (zeroFlag) ? ("_ZeroTracks") : ("_nonZeroTracks");
 	Float_t SIGW = 0., BKGW = 0., bMASS = 0.;
-	TBranch *sigW = nullptr, *sigW_training = nullptr;
-	TBranch *bkgW = nullptr, *bkgW_training = nullptr;
+	TBranch *sigW = nullptr;
+	TBranch *bkgW = nullptr;
 
 	cout<<"Starting DoSPlot()"<<endl;
 	cout << "Calculating sWeights" << endl;
@@ -242,8 +263,19 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	RooRealVar *Lb_Mass  = ws->var("Lb_DTF_M_JpsiLConstr");
 	RooDataSet *data     = (RooDataSet*) ws->data("data");
 
+	RooDataHist *rdh = new RooDataHist("rdh","",*Lb_Mass,hMass);
+
 	// fit the model to the data. unbinned extended ML fit
-	RooFitResult *r = model->fitTo(*data, Extended(), Strategy(2), Save(true));
+	//	RooFitResult *r = model->fitTo(*data, Extended(), Strategy(2), Save(true));
+	// Modifying this to try something along the lines of what steve does
+	RooArgSet *myVars;
+	model->fitTo(*rdh,Hesse(kTRUE),Strategy(2));
+	myVars = model->getParameters(*rdh);
+	myVars->Print("v");
+	myVars->setAttribAll("Constant",kTRUE);
+	sigYield->setConstant(kFALSE);
+	bkgYield->setConstant(kFALSE);
+	RooFitResult *r = model->fitTo(*rdh,Extended(),Hesse(kTRUE), Save(true));
 
 	cout<<"Starting MakePlots()"<<endl;
 
@@ -333,23 +365,24 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 
 	// The sPlot technique requires that we fix the parameters
 	// of the model that are not yields after doing the fit.
-	RooRealVar *sigma1 = ws->var("sigma1");
-	RooRealVar *sigma2 = ws->var("sigma2");
-	RooRealVar *mean   = ws->var("mean");
-	RooRealVar *tau    = ws->var("tau");
-
-	mean->setConstant(kTRUE);
-	sigma1->setConstant(kTRUE);
-	sigma2->setConstant(kTRUE);
-	tau->setConstant(kTRUE);
-
-	RooMsgService::instance().setSilentMode(true);
+	// RooRealVar *sigma1 = ws->var("sigma1");
+	// RooRealVar *sigma2 = ws->var("sigma2");
+	// RooRealVar *mean   = ws->var("mean");
+	// RooRealVar *tau    = ws->var("tau");
+	//
+	// mean->setConstant(kTRUE);
+	// sigma1->setConstant(kTRUE);
+	// sigma2->setConstant(kTRUE);
+	// tau->setConstant(kTRUE);
+	//
+	// RooMsgService::instance().setSilentMode(true);
 
 	// Now we use the SPlot class to add SWeights to our data set
 	// based on our model and our yield variables
 	RooStats::SPlot* sData = new RooStats::SPlot("sData","An SPlot", *data, model,
 	                                             RooArgList(*sigYield,*bkgYield) );
 
+	data->Print("v");
 	// Check that our weights have the desired properties
 
 	cout << "Check SWeights:" << endl;
@@ -435,11 +468,11 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	bkgW  = treeOut->Branch("BW",&BKGW,"BKGW/F");
 
 	//Add SW & BW branches to isolation training tree
-	if(!zeroFlag)
-	{
-		sigW_training = treeOut_training->Branch("SW",&SIGW,"SIGW/F");
-		bkgW_training = treeOut_training->Branch("BW",&BKGW,"BKGW/F");
-	}
+	// if(!zeroFlag)
+	// {
+	//      sigW_training = treeOut_training->Branch("SW",&SIGW,"SIGW/F");
+	//      bkgW_training = treeOut_training->Branch("BW",&BKGW,"BKGW/F");
+	// }
 	for(Int_t i = 0; i < dsentries; i++)
 	{
 		bMASS = (data->get(i))->getRealValue("Lb_DTF_M_JpsiLConstr");
@@ -448,48 +481,48 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 
 		sigW->Fill();
 		bkgW->Fill();
-		if(!zeroFlag)
-		{
-			if (bMASS > 5400 && bMASS < 5700)
-			{
-				sigW_training->Fill();
-				bkgW_training->Fill();
-			}
-		}
+		// if(!zeroFlag)
+		// {
+		//      if (bMASS > 5400 && bMASS < 5700)
+		//      {
+		//              sigW_training->Fill();
+		//              bkgW_training->Fill();
+		//      }
+		// }
 	}
 
 	//Activate only necessary branches in isolation training tree.
 	//It only needs to contain training variables + weights
-	if(!zeroFlag)
-	{
-		treeOut_training->SetBranchStatus("*",0);
-		treeOut_training->SetBranchStatus("SW",1);
-		treeOut_training->SetBranchStatus("BW",1);
-		treeOut_training->SetBranchStatus("Added_H_PT",1);
-		treeOut_training->SetBranchStatus("psi_1S_H_MINIPCHI2",1);
-		treeOut_training->SetBranchStatus("psi_1S_H_VERTEXCHI2_NEW",1);
-		treeOut_training->SetBranchStatus("psi_1S_H_IPCHI2_NEW",1);
-		treeOut_training->SetBranchStatus("psi_1S_H_IP_NEW",1);
-		treeOut_training->SetBranchStatus("psi_1S_H_FD_NEW",1);
-		treeOut_training->SetBranchStatus("psi_1S_H_FDCHI2_NEW",1);
-		treeOut_training->SetBranchStatus("psi_1S_H_VERTEX_Z_NEW",1);
-		treeOut_training->SetBranchStatus("Added_H_TRACKCHI2",1);
-		treeOut_training->SetBranchStatus("Added_H_GHOST",1);
-		treeOut_training->SetBranchStatus("Lb_H_OPENING",1);
-		treeOut_training->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-
-		//Give aliases to the branches in isolation training tree
-		treeOut_training->SetAlias("PT","Added_H_PT");
-		treeOut_training->SetAlias("MINIPCHI2","psi_1S_H_MINIPCHI2");
-		treeOut_training->SetAlias("VCHI2DOF","psi_1S_H_VERTEXCHI2_NEW");
-		treeOut_training->SetAlias("IPCHI2","psi_1S_H_IPCHI2_NEW");
-		treeOut_training->SetAlias("IP","psi_1S_H_IP_NEW");
-		treeOut_training->SetAlias("FD","psi_1S_H_FD_NEW");
-		treeOut_training->SetAlias("FDCHI2","psi_1S_H_FDCHI2_NEW");
-		treeOut_training->SetAlias("TRACKORIVX_Z","psi_1S_H_VERTEXCHI2_NEW");
-		treeOut_training->SetAlias("GHOSTPROB","Added_H_GHOST");
-		treeOut_training->SetAlias("TRACKCHI2DOF","Added_H_TRACKCHI2");
-	}
+	// if(!zeroFlag)
+	// {
+	//      treeOut_training->SetBranchStatus("*",0);
+	//      treeOut_training->SetBranchStatus("SW",1);
+	//      treeOut_training->SetBranchStatus("BW",1);
+	//      treeOut_training->SetBranchStatus("Added_H_PT",1);
+	//      treeOut_training->SetBranchStatus("psi_1S_H_MINIPCHI2",1);
+	//      treeOut_training->SetBranchStatus("psi_1S_H_VERTEXCHI2_NEW",1);
+	//      treeOut_training->SetBranchStatus("psi_1S_H_IPCHI2_NEW",1);
+	//      treeOut_training->SetBranchStatus("psi_1S_H_IP_NEW",1);
+	//      treeOut_training->SetBranchStatus("psi_1S_H_FD_NEW",1);
+	//      treeOut_training->SetBranchStatus("psi_1S_H_FDCHI2_NEW",1);
+	//      treeOut_training->SetBranchStatus("psi_1S_H_VERTEX_Z_NEW",1);
+	//      treeOut_training->SetBranchStatus("Added_H_TRACKCHI2",1);
+	//      treeOut_training->SetBranchStatus("Added_H_GHOST",1);
+	//      treeOut_training->SetBranchStatus("Lb_H_OPENING",1);
+	//      treeOut_training->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+	//
+	//      //Give aliases to the branches in isolation training tree
+	//      treeOut_training->SetAlias("PT","Added_H_PT");
+	//      treeOut_training->SetAlias("MINIPCHI2","psi_1S_H_MINIPCHI2");
+	//      treeOut_training->SetAlias("VCHI2DOF","psi_1S_H_VERTEXCHI2_NEW");
+	//      treeOut_training->SetAlias("IPCHI2","psi_1S_H_IPCHI2_NEW");
+	//      treeOut_training->SetAlias("IP","psi_1S_H_IP_NEW");
+	//      treeOut_training->SetAlias("FD","psi_1S_H_FD_NEW");
+	//      treeOut_training->SetAlias("FDCHI2","psi_1S_H_FDCHI2_NEW");
+	//      treeOut_training->SetAlias("TRACKORIVX_Z","psi_1S_H_VERTEXCHI2_NEW");
+	//      treeOut_training->SetAlias("GHOSTPROB","Added_H_GHOST");
+	//      treeOut_training->SetAlias("TRACKCHI2DOF","Added_H_TRACKCHI2");
+	// }
 	cout<<"Finishing DoSPlot()"<<endl;
 
 	return chi2;

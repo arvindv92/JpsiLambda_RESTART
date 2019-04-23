@@ -1,6 +1,7 @@
 import numpy
 import root_numpy
 import pandas
+import cPickle as pickle
 from hep_ml import reweight
 from matplotlib import pyplot as plt
 from sklearn.model_selection import train_test_split
@@ -27,9 +28,10 @@ from sklearn.metrics import roc_auc_score
 #            'p_P', 'p_PT', 'pi_P', 'pi_PT',
 #            'p_ProbNNp', 'pi_ProbNNpi', 'ntracks', 'SW']
 
-columns = ['Lb_P','Lb_PT','Lb_ETA','Jpsi_P','Jpsi_PT','Jpsi_ETA','L_P',
-           'L_PT','L_ETA','p_P','p_PT','p_ETA','pi_P','pi_PT','pi_ETA',
-           'Jpsi_P/Lb_P','p_P/L_P','SW']
+columns = ['Lb_P', 'Lb_PT', 'Lb_ETA', 'Jpsi_P', 'Jpsi_PT', 'Jpsi_ETA', 'L_P',
+           'L_PT', 'L_ETA', 'p_P', 'p_PT', 'p_ETA', 'pi_P', 'pi_PT', 'pi_ETA',
+           'SW']
+#           'Jpsi_P/Lb_P','p_P/L_P','SW']
 
 mcPath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run2/'
 dataPath = '../rootFiles/dataFiles/JpsiLambda/run2/sWeightSanity/'
@@ -99,7 +101,7 @@ def draw_distributions(myoriginal, mytarget, new_original_weights, targetwts):
         # print('KS over ', column, ' = ', myks)
     plt.draw()
     plt.figure(figsize=[15, 7])
-    for id, column in enumerate(columns[12:17], 1):
+    for id, column in enumerate(columns[12:15], 1):
         xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
                                 [0.01, 99.99])
         plt.subplot(2, 3, id)
@@ -187,10 +189,14 @@ avgks_orig = draw_distributions(original.iloc[:, :-1], target.iloc[:, :-1],
 #                                         gb_args={'subsample': 0.4,
 #                                                  'random_state': 42})
 
-reweighter = reweight.GBReweighter(n_estimators=400, learning_rate=0.07,
-                                        max_depth=4, min_samples_leaf=50,
-                                        gb_args={'subsample': 0.4,
-                                                 'random_state': 42})
+# reweighter = reweight.GBReweighter(n_estimators=400, learning_rate=0.07,
+#                                    max_depth=4, min_samples_leaf=50,
+#                                    gb_args={'subsample': 0.4,
+#                                             'random_state': 42})
+reweighter = reweight.GBReweighter(n_estimators=50, learning_rate=0.1,
+                                   max_depth=3, min_samples_leaf=100,
+                                   gb_args={'subsample': 0.5,
+                                            'random_state': 42})
 
 # reweighter_base = reweight.GBReweighter(n_estimators=40, learning_rate=0.1,
 #                                         max_depth=3, min_samples_leaf=50,
@@ -224,8 +230,14 @@ avgks_rw = draw_distributions(original.iloc[:, :-1], target.iloc[:, :-1],
                               gb_weights, target_weights)
 
 root_numpy.array2root(gb_weights_noTM,
-                      mcPath + 'jpsilambda_weighted3.root',
-                      treename='MyTuple', mode='update')
+                      mcPath + 'jpsilambda_weighted.root',
+                      treename='MyTuple', mode='recreate')
+
+# *******Exporting RW formula for re-use********
+with open(mcPath + 'gb_wts.pkl', 'w') as f:
+    pickle.dump(reweighter, f)
+# **********************************************
+
 # **********************************************
 #
 # data = numpy.concatenate([original_test.iloc[:, :-1],

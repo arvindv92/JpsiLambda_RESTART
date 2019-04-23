@@ -8,8 +8,8 @@
 
 using namespace std;
 void CutFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
-                 const char* isoVersion, Int_t isoConf, Int_t bdtConf,
-                 Float_t bdtCut, Float_t bdtCut_ZeroTracks, Bool_t isoFlag,
+                 const char* isoVersion, Int_t isoConf, Int_t bdtConf_nonZero,
+                 Int_t bdtConf_Zero, Float_t bdtCut, Float_t bdtCut_ZeroTracks, Bool_t isoFlag,
                  Bool_t logFlag, const char *FOM, const char *Part)
 {
 	TStopwatch sw;
@@ -61,18 +61,18 @@ void CutFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	}
 	const char* logFileName = "";
 
-	if(isoFlag) logFileName = Form("CutFinalBDT%d_%s_iso%d_%s.txt",bdtConf,type,isoConf,isoVersion);
-	else logFileName = Form("CutFinalBDT%d_%s_noIso.txt",bdtConf,type);
-
-	//****Set up logging*****
-	if(isData && logFlag)
-	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/%s",run,logFileName),"a");
-	}
-	else if(!isData && logFlag)
-	{
-		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/%s",folder,run,logFileName),"a");
-	}
+	// if(isoFlag) logFileName = Form("CutFinalBDT%d_%s_iso%d_%s.txt",bdtConf,type,isoConf,isoVersion);
+	// else logFileName = Form("CutFinalBDT%d_%s_noIso.txt",bdtConf,type);
+	//
+	// //****Set up logging*****
+	// if(isData && logFlag)
+	// {
+	//      gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/%s",run,logFileName),"a");
+	// }
+	// else if(!isData && logFlag)
+	// {
+	//      gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/%s",folder,run,logFileName),"a");
+	// }
 	cout<<"******************************************"<<endl;
 	cout<<"==> Starting CutFinalBDT: "<<endl;
 	gSystem->Exec("date");
@@ -116,32 +116,34 @@ void CutFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 			treeIn_zeroTracks = (TTree*)fileIn_zeroTracks->Get("MyTuple");
 
 			treeIn_zeroTracks->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_zeroTracks%s_FinalBDT%d.root",
-			                                            folder,run,part,type,bdtConf));
+			                                            folder,run,part,type,bdtConf_Zero));
 
-			fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/BDTcut/%s_%s/%s_%s_BDT%dcut_iso%d_%s.root",
-			                         folder,run,FOM,Part,part,type,bdtConf,isoConf,isoVersion),"RECREATE");
+			// fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/BDTcut/%s_%s/%s_%s_BDT%dcut_iso%d_%s.root",
+			//                          folder,run,FOM,Part,part,type,bdtConf,isoConf,isoVersion),"RECREATE");
+			fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/BDTcut/best.root",
+			                         folder,run),"RECREATE");
 			treeOut = (TTree*)treeIn->CloneTree(0);
 			treeIn->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_%s_FinalBDT%d_iso%d_%s.root",
-			                                 folder,run,part,type,bdtConf,isoConf,isoVersion));
+			                                 folder,run,part,type,bdtConf_nonZero,isoConf,isoVersion));
 
-			treeIn->SetBranchAddress(Form("BDT%d",bdtConf),&myBDT);
-			treeIn_zeroTracks->SetBranchAddress(Form("BDT%d",bdtConf),&myBDT_zeroTracks);
+			treeIn->SetBranchAddress(Form("BDT%d",bdtConf_nonZero),&myBDT);
+			treeIn_zeroTracks->SetBranchAddress(Form("BDT%d",bdtConf_Zero),&myBDT_zeroTracks);
 		}
-		else
-		{
-			fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_cutoutks_%s.root",
-			                          folder,run,part,type));
-			treeIn = (TTree*)fileIn->Get("MyTuple");
-
-			fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/BDTcut/%s_%s/%s_%s_BDT%dcut_noIso.root",
-			                         folder,run,FOM,Part,part,type,bdtConf),"RECREATE");
-
-			treeOut = (TTree*)treeIn->CloneTree(0);
-			treeIn->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_%s_FinalBDT%d_noIso.root",
-			                                 folder,run,part,type,bdtConf));
-
-			treeIn->SetBranchAddress(Form("BDT%d",bdtConf),&myBDT);
-		}
+		// else
+		// {
+		//      fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_cutoutks_%s.root",
+		//                                folder,run,part,type));
+		//      treeIn = (TTree*)fileIn->Get("MyTuple");
+		//
+		//      fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/BDTcut/%s_%s/%s_%s_BDT%dcut_noIso.root",
+		//                               folder,run,FOM,Part,part,type,bdtConf),"RECREATE");
+		//
+		//      treeOut = (TTree*)treeIn->CloneTree(0);
+		//      treeIn->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_%s_FinalBDT%d_noIso.root",
+		//                                       folder,run,part,type,bdtConf));
+		//
+		//      treeIn->SetBranchAddress(Form("BDT%d",bdtConf),&myBDT);
+		// }
 
 	}
 	else   // Data
@@ -156,34 +158,36 @@ void CutFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 			                                     run,type));
 			treeIn_zeroTracks = (TTree*)fileIn_zeroTracks->Get("MyTuple");
 			treeIn_zeroTracks->AddFriend("MyTuple",Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_zeroTracks%s_FinalBDT%d.root",
-			                                            run,type,bdtConf));
+			                                            run,type,bdtConf_Zero));
 
-			fileOut = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/BDTcut/%s_%s/jpsilambda_%s_BDT%dcut_iso%d_%s.root",
-			                         run,FOM,Part,type,bdtConf,isoConf,isoVersion),"RECREATE");
+			// fileOut = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/BDTcut/%s_%s/jpsilambda_%s_BDT%dcut_iso%d_%s.root",
+			//                          run,FOM,Part,type,bdtConf,isoConf,isoVersion),"RECREATE");
+			fileOut = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/BDTcut/best.root",
+			                         run),"RECREATE");
 
 			treeOut = (TTree*)treeIn->CloneTree(0);
 
 			treeIn->AddFriend("MyTuple",Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_FinalBDT%d_iso%d_%s.root",
-			                                 run,type,bdtConf,isoConf,isoVersion));
+			                                 run,type,bdtConf_nonZero,isoConf,isoVersion));
 
-			treeIn->SetBranchAddress(Form("BDT%d",bdtConf),&myBDT);
-			treeIn_zeroTracks->SetBranchAddress(Form("BDT%d",bdtConf),&myBDT_zeroTracks);
+			treeIn->SetBranchAddress(Form("BDT%d",bdtConf_nonZero),&myBDT);
+			treeIn_zeroTracks->SetBranchAddress(Form("BDT%d",bdtConf_Zero),&myBDT_zeroTracks);
 		}
-		else
-		{
-			fileIn = TFile::Open(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s.root",
-			                          run,type));
-			treeIn = (TTree*)fileIn->Get("MyTuple");
-
-			fileOut = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/BDTcut/%s_%s/jpsilambda_%s_BDT%dcut_noIso.root",
-			                         run,FOM,Part,type,bdtConf),"RECREATE");
-
-			treeOut = (TTree*)treeIn->CloneTree(0);
-
-			treeIn->AddFriend("MyTuple",Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_FinalBDT%d_noIso.root",
-			                                 run,type,bdtConf));
-			treeIn->SetBranchAddress(Form("BDT%d",bdtConf),&myBDT);
-		}
+		// else
+		// {
+		//      fileIn = TFile::Open(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_%s.root",
+		//                                run,type));
+		//      treeIn = (TTree*)fileIn->Get("MyTuple");
+		//
+		//      fileOut = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/BDTcut/%s_%s/jpsilambda_%s_BDT%dcut_noIso.root",
+		//                               run,FOM,Part,type,bdtConf),"RECREATE");
+		//
+		//      treeOut = (TTree*)treeIn->CloneTree(0);
+		//
+		//      treeIn->AddFriend("MyTuple",Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_%s_FinalBDT%d_noIso.root",
+		//                                       run,type,bdtConf));
+		//      treeIn->SetBranchAddress(Form("BDT%d",bdtConf),&myBDT);
+		// }
 	}
 	nEntries_nonZero = treeIn->GetEntries();
 	if(isoFlag) nEntries_zeroTracks = treeIn_zeroTracks->GetEntries();
@@ -265,5 +269,5 @@ void CutFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	sw.Stop();
 	cout << "==> CutFinalBDT is done! Death to Background!: "; sw.Print();
 
-	if(logFlag) gSystem->RedirectOutput(0);
+	// if(logFlag) gSystem->RedirectOutput(0);
 }

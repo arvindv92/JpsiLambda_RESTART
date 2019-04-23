@@ -9,6 +9,8 @@
 #include "TROOT.h"
 #include "TList.h"
 #include "TIterator.h"
+#include "TGraph.h"
+#include "TCanvas.h"
 #include <iostream>
 #include <vector>
 using namespace std;
