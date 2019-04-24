@@ -78,7 +78,6 @@ void MASTER()
 	Int_t isoConfArray[2]      = {1,2};
 	Int_t finalBDTconfArray[2] = {1,2};
 
-
 	//MCType = 1 for JpsiLambda MC
 	//MCType = 2 for JpsiSigma MC
 	//MCType = 3 for JpsiXi MC
