@@ -1,0 +1,30 @@
+******************************************
+==> Starting Trigger: 
+WD = /data1/avenkate/JpsiLambda_RESTART
+Sat Apr 20 14:35:30 EDT 2019
+******************************************
+******************************************
+==> Starting CollateFiles: 
+Sat Apr 20 14:35:30 EDT 2019
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+Input file = rootFiles/mcFiles/JpsiLambda/chiC1/run2/chic1.root
+Output file = rootFiles/mcFiles/JpsiLambda/chiC1/run2/chic1_triggered.root
+******************************************
+Incoming entries = 107635
+I am making the following trigger cuts. Sit tight
+(Lb_Hlt1DiMuonHighMassDecision_TOS==1||Lb_Hlt1TrackMuonDecision_TOS==1||Lb_Hlt1TrackAllL0Decision_TOS==1)&&(Lb_Hlt2DiMuonDetachedJPsiDecision_TOS==1)
+0
+100000
+Outgoing entries = 82231
+******************************************
+Trigger cut made with exclusive efficiency = 76.398% +/- 0.129431 %
+******************************************
+******************************************
+Trigger cut made with inclusive efficiency = 2.42371% +/- 0.00834901 %
+******************************************
+==> Trigger is done! Huzzah!: Real time 0:12:54, CP time 58.650

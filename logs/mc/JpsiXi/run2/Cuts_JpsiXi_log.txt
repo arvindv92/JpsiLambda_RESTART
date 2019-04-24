@@ -1,0 +1,20 @@
+******************************************
+==> Starting Cuts_JpsiXi: 
+Tue Apr 23 20:08:21 EDT 2019
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+Input file = rootFiles/mcFiles/JpsiXi/run2/jpsixi_triggered.root
+LL Output file = rootFiles/mcFiles/JpsiXi/run2/jpsixi_cut_LL.root
+******************************************
+Incoming entries = 77708
+0
+Outgoing LL entries = 2250
+******************************************
+LL cuts made with exclusive efficiency = 2.89545 % +/- 0.0601513 %
+******************************************
+Original generated number = 3461144
+******************************************
+LL cuts made with inclusive efficiency = 0.0650074 % +/- 0.00137003 %
+******************************************
+==> Cuts_JpsiXi is done! Mazel Tov!: Real time 0:00:14, CP time 14.560

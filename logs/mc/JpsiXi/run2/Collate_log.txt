@@ -1,0 +1,127 @@
+******************************************
+==> Starting JpsiXi CollateFiles: 
+Tue Apr 23 19:56:29 EDT 2019
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+Collating MC for WD = /data1/avenkate/JpsiXi/mc/LooseLL/Pythia8
+JpsiXi Run 2
+hadd Target file: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiXi/run2/jpsixi.root
+hadd compression setting for all ouput: 1
+hadd Source file 1: 2015_MagDown/1406_0/jpsixi.root
+hadd Source file 2: 2015_MagDown/1406_1/jpsixi.root
+hadd Source file 3: 2015_MagDown/1406_10/jpsixi.root
+hadd Source file 4: 2015_MagDown/1406_11/jpsixi.root
+hadd Source file 5: 2015_MagDown/1406_2/jpsixi.root
+hadd Source file 6: 2015_MagDown/1406_3/jpsixi.root
+hadd Source file 7: 2015_MagDown/1406_4/jpsixi.root
+hadd Source file 8: 2015_MagDown/1406_5/jpsixi.root
+hadd Source file 9: 2015_MagDown/1406_6/jpsixi.root
+hadd Source file 10: 2015_MagDown/1406_7/jpsixi.root
+hadd Source file 11: 2015_MagDown/1406_8/jpsixi.root
+hadd Source file 12: 2015_MagDown/1406_9/jpsixi.root
+hadd Source file 13: 2015_MagUp/1407_0/jpsixi.root
+hadd Source file 14: 2015_MagUp/1407_1/jpsixi.root
+hadd Source file 15: 2015_MagUp/1407_10/jpsixi.root
+hadd Source file 16: 2015_MagUp/1407_2/jpsixi.root
+hadd Source file 17: 2015_MagUp/1407_3/jpsixi.root
+hadd Source file 18: 2015_MagUp/1407_4/jpsixi.root
+hadd Source file 19: 2015_MagUp/1407_5/jpsixi.root
+hadd Source file 20: 2015_MagUp/1407_6/jpsixi.root
+hadd Source file 21: 2015_MagUp/1407_7/jpsixi.root
+hadd Source file 22: 2015_MagUp/1407_8/jpsixi.root
+hadd Source file 23: 2015_MagUp/1407_9/jpsixi.root
+hadd Source file 24: 2016_MagDown/1408_0/jpsixi.root
+hadd Source file 25: 2016_MagDown/1408_1/jpsixi.root
+hadd Source file 26: 2016_MagDown/1408_10/jpsixi.root
+hadd Source file 27: 2016_MagDown/1408_11/jpsixi.root
+hadd Source file 28: 2016_MagDown/1408_12/jpsixi.root
+hadd Source file 29: 2016_MagDown/1408_13/jpsixi.root
+hadd Source file 30: 2016_MagDown/1408_14/jpsixi.root
+hadd Source file 31: 2016_MagDown/1408_15/jpsixi.root
+hadd Source file 32: 2016_MagDown/1408_16/jpsixi.root
+hadd Source file 33: 2016_MagDown/1408_17/jpsixi.root
+hadd Source file 34: 2016_MagDown/1408_18/jpsixi.root
+hadd Source file 35: 2016_MagDown/1408_19/jpsixi.root
+hadd Source file 36: 2016_MagDown/1408_2/jpsixi.root
+hadd Source file 37: 2016_MagDown/1408_20/jpsixi.root
+hadd Source file 38: 2016_MagDown/1408_21/jpsixi.root
+hadd Source file 39: 2016_MagDown/1408_22/jpsixi.root
+hadd Source file 40: 2016_MagDown/1408_23/jpsixi.root
+hadd Source file 41: 2016_MagDown/1408_24/jpsixi.root
+hadd Source file 42: 2016_MagDown/1408_25/jpsixi.root
+hadd Source file 43: 2016_MagDown/1408_26/jpsixi.root
+hadd Source file 44: 2016_MagDown/1408_27/jpsixi.root
+hadd Source file 45: 2016_MagDown/1408_28/jpsixi.root
+hadd Source file 46: 2016_MagDown/1408_29/jpsixi.root
+hadd Source file 47: 2016_MagDown/1408_3/jpsixi.root
+hadd Source file 48: 2016_MagDown/1408_30/jpsixi.root
+hadd Source file 49: 2016_MagDown/1408_31/jpsixi.root
+hadd Source file 50: 2016_MagDown/1408_32/jpsixi.root
+hadd Source file 51: 2016_MagDown/1408_33/jpsixi.root
+hadd Source file 52: 2016_MagDown/1408_34/jpsixi.root
+hadd Source file 53: 2016_MagDown/1408_35/jpsixi.root
+hadd Source file 54: 2016_MagDown/1408_36/jpsixi.root
+hadd Source file 55: 2016_MagDown/1408_37/jpsixi.root
+hadd Source file 56: 2016_MagDown/1408_38/jpsixi.root
+hadd Source file 57: 2016_MagDown/1408_39/jpsixi.root
+hadd Source file 58: 2016_MagDown/1408_4/jpsixi.root
+hadd Source file 59: 2016_MagDown/1408_40/jpsixi.root
+hadd Source file 60: 2016_MagDown/1408_41/jpsixi.root
+hadd Source file 61: 2016_MagDown/1408_42/jpsixi.root
+hadd Source file 62: 2016_MagDown/1408_43/jpsixi.root
+hadd Source file 63: 2016_MagDown/1408_44/jpsixi.root
+hadd Source file 64: 2016_MagDown/1408_45/jpsixi.root
+hadd Source file 65: 2016_MagDown/1408_46/jpsixi.root
+hadd Source file 66: 2016_MagDown/1408_47/jpsixi.root
+hadd Source file 67: 2016_MagDown/1408_5/jpsixi.root
+hadd Source file 68: 2016_MagDown/1408_6/jpsixi.root
+hadd Source file 69: 2016_MagDown/1408_7/jpsixi.root
+hadd Source file 70: 2016_MagDown/1408_8/jpsixi.root
+hadd Source file 71: 2016_MagDown/1408_9/jpsixi.root
+hadd Source file 72: 2016_MagUp/1409_0/jpsixi.root
+hadd Source file 73: 2016_MagUp/1409_1/jpsixi.root
+hadd Source file 74: 2016_MagUp/1409_10/jpsixi.root
+hadd Source file 75: 2016_MagUp/1409_11/jpsixi.root
+hadd Source file 76: 2016_MagUp/1409_12/jpsixi.root
+hadd Source file 77: 2016_MagUp/1409_13/jpsixi.root
+hadd Source file 78: 2016_MagUp/1409_14/jpsixi.root
+hadd Source file 79: 2016_MagUp/1409_17/jpsixi.root
+hadd Source file 80: 2016_MagUp/1409_18/jpsixi.root
+hadd Source file 81: 2016_MagUp/1409_19/jpsixi.root
+hadd Source file 82: 2016_MagUp/1409_2/jpsixi.root
+hadd Source file 83: 2016_MagUp/1409_20/jpsixi.root
+hadd Source file 84: 2016_MagUp/1409_21/jpsixi.root
+hadd Source file 85: 2016_MagUp/1409_22/jpsixi.root
+hadd Source file 86: 2016_MagUp/1409_24/jpsixi.root
+hadd Source file 87: 2016_MagUp/1409_26/jpsixi.root
+hadd Source file 88: 2016_MagUp/1409_27/jpsixi.root
+hadd Source file 89: 2016_MagUp/1409_28/jpsixi.root
+hadd Source file 90: 2016_MagUp/1409_29/jpsixi.root
+hadd Source file 91: 2016_MagUp/1409_3/jpsixi.root
+hadd Source file 92: 2016_MagUp/1409_30/jpsixi.root
+hadd Source file 93: 2016_MagUp/1409_31/jpsixi.root
+hadd Source file 94: 2016_MagUp/1409_32/jpsixi.root
+hadd Source file 95: 2016_MagUp/1409_33/jpsixi.root
+hadd Source file 96: 2016_MagUp/1409_35/jpsixi.root
+hadd Source file 97: 2016_MagUp/1409_36/jpsixi.root
+hadd Source file 98: 2016_MagUp/1409_37/jpsixi.root
+hadd Source file 99: 2016_MagUp/1409_38/jpsixi.root
+hadd Source file 100: 2016_MagUp/1409_39/jpsixi.root
+hadd Source file 101: 2016_MagUp/1409_4/jpsixi.root
+hadd Source file 102: 2016_MagUp/1409_40/jpsixi.root
+hadd Source file 103: 2016_MagUp/1409_41/jpsixi.root
+hadd Source file 104: 2016_MagUp/1409_42/jpsixi.root
+hadd Source file 105: 2016_MagUp/1409_43/jpsixi.root
+hadd Source file 106: 2016_MagUp/1409_5/jpsixi.root
+hadd Source file 107: 2016_MagUp/1409_6/jpsixi.root
+hadd Source file 108: 2016_MagUp/1409_7/jpsixi.root
+hadd Source file 109: 2016_MagUp/1409_8/jpsixi.root
+hadd Source file 110: 2016_MagUp/1409_9/jpsixi.root
+hadd Sources and Target have different compression levels
+hadd merging will be slower
+hadd Target path: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiXi/run2/jpsixi.root:/
+hadd Target path: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiXi/run2/jpsixi.root:/EventTuple
+hadd Target path: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiXi/run2/jpsixi.root:/MCTuple
+hadd Target path: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiXi/run2/jpsixi.root:/Xib2JpsiXiTree
+DONE COLLATING
+WD = /data1/avenkate/JpsiLambda_RESTART
