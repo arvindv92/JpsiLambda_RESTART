@@ -1,6 +1,6 @@
 ******************************************
 ==> Starting CutOutKs: 
-Sat Apr 20 13:50:15 EDT 2019
+Wed Apr 24 16:27:19 EDT 2019
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
 ******************************************
@@ -11,9 +11,9 @@ WD = /data1/avenkate/JpsiLambda_RESTART
 Processing Run 2 YEAR 2018 LL MC type 6
 ******************************************
 ******************************************
-Input file = rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_sanity_LL.root
-nonZeroTracks Output file = rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_cutoutks_LL_nonZeroTracks.root
-ZeroTracks Output file = rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_cutoutks_LL_ZeroTracks.root
+Input file = rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_BONN_sanity_LL.root
+nonZeroTracks Output file = rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_BONN_cutoutks_LL_nonZeroTracks.root
+ZeroTracks Output file = rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_BONN_cutoutks_LL_ZeroTracks.root
 ******************************************
 Incoming entries = 71946
 Making LL file
@@ -30,4 +30,4 @@ Original generated number = 3460310
 ******************************************
 LL CutOutKs cuts made with inclusive efficiency = 1.87324% +/- 0.00728842 %
 ******************************************
-==> CutOutKs is done! Death to Ks0!: Real time 0:00:39, CP time 38.900
+==> CutOutKs is done! Death to Ks0!: Real time 0:00:39, CP time 38.370

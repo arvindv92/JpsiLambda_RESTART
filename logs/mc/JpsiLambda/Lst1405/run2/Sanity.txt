@@ -1,12 +1,12 @@
 ******************************************
 ==> Starting Sanity: 
-Sat Apr 20 13:49:28 EDT 2019
+Wed Apr 24 16:26:32 EDT 2019
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
 ******************************************
-Input file = rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_triggered.root
-LL Output file = rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_sanity_LL.root
-DD Output file = rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_sanity_DD.root
+Input file = rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_BONN_triggered.root
+LL Output file = rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_BONN_sanity_LL.root
+DD Output file = rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_BONN_sanity_DD.root
 ******************************************
 Incoming entries = 95424
 I am making the following sanity cuts, and then separating in LL and DD files. Sit tight
@@ -26,4 +26,4 @@ Original generated number = 3460310
 LL Sanity cuts made with inclusive efficiency = 2.07918% +/- 0.00767054 %
 DD Sanity cuts made with inclusive efficiency = 0% +/- 0 %
 ******************************************
-==> Sanity is done! Mazel Tov!: Real time 0:00:47, CP time 46.620
+==> Sanity is done! Mazel Tov!: Real time 0:00:47, CP time 46.160

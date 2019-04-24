@@ -1,22 +1,22 @@
 ******************************************
 Starting ApplyFinalBDT 
-Sat Apr 20 13:54:32 EDT 2019
+Wed Apr 24 16:01:23 EDT 2019
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
 ******************************************
 Processing Run 2 LL MC type 6
 ******************************************
 ******************************************
-Input file = rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_cutoutks_LL_nonZeroTracks.root
-Output file = rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_LL_FinalBDT2_iso2_v1.root
+Input file = rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_MV_cutoutks_LL_nonZeroTracks.root
+Output file = rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_MV_LL_FinalBDT2_iso2_v1.root
 ******************************************
 Incoming Entries = 60752                         : Booking "BDT method" of type "BDT" from dataset/weights/TMVAClassification-JpsiLambdaLL_dataRun2_iso2_v1_BDTconf2.weights.xml.
 <HEADER> DataSetInfo              : [Default] : Added class "Signal"
 <HEADER> DataSetInfo              : [Default] : Added class "Background"
                          : Booked classifier "BDTconf2" of type: "BDT"
---- TMVAClassificationApp    : Using input file: rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_cutoutks_LL_nonZeroTracks.root
+--- TMVAClassificationApp    : Using input file: rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_MV_cutoutks_LL_nonZeroTracks.root
 --- Processing: 60752 events
 --- ... Processing event: 0
 --- ... Processing event: 50000
---- End of event loop: --- Created root file: rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_LL_FinalBDT2_iso2_v1.root containing the MVA output histograms
-==> ApplyFinalBDT is done! Go optimize and fit!: Real time 0:00:17, CP time 17.110
+--- End of event loop: --- Created root file: rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_MV_LL_FinalBDT2_iso2_v1.root containing the MVA output histograms
+==> ApplyFinalBDT is done! Go optimize and fit!: Real time 0:00:16, CP time 16.120

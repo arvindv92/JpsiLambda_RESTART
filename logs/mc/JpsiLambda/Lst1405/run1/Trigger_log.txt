@@ -1,19 +1,14 @@
 ******************************************
 ==> Starting Trigger: 
 WD = /data1/avenkate/JpsiLambda_RESTART
-Sat Apr 20 11:32:27 EDT 2019
-******************************************
-******************************************
-==> Starting CollateFiles: 
-Sat Apr 20 11:32:27 EDT 2019
-WD = /data1/avenkate/JpsiLambda_RESTART
+Wed Apr 24 16:22:44 EDT 2019
 ******************************************
 ******************************************
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
 ******************************************
-Input file = rootFiles/mcFiles/JpsiLambda/Lst1405/run1/lst1405.root
-Output file = rootFiles/mcFiles/JpsiLambda/Lst1405/run1/lst1405_triggered.root
+Input file = rootFiles/mcFiles/JpsiLambda/Lst1405/run1/lst1405_BONN.root
+Output file = rootFiles/mcFiles/JpsiLambda/Lst1405/run1/lst1405_BONN_triggered.root
 ******************************************
 Incoming entries = 154016
 I am making the following trigger cuts. Sit tight
@@ -27,4 +22,4 @@ Trigger cut made with exclusive efficiency = 78.4678% +/- 0.104739 %
 ******************************************
 Trigger cut made with inclusive efficiency = 3.09705% +/- 0.00876976 %
 ******************************************
-==> Trigger is done! Huzzah!: Real time 0:17:21, CP time 82.760
+==> Trigger is done! Huzzah!: Real time 0:01:19, CP time 76.870
