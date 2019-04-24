@@ -184,9 +184,8 @@ void reweight_Lst1405(Int_t run = 1)
 		{
 			if((runno_gen == runno[j]) && (evtno_gen == evtno[j]))
 			{
-				cout<<"Lst_PE = "<<Lst_PE<<"\tLst_PX = "<<Lst_PX<<"\tLst_PY = "<<Lst_PY<<"\tLst_PZ = "<<Lst_PZ<<endl;
+				// cout<<"Lst_PE = "<<Lst_PE<<"\tLst_PX = "<<Lst_PX<<"\tLst_PY = "<<Lst_PY<<"\tLst_PZ = "<<Lst_PZ<<endl;
 				lstmass_gen[j] = sqrt(Lst_PE*Lst_PE - Lst_PX*Lst_PX - Lst_PY*Lst_PY - Lst_PZ*Lst_PZ);
-				exit(1);
 			}
 		}
 
@@ -239,13 +238,8 @@ void reweight_Lst1405(Int_t run = 1)
 	{
 		if(lstmass_gen[i] == 0.0)
 		{
-			if(newct == 0)
-			{
-				cout<<"runNo = "<<runno[i]<<" evtNo = "<<evtno[i]<<endl;
-			}
-			newct++;
+			zeroct++;
 		}
-		zeroct++;
 	}
 	cout<<zeroct<<" entries of lstmass_gen are 0.0"<<endl;
 	cout<<"Looping over reco tree again"<<endl;
