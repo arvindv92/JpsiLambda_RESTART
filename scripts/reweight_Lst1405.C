@@ -170,10 +170,13 @@ void reweight_Lst1405(Int_t run = 1)
 	lstmass_gen.assign(len,0.0);
 
 	//Loop over generated tree
-	cout<<"Looping over generated tree"<<endl;
+	cout<<"Looping over generated tree which has "<<nentries_gen<<" entries"<<endl;
+	Int_t ctr_notfound = 0;
+	int index_rno;
+	int index_eno;
 	for(Int_t i=0; i<nentries_gen; i++)
 	{
-		if(i%50000 == 0)
+		if(i%100000 == 0)
 			cout<<i<<endl;
 		treein_gen->GetEntry(i);
 
@@ -182,20 +185,21 @@ void reweight_Lst1405(Int_t run = 1)
 
 		if(it_runno == runno.end() || it_evtno == evtno.end())//this event in the gen tree was not found in the reco tree.
 		{
+			ctr_notfound++;
 			continue;
 		}
+		//At this point both runNumber and eventNumber have some match in the reco tree. Might not be the same index.
+		index_rno = std::distance(runno.begin(),it_runno);
+		index_eno = std::distance(evtno.begin(),it_evtno);
 
-		int index_rno = std::distance(runno.begin(),it_runno);
-		int index_eno = std::distance(evtno.begin(),it_evtno);
-
-		if(index_rno != index_eno)//no match.
+		if(index_rno != index_eno)//index doesnt match.
 		{
 			Int_t flag = 0;
 			while(flag == 0)
 			{
 				//search for next event number match, starting from the previous match
 				it_evtno  = std::find(it_evtno+1,evtno.end(),evtno_gen);
-				if(it_evtno == evtno.end())
+				if(it_evtno == evtno.end()) //no other match found for evtno.
 					break;
 				index_eno = std::distance(evtno.begin(),it_evtno);
 				//now get the run number corresponding to the new index_eno
@@ -215,14 +219,23 @@ void reweight_Lst1405(Int_t run = 1)
 	}
 
 	cout<<"Done looping over generated tree"<<endl;
+	cout<<"ctr_notfound = "<<ctr_notfound<<endl;
 	cout<<"Length of evtno vector = "<<evtno.size()<<" and length of lstmass vector = "<<lstmass_gen.size()<<endl;
 	//How many entries of lstmass_gen are zero at this stage?
 	Int_t zeroct = 0;
+	Int_t newct = 0;
 
 	for(Int_t i=0; i<len; i++)
 	{
 		if(lstmass_gen[i] == 0.0)
-			zeroct++;
+		{
+			if(newct == 0)
+			{
+				cout<<"runNo = "<<runno[i]<<" evtNo = "<<evtno[i]<<endl;
+			}
+			newct++;
+		}
+		zeroct++;
 	}
 	cout<<zeroct<<" entries of lstmass_gen are 0.0"<<endl;
 	cout<<"Looping over reco tree again"<<endl;
