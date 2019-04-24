@@ -180,42 +180,50 @@ void reweight_Lst1405(Int_t run = 1)
 			cout<<i<<endl;
 		treein_gen->GetEntry(i);
 
-		vector<UInt_t>::iterator it_runno = std::find(runno.begin(),runno.end(),runno_gen);
-		vector<ULong64_t>::iterator it_evtno = std::find(evtno.begin(),evtno.end(),evtno_gen);
-
-		if(it_runno == runno.end() || it_evtno == evtno.end())//this event in the gen tree was not found in the reco tree.
+		for(Int_t j=0; j<len; j++)
 		{
-			ctr_notfound++;
-			continue;
-		}
-		//At this point both runNumber and eventNumber have some match in the reco tree. Might not be the same index.
-		index_rno = std::distance(runno.begin(),it_runno);
-		index_eno = std::distance(evtno.begin(),it_evtno);
-
-		if(index_rno != index_eno)//index doesnt match.
-		{
-			Int_t flag = 0;
-			while(flag == 0)
+			if((runno_gen == runno[j]) && (evtno_gen == evtno[j]))
 			{
-				//search for next event number match, starting from the previous match
-				it_evtno  = std::find(it_evtno+1,evtno.end(),evtno_gen);
-				if(it_evtno == evtno.end()) //no other match found for evtno.
-					break;
-				index_eno = std::distance(evtno.begin(),it_evtno);
-				//now get the run number corresponding to the new index_eno
-				UInt_t new_runno = runno.at(index_eno);
-				//check if this run number matches the one we want
-				if(new_runno == runno_gen)
-				{
-					flag = 1;
-				}
+				lstmass_gen[j] = sqrt(Lst_PE*Lst_PE - Lst_PX*Lst_PX - Lst_PY*Lst_PY - Lst_PZ*Lst_PZ);
 			}
-			if(it_evtno == evtno.end())
-				continue;
 		}
+
+		// vector<UInt_t>::iterator it_runno = std::find(runno.begin(),runno.end(),runno_gen);
+		// vector<ULong64_t>::iterator it_evtno = std::find(evtno.begin(),evtno.end(),evtno_gen);
+		//
+		// if(it_runno == runno.end() || it_evtno == evtno.end())//this event in the gen tree was not found in the reco tree.
+		// {
+		//      ctr_notfound++;
+		//      continue;
+		// }
+		// //At this point both runNumber and eventNumber have some match in the reco tree. Might not be the same index.
+		// index_rno = std::distance(runno.begin(),it_runno);
+		// index_eno = std::distance(evtno.begin(),it_evtno);
+		//
+		// if(index_rno != index_eno)//index doesnt match.
+		// {
+		//      Int_t flag = 0;
+		//      while(flag == 0)
+		//      {
+		//              //search for next event number match, starting from the previous match
+		//              it_evtno  = std::find(it_evtno+1,evtno.end(),evtno_gen);
+		//              if(it_evtno == evtno.end()) //no other match found for evtno.
+		//                      break;
+		//              index_eno = std::distance(evtno.begin(),it_evtno);
+		//              //now get the run number corresponding to the new index_eno
+		//              UInt_t new_runno = runno.at(index_eno);
+		//              //check if this run number matches the one we want
+		//              if(new_runno == runno_gen)
+		//              {
+		//                      flag = 1;
+		//              }
+		//      }
+		//      if(it_evtno == evtno.end())
+		//              continue;
+		// }
 		//hopefully match should be found by now.
 		//calculate lstmass_gen and insert it into lstmass_gen at position index_eno
-		lstmass_gen[index_eno] = sqrt(Lst_PE*Lst_PE - Lst_PX*Lst_PX - Lst_PY*Lst_PY - Lst_PZ*Lst_PZ);
+		// lstmass_gen[index_eno] = sqrt(Lst_PE*Lst_PE - Lst_PX*Lst_PX - Lst_PY*Lst_PY - Lst_PZ*Lst_PZ);
 	}
 
 	cout<<"Done looping over generated tree"<<endl;
