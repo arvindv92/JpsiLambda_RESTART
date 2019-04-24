@@ -60,7 +60,7 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 	case 6:
 	{
 		folder = "Lst1405";
-		part = "lst1405_BONN";
+		part = "lst1405";
 		break;
 	}
 	case 7:
@@ -121,12 +121,11 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 
 	Bool_t hlt1DiMuonHighMass = false, hlt1TrackMuon      = false;
 	Bool_t hlt1TrackAllL0     = false, hlt2DiMuonDetached = false;
-	Bool_t collateFlag        = false;//NOTE collateFlag is FALSE!!!
+	Bool_t collateFlag        = true;
 	/*f you don't want to re-collate MC, set this to false.
 	   For example, if only the trigger condition changes.*/
 
 	TFile *fileOut = nullptr, *fileIn     = nullptr;
-	TFile *fileIn_gen = nullptr;
 	TTree *treeIn  = nullptr, *treeIn_gen = nullptr;
 	TTree *treeOut = nullptr, *myTree     = nullptr;
 	const char *triggerCut = "(Lb_Hlt1DiMuonHighMassDecision_TOS==1||"
@@ -183,10 +182,7 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 		}
 		fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",
 		                          folder,run,part));
-		fileIn_gen = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/lst1405.root",
-		                              folder,run));
-		treeIn_gen = (TTree*)fileIn_gen->Get("MCTuple/MCDecayTree");
-		// treeIn     = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
+		treeIn     = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
 		treeIn     = (TTree*)fileIn->Get("MyTuple");//TEMP
 
 

@@ -66,7 +66,7 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 	case 6:
 	{
 		folder = "Lst1405";
-		part = "lst1405_BONN";
+		part = "lst1405";
 		break;
 	}
 	case 7:
