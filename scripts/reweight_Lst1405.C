@@ -166,8 +166,9 @@ void reweight_Lst1405(Int_t run = 1)
 		exit(1);
 	}
 
-	lstmass_gen.assign(evtno.size(),0.0);
 	int len = evtno.size();
+	lstmass_gen.assign(len,0.0);
+
 	//Loop over generated tree
 	cout<<"Looping over generated tree"<<endl;
 	for(Int_t i=0; i<nentries_gen; i++)
@@ -215,7 +216,15 @@ void reweight_Lst1405(Int_t run = 1)
 
 	cout<<"Done looping over generated tree"<<endl;
 	cout<<"Length of evtno vector = "<<evtno.size()<<" and length of lstmass vector = "<<lstmass_gen.size()<<endl;
+	//How many entries of lstmass_gen are zero at this stage?
+	Int_t zeroct = 0;
 
+	for(Int_t i=0; i<len; i++)
+	{
+		if(lstmass_gen[i] == 0.0)
+			zeroct++;
+	}
+	cout<<zeroct<<" entries of lstmass_gen are 0.0"<<endl;
 	cout<<"Looping over reco tree again"<<endl;
 
 	ctr = 0;
