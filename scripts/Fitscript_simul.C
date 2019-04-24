@@ -20,7 +20,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 	Int_t binwidth = 4;
 	Int_t nbins    = (Int_t)(high-low)/binwidth;
 
-	Float_t myBDT = bdtCut;
 	// gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/UpperLimit/Fit_HypatiaSig_ExpoBkg_%d_%d_%dMeVBins.txt",
 	//                              myLow,myHigh,binwidth),"w");
 
@@ -68,103 +67,103 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 	}
 
 	// Xib normalization & errs
-	Double_t xibnorm_LL[2]         = {0.0,0.0};
-	Double_t xibnorm_LL_staterr[2] = {0.0,0.0};
-	Double_t xibnorm_LL_systerr[2] = {0.0,0.0};
-	Double_t xibnorm_LL_err[2]     = {0.0,0.0};
+	Float_t xibnorm_LL[2]         = {0.0,0.0};
+	Float_t xibnorm_LL_staterr[2] = {0.0,0.0};
+	Float_t xibnorm_LL_systerr[2] = {0.0,0.0};
+	Float_t xibnorm_LL_err[2]     = {0.0,0.0};
 
 	// Lb->J/psi L MC eff & errs
 	Int_t nGen_Lambda[2]           = {0,0};     // Generated yield
-	Double_t eff_Lambda_gen[2]     = {0.0,0.0}; // Generator Eff.
-	Double_t eff_Lambda_gen_err[2] = {0.0,0.0}; // Generator Eff. Stat. Err.
-	Double_t eff_Lambda_rec[2]     = {0.0,0.0}; // Reco. Eff.
-	Double_t eff_Lambda_rec_err[2] = {0.0,0.0}; // Reco. Eff. Stat. Err.
-	Double_t eff_Lambda[2]         = {0.0,0.0}; // Overall Eff.
-	Double_t eff_Lambda_staterr[2] = {0.0,0.0}; // Overall Eff. Stat. Err.
+	Float_t eff_Lambda_gen[2]     = {0.0,0.0}; // Generator Eff.
+	Float_t eff_Lambda_gen_err[2] = {0.0,0.0}; // Generator Eff. Stat. Err.
+	Float_t eff_Lambda_rec[2]     = {0.0,0.0}; // Reco. Eff.
+	Float_t eff_Lambda_rec_err[2] = {0.0,0.0}; // Reco. Eff. Stat. Err.
+	Float_t eff_Lambda[2]         = {0.0,0.0}; // Overall Eff.
+	Float_t eff_Lambda_staterr[2] = {0.0,0.0}; // Overall Eff. Stat. Err.
 
 	// Lb->J/psi 1405 MC eff & errs
 	Int_t nGen_1405[2]            = {0,0};
-	Double_t eff_1405_gen[2]      = {0.0,0.0};
-	Double_t eff_1405_gen_err[2]  = {0.0,0.0};
-	Double_t eff_1405_rec[2]      = {0.0,0.0};
-	Double_t eff_1405_rec_err[2]  = {0.0,0.0};
-	Double_t eff_1405[2]          = {0.0,0.0};
-	Double_t eff_1405_staterr[2]  = {0.0,0.0};
+	Float_t eff_1405_gen[2]      = {0.0,0.0};
+	Float_t eff_1405_gen_err[2]  = {0.0,0.0};
+	Float_t eff_1405_rec[2]      = {0.0,0.0};
+	Float_t eff_1405_rec_err[2]  = {0.0,0.0};
+	Float_t eff_1405[2]          = {0.0,0.0};
+	Float_t eff_1405_staterr[2]  = {0.0,0.0};
 
 	// Lb->J/psi 1520 MC eff & errs
 	Int_t nGen_1520[2]            = {0,0};
-	Double_t eff_1520_gen[2]      = {0.0,0.0};
-	Double_t eff_1520_gen_err[2]  = {0.0,0.0};
-	Double_t eff_1520_rec[2]      = {0.0,0.0};
-	Double_t eff_1520_rec_err[2]  = {0.0,0.0};
-	Double_t eff_1520[2]          = {0.0,0.0};
-	Double_t eff_1520_staterr[2]  = {0.0,0.0};
+	Float_t eff_1520_gen[2]      = {0.0,0.0};
+	Float_t eff_1520_gen_err[2]  = {0.0,0.0};
+	Float_t eff_1520_rec[2]      = {0.0,0.0};
+	Float_t eff_1520_rec_err[2]  = {0.0,0.0};
+	Float_t eff_1520[2]          = {0.0,0.0};
+	Float_t eff_1520_staterr[2]  = {0.0,0.0};
 
 	// Lb->J/psi 1600 MC eff & errs
 	Int_t nGen_1600[2]            = {0,0};
-	Double_t eff_1600_gen[2]      = {0.0,0.0};
-	Double_t eff_1600_gen_err[2]  = {0.0,0.0};
-	Double_t eff_1600_rec[2]      = {0.0,0.0};
-	Double_t eff_1600_rec_err[2]  = {0.0,0.0};
-	Double_t eff_1600[2]          = {0.0,0.0};
-	Double_t eff_1600_staterr[2]  = {0.0,0.0};
+	Float_t eff_1600_gen[2]      = {0.0,0.0};
+	Float_t eff_1600_gen_err[2]  = {0.0,0.0};
+	Float_t eff_1600_rec[2]      = {0.0,0.0};
+	Float_t eff_1600_rec_err[2]  = {0.0,0.0};
+	Float_t eff_1600[2]          = {0.0,0.0};
+	Float_t eff_1600_staterr[2]  = {0.0,0.0};
 
 	// Lb->chiC1 Lambda MC eff & errs
 	Int_t nGen_chic1[2]            = {0,0};
-	Double_t eff_chic1_gen[2]      = {0.0,0.0};
-	Double_t eff_chic1_gen_err[2]  = {0.0,0.0};
-	Double_t eff_chic1_rec[2]      = {0.0,0.0};
-	Double_t eff_chic1_rec_err[2]  = {0.0,0.0};
-	Double_t eff_chic1[2]          = {0.0,0.0};
-	Double_t eff_chic1_staterr[2]  = {0.0,0.0};
+	Float_t eff_chic1_gen[2]      = {0.0,0.0};
+	Float_t eff_chic1_gen_err[2]  = {0.0,0.0};
+	Float_t eff_chic1_rec[2]      = {0.0,0.0};
+	Float_t eff_chic1_rec_err[2]  = {0.0,0.0};
+	Float_t eff_chic1[2]          = {0.0,0.0};
+	Float_t eff_chic1_staterr[2]  = {0.0,0.0};
 
 	// Lb->J/psi Sigma MC eff & errs
 	Int_t nGen_Sigma[2]            = {0,0};
-	Double_t eff_Sigma_gen[2]      = {0.0,0.0};
-	Double_t eff_Sigma_gen_err[2]  = {0.0,0.0};
-	Double_t eff_Sigma_rec[2]      = {0.0,0.0};
-	Double_t eff_Sigma_rec_err[2]  = {0.0,0.0};
-	Double_t eff_Sigma[2]          = {0.0,0.0};
-	Double_t eff_Sigma_staterr[2]  = {0.0,0.0};
+	Float_t eff_Sigma_gen[2]      = {0.0,0.0};
+	Float_t eff_Sigma_gen_err[2]  = {0.0,0.0};
+	Float_t eff_Sigma_rec[2]      = {0.0,0.0};
+	Float_t eff_Sigma_rec_err[2]  = {0.0,0.0};
+	Float_t eff_Sigma[2]          = {0.0,0.0};
+	Float_t eff_Sigma_staterr[2]  = {0.0,0.0};
 
 	// eff(Lb -> J/psi Sigma) / eff(Lb -> J/psi Lambda)
-	Double_t eff_ratio[2]          = {0.0,0.0};
-	Double_t eff_ratio_staterr[2]  = {0.0,0.0};
-	Double_t eff_ratio_systerr[2]  = {0.0,0.0};
-	Double_t eff_ratio_err[2]      = {0.0,0.0};
+	Float_t eff_ratio[2]          = {0.0,0.0};
+	Float_t eff_ratio_staterr[2]  = {0.0,0.0};
+	Float_t eff_ratio_systerr[2]  = {0.0,0.0};
+	Float_t eff_ratio_err[2]      = {0.0,0.0};
 
 	// eff(Lb -> J/psi LAMBDA(1405)) / eff(Lb -> J/psi Lambda)
-	Double_t eff_ratio_1405[2]          = {0.0,0.0};
-	Double_t eff_ratio_staterr_1405[2]  = {0.0,0.0};
-	Double_t eff_ratio_systerr_1405[2]  = {0.0,0.0};
-	Double_t eff_ratio_err_1405[2]      = {0.0,0.0};
+	Float_t eff_ratio_1405[2]          = {0.0,0.0};
+	Float_t eff_ratio_staterr_1405[2]  = {0.0,0.0};
+	Float_t eff_ratio_systerr_1405[2]  = {0.0,0.0};
+	Float_t eff_ratio_err_1405[2]      = {0.0,0.0};
 
 	// eff(Lb -> J/psi LAMBDA(1520)) / eff(Lb -> J/psi Lambda)
-	Double_t eff_ratio_1520[2]          = {0.0,0.0};
-	Double_t eff_ratio_staterr_1520[2]  = {0.0,0.0};
-	Double_t eff_ratio_systerr_1520[2]  = {0.0,0.0};
-	Double_t eff_ratio_err_1520[2]      = {0.0,0.0};
+	Float_t eff_ratio_1520[2]          = {0.0,0.0};
+	Float_t eff_ratio_staterr_1520[2]  = {0.0,0.0};
+	Float_t eff_ratio_systerr_1520[2]  = {0.0,0.0};
+	Float_t eff_ratio_err_1520[2]      = {0.0,0.0};
 
 	// eff(Lb -> J/psi LAMBDA(1600)) / eff(Lb -> J/psi Lambda)
-	Double_t eff_ratio_1600[2]          = {0.0,0.0};
-	Double_t eff_ratio_staterr_1600[2]  = {0.0,0.0};
-	Double_t eff_ratio_systerr_1600[2]  = {0.0,0.0};
-	Double_t eff_ratio_err_1600[2]      = {0.0,0.0};
+	Float_t eff_ratio_1600[2]          = {0.0,0.0};
+	Float_t eff_ratio_staterr_1600[2]  = {0.0,0.0};
+	Float_t eff_ratio_systerr_1600[2]  = {0.0,0.0};
+	Float_t eff_ratio_err_1600[2]      = {0.0,0.0};
 
 	// eff(Lb -> chiC1 Lambda) / eff(Lb -> J/psi Lambda)
-	Double_t eff_ratio_chic1[2]          = {0.0,0.0};
-	Double_t eff_ratio_staterr_chic1[2]  = {0.0,0.0};
-	Double_t eff_ratio_systerr_chic1[2]  = {0.0,0.0};
-	Double_t eff_ratio_err_chic1[2]      = {0.0,0.0};
+	Float_t eff_ratio_chic1[2]          = {0.0,0.0};
+	Float_t eff_ratio_staterr_chic1[2]  = {0.0,0.0};
+	Float_t eff_ratio_systerr_chic1[2]  = {0.0,0.0};
+	Float_t eff_ratio_err_chic1[2]      = {0.0,0.0};
 
 	// ***************Systematics put in by hand ************************
-	Float_t xib_syst       = 0.05;
-	Float_t eff_ratio_syst = 0.02;
-	Float_t eff_ratio_syst_1405 = 0.02;
-	Float_t eff_ratio_syst_1520 = 0.02;
-	Float_t eff_ratio_syst_1600 = 0.02;
+	Float_t xib_syst             = 0.05;
+	Float_t eff_ratio_syst       = 0.02;
+	Float_t eff_ratio_syst_1405  = 0.02;
+	Float_t eff_ratio_syst_1520  = 0.02;
+	Float_t eff_ratio_syst_1600  = 0.02;
 	Float_t eff_ratio_syst_chic1 = 0.02;
-	// ******************************************************************
+	// ***************************Flags**********************************
 	// Flags controlling shapes
 	Int_t lst1405flag    = 1;
 	Int_t lst1520flag    = 1;
@@ -175,6 +174,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 	Int_t sigmaflag      = 1;
 	Int_t Lst1405_rwtype = 2;
 
+	// ************************Master Workspace**************************
 	RooWorkspace w("w");
 
 	//*********MASTER VARIABLE*******************************************
@@ -246,7 +246,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 		    <<" % +/- "<<eff_Lambda_gen_err[i]*100<<" %"<<endl;
 
 		Int_t num_Lambda = mcTreeIn_nonZero_Lambda->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]))
-		                   + mcTreeIn_Zero_Lambda->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+		                   + mcTreeIn_Zero_Lambda->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TM HERE
 
 		eff_Lambda_rec[i]     = num_Lambda*1.0/nGen_Lambda[i]; //Calc. reco eff.
 		eff_Lambda_rec_err[i] = sqrt(eff_Lambda_rec[i]*(1-eff_Lambda_rec[i])/nGen_Lambda[i]); //statistical error on recon. eff.
@@ -261,29 +261,14 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 		cout<<"Run "<<run<<" Jpsi Lambda Eff = "<<eff_Lambda[i]*100
 		    <<" % +/- "<<eff_Lambda_staterr[i]*100<<" %"<<endl;
 
-		// TFile *fileOut_cut = new TFile(Form("%s/run%d/jpsilambda_LL_BDTCut_temp.root",lambdaMCPath,run),"RECREATE");
-		//
-		// TTree *mcTree_nonZero_cut = (TTree*)mcTreeIn_nonZero_Lambda->CopyTree(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
-		// TTree *mcTree_Zero_cut    = (TTree*)mcTreeIn_Zero_Lambda->CopyTree(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
-		//
-		// TList *mcList = new TList;
-		// mcList->Add(mcTree_nonZero_cut);
-		// mcList->Add(mcTree_Zero_cut);
-		//
-		// TTree *totTree = TTree::MergeTrees(mcList);
-		// totTree->SetName("MyTuple");
-		//
-		// totTree->Write();
-		// fileOut_cut->Write();
-		// fileOut_cut->Close();
 	}
-	//************************************************
+	//*******************************************************************
 
 	RooHistPdf* SIG[2];
 	RooKeysPdf* SIG_KEYS[2];
 	RooDataSet* ds_sig[2];
 
-	//****Get J/psi Sigma efficiencies and shape from MC*******
+	//****Get J/psi Sigma efficiencies and shape from MC*****************
 	const char* sigmaPath = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma";
 
 	for(Int_t run = 1; run<=2; run++)
@@ -416,7 +401,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 		genFile_1405.open((Form("../logs/mc/JpsiLambda/Lst1405/run%d/gen_log.txt",run)));
 
 		genFile_1405>>nGen_1405[i]; // Get number of generated events
-
 
 		//***** DONT HAVE GENERATOR EFFS FOR LST(1405) YET
 		// fstream genEffFile_1405;

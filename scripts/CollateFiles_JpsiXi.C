@@ -90,7 +90,7 @@ void CollateFiles_JpsiXi(Int_t run, Int_t year, Bool_t isData, TChain** h1,
 		else if(run == 2)
 		{
 			gSystem->Exec("hadd -f /data1/avenkate/JpsiLambda_RESTART/rootFiles/"
-			              "mcFiles/JpsiXi/run2/jpsixi.root 2015*/*/*.root"
+			              "mcFiles/JpsiXi/run2/jpsixi.root 2015*/*/*.root "
 			              "2016*/*/*.root");
 		}
 	}//end MC block
