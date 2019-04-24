@@ -126,6 +126,7 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 	   For example, if only the trigger condition changes.*/
 
 	TFile *fileOut = nullptr, *fileIn     = nullptr;
+	TFile *fileIn_gen = nullptr;
 	TTree *treeIn  = nullptr, *treeIn_gen = nullptr;
 	TTree *treeOut = nullptr, *myTree     = nullptr;
 	const char *triggerCut = "(Lb_Hlt1DiMuonHighMassDecision_TOS==1||"
@@ -175,7 +176,7 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 	}//end Data block
 	else //MC
 	{
-		genFile.open(Form("logs/mc/JpsiLambda/%s/run%d/gen_log.txt",folder,run));
+		// genFile.open(Form("logs/mc/JpsiLambda/%s/run%d/gen_log.txt",folder,run));
 
 		if(collateFlag)
 		{
@@ -183,7 +184,9 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 		}
 		fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",
 		                          folder,run,part));
-		treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
+		fileIn_gen = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/lst1405.root",
+		                              folder,run));
+		treeIn_gen = (TTree*)fileIn_gen->Get("MCTuple/MCDecayTree");
 		treeIn     = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
 
 		fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_triggered.root",

@@ -99,6 +99,7 @@ void MASTER()
 		for(Int_t i = 0; i<=1; i++)
 		{
 			run = runArray[i];
+			cout<<"$$$$$$$$$$$ Processing Run "<<run<<" $$$$$$$$$$$"<<endl;
 			//Trigger Cut
 			cout<<"***Trigger***"<<endl;
 			Trigger(run, year, isData, mcType, testing, loose, logFlag);
