@@ -252,15 +252,7 @@ void reweight_Lst1405(Int_t run = 1)
 		// lstmass_gen[index_eno] = sqrt(Lst_PE*Lst_PE - Lst_PX*Lst_PX - Lst_PY*Lst_PY - Lst_PZ*Lst_PZ);
 	}
 
-	cout<<"Done looping over generated tree. Writing out rweighted generator"<<endl;
-
-	genFile_MV->cd();
-	genTreeout_MV->Write();
-	genFile_MV->Close();
-
-	genFile_BONN->cd();
-	genTreeout_BONN->Write();
-	genFile_BONN->Close();
+	cout<<"Done looping over generated tree."<<endl;
 
 	cout<<"ctr_notfound = "<<ctr_notfound<<endl;
 	cout<<"Length of evtno vector = "<<evtno.size()<<" and length of lstmass vector = "<<lstmass_gen.size()<<endl;
@@ -373,4 +365,14 @@ void reweight_Lst1405(Int_t run = 1)
 	treeout_BONN->Write("",TObject::kOverwrite);
 	mcfile_BONN->Close();
 	cout<<"BONN DONE"<<endl;
+
+	cout<<"Writing out rweighted generator"<<endl;
+	genFile_MV->cd();
+	genTreeout_MV->Write();
+	genFile_MV->Close();
+
+	genFile_BONN->cd();
+	genTreeout_BONN->Write();
+	genFile_BONN->Close();
+
 }
