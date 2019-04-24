@@ -18,13 +18,17 @@ using namespace std;
 //SOMETHING IS GOING WRONG. LOT OF THE WEIGHTS ARE ZERO.
 void reweight_Lst1405(Int_t run = 1)
 {
-	TFile *filein, *mcfile_MV, *mcfile_BONN;
-	TTree *treein, *treein_gen, *treeout_MV, *treeout_BONN;
+	TFile *filein = nullptr, *mcfile_MV = nullptr, *mcfile_BONN = nullptr;
+	TFile *genFile_MV = nullptr, *genFile_BONN = nullptr;
+	TTree *treein = nullptr, *treein_gen = nullptr;
+	TTree *treeout_MV = nullptr, *treeout_BONN = nullptr;
+	TTree *genTreeout_MV = nullptr, *genTreeout_BONN = nullptr;
 
 	Double_t Lst_PE, Lst_PX, Lst_PY, Lst_PZ;
 	Double_t Jpsi_PE, Jpsi_PX, Jpsi_PY, Jpsi_PZ;
 	Double_t Lambda_PE, Lambda_PX, Lambda_PY,Lambda_PZ;
-	Double_t mass_gen, JpsiLmass, MVweight, BONNweight, num, den;
+	Double_t mass_gen, MVweight, BONNweight;
+	Double_t MVweight_gen, BONNweight_gen;
 
 	Int_t nentries, nentries_gen, massbin_MV, massbin_BONN;
 	Int_t low_MV, high_MV, low_BONN, high_BONN;//limits for Lst mass in which the models work
@@ -69,6 +73,12 @@ void reweight_Lst1405(Int_t run = 1)
 	treeout_BONN = (TTree*)treein->CopyTree("");
 	// treeout_BONN = new TTree("MyTuple","");
 	// treeout_BONN = (TTree*)treein->CloneTree(0);
+
+	genFile_MV = new TFile(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405_gen_MV.root",run),"RECREATE");
+	genTreeout_MV = new TTree("MCDecayTree","");
+
+	genFile_BONN = new TFile(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405_gen_BONN.root",run),"RECREATE");
+	genTreeout_BONN = new TTree("MCDecayTree","");
 
 	cout<<"Done copying Trees"<<endl;
 
@@ -143,6 +153,8 @@ void reweight_Lst1405(Int_t run = 1)
 	// TBranch *JpsiLMass_MV = treeout_MV->Branch("JpsiLmass",&JpsiLmass,"JpsiLmass/D");
 	// TBranch *JpsiLMass_BONN = treeout_BONN->Branch("JpsiLmass",&JpsiLmass,"JpsiLmass/D");
 
+	TBranch *MVwtbranch_gen = genTreeout_MV->Branch("MVweight",&MVweight_gen,"MVweight/D");
+	TBranch *BONNwtbranch_gen = genTreeout_BONN->Branch("BONNweight",&BONNweight_gen,"BONNweight/D");
 	Int_t ctr = 0;
 
 	//First loop over reco tree
@@ -179,6 +191,19 @@ void reweight_Lst1405(Int_t run = 1)
 		if(i%100000 == 0)
 			cout<<i<<endl;
 		treein_gen->GetEntry(i);
+
+		//*****Reweight the generator MC also*****
+		mass_gen       = sqrt(Lst_PE*Lst_PE - Lst_PX*Lst_PX - Lst_PY*Lst_PY - Lst_PZ*Lst_PZ);
+		massbin_MV     = wts_MV->FindBin(mass_gen);
+		massbin_BONN   = wts_BONN->FindBin(mass_gen);
+		MVweight_gen   = wts_MV->GetBinContent(massbin_MV);
+		BONNweight_gen = wts_BONN->GetBinContent(massbin_BONN);
+		// MVwtbranch_gen->Fill();
+		// BONNwtbranch_gen->Fill();
+		genTreeout_MV->Fill();
+		genTreeout_BONN->Fill();
+		//****************************************
+
 
 		for(Int_t j=0; j<len; j++)
 		{
@@ -227,7 +252,16 @@ void reweight_Lst1405(Int_t run = 1)
 		// lstmass_gen[index_eno] = sqrt(Lst_PE*Lst_PE - Lst_PX*Lst_PX - Lst_PY*Lst_PY - Lst_PZ*Lst_PZ);
 	}
 
-	cout<<"Done looping over generated tree"<<endl;
+	cout<<"Done looping over generated tree. Writing out rweighted generator"<<endl;
+
+	genFile_MV->cd();
+	genTreeout_MV->Write();
+	genFile_MV->Close();
+
+	genFile_BONN->cd();
+	genTreeout_BONN->Write();
+	genFile_BONN->Close();
+
 	cout<<"ctr_notfound = "<<ctr_notfound<<endl;
 	cout<<"Length of evtno vector = "<<evtno.size()<<" and length of lstmass vector = "<<lstmass_gen.size()<<endl;
 	//How many entries of lstmass_gen are zero at this stage?
@@ -332,9 +366,11 @@ void reweight_Lst1405(Int_t run = 1)
 	cout<<"ctr = "<<ctr<<endl;
 	mcfile_MV->cd();
 	treeout_MV->Write("",TObject::kOverwrite);
+	mcfile_MV->Close();
 	cout<<"MV DONE"<<endl;
 
 	mcfile_BONN->cd();
 	treeout_BONN->Write("",TObject::kOverwrite);
+	mcfile_BONN->Close();
 	cout<<"BONN DONE"<<endl;
 }
