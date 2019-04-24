@@ -62,7 +62,7 @@ void MASTER()
 	Bool_t loose           = true;// when true, analysis will run over data/MC from "loose" stripping line. Only LL
 	Bool_t isData          = false;// Data or MC?
 	Bool_t isoFlag         = true;// when true, isolation will be used in final BDT.
-	Bool_t logFlag         = false;// set to false only while testing.
+	Bool_t logFlag         = true;// set to false only while testing.
 
 	Float_t bdtCut         = 0.0;
 	Float_t bdtCut_ZeroTracks = 0.0;
