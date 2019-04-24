@@ -138,7 +138,6 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 	   this file, so that it can be accessed for calculating exclusive efficiencies
 	   later*/
 	ofstream genFile;
-
 	// Set up input, output
 	if(isData)
 	{
@@ -177,7 +176,6 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 	else //MC
 	{
 		genFile.open(Form("logs/mc/JpsiLambda/%s/run%d/gen_log.txt",folder,run));
-
 		if(collateFlag)
 		{
 			CollateFiles(run, year, isData, mcType);
@@ -187,7 +185,9 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 		fileIn_gen = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/lst1405.root",
 		                              folder,run));
 		treeIn_gen = (TTree*)fileIn_gen->Get("MCTuple/MCDecayTree");
-		treeIn     = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
+		// treeIn     = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
+		treeIn     = (TTree*)fileIn->Get("MyTuple");//TEMP
+
 
 		fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_triggered.root",
 		                         folder,run,part),"RECREATE");
