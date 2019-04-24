@@ -63,11 +63,11 @@ void reweight_Lst1405(Int_t run = 1)
 	cout<<"Copying Trees"<<endl;
 	mcfile_MV = new TFile(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405_MV.root",run),"RECREATE");
 	// treeout_MV = (TTree*)treein->CloneTree(0);
-	// treeout_MV = (TTree*)treein->CopyTree("");
-	treeout_MV = new TTree("MyTuple","");
+	treeout_MV = (TTree*)treein->CopyTree("");
+	// treeout_MV = new TTree("MyTuple","");
 	mcfile_BONN = new TFile(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405_BONN.root",run),"RECREATE");
-	// treeout_BONN = (TTree*)treein->CopyTree("");
-	treeout_BONN = new TTree("MyTuple","");
+	treeout_BONN = (TTree*)treein->CopyTree("");
+	// treeout_BONN = new TTree("MyTuple","");
 	// treeout_BONN = (TTree*)treein->CloneTree(0);
 
 	cout<<"Done copying Trees"<<endl;
