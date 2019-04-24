@@ -184,7 +184,9 @@ void reweight_Lst1405(Int_t run = 1)
 		{
 			if((runno_gen == runno[j]) && (evtno_gen == evtno[j]))
 			{
+				cout<<"Lst_PE = "<<Lst_PE<<"\tLst_PX = "<<Lst_PX<<"\tLst_PY = "<<Lst_PY<<"\tLst_PZ = "<<Lst_PZ<<endl;
 				lstmass_gen[j] = sqrt(Lst_PE*Lst_PE - Lst_PX*Lst_PX - Lst_PY*Lst_PY - Lst_PZ*Lst_PZ);
+				exit(1);
 			}
 		}
 
