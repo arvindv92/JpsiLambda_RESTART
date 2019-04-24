@@ -256,10 +256,10 @@ void reweight_Lst1405(Int_t run = 1)
 		{
 			MVweight   = 1.0;
 			BONNweight = 1.0;
-			// MVwtbranch->Fill();
-			// BONNwtbranch->Fill();
-			treeout_MV->Fill();
-			treeout_BONN->Fill();
+			MVwtbranch->Fill();
+			BONNwtbranch->Fill();
+			// treeout_MV->Fill();
+			// treeout_BONN->Fill();
 			continue;
 		}
 		else
@@ -269,10 +269,10 @@ void reweight_Lst1405(Int_t run = 1)
 			massbin_BONN = wts_BONN->FindBin(mass_gen);
 			MVweight = wts_MV->GetBinContent(massbin_MV);
 			BONNweight = wts_BONN->GetBinContent(massbin_BONN);
-			// MVwtbranch->Fill();
-			// BONNwtbranch->Fill();
-			treeout_MV->Fill();
-			treeout_BONN->Fill();
+			MVwtbranch->Fill();
+			BONNwtbranch->Fill();
+			// treeout_MV->Fill();
+			// treeout_BONN->Fill();
 			ctr++;
 		}
 
