@@ -176,6 +176,7 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 	else //MC
 	{
 		genFile.open(Form("logs/mc/JpsiLambda/%s/run%d/gen_log.txt",folder,run));
+
 		if(collateFlag)
 		{
 			CollateFiles(run, year, isData, mcType);
