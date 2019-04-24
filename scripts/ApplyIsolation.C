@@ -78,7 +78,7 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	case 6:
 	{
 		folder = "Lst1405";
-		part = "lst1405";
+		part = "lst1405_MV";
 		break;
 	}
 	case 7:
