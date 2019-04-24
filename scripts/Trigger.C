@@ -60,7 +60,7 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 	case 6:
 	{
 		folder = "Lst1405";
-		part = "lst1405_MV";
+		part = "lst1405_BONN";
 		break;
 	}
 	case 7:
