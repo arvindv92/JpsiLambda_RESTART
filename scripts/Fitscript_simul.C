@@ -1421,9 +1421,9 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	// w.factory("n1520_Run2[3000,1,5000]");
 	// w.factory("n1600_Run1[3000,1,10000]");
 	// w.factory("n1600_Run2[3000,1,10000]");
-	w.factory("nMiscLst_Run1[2500,1,5000]");
+	w.factory("nMiscLst_Run1[1500,1,5000]");
 	// w.factory("nMiscLst_Run2[2500,1,5000]");
-	w.factory("nMiscLst_Run2[2500,1,10000]");
+	w.factory("nMiscLst_Run2[4000,1,10000]");
 	w.factory(Form("nBkg_Run1[2000,1,%d]",nentries[0]));
 	w.factory(Form("nBkg_Run2[4000,1,%d]",nentries[1]));
 
