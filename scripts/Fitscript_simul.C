@@ -6,9 +6,10 @@ using namespace RooStats;
 
 #define Open TFile::Open
 
-void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtCut)
+void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Float_t bdtCut)
 //option = "best" to fit to data with best BDT cuts
 //myLow and myHigh define the fit range
+//rwType 0 is no RW, 1 is MV RW, 2 is BONN RW
 {
 	Bool_t calcUL   = true;
 	Bool_t isBinned = true; //set to false if you want unbinned ML fit.
@@ -172,7 +173,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 	Int_t chic1flag      = 1;
 	Int_t xibflag        = 1;
 	Int_t sigmaflag      = 1;
-	Int_t Lst1405_rwtype = 2;//0 is no RW, 1 is MV RW, 2 is BONN RW
 
 	// ************************Master Workspace**************************
 	RooWorkspace w("w");
@@ -396,7 +396,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 		rwSuffix     = "_MV";
 		rwType       = "MV";
 	}
-	else if(Lst1405_rwtype==1)//BONN RW
+	else if(Lst1405_rwtype==2)//BONN RW
 	{
 		nGen_1405[0] = 3901944;
 		nGen_1405[1] = 3459901;
