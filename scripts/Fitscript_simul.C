@@ -1413,7 +1413,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	//*******************************************************************
 
 	w.factory("nLb_Run1[5000,1000,7000]");
-	w.factory("nLb_Run2[17000,1000,20000]");
+	w.factory("nLb_Run2[17000,1000,22000]");
 
 	// w.factory("n1405_Run1[500,1,5000]");
 	// w.factory("n1405_Run2[500,1,5000]");
