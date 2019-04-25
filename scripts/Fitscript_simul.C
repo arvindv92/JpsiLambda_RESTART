@@ -1923,7 +1923,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	            "nBkg_Run2,nMiscLst_Run2,miscLstMean_Run2,"
 	            "miscLstSigma_Run2,eff_ratio2,nXib2,eff_ratio_1405_2,"
 	            "eff_ratio_1520_2,eff_ratio_1600_2,eff_ratio_chic1_2,"
-	            "c0_Run1,c1_Run1,c2_Run1");
+	            "c0_Run2,c1_Run2,c2_Run2");
 	// "tau_Run2");                                    // define set of nuisance parameters
 
 	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,alpha1_Run1,alpha2_Run1,nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1");// define set of nuisance parameters
