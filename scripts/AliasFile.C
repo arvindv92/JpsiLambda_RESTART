@@ -48,7 +48,7 @@ void AliasFile(Int_t run = 1, Int_t mcType = 1)
 	case 7:
 	{
 		folder = "Lst1520";
-		part = "lst152-";
+		part = "lst1520";
 		break;
 	}
 	case 8:
