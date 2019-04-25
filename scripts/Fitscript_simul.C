@@ -172,7 +172,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 	Int_t chic1flag      = 1;
 	Int_t xibflag        = 1;
 	Int_t sigmaflag      = 1;
-	Int_t Lst1405_rwtype = 2;
+	Int_t Lst1405_rwtype = 2;//0 is no RW, 1 is MV RW, 2 is BONN RW
 
 	// ************************Master Workspace**************************
 	RooWorkspace w("w");
@@ -381,26 +381,48 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 
 	//****Get J/psi Lst(1405) efficiencies and shape from MC*******
 	const char* Lst1405Path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/Lst1405";
+	const char* rwSuffix    = "";
+	const char* rwType      = "";
+	if(Lst1405_rwtype==0)
+	{
+		nGen_1405[0] = 3902198;
+		nGen_1405[1] = 3460130;
+		rwSuffix     = "";
+	}
+	else if(Lst1405_rwtype==1)//MV RW
+	{
+		nGen_1405[0] = 3890604;
+		nGen_1405[1] = 3449849;
+		rwSuffix     = "_MV";
+		rwType       = "MV";
+	}
+	else if(Lst1405_rwtype==1)//BONN RW
+	{
+		nGen_1405[0] = 3901944;
+		nGen_1405[1] = 3459901;
+		rwSuffix     = "_BONN";
+		rwType       = "BONN";
+	}
 
 	for(Int_t run = 1; run<=2; run++)
 	{
 		Int_t i = run-1;
-		TFile *mcFileIn_nonZero_1405 = Open(Form("%s/run%d/lst1405_cutoutks_LL_nonZeroTracks.root",
-		                                         Lst1405Path,run));
+		TFile *mcFileIn_nonZero_1405 = Open(Form("%s/run%d/lst1405%s_cutoutks_LL_nonZeroTracks.root",
+		                                         Lst1405Path,run,rwSuffix));
 		TTree *mcTreeIn_nonZero_1405 = (TTree*)mcFileIn_nonZero_1405->Get("MyTuple");
 
-		TFile *mcFileIn_Zero_1405    = Open(Form("%s/run%d/lst1405_cutoutks_LL_ZeroTracks.root",
-		                                         Lst1405Path,run));
+		TFile *mcFileIn_Zero_1405    = Open(Form("%s/run%d/lst1405%s_cutoutks_LL_ZeroTracks.root",
+		                                         Lst1405Path,run,rwSuffix));
 		TTree *mcTreeIn_Zero_1405    = (TTree*)mcFileIn_Zero_1405->Get("MyTuple");
 
 		mcTreeIn_nonZero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_LL_FinalBDT%d_iso%d_%s.root",
 		                                                Lst1405Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
 		mcTreeIn_Zero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_zeroTracksLL_FinalBDT%d.root",
 		                                             Lst1405Path,run,bdtConf_Zero[i]));
-		fstream genFile_1405;
-		genFile_1405.open((Form("../logs/mc/JpsiLambda/Lst1405/run%d/gen_log.txt",run)));
-
-		genFile_1405>>nGen_1405[i]; // Get number of generated events
+		// fstream genFile_1405;
+		// genFile_1405.open((Form("../logs/mc/JpsiLambda/Lst1405/run%d/gen_log.txt",run)));
+		//
+		// genFile_1405>>nGen_1405[i]; // Get number of generated events
 
 		//***** DONT HAVE GENERATOR EFFS FOR LST(1405) YET
 		// fstream genEffFile_1405;
@@ -414,8 +436,20 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 
 		//FOR NOW, EFF RATIO IS JUST RATIO OF RECO EFFS. ONCE I GET GENERATOR EFFS, I'LL PUT THEM IN
 
-		Int_t num_1405 = mcTreeIn_nonZero_1405->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
-		                 mcTreeIn_Zero_1405->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TM HERE
+		Int_t num_1405 = 0;
+		if(Lst1405_rwtype==0)
+		{
+			num_1405 = mcTreeIn_nonZero_1405->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
+			           mcTreeIn_Zero_1405->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));      //NOTE NO TM HERE
+		}
+		else
+		{
+			mcTreeIn_nonZero_1405->Draw(Form("%sweight>>hrw0",rwType),Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
+			mcTreeIn_Zero_1405->Draw(Form("%sweight>>hrw1",rwType),Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+			TH1D* hrw0 = (TH1D*)gDirectory->Get("hrw0");
+			TH1D* hrw1 = (TH1D*)gDirectory->Get("hrw1");
+			num_1405   = (hrw0->GetMean()*hrw0->GetEntries()) +(hrw1->GetMean()*hrw1->GetEntries());
+		}
 
 		eff_1405_rec[i]     = num_1405*1.0/nGen_1405[i]; // Calc. reco. eff.
 		eff_1405_rec_err[i] = sqrt(eff_1405_rec[i]*(1-eff_1405_rec[i])/nGen_1405[i]); //stat error on recon. eff.
@@ -475,7 +509,14 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Float_t bdtC
 		TTree *combTree_1405 = TTree::MergeTrees(list_1405);
 		combTree_1405->SetName("combTree_1405");
 
-		ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))));
+		if(Lst1405_rwtype!=0)
+		{
+			ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,Form("%sweight",rwType));
+		}
+		else
+		{
+			ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))));
+		}
 		ds_1405[i]->Print();
 
 		KEYS_1405[i] = new RooKeysPdf(Form("LST1405_Run%d",run),Form("LST1405_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1405[i]),RooKeysPdf::MirrorBoth,1);
