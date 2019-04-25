@@ -2,6 +2,12 @@
 #include "TTree.h"
 
 void AliasFile(Int_t run = 1, Int_t mcType = 1)
+//mcType = 1 for JpsiLambda MC
+//mcType = 2 for JpsiSigma MC
+//mcType = 6 for JpsiLst(1405) MC
+//mcType = 7 for JpsiLst(1520) MC
+//mcType = 8 for JpsiLst(1600) MC
+//mcType = 9 for chiC1 Lambda MC
 {
 	TFile *fileIn = nullptr, *fileOut = nullptr;
 	TTree *treeIn = nullptr, *treeOut = nullptr;
@@ -33,11 +39,35 @@ void AliasFile(Int_t run = 1, Int_t mcType = 1)
 		part = "jpsixi";
 		break;
 	}
+	case 6:
+	{
+		folder = "Lst1405";
+		part = "lst1405";
+		break;
 	}
-	fileIn = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/%s.root",folder,run,part),"READ");
+	case 7:
+	{
+		folder = "Lst1520";
+		part = "lst152-";
+		break;
+	}
+	case 8:
+	{
+		folder = "Lst1600";
+		part = "lst1600";
+		break;
+	}
+	case 9:
+	{
+		folder = "chiC1";
+		part = "chic1";
+		break;
+	}
+	}
+	fileIn = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",folder,run,part),"READ");
 	treeIn = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
 
-	if(mcType == 1||mcType == 2)
+	if(mcType != 3)
 	{
 		treeIn->SetAlias("Lb_PT","Lambda_b0_TRUEPT");
 		treeIn->SetAlias("Lb_P","sqrt(Lambda_b0_TRUEPT**2+Lambda_b0_TRUEP_Z**2)");
@@ -71,4 +101,6 @@ void AliasFile(Int_t run = 1, Int_t mcType = 1)
 
 	fileOut->Write();
 	fileOut->Close();
+
+	fileIn->Close();
 }

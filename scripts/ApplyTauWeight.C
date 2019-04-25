@@ -7,6 +7,10 @@ using namespace std;
 void ApplyTauWeight(Int_t run = 1, Int_t mcType = 0, Bool_t isGen = false)
 //mcType = 1 for JpsiLambda MC
 //mcType = 2 for JpsiSigma MC
+//mcType = 6 for JpsiLst(1405) MC
+//mcType = 7 for JpsiLst(1520) MC
+//mcType = 8 for JpsiLst(1600) MC
+//mcType = 9 for chiC1 Lambda MC
 //isGen = true when you are RW'ing Generator Info
 {
 	TFile *fileIn = nullptr, *fileOut = nullptr;
@@ -34,6 +38,30 @@ void ApplyTauWeight(Int_t run = 1, Int_t mcType = 0, Bool_t isGen = false)
 	{
 		folder = "JpsiSigma";
 		part = "jpsisigma";
+		break;
+	}
+	case 6:
+	{
+		folder = "Lst1405";
+		part = "lst1405";
+		break;
+	}
+	case 7:
+	{
+		folder = "Lst1520";
+		part = "lst152-";
+		break;
+	}
+	case 8:
+	{
+		folder = "Lst1600";
+		part = "lst1600";
+		break;
+	}
+	case 9:
+	{
+		folder = "chiC1";
+		part = "chic1";
 		break;
 	}
 	}
