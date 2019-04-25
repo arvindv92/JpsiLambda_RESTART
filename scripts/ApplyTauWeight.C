@@ -20,6 +20,7 @@ void ApplyTauWeight(Int_t run = 1, Int_t mcType = 0, Bool_t isGen = false)
 	Int_t nEntries = 0;
 	Float_t wt_tau = 0.0;
 
+	cout<<"********Processing Run "<<run<<" MC Type "<<mcType<<" isGen "<<isGen<<endl;
 	switch(mcType)
 	{
 	case 0:
@@ -49,7 +50,7 @@ void ApplyTauWeight(Int_t run = 1, Int_t mcType = 0, Bool_t isGen = false)
 	case 7:
 	{
 		folder = "Lst1520";
-		part = "lst152-";
+		part = "lst1520";
 		break;
 	}
 	case 8:
