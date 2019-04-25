@@ -1425,7 +1425,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	// w.factory("nMiscLst_Run2[2500,1,5000]");
 	w.factory("nMiscLst_Run2[2500,1,10000]");
 	w.factory(Form("nBkg_Run1[2000,1,%d]",nentries[0]));
-	w.factory(Form("nBkg_Run2[2000,1,%d]",nentries[1]));
+	w.factory(Form("nBkg_Run2[4000,1,%d]",nentries[1]));
 
 	//What should the limits on nXib be?
 	Double_t xibCentral_run1 = xibnorm_LL[0];
