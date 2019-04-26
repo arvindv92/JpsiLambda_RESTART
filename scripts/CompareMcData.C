@@ -93,12 +93,12 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 	// treeIn_mcgen = (TTree*)fileIn_mc->Get("MCTuple/MCDecayTree");
 	treeIn_mc = (TTree*)fileIn_mc->Get("Lb2JpsiLTree/MyTuple");
 	// treeIn_mc = (TTree*)fileIn_mc->Get("MyTuple");
-	treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/gbWeights_rec.root",folder,run));
+	// treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/gbWeights_rec.root",folder,run));
 	treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/gbWeights_pid_rec.root",folder,run));
 	treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/tauWeights_rec.root",folder,run));
 
 	treeIn_data->Draw(Form("%s>>dataHist(%d,%f,%f)",varName,nBins,low,high),"SW","goff");
-	treeIn_mc->Draw(Form("%s>>mcHist_rw(%d,%f,%f)",varName,nBins,low,high),"gb_wts*gb_wts_pid*wt_tau*(Lb_BKGCAT==0||Lb_BKGCAT==50)","goff");
+	treeIn_mc->Draw(Form("%s>>mcHist_rw(%d,%f,%f)",varName,nBins,low,high),"gb_wts_pid*wt_tau*(Lb_BKGCAT==0||Lb_BKGCAT==50)","goff");
 	treeIn_mc->Draw(Form("%s>>mcHist(%d,%f,%f)",varName,nBins,low,high),"(Lb_BKGCAT==0||Lb_BKGCAT==50)","goff");
 
 	// treeIn_mcgen->Draw(Form("%s>>genHist_rw(%d,%f,%f)",mcvarName,nBins,low,high),"","goff");
