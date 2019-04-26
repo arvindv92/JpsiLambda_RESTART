@@ -94,16 +94,22 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 	}
 
 	//Set up logging
-	if(isData && logFlag)
+	if(isData && logFlag && run == 1)
 	{
 		//gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/sanity_%d_log.txt",run,year));
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/Sanity_%d.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/Sanity_noPID.txt",
+		                             run),"w");
+	}
+	else if(isData && logFlag && run == 2)
+	{
+		//gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/sanity_%d_log.txt",run,year));
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/Sanity_%d_noPID.txt",
 		                             run,year),"w");
 	}
 	else if(!isData && logFlag)
 	{
 		//gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/%s/run%d/sanity_log.txt",folder,run));
-		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/Sanity.txt",
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/Sanity_noPID.txt",
 		                             folder,run),"w");
 	}
 	cout<<"******************************************"<<endl;
@@ -147,11 +153,11 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 		fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_triggered.root",folder,run,part));
 		treeIn = (TTree*)fileIn->Get("MyTuple");
 
-		fileOut_LL = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_sanity_LL.root",folder,run,part),"RECREATE");
+		fileOut_LL = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_sanity_LL_noPID.root",folder,run,part),"RECREATE");
 		treeOut_LL = (TTree*)treeIn->CloneTree(0);
 
-		fileOut_DD = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_sanity_DD.root",folder,run,part),"RECREATE");
-		treeOut_DD = (TTree*)treeIn->CloneTree(0);
+		// fileOut_DD = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_sanity_DD_noPID.root",folder,run,part),"RECREATE");
+		// treeOut_DD = (TTree*)treeIn->CloneTree(0);
 
 		treeIn->SetBranchAddress("Lb_BKGCAT",&Lb_BKGCAT);
 		treeIn->SetBranchAddress("p_MC_MOTHER_ID",&p_MOTHER_ID);
@@ -163,21 +169,38 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 	} // end MC block
 	else //Data
 	{
-		fileIn = TFile::Open(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_%d.root",run,year));
-		treeIn = (TTree*)fileIn->Get("MyTuple");
 
-		fileOut_LL = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_LL_%d.root",run,year),"RECREATE");
-		treeOut_LL = (TTree*)treeIn->CloneTree(0);
+		if(run == 1)
+		{
+			fileIn = TFile::Open(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered.root",run));
+			treeIn = (TTree*)fileIn->Get("MyTuple");
 
-		fileOut_DD = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_DD_%d.root",run,year),"RECREATE");
-		treeOut_DD = (TTree*)treeIn->CloneTree(0);
+			fileOut_LL = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_LL_noPID.root",run),"RECREATE");
+			treeOut_LL = (TTree*)treeIn->CloneTree(0);
+
+			// fileOut_DD = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_DD_noPID.root",run),"RECREATE");
+			// treeOut_DD = (TTree*)treeIn->CloneTree(0);
+		}
+		else if(run == 2)
+		{
+			fileIn = TFile::Open(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_%d.root",run,year));
+			treeIn = (TTree*)fileIn->Get("MyTuple");
+
+			fileOut_LL = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_LL_%d_noPID.root",run,year),"RECREATE");
+			treeOut_LL = (TTree*)treeIn->CloneTree(0);
+
+			// fileOut_DD = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_DD_%d_noPID.root",run,year),"RECREATE");
+			// treeOut_DD = (TTree*)treeIn->CloneTree(0);
+		}
+
+
 	}//end Data block
 	 //end setup of input, output
 
 	cout<<"******************************************"<<endl;
 	cout<<"Input file = "<<fileIn->GetName()<<endl;
 	cout<<"LL Output file = "<<fileOut_LL->GetName()<<endl;
-	cout<<"DD Output file = "<<fileOut_DD->GetName()<<endl;
+	// cout<<"DD Output file = "<<fileOut_DD->GetName()<<endl;
 	cout<<"******************************************"<<endl;
 
 	entries_init = treeIn->GetEntries();
@@ -230,7 +253,7 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 
 	lifetimeCut.Print();
 	dtfCut.Print();
-	pidCut.Print();
+	// pidCut.Print();
 	accCut.Print();
 	//if(!isData) tmCut.Print();
 
@@ -251,14 +274,14 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 					// {
 					// if( (isData == 1) || (isData == 0 && abs(p_MOTHER_ID) == 3122 && abs(pi_MOTHER_ID) == 3122 && ((mcType == 1 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 5122) || (mcType == 2 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 3212 && abs(L_GD_MOTHER_ID) == 5122) || (mcType == 3 && abs(Jpsi_MOTHER_ID) == 5132 && abs(L_MOTHER_ID) == 3312 && abs(L_GD_MOTHER_ID) == 5122))))
 					// {
-					if(p_TRACK_Type == 3)
-					{
-						treeOut_LL->Fill();
-					}
-					else
-					{
-						treeOut_DD->Fill();
-					}
+					// if(p_TRACK_Type == 3)
+					// {
+					treeOut_LL->Fill();
+					// }
+					// else
+					// {
+					//      treeOut_DD->Fill();
+					// }
 					// }
 					// }
 				}
@@ -267,9 +290,9 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 	}
 
 	entries_final_LL = treeOut_LL->GetEntries();
-	entries_final_DD = treeOut_DD->GetEntries();
+	// entries_final_DD = treeOut_DD->GetEntries();
 	cout<<"Outgoing LL entries = "<<entries_final_LL<<endl;
-	cout<<"Outgoing DD entries = "<<entries_final_DD<<endl;
+	// cout<<"Outgoing DD entries = "<<entries_final_DD<<endl;
 
 	if(isData==0)//Efficiency calculation for MC.
 	{
@@ -278,14 +301,14 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 			eff_excl_LL = (Float_t)entries_final_LL*100/entries_init;
 			eff_excl_LL_err = sqrt(eff_excl_LL*(100.0-eff_excl_LL)/entries_init);
 
-			eff_excl_DD = (Float_t)entries_final_DD*100/entries_init;
-			eff_excl_DD_err = sqrt(eff_excl_DD*(100.0-eff_excl_DD)/entries_init);
+			// eff_excl_DD = (Float_t)entries_final_DD*100/entries_init;
+			// eff_excl_DD_err = sqrt(eff_excl_DD*(100.0-eff_excl_DD)/entries_init);
 
 			cout<<"******************************************"<<endl;
 			cout<<"LL Sanity cuts made with exclusive efficiency = "<<
 			        eff_excl_LL<<"% +/- " <<eff_excl_LL_err<<" %"<<endl;
-			cout<<"DD Sanity cuts made with exclusive efficiency = "<<
-			        eff_excl_DD<<"% +/- " <<eff_excl_DD_err<<" %"<<endl;
+			// cout<<"DD Sanity cuts made with exclusive efficiency = "<<
+			//         eff_excl_DD<<"% +/- " <<eff_excl_DD_err<<" %"<<endl;
 			cout<<"******************************************"<<endl;
 		}
 
@@ -298,14 +321,14 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 				eff_incl_LL = (Float_t)entries_final_LL*100/entries_gen;
 				eff_incl_LL_err = sqrt(eff_incl_LL*(100.0-eff_incl_LL)/entries_gen);
 
-				eff_incl_DD = (Float_t)entries_final_DD*100/entries_gen;
-				eff_incl_DD_err = sqrt(eff_incl_DD*(100.0-eff_incl_DD)/entries_gen);
+				// eff_incl_DD = (Float_t)entries_final_DD*100/entries_gen;
+				// eff_incl_DD_err = sqrt(eff_incl_DD*(100.0-eff_incl_DD)/entries_gen);
 
 				cout<<"******************************************"<<endl;
 				cout<<"LL Sanity cuts made with inclusive efficiency = "<<
 				        eff_incl_LL<<"% +/- " <<eff_incl_LL_err<<" %"<<endl;
-				cout<<"DD Sanity cuts made with inclusive efficiency = "<<
-				        eff_incl_DD<<"% +/- " <<eff_incl_DD_err<<" %"<<endl;
+				// cout<<"DD Sanity cuts made with inclusive efficiency = "<<
+				//         eff_incl_DD<<"% +/- " <<eff_incl_DD_err<<" %"<<endl;
 				cout<<"******************************************"<<endl;
 			}
 		}
@@ -314,8 +337,8 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 	fileOut_LL->Write();
 	fileOut_LL->Close();
 
-	fileOut_DD->Write();
-	fileOut_DD->Close();
+	// fileOut_DD->Write();
+	// fileOut_DD->Close();
 
 	sw.Stop();
 	cout << "==> Sanity is done! Mazel Tov!: "; sw.Print();

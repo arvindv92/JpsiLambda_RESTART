@@ -89,14 +89,19 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 	}
 	}
 	//Set up logging
-	if(isData && logFlag)
+	if(isData && logFlag && run == 1)
 	{
 		//		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/CutOutKs_%d.txt",run,year),"w");
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/CutOutKs.txt",run),"w");
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/CutOutKs_noPID.txt",run),"w");
+	}
+	else if(isData && logFlag && run == 2)
+	{
+		//		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/CutOutKs_%d.txt",run,year),"w");
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/CutOutKs_%d_noPID.txt",run,year),"w");
 	}
 	else if(!isData && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/CutOutKs.txt",folder,run),"w");
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/CutOutKs_noPID.txt",folder,run),"w");
 	}
 	cout<<"******************************************"<<endl;
 	cout<<"==> Starting CutOutKs: "<<endl;
@@ -131,8 +136,8 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 	{
 		logFolder        = Form("logs/mc/JpsiLambda/%s/run%d",folder,run);
 		rootFolder       = Form("rootFiles/mcFiles/JpsiLambda/%s/run%d",folder,run);
-		fileName_nonZero = Form("%s_cutoutks_%s_nonZeroTracks.root",part,type);
-		fileName_Zero    = Form("%s_cutoutks_%s_ZeroTracks.root",part,type);
+		fileName_nonZero = Form("%s_cutoutks_%s_nonZeroTracks_noPID.root",part,type);
+		fileName_Zero    = Form("%s_cutoutks_%s_ZeroTracks_noPID.root",part,type);
 
 		if(!gSystem->AccessPathName((Form("%s/gen_log.txt",logFolder))))
 		{
@@ -141,7 +146,7 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 		}
 		else cout<<"*****GenFile not accessible!!*****"<<endl;
 
-		fileIn  = TFile::Open(Form("%s/%s_sanity_%s.root",rootFolder,part,type),"READ");
+		fileIn  = TFile::Open(Form("%s/%s_sanity_%s_noPID.root",rootFolder,part,type),"READ");
 		treeIn  = (TTree*)fileIn->Get("MyTuple");
 
 		fileOut_nonZero = new TFile(Form("%s/%s",rootFolder,fileName_nonZero),"RECREATE");
@@ -152,15 +157,23 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 	else   // Data
 	{
 		rootFolder       = Form("rootFiles/dataFiles/JpsiLambda/run%d",run);
-		//		fileName_nonZero = Form("jpsilambda_cutoutks_%s_%d_nonZeroTracks.root",type,year);
-		//		fileName_Zero    = Form("jpsilambda_cutoutks_%s_%d_ZeroTracks.root",type,year);
 
-		fileName_nonZero = Form("jpsilambda_cutoutks_%s_nonZeroTracks.root",type);
-		fileName_Zero    = Form("jpsilambda_cutoutks_%s_ZeroTracks.root",type);
+		if(run == 1)
+		{
+			fileIn  = TFile::Open(Form("%s/jpsilambda_sanity_%s_noPID.root",rootFolder,type),"READ");
+			treeIn  = (TTree*)fileIn->Get("MyTuple");
 
-		//		fileIn  = TFile::Open(Form("%s/jpsilambda_sanity_%s_%d.root",rootFolder,type,year),"READ");
-		fileIn  = TFile::Open(Form("%s/jpsilambda_sanity_%s.root",rootFolder,type),"READ");
-		treeIn  = (TTree*)fileIn->Get("MyTuple");
+			fileName_nonZero = Form("jpsilambda_cutoutks_%s_nonZeroTracks_noPID.root",type);
+			fileName_Zero    = Form("jpsilambda_cutoutks_%s_ZeroTracks_noPID.root",type);
+		}
+		else if(run == 2)
+		{
+			fileIn  = TFile::Open(Form("%s/jpsilambda_sanity_%s_%d_noPID.root",rootFolder,type,year),"READ");
+			treeIn  = (TTree*)fileIn->Get("MyTuple");
+
+			fileName_nonZero = Form("jpsilambda_cutoutks_%s_%d_nonZeroTracks_noPID.root",type,year);
+			fileName_Zero    = Form("jpsilambda_cutoutks_%s_%d_ZeroTracks_noPID.root",type,year);
+		}
 
 		fileOut_nonZero = new TFile(Form("%s/%s",rootFolder,fileName_nonZero),"RECREATE");
 		treeOut_nonZero = (TTree*)treeIn->CloneTree(0);
@@ -173,10 +186,20 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 	cout<<"******************************************"<<endl;
 
-	cout<<"******************************************"<<endl;
-	cout<<"Processing Run "<<run<<" YEAR "<<year<<" "<<type
-	    <<((isData) ? (" Data") : (" MC type "))<<mcType<<endl;
-	cout<<"******************************************"<<endl;
+	if(run == 1)
+	{
+		cout<<"******************************************"<<endl;
+		cout<<"Processing Run "<<run<<" "<<type
+		    <<((isData) ? (" Data") : (" MC type "))<<mcType<<endl;
+		cout<<"******************************************"<<endl;
+	}
+	else if(run == 2)
+	{
+		cout<<"******************************************"<<endl;
+		cout<<"Processing Run "<<run<<" YEAR "<<year<<" "<<type
+		    <<((isData) ? (" Data") : (" MC type "))<<mcType<<endl;
+		cout<<"******************************************"<<endl;
+	}
 
 	cout<<"******************************************"<<endl;
 	cout<<"Input file = "<<fileIn->GetName()<<endl;
@@ -193,18 +216,18 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 
 	treeIn->SetBranchAddress("p_PIDp",&p_PIDp);
 
-	if(trackType == 3)
-	{
-		L_dmCut = "L_dm < 7.5";//These cuts are not optimized. RC might pain.
-		pidCut  = "p_PIDp > 10";
-		cout<<"Making LL file"<<endl;
-	}
-	else if(trackType == 5)
-	{
-		L_dmCut = "L_dm < 10";
-		pidCut  = "p_PIDp > 15";
-		cout<<"Making DD file"<<endl;
-	}
+	// if(trackType == 3)
+	// {
+	L_dmCut = "L_dm < 7.5";        //These cuts are not optimized. RC might pain.
+	pidCut  = "p_PIDp > 10";
+	cout<<"Making LL file"<<endl;
+	// }
+	// else if(trackType == 5)
+	// {
+	//      L_dmCut = "L_dm < 10";
+	//      pidCut  = "p_PIDp > 15";
+	//      cout<<"Making DD file"<<endl;
+	// }
 
 	cout<<"I am making the following cutoutks cuts only on events within "
 	    <<"480-520 MeV in Lb_DTF_L_WMpipi_JpsiConstr. "
@@ -224,34 +247,34 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 		}
 		else
 		{
-			if(trackType == 3)
+			// if(trackType == 3)
+			// {
+			if (WMpipi > 480 && WMpipi < 520)
 			{
-				if (WMpipi > 480 && WMpipi < 520)
+				if (p_PIDp > 10)
 				{
-					if (p_PIDp > 10)
+					if(L_dm < 7.5)
 					{
-						if(L_dm < 7.5)
-						{
-							if(nTracks > 0) treeOut_nonZero->Fill();
-							else if(nTracks == 0) treeOut_Zero->Fill();
-						}
+						if(nTracks > 0) treeOut_nonZero->Fill();
+						else if(nTracks == 0) treeOut_Zero->Fill();
 					}
 				}
 			}
-			if(trackType == 5)
-			{
-				if (WMpipi > 480 && WMpipi < 520)
-				{
-					if (p_PIDp > 15)
-					{
-						if(L_dm < 10)
-						{
-							if(nTracks > 0) treeOut_nonZero->Fill();
-							if(nTracks == 0) treeOut_Zero->Fill();
-						}
-					}
-				}
-			}
+			// }
+			// if(trackType == 5)
+			// {
+			//      if (WMpipi > 480 && WMpipi < 520)
+			//      {
+			//              if (p_PIDp > 15)
+			//              {
+			//                      if(L_dm < 10)
+			//                      {
+			//                              if(nTracks > 0) treeOut_nonZero->Fill();
+			//                              if(nTracks == 0) treeOut_Zero->Fill();
+			//                      }
+			//              }
+			//      }
+			// }
 		}
 	}
 	entries_final_nonZero = treeOut_nonZero->GetEntries();
