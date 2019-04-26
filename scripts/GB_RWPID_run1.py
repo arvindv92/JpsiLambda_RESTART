@@ -17,9 +17,9 @@ mcPath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/'
 dataPath = '../rootFiles/dataFiles/JpsiLambda/run1/sWeightSanity/'
 
 original = root_numpy.root2array(mcPath + 'jpsilambda_withsw_stage2.root',
-                                 'MyTuple', branches=columns,
+                                 'Lb2JpsiLTree/MyTuple', branches=columns,
                                  selection='(Lb_BKGCAT==0||Lb_BKGCAT==50)')
-original_noTM = root_numpy.root2array(mcPath + 'jpsilambda_withsw.root',
+original_noTM = root_numpy.root2array(mcPath + 'jpsilambda_withsw_stage2.root',
                                       'Lb2JpsiLTree/MyTuple', branches=columns)
 target = root_numpy.root2array(dataPath + 'jpsilambda_LL_sanity_withsw_noPID.root',
                                'MyTuple', branches=columns)
