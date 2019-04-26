@@ -66,7 +66,7 @@ void ApplyTauWeight(Int_t run = 1, Int_t mcType = 0, Bool_t isGen = false)
 		break;
 	}
 	}
-	fileIn = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/%s.root",folder,run,part));
+	fileIn = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",folder,run,part));
 
 	if(!isGen)
 	{
