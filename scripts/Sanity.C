@@ -15,6 +15,7 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
    mcType = 4 for Bu_JpsiX, 5 for Bd_JpsiX
  */
 //***MODIFIED TM CUTS REMOVED. I HATE TM*******
+//***MODIFIED REMOVED PID CUTS FOR TESTING*****
 /*
    NB: BKGCAT applies to MC, but not data. Read  Steve's analysis and think about exactly what TM condition is to be applied
    Lb_DTF_CTAU_L -> Lb_TAU
@@ -246,20 +247,20 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 			{
 				if((Lb_ConsLb_chi2/Lb_ConsLb_nDOF) > 0 && (Lb_ConsLb_chi2/Lb_ConsLb_nDOF) < 50)// DTF chi2 cut, universal
 				{
-					if((run == 1 && pi_PIDp != 0 && pi_PIDp != -1000 && pi_PIDK != 0 && p_PIDp !=0 && p_PIDp!= -1000 && p_PIDK !=0)|| (run == 2 && p_PIDp != -1000 && pi_PIDp != -1000))
+					// if((run == 1 && pi_PIDp != 0 && pi_PIDp != -1000 && pi_PIDK != 0 && p_PIDp !=0 && p_PIDp!= -1000 && p_PIDK !=0)|| (run == 2 && p_PIDp != -1000 && pi_PIDp != -1000))
+					// {
+					// if( (isData == 1) || (isData == 0 && abs(p_MOTHER_ID) == 3122 && abs(pi_MOTHER_ID) == 3122 && ((mcType == 1 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 5122) || (mcType == 2 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 3212 && abs(L_GD_MOTHER_ID) == 5122) || (mcType == 3 && abs(Jpsi_MOTHER_ID) == 5132 && abs(L_MOTHER_ID) == 3312 && abs(L_GD_MOTHER_ID) == 5122))))
+					// {
+					if(p_TRACK_Type == 3)
 					{
-						// if( (isData == 1) || (isData == 0 && abs(p_MOTHER_ID) == 3122 && abs(pi_MOTHER_ID) == 3122 && ((mcType == 1 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 5122) || (mcType == 2 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 3212 && abs(L_GD_MOTHER_ID) == 5122) || (mcType == 3 && abs(Jpsi_MOTHER_ID) == 5132 && abs(L_MOTHER_ID) == 3312 && abs(L_GD_MOTHER_ID) == 5122))))
-						// {
-						if(p_TRACK_Type == 3)
-						{
-							treeOut_LL->Fill();
-						}
-						else
-						{
-							treeOut_DD->Fill();
-						}
-						// }
+						treeOut_LL->Fill();
 					}
+					else
+					{
+						treeOut_DD->Fill();
+					}
+					// }
+					// }
 				}
 			}
 		}
