@@ -20,7 +20,7 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0)
 	Float_t highArray[25]        = {20000,300000,6.0,20000,300000,6.5,15000,200000,5.5,10000,100000,5.5,3000,50000,5.5,1.0,1.0,1.0,1.0,150,40,1.0,0.3,1000,1000 };
 	Float_t nBinArray[25]        = {50,50,20,50,50,20,50,50,20,50,50,20,50,50,20,15,15,50,50,50,50,20,40,25,25 };
 
-	for(Int_t i=0; i<21; i++)
+	for(Int_t i=17; i<21; i++)
 	{
 		cout<<"********"<<endl;
 		cout<<"VARNAME = "<<varNameArray[i]<<endl;
@@ -97,8 +97,8 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 	treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/tauWeights_rec.root",folder,run));
 
 	treeIn_data->Draw(Form("%s>>dataHist(%d,%f,%f)",varName,nBins,low,high),"SW","goff");
-	treeIn_mc->Draw(Form("%s>>mcHist_rw(%d,%f,%f)",varName,nBins,low,high),"gb_wts*wt_tau*(Lb_BKGCAT==0||Lb_BKGCAT==50)","goff");
-	treeIn_mc->Draw(Form("%s>>mcHist(%d,%f,%f)",varName,nBins,low,high),"(Lb_BKGCAT==0||Lb_BKGCAT==50)","goff");
+	treeIn_mc->Draw(Form("%s_corr>>mcHist_rw(%d,%f,%f)",varName,nBins,low,high),"gb_wts*wt_tau*(Lb_BKGCAT==0||Lb_BKGCAT==50)","goff");
+	treeIn_mc->Draw(Form("%s_corr>>mcHist(%d,%f,%f)",varName,nBins,low,high),"(Lb_BKGCAT==0||Lb_BKGCAT==50)","goff");
 
 	// treeIn_mcgen->Draw(Form("%s>>genHist_rw(%d,%f,%f)",mcvarName,nBins,low,high),"","goff");
 	// treeIn_mcgen->Draw(Form("%s>>genHist(%d,%f,%f)",mcvarName,nBins,low,high),"","goff");
