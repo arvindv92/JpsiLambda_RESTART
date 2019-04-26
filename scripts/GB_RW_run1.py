@@ -30,7 +30,7 @@ from sklearn.metrics import roc_auc_score
 
 columns = ['Lb_P', 'Lb_PT', 'Lb_ETA', 'Jpsi_P', 'Jpsi_PT', 'Jpsi_ETA', 'L_P',
            'L_PT', 'L_ETA', 'p_P', 'p_PT', 'p_ETA', 'pi_P', 'pi_PT', 'pi_ETA',
-           'SW']
+           'p_ProbNNp', 'pi_ProbNNpi', 'p_PIDp', 'SW']
 #           'Jpsi_P/Lb_P','p_P/L_P','SW']
 
 mcPath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/'
@@ -41,7 +41,7 @@ original = root_numpy.root2array(mcPath + 'jpsilambda_withsw.root',
                                  selection='(Lb_BKGCAT==0||Lb_BKGCAT==50)')
 original_noTM = root_numpy.root2array(mcPath + 'jpsilambda_withsw.root',
                                       'Lb2JpsiLTree/MyTuple', branches=columns)
-target = root_numpy.root2array(dataPath + 'jpsilambda_LL_sanity_withsw_new.root',
+target = root_numpy.root2array(dataPath + 'jpsilambda_LL_sanity_withsw_noPID.root',
                                'MyTuple', branches=columns)
 
 original = pandas.DataFrame(original, dtype=float)
@@ -101,7 +101,7 @@ def draw_distributions(myoriginal, mytarget, new_original_weights, targetwts):
         # print('KS over ', column, ' = ', myks)
     plt.draw()
     plt.figure(figsize=[15, 7])
-    for id, column in enumerate(columns[12:15], 1):
+    for id, column in enumerate(columns[12:18], 1):
         xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
                                 [0.01, 99.99])
         plt.subplot(2, 3, id)
@@ -193,7 +193,7 @@ gb_weights = reweighter.predict_weights(original.iloc[:, :-1])
 
 gb_weights_noTM = reweighter.predict_weights(original_noTM.iloc[:, :-1])
 
-gb_weights_noTM.dtype = [('gb_wts', 'float64')]
+gb_weights_noTM.dtype = [('gb_wts_pid', 'float64')]
 # validate reweighting rule on the test part comparing 1d projections
 # print 'After GB reweighting on test sample'
 # draw_distributions(original_test.iloc[:, :-1], target_test.iloc[:, :-1],
@@ -203,11 +203,11 @@ avgks_rw = draw_distributions(original.iloc[:, :-1], target.iloc[:, :-1],
                               gb_weights, target_weights)
 
 root_numpy.array2root(gb_weights_noTM,
-                      mcPath + 'jpsilambda_weighted.root',
+                      mcPath + 'jpsilambda_weighted_pid.root',
                       treename='MyTuple', mode='recreate')
 
 #*******Exporting RW formula for re-use********
-with open(mcPath + 'gb_wts.pkl', 'w') as f:
+with open(mcPath + 'gb_wts_pid.pkl', 'w') as f:
     pickle.dump(reweighter, f)
 #**********************************************
 
