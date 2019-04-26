@@ -29,10 +29,10 @@ void MASTER()
 	// gROOT->ProcessLine(".L Sanity.C+");
 	// gROOT->ProcessLine(".L CutOutKs.C+");
 	gROOT->ProcessLine(".L DoSWeight.C+");
-	gROOT->ProcessLine(".L TrainIsolation.C+");
-	gROOT->ProcessLine(".L ApplyIsolation.C+");
-	gROOT->ProcessLine(".L TrainFinalBDT.C+");
-	gROOT->ProcessLine(".L ApplyFinalBDT.C+");
+	// gROOT->ProcessLine(".L TrainIsolation.C+");
+	// gROOT->ProcessLine(".L ApplyIsolation.C+");
+	// gROOT->ProcessLine(".L TrainFinalBDT.C+");
+	// gROOT->ProcessLine(".L ApplyFinalBDT.C+");
 	// gROOT->ProcessLine(".L OptimizeFinalBDT.C+");
 	//  gROOT->ProcessLine(".L CutFinalBDT.C+");
 
@@ -41,10 +41,10 @@ void MASTER()
 	// gSystem->Load("Sanity_C.so");
 	// gSystem->Load("CutOutKs_C.so");
 	gSystem->Load("DoSWeight_C.so");
-	gSystem->Load("TrainIsolation_C.so");
-	gSystem->Load("ApplyIsolation_C.so");
-	gSystem->Load("TrainFinalBDT_C.so");
-	gSystem->Load("ApplyFinalBDT_C.so");
+	// gSystem->Load("TrainIsolation_C.so");
+	// gSystem->Load("ApplyIsolation_C.so");
+	// gSystem->Load("TrainFinalBDT_C.so");
+	// gSystem->Load("ApplyFinalBDT_C.so");
 	// gSystem->Load("OptimizeFinalBDT_C.so");
 	//  gSystem->Load("CutFinalBDT_C.so");
 
