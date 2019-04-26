@@ -14,7 +14,7 @@ using namespace RooStats;
 using namespace std;
 
 void AddModel(RooWorkspace *ws = nullptr, Int_t lowRange = 5200,
-              Int_t highRange = 6000, Int_t nEntries = 0);
+              Int_t highRange = 6000, Int_t nEntries = 0, Int_t run = 1);
 
 void AddData(RooWorkspace *ws = nullptr, Int_t run = 1,
              TTree *treeIn = nullptr);
@@ -46,7 +46,7 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 
 	if(logFlag)//Redirect output to log file
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/sPlot_Sanity_%s_new_log.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/sPlot_Sanity_%s_noPID_log.txt",
 		                             run, type),"w");
 	}
 	cout<<"********************************"<<endl;
@@ -69,8 +69,8 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 
 	rootFolder    = Form("rootFiles/dataFiles/JpsiLambda/run%d", run);
 
-	inFileName    = Form("%s/jpsilambda_sanity_%s.root", rootFolder, type);
-	outFileName   = Form("%s/sWeightSanity/jpsilambda_%s_sanity_withsw_new.root", rootFolder, type);
+	inFileName    = Form("%s/jpsilambda_sanity_%s_noPID.root", rootFolder, type);
+	outFileName   = Form("%s/sWeightSanity/jpsilambda_%s_sanity_withsw_noPID.root", rootFolder, type);
 	// trainFileName = Form("%s/jpsilambda_%s_forIsoTraining.root", rootFolder, type);
 
 	fileIn = TFile::Open(inFileName,"READ");
@@ -134,7 +134,7 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 
 	// add the signal and background models to the workspace.
 	// Inside this function you will find a discription the model.
-	AddModel(wSpace, lowRange, highRange, entries_massWindow);
+	AddModel(wSpace, lowRange, highRange, entries_massWindow, run);
 
 	// add data to the workspace
 	AddData(wSpace, run, treeIn);
@@ -167,7 +167,7 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 
 	return myChi2;
 }
-void AddModel(RooWorkspace *ws, Int_t lowRange, Int_t highRange, Int_t nEntries)
+void AddModel(RooWorkspace *ws, Int_t lowRange, Int_t highRange, Int_t nEntries, Int_t run)
 {
 	cout<<"Starting AddModel()"<<endl;
 
@@ -207,8 +207,11 @@ void AddModel(RooWorkspace *ws, Int_t lowRange, Int_t highRange, Int_t nEntries)
 	RooExponential bkg("bkg","Exponential Bkg",Lb_Mass,tau);
 
 	// COMBINED MODEL	cout << "Making full model" << endl;
+	Int_t init_sigval = 0;
+	if(run == 1) init_sigval = 7000;
+	else if(run == 2) init_sigval = 27000;
 
-	RooRealVar sigYield("sigYield","fitted yield for sig",5000,0, 30000);
+	RooRealVar sigYield("sigYield","fitted yield for sig",init_sigval,0, 35000);
 	RooRealVar bkgYield("bkgYield","fitted yield for bkg",(nEntries/2),0, nEntries);
 
 	RooAddPdf model("model","signal+background models",
@@ -348,7 +351,7 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	fitCanvas->cd();
 
 	fitCanvas->Update();
-	fitCanvas->SaveAs(Form("plots/fit_sanity_run%d%s.pdf",run,type));
+	fitCanvas->SaveAs(Form("plots/fit_sanity_run%d%s_noPID.pdf",run,type));
 
 	cout<<"Pull Mean Y = "<<hpull->GetMean(2)<<endl;
 	cout<<"Pull RMS  Y = "<<hpull->GetRMS(2)<<endl;
@@ -420,7 +423,7 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	data->plotOn(frame_sigsw);
 	frame_sigsw->Draw();
 	sWeightCanvas->Update();
-	sWeightCanvas->SaveAs(Form("plots/fit_sanity_run%d%s_sWeights.pdf",run,type));
+	sWeightCanvas->SaveAs(Form("plots/fit_sanity_run%d%s_sWeights_noPID.pdf",run,type));
 
 	// TCanvas *sWeightVsMass = new TCanvas();
 	// RooPlot* frame_sigsw_x = Lb_Mass->frame();
@@ -454,7 +457,7 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	frame2_2->Draw();
 
 	sWeightMass->Update();
-	sWeightMass->SaveAs(Form("plots/fit_run%d%s_sWeightedMass.pdf",run,type));
+	sWeightMass->SaveAs(Form("plots/fit_run%d%s_sWeightedMass_noPID.pdf",run,type));
 
 	Int_t dsentries = data->numEntries();
 	cout<<"No. of entries in dataset = "<<dsentries<<endl;
