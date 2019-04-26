@@ -91,8 +91,8 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 	// fileIn_mc   = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",folder,run,part),"READ");
 
 	// treeIn_mcgen = (TTree*)fileIn_mc->Get("MCTuple/MCDecayTree");
-	// treeIn_mc = (TTree*)fileIn_mc->Get("Lb2JpsiLTree/MyTuple");
-	treeIn_mc = (TTree*)fileIn_mc->Get("MyTuple");
+	treeIn_mc = (TTree*)fileIn_mc->Get("Lb2JpsiLTree/MyTuple");
+	// treeIn_mc = (TTree*)fileIn_mc->Get("MyTuple");
 	treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/gbWeights_rec.root",folder,run));
 	treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/gbWeights_pid_rec.root",folder,run));
 	treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/tauWeights_rec.root",folder,run));
