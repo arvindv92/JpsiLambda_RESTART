@@ -34,7 +34,7 @@ void TrainIsolation(Int_t run, Int_t trackType,
 
 	if(logFlag) //set up logging
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainIsolation_%s_%s.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainIsolation_%s_%s_noPID.txt",
 		                             run,type,isoVersion),"w");
 	}
 	cout<<"*****************************"<<endl;
@@ -54,11 +54,11 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	TMVA::Tools::Instance(); // This loads the library
 
 	outFileName = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
-	                   "TMVAtraining/iso/TMVA300-isok%s_data_%s.root",
+	                   "TMVAtraining/iso/TMVA300-isok%s_data_%s_noPID.root",
 	                   run,type,isoVersion);
 	outputFile  = TFile::Open(outFileName, "RECREATE");
 
-	factory     = new TMVA::Factory(Form("TMVAClassification300-isok%s_dataRun%d_%s",
+	factory     = new TMVA::Factory(Form("TMVAClassification300-isok%s_dataRun%d_%s_noPID",
 	                                     type,run,isoVersion), outputFile,
 	                                "!V:!Silent:Color:!DrawProgressBar:"
 	                                "AnalysisType=Classification" );
@@ -94,7 +94,7 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	// }
 
 	fname_sig = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
-	                 "jpsilambda_%s_forIsoTraining.root",run,type);
+	                 "jpsilambda_%s_forIsoTraining_noPID.root",run,type);
 	input_sig = TFile::Open(fname_sig);
 	if (!input_sig)
 	{

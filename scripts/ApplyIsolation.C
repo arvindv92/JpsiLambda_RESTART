@@ -103,12 +103,12 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 
 	if(!isData && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/ApplyIsolation_%s_%s_conf%d.txt",
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/ApplyIsolation_%s_%s_conf%d_noPID.txt",
 		                             folder,run,type,isoVersion,isoConf),"w");
 	}
 	if(isData && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/ApplyIsolation_%s_%s_conf%d.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/ApplyIsolation_%s_%s_conf%d_noPID.txt",
 		                             run,type,isoVersion,isoConf),"a");
 	}
 	cout<<"******************************************"<<endl;
@@ -125,9 +125,9 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 
 	Int_t entries_init     = 0, nTracks        = 0;
 	Float_t PT[Max]        = {0.}, IPCHI2[Max] = {0.}, VCHI2DOF[Max] = {0.};
-	Float_t MINIPCHI2[Max] = {0.}, FD[Max]     = {0.}, FDCHI2[Max] = {0.};
+	Float_t MINIPCHI2[Max] = {0.};
 	Float_t ipChi2         = 0., vChi2Dof      = 0., log_minIpChi2 = 0.;
-	Float_t log_PT         = 0., log_FD        = 0., log_fdChi2 = 0.;
+	Float_t log_PT         = 0.;
 	Double_t BDTk[Max]     = {0.}, BDTkMin     = 1.1;
 
 	const char *rootFolder  = "";
@@ -140,9 +140,9 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	{
 		rootFolder = Form("rootFiles/mcFiles/JpsiLambda/%s/run%d",folder,run);
 
-		fileIn  = TFile::Open(Form("%s/%s_cutoutks_%s_nonZeroTracks.root",
+		fileIn  = TFile::Open(Form("%s/%s_cutoutks_%s_nonZeroTracks_noPID.root",
 		                           rootFolder,part,type));
-		fileOut = new TFile(Form("%s/%s_%s_iso%d_%s.root",
+		fileOut = new TFile(Form("%s/%s_%s_iso%d_%s_noPID.root",
 		                         rootFolder,part,type,isoConf,isoVersion),"RECREATE");
 	}//end MC block
 	else // Data
@@ -151,16 +151,16 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 
 		if(flag == 1)
 		{
-			fileIn  = TFile::Open(Form("%s/jpsilambda_cutoutks_%s_nonZeroTracks.root",
+			fileIn  = TFile::Open(Form("%s/jpsilambda_cutoutks_%s_nonZeroTracks_noPID.root",
 			                           rootFolder,type));
-			fileOut = new TFile(Form("%s/jpsilambda_%s_iso%d_%s.root",
+			fileOut = new TFile(Form("%s/jpsilambda_%s_iso%d_%s_noPID.root",
 			                         rootFolder,type,isoConf,isoVersion),"RECREATE");
 		}
 		else if(flag == 2)
 		{
-			fileIn  = TFile::Open(Form("%s/jpsilambda_%s_withsw_nonZeroTracks.root",
+			fileIn  = TFile::Open(Form("%s/jpsilambda_%s_withsw_nonZeroTracks_noPID.root",
 			                           rootFolder,type));
-			fileOut = new TFile(Form("%s/jpsilambda_%ssig_iso%d_%s.root",
+			fileOut = new TFile(Form("%s/jpsilambda_%ssig_iso%d_%s_noPID.root",
 			                         rootFolder,type,isoConf,isoVersion),"RECREATE");
 		}
 	}
@@ -200,17 +200,6 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	{
 		reader->AddVariable("log_PT := log10(PT)", &log_PT);
 	}
-	// else if(strncmp(isoVersion,"v2",2) == 0)
-	// {
-	//      reader->AddVariable("log_FD := log10(FD)", &log_FD);
-	//      reader->AddVariable("log_fdChi2 := log10(FDCHI2)", &log_fdChi2);
-	// }
-	// else if(strncmp(isoVersion,"v3",2) == 0)
-	// {
-	//      reader->AddVariable("log_PT := log10(PT)", &log_PT);
-	//      reader->AddVariable("log_FD := log10(FD)", &log_FD);
-	//      reader->AddVariable("log_fdChi2 := log10(FDCHI2)", &log_fdChi2);
-	// }
 
 	dir        = "dataset/weights/";
 	prefix     = Form("TMVAClassification300-isok%s_dataRun%d_%s",
@@ -230,11 +219,6 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	{
 		treeIn->SetBranchAddress("Added_H_PT", PT);
 	}
-	// if(strncmp(isoVersion,"v2",2) == 0 || strncmp(isoVersion,"v3",2) == 0)
-	// {
-	//      treeIn->SetBranchAddress("psi_1S_H_FD_NEW", FD);
-	//      treeIn->SetBranchAddress("psi_1S_H_FDCHI2_NEW", FDCHI2);
-	// }
 
 	treeOut->Branch(Form("BDTkMin_%s",isoVersion),&BDTkMin,
 	                Form("BDTkMin_%s/D",isoVersion));

@@ -23,12 +23,12 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 
 	if(isoFlag && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT_%s_iso%d_%s.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT_%s_iso%d_%s_noPID.txt",
 		                             run,type,isoConf,isoVersion),"w");
 	}
 	else if(!isoFlag && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT_%s_noIso.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT_%s_noIso_noPID.txt",
 		                             run,type),"w");
 	}
 
@@ -56,11 +56,11 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	if(isoFlag)
 	{
 		outfileName = Form("%s/TMVAtraining/iso/"
-		                   "TMVA-JpsiLambda_%s_data_iso%d_%s.root",
+		                   "TMVA-JpsiLambda_%s_data_iso%d_%s_noPID.root",
 		                   rootFolder,type,isoConf,isoVersion);
 		outputFile  = TFile::Open(outfileName, "RECREATE");
 		factory     = new TMVA::Factory(Form("TMVAClassification-"
-		                                     "JpsiLambda%s_dataRun%d_iso%d_%s",
+		                                     "JpsiLambda%s_dataRun%d_iso%d_%s_noPID",
 		                                     type,run,isoConf,isoVersion),outputFile,
 		                                "!V:!Silent:Color:!DrawProgressBar:"
 		                                "AnalysisType=Classification");
@@ -68,11 +68,11 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	else
 	{
 		outfileName = Form("%s/TMVAtraining/noIso/"
-		                   "TMVA-JpsiLambda%s_data_noIso.root",
+		                   "TMVA-JpsiLambda%s_data_noIso_noPID.root",
 		                   rootFolder,type);
 		outputFile  = TFile::Open( outfileName, "RECREATE");
 		factory = new TMVA::Factory( Form("TMVAClassification-"
-		                                  "JpsiLambda%s_dataRun%d_noIso",
+		                                  "JpsiLambda%s_dataRun%d_noIso_noPID",
 		                                  type,run), outputFile,
 		                             "!V:!Silent:Color:!DrawProgressBar:"
 		                             "AnalysisType=Classification" );
@@ -118,20 +118,20 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 
 	if(isoFlag)
 	{
-		input      = TFile::Open(Form("%s/jpsilambda_%s_withsw_nonZeroTracks.root",
+		input      = TFile::Open(Form("%s/jpsilambda_%s_withsw_nonZeroTracks_noPID.root",
 		                              rootFolder,type),"READ");
 		treeIn     = (TTree*)input->Get("MyTuple");
-		input_iso  = TFile::Open(Form("%s/jpsilambda_%ssig_iso%d_%s.root",
+		input_iso  = TFile::Open(Form("%s/jpsilambda_%ssig_iso%d_%s_noPID.root",
 		                              rootFolder,type,isoConf,isoVersion));
 		treeIn_iso = (TTree*)input_iso->Get("MyTuple");
 	}
 	else
 	{
-		gSystem->Exec(Form("hadd -f %s/jpsilambda_%s_withsw.root "
-		                   "%s/jpsilambda_%s_withsw_nonZeroTracks.root"
-		                   " %s/jpsilambda_%s_withsw_ZeroTracks.root",
+		gSystem->Exec(Form("hadd -f %s/jpsilambda_%s_withsw_noPID.root "
+		                   "%s/jpsilambda_%s_withsw_nonZeroTracks_noPID.root"
+		                   " %s/jpsilambda_%s_withsw_ZeroTracks_noPID.root",
 		                   rootFolder,type,rootFolder,type,rootFolder,type));
-		input  = TFile::Open(Form("%s/jpsilambda_%s_withsw.root",
+		input  = TFile::Open(Form("%s/jpsilambda_%s_withsw_noPID.root",
 		                          rootFolder,type));
 		treeIn = (TTree*)input->Get("MyTuple");
 	}
@@ -236,6 +236,17 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf2",
 	                    "!H:!V:NTrees=500:MinNodeSize=0.5%:MaxDepth=4:"
 	                    "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
+	                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
+	                    "nCuts=100" );
+	factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf1_REAL",
+	                    "!H:!V:NTrees=500:MinNodeSize=1.0%:MaxDepth=4:"
+	                    "BoostType=RealAdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
+	                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
+	                    "nCuts=100" );
+
+	factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf2_REAL",
+	                    "!H:!V:NTrees=500:MinNodeSize=0.5%:MaxDepth=4:"
+	                    "BoostType=RealAdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
 	                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
 	                    "nCuts=100" );
 

@@ -14,7 +14,7 @@ using namespace RooStats;
 using namespace std;
 
 void AddModel(RooWorkspace *ws = nullptr, Int_t lowRange = 5200,
-              Int_t highRange = 6000, Int_t nEntries = 0);
+              Int_t highRange = 6000, Int_t nEntries = 0, Int_t run = 1);
 
 void AddData(RooWorkspace *ws = nullptr, Int_t run = 1,
              TTree *treeIn = nullptr);
@@ -46,7 +46,7 @@ Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 
 	if(logFlag)//Redirect output to log file
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/sPlot_%s%s.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/sPlot_%s%s_noPID.txt",
 		                             run, type, suffix),"w");
 	}
 	cout<<"********************************"<<endl;
@@ -68,9 +68,9 @@ Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 
 	rootFolder    = Form("rootFiles/dataFiles/JpsiLambda/run%d", run);
 
-	inFileName    = Form("%s/jpsilambda_cutoutks_%s%s.root", rootFolder, type, suffix);
-	outFileName   = Form("%s/jpsilambda_%s_withsw%s.root", rootFolder, type, suffix);
-	trainFileName = Form("%s/jpsilambda_%s_forIsoTraining.root", rootFolder, type);
+	inFileName    = Form("%s/jpsilambda_cutoutks_%s%s_noPID.root", rootFolder, type, suffix);
+	outFileName   = Form("%s/jpsilambda_%s_withsw%s_noPID.root", rootFolder, type, suffix);
+	trainFileName = Form("%s/jpsilambda_%s_forIsoTraining_noPID.root", rootFolder, type);
 
 	fileIn = TFile::Open(inFileName,"READ");
 	if (!fileIn)
@@ -130,7 +130,7 @@ Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 
 	// add the signal and background models to the workspace.
 	// Inside this function you will find a discription the model.
-	AddModel(wSpace, lowRange, highRange, entries_massWindow);
+	AddModel(wSpace, lowRange, highRange, entries_massWindow, run);
 
 	// add data to the workspace
 	AddData(wSpace, run, treeIn);
@@ -163,7 +163,7 @@ Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 
 	return myChi2;
 }
-void AddModel(RooWorkspace *ws, Int_t lowRange, Int_t highRange, Int_t nEntries)
+void AddModel(RooWorkspace *ws, Int_t lowRange, Int_t highRange, Int_t nEntries, Int_t run)
 {
 	cout<<"Starting AddModel()"<<endl;
 
@@ -204,7 +204,11 @@ void AddModel(RooWorkspace *ws, Int_t lowRange, Int_t highRange, Int_t nEntries)
 
 	// COMBINED MODEL	cout << "Making full model" << endl;
 
-	RooRealVar sigYield("sigYield","fitted yield for sig",5000,0, 100000);
+	Int_t init_sigval = 0;
+	if(run == 1) init_sigval = 7000;
+	else if(run == 2) init_sigval = 27000;
+
+	RooRealVar sigYield("sigYield","fitted yield for sig",init_sigval,0, 35000);
 	RooRealVar bkgYield("bkgYield","fitted yield for bkg",(nEntries/2),0, nEntries);
 
 	RooAddPdf model("model","signal+background models",
