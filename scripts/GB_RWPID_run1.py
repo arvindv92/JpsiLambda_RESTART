@@ -9,7 +9,7 @@ from hep_ml.metrics_utils import ks_2samp_weighted
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_auc_score
 
-columns = ['p_ProbNNp', 'pi_ProbNNpi', 'p_PIDp'
+columns = ['p_ProbNNp', 'pi_ProbNNpi', 'p_PIDp',
            'SW']
 #           'Jpsi_P/Lb_P','p_P/L_P','SW']
 
