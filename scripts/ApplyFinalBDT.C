@@ -345,13 +345,13 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	TString prefix;
 	if(isoFlag && !zeroFlag)
 	{
-		prefix = Form("TMVAClassification-JpsiLambda%s_dataRun%d_iso%d_%s",
-		              type,run,isoConf,isoVersion);
+		prefix = Form("TMVAClassification-JpsiLambda%s_dataRun%d_iso%d_%s_BDT%d_noPID",
+		              type,run,isoConf,isoVersion,bdtConf);
 	}
 	else if(!isoFlag || (isoFlag && zeroFlag))
 	{
-		prefix = Form("TMVAClassification-JpsiLambda%s_dataRun%d_noIso",
-		              type,run);
+		prefix = Form("TMVAClassification-JpsiLambda%s_dataRun%d_noIso_BDT%d_noPID",
+		              type,run,bdtConf);
 	}
 	TString methodName = TString("BDT method");
 	TString weightfile = dir + prefix + TString("_") +

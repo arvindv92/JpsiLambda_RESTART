@@ -3,7 +3,7 @@
  *********************************/
 #include "TrainFinalBDT.h"
 void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
-                   Int_t isoConf, Bool_t isoFlag, Bool_t logFlag)
+                   Int_t isoConf, Bool_t isoFlag, Int_t bdtConf, Bool_t logFlag)
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    trackType = 3 for LL, 5 for DD.
@@ -23,13 +23,13 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 
 	if(isoFlag && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT_%s_iso%d_%s_noPID.txt",
-		                             run,type,isoConf,isoVersion),"w");
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT%d_%s_iso%d_%s_noPID.txt",
+		                             run,bdtConf,type,isoConf,isoVersion),"w");
 	}
 	else if(!isoFlag && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT_%s_noIso_noPID.txt",
-		                             run,type),"w");
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT%d_%s_noIso_noPID.txt",
+		                             run,bdtConf,type),"w");
 	}
 
 	cout<<"*****************************"<<endl;
@@ -56,24 +56,24 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	if(isoFlag)
 	{
 		outfileName = Form("%s/TMVAtraining/iso/"
-		                   "TMVA-JpsiLambda_%s_data_iso%d_%s_noPID.root",
-		                   rootFolder,type,isoConf,isoVersion);
+		                   "TMVA-JpsiLambda_%s_data_iso%d_%s_BDT%d_noPID.root",
+		                   rootFolder,type,isoConf,isoVersion,bdtConf);
 		outputFile  = TFile::Open(outfileName, "RECREATE");
 		factory     = new TMVA::Factory(Form("TMVAClassification-"
-		                                     "JpsiLambda%s_dataRun%d_iso%d_%s_noPID",
-		                                     type,run,isoConf,isoVersion),outputFile,
+		                                     "JpsiLambda%s_dataRun%d_iso%d_%s_BDT%d_noPID",
+		                                     type,run,isoConf,isoVersion,bdtConf),outputFile,
 		                                "!V:!Silent:Color:!DrawProgressBar:"
 		                                "AnalysisType=Classification");
 	}
 	else
 	{
 		outfileName = Form("%s/TMVAtraining/noIso/"
-		                   "TMVA-JpsiLambda%s_data_noIso_noPID.root",
-		                   rootFolder,type);
+		                   "TMVA-JpsiLambda%s_data_noIso_BDT%d_noPID.root",
+		                   rootFolder,type,bdtConf);
 		outputFile  = TFile::Open( outfileName, "RECREATE");
 		factory = new TMVA::Factory( Form("TMVAClassification-"
-		                                  "JpsiLambda%s_dataRun%d_noIso_noPID",
-		                                  type,run), outputFile,
+		                                  "JpsiLambda%s_dataRun%d_noIso_BDT%d_noPID",
+		                                  type,run,bdtConf), outputFile,
 		                             "!V:!Silent:Color:!DrawProgressBar:"
 		                             "AnalysisType=Classification" );
 	}
@@ -227,28 +227,36 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	                                             "SplitMode=Random:NormMode=NumEvents:!V",
 	                                             nTrain_S,nTest_S,nTrain_B,nTest_B));
 
-	factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf1",
-	                    "!H:!V:NTrees=500:MinNodeSize=1.0%:MaxDepth=4:"
-	                    "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
-	                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
-	                    "nCuts=100" );
+	if(bdtConf == 1)
+	{
+		factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf1",
+		                    "!H:!V:NTrees=500:MinNodeSize=1.0%:MaxDepth=4:"
+		                    "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
+		                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
+		                    "nCuts=100" );
 
-	factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf2",
-	                    "!H:!V:NTrees=500:MinNodeSize=0.5%:MaxDepth=4:"
-	                    "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
-	                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
-	                    "nCuts=100" );
-	factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf1_REAL",
-	                    "!H:!V:NTrees=500:MinNodeSize=1.0%:MaxDepth=4:"
-	                    "BoostType=RealAdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
-	                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
-	                    "nCuts=100" );
+		factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf1_REAL",
+		                    "!H:!V:NTrees=500:MinNodeSize=1.0%:MaxDepth=4:"
+		                    "BoostType=RealAdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
+		                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
+		                    "nCuts=100" );
+	}
+	else if(bdtConf == 2)
 
-	factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf2_REAL",
-	                    "!H:!V:NTrees=500:MinNodeSize=0.5%:MaxDepth=4:"
-	                    "BoostType=RealAdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
-	                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
-	                    "nCuts=100" );
+	{
+		factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf2",
+		                    "!H:!V:NTrees=500:MinNodeSize=0.5%:MaxDepth=4:"
+		                    "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
+		                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
+		                    "nCuts=100" );
+
+
+		factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf2_REAL",
+		                    "!H:!V:NTrees=500:MinNodeSize=0.5%:MaxDepth=4:"
+		                    "BoostType=RealAdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
+		                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
+		                    "nCuts=100" );
+	}
 
 	/*factory->BookMethod( TMVA::Types::kBDT, "BDTconf6",
 	   "!H:!V:NTrees=1000:MinNodeSize=0.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.3:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=-1" );
