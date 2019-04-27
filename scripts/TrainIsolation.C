@@ -10,7 +10,7 @@
  #include "TrainIsolation.h"
 
 void TrainIsolation(Int_t run, Int_t trackType,
-                    const char* isoVersion, Bool_t logFlag)
+                    const char* isoVersion, Int_t isoConf, Bool_t logFlag)
 /*
    >run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC.
    Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
@@ -34,8 +34,8 @@ void TrainIsolation(Int_t run, Int_t trackType,
 
 	if(logFlag) //set up logging
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainIsolation_%s_%s_noPID.txt",
-		                             run,type,isoVersion),"w");
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainIsolation_%s_%s_iso%d_noPID.txt",
+		                             run,type,isoVersion,isoConf),"w");
 	}
 	cout<<"*****************************"<<endl;
 	cout<<"==> Starting TrainIsolation: "<<isoVersion<<endl;
@@ -54,12 +54,12 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	TMVA::Tools::Instance(); // This loads the library
 
 	outFileName = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
-	                   "TMVAtraining/iso/TMVA300-isok%s_data_%s_noPID.root",
-	                   run,type,isoVersion);
+	                   "TMVAtraining/iso/TMVA300-isok%s_data_%s_iso%d_noPID.root",
+	                   run,type,isoVersion,isoConf);
 	outputFile  = TFile::Open(outFileName, "RECREATE");
 
-	factory     = new TMVA::Factory(Form("TMVAClassification300-isok%s_dataRun%d_%s_noPID",
-	                                     type,run,isoVersion), outputFile,
+	factory     = new TMVA::Factory(Form("TMVAClassification300-isok%s_dataRun%d_%s_iso%d_noPID",
+	                                     type,run,isoVersion,isoConf), outputFile,
 	                                "!V:!Silent:Color:!DrawProgressBar:"
 	                                "AnalysisType=Classification" );
 
@@ -77,21 +77,6 @@ void TrainIsolation(Int_t run, Int_t trackType,
 
 		myCut = myCut && "PT > 0 ";
 	}
-	// else if(strncmp(isoVersion,"v2",2)==0)
-	// {
-	//      dataLoader->AddVariable("log_FD     := log10(FD)",'F');
-	//      dataLoader->AddVariable("log_FDCHI2 := log10(FDCHI2)",'F');
-	//
-	//      myCut = myCut && "FD > 0 && FDCHI2 > 0";
-	// }
-	// else if(strncmp(isoVersion,"v3",2)==0)
-	// {
-	//      dataLoader->AddVariable("log_PT     := log10(PT)",'F');
-	//      dataLoader->AddVariable("log_FD     := log10(FD)",'F');
-	//      dataLoader->AddVariable("log_FDCHI2 := log10(FDCHI2)",'F');
-	//
-	//      myCut = myCut && "PT > 0 && FDCHI2 > 0 && FD > 0";
-	// }
 
 	fname_sig = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
 	                 "jpsilambda_%s_forIsoTraining_noPID.root",run,type);
@@ -145,17 +130,22 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	                                             "SplitMode=Random:NormMode=NumEvents:!V",
 	                                             nTrain_S,nTest_S,nTrain_B,nTest_B));
 
-	factory->BookMethod(dataLoader, TMVA::Types::kBDT, "isoConf1_300",
-	                    "!H:!V:NTrees=300:MinNodeSize=1.25%:MaxDepth=3:"
-	                    "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
-	                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
-	                    "nCuts=200" );
-
-	factory->BookMethod(dataLoader, TMVA::Types::kBDT, "isoConf2_300",
-	                    "!H:!V:NTrees=300:MinNodeSize=0.75%:MaxDepth=3:"
-	                    "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
-	                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
-	                    "nCuts=200" );
+	if(isoConf == 1)
+	{
+		factory->BookMethod(dataLoader, TMVA::Types::kBDT, "isoConf1_300",
+		                    "!H:!V:NTrees=300:MinNodeSize=1.25%:MaxDepth=3:"
+		                    "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
+		                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
+		                    "nCuts=200" );
+	}
+	else if(isoConf == 2)
+	{
+		factory->BookMethod(dataLoader, TMVA::Types::kBDT, "isoConf2_300",
+		                    "!H:!V:NTrees=300:MinNodeSize=0.75%:MaxDepth=3:"
+		                    "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
+		                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
+		                    "nCuts=200" );
+	}
 
 	/*	factory->BookMethod( TMVA::Types::kBDT, "BDTconf2",
 	   "!H:!V:NTrees=850:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.7:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=-1" );
