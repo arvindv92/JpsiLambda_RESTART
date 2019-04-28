@@ -209,54 +209,55 @@ void MASTER(Int_t run = 1, Int_t config = 1, Bool_t doFixed = false, Bool_t isDa
 		        " isoConf "<<isoConf<<"***"<<endl;
 		ApplyIsolation(run, isData, mcType, trackType, 2, isoVersion, isoConf, logFlag);
 	}
-	if(isData && isoFlag)
-	{
-		//Train Final BDT on data w/ isolation
-		cout<<"***TrainFinalBDT nonZeroTracks run "<<run<<" isoVersion "<<isoVersion<<
-		        " isoConf "<<isoConf<<" ***"<<endl;
-
-		//                                                               isoFlag
-		TrainFinalBDT(run, trackType, isoVersion, isoConf, finalBDTconf, true, logFlag);
-
-		//Train Final BDT on data sans isolation
-		cout<<"***TrainFinalBDT ZeroTracks run "<<run<<" ***"<<endl;
-
-		//                                                              isoFlag
-		TrainFinalBDT(run, trackType, isoVersion, isoConf, finalBDTconf, false, logFlag);
-	}
-
-	//Apply final BDT on nonZeroTracks data/MC
-	cout<<"***ApplyFinalBDT all nonZeroTracks run "<<run<<"isoVersion "<<
-	        isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
-	        finalBDTconf<<" ***"<<endl;
-	ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 1, isoFlag, false, logFlag);
-
-	//Apply final BDT on zeroTracks data/MC
-	cout<<"***ApplyFinalBDT all ZeroTracks run "<<run<<" finalBDTconf "<<
-	        finalBDTconf<<" ***"<<endl;
-	ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 1, isoFlag, true, logFlag);
-
-	if(isData)
-	{
-		// Apply final BDT on nonZeroTracks sWeighted data/MC
-		cout<<"***ApplyFinalBDT sWeight nonZeroTracks run "<<run<<" isoVersion "<<
-		        isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
-		        finalBDTconf<<" ***"<<endl;
-		ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 2, isoFlag, false, logFlag);
-
-		//Apply final BDT on ZeroTracks sWeighted data/MC
-		cout<<"***ApplyFinalBDT sWeight ZeroTracks run "<<run<<" isoVersion "<<
-		        isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
-		        finalBDTconf<<"***"<<endl;
-		//Optimize final BDT cut based on some FoM
-		// cout<<"***OptimizeFinalBDT run "<<run<<" isoVersion "<<
-		//         isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
-		//         finalBDTconf<<" FOM "<<FOM<<" ***"<<endl;
-		//
-		// bdtCuts = OptimizeFinalBDT(run, trackType, isoVersion, isoConf,
-		//                            finalBDTconf, isoFlag, logFlag, FOM,
-		//                            "sigma");
-	}
+	// if(isData && isoFlag)
+	// {
+	//      //Train Final BDT on data w/ isolation
+	//      cout<<"***TrainFinalBDT nonZeroTracks run "<<run<<" isoVersion "<<isoVersion<<
+	//              " isoConf "<<isoConf<<" ***"<<endl;
+	//
+	//      //                                                               isoFlag
+	//      TrainFinalBDT(run, trackType, isoVersion, isoConf, finalBDTconf, true, logFlag);
+	//
+	//      //Train Final BDT on data sans isolation
+	//      cout<<"***TrainFinalBDT ZeroTracks run "<<run<<" ***"<<endl;
+	//
+	//      //                                                              isoFlag
+	//      TrainFinalBDT(run, trackType, isoVersion, isoConf, finalBDTconf, false, logFlag);
+	// }
+	//
+	// //Apply final BDT on nonZeroTracks data/MC
+	// cout<<"***ApplyFinalBDT all nonZeroTracks run "<<run<<"isoVersion "<<
+	//         isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
+	//         finalBDTconf<<" ***"<<endl;
+	// ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 1, isoFlag, false, logFlag);
+	//
+	// //Apply final BDT on zeroTracks data/MC
+	// cout<<"***ApplyFinalBDT all ZeroTracks run "<<run<<" finalBDTconf "<<
+	//         finalBDTconf<<" ***"<<endl;
+	// ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 1, isoFlag, true, logFlag);
+	//
+	// if(isData)
+	// {
+	//      // Apply final BDT on nonZeroTracks sWeighted data/MC
+	//      cout<<"***ApplyFinalBDT sWeight nonZeroTracks run "<<run<<" isoVersion "<<
+	//              isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
+	//              finalBDTconf<<" ***"<<endl;
+	//      ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 2, isoFlag, false, logFlag);
+	//
+	//      //Apply final BDT on ZeroTracks sWeighted data/MC
+	//      cout<<"***ApplyFinalBDT sWeight ZeroTracks run "<<run<<" isoVersion "<<
+	//              isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
+	//              finalBDTconf<<"***"<<endl;
+	//      ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 2, isoFlag, true, logFlag);
+	//      //Optimize final BDT cut based on some FoM
+	//      // cout<<"***OptimizeFinalBDT run "<<run<<" isoVersion "<<
+	//      //         isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
+	//      //         finalBDTconf<<" FOM "<<FOM<<" ***"<<endl;
+	//      //
+	//      // bdtCuts = OptimizeFinalBDT(run, trackType, isoVersion, isoConf,
+	//      //                            finalBDTconf, isoFlag, logFlag, FOM,
+	//      //                            "sigma");
+	// }
 
 	// bdtCut = bdtCuts[0];
 	// bdtCut_ZeroTracks = bdtCuts[1];
