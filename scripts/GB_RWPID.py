@@ -52,7 +52,7 @@ def draw_distributions(myoriginal, mytarget, new_original_weights, targetwts):
     sum_ks = 0
     ctr = 0
     plt.figure(figsize=[15, 7])
-    for id, column in enumerate(columns[0:4], 1):
+    for id, column in enumerate(columns[0:3], 1):
         ctr = ctr + 1
         xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
                                 [0.01, 99.99])
