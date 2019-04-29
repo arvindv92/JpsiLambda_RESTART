@@ -12,9 +12,11 @@ from sklearn.metrics import roc_auc_score
 
 run = int(sys.argv[1])
 
-columns = ['Lb_P', 'Lb_PT', 'Lb_ETA', 'Jpsi_P', 'Jpsi_PT', 'Jpsi_ETA', 'L_P',
-           'L_PT', 'L_ETA', 'p_P', 'p_PT', 'p_ETA', 'pi_P', 'pi_PT', 'pi_ETA',
-           'p_ProbNNp', 'pi_ProbNNpi', 'p_PIDp', 'SW']
+# columns = ['Lb_P', 'Lb_PT', 'Lb_ETA', 'Jpsi_P', 'Jpsi_PT', 'Jpsi_ETA', 'L_P',
+#            'L_PT', 'L_ETA', 'p_P', 'p_PT', 'p_ETA', 'pi_P', 'pi_PT', 'pi_ETA',
+#            'p_ProbNNp', 'pi_ProbNNpi', 'p_PIDp', 'SW']
+
+columns = ['p_ProbNNp', 'pi_ProbNNpi', 'p_PIDp', 'SW']
 
 mcPath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run{}/'.format(run)
 dataPath = '../rootFiles/dataFiles/JpsiLambda/run{}/sWeightSanity/'.format(run)
