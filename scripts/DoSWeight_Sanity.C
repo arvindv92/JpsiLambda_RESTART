@@ -122,15 +122,15 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 	// add data to the workspace
 	AddData(wSpace, run, treeIn);
 
+	// do sPlot.
+	//This wil make a new dataset with sWeights added for every event.
+	Double_t myChi2 = DosPlot(wSpace, run, type, treeOut, hMass);
+
 	// inspect the workspace if you wish
 	wSpace->Print();
 
 	//save workspace in ROOT file so you don't have to make and load input data each time, dummy
 	wSpace->writeToFile(Form("%s/wSpace_sPlot_Sanity_noPID.root",rootFolder));
-
-	// do sPlot.
-	//This wil make a new dataset with sWeights added for every event.
-	Double_t myChi2 = DosPlot(wSpace, run, type, treeOut, hMass);
 
 	fileOut->cd();
 	treeOut->Write("",TObject::kOverwrite);

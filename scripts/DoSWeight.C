@@ -138,15 +138,15 @@ Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 	// add data to the workspace
 	AddData(wSpace, run, treeIn);
 
+	// do sPlot.
+	//This wil make a new dataset with sWeights added for every event.
+	Double_t myChi2 = DosPlot(wSpace, run, type, treeOut, treeOut_training, zeroFlag, hMass);
+
 	// inspect the workspace if you wish
 	wSpace->Print();
 
 	//save workspace in ROOT file so you don't have to make and load input data each time, dummy
-	wSpace->writeToFile(Form("%s/wSpace_sPlot_%s_noPID.root",rootFolder,suffix));
-
-	// do sPlot.
-	//This wil make a new dataset with sWeights added for every event.
-	Double_t myChi2 = DosPlot(wSpace, run, type, treeOut, treeOut_training, zeroFlag, hMass);
+	wSpace->writeToFile(Form("%s/wSpace_sPlot%s_noPID.root",rootFolder,suffix));
 
 	fileOut->cd();
 	treeOut->Write("",TObject::kOverwrite);
