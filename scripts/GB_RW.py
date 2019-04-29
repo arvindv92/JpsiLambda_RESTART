@@ -14,7 +14,7 @@ run = int(sys.argv[1])
 
 columns = ['Lb_P', 'Lb_PT', 'Lb_ETA', 'Jpsi_P', 'Jpsi_PT', 'Jpsi_ETA', 'L_P',
            'L_PT', 'L_ETA', 'p_P', 'p_PT', 'p_ETA', 'pi_P', 'pi_PT', 'pi_ETA',
-           'SW']
+           'ntracks', 'SW']
 
 mcPath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run{}/'.format(run)
 dataPath = '../rootFiles/dataFiles/JpsiLambda/run{}/sWeightSanity/'.format(run)
@@ -84,7 +84,7 @@ def draw_distributions(myoriginal, mytarget, new_original_weights, targetwts):
         # print('KS over ', column, ' = ', myks)
     plt.draw()
     plt.figure(figsize=[15, 7])
-    for id, column in enumerate(columns[12:15], 1):
+    for id, column in enumerate(columns[12:16], 1):
         xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
                                 [0.01, 99.99])
         plt.subplot(2, 3, id)
@@ -130,8 +130,8 @@ avgks_orig = draw_distributions(original.iloc[:, :-1], target.iloc[:, :-1],
 #                                         gb_args={'subsample': 0.2,
 #                                                  'random_state': 42})
 
-reweighter = reweight.GBReweighter(n_estimators=50, learning_rate=0.1,
-                                   max_depth=3, min_samples_leaf=100,
+reweighter = reweight.GBReweighter(n_estimators=100, learning_rate=0.1,
+                                   max_depth=3, min_samples_leaf=50,
                                    gb_args={'subsample': 0.5,
                                             'random_state': 42})
 
