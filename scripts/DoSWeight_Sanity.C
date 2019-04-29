@@ -58,20 +58,21 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 	TFile *fileIn = nullptr, *fileOut = nullptr;
 	TTree *treeIn = nullptr, *treeOut = nullptr;
 
-
 	const char *rootFolder = "";
-	TString inFileName      = "", outFileName = "", trainFileName = "";
+	TString inFileName     = "";
+	TString outFileName    = "";
+	TString trainFileName  = "";
 
-	Int_t entries_init = 0, entries_massWindow = 0;
-	Int_t lowRange     = 5200, highRange       = 6000;//5200-6000 MeV window for sWeighting
-	Int_t nBins = (Int_t)(highRange-lowRange)/4;
-	Double_t Lb_Mass   = 0.0;
+	Int_t entries_init       = 0;
+	Int_t entries_massWindow = 0;
+	Int_t lowRange           = 5200;
+	Int_t highRange          = 6000;//5200-6000 MeV window for sWeighting
+	Int_t nBins              = (Int_t)(highRange-lowRange)/4;
+	Double_t Lb_Mass         = 0.0;
 
 	rootFolder    = Form("rootFiles/dataFiles/JpsiLambda/run%d", run);
-
 	inFileName    = Form("%s/jpsilambda_sanity_%s_noPID.root", rootFolder, type);
 	outFileName   = Form("%s/sWeightSanity/jpsilambda_%s_sanity_withsw_noPID.root", rootFolder, type);
-	// trainFileName = Form("%s/jpsilambda_%s_forIsoTraining.root", rootFolder, type);
 
 	fileIn = TFile::Open(inFileName,"READ");
 	if (!fileIn)
@@ -92,23 +93,12 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 	fileOut = new TFile(outFileName,"RECREATE");
 	treeOut = treeIn->CloneTree(0);
 
-	// if(!zeroFlag)
-	// {
-	//      fileOut_training = new TFile(trainFileName,"RECREATE");
-	//      treeOut_training = treeIn->CloneTree(0);
-	// }
-
 	treeIn->SetBranchAddress("Lb_DTF_M_JpsiLConstr",&Lb_Mass);
 	cout<<"Incoming Entries = "<<entries_init<<endl;
 
 	cout<<"******************************************"<<endl;
 	cout<<"Input file = "<<fileIn->GetName()<<endl;
 	cout<<"sWeighted Output file = "<<fileOut->GetName()<<endl;
-	// if(!zeroFlag)
-	// {
-	//      cout<<"Isolation Training Output file = "
-	//          <<fileOut_training->GetName()<<endl;
-	// }
 	cout<<"******************************************"<<endl;
 
 	cout<<"Making mass cut on "<<entries_init<<" entries"<<endl;
@@ -119,13 +109,6 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 		if(Lb_Mass > lowRange && Lb_Mass < highRange)
 		{
 			treeOut->Fill();
-			// if(!zeroFlag)
-			// {
-			//      // if(Lb_Mass > 5400 && Lb_Mass < 5700)//5400-5700 only for training
-			//      //      {
-			//      // treeOut_training->Fill();
-			//      //	}
-			// }
 		}
 	}
 
@@ -142,6 +125,9 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 	// inspect the workspace if you wish
 	wSpace->Print();
 
+	//save workspace in ROOT file so you don't have to make and load input data each time, dummy
+	wSpace->writeToFile(Form("%s/wSpace_sPlot_Sanity_noPID.root",rootFolder));
+
 	// do sPlot.
 	//This wil make a new dataset with sWeights added for every event.
 	Double_t myChi2 = DosPlot(wSpace, run, type, treeOut, hMass);
@@ -150,13 +136,6 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 	treeOut->Write("",TObject::kOverwrite);
 	fileOut->Close();
 
-	// if(!zeroFlag)
-	// {
-	//      fileOut_training->cd();
-	//      treeOut_training->Write("",TObject::kOverwrite);
-	//      fileOut_training->Close();
-	// }
-	// cleanup
 	delete wSpace;
 
 	sw.Stop();
@@ -247,7 +226,6 @@ void AddData(RooWorkspace *ws, Int_t run, TTree *treeIn)
 Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
                  TH1D *hMass)
 {
-	// const char *suffix = (zeroFlag) ? ("_ZeroTracks") : ("_nonZeroTracks");
 	Float_t SIGW = 0., BKGW = 0., bMASS = 0.;
 	TBranch *sigW = nullptr;
 	TBranch *bkgW = nullptr;
@@ -484,48 +462,8 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 
 		sigW->Fill();
 		bkgW->Fill();
-		// if(!zeroFlag)
-		// {
-		//      if (bMASS > 5400 && bMASS < 5700)
-		//      {
-		//              sigW_training->Fill();
-		//              bkgW_training->Fill();
-		//      }
-		// }
 	}
 
-	//Activate only necessary branches in isolation training tree.
-	//It only needs to contain training variables + weights
-	// if(!zeroFlag)
-	// {
-	//      treeOut_training->SetBranchStatus("*",0);
-	//      treeOut_training->SetBranchStatus("SW",1);
-	//      treeOut_training->SetBranchStatus("BW",1);
-	//      treeOut_training->SetBranchStatus("Added_H_PT",1);
-	//      treeOut_training->SetBranchStatus("psi_1S_H_MINIPCHI2",1);
-	//      treeOut_training->SetBranchStatus("psi_1S_H_VERTEXCHI2_NEW",1);
-	//      treeOut_training->SetBranchStatus("psi_1S_H_IPCHI2_NEW",1);
-	//      treeOut_training->SetBranchStatus("psi_1S_H_IP_NEW",1);
-	//      treeOut_training->SetBranchStatus("psi_1S_H_FD_NEW",1);
-	//      treeOut_training->SetBranchStatus("psi_1S_H_FDCHI2_NEW",1);
-	//      treeOut_training->SetBranchStatus("psi_1S_H_VERTEX_Z_NEW",1);
-	//      treeOut_training->SetBranchStatus("Added_H_TRACKCHI2",1);
-	//      treeOut_training->SetBranchStatus("Added_H_GHOST",1);
-	//      treeOut_training->SetBranchStatus("Lb_H_OPENING",1);
-	//      treeOut_training->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-	//
-	//      //Give aliases to the branches in isolation training tree
-	//      treeOut_training->SetAlias("PT","Added_H_PT");
-	//      treeOut_training->SetAlias("MINIPCHI2","psi_1S_H_MINIPCHI2");
-	//      treeOut_training->SetAlias("VCHI2DOF","psi_1S_H_VERTEXCHI2_NEW");
-	//      treeOut_training->SetAlias("IPCHI2","psi_1S_H_IPCHI2_NEW");
-	//      treeOut_training->SetAlias("IP","psi_1S_H_IP_NEW");
-	//      treeOut_training->SetAlias("FD","psi_1S_H_FD_NEW");
-	//      treeOut_training->SetAlias("FDCHI2","psi_1S_H_FDCHI2_NEW");
-	//      treeOut_training->SetAlias("TRACKORIVX_Z","psi_1S_H_VERTEXCHI2_NEW");
-	//      treeOut_training->SetAlias("GHOSTPROB","Added_H_GHOST");
-	//      treeOut_training->SetAlias("TRACKCHI2DOF","Added_H_TRACKCHI2");
-	// }
 	cout<<"Finishing DoSPlot()"<<endl;
 
 	return chi2;
