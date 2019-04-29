@@ -130,9 +130,10 @@ avgks_orig = draw_distributions(original.iloc[:, :-1], target.iloc[:, :-1],
 #                                    gb_args={'subsample': 0.2,
 #                                             'random_state': 42})
 
-reweighter = reweight.GBReweighter(n_estimators=100, learning_rate=0.1,
-                                   max_depth=3, min_samples_leaf=50,
-                                   gb_args={'subsample': 0.5})
+reweighter = reweight.GBReweighter(n_estimators=100, learning_rate=0.2,
+                                   max_depth=4, min_samples_leaf=50,
+                                   gb_args={'subsample': 0.5,
+                                            'random_state': 42})
 
 # reweighter = reweight.GBReweighter(n_estimators=50, learning_rate=0.1,
 #                                    max_depth=3, min_samples_leaf=100,
