@@ -17,7 +17,8 @@ mcOpt = int(sys.argv[2])
 print 'Processing Run', run, 'mcOpt ', mcOpt
 columns = ['Lb_P', 'Lb_PT', 'Lb_ETA', 'Jpsi_P', 'Jpsi_PT', 'Jpsi_ETA',
            'L_P', 'L_PT', 'L_ETA', 'p_P', 'p_PT', 'p_ETA', 'pi_P', 'pi_PT',
-           'pi_ETA', 'p_ProbNNp', 'pi_ProbNNpi', 'p_PIDp']
+           'pi_ETA']
+# 'p_ProbNNp', 'pi_ProbNNpi', 'p_PIDp']
 
 
 mcPath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run{}/'.format(run)
@@ -49,7 +50,7 @@ elif mcOpt == 4:
 filePath = filePath.format(run)
 
 # Get the reweighter
-with open(mcPath + 'gb_wts_pid.pkl') as f:
+with open(mcPath + 'gb_wts.pkl') as f:
     reweighter = pickle.load(f)
 
     # Get the input file
@@ -59,8 +60,8 @@ with open(mcPath + 'gb_wts_pid.pkl') as f:
 
     # Predict weights
     gb_weights = reweighter.predict_weights(original)
-    gb_weights.dtype = [('gb_wts_pid', 'float64')]
+    gb_weights.dtype = [('gb_wts', 'float64')]
     # Write out weights to separate ROOT file
     root_numpy.array2root(gb_weights,
-                          filePath + 'RW/gbWeights_pid_rec.root',
+                          filePath + 'RW/gbWeights_rec.root',
                           treename='MyTuple', mode='recreate')
