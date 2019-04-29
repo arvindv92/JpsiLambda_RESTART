@@ -1,3 +1,4 @@
+import sys
 import numpy
 import root_numpy
 import pandas
@@ -9,32 +10,15 @@ from hep_ml.metrics_utils import ks_2samp_weighted
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_auc_score
 
-# columns = ['Lb_PT', 'Lb_P', '(Jpsi_P/Lb_P)', '(p_P-pi_P)/(p_P+pi_P)',
-#            'p_ProbNNp', 'pi_ProbNNpi', 'ntracks',
-#            'log10(Lb_ConsLb_chi2)', 'p_PIDp', 'L_dm', 'log10(Lb_MINIPCHI2)',
-#            'log10(acos(Lb_DIRA_OWNPV))',
-#            'log10(Lb_FD_OWNPV)', 'log10(Jpsi_MINIPCHI2)', 'log10(Jpsi_M)',
-#            'log10(p_MINIPCHI2)', 'log10(p_PT)',
-#            'log10(L_FDCHI2_ORIVX)', 'log10(acos(L_DIRA_ORIVX))',
-#            'log10(L_FD_ORIVX)', 'log10(acos(L_DIRA_OWNPV))',
-#            'log10(L_MINIPCHI2)', 'p_ProbNNghost', 'pi_ProbNNghost',
-#            'log10(pi_MINIPCHI2)', 'log10(pi_PT)',
-#            'SW']
-
-# columns = ['Lb_PT', 'Lb_P', '(Jpsi_P/Lb_P)', '(p_P-pi_P)/(p_P+pi_P)',
-#            'p_ProbNNp', 'pi_ProbNNpi', 'ntracks', 'SW']
-
-# columns = ['Lb_PT', 'Lb_P', 'Jpsi_P', 'Jpsi_PT', 'L_P', 'L_PT',
-#            'p_P', 'p_PT', 'pi_P', 'pi_PT',
-#            'p_ProbNNp', 'pi_ProbNNpi', 'ntracks', 'SW']
+run = int(sys.argv[1])
 
 columns = ['Lb_P', 'Lb_PT', 'Lb_ETA', 'Jpsi_P', 'Jpsi_PT', 'Jpsi_ETA', 'L_P',
            'L_PT', 'L_ETA', 'p_P', 'p_PT', 'p_ETA', 'pi_P', 'pi_PT', 'pi_ETA',
-           'p_ProbNNp', 'pi_ProbNNpi', 'p_PIDp', 'SW']
-#           'Jpsi_P/Lb_P','p_P/L_P','SW']
+           'SW']
 
-mcPath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/'
-dataPath = '../rootFiles/dataFiles/JpsiLambda/run1/sWeightSanity/'
+mcPath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run{}/'.format(run)
+dataPath = '../rootFiles/dataFiles/JpsiLambda/run{}/sWeightSanity/'.format(run)
+
 
 original = root_numpy.root2array(mcPath + 'jpsilambda_withsw.root',
                                  'Lb2JpsiLTree/MyTuple', branches=columns,
@@ -48,7 +32,6 @@ original = pandas.DataFrame(original, dtype=float)
 original_noTM = pandas.DataFrame(original_noTM, dtype=float)
 target = pandas.DataFrame(target, dtype=float)
 
-# original_weights = numpy.ones(len(original))
 original_weights = numpy.array(original['SW'])
 target_weights = numpy.array(target['SW'])
 
@@ -101,7 +84,7 @@ def draw_distributions(myoriginal, mytarget, new_original_weights, targetwts):
         # print('KS over ', column, ' = ', myks)
     plt.draw()
     plt.figure(figsize=[15, 7])
-    for id, column in enumerate(columns[12:18], 1):
+    for id, column in enumerate(columns[12:15], 1):
         xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
                                 [0.01, 99.99])
         plt.subplot(2, 3, id)
@@ -116,38 +99,6 @@ def draw_distributions(myoriginal, mytarget, new_original_weights, targetwts):
         sum_ks = sum_ks + myks
         # print('KS over ', column, ' = ', myks)
     plt.draw()
-    # plt.figure(figsize=[15, 7])
-    # for id, column in enumerate(columns[18:24], 1):
-    #     xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
-    #                             [0.01, 99.99])
-    #     plt.subplot(2, 3, id)
-    #     plt.hist(myoriginal[column], weights=new_original_weights, range=xlim,
-    #              **hist_settings)
-    #     plt.hist(mytarget[column], weights=targetwts, range=xlim,
-    #              **hist_settings)
-    #     plt.title(column)
-    #     myks = ks_2samp_weighted(myoriginal[column], mytarget[column],
-    #                              weights1=new_original_weights,
-    #                              weights2=targetwts)
-    #     sum_ks = sum_ks + myks
-    #     # print('KS over ', column, ' = ', myks)
-    # plt.draw()
-    # plt.figure(figsize=[15, 7])
-    # for id, column in enumerate(columns[24:26], 1):
-    #     xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
-    #                             [0.01, 99.99])
-    #     plt.subplot(2, 3, id)
-    #     plt.hist(myoriginal[column], weights=new_original_weights, range=xlim,
-    #              **hist_settings)
-    #     plt.hist(mytarget[column], weights=targetwts, range=xlim,
-    #              **hist_settings)
-    #     plt.title(column)
-    #     myks = ks_2samp_weighted(myoriginal[column], mytarget[column],
-    #                              weights1=new_original_weights,
-    #                              weights2=targetwts)
-    #     sum_ks = sum_ks + myks
-    #     # print('KS over ', column, ' = ', myks)
-    # plt.draw()
     avg_ks = sum_ks / ctr
     print('average of KS distances = ', avg_ks)
     return avg_ks
@@ -166,7 +117,8 @@ avgks_orig = draw_distributions(original.iloc[:, :-1], target.iloc[:, :-1],
 # # validate reweighting rule on the test part comparing 1d projections
 #
 # print 'After binned re-weighting'
-# draw_distributions(original_test.iloc[:,:-1], target_test.iloc[:,:-1], bins_weights_test, target_weights_test)
+# draw_distributions(original_test.iloc[:,:-1], target_test.iloc[:,:-1],
+# bins_weights_test, target_weights_test)
 # **********************************************
 
 # *********Gradient Boosted Re-weighting********
@@ -193,7 +145,7 @@ gb_weights = reweighter.predict_weights(original.iloc[:, :-1])
 
 gb_weights_noTM = reweighter.predict_weights(original_noTM.iloc[:, :-1])
 
-gb_weights_noTM.dtype = [('gb_wts_pid', 'float64')]
+gb_weights_noTM.dtype = [('gb_wts', 'float64')]
 # validate reweighting rule on the test part comparing 1d projections
 # print 'After GB reweighting on test sample'
 # draw_distributions(original_test.iloc[:, :-1], target_test.iloc[:, :-1],
@@ -203,13 +155,13 @@ avgks_rw = draw_distributions(original.iloc[:, :-1], target.iloc[:, :-1],
                               gb_weights, target_weights)
 
 root_numpy.array2root(gb_weights_noTM,
-                      mcPath + 'jpsilambda_weighted_pid.root',
+                      mcPath + 'jpsilambda_weighted.root',
                       treename='MyTuple', mode='recreate')
 
-#*******Exporting RW formula for re-use********
-with open(mcPath + 'gb_wts_pid.pkl', 'w') as f:
+# *******Exporting RW formula for re-use********
+with open(mcPath + 'gb_wts.pkl', 'w') as f:
     pickle.dump(reweighter, f)
-#**********************************************
+# **********************************************
 
 
 # **********************************************

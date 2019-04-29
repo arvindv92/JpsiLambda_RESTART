@@ -9,17 +9,37 @@ from hep_ml.metrics_utils import ks_2samp_weighted
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_auc_score
 
-columns = ['p_ProbNNp', 'pi_ProbNNpi', 'p_PIDp',
-           'SW']
+# columns = ['Lb_PT', 'Lb_P', '(Jpsi_P/Lb_P)', '(p_P-pi_P)/(p_P+pi_P)',
+#            'p_ProbNNp', 'pi_ProbNNpi', 'ntracks',
+#            'log10(Lb_ConsLb_chi2)', 'p_PIDp', 'L_dm', 'log10(Lb_MINIPCHI2)',
+#            'log10(acos(Lb_DIRA_OWNPV))',
+#            'log10(Lb_FD_OWNPV)', 'log10(Jpsi_MINIPCHI2)', 'log10(Jpsi_M)',
+#            'log10(p_MINIPCHI2)', 'log10(p_PT)',
+#            'log10(L_FDCHI2_ORIVX)', 'log10(acos(L_DIRA_ORIVX))',
+#            'log10(L_FD_ORIVX)', 'log10(acos(L_DIRA_OWNPV))',
+#            'log10(L_MINIPCHI2)', 'p_ProbNNghost', 'pi_ProbNNghost',
+#            'log10(pi_MINIPCHI2)', 'log10(pi_PT)',
+#            'SW']
+
+# columns = ['Lb_PT', 'Lb_P', '(Jpsi_P/Lb_P)', '(p_P-pi_P)/(p_P+pi_P)',
+#            'p_ProbNNp', 'pi_ProbNNpi', 'ntracks', 'SW']
+
+# columns = ['Lb_PT', 'Lb_P', 'Jpsi_P', 'Jpsi_PT', 'L_P', 'L_PT',
+#            'p_P', 'p_PT', 'pi_P', 'pi_PT',
+#            'p_ProbNNp', 'pi_ProbNNpi', 'ntracks', 'SW']
+
+columns = ['Lb_P', 'Lb_PT', 'Lb_ETA', 'Jpsi_P', 'Jpsi_PT', 'Jpsi_ETA', 'L_P',
+           'L_PT', 'L_ETA', 'p_P', 'p_PT', 'p_ETA', 'pi_P', 'pi_PT', 'pi_ETA',
+           'p_ProbNNp', 'pi_ProbNNpi', 'p_PIDp', 'SW']
 #           'Jpsi_P/Lb_P','p_P/L_P','SW']
 
 mcPath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/'
 dataPath = '../rootFiles/dataFiles/JpsiLambda/run1/sWeightSanity/'
 
-original = root_numpy.root2array(mcPath + 'jpsilambda_withsw_stage2.root',
+original = root_numpy.root2array(mcPath + 'jpsilambda_withsw.root',
                                  'Lb2JpsiLTree/MyTuple', branches=columns,
                                  selection='(Lb_BKGCAT==0||Lb_BKGCAT==50)')
-original_noTM = root_numpy.root2array(mcPath + 'jpsilambda_withsw_stage2.root',
+original_noTM = root_numpy.root2array(mcPath + 'jpsilambda_withsw.root',
                                       'Lb2JpsiLTree/MyTuple', branches=columns)
 target = root_numpy.root2array(dataPath + 'jpsilambda_LL_sanity_withsw_noPID.root',
                                'MyTuple', branches=columns)
@@ -48,7 +68,7 @@ def draw_distributions(myoriginal, mytarget, new_original_weights, targetwts):
     sum_ks = 0
     ctr = 0
     plt.figure(figsize=[15, 7])
-    for id, column in enumerate(columns[0:3], 1):
+    for id, column in enumerate(columns[0:6], 1):
         ctr = ctr + 1
         xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
                                 [0.01, 99.99])
@@ -64,6 +84,70 @@ def draw_distributions(myoriginal, mytarget, new_original_weights, targetwts):
         sum_ks = sum_ks + myks
         # print('KS over ', column, ' = ', myks)
     plt.draw()
+    plt.figure(figsize=[15, 7])
+    for id, column in enumerate(columns[6:12], 1):
+        xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
+                                [0.01, 99.99])
+        plt.subplot(2, 3, id)
+        plt.hist(myoriginal[column], weights=new_original_weights, range=xlim,
+                 **hist_settings)
+        plt.hist(mytarget[column], weights=targetwts, range=xlim,
+                 **hist_settings)
+        plt.title(column)
+        myks = ks_2samp_weighted(myoriginal[column], mytarget[column],
+                                 weights1=new_original_weights,
+                                 weights2=targetwts)
+        sum_ks = sum_ks + myks
+        # print('KS over ', column, ' = ', myks)
+    plt.draw()
+    plt.figure(figsize=[15, 7])
+    for id, column in enumerate(columns[12:18], 1):
+        xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
+                                [0.01, 99.99])
+        plt.subplot(2, 3, id)
+        plt.hist(myoriginal[column], weights=new_original_weights, range=xlim,
+                 **hist_settings)
+        plt.hist(mytarget[column], weights=targetwts, range=xlim,
+                 **hist_settings)
+        plt.title(column)
+        myks = ks_2samp_weighted(myoriginal[column], mytarget[column],
+                                 weights1=new_original_weights,
+                                 weights2=targetwts)
+        sum_ks = sum_ks + myks
+        # print('KS over ', column, ' = ', myks)
+    plt.draw()
+    # plt.figure(figsize=[15, 7])
+    # for id, column in enumerate(columns[18:24], 1):
+    #     xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
+    #                             [0.01, 99.99])
+    #     plt.subplot(2, 3, id)
+    #     plt.hist(myoriginal[column], weights=new_original_weights, range=xlim,
+    #              **hist_settings)
+    #     plt.hist(mytarget[column], weights=targetwts, range=xlim,
+    #              **hist_settings)
+    #     plt.title(column)
+    #     myks = ks_2samp_weighted(myoriginal[column], mytarget[column],
+    #                              weights1=new_original_weights,
+    #                              weights2=targetwts)
+    #     sum_ks = sum_ks + myks
+    #     # print('KS over ', column, ' = ', myks)
+    # plt.draw()
+    # plt.figure(figsize=[15, 7])
+    # for id, column in enumerate(columns[24:26], 1):
+    #     xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
+    #                             [0.01, 99.99])
+    #     plt.subplot(2, 3, id)
+    #     plt.hist(myoriginal[column], weights=new_original_weights, range=xlim,
+    #              **hist_settings)
+    #     plt.hist(mytarget[column], weights=targetwts, range=xlim,
+    #              **hist_settings)
+    #     plt.title(column)
+    #     myks = ks_2samp_weighted(myoriginal[column], mytarget[column],
+    #                              weights1=new_original_weights,
+    #                              weights2=targetwts)
+    #     sum_ks = sum_ks + myks
+    #     # print('KS over ', column, ' = ', myks)
+    # plt.draw()
     avg_ks = sum_ks / ctr
     print('average of KS distances = ', avg_ks)
     return avg_ks
@@ -72,6 +156,18 @@ def draw_distributions(myoriginal, mytarget, new_original_weights, targetwts):
 print 'Original'
 avgks_orig = draw_distributions(original.iloc[:, :-1], target.iloc[:, :-1],
                                 original_weights, target_weights)
+
+# **********Binned Re-weighting****************
+# bins_reweighter = reweight.BinsReweighter(n_bins=30, n_neighs=2.)
+# bins_reweighter.fit(original_train.iloc[:,:-1], target_train.iloc[:,:-1],
+# original_weights_train, target_weights_train)
+#
+# bins_weights_test = bins_reweighter.predict_weights(original_test.iloc[:,:-1])
+# # validate reweighting rule on the test part comparing 1d projections
+#
+# print 'After binned re-weighting'
+# draw_distributions(original_test.iloc[:,:-1], target_test.iloc[:,:-1], bins_weights_test, target_weights_test)
+# **********************************************
 
 # *********Gradient Boosted Re-weighting********
 
@@ -110,10 +206,10 @@ root_numpy.array2root(gb_weights_noTM,
                       mcPath + 'jpsilambda_weighted_pid.root',
                       treename='MyTuple', mode='recreate')
 
-# *******Exporting RW formula for re-use********
+#*******Exporting RW formula for re-use********
 with open(mcPath + 'gb_wts_pid.pkl', 'w') as f:
     pickle.dump(reweighter, f)
-# **********************************************
+#**********************************************
 
 
 # **********************************************
