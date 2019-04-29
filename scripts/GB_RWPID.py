@@ -52,7 +52,7 @@ def draw_distributions(myoriginal, mytarget, new_original_weights, targetwts):
     sum_ks = 0
     ctr = 0
     plt.figure(figsize=[15, 7])
-    for id, column in enumerate(columns[0:6], 1):
+    for id, column in enumerate(columns[0:4], 1):
         ctr = ctr + 1
         xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
                                 [0.01, 99.99])
@@ -69,37 +69,37 @@ def draw_distributions(myoriginal, mytarget, new_original_weights, targetwts):
         # print('KS over ', column, ' = ', myks)
     plt.draw()
     plt.figure(figsize=[15, 7])
-    for id, column in enumerate(columns[6:12], 1):
-        xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
-                                [0.01, 99.99])
-        plt.subplot(2, 3, id)
-        plt.hist(myoriginal[column], weights=new_original_weights, range=xlim,
-                 **hist_settings)
-        plt.hist(mytarget[column], weights=targetwts, range=xlim,
-                 **hist_settings)
-        plt.title(column)
-        myks = ks_2samp_weighted(myoriginal[column], mytarget[column],
-                                 weights1=new_original_weights,
-                                 weights2=targetwts)
-        sum_ks = sum_ks + myks
-        # print('KS over ', column, ' = ', myks)
-    plt.draw()
-    plt.figure(figsize=[15, 7])
-    for id, column in enumerate(columns[12:18], 1):
-        xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
-                                [0.01, 99.99])
-        plt.subplot(2, 3, id)
-        plt.hist(myoriginal[column], weights=new_original_weights, range=xlim,
-                 **hist_settings)
-        plt.hist(mytarget[column], weights=targetwts, range=xlim,
-                 **hist_settings)
-        plt.title(column)
-        myks = ks_2samp_weighted(myoriginal[column], mytarget[column],
-                                 weights1=new_original_weights,
-                                 weights2=targetwts)
-        sum_ks = sum_ks + myks
-        # print('KS over ', column, ' = ', myks)
-    plt.draw()
+    # for id, column in enumerate(columns[6:12], 1):
+    #     xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
+    #                             [0.01, 99.99])
+    #     plt.subplot(2, 3, id)
+    #     plt.hist(myoriginal[column], weights=new_original_weights, range=xlim,
+    #              **hist_settings)
+    #     plt.hist(mytarget[column], weights=targetwts, range=xlim,
+    #              **hist_settings)
+    #     plt.title(column)
+    #     myks = ks_2samp_weighted(myoriginal[column], mytarget[column],
+    #                              weights1=new_original_weights,
+    #                              weights2=targetwts)
+    #     sum_ks = sum_ks + myks
+    #     # print('KS over ', column, ' = ', myks)
+    # plt.draw()
+    # plt.figure(figsize=[15, 7])
+    # for id, column in enumerate(columns[12:18], 1):
+    #     xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
+    #                             [0.01, 99.99])
+    #     plt.subplot(2, 3, id)
+    #     plt.hist(myoriginal[column], weights=new_original_weights, range=xlim,
+    #              **hist_settings)
+    #     plt.hist(mytarget[column], weights=targetwts, range=xlim,
+    #              **hist_settings)
+    #     plt.title(column)
+    #     myks = ks_2samp_weighted(myoriginal[column], mytarget[column],
+    #                              weights1=new_original_weights,
+    #                              weights2=targetwts)
+    #     sum_ks = sum_ks + myks
+    #     # print('KS over ', column, ' = ', myks)
+    # plt.draw()
     avg_ks = sum_ks / ctr
     print('average of KS distances = ', avg_ks)
     return avg_ks
