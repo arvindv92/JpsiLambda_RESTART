@@ -21,7 +21,8 @@ void AddData(RooWorkspace *ws = nullptr, Int_t run = 1,
 
 Double_t DosPlot(RooWorkspace *ws = nullptr, Int_t run = 1,
                  const char *type = "LL", TTree *treeOut = nullptr,
-                 TTree *treeOut_training = nullptr, Bool_t zeroFlag = false);
+                 TTree *treeOut_training = nullptr, Bool_t zeroFlag = false,
+                 TH1D *hMass = nullptr);
 
 Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 /*
@@ -58,16 +59,19 @@ Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 	TFile *fileIn = nullptr, *fileOut = nullptr, *fileOut_training = nullptr;
 	TTree *treeIn = nullptr, *treeOut = nullptr, *treeOut_training = nullptr;
 
-
 	const char *rootFolder = "";
-	TString inFileName      = "", outFileName = "", trainFileName = "";
+	TString inFileName     = "";
+	TString outFileName    = "";
+	TString trainFileName  = "";
 
-	Int_t entries_init = 0, entries_massWindow = 0;
-	Int_t lowRange     = 5200, highRange       = 6000;//5200-6000 MeV window for sWeighting
-	Double_t Lb_Mass   = 0.0;
+	Int_t entries_init       = 0;
+	Int_t entries_massWindow = 0;
+	Int_t lowRange           = 5200;
+	Int_t highRange          = 6000;//5200-6000 MeV window for sWeighting
+	Int_t nBins              = (Int_t)(highRange-lowRange)/4;
+	Double_t Lb_Mass         = 0.0;
 
 	rootFolder    = Form("rootFiles/dataFiles/JpsiLambda/run%d", run);
-
 	inFileName    = Form("%s/jpsilambda_cutoutks_%s%s_noPID.root", rootFolder, type, suffix);
 	outFileName   = Form("%s/jpsilambda_%s_withsw%s_noPID.root", rootFolder, type, suffix);
 	trainFileName = Form("%s/jpsilambda_%s_forIsoTraining_noPID.root", rootFolder, type);
@@ -80,6 +84,8 @@ Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 	}
 	treeIn = (TTree*)fileIn->Get("MyTuple");
 
+	treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nBins,lowRange,highRange),"","goff");
+	TH1D *hMass = (TH1D*)gDirectory->Get("hMass");
 	entries_init       = treeIn->GetEntries();
 	entries_massWindow = treeIn->GetEntries(Form("Lb_DTF_M_JpsiLConstr > %d &&"
 	                                             " Lb_DTF_M_JpsiLConstr < %d",
@@ -117,10 +123,7 @@ Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 			treeOut->Fill();
 			if(!zeroFlag)
 			{
-				// if(Lb_Mass > 5400 && Lb_Mass < 5700)//5400-5700 only for training
-				//      {
 				treeOut_training->Fill();
-				//	}
 			}
 		}
 	}
@@ -138,9 +141,12 @@ Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 	// inspect the workspace if you wish
 	wSpace->Print();
 
+	//save workspace in ROOT file so you don't have to make and load input data each time, dummy
+	wSpace->writeToFile(Form("%s/wSpace_sPlot_%s_noPID.root",rootFolder,suffix));
+
 	// do sPlot.
 	//This wil make a new dataset with sWeights added for every event.
-	Double_t myChi2 = DosPlot(wSpace, run, type, treeOut, treeOut_training, zeroFlag);
+	Double_t myChi2 = DosPlot(wSpace, run, type, treeOut, treeOut_training, zeroFlag, hMass);
 
 	fileOut->cd();
 	treeOut->Write("",TObject::kOverwrite);
@@ -244,7 +250,7 @@ void AddData(RooWorkspace *ws, Int_t run, TTree *treeIn)
 }
 
 Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
-                 TTree *treeOut_training, Bool_t zeroFlag)
+                 TTree *treeOut_training, Bool_t zeroFlag, TH1D *hMass)
 {
 	const char *suffix = (zeroFlag) ? ("_ZeroTracks") : ("_nonZeroTracks");
 	Float_t SIGW = 0., BKGW = 0., bMASS = 0.;
@@ -265,8 +271,19 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	RooRealVar *Lb_Mass  = ws->var("Lb_DTF_M_JpsiLConstr");
 	RooDataSet *data     = (RooDataSet*) ws->data("data");
 
+	RooDataHist *rdh = new RooDataHist("rdh","",*Lb_Mass,hMass);
+
 	// fit the model to the data. unbinned extended ML fit
-	RooFitResult *r = model->fitTo(*data, Extended(), Strategy(2), Save(true));
+	// RooFitResult *r = model->fitTo(*data, Extended(), Strategy(2), Save(true));
+	// Modifying this to try something along the lines of what steve does
+	RooArgSet *myVars;
+	model->fitTo(*rdh,Hesse(kTRUE),Strategy(2));
+	myVars = model->getParameters(*rdh);
+	myVars->Print("v");
+	myVars->setAttribAll("Constant",kTRUE);
+	sigYield->setConstant(kFALSE);
+	bkgYield->setConstant(kFALSE);
+	RooFitResult *r = model->fitTo(*rdh,Extended(),Hesse(kTRUE), Save(true));
 
 	cout<<"Starting MakePlots()"<<endl;
 
@@ -356,23 +373,24 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 
 	// The sPlot technique requires that we fix the parameters
 	// of the model that are not yields after doing the fit.
-	RooRealVar *sigma1 = ws->var("sigma1");
-	RooRealVar *sigma2 = ws->var("sigma2");
-	RooRealVar *mean   = ws->var("mean");
-	RooRealVar *tau    = ws->var("tau");
-
-	mean->setConstant(kTRUE);
-	sigma1->setConstant(kTRUE);
-	sigma2->setConstant(kTRUE);
-	tau->setConstant(kTRUE);
-
-	RooMsgService::instance().setSilentMode(true);
+	// RooRealVar *sigma1 = ws->var("sigma1");
+	// RooRealVar *sigma2 = ws->var("sigma2");
+	// RooRealVar *mean   = ws->var("mean");
+	// RooRealVar *tau    = ws->var("tau");
+	//
+	// mean->setConstant(kTRUE);
+	// sigma1->setConstant(kTRUE);
+	// sigma2->setConstant(kTRUE);
+	// tau->setConstant(kTRUE);
+	//
+	// RooMsgService::instance().setSilentMode(true);
 
 	// Now we use the SPlot class to add SWeights to our data set
 	// based on our model and our yield variables
 	RooStats::SPlot* sData = new RooStats::SPlot("sData","An SPlot", *data, model,
 	                                             RooArgList(*sigYield,*bkgYield) );
 
+	data->Print("v");
 	// Check that our weights have the desired properties
 
 	cout << "Check SWeights:" << endl;
@@ -412,13 +430,13 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	sWeightCanvas->Update();
 	sWeightCanvas->SaveAs(Form("plots/fit_run%d%s_sWeights%s.pdf",run,type,suffix));
 
-	TCanvas *sWeightVsMass = new TCanvas();
-	RooPlot* frame_sigsw_x = Lb_Mass->frame();
-	frame_sigsw_x->SetTitle("sWeights vs bmass");
-	data->plotOnXY(frame_sigsw_x,YVar(*sigYield_sw),MarkerColor(kBlue));
-	frame_sigsw_x->Draw();
-	sWeightVsMass->Update();
-	sWeightVsMass->SaveAs(Form("plots/fit_run%d%s_sWeightsVsMass%s.pdf",run,type,suffix));
+	// TCanvas *sWeightVsMass = new TCanvas();
+	// RooPlot* frame_sigsw_x = Lb_Mass->frame();
+	// frame_sigsw_x->SetTitle("sWeights vs bmass");
+	// data->plotOnXY(frame_sigsw_x,YVar(*sigYield_sw),MarkerColor(kBlue));
+	// frame_sigsw_x->Draw();
+	// sWeightVsMass->Update();
+	// sWeightVsMass->SaveAs(Form("plots/fit_run%d%s_sWeightsVsMass%s.pdf",run,type,suffix));
 
 	// create weightfed data set
 	RooDataSet *dataw_sig = new RooDataSet(data->GetName(),data->GetTitle(),

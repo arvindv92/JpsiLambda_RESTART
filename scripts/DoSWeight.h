@@ -7,6 +7,7 @@
 #include "RooRealVar.h"
 #include "RooStats/SPlot.h"
 #include "RooDataSet.h"
+#include "RooDataHist.h"
 #include "RooRealVar.h"
 #include "RooGaussian.h"
 #include "RooExponential.h"
