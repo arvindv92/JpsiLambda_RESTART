@@ -15,11 +15,10 @@ run = int(sys.argv[1])
 mcOpt = int(sys.argv[2])
 
 print 'Processing Run', run, 'mcOpt ', mcOpt
-columns = ['Lb_P', 'Lb_PT', 'Lb_ETA', 'Jpsi_P', 'Jpsi_PT', 'Jpsi_ETA',
-           'L_P', 'L_PT', 'L_ETA', 'p_P', 'p_PT', 'p_ETA', 'pi_P', 'pi_PT',
-           'pi_ETA']
-# 'p_ProbNNp', 'pi_ProbNNpi', 'p_PIDp']
-
+# columns = ['Lb_P', 'Lb_PT', 'Lb_ETA', 'Jpsi_P', 'Jpsi_PT', 'Jpsi_ETA',
+#            'L_P', 'L_PT', 'L_ETA', 'p_P', 'p_PT', 'p_ETA', 'pi_P', 'pi_PT',
+#            'pi_ETA']
+columns = ['p_ProbNNp', 'pi_ProbNNpi', 'p_PIDp']
 
 mcPath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run{}/'.format(run)
 if mcOpt == 1:
