@@ -17,7 +17,7 @@
 
 using namespace std;
 
-void MASTER(Int_t run = 1, Int_t config = 1, Bool_t doFixed = false, Bool_t isData = true)
+void MASTER1(Int_t run = 1, Int_t config = 1, Bool_t doFixed = false, Bool_t isData = true)
 //MCType = 1 for JpsiLambda MC
 //MCType = 2 for JpsiSigma MC
 //MCType = 3 for JpsiXi MC
