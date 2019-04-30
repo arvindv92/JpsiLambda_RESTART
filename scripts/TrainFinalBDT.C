@@ -11,6 +11,7 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
    isoConf = 1 or 5
    isoFlag = true if you want to use isolation in the final BDT.
  */
+//NB MODIFIED: Removing pi_ProbNNpi from variables because MC doesn't model it well
 {
 	TStopwatch sw;
 	sw.Start();
@@ -32,6 +33,10 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		                             run,bdtConf,type),"w");
 	}
 
+	cout<<"*****************************"<<endl;
+	cout<<"*****************************"<<endl;
+	cout<<"*****************************"<<endl;
+	cout<<"*****************************"<<endl;
 	cout<<"*****************************"<<endl;
 	cout << "==> Starting TrainFinalBDT: "<<endl;
 	gSystem->Exec("date");
@@ -56,24 +61,22 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	if(isoFlag)
 	{
 		outfileName = Form("%s/TMVAtraining/iso/"
-		                   "TMVA-JpsiLambda_%s_data_iso%d_%s_BDT%d_noPID.root",
-		                   rootFolder,type,isoConf,isoVersion,bdtConf);
+		                   "data_iso%d_%s_BDT%d_noPID.root",
+		                   rootFolder,isoConf,isoVersion,bdtConf);
 		outputFile  = TFile::Open(outfileName, "RECREATE");
-		factory     = new TMVA::Factory(Form("TMVAClassification-"
-		                                     "JpsiLambda%s_dataRun%d_iso%d_%s_BDT%d_noPID",
-		                                     type,run,isoConf,isoVersion,bdtConf),outputFile,
+		factory     = new TMVA::Factory(Form("dataRun%d_iso%d_%s_BDT%d_noPID",
+		                                     run,isoConf,isoVersion,bdtConf),outputFile,
 		                                "!V:!Silent:Color:!DrawProgressBar:"
 		                                "AnalysisType=Classification");
 	}
 	else
 	{
 		outfileName = Form("%s/TMVAtraining/noIso/"
-		                   "TMVA-JpsiLambda%s_data_noIso_BDT%d_noPID.root",
-		                   rootFolder,type,bdtConf);
+		                   "data_noIso_BDT%d_noPID.root",
+		                   rootFolder,bdtConf);
 		outputFile  = TFile::Open( outfileName, "RECREATE");
-		factory = new TMVA::Factory( Form("TMVAClassification-"
-		                                  "JpsiLambda%s_dataRun%d_noIso_BDT%d_noPID",
-		                                  type,run,bdtConf), outputFile,
+		factory = new TMVA::Factory( Form("dataRun%d_noIso_BDT%d_noPID",
+		                                  run,bdtConf), outputFile,
 		                             "!V:!Silent:Color:!DrawProgressBar:"
 		                             "AnalysisType=Classification" );
 	}
@@ -112,7 +115,7 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	//	dataLoader->AddVariable("pi_PIDK",'F');
 	dataLoader->AddVariable("log_piminipchi2     := log10(pi_MINIPCHI2)",'F');
 	dataLoader->AddVariable("log_pi_PT           := log10(pi_PT)",'F');
-	dataLoader->AddVariable("pi_ProbNNpi",'F');
+	// dataLoader->AddVariable("pi_ProbNNpi",'F');
 
 	if(isoFlag) dataLoader->AddVariable(Form("BDTkMin_%s",isoVersion),'F');
 
@@ -184,7 +187,7 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	treeIn->SetBranchStatus("pi_MINIPCHI2",1);
 	treeIn->SetBranchStatus("pi_ProbNNghost",1);
 	treeIn->SetBranchStatus("pi_PT",1);
-	treeIn->SetBranchStatus("pi_ProbNNpi",1);
+	// treeIn->SetBranchStatus("pi_ProbNNpi",1);
 
 	treeIn->SetBranchStatus("SW",1);
 	treeIn->SetBranchStatus("BW",1);

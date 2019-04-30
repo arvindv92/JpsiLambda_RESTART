@@ -54,12 +54,12 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	TMVA::Tools::Instance(); // This loads the library
 
 	outFileName = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
-	                   "TMVAtraining/iso/TMVA300-isok%s_data_%s_iso%d_noPID.root",
-	                   run,type,isoVersion,isoConf);
+	                   "TMVAtraining/iso/TMVA300-isok_data_%s_iso%d_noPID.root",
+	                   run,isoVersion,isoConf);
 	outputFile  = TFile::Open(outFileName, "RECREATE");
 
-	factory     = new TMVA::Factory(Form("TMVAClassification300-isok%s_dataRun%d_%s_iso%d_noPID",
-	                                     type,run,isoVersion,isoConf), outputFile,
+	factory     = new TMVA::Factory(Form("isok_dataRun%d_%s_iso%d_noPID",
+	                                     run,isoVersion,isoConf), outputFile,
 	                                "!V:!Silent:Color:!DrawProgressBar:"
 	                                "AnalysisType=Classification" );
 

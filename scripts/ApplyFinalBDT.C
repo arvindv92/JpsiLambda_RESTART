@@ -19,6 +19,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
    isoFlag = true if you want to use isolation in the final BDT.
    zeroFlag = true to apply final BDT on zeroTrack data, false to apply on nonZeroTracks data.
  */
+//NB MODIFIED: Removing pi_ProbNNpi from variables because MC doesn't model it well
 {
 	TStopwatch sw;
 	sw.Start();
@@ -112,6 +113,10 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 		                             folder,run,bdtConf,type),"w");
 	}
 
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
 	cout<<"******************************************"<<endl;
 	cout<<"Starting ApplyFinalBDT "<<endl;
 	gSystem->Exec("date");
@@ -333,7 +338,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	//	reader->AddVariable("pi_PIDK", &pi_PIDK);
 	reader->AddVariable("log_piminipchi2     := log10(pi_MINIPCHI2)", &log_piMinIpChi2);
 	reader->AddVariable("log_pi_PT           := log10(pi_PT)", &log_pi_pt);
-	reader->AddVariable("pi_ProbNNpi", &pi_ProbNNpi);
+	// reader->AddVariable("pi_ProbNNpi", &pi_ProbNNpi);
 
 	if(isoFlag && !zeroFlag)
 	{
@@ -345,13 +350,13 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	TString prefix;
 	if(isoFlag && !zeroFlag)
 	{
-		prefix = Form("TMVAClassification-JpsiLambda%s_dataRun%d_iso%d_%s_BDT%d_noPID",
-		              type,run,isoConf,isoVersion,bdtConf);
+		prefix = Form("dataRun%d_iso%d_%s_BDT%d_noPID",
+		              run,isoConf,isoVersion,bdtConf);
 	}
 	else if(!isoFlag || (isoFlag && zeroFlag))
 	{
-		prefix = Form("TMVAClassification-JpsiLambda%s_dataRun%d_noIso_BDT%d_noPID",
-		              type,run,bdtConf);
+		prefix = Form("dataRun%d_noIso_BDT%d_noPID",
+		              run,bdtConf);
 	}
 	TString methodName = TString("BDT method");
 	TString weightfile = dir + prefix + TString("_") +
@@ -399,8 +404,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	//	treeIn->SetBranchAddress("pi_PIDK", &piPIDK);
 	treeIn->SetBranchAddress("pi_MINIPCHI2", &piMinIpChi2);
 	treeIn->SetBranchAddress("pi_PT", &piPT);
-
-	treeIn->SetBranchAddress("pi_ProbNNpi", &piProbNNpi);
+	//treeIn->SetBranchAddress("pi_ProbNNpi", &piProbNNpi);
 
 	if(isoFlag && !zeroFlag)
 	{
@@ -450,7 +454,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 		//	pi_PIDK          = piPIDK;
 		log_piMinIpChi2      = log10(piMinIpChi2);
 		log_pi_pt            = log10(piPT);
-		pi_ProbNNpi          = piProbNNpi;
+		// pi_ProbNNpi          = piProbNNpi;
 
 		if(isoFlag && !zeroFlag) BDTK = myBDTK;
 

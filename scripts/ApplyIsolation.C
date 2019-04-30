@@ -202,8 +202,8 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	}
 
 	dir        = "dataset/weights/";
-	prefix     = Form("TMVAClassification300-isok%s_dataRun%d_%s_iso%d_noPID",
-	                  type,run,isoVersion,isoConf);
+	prefix     = Form("isok_dataRun%d_%s_iso%d_noPID",
+	                  run,isoVersion,isoConf);
 	methodName = "BDT method";
 
 	weightFile = dir + prefix + TString("_") +
