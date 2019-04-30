@@ -228,12 +228,12 @@ void MASTER(Int_t run = 1, Int_t config = 1, Bool_t doFixed = false, Bool_t isDa
 	// cout<<"***ApplyFinalBDT all nonZeroTracks run "<<run<<"isoVersion "<<
 	//         isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
 	//         finalBDTconf<<" ***"<<endl;
-	// ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, 1, finalBDTconf, isoFlag, false, logFlag);
+	// ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 1, isoFlag, false, logFlag);
 	//
 	// //Apply final BDT on zeroTracks data/MC
 	// cout<<"***ApplyFinalBDT all ZeroTracks run "<<run<<" finalBDTconf "<<
 	//         finalBDTconf<<" ***"<<endl;
-	// ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, 1, finalBDTconf, isoFlag, true, logFlag);
+	// ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 1, isoFlag, true, logFlag);
 	//
 	// if(isData)
 	// {
