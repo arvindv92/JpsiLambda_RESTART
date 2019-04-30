@@ -17,7 +17,7 @@ mcOpt = int(sys.argv[2])
 print 'Processing Run', run, 'mcOpt ', mcOpt
 columns = ['Lb_P', 'Lb_PT', 'Lb_ETA', 'Jpsi_P', 'Jpsi_PT', 'Jpsi_ETA',
            'L_P', 'L_PT', 'L_ETA', 'p_P', 'p_PT', 'p_ETA', 'pi_P', 'pi_PT',
-           'pi_ETA', 'ntracks']
+           'pi_ETA']
 
 
 mcPath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run{}/'.format(run)
@@ -49,7 +49,7 @@ elif mcOpt == 4:
 filePath = filePath.format(run)
 
 # Get the reweighter
-with open(mcPath + 'gb_wts.pkl') as f:
+with open(mcPath + 'gb_wts2.pkl') as f:
     reweighter = pickle.load(f)
 
     # Get the input file

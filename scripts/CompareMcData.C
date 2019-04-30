@@ -30,6 +30,7 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0)
 }
 void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t high, Int_t nBins)
 {
+  cout<<"Entered routine"<<endl;
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
 	gStyle->SetOptStat(0);
@@ -83,6 +84,7 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 		break;
 	}
 	}
+	cout<<"poop1"<<endl;
 
 	fileIn_data = TFile::Open(Form("rootFiles/dataFiles/JpsiLambda/run%d/sWeightSanity/jpsilambda_LL_sanity_withsw_noPID.root",run),"READ");
 	treeIn_data = (TTree*)fileIn_data->Get("MyTuple");
@@ -91,31 +93,41 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 	// fileIn_mc   = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",folder,run,part),"READ");
 
 	// treeIn_mcgen = (TTree*)fileIn_mc->Get("MCTuple/MCDecayTree");
-	treeIn_mc = (TTree*)fileIn_mc->Get("Lb2JpsiLTree/MyTuple");
+	treeIn_mc = (TTree*)fileIn_mc->Get("MyTuple");
+	cout<<"poop2"<<endl;
 	// treeIn_mc = (TTree*)fileIn_mc->Get("MyTuple");
 	// treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/gbWeights_pid_rec.root",folder,run));
 	treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/gbWeights_rec.root",folder,run));
+	cout<<"poop3"<<endl;
 	treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/tauWeights_rec.root",folder,run));
+	cout<<"poop4"<<endl;
 	// treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_pidgen.root",folder,run,part));
-
+	cout<<"poop5"<<endl;
 	treeIn_data->Draw(Form("%s>>dataHist(%d,%f,%f)",varName,nBins,low,high),"SW","goff");
+	cout<<"poop6"<<endl;
 	treeIn_mc->Draw(Form("%s>>mcHist(%d,%f,%f)",varName,nBins,low,high),"(Lb_BKGCAT==0||Lb_BKGCAT==50)","goff");
+	cout<<"poop7"<<endl;
 	treeIn_mc->Draw(Form("%s_corr>>mcHist_corr(%d,%f,%f)",varName,nBins,low,high),"(Lb_BKGCAT==0||Lb_BKGCAT==50)","goff");
+	cout<<"poop8"<<endl;
 	treeIn_mc->Draw(Form("%s_corr>>mcHist_corr_rw(%d,%f,%f)",varName,nBins,low,high),"gb_wts*wt_tau*(Lb_BKGCAT==0||Lb_BKGCAT==50)","goff");
+	cout<<"poop9"<<endl;
 	// treeIn_mcgen->Draw(Form("%s>>genHist_rw(%d,%f,%f)",mcvarName,nBins,low,high),"","goff");
 	// treeIn_mcgen->Draw(Form("%s>>genHist(%d,%f,%f)",mcvarName,nBins,low,high),"","goff");
 
 	TH1D *dataHist = (TH1D*)gDirectory->Get("dataHist");
 	TH1D *mcHist = (TH1D*)gDirectory->Get("mcHist");
-	TH1D *mcHist_rw = (TH1D*)gDirectory->Get("mcHist_rw");
+	TH1D *mcHist_corr = (TH1D*)gDirectory->Get("mcHist_corr");
 	TH1D *mcHist_corr_rw = (TH1D*)gDirectory->Get("mcHist_corr_rw");
+	cout<<"poop10"<<endl;
 	// TH1D *genHist = (TH1D*)gDirectory->Get("genHist");
 	// TH1D *genHist_rw = (TH1D*)gDirectory->Get("genHist_rw");
 
 	dataHist->Scale(1.0/dataHist->Integral());
 	mcHist->Scale(1.0/mcHist->Integral());
-	mcHist_rw->Scale(1.0/mcHist_rw->Integral());
+	mcHist_corr->Scale(1.0/mcHist_corr->Integral());
+	cout<<"poop10.5"<<endl;
 	mcHist_corr_rw->Scale(1.0/mcHist_corr_rw->Integral());
+	cout<<"poop11"<<endl;
 	// genHist->Scale(1.0/genHist->Integral());
 	// genHist_rw->Scale(1.0/genHist_rw->Integral());
 
@@ -126,11 +138,11 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 	}
 
 	myChi2    = mcHist->Chi2Test(dataHist,"WW CHI2/NDF");
-	myChi2_rw = mcHist_rw->Chi2Test(dataHist,"WW CHI2/NDF");
+	myChi2_rw = mcHist_corr->Chi2Test(dataHist,"WW CHI2/NDF");
 	myChi2_corr_rw = mcHist_corr_rw->Chi2Test(dataHist,"WW CHI2/NDF");
 	// genChi2    = genHist->Chi2Test(dataHist,"WW CHI2/NDF");
 	// genChi2_rw = genHist_rw->Chi2Test(dataHist,"WW CHI2/NDF");
-
+	cout<<"poop12"<<endl;
 	cout<<"myChi2 = "<<myChi2<<endl;
 	cout<<"myChi2_rw = "<<myChi2_rw<<endl;
 	cout<<"myChi2_corr_rw = "<<myChi2_corr_rw<<endl;
@@ -139,7 +151,7 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 	// cout<<"gen myChi2_rw = "<<genChi2_rw<<endl;
 
 	Float_t maxY = TMath::Max(dataHist->GetBinContent(dataHist->GetMaximumBin()), mcHist->GetBinContent(mcHist->GetMaximumBin()));
-	Float_t maxY1 = TMath::Max(dataHist->GetBinContent(dataHist->GetMaximumBin()), mcHist_rw->GetBinContent(mcHist_rw->GetMaximumBin()));
+	Float_t maxY1 = TMath::Max(dataHist->GetBinContent(dataHist->GetMaximumBin()), mcHist_corr->GetBinContent(mcHist_corr->GetMaximumBin()));
 	Float_t maxY2 = TMath::Max(dataHist->GetBinContent(dataHist->GetMaximumBin()), mcHist_corr_rw->GetBinContent(mcHist_corr_rw->GetMaximumBin()));
 	// Float_t maxY2 = TMath::Max(dataHist->GetBinContent(dataHist->GetMaximumBin()), genHist->GetBinContent(genHist->GetMaximumBin()));
 	// Float_t maxY3 = TMath::Max(dataHist->GetBinContent(dataHist->GetMaximumBin()), genHist_rw->GetBinContent(genHist_rw->GetMaximumBin()));
@@ -147,8 +159,8 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 	mcHist->SetLineColor(kRed);
 	mcHist->SetLineWidth(2.0);
 
-	mcHist_rw->SetLineColor(kRed);
-	mcHist_rw->SetLineWidth(2.0);
+	mcHist_corr->SetLineColor(kRed);
+	mcHist_corr->SetLineWidth(2.0);
 
 	mcHist_corr_rw->SetLineColor(kRed);
 	mcHist_corr_rw->SetLineWidth(2.0);
@@ -165,7 +177,7 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 	dataHist->SetMarkerSize(0.8);
 
 	mcHist->GetYaxis()->SetRangeUser(0,maxY*1.2);
-	mcHist_rw->GetYaxis()->SetRangeUser(0,maxY1*1.2);
+	mcHist_corr->GetYaxis()->SetRangeUser(0,maxY1*1.2);
 	mcHist_corr_rw->GetYaxis()->SetRangeUser(0,maxY2*1.2);
 	// genHist->GetYaxis()->SetRangeUser(0,maxY2*1.2);
 	// genHist_rw->GetYaxis()->SetRangeUser(0,maxY3*1.2);
@@ -183,7 +195,7 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 
 	c1->cd(2);
 
-	mcHist_rw->Draw("HIST");
+	mcHist_corr->Draw("HIST");
 	dataHist->Draw("E0same");
 
 	TLatex chi2_rw;
