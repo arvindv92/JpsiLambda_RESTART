@@ -21,12 +21,12 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0)
 	Float_t nBinArray[26]        = {50,50,20,50,50,20,50,50,20,50,50,20,50,50,20,15,15,50,50,50,50,20,40,25,25,50 };
 
 	for(Int_t i=17; i<20; i++)
-	{
-		cout<<"********"<<endl;
-		cout<<"VARNAME = "<<varNameArray[i]<<endl;
-		routine(run,mcType,varNameArray[i],lowArray[i],highArray[i],nBinArray[i]);
-	}
-
+	  {
+	    cout<<"********"<<endl;
+	    cout<<"VARNAME = "<<varNameArray[i]<<endl;
+	    routine(run,mcType,varNameArray[i],lowArray[i],highArray[i],nBinArray[i]);
+	  }
+	
 }
 void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t high, Int_t nBins)
 {
@@ -41,7 +41,7 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 
 	// if(tmFlag)
 	//      tmCut = "(Lb_BKGCAT==0||Lb_BKGCAT==50)";
-	Double_t myChi2 = 0.0, myChi2_rw = 0.0, myChi2_corr_rw = 0.0;
+	Double_t myChi2 = 0.0, myChi2_rw = 0.0, myChi2_corr_rw = 0.0, myChi2_corr = 0.0;
 	Double_t genChi2 = 0.0, genChi2_rw = 0.0, genChi2_corr_rw = 0.0;
 
 	const char *folder = "", *part = "";
@@ -84,7 +84,6 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 		break;
 	}
 	}
-	cout<<"poop1"<<endl;
 
 	fileIn_data = TFile::Open(Form("rootFiles/dataFiles/JpsiLambda/run%d/sWeightSanity/jpsilambda_LL_sanity_withsw_noPID.root",run),"READ");
 	treeIn_data = (TTree*)fileIn_data->Get("MyTuple");
@@ -94,40 +93,34 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 
 	// treeIn_mcgen = (TTree*)fileIn_mc->Get("MCTuple/MCDecayTree");
 	treeIn_mc = (TTree*)fileIn_mc->Get("MyTuple");
-	cout<<"poop2"<<endl;
+
 	// treeIn_mc = (TTree*)fileIn_mc->Get("MyTuple");
 	// treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/gbWeights_pid_rec.root",folder,run));
 	treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/gbWeights_rec.root",folder,run));
-	cout<<"poop3"<<endl;
 	treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/tauWeights_rec.root",folder,run));
-	cout<<"poop4"<<endl;
-	// treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_pidgen.root",folder,run,part));
-	cout<<"poop5"<<endl;
-	treeIn_data->Draw(Form("%s>>dataHist(%d,%f,%f)",varName,nBins,low,high),"SW","goff");
-	cout<<"poop6"<<endl;
-	treeIn_mc->Draw(Form("%s>>mcHist(%d,%f,%f)",varName,nBins,low,high),"(Lb_BKGCAT==0||Lb_BKGCAT==50)","goff");
-	cout<<"poop7"<<endl;
-	treeIn_mc->Draw(Form("%s_corr>>mcHist_corr(%d,%f,%f)",varName,nBins,low,high),"(Lb_BKGCAT==0||Lb_BKGCAT==50)","goff");
-	cout<<"poop8"<<endl;
-	treeIn_mc->Draw(Form("%s_corr>>mcHist_corr_rw(%d,%f,%f)",varName,nBins,low,high),"gb_wts*wt_tau*(Lb_BKGCAT==0||Lb_BKGCAT==50)","goff");
-	cout<<"poop9"<<endl;
+
+	treeIn_data->Draw(Form("%s>>dataHist(%d,%f,%f)",varName,nBins,low,high),"SW*(pi_PT > 250 && pi_P > 2000 && pi_MINIPCHI2 < 50)"," goff");
+	treeIn_mc->Draw(Form("%s>>mcHist(%d,%f,%f)",varName,nBins,low,high),"(Lb_BKGCAT==0||Lb_BKGCAT==50)&&(pi_PT > 250 && pi_P > 2000 && pi_MINIPCHI2 < 50)","goff");
+	//	treeIn_mc->Draw(Form("%s>>mcHist_rw(%d,%f,%f)",varName,nBins,low,high),"gb_wts*wt_tau*((Lb_BKGCAT==0||Lb_BKGCAT==50)&&(pi_PT > 250 && pi_P > 2000))","goff");
+	treeIn_mc->Draw(Form("%s_corr>>mcHist_corr(%d,%f,%f)",varName,nBins,low,high),"(Lb_BKGCAT==0||Lb_BKGCAT==50)&&(pi_PT > 250 && pi_P > 2000 && pi_MINIPCHI2 < 50)","goff");
+	treeIn_mc->Draw(Form("%s_corr>>mcHist_corr_rw(%d,%f,%f)",varName,nBins,low,high),"gb_wts*wt_tau*((Lb_BKGCAT==0||Lb_BKGCAT==50)&&(pi_PT > 250 && pi_P > 2000 && pi_MINIPCHI2 < 50))","goff");
 	// treeIn_mcgen->Draw(Form("%s>>genHist_rw(%d,%f,%f)",mcvarName,nBins,low,high),"","goff");
 	// treeIn_mcgen->Draw(Form("%s>>genHist(%d,%f,%f)",mcvarName,nBins,low,high),"","goff");
 
 	TH1D *dataHist = (TH1D*)gDirectory->Get("dataHist");
 	TH1D *mcHist = (TH1D*)gDirectory->Get("mcHist");
+	//	TH1D *mcHist_rw = (TH1D*)gDirectory->Get("mcHist_rw");
 	TH1D *mcHist_corr = (TH1D*)gDirectory->Get("mcHist_corr");
 	TH1D *mcHist_corr_rw = (TH1D*)gDirectory->Get("mcHist_corr_rw");
-	cout<<"poop10"<<endl;
+
 	// TH1D *genHist = (TH1D*)gDirectory->Get("genHist");
 	// TH1D *genHist_rw = (TH1D*)gDirectory->Get("genHist_rw");
 
 	dataHist->Scale(1.0/dataHist->Integral());
 	mcHist->Scale(1.0/mcHist->Integral());
+	//mcHist_rw->Scale(1.0/mcHist_rw->Integral());
 	mcHist_corr->Scale(1.0/mcHist_corr->Integral());
-	cout<<"poop10.5"<<endl;
 	mcHist_corr_rw->Scale(1.0/mcHist_corr_rw->Integral());
-	cout<<"poop11"<<endl;
 	// genHist->Scale(1.0/genHist->Integral());
 	// genHist_rw->Scale(1.0/genHist_rw->Integral());
 
@@ -138,19 +131,22 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 	}
 
 	myChi2    = mcHist->Chi2Test(dataHist,"WW CHI2/NDF");
-	myChi2_rw = mcHist_corr->Chi2Test(dataHist,"WW CHI2/NDF");
+	//myChi2_rw = mcHist_rw->Chi2Test(dataHist,"WW CHI2/NDF");
+	myChi2_corr = mcHist_corr->Chi2Test(dataHist,"WW CHI2/NDF");
 	myChi2_corr_rw = mcHist_corr_rw->Chi2Test(dataHist,"WW CHI2/NDF");
 	// genChi2    = genHist->Chi2Test(dataHist,"WW CHI2/NDF");
 	// genChi2_rw = genHist_rw->Chi2Test(dataHist,"WW CHI2/NDF");
-	cout<<"poop12"<<endl;
+
 	cout<<"myChi2 = "<<myChi2<<endl;
-	cout<<"myChi2_rw = "<<myChi2_rw<<endl;
+	//	cout<<"myChi2_rw = "<<myChi2_rw<<endl;
+	cout<<"myChi2_corr = "<<myChi2_corr<<endl;
 	cout<<"myChi2_corr_rw = "<<myChi2_corr_rw<<endl;
 
 	// cout<<"gen myChi2 = "<<genChi2<<endl;
 	// cout<<"gen myChi2_rw = "<<genChi2_rw<<endl;
 
 	Float_t maxY = TMath::Max(dataHist->GetBinContent(dataHist->GetMaximumBin()), mcHist->GetBinContent(mcHist->GetMaximumBin()));
+	//	Float_t maxY1 = TMath::Max(dataHist->GetBinContent(dataHist->GetMaximumBin()), mcHist_rw->GetBinContent(mcHist_rw->GetMaximumBin()));
 	Float_t maxY1 = TMath::Max(dataHist->GetBinContent(dataHist->GetMaximumBin()), mcHist_corr->GetBinContent(mcHist_corr->GetMaximumBin()));
 	Float_t maxY2 = TMath::Max(dataHist->GetBinContent(dataHist->GetMaximumBin()), mcHist_corr_rw->GetBinContent(mcHist_corr_rw->GetMaximumBin()));
 	// Float_t maxY2 = TMath::Max(dataHist->GetBinContent(dataHist->GetMaximumBin()), genHist->GetBinContent(genHist->GetMaximumBin()));
@@ -159,6 +155,8 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 	mcHist->SetLineColor(kRed);
 	mcHist->SetLineWidth(2.0);
 
+	//	mcHist_rw->SetLineColor(kRed);
+	//        mcHist_rw->SetLineWidth(2.0);
 	mcHist_corr->SetLineColor(kRed);
 	mcHist_corr->SetLineWidth(2.0);
 
@@ -177,6 +175,7 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 	dataHist->SetMarkerSize(0.8);
 
 	mcHist->GetYaxis()->SetRangeUser(0,maxY*1.2);
+	//	mcHist_rw->GetYaxis()->SetRangeUser(0,maxY*1.2);
 	mcHist_corr->GetYaxis()->SetRangeUser(0,maxY1*1.2);
 	mcHist_corr_rw->GetYaxis()->SetRangeUser(0,maxY2*1.2);
 	// genHist->GetYaxis()->SetRangeUser(0,maxY2*1.2);
@@ -195,12 +194,19 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 
 	c1->cd(2);
 
+	// mcHist_rw->Draw("HIST");
+	// dataHist->Draw("E0same");
+
+	// TLatex chi2_rw;
+	// chi2_rw.SetTextSize(0.05);
+	// chi2_rw.DrawLatexNDC(.6,.85,Form("#chi^{2}/ndf = %.3f",myChi2_rw));
+
 	mcHist_corr->Draw("HIST");
 	dataHist->Draw("E0same");
 
-	TLatex chi2_rw;
-	chi2_rw.SetTextSize(0.05);
-	chi2_rw.DrawLatexNDC(.6,.85,Form("#chi^{2}/ndf = %.3f",myChi2_rw));
+	TLatex chi2_corr;
+	chi2_corr.SetTextSize(0.05);
+	chi2_corr.DrawLatexNDC(.6,.85,Form("#chi^{2}/ndf = %.3f",myChi2_corr));
 
 	c1->cd(3);
 
