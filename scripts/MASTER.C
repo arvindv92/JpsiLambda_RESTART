@@ -192,7 +192,7 @@ void MASTER(Int_t run = 1, Int_t config = 1, Bool_t doFixed = false, Bool_t isDa
 
 	//****ALL THIS STUFF IN THIS BLOCK IS INDEPENDENT OF ISOLATION. ONLY NEEDS TO BE EXECUTED TWICE. ONCE FOR EACH BDT CONF*******
 	//Train Final BDT on data sans isolation
-	cout<<"***TrainFinalBDT ZeroTracks run "<<run<<" ***"<<endl;
+	cout<<"***TrainFinalBDT ZeroTracks run "<<run<<"finalBDTconf "<<finalBDTconf<<" ***"<<endl;
 
 	//                                                isoFlag
 	TrainFinalBDT(run, trackType, isoVersion, isoConf, false, finalBDTconf, logFlag);
