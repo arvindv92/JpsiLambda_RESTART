@@ -146,9 +146,10 @@ void MASTER(Int_t run = 1, Int_t config = 1, Bool_t doFixed = false, Bool_t isDa
 	}
 	}
 
-	//      cout<<"$$$$$$$$$$$ Processing MC Type "<<mcType<< " $$$$$$$$$$$$$$"<<endl;
 	for(mcType = 1; mcType <=9; mcType++)
 	{
+		cout<<"$$$$$$$$$$$ Processing MC Type "<<mcType<< " $$$$$$$$$$$$$$"<<endl;
+
 		if((mcType !=4) && (mcType !=5))
 		{
 			if(doFixed == true)
