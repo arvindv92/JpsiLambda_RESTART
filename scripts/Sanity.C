@@ -113,6 +113,11 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 		                             folder,run),"w");
 	}
 	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
 	cout<<"==> Starting Sanity: "<<endl;
 	gSystem->Exec("date");
 	cout<<"WD = "<<gSystem->pwd()<<endl;

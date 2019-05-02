@@ -95,18 +95,15 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/Trigger_log.txt",
 		                             folder,run),"w");
 	}
-	// else if(!isData && logFlag && mcType == 2)
-	// {
-	//      gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiSigma/run%d/trigger_log.txt",run));
-	// }
-	// else if(!isData && logFlag && mcType == 3)
-	// {
-	//      gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/JpsiXi/run%d/trigger_log.txt",run));
-	// }
 
 	TStopwatch sw;
 	sw.Start();
 
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
 	cout<<"******************************************"<<endl;
 	cout<<"==> Starting Trigger: "<<endl;
 	cout<<"WD = "<<gSystem->pwd()<<endl;
@@ -121,11 +118,11 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 
 	Bool_t hlt1DiMuonHighMass = false, hlt1TrackMuon      = false;
 	Bool_t hlt1TrackAllL0     = false, hlt2DiMuonDetached = false;
-	Bool_t collateFlag        = true;
+	Bool_t collateFlag        = false;//NB set to false
 	/*f you don't want to re-collate MC, set this to false.
 	   For example, if only the trigger condition changes.*/
 
-	TFile *fileOut = nullptr, *fileIn     = nullptr;
+	TFile *fileOut = nullptr, *fileIn     = nullptr, *fileIn_pid = nullptr;
 	TTree *treeIn  = nullptr, *treeIn_gen = nullptr;
 	TTree *treeOut = nullptr, *myTree     = nullptr;
 	const char *triggerCut = "(Lb_Hlt1DiMuonHighMassDecision_TOS==1||"
@@ -180,11 +177,20 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 		{
 			CollateFiles(run, year, isData, mcType);
 		}
-		fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",
-		                          folder,run,part));
-		treeIn     = (TTree*)fileIn->Get("Lb2JpsiLTree/MyTuple");
-		treeIn     = (TTree*)fileIn->Get("MyTuple");//TEMP
+		fileIn     = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",
+		                              folder,run,part));
+		treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
 
+		fileIn_pid = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_pidgen.root",
+		                              folder,run,part));
+		if(!fileIn_pid)
+		{
+			cout<<"Unable to open PIDGEN file"<<endl;
+		}
+		else
+		{
+			treeIn = (TTree*)fileIn_pid->Get("MyTuple");
+		}
 
 		fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_triggered.root",
 		                         folder,run,part),"RECREATE");

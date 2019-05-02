@@ -104,6 +104,11 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/CutOutKs_noPID.txt",folder,run),"w");
 	}
 	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
 	cout<<"==> Starting CutOutKs: "<<endl;
 	gSystem->Exec("date");
 	cout<<"WD = "<<gSystem->pwd()<<endl;

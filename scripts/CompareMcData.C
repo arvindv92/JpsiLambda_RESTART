@@ -21,16 +21,19 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0)
 	Float_t nBinArray[26]        = {50,50,20,50,50,20,50,50,20,50,50,20,50,50,20,15,15,50,50,50,50,20,40,25,25,50 };
 
 	for(Int_t i=17; i<20; i++)
-	  {
-	    cout<<"********"<<endl;
-	    cout<<"VARNAME = "<<varNameArray[i]<<endl;
-	    routine(run,mcType,varNameArray[i],lowArray[i],highArray[i],nBinArray[i]);
-	  }
-	
+	{
+		if(i!=18)
+		{
+			cout<<"********"<<endl;
+			cout<<"VARNAME = "<<varNameArray[i]<<endl;
+			routine(run,mcType,varNameArray[i],lowArray[i],highArray[i],nBinArray[i]);
+		}
+	}
+
 }
 void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t high, Int_t nBins)
 {
-  cout<<"Entered routine"<<endl;
+	cout<<"Entered routine"<<endl;
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
 	gStyle->SetOptStat(0);
@@ -99,11 +102,11 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 	treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/gbWeights_rec.root",folder,run));
 	treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/tauWeights_rec.root",folder,run));
 
-	treeIn_data->Draw(Form("%s>>dataHist(%d,%f,%f)",varName,nBins,low,high),"SW*(pi_PT > 250 && pi_P > 2000 && pi_MINIPCHI2 < 50)"," goff");
-	treeIn_mc->Draw(Form("%s>>mcHist(%d,%f,%f)",varName,nBins,low,high),"(Lb_BKGCAT==0||Lb_BKGCAT==50)&&(pi_PT > 250 && pi_P > 2000 && pi_MINIPCHI2 < 50)","goff");
+	treeIn_data->Draw(Form("%s>>dataHist(%d,%f,%f)",varName,nBins,low,high),"SW"," goff");
+	treeIn_mc->Draw(Form("%s>>mcHist(%d,%f,%f)",varName,nBins,low,high),"(Lb_BKGCAT==0||Lb_BKGCAT==50)","goff");
 	//	treeIn_mc->Draw(Form("%s>>mcHist_rw(%d,%f,%f)",varName,nBins,low,high),"gb_wts*wt_tau*((Lb_BKGCAT==0||Lb_BKGCAT==50)&&(pi_PT > 250 && pi_P > 2000))","goff");
-	treeIn_mc->Draw(Form("%s_corr>>mcHist_corr(%d,%f,%f)",varName,nBins,low,high),"(Lb_BKGCAT==0||Lb_BKGCAT==50)&&(pi_PT > 250 && pi_P > 2000 && pi_MINIPCHI2 < 50)","goff");
-	treeIn_mc->Draw(Form("%s_corr>>mcHist_corr_rw(%d,%f,%f)",varName,nBins,low,high),"gb_wts*wt_tau*((Lb_BKGCAT==0||Lb_BKGCAT==50)&&(pi_PT > 250 && pi_P > 2000 && pi_MINIPCHI2 < 50))","goff");
+	treeIn_mc->Draw(Form("%s_corr>>mcHist_corr(%d,%f,%f)",varName,nBins,low,high),"(Lb_BKGCAT==0||Lb_BKGCAT==50)","goff");
+	treeIn_mc->Draw(Form("%s_corr>>mcHist_corr_rw(%d,%f,%f)",varName,nBins,low,high),"gb_wts*wt_tau*(Lb_BKGCAT==0||Lb_BKGCAT==50)","goff");
 	// treeIn_mcgen->Draw(Form("%s>>genHist_rw(%d,%f,%f)",mcvarName,nBins,low,high),"","goff");
 	// treeIn_mcgen->Draw(Form("%s>>genHist(%d,%f,%f)",mcvarName,nBins,low,high),"","goff");
 
