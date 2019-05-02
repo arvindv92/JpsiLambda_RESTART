@@ -192,78 +192,78 @@ void MASTER(Int_t run = 1, Int_t config = 1, Bool_t doFixed = false, Bool_t isDa
 					}
 				}
 			}
-			// else
-			// {
-			//      //****ALL THIS STUFF IN THIS BLOCK IS INDEPENDENT OF ISOLATION. ONLY NEEDS TO BE EXECUTED TWICE. ONCE FOR EACH BDT CONF*******
-			//
-			//      if(isData)
-			//      {
-			//              //Train Final BDT on data sans isolation
-			//              cout<<"***TrainFinalBDT ZeroTracks run "<<run<<"finalBDTconf "<<finalBDTconf<<" ***"<<endl;
-			//
-			//              //                                                isoFlag
-			//              TrainFinalBDT(run, trackType, isoVersion, isoConf, false, finalBDTconf, logFlag);
-			//      }
-			//
-			//      //Apply final BDT on zeroTracks data/MC
-			//      cout<<"***ApplyFinalBDT all ZeroTracks run "<<run<<" finalBDTconf "<<
-			//              finalBDTconf<<" ***"<<endl;
-			//      ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 1, isoFlag, true, logFlag);
-			//
-			//      if(isData)
-			//      {
-			//              //Apply final BDT on ZeroTracks sWeighted data
-			//              cout<<"***ApplyFinalBDT sWeight ZeroTracks run "<<run<<" isoVersion "<<
-			//                      isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
-			//                      finalBDTconf<<"***"<<endl;
-			//              ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 2, isoFlag, true, logFlag);
-			//      }
-			//      // ****************************************************************************************************************************
-			// }
-			if(isData)
+			else
 			{
-				// Train Isolation BDT on data.Both configs get trained here.
-				cout<<"***TrainIsolation run "<<run<<" isoVersion "<<isoVersion<<" isoConf "<<isoConf<<"***"<<endl;
-				TrainIsolation(run, trackType, isoVersion, isoConf, logFlag);
-			}
+				//****ALL THIS STUFF IN THIS BLOCK IS INDEPENDENT OF ISOLATION. ONLY NEEDS TO BE EXECUTED TWICE. ONCE FOR EACH BDT CONF*******
 
-			// Apply isolation BDT on all data/MC
-			cout<<"***ApplyIsolation all data/MC run "<<run<<" isoVersion "<<isoVersion<<
-			        " isoConf "<<isoConf<<"***"<<endl;
-			ApplyIsolation(run, isData, mcType, trackType, 1, isoVersion, isoConf, logFlag);
+				if(isData)
+				{
+					//Train Final BDT on data sans isolation
+					cout<<"***TrainFinalBDT ZeroTracks run "<<run<<"finalBDTconf "<<finalBDTconf<<" ***"<<endl;
 
-			if(isData)
-			{
-				//Apply isolation BDT on sWeighted data
-				cout<<"***ApplyIsolation sWeight data run "<<run<<" isoVersion "<<isoVersion<<
-				        " isoConf "<<isoConf<<"***"<<endl;
-				ApplyIsolation(run, isData, mcType, trackType, 2, isoVersion, isoConf, logFlag);
-			}
-			if(isData && isoFlag)
-			{
-				//Train Final BDT on data w/ isolation
-				cout<<"***TrainFinalBDT nonZeroTracks run "<<run<<" isoVersion "<<isoVersion<<
-				        " isoConf "<<isoConf<<" ***"<<endl;
+					//                                                isoFlag
+					TrainFinalBDT(run, trackType, isoVersion, isoConf, false, finalBDTconf, logFlag);
+				}
 
-				//                                                isoFlag
-				TrainFinalBDT(run, trackType, isoVersion, isoConf, true, finalBDTconf, logFlag);
-			}
-
-			//Apply final BDT on nonZeroTracks data/MC
-			cout<<"***ApplyFinalBDT all nonZeroTracks run "<<run<<"isoVersion "<<
-			        isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
-			        finalBDTconf<<" ***"<<endl;
-			ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 1, isoFlag, false, logFlag);
-
-			if(isData)
-			{
-				// Apply final BDT on nonZeroTracks sWeighted data
-				cout<<"***ApplyFinalBDT sWeight nonZeroTracks run "<<run<<" isoVersion "<<
-				        isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
+				//Apply final BDT on zeroTracks data/MC
+				cout<<"***ApplyFinalBDT all ZeroTracks run "<<run<<" finalBDTconf "<<
 				        finalBDTconf<<" ***"<<endl;
-				ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 2, isoFlag, false, logFlag);
+				ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 1, isoFlag, true, logFlag);
 
+				if(isData)
+				{
+					//Apply final BDT on ZeroTracks sWeighted data
+					cout<<"***ApplyFinalBDT sWeight ZeroTracks run "<<run<<" isoVersion "<<
+					        isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
+					        finalBDTconf<<"***"<<endl;
+					ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 2, isoFlag, true, logFlag);
+				}
+				// ****************************************************************************************************************************
 			}
+			// if(isData)
+			// {
+			//      // Train Isolation BDT on data.Both configs get trained here.
+			//      cout<<"***TrainIsolation run "<<run<<" isoVersion "<<isoVersion<<" isoConf "<<isoConf<<"***"<<endl;
+			//      TrainIsolation(run, trackType, isoVersion, isoConf, logFlag);
+			// }
+			//
+			// // Apply isolation BDT on all data/MC
+			// cout<<"***ApplyIsolation all data/MC run "<<run<<" isoVersion "<<isoVersion<<
+			//         " isoConf "<<isoConf<<"***"<<endl;
+			// ApplyIsolation(run, isData, mcType, trackType, 1, isoVersion, isoConf, logFlag);
+			//
+			// if(isData)
+			// {
+			//      //Apply isolation BDT on sWeighted data
+			//      cout<<"***ApplyIsolation sWeight data run "<<run<<" isoVersion "<<isoVersion<<
+			//              " isoConf "<<isoConf<<"***"<<endl;
+			//      ApplyIsolation(run, isData, mcType, trackType, 2, isoVersion, isoConf, logFlag);
+			// }
+			// if(isData && isoFlag)
+			// {
+			//      //Train Final BDT on data w/ isolation
+			//      cout<<"***TrainFinalBDT nonZeroTracks run "<<run<<" isoVersion "<<isoVersion<<
+			//              " isoConf "<<isoConf<<" ***"<<endl;
+			//
+			//      //                                                isoFlag
+			//      TrainFinalBDT(run, trackType, isoVersion, isoConf, true, finalBDTconf, logFlag);
+			// }
+			//
+			// //Apply final BDT on nonZeroTracks data/MC
+			// cout<<"***ApplyFinalBDT all nonZeroTracks run "<<run<<"isoVersion "<<
+			//         isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
+			//         finalBDTconf<<" ***"<<endl;
+			// ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 1, isoFlag, false, logFlag);
+			//
+			// if(isData)
+			// {
+			//      // Apply final BDT on nonZeroTracks sWeighted data
+			//      cout<<"***ApplyFinalBDT sWeight nonZeroTracks run "<<run<<" isoVersion "<<
+			//              isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
+			//              finalBDTconf<<" ***"<<endl;
+			//      ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 2, isoFlag, false, logFlag);
+			//
+			// }
 			//Optimize final BDT cut based on some FoM
 			// cout<<"***OptimizeFinalBDT run "<<run<<" isoVersion "<<
 			//         isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
