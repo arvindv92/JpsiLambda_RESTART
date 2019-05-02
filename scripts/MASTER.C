@@ -17,7 +17,7 @@
 
 using namespace std;
 
-void MASTER(Int_t run = 1, Int_t config = 1, Bool_t doFixed = false, Bool_t isData = true)
+void MASTER(Int_t run = 1, Int_t config = 1, Int_t mcType = 0, Bool_t doFixed = false, Bool_t isData = true)
 //MCType = 1 for JpsiLambda MC
 //MCType = 2 for JpsiSigma MC
 //MCType = 3 for JpsiXi MC
@@ -59,7 +59,7 @@ void MASTER(Int_t run = 1, Int_t config = 1, Bool_t doFixed = false, Bool_t isDa
 
 	cout<<"poop"<<endl;
 
-	Int_t mcType               = 0;// 0 when running over data. 1, 2, 3 corresponding to J/psi Lambda MC reco'd as J/psi Lambda, J/psi Sigma and J/psi Xi respectively
+	// Int_t mcType               = 0;// 0 when running over data. 1, 2, 3 corresponding to J/psi Lambda MC reco'd as J/psi Lambda, J/psi Sigma and J/psi Xi respectively
 	Int_t trackType            = 3;// 3 for LL, 5 for DD.
 	Int_t isoConf              = 1;// config for isolation BDT. Currently 1 or 2 supported
 	Int_t finalBDTconf         = 1;// config for final BDT. Currently 1 or 2 supported
