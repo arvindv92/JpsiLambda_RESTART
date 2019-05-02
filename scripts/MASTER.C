@@ -152,8 +152,8 @@ void MASTER(Int_t run = 1, Int_t config = 1, Bool_t doFixed = false, Bool_t isDa
 	{
 		cout<<"$$$$$$$$$$$ Processing Run "<<run<<" $$$$$$$$$$$"<<endl;
 		//Trigger Cut
-		// cout<<"***Trigger***"<<endl;
-		// Trigger(run, year, isData, mcType, testing, loose, logFlag);
+		cout<<"***Trigger***"<<endl;
+		Trigger(run, year, isData, mcType, testing, loose, logFlag);
 
 		//Sanity Cuts
 		cout<<"***Sanity***"<<endl;
