@@ -42,7 +42,7 @@ void MASTER(Int_t run = 1, Int_t config = 1, Bool_t doFixed = false, Bool_t isDa
 	gROOT->ProcessLine(".L ApplyIsolation.C+");
 	gROOT->ProcessLine(".L TrainFinalBDT.C+");
 	gROOT->ProcessLine(".L ApplyFinalBDT.C+");
-	// gROOT->ProcessLine(".L OptimizeFinalBDT.C+");
+	gROOT->ProcessLine(".L OptimizeFinalBDT.C+");
 	//  gROOT->ProcessLine(".L CutFinalBDT.C+");
 
 	gSystem->Load("CollateFiles_C.so");
@@ -54,7 +54,7 @@ void MASTER(Int_t run = 1, Int_t config = 1, Bool_t doFixed = false, Bool_t isDa
 	gSystem->Load("ApplyIsolation_C.so");
 	gSystem->Load("TrainFinalBDT_C.so");
 	gSystem->Load("ApplyFinalBDT_C.so");
-	// gSystem->Load("OptimizeFinalBDT_C.so");
+	gSystem->Load("OptimizeFinalBDT_C.so");
 	//  gSystem->Load("CutFinalBDT_C.so");
 
 	cout<<"poop"<<endl;
