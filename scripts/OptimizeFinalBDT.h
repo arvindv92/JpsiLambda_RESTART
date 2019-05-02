@@ -15,8 +15,7 @@
 #include <vector>
 using namespace std;
 
-std::vector <Double_t> OptimizeFinalBDT(Int_t run = 1, Int_t trackType = 3,
-                                        const char* isoVersion = "v1",
+std::vector <Double_t> OptimizeFinalBDT(Int_t run = 1, const char* isoVersion = "v1",
                                         Int_t isoConf = 1, Int_t bdtConf = 1,
                                         Bool_t isoFlag = true,
                                         Bool_t logFlag = false,

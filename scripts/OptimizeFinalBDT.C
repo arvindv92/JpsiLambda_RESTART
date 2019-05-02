@@ -1,10 +1,6 @@
 #include "OptimizeFinalBDT.h"
 
-Double_t getSumOfWeights(Double_t mybdt = 0., TTree* tree = nullptr,
-                         Int_t flag = 1, Int_t bdtConf = 1, Int_t nEntries = 0);
-
-std::vector <Double_t> OptimizeFinalBDT(Int_t run, Int_t trackType,
-                                        const char* isoVersion, Int_t isoConf,
+std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t isoConf,
                                         Int_t bdtConf, Bool_t isoFlag,
                                         Bool_t logFlag, const char* FOM,
                                         const char *part)
@@ -12,19 +8,15 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, Int_t trackType,
 {
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
-	const char *type = "";
-
-	type = (trackType == 3) ? "LL" : "DD";
-
 	if(logFlag && isoFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/OptimizeFinalBDT%d_%s_iso%d_%s_%s_%s_noPID.txt",
-		                             run,bdtConf,type,isoConf,isoVersion, FOM, part),"w");
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/OptimizeFinalBDT%d_iso%d_%s_%s_%s_noPID.txt",
+		                             run,bdtConf,isoConf,isoVersion, FOM, part),"w");
 	}
 	if(logFlag && !isoFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/OptimizeFinalBDT%d_%s_noIso_%s_%s_noPID.txt",
-		                             run,bdtConf,type, FOM, part),"w");
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/OptimizeFinalBDT%d_noIso_%s_%s_noPID.txt",
+		                             run,bdtConf,FOM, part),"w");
 	}
 
 	cout<<"******************************************"<<endl;
@@ -32,6 +24,8 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, Int_t trackType,
 	gSystem->Exec("date");
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 	cout<<"******************************************"<<endl;
+
+	const char *type = "LL";
 
 	TFile *fileIn    = nullptr, *fileIn_zeroTracks    = nullptr;
 	TFile *fileIn_mc = nullptr, *fileIn_zeroTracks_mc = nullptr;
@@ -178,15 +172,9 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, Int_t trackType,
 		myTree->Draw(Form("BDT%d>>hsig0(200,-1.0,1.0)",bdtConf),"","goff");
 
 		hsig = (TH1D*)gDirectory->Get("hsig0");  //play around with this
-		//      hbkg = (TH1D*)gDirectory->Get("hbkg");
-
-		// TFile *tempFile = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/tempFile.root",run),"RECREATE");
-		// TTree *tempTree = (TTree*)myTree->CopyTree("");
 
 		bkginit = myTree->GetEntries("Lb_DTF_M_JpsiLConstr > 5700")*width/300;//scaling background to width of signal region
-		//siginit =  (Int_t)getSumOfWeights(-0.5,tempTree,1,bdtConf,nEntries);//rounding off happening here
 
-		//      bkginit =  (Int_t)getSumOfWeights(-0.5,myTree,2,bdtConf,nEntries);
 		cout<<"siginit = "<<siginit<<endl;
 		cout<<"bkginit = "<<bkginit<<endl;
 
@@ -258,43 +246,9 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, Int_t trackType,
 	TGraph *gr_Zero = new TGraph(199,bdtArray_Zero,fomArray_Zero);
 	gr_Zero->Draw("AC*");
 
-	c1->SaveAs(Form("plots/FOM_run%d_nonZeroTracks_bdtConf%d_iso%d_%s.pdf",run,bdtConf,isoConf,isoVersion));
-	c2->SaveAs(Form("plots/FOM_run%d_ZeroTracks_bdtConf%d.pdf",run,bdtConf));
+	c1->SaveAs(Form("plots/FOM_run%d_nonZeroTracks_bdtConf%d_iso%d_%s_noPID.pdf",run,bdtConf,isoConf,isoVersion));
+	c2->SaveAs(Form("plots/FOM_run%d_ZeroTracks_bdtConf%d_noPID.pdf",run,bdtConf));
 
 	if(logFlag) gSystem->RedirectOutput(0);
 	return cuts;
-}
-Double_t getSumOfWeights(Double_t mybdt, TTree* tree, Int_t flag,
-                         Int_t bdtConf, Int_t nEntries)
-{
-	Double_t sum = 0., mybdt1 = 0., bmass = 0.;
-	Float_t myweight = 0.;
-	// TTree *treecut = (TTree*)tree->CopyTree(Form("BDT > %f",mybdt));
-
-	if(flag == 1)
-	{
-		tree->SetBranchAddress("SW",&myweight);
-	}
-	else if(flag == 2)
-	{
-		tree->SetBranchAddress("BW",&myweight);
-	}
-
-	tree->SetBranchAddress("Lb_DTF_M_JpsiLConstr",&bmass);
-	tree->SetBranchAddress(Form("BDT%d",bdtConf),&mybdt1);
-
-	for(Int_t i=0; i<nEntries; i++)
-	{
-		tree->GetEntry(i);
-
-		if(mybdt1 > mybdt)
-		{
-			if((flag == 2 && bmass > 5700) || flag == 1)
-			{
-				sum += myweight;
-			}
-		}
-	}
-	cout<<"mybdt = "<<mybdt<<" sum = "<<sum<<endl;
-	return sum;
 }
