@@ -219,8 +219,14 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 	treeIn->SetBranchAddress("Lb_DTF_L_WMpipi_JpsiConstr",&WMpipi);
 	treeIn->SetBranchAddress("Added_n_Particles",&nTracks);
 
-	treeIn->SetBranchAddress("p_PIDp",&p_PIDp);
-
+	if(isData)
+	{
+		treeIn->SetBranchAddress("p_PIDp",&p_PIDp);
+	}
+	else
+	{
+		treeIn->SetBranchAddress("p_PIDp_corr",&p_PIDp);
+	}
 	// if(trackType == 3)
 	// {
 	L_dmCut = "L_dm < 7.5";        //These cuts are not optimized. RC might pain.
