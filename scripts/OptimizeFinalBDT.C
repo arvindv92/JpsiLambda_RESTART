@@ -153,18 +153,18 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 			cout<<"****************Optimizing for nonZeroTracks****************"<<endl;
 			mcTree = treeIn_mc;
 			if(run == 1)
-				siginit = 6569;
+				siginit = 7385; //6569;
 			if(run == 2)
-				siginit = 24741;
+				siginit = 25081; //24741;
 		}
 		else if(ctr == 1)
 		{
 			cout<<"****************Optimizing for ZeroTracks****************"<<endl;
 			mcTree = treeIn_zeroTracks_mc;
 			if(run == 1)
-				siginit = 407;
+				siginit = 439; //407;
 			if(run == 2)
-				siginit = 1195;
+				siginit = 1169; //1195;
 		}
 		nEntries = myTree->GetEntries();
 		cout<<"nEntries= "<<nEntries<<endl;
