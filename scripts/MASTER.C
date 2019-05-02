@@ -265,16 +265,16 @@ void MASTER(Int_t run = 1, Int_t config = 1, Bool_t doFixed = false, Bool_t isDa
 
 			}
 			//Optimize final BDT cut based on some FoM
-			cout<<"***OptimizeFinalBDT run "<<run<<" isoVersion "<<
-			        isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
-			        finalBDTconf<<" FOM "<<FOM<<" ***"<<endl;
-
-			bdtCuts = OptimizeFinalBDT(run, isoVersion, isoConf,
-			                           finalBDTconf, isoFlag, logFlag, FOM,
-			                           "sigma");
-
-			bdtCut = bdtCuts[0];
-			bdtCut_ZeroTracks = bdtCuts[1];
+			// cout<<"***OptimizeFinalBDT run "<<run<<" isoVersion "<<
+			//         isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
+			//         finalBDTconf<<" FOM "<<FOM<<" ***"<<endl;
+			//
+			// bdtCuts = OptimizeFinalBDT(run, isoVersion, isoConf,
+			//                            finalBDTconf, isoFlag, logFlag, FOM,
+			//                            "sigma");
+			//
+			// bdtCut = bdtCuts[0];
+			// bdtCut_ZeroTracks = bdtCuts[1];
 			// // Make cut on final BDT at optimum point for both nonZeroTracks and ZeroTracks, and combine the cut files.
 			// cout<<"***CutFinalBDT run "<<run<<" isoVersion "<<
 			//         isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
