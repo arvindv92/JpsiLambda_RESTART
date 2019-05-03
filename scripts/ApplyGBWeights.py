@@ -23,33 +23,57 @@ columns = ['Lb_P', 'Lb_PT', 'Lb_ETA', 'Jpsi_P', 'Jpsi_PT', 'Jpsi_ETA',
 mcPath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run{}/'.format(run)
 if mcOpt == 1:
     filePath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run{}/'
-    fileName = 'jpsilambda.root'
+    fileName = 'jpsilambda_pidgen.root'
     # fileName = 'jpsilambda_aliased.root'
-    treeName = 'Lb2JpsiLTree/MyTuple'
+    treeName = 'MyTuple'
     # treeName = 'MCDecayTree'
 elif mcOpt == 2:
     filePath = '../rootFiles/mcFiles/JpsiLambda/JpsiSigma/run{}/'
-    fileName = 'jpsisigma.root'
+    fileName = 'jpsisigma_pidgen.root'
     # fileName = 'jpsisigma_aliased.root'
-    treeName = 'Lb2JpsiLTree/MyTuple'
+    treeName = 'MyTuple'
     # treeName = 'MCDecayTree'
 elif mcOpt == 3:
     filePath = '../rootFiles/mcFiles/JpsiLambda/JpsiXi/run{}/'
-    fileName = 'jpsixi.root'
+    fileName = 'jpsixi_pidgen.root'
     # fileName = 'jpsixi_aliased.root'
-    treeName = 'Lb2JpsiLTree/MyTuple'
+    treeName = 'MyTuple'
     # treeName = 'MCDecayTree'
-elif mcOpt == 4:
-    filePath = '../rootFiles/mcFiles/JpsiXi/run{}/'
-    # fileName = 'jpsixi.root'
-    fileName = 'jpsilambda_aliased.root'
-    # treeName = 'Xib2JpsiXiTree/MyTuple'
-    treeName = 'MCDecayTree'
+elif mcOpt == 6:
+    filePath = '../rootFiles/mcFiles/JpsiLambda/Lst1405/run{}/'
+    fileName = 'lst1405_pidgen.root'
+    # fileName = 'jpsixi_aliased.root'
+    treeName = 'MyTuple'
+    # treeName = 'MCDecayTree'
+elif mcOpt == 7:
+    filePath = '../rootFiles/mcFiles/JpsiLambda/Lst1520/run{}/'
+    fileName = 'lst1520_pidgen.root'
+    # fileName = 'jpsixi_aliased.root'
+    treeName = 'MyTuple'
+    # treeName = 'MCDecayTree'
+elif mcOpt == 8:
+    filePath = '../rootFiles/mcFiles/JpsiLambda/Lst1600/run{}/'
+    fileName = 'lst1600_pidgen.root'
+    # fileName = 'jpsixi_aliased.root'
+    treeName = 'MyTuple'
+    # treeName = 'MCDecayTree'
+elif mcOpt == 9:
+    filePath = '../rootFiles/mcFiles/JpsiLambda/chiC1/run{}/'
+    fileName = 'chic1_pidgen.root'
+    # fileName = 'jpsixi_aliased.root'
+    treeName = 'MyTuple'
+    # treeName = 'MCDecayTree'
+# elif mcOpt == 4:
+#     filePath = '../rootFiles/mcFiles/JpsiXi/run{}/'
+#     # fileName = 'jpsixi.root'
+#     fileName = 'jpsilambda_aliased.root'
+#     # treeName = 'Xib2JpsiXiTree/MyTuple'
+#     treeName = 'MCDecayTree'
 
 filePath = filePath.format(run)
 
 # Get the reweighter
-with open(mcPath + 'gb_wts2.pkl') as f:
+with open(mcPath + 'gb_wts.pkl') as f:
     reweighter = pickle.load(f)
 
     # Get the input file
@@ -61,6 +85,9 @@ with open(mcPath + 'gb_wts2.pkl') as f:
     gb_weights = reweighter.predict_weights(original)
     gb_weights.dtype = [('gb_wts', 'float64')]
     # Write out weights to separate ROOT file
+    # root_numpy.array2root(gb_weights,
+    #                       filePath + 'RW/gbWeights_rec.root',
+    #                       treename='MyTuple', mode='recreate')
     root_numpy.array2root(gb_weights,
-                          filePath + 'RW/gbWeights_rec.root',
-                          treename='MyTuple', mode='recreate')
+                          filePath + fileName,
+                          treename='MyTuple', mode='update')
