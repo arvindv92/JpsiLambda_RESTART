@@ -63,7 +63,7 @@ for fName in files:
                 ctr = ctr + 1
     print ('finalBDTconf', bdtConf, 'isoConf', isoConf,
            'isoVersion', isoVersion, 'FOM_nonZero', myFOM_nonZero,
-           'eff_nonZero', mySigEff_nonZero, 'eff_Zero')
+           'eff_nonZero', mySigEff_nonZero, 'eff_Zero', mySigEff_Zero)
     if mySigEff_nonZero > maxSigEff_nonZero:
         maxFOM_nonZero = myFOM_nonZero
         bdtConf_best_nonZero = bdtConf
