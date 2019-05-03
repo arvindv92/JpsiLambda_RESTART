@@ -36,7 +36,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 	TString friendFileName            = "";
 	TString friendFileName_zeroTracks = "", t = "";
 
-	TH1D *hsig             = nullptr, *hbkg = nullptr;
+	TH1D *hsig             = nullptr;
 	Int_t nEntries         = 0, N = 0;
 	Float_t width          = 0.0;
 	const char *rootFolder = "";
@@ -141,11 +141,17 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 
 	while((myTree = (TTree*)iter->Next()))
 	{
-		Double_t BDT = 0., BDT_max = 0.;
-		Double_t myFOM = 0., myFOM_max = 0.;
-		Double_t eff_sig = 0., eff_sig_max = 0.;
-		Double_t eff_bkg = 0., eff_bkg_max = 0.;
-		Double_t sig = 0., bkg = 0., siginit = 0.;
+		Double_t BDT           = 0., BDT_max           = 0.;
+		Double_t myFOM         = 0., myFOM_max         = 0.;
+		Double_t eff_sig_wt    = 0., eff_sig_wt_max    = 0.;
+		Double_t eff_sig_wt_TM = 0., eff_sig_wt_TM_max = 0.;
+		Double_t eff_sig       = 0., eff_sig_max       = 0.;
+		Double_t eff_sig_TM    = 0., eff_sig_TM_max    = 0.;
+		Double_t eff_bkg       = 0., eff_bkg_max       = 0.;
+		Double_t sig           = 0., bkg               = 0., siginit = 0.;
+		Double_t gbwt = 0., tauwt = 0.;
+		Double_t mcBDT = 0., sumwt_num = 0., sumwt_den = 0.;
+		Int_t bkgcat = 0;
 		Int_t bkginit = 0;
 
 		if(ctr == 0)
@@ -166,6 +172,13 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 			if(run == 2)
 				siginit = 1169; //1195;
 		}
+		mcTree->SetBranchAddress("gb_wts",&gbwt);
+		mcTree->SetBranchAddress("wt_tau",&tauwt);
+		mcTree->SetBranchAddress("Lb_BKGCAT",&bkgcat);
+		mcTree->SetBranchAddress(Form("BDT%d",bdtConf),&mcBDT);
+
+		Int_t nEntries_mc = mcTree->GetEntries();
+
 		nEntries = myTree->GetEntries();
 		cout<<"nEntries= "<<nEntries<<endl;
 
@@ -179,21 +192,42 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 		cout<<"bkginit = "<<bkginit<<endl;
 
 		Int_t denom = mcTree->GetEntries("(Lb_BKGCAT==0||Lb_BKGCAT==50)");
-
+		for(Int_t j = 0; j<nEntries_mc; j++)
+		{
+			mcTree->GetEntry(j);
+			if(bkgcat==0||bkgcat==50)
+			{
+				sumwt_den += gbwt*tauwt;
+			}
+		}
 		for(Int_t i = 1; i < 200; i++) {
 
 			BDT = hsig->GetBinCenter(i);
 
+			for(Int_t j = 0; j<nEntries_mc; j++)
+			{
+				mcTree->GetEntry(j);
+				if(mcBDT < BDT || !(bkgcat==0||bkgcat==50))
+				{
+					continue;
+				}
+				else
+				{
+					sumwt_num += gbwt*tauwt;
+				}
+			}
+
 			if(ctr == 0) bdtArray_nonZero[i-1] = BDT;
 			else if(ctr == 1) bdtArray_Zero[i-1] = BDT;
 
-			eff_sig = mcTree->GetEntries(Form("(Lb_BKGCAT==0||Lb_BKGCAT==50) && BDT%d > %f",bdtConf,BDT))*1.0/denom;
+			eff_sig_TM    = mcTree->GetEntries(Form("(Lb_BKGCAT == 0||Lb_BKGCAT == 50) && BDT%d > %f",bdtConf,BDT))*1.0/denom;
+			eff_sig       = mcTree->GetEntries(Form("BDT%d > %f",bdtConf,BDT))*1.0/denom;
+			eff_sig_wt_TM = sumwt_num/sumwt_den;
 
-			sig = siginit*eff_sig;
+			sig = siginit*eff_sig_wt_TM;
 			bkg = myTree->GetEntries(Form("Lb_DTF_M_JpsiLConstr > 5700 && BDT%d > %f",bdtConf,BDT))*width/300;//assumes flat background
 
 			cout<<"SIG = "<<sig<<" BKG = "<<bkg;
-			// eff_sig = (Double_t) sig/siginit;
 			eff_bkg = (Double_t) bkg/bkginit;
 
 			if(TString(part) == "sigma" && TString(FOM) == "Sig")
@@ -225,16 +259,17 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 			else if(ctr == 1) fomArray_Zero[i-1] = myFOM;
 
 			if(myFOM > myFOM_max) {
-				myFOM_max = myFOM;
-				BDT_max = BDT;
-				eff_sig_max = eff_sig;
-				eff_bkg_max = eff_bkg;
+				myFOM_max         = myFOM;
+				BDT_max           = BDT;
+				eff_sig_TM_max    = eff_sig_TM;
+				eff_sig_wt_TM_max = eff_sig_wt_TM;
+				eff_bkg_max       = eff_bkg;
 			}
 			cout<<"For BDT = "<<BDT<<" FOM = "<<myFOM<<" sig_eff = "
-			    <<eff_sig*100<<"% bkg_eff = "<<eff_bkg*100<<"%"<<endl;
+			    <<eff_sig_TM*100<<"% sig_eff_wt = "<<eff_sig_wt_TM*100<<"% bkg_eff = "<<eff_bkg*100<<"%"<<endl;
 		}
 		cout<<"MAXIMUM FOM = "<<myFOM_max<<" at BDT = "<<BDT_max<<" with sig_eff = "
-		    <<eff_sig_max*100<<"% and bkg_eff = "<<eff_bkg_max*100<<"%"<<endl;
+		    <<eff_sig_TM_max*100<<"% sig_eff_wt = "<<eff_sig_wt_TM*100<<"% and bkg_eff = "<<eff_bkg_max*100<<"%"<<endl;
 		cuts.push_back(BDT_max);
 		ctr++;
 	}
