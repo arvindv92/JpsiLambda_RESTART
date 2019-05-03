@@ -9,8 +9,8 @@ void AliasFile(Int_t run = 1, Int_t mcType = 1)
 //mcType = 8 for JpsiLst(1600) MC
 //mcType = 9 for chiC1 Lambda MC
 {
-	TFile *fileIn = nullptr, *fileOut = nullptr;
-	TTree *treeIn = nullptr, *treeOut = nullptr;
+	TFile *fileIn = nullptr;
+	TTree *treeIn = nullptr;
 
 	const char *folder = "", *part = "";
 	switch(mcType)
@@ -96,11 +96,14 @@ void AliasFile(Int_t run = 1, Int_t mcType = 1)
 	treeIn->SetAlias("pi_ETA","-log(tan(0.5*atan(piminus_TRUEPT/piminus_TRUEP_Z)))");
 
 
-	fileOut = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/%s_aliased.root",folder,run,part),"RECREATE");
-	treeOut = (TTree*)treeIn->CopyTree("");
+	// fileOut = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/%s_aliased.root",folder,run,part),"RECREATE");
+	// treeOut = (TTree*)treeIn->CopyTree("");
+	//
+	// fileOut->Write();
+	// fileOut->Close();
 
-	fileOut->Write();
-	fileOut->Close();
+	fileIn->cd("MCTuple");
+	treeIn->Write("",TObject::kOverwrite);
 
 	fileIn->Close();
 }
