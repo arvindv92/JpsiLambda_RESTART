@@ -149,7 +149,8 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 		Double_t eff_sig_TM    = 0., eff_sig_TM_max    = 0.;
 		Double_t eff_bkg       = 0., eff_bkg_max       = 0.;
 		Double_t sig           = 0., bkg               = 0., siginit = 0.;
-		Double_t gbwt = 0., tauwt = 0.;
+		Double_t gbwt = 0.;
+		Float_t tauwt = 0.;
 		Double_t mcBDT = 0., sumwt_num = 0., sumwt_den = 0.;
 		Int_t bkgcat = 0;
 		Int_t bkginit = 0;
