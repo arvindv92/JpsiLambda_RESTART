@@ -1,5 +1,6 @@
 #include "TFile.h"
 #include "TTree.h"
+#include "TBranch.h"
 #include "iostream"
 
 using namespace std;
@@ -88,7 +89,7 @@ void ApplyTauWeight(Int_t run = 1, Int_t mcType = 0, Bool_t isGen = false)
 		treeOut = new TTree("MyTuple","MyTuple");
 	}
 
-	treeOut->Branch("wt_tau",&wt_tau,"wt_tau/F");
+	TBranch *wtBranch = treeOut->Branch("wt_tau",&wt_tau,"wt_tau/F");
 
 	nEntries = treeIn->GetEntries();
 
@@ -122,7 +123,8 @@ void ApplyTauWeight(Int_t run = 1, Int_t mcType = 0, Bool_t isGen = false)
 		{
 			wt_tau = 1.0;
 		}
-		treeOut->Fill();
+		// treeOut->Fill();
+		wtBranch->Fill();
 	}
 
 	if(!isGen)
