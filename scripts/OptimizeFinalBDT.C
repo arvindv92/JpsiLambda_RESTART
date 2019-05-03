@@ -201,7 +201,8 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 				sumwt_den += gbwt*tauwt;
 			}
 		}
-		for(Int_t i = 1; i < 200; i++) {
+		for(Int_t i = 1; i < 200; i++)
+		{
 			sumwt_num = 0.;
 			BDT = hsig->GetBinCenter(i);
 
@@ -259,7 +260,8 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 			if(ctr == 0) fomArray_nonZero[i-1] = myFOM;
 			else if(ctr == 1) fomArray_Zero[i-1] = myFOM;
 
-			if(myFOM > myFOM_max) {
+			if(myFOM > myFOM_max)
+			{
 				myFOM_max         = myFOM;
 				BDT_max           = BDT;
 				eff_sig_TM_max    = eff_sig_TM;
@@ -270,7 +272,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 			    <<eff_sig_TM*100<<"% sig_eff_wt = "<<eff_sig_wt_TM*100<<"% bkg_eff = "<<eff_bkg*100<<"%"<<endl;
 		}
 		cout<<"MAXIMUM FOM = "<<myFOM_max<<" at BDT = "<<BDT_max<<" with sig_eff = "
-		    <<eff_sig_TM_max*100<<"% sig_eff_wt = "<<eff_sig_wt_TM*100<<"% and bkg_eff = "<<eff_bkg_max*100<<"%"<<endl;
+		    <<eff_sig_TM_max*100<<"% sig_eff_wt = "<<eff_sig_wt_TM_max*100<<"% and bkg_eff = "<<eff_bkg_max*100<<"%"<<endl;
 		cuts.push_back(BDT_max);
 		ctr++;
 	}
