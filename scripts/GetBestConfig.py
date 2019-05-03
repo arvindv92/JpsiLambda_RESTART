@@ -10,7 +10,7 @@ args = parser.parse_args()
 run = args.RUN
 
 isoFlag = True
-files = glob.glob("../logs/data/JpsiLambda/run{}/OptimizeFinalBDT*_Punzi_Sigma.txt".format(run))
+files = glob.glob("../logs/data/JpsiLambda/run{}/OptimizeFinalBDT*_Punzi_Sigma_noPID.txt".format(run))
 ctr = 0
 myFOM_nonZero = 0.0
 myFOM_Zero = 0.0
@@ -53,14 +53,17 @@ for fName in files:
                 if ctr == 0:
                     myFOM_nonZero = float(line.split()[3])
                     bdtCut_nonZero = float(line.split()[7])
-                    mySigEff_nonZero = float(line.split()[11])
-                    myBkgEff_nonZero = float(line.split()[15])
+                    mySigEff_nonZero = float(line.split()[14])  # this gives weighted signal efficiency
+                    myBkgEff_nonZero = float(line.split()[18])
                 if ctr == 1:
                     myFOM_Zero = float(line.split()[3])
                     bdtCut_Zero = float(line.split()[7])
-                    mySigEff_Zero = float(line.split()[11])
-                    myBkgEff_Zero = float(line.split()[15])
+                    mySigEff_Zero = float(line.split()[14])  # this gives weighted signal efficiency
+                    myBkgEff_Zero = float(line.split()[18])
                 ctr = ctr + 1
+    print ('finalBDTconf', bdtConf, 'isoConf', isoConf,
+           'isoVersion', isoVersion, 'FOM_nonZero', myFOM_nonZero,
+           'eff_nonZero', mySigEff_nonZero, 'eff_Zero')
     if mySigEff_nonZero > maxSigEff_nonZero:
         maxFOM_nonZero = myFOM_nonZero
         bdtConf_best_nonZero = bdtConf
