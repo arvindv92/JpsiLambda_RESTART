@@ -202,7 +202,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 			}
 		}
 		for(Int_t i = 1; i < 200; i++) {
-
+			sumwt_num = 0.;
 			BDT = hsig->GetBinCenter(i);
 
 			for(Int_t j = 0; j<nEntries_mc; j++)
