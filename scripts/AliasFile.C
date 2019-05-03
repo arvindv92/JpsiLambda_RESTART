@@ -64,7 +64,7 @@ void AliasFile(Int_t run = 1, Int_t mcType = 1)
 		break;
 	}
 	}
-	fileIn = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",folder,run,part),"READ");
+	fileIn = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",folder,run,part),"UPDATE");
 	treeIn = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
 
 	if(mcType != 3)
