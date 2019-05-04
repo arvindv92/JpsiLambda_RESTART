@@ -3,8 +3,8 @@ import math
 from ROOT import TFile, TGraph
 
 
-def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1, finalBDTConf_Zero=1,
-            bdtCut_nonZero=-1.0, bdtCut_Zero=-1.0):
+def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
+            finalBDTConf_Zero=1, bdtCut_nonZero=-1.0, bdtCut_Zero=-1.0):
     genLog = open("../logs/mc/JpsiXi/run" + str(run) + "/gen_log.txt")
     line = genLog.readline()
     genYield = int(line.rstrip('\n'))
@@ -33,17 +33,17 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1, finalBDTC
     ###############################
     path = "../rootFiles/mcFiles/JpsiLambda/JpsiXi/run" + str(run) + "/"
     nonZeroTracksFile = TFile(path
-                              + "jpsixi_cutoutks_LL_nonZeroTracks.root")
+                              + "jpsixi_cutoutks_LL_nonZeroTracks_noPID.root")
     ZeroTracksFile = TFile(path
-                           + "jpsixi_cutoutks_LL_ZeroTracks.root")
+                           + "jpsixi_cutoutks_LL_ZeroTracks_noPID.root")
     nonZeroTracksTree = nonZeroTracksFile.MyTuple
     ZeroTracksTree = ZeroTracksFile.MyTuple
     ###############################
     nonZeroTracksTree.AddFriend("MyTuple", path + "jpsixi_LL_FinalBDT"
                                 + str(finalBDTConf_nonZero) + "_iso" + str(isoConf)
-                                + "_" + isoVersion + ".root")
+                                + "_" + isoVersion + "_noPID.root")
     ZeroTracksTree.AddFriend("MyTuple", path + "jpsixi_zeroTracksLL_FinalBDT"
-                             + str(finalBDTConf_Zero) + ".root")
+                             + str(finalBDTConf_Zero) + "_noPID.root")
     ###############################
 
     num = nonZeroTracksTree.GetEntries("Lb_BKGCAT==40 && BDT"
