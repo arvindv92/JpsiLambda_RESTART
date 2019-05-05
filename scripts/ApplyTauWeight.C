@@ -124,13 +124,17 @@ void ApplyTauWeight(Int_t run = 1, Int_t mcType = 0, Bool_t isGen = false)
 			wt_tau = 1.0;
 		}
 		// treeOut->Fill();
-		wtBranch->Fill();
+		if(!isGen)
+			wtBranch->Fill();
+		else
+			treeOut->Fill();
 	}
 
 	if(!isGen)
 	{
 		fileOut->cd();
 		treeOut->Write("",TObject::kOverwrite);
+		fileOut->Close();
 	}
 	else
 	{
