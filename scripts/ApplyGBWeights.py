@@ -47,19 +47,18 @@ elif mcOpt == 8:
 elif mcOpt == 9:
     filePath = '../rootFiles/mcFiles/JpsiLambda/chiC1/run{}/'
     part = 'chic1'
-# elif mcOpt == 4:
-#     filePath = '../rootFiles/mcFiles/JpsiXi/run{}/'
-#     # fileName = 'jpsixi.root'
-#     fileName = 'jpsilambda_aliased.root'
-#     # treeName = 'Xib2JpsiXiTree/MyTuple'
-#     treeName = 'MCDecayTree'
-
+elif mcOpt == 10:
+    filePath = '../rootFiles/mcFiles/JpsiXi/run{}/'
+    part = 'jpsixi'
 if isGen:
     fileName = part + '.root'
     treeName = 'MCTuple/MCDecayTree'
 else:
-    fileName = part + '_pidgen.root'
     treeName = 'MyTuple'
+    if(mcOpt != 10):
+        fileName = part + '_pidgen.root'
+    else:
+        fileName = part + '_cut_LL.root'
 filePath = filePath.format(run)
 
 # Get the reweighter
