@@ -337,9 +337,9 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		genWtsTree_Lambda->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
 		                                            lambdaMCPath,run));
 
-		TH1D *genWt_Lambda = nullptr;
-		genWtsTree_Lambda->Draw("gb_wts*wt_tau>>genWt_Lambda");
+		genWtsTree_Lambda->Draw("gb_wts*wt_tau>>genWt_Lambda","","goff");
 
+		TH1F *genWt_Lambda = (TH1F*)gDirectory->Get("genWt_Lambda");
 		nGen_Lambda_wt[i] = genWt_Lambda->GetEntries()*genWt_Lambda->GetMean();
 
 		fstream genEffFile_Lambda;
