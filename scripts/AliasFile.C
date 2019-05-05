@@ -73,7 +73,7 @@ void AliasFile(Int_t run = 1, Int_t mcType = 1)
 	if(mcType!=10)
 		fileIn = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",folder,run,part),"UPDATE");
 	else
-		fileIn = TFile::Open(Form("../rootFiles/mcFiles/JpsiXi/%s/run%d/%s.root",folder,run,part),"UPDATE");
+		fileIn = TFile::Open(Form("../rootFiles/mcFiles/JpsiXi/run%d/%s.root",run,part),"UPDATE");
 
 	treeIn = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
 
