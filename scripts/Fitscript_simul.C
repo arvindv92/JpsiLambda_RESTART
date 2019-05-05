@@ -556,6 +556,9 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	RooKeysPdf* KEYS_1405[2];
 
 	//****Get J/psi Lst(1405) efficiencies and shape from MC*******
+	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
+	cout<<"Get Lb -> J/psi Lst(1405) efficiency and shape"<<endl;
+	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
 	const char* Lst1405Path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/Lst1405";
 	const char* rwSuffix    = "";
 	const char* rwType      = "";
@@ -595,6 +598,19 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		                                                Lst1405Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
 		mcTreeIn_Zero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_zeroTracksLL_FinalBDT%d_noPID.root",
 		                                             Lst1405Path,run,bdtConf_Zero[i]));
+
+		TFile *genWtsFile_1405 = Open(Form("%s/run%d/RW/gbWeights_gen.root",
+		                                   Lst1405Path,run));
+		TTree *genWtsTree_1405 = (TTree*)genWtsFile_1405->Get("MyTuple");
+
+		genWtsTree_1405->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
+		                                          Lst1405Path,run));
+
+		genWtsTree_1405->Draw("gb_wts*wt_tau>>genWt_1405","","goff");
+
+		TH1F *genWt_1405 = (TH1F*)gDirectory->Get("genWt_1405");
+		nGen_1405_wt[i] = genWt_1405->GetEntries()*genWt_1405->GetMean();
+
 		// fstream genFile_1405;
 		// genFile_1405.open((Form("../logs/mc/JpsiLambda/Lst1405/run%d/gen_log.txt",run)));
 		//
@@ -612,11 +628,21 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 		//FOR NOW, EFF RATIO IS JUST RATIO OF RECO EFFS. ONCE I GET GENERATOR EFFS, I'LL PUT THEM IN
 
-		Int_t num_1405 = 0;
+		Int_t num_1405 = 0, num_1405_wt;
 		if(Lst1405_rwtype==0)
 		{
 			num_1405 = mcTreeIn_nonZero_1405->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
 			           mcTreeIn_Zero_1405->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));      //NOTE NO TM HERE
+
+			mcTreeIn_nonZero_1405->Draw("gb_wts*wt_tau>>wt_1405_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
+			mcTreeIn_Zero_1405->Draw("gb_wts*wt_tau>>wt_1405_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+
+			TH1F *wt_1405_nonZero = (TH1F*)gDirectory->Get("wt_1405_nonZero");
+			TH1F *wt_1405_Zero    = (TH1F*)gDirectory->Get("wt_1405_Zero");
+
+			num_1405_wt = (wt_1405_nonZero->GetMean()*wt_1405_nonZero->GetEntries()) +
+			              (wt_1405_Zero->GetMean()*wt_1405_Zero->GetEntries());
+
 		}
 		else
 		{
@@ -625,35 +651,64 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 			TH1D* hrw0 = (TH1D*)gDirectory->Get("hrw0");
 			TH1D* hrw1 = (TH1D*)gDirectory->Get("hrw1");
 			num_1405   = (hrw0->GetMean()*hrw0->GetEntries()) +(hrw1->GetMean()*hrw1->GetEntries());
+
+			mcTreeIn_nonZero_1405->Draw(Form("%sweight*gb_wts*wt_tau>>wt_1405_nonZero",rwType),Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
+			mcTreeIn_Zero_1405->Draw(Form("%sweight*gb_wts*wt_tau>>wt_1405_Zero",rwType),Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+
+			TH1F *wt_1405_nonZero = (TH1F*)gDirectory->Get("wt_1405_nonZero");
+			TH1F *wt_1405_Zero    = (TH1F*)gDirectory->Get("wt_1405_Zero");
+
+			num_1405_wt = (wt_1405_nonZero->GetMean()*wt_1405_nonZero->GetEntries()) +
+			              (wt_1405_Zero->GetMean()*wt_1405_Zero->GetEntries());
+
 		}
 
 		eff_1405_rec[i]     = num_1405*1.0/nGen_1405[i]; // Calc. reco. eff.
 		eff_1405_rec_err[i] = sqrt(eff_1405_rec[i]*(1-eff_1405_rec[i])/nGen_1405[i]); //stat error on recon. eff.
 
-		cout<<"Run "<<run<<" Lst1405 Recons. Effs = "
-		    <<eff_1405_rec[i]*100<<" % +/- "<<eff_1405_rec_err[i]*100<<" %"<<endl;
+		eff_1405_rec_wt[i]     = num_1405_wt*1.0/nGen_1405_wt[i]; //Calc. weighted reco eff.
+		eff_1405_rec_err_wt[i] = sqrt(eff_1405_rec_wt[i]*(1-eff_1405_rec_wt[i])/nGen_1405_wt[i]); //statistical error on weighted recon. eff.
 
-		eff_1405[i] = eff_1405_rec[i]; //TEMPORARY
+		cout<<"Run "<<run<<" UNWEIGHTED /\(1405) Recons. Effs = "<<eff_1405_rec[i]*100
+		    <<" % +/- "<<eff_1405_rec_err[i]*100<<" %"<<endl;
+
+		cout<<"Run "<<run<<" WEIGHTED /\(1405) Recons. Effs = "<<eff_1405_rec_wt[i]*100
+		    <<" % +/- "<<eff_1405_rec_err_wt[i]*100<<" %"<<endl;
+
+		eff_1405[i]         = eff_1405_rec[i]; //TEMPORARY
 		eff_1405_staterr[i] = eff_1405_rec_err[i]; //TEMPORARY
+
+		eff_1405_wt[i]         = eff_1405_rec_wt[i]; //TEMPORARY
+		eff_1405_staterr_wt[i] = eff_1405_rec_err_wt[i]; //TEMPORARY
 
 		// eff_1405[i] = eff_1405_gen[i] * eff_1405_rec[i]; // Calc overall eff.
 		// eff_1405_staterr[i] = eff_1405[i]*sqrt(pow((eff_1405_gen_err[i]/eff_1405_gen[i]),2) +
 		//                                        pow((eff_1405_rec_err[i]/eff_1405_rec[i]),2));   // and stat. error on above
 
-		cout<<"Run "<<run<<" Jpsi Lst1405 Eff = "<<eff_1405[i]*100<<" % +/- "<<eff_1405_staterr[i]*100<<" %"<<endl;
+		cout<<"************************************************"<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED Jpsi /\(1405) Eff = "<<eff_1405[i]*100
+		    <<" % +/- "<<eff_1405_staterr[i]*100<<" %"<<endl;
+		cout<<"Run "<<run<<" WEIGHTED Jpsi /\(1405) Eff = "<<eff_1405_wt[i]*100
+		    <<" % +/- "<<eff_1405_staterr_wt[i]*100<<" %"<<endl;
+		cout<<"************************************************"<<endl;
 
 		// eff_ratio[i]         = eff_1405[i]/eff_Lambda[i]; // Calc eff ratio.
 
-		eff_ratio_1405[i] = eff_1405[i]/eff_Lambda_rec[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
+		eff_ratio_1405[i]            = eff_1405[i]/eff_Lambda_rec[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
 		// eff_ratio_staterr_1405[i] = eff_ratio_1405[i]*sqrt(pow((eff_1405_staterr[i]/eff_1405[i]),2)+pow((eff_Lambda_staterr[i]/eff_Lambda[i]),2)); // stat err on ratio
-		eff_ratio_staterr_1405[i] = eff_ratio_1405[i]*sqrt(pow((eff_1405_staterr[i]/eff_1405[i]),2)+pow((eff_Lambda_rec_err[i]/eff_Lambda_rec[i]),2)); // TEMPORARY
+		eff_ratio_staterr_1405[i]    = eff_ratio_1405[i]*sqrt(pow((eff_1405_staterr[i]/eff_1405[i]),2)+pow((eff_Lambda_rec_err[i]/eff_Lambda_rec[i]),2)); // TEMPORARY
+		eff_ratio_systerr_1405[i]    = eff_ratio_1405[i]*eff_ratio_syst_1405;
+		eff_ratio_err_1405[i]        = sqrt(pow(eff_ratio_staterr_1405[i],2) + pow(eff_ratio_systerr_1405[i],2));//combine in quadrature
 
-		eff_ratio_systerr_1405[i] = eff_ratio_1405[i]*eff_ratio_syst_1405;
-
-		eff_ratio_err_1405[i] = sqrt(pow(eff_ratio_staterr_1405[i],2) + pow(eff_ratio_systerr_1405[i],2));//combine in quadrature
+		eff_ratio_1405_wt[i]            = eff_1405_wt[i]/eff_Lambda_rec_wt[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
+		// eff_ratio_staterr_1405_wt[i] = eff_ratio_1405_wt[i]*sqrt(pow((eff_1405_staterr_wt[i]/eff_1405_wt[i]),2)+pow((eff_Lambda_staterr_wt[i]/eff_Lambda_wt[i]),2)); // stat err on ratio
+		eff_ratio_staterr_1405_wt[i]    = eff_ratio_1405_wt[i]*sqrt(pow((eff_1405_staterr_wt[i]/eff_1405_wt[i]),2)+pow((eff_Lambda_rec_err_wt[i]/eff_Lambda_rec_wt[i]),2)); // TEMPORARY
+		eff_ratio_systerr_1405_wt[i]    = eff_ratio_1405_wt[i]*eff_ratio_syst_1405;
+		eff_ratio_err_1405_wt[i]        = sqrt(pow(eff_ratio_staterr_1405_wt[i],2) + pow(eff_ratio_systerr_1405_wt[i],2));//combine in quadrature
 
 		cout<<"***************************************"<<endl;
-		cout<<"The 1405/Lb efficiency ratio for Run "<<run<<" is "<<eff_ratio_1405[i]<<" +/- "<<eff_ratio_err_1405[i]<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED /\(1405)/Lambda efficiency ratio = "<<eff_ratio[i]<<" +/- "<<eff_ratio_err[i]<<endl;
+		cout<<"Run "<<run<<" WEIGHTED /\(1405)/Lambda efficiency ratio   = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_err_wt[i]<<endl;
 		cout<<"***************************************"<<endl;
 
 		//*******************************************************************
@@ -687,11 +742,11 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 		if(Lst1405_rwtype!=0)
 		{
-			ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,Form("%sweight",rwType));
+			ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,Form("%sweight*gb_wts*wt_tau",rwType));
 		}
 		else
 		{
-			ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))));
+			ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"gb_wts*wt_tau");
 		}
 		ds_1405[i]->Print();
 
@@ -760,6 +815,17 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 		genFile_1520>>nGen_1520[i]; // Get number of generated events
 
+		TFile *genWtsFile_1520 = Open(Form("%s/run%d/RW/gbWeights_gen.root",
+		                                   Lst1520Path,run));
+		TTree *genWtsTree_1520 = (TTree*)genWtsFile_1520->Get("MyTuple");
+
+		genWtsTree_1520->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
+		                                          Lst1520Path,run));
+
+		genWtsTree_1520->Draw("gb_wts*wt_tau>>genWt_1520","","goff");
+
+		TH1F *genWt_1520 = (TH1F*)gDirectory->Get("genWt_1520");
+		nGen_1520_wt[i] = genWt_1520->GetEntries()*genWt_1520->GetMean();
 
 		//***** DONT HAVE GENERATOR EFFS FOR LST(1520) YET
 		// fstream genEffFile_1520;
@@ -774,35 +840,63 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		//FOR NOW, EFF RATIO IS JUST RATIO OF RECO EFFS. ONCE I GET GENERATOR EFFS, I'LL PUT THEM IN
 
 		Int_t num_1520 = mcTreeIn_nonZero_1520->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
-		                 mcTreeIn_Zero_1520->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));                                                //NOTE NO TM HERE
+		                 mcTreeIn_Zero_1520->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+		//NOTE NO TM HERE
+		mcTreeIn_nonZero_1520->Draw("gb_wts*wt_tau>>wt_1520_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
+		mcTreeIn_Zero_1520->Draw("gb_wts*wt_tau>>wt_1520_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+
+		TH1F *wt_1520_nonZero = (TH1F*)gDirectory->Get("wt_1520_nonZero");
+		TH1F *wt_1520_Zero    = (TH1F*)gDirectory->Get("wt_1520_Zero");
+
+		Int_t num_1520_wt = (wt_1520_nonZero->GetMean()*wt_1520_nonZero->GetEntries()) +
+		                    (wt_1520_Zero->GetMean()*wt_1520_Zero->GetEntries());
 
 		eff_1520_rec[i]     = num_1520*1.0/nGen_1520[i]; // Calc. reco. eff.
 		eff_1520_rec_err[i] = sqrt(eff_1520_rec[i]*(1-eff_1520_rec[i])/nGen_1520[i]); //stat error on recon. eff.
 
-		cout<<"Run "<<run<<" Lst1520 Recons. Effs = "
-		    <<eff_1520_rec[i]*100<<" % +/- "<<eff_1520_rec_err[i]*100<<" %"<<endl;
+		eff_1520_rec_wt[i]     = num_1520_wt*1.0/nGen_1520_wt[i]; //Calc. weighted reco eff.
+		eff_1520_rec_err_wt[i] = sqrt(eff_1520_rec_wt[i]*(1-eff_1520_rec_wt[i])/nGen_1520_wt[i]); //statistical error on weighted recon. eff.
+
+		cout<<"Run "<<run<<" UNWEIGHTED /\(1520) Recons. Effs = "<<eff_1520_rec[i]*100
+		    <<" % +/- "<<eff_1520_rec_err[i]*100<<" %"<<endl;
+
+		cout<<"Run "<<run<<" WEIGHTED /\(1520) Recons. Effs = "<<eff_1520_rec_wt[i]*100
+		    <<" % +/- "<<eff_1520_rec_err_wt[i]*100<<" %"<<endl;
 
 		eff_1520[i] = eff_1520_rec[i]; //TEMPORARY
 		eff_1520_staterr[i] = eff_1520_rec_err[i]; //TEMPORARY
+
+		eff_1520_wt[i]         = eff_1520_rec_wt[i]; //TEMPORARY
+		eff_1520_staterr_wt[i] = eff_1520_rec_err_wt[i]; //TEMPORARY
 
 		// eff_1520[i] = eff_1520_gen[i] * eff_1520_rec[i]; // Calc overall eff.
 		// eff_1520_staterr[i] = eff_1520[i]*sqrt(pow((eff_1520_gen_err[i]/eff_1520_gen[i]),2) +
 		//                                        pow((eff_1520_rec_err[i]/eff_1520_rec[i]),2));   // and stat. error on above
 
-		cout<<"Run "<<run<<" Jpsi Lst1520 Eff = "<<eff_1520[i]*100<<" % +/- "<<eff_1520_staterr[i]*100<<" %"<<endl;
+		cout<<"************************************************"<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED Jpsi /\(1520) Eff = "<<eff_1520[i]*100
+		    <<" % +/- "<<eff_1520_staterr[i]*100<<" %"<<endl;
+		cout<<"Run "<<run<<" WEIGHTED Jpsi /\(1520) Eff = "<<eff_1520_wt[i]*100
+		    <<" % +/- "<<eff_1520_staterr_wt[i]*100<<" %"<<endl;
+		cout<<"************************************************"<<endl;
 
 		// eff_ratio[i]         = eff_1520[i]/eff_Lambda[i]; // Calc eff ratio.
 
 		eff_ratio_1520[i] = eff_1520[i]/eff_Lambda_rec[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
 		// eff_ratio_staterr_1520[i] = eff_ratio_1520[i]*sqrt(pow((eff_1520_staterr[i]/eff_1520[i]),2)+pow((eff_Lambda_staterr[i]/eff_Lambda[i]),2)); // stat err on ratio
 		eff_ratio_staterr_1520[i] = eff_ratio_1520[i]*sqrt(pow((eff_1520_staterr[i]/eff_1520[i]),2)+pow((eff_Lambda_rec_err[i]/eff_Lambda_rec[i]),2)); // TEMPORARY
-
 		eff_ratio_systerr_1520[i] = eff_ratio_1520[i]*eff_ratio_syst_1520;
-
 		eff_ratio_err_1520[i] = sqrt(pow(eff_ratio_staterr_1520[i],2) + pow(eff_ratio_systerr_1520[i],2));//combine in quadrature
 
+		eff_ratio_1520_wt[i]            = eff_1520_wt[i]/eff_Lambda_rec_wt[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
+		// eff_ratio_staterr_1520_wt[i] = eff_ratio_1520_wt[i]*sqrt(pow((eff_1520_staterr_wt[i]/eff_1520_wt[i]),2)+pow((eff_Lambda_staterr_wt[i]/eff_Lambda_wt[i]),2)); // stat err on ratio
+		eff_ratio_staterr_1520_wt[i]    = eff_ratio_1520_wt[i]*sqrt(pow((eff_1520_staterr_wt[i]/eff_1520_wt[i]),2)+pow((eff_Lambda_rec_err_wt[i]/eff_Lambda_rec_wt[i]),2)); // TEMPORARY
+		eff_ratio_systerr_1520_wt[i]    = eff_ratio_1520_wt[i]*eff_ratio_syst_1520;
+		eff_ratio_err_1520_wt[i]        = sqrt(pow(eff_ratio_staterr_1520_wt[i],2) + pow(eff_ratio_systerr_1520_wt[i],2));//combine in quadrature
+
 		cout<<"***************************************"<<endl;
-		cout<<"The 1520/Lb efficiency ratio for Run "<<run<<" is "<<eff_ratio_1520[i]<<" +/- "<<eff_ratio_err_1520[i]<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED /\(1520)/Lambda efficiency ratio = "<<eff_ratio[i]<<" +/- "<<eff_ratio_err[i]<<endl;
+		cout<<"Run "<<run<<" WEIGHTED /\(1520)/Lambda efficiency ratio   = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_err_wt[i]<<endl;
 		cout<<"***************************************"<<endl;
 
 		//*******************************************************************
@@ -834,7 +928,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		TTree *combTree_1520 = TTree::MergeTrees(list_1520);
 		combTree_1520->SetName("combTree_1520");
 
-		ds_1520[i] = new RooDataSet("ds_1520","ds_1520",combTree_1520,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))));
+		ds_1520[i] = new RooDataSet("ds_1520","ds_1520",combTree_1520,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"gb_wts*wt_tau");
 		ds_1520[i]->Print();
 
 		KEYS_1520[i] = new RooKeysPdf(Form("LST1520_Run%d",run),Form("LST1520_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1520[i]),RooKeysPdf::MirrorBoth,1);
@@ -902,6 +996,17 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 		genFile_1600>>nGen_1600[i]; // Get number of generated events
 
+		TFile *genWtsFile_1600 = Open(Form("%s/run%d/RW/gbWeights_gen.root",
+		                                   Lst1600Path,run));
+		TTree *genWtsTree_1600 = (TTree*)genWtsFile_1600->Get("MyTuple");
+
+		genWtsTree_1600->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
+		                                          Lst1600Path,run));
+
+		genWtsTree_1600->Draw("gb_wts*wt_tau>>genWt_1600","","goff");
+
+		TH1F *genWt_1600 = (TH1F*)gDirectory->Get("genWt_1600");
+		nGen_1600_wt[i] = genWt_1600->GetEntries()*genWt_1600->GetMean();
 
 		//***** DONT HAVE GENERATOR EFFS FOR LST(1600) YET
 		// fstream genEffFile_1600;
@@ -918,33 +1023,60 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		Int_t num_1600 = mcTreeIn_nonZero_1600->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
 		                 mcTreeIn_Zero_1600->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));                                                //NOTE NO TM HERE
 
+		mcTreeIn_nonZero_1600->Draw("gb_wts*wt_tau>>wt_1600_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
+		mcTreeIn_Zero_1600->Draw("gb_wts*wt_tau>>wt_1600_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+
+		TH1F *wt_1600_nonZero = (TH1F*)gDirectory->Get("wt_1600_nonZero");
+		TH1F *wt_1600_Zero    = (TH1F*)gDirectory->Get("wt_1600_Zero");
+
+		Int_t num_1600_wt = (wt_1600_nonZero->GetMean()*wt_1600_nonZero->GetEntries()) +
+		                    (wt_1600_Zero->GetMean()*wt_1600_Zero->GetEntries());
+
 		eff_1600_rec[i]     = num_1600*1.0/nGen_1600[i]; // Calc. reco. eff.
 		eff_1600_rec_err[i] = sqrt(eff_1600_rec[i]*(1-eff_1600_rec[i])/nGen_1600[i]); //stat error on recon. eff.
 
-		cout<<"Run "<<run<<" Lst1600 Recons. Effs = "
-		    <<eff_1600_rec[i]*100<<" % +/- "<<eff_1600_rec_err[i]*100<<" %"<<endl;
+		eff_1600_rec_wt[i]     = num_1600_wt*1.0/nGen_1600_wt[i]; //Calc. weighted reco eff.
+		eff_1600_rec_err_wt[i] = sqrt(eff_1600_rec_wt[i]*(1-eff_1600_rec_wt[i])/nGen_1600_wt[i]); //statistical error on weighted recon. eff.
+
+		cout<<"Run "<<run<<" UNWEIGHTED /\(1600) Recons. Effs = "<<eff_1600_rec[i]*100
+		    <<" % +/- "<<eff_1600_rec_err[i]*100<<" %"<<endl;
+
+		cout<<"Run "<<run<<" WEIGHTED /\(1600) Recons. Effs = "<<eff_1600_rec_wt[i]*100
+		    <<" % +/- "<<eff_1600_rec_err_wt[i]*100<<" %"<<endl;
 
 		eff_1600[i] = eff_1600_rec[i]; //TEMPORARY
 		eff_1600_staterr[i] = eff_1600_rec_err[i]; //TEMPORARY
+
+		eff_1600_wt[i]         = eff_1600_rec_wt[i]; //TEMPORARY
+		eff_1600_staterr_wt[i] = eff_1600_rec_err_wt[i]; //TEMPORARY
 
 		// eff_1600[i] = eff_1600_gen[i] * eff_1600_rec[i]; // Calc overall eff.
 		// eff_1600_staterr[i] = eff_1600[i]*sqrt(pow((eff_1600_gen_err[i]/eff_1600_gen[i]),2) +
 		//                                        pow((eff_1600_rec_err[i]/eff_1600_rec[i]),2));   // and stat. error on above
 
-		cout<<"Run "<<run<<" Jpsi Lst1600 Eff = "<<eff_1600[i]*100<<" % +/- "<<eff_1600_staterr[i]*100<<" %"<<endl;
-
+		cout<<"************************************************"<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED Jpsi /\(1600) Eff = "<<eff_1600[i]*100
+		    <<" % +/- "<<eff_1600_staterr[i]*100<<" %"<<endl;
+		cout<<"Run "<<run<<" WEIGHTED Jpsi /\(1600) Eff = "<<eff_1600_wt[i]*100
+		    <<" % +/- "<<eff_1600_staterr_wt[i]*100<<" %"<<endl;
+		cout<<"************************************************"<<endl;
 		// eff_ratio[i]         = eff_1600[i]/eff_Lambda[i]; // Calc eff ratio.
 
 		eff_ratio_1600[i] = eff_1600[i]/eff_Lambda_rec[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
 		// eff_ratio_staterr_1600[i] = eff_ratio_1600[i]*sqrt(pow((eff_1600_staterr[i]/eff_1600[i]),2)+pow((eff_Lambda_staterr[i]/eff_Lambda[i]),2)); // stat err on ratio
 		eff_ratio_staterr_1600[i] = eff_ratio_1600[i]*sqrt(pow((eff_1600_staterr[i]/eff_1600[i]),2)+pow((eff_Lambda_rec_err[i]/eff_Lambda_rec[i]),2)); // TEMPORARY
-
 		eff_ratio_systerr_1600[i] = eff_ratio_1600[i]*eff_ratio_syst_1600;
-
 		eff_ratio_err_1600[i] = sqrt(pow(eff_ratio_staterr_1600[i],2) + pow(eff_ratio_systerr_1600[i],2));//combine in quadrature
 
+		eff_ratio_1600_wt[i]            = eff_1600_wt[i]/eff_Lambda_rec_wt[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
+		// eff_ratio_staterr_1600_wt[i] = eff_ratio_1600_wt[i]*sqrt(pow((eff_1600_staterr_wt[i]/eff_1600_wt[i]),2)+pow((eff_Lambda_staterr_wt[i]/eff_Lambda_wt[i]),2)); // stat err on ratio
+		eff_ratio_staterr_1600_wt[i]    = eff_ratio_1600_wt[i]*sqrt(pow((eff_1600_staterr_wt[i]/eff_1600_wt[i]),2)+pow((eff_Lambda_rec_err_wt[i]/eff_Lambda_rec_wt[i]),2)); // TEMPORARY
+		eff_ratio_systerr_1600_wt[i]    = eff_ratio_1600_wt[i]*eff_ratio_syst_1600;
+		eff_ratio_err_1600_wt[i]        = sqrt(pow(eff_ratio_staterr_1600_wt[i],2) + pow(eff_ratio_systerr_1600_wt[i],2));//combine in quadrature
+
 		cout<<"***************************************"<<endl;
-		cout<<"The 1600/Lb efficiency ratio for Run "<<run<<" is "<<eff_ratio_1600[i]<<" +/- "<<eff_ratio_err_1600[i]<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED /\(1600)/Lambda efficiency ratio = "<<eff_ratio[i]<<" +/- "<<eff_ratio_err[i]<<endl;
+		cout<<"Run "<<run<<" WEIGHTED /\(1600)/Lambda efficiency ratio   = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_err_wt[i]<<endl;
 		cout<<"***************************************"<<endl;
 
 		//*******************************************************************
@@ -976,7 +1108,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		TTree *combTree_1600 = TTree::MergeTrees(list_1600);
 		combTree_1600->SetName("combTree_1600");
 
-		ds_1600[i] = new RooDataSet("ds_1600","ds_1600",combTree_1600,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))));
+		ds_1600[i] = new RooDataSet("ds_1600","ds_1600",combTree_1600,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"gb_wts*wt_tau");
 		ds_1600[i]->Print();
 
 		KEYS_1600[i] = new RooKeysPdf(Form("LST1600_Run%d",run),Form("LST1600_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1600[i]),RooKeysPdf::MirrorBoth,1);
