@@ -1682,11 +1682,11 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	//*******************************************************************
 
 	//**************** 1405/Lb Efficiency Ratio**************************
-	w.factory(Form("eff_ratio_1405_1[%f,0.,1.]",eff_ratio_1405[0])); //eff(Lb -> Jpsi Lambda(1405))/eff(Lb -> Jpsi Lambda)
-	w.factory(Form("eff_ratio_1405_2[%f,0.,1.]",eff_ratio_1405[1]));
+	w.factory(Form("eff_ratio_1405_1[%f,0.,1.]",eff_ratio_1405_wt[0])); //eff(Lb -> Jpsi Lambda(1405))/eff(Lb -> Jpsi Lambda)
+	w.factory(Form("eff_ratio_1405_2[%f,0.,1.]",eff_ratio_1405_wt[1]));
 
-	w.factory(Form("Gaussian::eff_ratio_1405_constraint1(geff_ratio_1405_1[%f,0,1],eff_ratio_1405_1,%f)",eff_ratio_1405[0],eff_ratio_err_1405[0]));
-	w.factory(Form("Gaussian::eff_ratio_1405_constraint2(geff_ratio_1405_2[%f,0,1],eff_ratio_1405_2,%f)",eff_ratio_1405[1],eff_ratio_err_1405[1]));
+	w.factory(Form("Gaussian::eff_ratio_1405_constraint1(geff_ratio_1405_1[%f,0,1],eff_ratio_1405_1,%f)",eff_ratio_1405_wt[0],eff_ratio_err_1405_wt[0]));
+	w.factory(Form("Gaussian::eff_ratio_1405_constraint2(geff_ratio_1405_2[%f,0,1],eff_ratio_1405_2,%f)",eff_ratio_1405_wt[1],eff_ratio_err_1405_wt[1]));
 
 	w.var("geff_ratio_1405_1")->setConstant();
 	w.var("geff_ratio_1405_2")->setConstant();
@@ -1696,8 +1696,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	w.factory(Form("eff_ratio_1520_1[%f,0.,1.]",eff_ratio_1520[0])); //eff(Lb -> Jpsi Lambda(1520))/eff(Lb -> Jpsi Lambda)
 	w.factory(Form("eff_ratio_1520_2[%f,0.,1.]",eff_ratio_1520[1]));
 
-	w.factory(Form("Gaussian::eff_ratio_1520_constraint1(geff_ratio_1520_1[%f,0,1],eff_ratio_1520_1,%f)",eff_ratio_1520[0],eff_ratio_err_1520[0]));
-	w.factory(Form("Gaussian::eff_ratio_1520_constraint2(geff_ratio_1520_2[%f,0,1],eff_ratio_1520_2,%f)",eff_ratio_1520[1],eff_ratio_err_1520[1]));
+	w.factory(Form("Gaussian::eff_ratio_1520_constraint1(geff_ratio_1520_1[%f,0,1],eff_ratio_1520_1,%f)",eff_ratio_1520_wt[0],eff_ratio_err_1520_wt[0]));
+	w.factory(Form("Gaussian::eff_ratio_1520_constraint2(geff_ratio_1520_2[%f,0,1],eff_ratio_1520_2,%f)",eff_ratio_1520_wt[1],eff_ratio_err_1520_wt[1]));
 
 	w.var("geff_ratio_1520_1")->setConstant();
 	w.var("geff_ratio_1520_2")->setConstant();
@@ -1707,8 +1707,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	w.factory(Form("eff_ratio_1600_1[%f,0.,1.]",eff_ratio_1600[0])); //eff(Lb -> Jpsi Lambda(1600))/eff(Lb -> Jpsi Lambda)
 	w.factory(Form("eff_ratio_1600_2[%f,0.,1.]",eff_ratio_1600[1]));
 
-	w.factory(Form("Gaussian::eff_ratio_1600_constraint1(geff_ratio_1600_1[%f,0,1],eff_ratio_1600_1,%f)",eff_ratio_1600[0],eff_ratio_err_1600[0]));
-	w.factory(Form("Gaussian::eff_ratio_1600_constraint2(geff_ratio_1600_2[%f,0,1],eff_ratio_1600_2,%f)",eff_ratio_1600[1],eff_ratio_err_1600[1]));
+	w.factory(Form("Gaussian::eff_ratio_1600_constraint1(geff_ratio_1600_1[%f,0,1],eff_ratio_1600_1,%f)",eff_ratio_1600_wt[0],eff_ratio_err_1600_wt[0]));
+	w.factory(Form("Gaussian::eff_ratio_1600_constraint2(geff_ratio_1600_2[%f,0,1],eff_ratio_1600_2,%f)",eff_ratio_1600_wt[1],eff_ratio_err_1600_wt[1]));
 
 	w.var("geff_ratio_1600_1")->setConstant();
 	w.var("geff_ratio_1600_2")->setConstant();
@@ -1741,13 +1741,13 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	w.factory(Form("nBkg_Run2[4000,1,%d]",nentries[1]));
 
 	//What should the limits on nXib be?
-	Double_t xibCentral_run1 = xibnorm_LL[0];
-	Double_t xibErr_run1     = xibnorm_LL_err[0];
+	Double_t xibCentral_run1 = xibnorm_LL_wt[0];
+	Double_t xibErr_run1     = xibnorm_LL_err_wt[0];
 	Double_t xibLow_run1     = 0;
 	Double_t xibHigh_run1    = 200;
 
-	Double_t xibCentral_run2 = xibnorm_LL[1];
-	Double_t xibErr_run2     = xibnorm_LL_err[1];
+	Double_t xibCentral_run2 = xibnorm_LL_wt[1];
+	Double_t xibErr_run2     = xibnorm_LL_err_wt[1];
 	Double_t xibLow_run2     = 0;
 	// Double_t xibHigh_run2    = 200;
 	Double_t xibHigh_run2    = 400;
