@@ -61,8 +61,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		bdtConf_Zero[0] = 2;//1;
 		bdtConf_Zero[1] = 1;//1;
 
-		bdtCut_nonZero[0] = 0.475;//0.375 - 0.1;
-		bdtCut_nonZero[1] = 0.555;//0.535 - 0.1;
+		bdtCut_nonZero[0] = 0.475-0.1;//0.375 - 0.1;
+		bdtCut_nonZero[1] = 0.555-0.1;//0.535 - 0.1;
 
 		bdtCut_Zero[0] = 0.365;//0.285;
 		bdtCut_Zero[1] = 0.455;//0.415;
