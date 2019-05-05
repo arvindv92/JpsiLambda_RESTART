@@ -351,9 +351,11 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		cout<<"Run "<<run<<" Lambda Generator Effs = "<<eff_Lambda_gen[i]*100
 		    <<" % +/- "<<eff_Lambda_gen_err[i]*100<<" %"<<endl;
 
-		TH1F *wt_lambda_nonZero = nullptr, *wt_lambda_Zero = nullptr;
 		mcTreeIn_nonZero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
 		mcTreeIn_Zero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+
+		TH1F *wt_lambda_nonZero = (TH1F*)gDirectory->Get("wt_lambda_nonZero");
+		TH1F *wt_lambda_Zero = (TH1F*)gDirectory->Get("wt_lambda_Zero");
 
 		Int_t num_Lambda_wt = (wt_lambda_nonZero->GetMean()*wt_lambda_nonZero->GetEntries()) +
 		                      (wt_lambda_Zero->GetMean()*wt_lambda_Zero->GetEntries());
@@ -431,8 +433,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		genWtsTree_Sigma->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
 		                                           sigmaPath,run));
 
-		TH1D *genWt_Sigma = nullptr;
 		genWtsTree_Sigma->Draw("gb_wts*wt_tau>>genWt_Sigma");
+		TH1F *genWt_Sigma = (TH1F*)gDirectory->Get("genWt_Sigma");
 
 		nGen_Sigma_wt[i] = genWt_Sigma->GetEntries()*genWt_Sigma->GetMean();
 
@@ -445,9 +447,12 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		cout<<"Run "<<run<<" Sigma Generator Effs = "<<eff_Sigma_gen[i]*100
 		    <<" % +/- "<<eff_Sigma_gen_err[i]*100<<" %"<<endl;
 
-		TH1F *wt_Sigma_nonZero = nullptr, *wt_Sigma_Zero = nullptr;
+
 		mcTreeIn_nonZero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
 		mcTreeIn_Zero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+
+		TH1F *wt_Sigma_nonZero = (TH1F*)gDirectory->Get("wt_Sigma_nonZero");
+		TH1F *wt_Sigma_Zero = (TH1F*)gDirectory->Get("wt_Sigma_Zero");
 
 		Int_t num_Sigma_wt = (wt_Sigma_nonZero->GetMean()*wt_Sigma_nonZero->GetEntries()) +
 		                     (wt_Sigma_Zero->GetMean()*wt_Sigma_Zero->GetEntries());
