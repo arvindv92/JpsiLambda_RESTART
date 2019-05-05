@@ -74,59 +74,106 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	Float_t xibnorm_LL_systerr[2] = {0.0,0.0};
 	Float_t xibnorm_LL_err[2]     = {0.0,0.0};
 
+	Float_t xibnorm_LL_wt[2]         = {0.0,0.0};
+	Float_t xibnorm_LL_staterr_wt[2] = {0.0,0.0};
+	Float_t xibnorm_LL_systerr_wt[2] = {0.0,0.0};
+	Float_t xibnorm_LL_err_wt[2]     = {0.0,0.0};
+
 	// Lb->J/psi L MC eff & errs
-	Int_t nGen_Lambda[2]           = {0,0};     // Generated yield
+	Int_t nGen_Lambda[2]          = {0,0}; // Generated yield
+	Float_t nGen_Lambda_wt[2]     = {0,0}; // Generated yield weighted
 	Float_t eff_Lambda_gen[2]     = {0.0,0.0}; // Generator Eff.
 	Float_t eff_Lambda_gen_err[2] = {0.0,0.0}; // Generator Eff. Stat. Err.
+
 	Float_t eff_Lambda_rec[2]     = {0.0,0.0}; // Reco. Eff.
 	Float_t eff_Lambda_rec_err[2] = {0.0,0.0}; // Reco. Eff. Stat. Err.
 	Float_t eff_Lambda[2]         = {0.0,0.0}; // Overall Eff.
 	Float_t eff_Lambda_staterr[2] = {0.0,0.0}; // Overall Eff. Stat. Err.
 
+	Float_t eff_Lambda_rec_wt[2]     = {0.0,0.0}; // Reco. Eff.
+	Float_t eff_Lambda_rec_err_wt[2] = {0.0,0.0}; // Reco. Eff. Stat. Err.
+	Float_t eff_Lambda_wt[2]         = {0.0,0.0}; // Overall Eff.
+	Float_t eff_Lambda_staterr_wt[2] = {0.0,0.0}; // Overall Eff. Stat. Err.
+
 	// Lb->J/psi 1405 MC eff & errs
-	Int_t nGen_1405[2]            = {0,0};
-	Float_t eff_1405_gen[2]      = {0.0,0.0};
-	Float_t eff_1405_gen_err[2]  = {0.0,0.0};
+	Int_t nGen_1405[2]          = {0,0};
+	Float_t nGen_1405_wt[2]     = {0,0}; // Generated yield weighted
+	Float_t eff_1405_gen[2]     = {0.0,0.0};
+	Float_t eff_1405_gen_err[2] = {0.0,0.0};
+
 	Float_t eff_1405_rec[2]      = {0.0,0.0};
 	Float_t eff_1405_rec_err[2]  = {0.0,0.0};
 	Float_t eff_1405[2]          = {0.0,0.0};
 	Float_t eff_1405_staterr[2]  = {0.0,0.0};
 
+	Float_t eff_1405_rec_wt[2]      = {0.0,0.0};
+	Float_t eff_1405_rec_err_wt[2]  = {0.0,0.0};
+	Float_t eff_1405_wt[2]          = {0.0,0.0};
+	Float_t eff_1405_staterr_wt[2]  = {0.0,0.0};
+
 	// Lb->J/psi 1520 MC eff & errs
-	Int_t nGen_1520[2]            = {0,0};
-	Float_t eff_1520_gen[2]      = {0.0,0.0};
-	Float_t eff_1520_gen_err[2]  = {0.0,0.0};
+	Int_t nGen_1520[2]          = {0,0};
+	Float_t nGen_1520_wt[2]     = {0,0}; // Generated yield weighted
+	Float_t eff_1520_gen[2]     = {0.0,0.0};
+	Float_t eff_1520_gen_err[2] = {0.0,0.0};
+
 	Float_t eff_1520_rec[2]      = {0.0,0.0};
 	Float_t eff_1520_rec_err[2]  = {0.0,0.0};
 	Float_t eff_1520[2]          = {0.0,0.0};
 	Float_t eff_1520_staterr[2]  = {0.0,0.0};
 
+	Float_t eff_1520_rec_wt[2]      = {0.0,0.0};
+	Float_t eff_1520_rec_err_wt[2]  = {0.0,0.0};
+	Float_t eff_1520_wt[2]          = {0.0,0.0};
+	Float_t eff_1520_staterr_wt[2]  = {0.0,0.0};
+
 	// Lb->J/psi 1600 MC eff & errs
-	Int_t nGen_1600[2]            = {0,0};
-	Float_t eff_1600_gen[2]      = {0.0,0.0};
-	Float_t eff_1600_gen_err[2]  = {0.0,0.0};
+	Int_t nGen_1600[2]          = {0,0};
+	Float_t nGen_1600_wt[2]     = {0,0}; // Generated yield weighted
+	Float_t eff_1600_gen[2]     = {0.0,0.0};
+	Float_t eff_1600_gen_err[2] = {0.0,0.0};
+
 	Float_t eff_1600_rec[2]      = {0.0,0.0};
 	Float_t eff_1600_rec_err[2]  = {0.0,0.0};
 	Float_t eff_1600[2]          = {0.0,0.0};
 	Float_t eff_1600_staterr[2]  = {0.0,0.0};
 
+	Float_t eff_1600_rec_wt[2]      = {0.0,0.0};
+	Float_t eff_1600_rec_err_wt[2]  = {0.0,0.0};
+	Float_t eff_1600_wt[2]          = {0.0,0.0};
+	Float_t eff_1600_staterr_wt[2]  = {0.0,0.0};
+
 	// Lb->chiC1 Lambda MC eff & errs
-	Int_t nGen_chic1[2]            = {0,0};
-	Float_t eff_chic1_gen[2]      = {0.0,0.0};
-	Float_t eff_chic1_gen_err[2]  = {0.0,0.0};
+	Int_t nGen_chic1[2]          = {0,0};
+	Float_t nGen_chiC1_wt[2]     = {0,0}; // Generated yield weighted
+	Float_t eff_chic1_gen[2]     = {0.0,0.0};
+	Float_t eff_chic1_gen_err[2] = {0.0,0.0};
+
 	Float_t eff_chic1_rec[2]      = {0.0,0.0};
 	Float_t eff_chic1_rec_err[2]  = {0.0,0.0};
 	Float_t eff_chic1[2]          = {0.0,0.0};
 	Float_t eff_chic1_staterr[2]  = {0.0,0.0};
 
+	Float_t eff_chic1_rec_wt[2]      = {0.0,0.0};
+	Float_t eff_chic1_rec_err_wt[2]  = {0.0,0.0};
+	Float_t eff_chic1_wt[2]          = {0.0,0.0};
+	Float_t eff_chic1_staterr_wt[2]  = {0.0,0.0};
+
 	// Lb->J/psi Sigma MC eff & errs
-	Int_t nGen_Sigma[2]            = {0,0};
-	Float_t eff_Sigma_gen[2]      = {0.0,0.0};
-	Float_t eff_Sigma_gen_err[2]  = {0.0,0.0};
-	Float_t eff_Sigma_rec[2]      = {0.0,0.0};
-	Float_t eff_Sigma_rec_err[2]  = {0.0,0.0};
-	Float_t eff_Sigma[2]          = {0.0,0.0};
-	Float_t eff_Sigma_staterr[2]  = {0.0,0.0};
+	Int_t nGen_Sigma[2]          = {0,0};
+	Float_t nGen_Sigma_wt[2]     = {0,0}; // Generated yield weighted
+	Float_t eff_Sigma_gen[2]     = {0.0,0.0};
+	Float_t eff_Sigma_gen_err[2] = {0.0,0.0};
+
+	Float_t eff_Sigma_rec[2]     = {0.0,0.0};
+	Float_t eff_Sigma_rec_err[2] = {0.0,0.0};
+	Float_t eff_Sigma[2]         = {0.0,0.0};
+	Float_t eff_Sigma_staterr[2] = {0.0,0.0};
+
+	Float_t eff_Sigma_rec_wt[2]     = {0.0,0.0};
+	Float_t eff_Sigma_rec_err_wt[2] = {0.0,0.0};
+	Float_t eff_Sigma_wt[2]         = {0.0,0.0};
+	Float_t eff_Sigma_staterr_wt[2] = {0.0,0.0};
 
 	// eff(Lb -> J/psi Sigma) / eff(Lb -> J/psi Lambda)
 	Float_t eff_ratio[2]          = {0.0,0.0};
@@ -134,11 +181,21 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	Float_t eff_ratio_systerr[2]  = {0.0,0.0};
 	Float_t eff_ratio_err[2]      = {0.0,0.0};
 
+	Float_t eff_ratio_wt[2]          = {0.0,0.0};
+	Float_t eff_ratio_staterr_wt[2]  = {0.0,0.0};
+	Float_t eff_ratio_systerr_wt[2]  = {0.0,0.0};
+	Float_t eff_ratio_err_wt[2]      = {0.0,0.0};
+
 	// eff(Lb -> J/psi LAMBDA(1405)) / eff(Lb -> J/psi Lambda)
 	Float_t eff_ratio_1405[2]          = {0.0,0.0};
 	Float_t eff_ratio_staterr_1405[2]  = {0.0,0.0};
 	Float_t eff_ratio_systerr_1405[2]  = {0.0,0.0};
 	Float_t eff_ratio_err_1405[2]      = {0.0,0.0};
+
+	Float_t eff_ratio_1405_wt[2]          = {0.0,0.0};
+	Float_t eff_ratio_staterr_1405_wt[2]  = {0.0,0.0};
+	Float_t eff_ratio_systerr_1405_wt[2]  = {0.0,0.0};
+	Float_t eff_ratio_err_1405_wt[2]      = {0.0,0.0};
 
 	// eff(Lb -> J/psi LAMBDA(1520)) / eff(Lb -> J/psi Lambda)
 	Float_t eff_ratio_1520[2]          = {0.0,0.0};
@@ -146,17 +203,32 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	Float_t eff_ratio_systerr_1520[2]  = {0.0,0.0};
 	Float_t eff_ratio_err_1520[2]      = {0.0,0.0};
 
+	Float_t eff_ratio_1520_wt[2]          = {0.0,0.0};
+	Float_t eff_ratio_staterr_1520_wt[2]  = {0.0,0.0};
+	Float_t eff_ratio_systerr_1520_wt[2]  = {0.0,0.0};
+	Float_t eff_ratio_err_1520_wt[2]      = {0.0,0.0};
+
 	// eff(Lb -> J/psi LAMBDA(1600)) / eff(Lb -> J/psi Lambda)
 	Float_t eff_ratio_1600[2]          = {0.0,0.0};
 	Float_t eff_ratio_staterr_1600[2]  = {0.0,0.0};
 	Float_t eff_ratio_systerr_1600[2]  = {0.0,0.0};
 	Float_t eff_ratio_err_1600[2]      = {0.0,0.0};
 
+	Float_t eff_ratio_1600_wt[2]          = {0.0,0.0};
+	Float_t eff_ratio_staterr_1600_wt[2]  = {0.0,0.0};
+	Float_t eff_ratio_systerr_1600_wt[2]  = {0.0,0.0};
+	Float_t eff_ratio_err_1600_wt[2]      = {0.0,0.0};
+
 	// eff(Lb -> chiC1 Lambda) / eff(Lb -> J/psi Lambda)
 	Float_t eff_ratio_chic1[2]          = {0.0,0.0};
 	Float_t eff_ratio_staterr_chic1[2]  = {0.0,0.0};
 	Float_t eff_ratio_systerr_chic1[2]  = {0.0,0.0};
 	Float_t eff_ratio_err_chic1[2]      = {0.0,0.0};
+
+	Float_t eff_ratio_chic1_wt[2]          = {0.0,0.0};
+	Float_t eff_ratio_staterr_chic1_wt[2]  = {0.0,0.0};
+	Float_t eff_ratio_systerr_chic1_wt[2]  = {0.0,0.0};
+	Float_t eff_ratio_err_chic1_wt[2]      = {0.0,0.0};
 
 	// ***************Systematics put in by hand ************************
 	Float_t xib_syst             = 0.05;
@@ -188,6 +260,9 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	//*******************************************************************
 
 	//*****Run script to get Xib normalization***************************
+	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
+	cout<<"Get Xib Normalization"<<endl;
+	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
 	for(Int_t run = 1; run<=2; run++)
 	{
 		Int_t i = run-1;
@@ -201,18 +276,36 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		infile>>xibnorm_LL[i];         // Get normalization
 		infile>>xibnorm_LL_staterr[i]; // Get statistical error on norm. This is the fit error
 
+		infile>>xibnorm_LL_wt[i];         // Get weighted normalization
+		infile>>xibnorm_LL_staterr_wt[i]; // Get weighted statistical error on norm. This is the fit error
+
 		xibnorm_LL_systerr[i] = xibnorm_LL[i]*xib_syst;
 		xibnorm_LL_err[i]     = sqrt(pow(xibnorm_LL_staterr[i],2) + pow(xibnorm_LL_systerr[i],2)); //Combining stat and syst in quadrature
+
+		xibnorm_LL_systerr_wt[i] = xibnorm_LL_wt[i]*xib_syst;
+		xibnorm_LL_err_wt[i]     = sqrt(pow(xibnorm_LL_staterr_wt[i],2) + pow(xibnorm_LL_systerr_wt[i],2)); //Combining stat and syst in quadrature
 
 		xibnorm_LL[i]         = xibnorm_LL[i]*2; //ACCOUNT FOR XIB0
 		xibnorm_LL_err[i]     = xibnorm_LL_err[i]*1.414; //ACCOUNT FOR XIB0
 
-		cout<<"The LL Xib normalization for Run "<<run
+		xibnorm_LL_wt[i]         = xibnorm_LL_wt[i]*2; //ACCOUNT FOR XIB0
+		xibnorm_LL_err_wt[i]     = xibnorm_LL_err_wt[i]*1.414; //ACCOUNT FOR XIB0
+
+		cout<<"************************************************"<<endl;
+		cout<<"The UNWEIGHTED LL Xib normalization for Run "<<run
 		    <<" is "<<xibnorm_LL[i]<<" +/- "<<xibnorm_LL_err[i]<<endl;
+
+		cout<<"The WEIGHTED LL Xib normalization for Run "<<run
+		    <<" is "<<xibnorm_LL_wt[i]<<" +/- "<<xibnorm_LL_err_wt[i]<<endl;
+		cout<<"************************************************"<<endl;
+
 	}
 	//************************************************
 
 	//****Get J/psi Lambda efficiencies from MC*******
+	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
+	cout<<"Get Lb -> J/psi Lambda efficiency"<<endl;
+	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
 	const char* lambdaMCPath = "../rootFiles/mcFiles/JpsiLambda/JpsiLambda";
 
 	for(Int_t run = 1; run<=2; run++)
@@ -237,6 +330,18 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 		genFile_Lambda>>nGen_Lambda[i]; //Get number of generated events
 
+		TFile *genWtsFile_Lambda = Open(Form("%s/run%d/RW/gbWeights_gen.root",
+		                                     lambdaMCPath,run));
+		TTree *genWtsTree_Lambda = (TTree*)genWtsFile_Lambda->Get("MyTuple");
+
+		genWtsTree_Lambda->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
+		                                            lambdaMCPath,run));
+
+		TH1D *genWt_Lambda = nullptr;
+		genWtsTree_Lambda->Draw("gb_wts*wt_tau>>genWt_Lambda");
+
+		nGen_Lambda_wt[i] = genWt_Lambda->GetEntries()*genWt_Lambda->GetMean();
+
 		fstream genEffFile_Lambda;
 		genEffFile_Lambda.open(Form("../logs/mc/JpsiLambda/JpsiLambda/run%d/Generator_Effs_Combined.txt",run));
 
@@ -246,22 +351,42 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		cout<<"Run "<<run<<" Lambda Generator Effs = "<<eff_Lambda_gen[i]*100
 		    <<" % +/- "<<eff_Lambda_gen_err[i]*100<<" %"<<endl;
 
+		TH1F *wt_lambda_nonZero = nullptr, *wt_lambda_Zero = nullptr;
+		mcTreeIn_nonZero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
+		mcTreeIn_Zero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+
+		Int_t num_Lambda_wt = (wt_lambda_nonZero->GetMean()*wt_lambda_nonZero->GetEntries()) +
+		                      (wt_lambda_Zero->GetMean()*wt_lambda_Zero->GetEntries());
+
 		Int_t num_Lambda = mcTreeIn_nonZero_Lambda->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]))
 		                   + mcTreeIn_Zero_Lambda->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TM HERE
 
 		eff_Lambda_rec[i]     = num_Lambda*1.0/nGen_Lambda[i]; //Calc. reco eff.
 		eff_Lambda_rec_err[i] = sqrt(eff_Lambda_rec[i]*(1-eff_Lambda_rec[i])/nGen_Lambda[i]); //statistical error on recon. eff.
 
-		cout<<"Run "<<run<<" Lambda Recons. Effs = "<<eff_Lambda_rec[i]*100
+		eff_Lambda_rec_wt[i]     = num_Lambda_wt*1.0/nGen_Lambda_wt[i]; //Calc. weighted reco eff.
+		eff_Lambda_rec_err_wt[i] = sqrt(eff_Lambda_rec_wt[i]*(1-eff_Lambda_rec_wt[i])/nGen_Lambda_wt[i]); //statistical error on weighted recon. eff.
+
+		cout<<"Run "<<run<<" UNWEIGHTED Lambda Recons. Effs = "<<eff_Lambda_rec[i]*100
 		    <<" % +/- "<<eff_Lambda_rec_err[i]*100<<" %"<<endl;
+
+		cout<<"Run "<<run<<" WEIGHTED Lambda Recons. Effs = "<<eff_Lambda_rec_wt[i]*100
+		    <<" % +/- "<<eff_Lambda_rec_err_wt[i]*100<<" %"<<endl;
 
 		eff_Lambda[i]     = eff_Lambda_rec[i]*eff_Lambda_gen[i]; // Calc. total eff.
 		eff_Lambda_staterr[i] = eff_Lambda[i]*sqrt(pow((eff_Lambda_gen_err[i]/eff_Lambda_gen[i]),2) +
 		                                           pow((eff_Lambda_rec_err[i]/eff_Lambda_rec[i]),2)); // and stat error on tot. eff.
 
-		cout<<"Run "<<run<<" Jpsi Lambda Eff = "<<eff_Lambda[i]*100
-		    <<" % +/- "<<eff_Lambda_staterr[i]*100<<" %"<<endl;
+		eff_Lambda_wt[i]     = eff_Lambda_rec_wt[i]*eff_Lambda_gen[i];                                                                                                                                                                          // Calc. total eff.
+		eff_Lambda_staterr_wt[i] = eff_Lambda_wt[i]*sqrt(pow((eff_Lambda_gen_err[i]/eff_Lambda_gen[i]),2) +
+		                                                 pow((eff_Lambda_rec_err_wt[i]/eff_Lambda_rec_wt[i]),2));                                                                                                                                                                                                                                                                                                 // and stat error on tot. eff.
 
+		cout<<"************************************************"<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED Jpsi Lambda Eff = "<<eff_Lambda[i]*100
+		    <<" % +/- "<<eff_Lambda_staterr[i]*100<<" %"<<endl;
+		cout<<"Run "<<run<<" WEIGHTED Jpsi Lambda Eff = "<<eff_Lambda_wt[i]*100
+		    <<" % +/- "<<eff_Lambda_staterr_wt[i]*100<<" %"<<endl;
+		cout<<"************************************************"<<endl;
 	}
 	//*******************************************************************
 
@@ -270,7 +395,12 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	RooDataSet* ds_sig[2];
 
 	//****Get J/psi Sigma efficiencies and shape from MC*****************
-	const char* sigmaPath = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiSigma";
+	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
+	cout<<"Get Lb -> J/psi Sigma efficiency and shape"<<endl;
+	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
+
+	const char* sigmaPath = "/data1/avenkate/JpsiLambda_RESTART/"
+	                        "rootFiles/mcFiles/JpsiLambda/JpsiSigma";
 
 	for(Int_t run = 1; run<=2; run++)
 	{
@@ -294,6 +424,18 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 		genFile_Sigma>>nGen_Sigma[i]; // Get number of generated events
 
+		TFile *genWtsFile_Sigma = Open(Form("%s/run%d/RW/gbWeights_gen.root",
+		                                    sigmaPath,run));
+		TTree *genWtsTree_Sigma = (TTree*)genWtsFile_Sigma->Get("MyTuple");
+
+		genWtsTree_Sigma->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
+		                                           sigmaPath,run));
+
+		TH1D *genWt_Sigma = nullptr;
+		genWtsTree_Sigma->Draw("gb_wts*wt_tau>>genWt_Sigma");
+
+		nGen_Sigma_wt[i] = genWt_Sigma->GetEntries()*genWt_Sigma->GetMean();
+
 		fstream genEffFile_Sigma;
 		genEffFile_Sigma.open(Form("../logs/mc/JpsiLambda/JpsiSigma/run%d/Generator_Effs_Combined.txt",run));
 
@@ -303,47 +445,75 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		cout<<"Run "<<run<<" Sigma Generator Effs = "<<eff_Sigma_gen[i]*100
 		    <<" % +/- "<<eff_Sigma_gen_err[i]*100<<" %"<<endl;
 
+		TH1F *wt_Sigma_nonZero = nullptr, *wt_Sigma_Zero = nullptr;
+		mcTreeIn_nonZero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
+		mcTreeIn_Zero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+
+		Int_t num_Sigma_wt = (wt_Sigma_nonZero->GetMean()*wt_Sigma_nonZero->GetEntries()) +
+		                     (wt_Sigma_Zero->GetMean()*wt_Sigma_Zero->GetEntries());
+
 		Int_t num_Sigma = mcTreeIn_nonZero_Sigma->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
 		                  mcTreeIn_Zero_Sigma->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
 
 		eff_Sigma_rec[i]     = num_Sigma*1.0/nGen_Sigma[i]; // Calc. reco. eff.
 		eff_Sigma_rec_err[i] = sqrt(eff_Sigma_rec[i]*(1-eff_Sigma_rec[i])/nGen_Sigma[i]); //stat error on recon. eff.
 
+		eff_Sigma_rec_wt[i]     = num_Sigma_wt*1.0/nGen_Sigma_wt[i]; //Calc. weighted reco eff.
+		eff_Sigma_rec_err_wt[i] = sqrt(eff_Sigma_rec_wt[i]*(1-eff_Sigma_rec_wt[i])/nGen_Sigma_wt[i]); //statistical error on weighted recon. eff.
+
 		cout<<"Run "<<run<<" Sigma Recons. Effs = "
 		    <<eff_Sigma_rec[i]*100<<" % +/- "<<eff_Sigma_rec_err[i]*100<<" %"<<endl;
+
+		cout<<"Run "<<run<<" WEIGHTED Sigma Recons. Effs = "<<eff_Sigma_rec_wt[i]*100
+		    <<" % +/- "<<eff_Sigma_rec_err_wt[i]*100<<" %"<<endl;
 
 		eff_Sigma[i] = eff_Sigma_gen[i] * eff_Sigma_rec[i]; // Calc overall eff.
 		eff_Sigma_staterr[i] = eff_Sigma[i]*sqrt(pow((eff_Sigma_gen_err[i]/eff_Sigma_gen[i]),2) +
 		                                         pow((eff_Sigma_rec_err[i]/eff_Sigma_rec[i]),2)); // and stat. error on above
 
-		cout<<"Run "<<run<<" Jpsi Sigma Eff = "<<eff_Sigma[i]*100<<" % +/- "<<eff_Sigma_staterr[i]*100<<" %"<<endl;
+		eff_Sigma_wt[i]     = eff_Sigma_rec_wt[i]*eff_Sigma_gen[i];                                                                                                                                                                          // Calc. total eff.
+		eff_Sigma_staterr_wt[i] = eff_Sigma_wt[i]*sqrt(pow((eff_Sigma_gen_err[i]/eff_Sigma_gen[i]),2) +
+		                                               pow((eff_Sigma_rec_err_wt[i]/eff_Sigma_rec_wt[i]),2));                                                                                                                                                                                                                                                                                                                                                                                                                                                   // and stat error on tot. eff.
+
+		cout<<"************************************************"<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED Jpsi Sigma Eff = "<<eff_Sigma[i]*100
+		    <<" % +/- "<<eff_Sigma_staterr[i]*100<<" %"<<endl;
+		cout<<"Run "<<run<<" WEIGHTED Jpsi Sigma Eff = "<<eff_Sigma_wt[i]*100
+		    <<" % +/- "<<eff_Sigma_staterr_wt[i]*100<<" %"<<endl;
+		cout<<"************************************************"<<endl;
 
 		eff_ratio[i]         = eff_Sigma[i]/eff_Lambda[i]; // Calc eff ratio.
 		eff_ratio_staterr[i] = eff_ratio[i]*sqrt(pow((eff_Sigma_staterr[i]/eff_Sigma[i]),2)+pow((eff_Lambda_staterr[i]/eff_Lambda[i]),2)); // stat err on ratio
 		eff_ratio_systerr[i] = eff_ratio[i]*eff_ratio_syst;
+		eff_ratio_err[i]     = sqrt(pow(eff_ratio_staterr[i],2) + pow(eff_ratio_systerr[i],2));//combine in quadrature
 
-		eff_ratio_err[i] = sqrt(pow(eff_ratio_staterr[i],2) + pow(eff_ratio_systerr[i],2));//combine in quadrature
+		eff_ratio_wt[i]         = eff_Sigma_wt[i]/eff_Lambda_wt[i]; // Calc eff ratio.
+		eff_ratio_staterr_wt[i] = eff_ratio_wt[i]*sqrt(pow((eff_Sigma_staterr_wt[i]/eff_Sigma_wt[i]),2)+pow((eff_Lambda_staterr_wt[i]/eff_Lambda_wt[i]),2)); // stat err on ratio
+		eff_ratio_systerr_wt[i] = eff_ratio_wt[i]*eff_ratio_syst;
+		eff_ratio_err_wt[i]     = sqrt(pow(eff_ratio_staterr_wt[i],2) + pow(eff_ratio_systerr_wt[i],2));//combine in quadrature
 
 		cout<<"***************************************"<<endl;
-		cout<<"The efficiency ratio for Run "<<run<<" is "<<eff_ratio[i]<<" +/- "<<eff_ratio_err[i]<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED Sigma/Lambda efficiency ratio = "<<eff_ratio[i]<<" +/- "<<eff_ratio_err[i]<<endl;
+		cout<<"Run "<<run<<" WEIGHTED Sigma/Lambda efficiency ratio   = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_err_wt[i]<<endl;
 		cout<<"***************************************"<<endl;
 
 		//******************************************************************
 
 		//****************Shape*********************************************
-		cout<<"***************************************"<<endl;
-		cout<<"Get J/psi Sigma shape from MC"<<endl;
-		cout<<"***************************************"<<endl;
 
 		mcTreeIn_Zero_Sigma->SetBranchStatus("*",0);
 		mcTreeIn_Zero_Sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 		mcTreeIn_Zero_Sigma->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
 		mcTreeIn_Zero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
+		mcTreeIn_Zero_Sigma->SetBranchStatus("gb_wts",1);
+		mcTreeIn_Zero_Sigma->SetBranchStatus("wt_tau",1);
 
 		mcTreeIn_nonZero_Sigma->SetBranchStatus("*",0);
 		mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 		mcTreeIn_nonZero_Sigma->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
 		mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
+		mcTreeIn_nonZero_Sigma->SetBranchStatus("gb_wts",1);
+		mcTreeIn_nonZero_Sigma->SetBranchStatus("wt_tau",1);
 
 		TFile *tempFile = new TFile("tempFile_sig.root","RECREATE");
 
@@ -357,7 +527,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		TTree *combTree_sig = TTree::MergeTrees(list_sig);
 		combTree_sig->SetName("combTree_sig");
 
-		ds_sig[i] = new RooDataSet("ds_sig","ds_sig",combTree_sig,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))));
+		ds_sig[i] = new RooDataSet("ds_sig","ds_sig",combTree_sig,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"gb_wts*wt_tau");
 		ds_sig[i]->Print();
 
 		SIG_KEYS[i] = new RooKeysPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_sig[i]),RooKeysPdf::MirrorBoth,1);
@@ -408,12 +578,12 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	for(Int_t run = 1; run<=2; run++)
 	{
 		Int_t i = run-1;
-		TFile *mcFileIn_nonZero_1405 = Open(Form("%s/run%d/lst1405%s_cutoutks_LL_nonZeroTracks_noPID.root",
-		                                         Lst1405Path,run,rwSuffix));
+		TFile *mcFileIn_nonZero_1405 = Open(Form("%s/run%d/lst1405_cutoutks_LL_nonZeroTracks_noPID.root",
+		                                         Lst1405Path,run));
 		TTree *mcTreeIn_nonZero_1405 = (TTree*)mcFileIn_nonZero_1405->Get("MyTuple");
 
-		TFile *mcFileIn_Zero_1405    = Open(Form("%s/run%d/lst1405%s_cutoutks_LL_ZeroTracks_noPID.root",
-		                                         Lst1405Path,run,rwSuffix));
+		TFile *mcFileIn_Zero_1405    = Open(Form("%s/run%d/lst1405_cutoutks_LL_ZeroTracks_noPID.root",
+		                                         Lst1405Path,run));
 		TTree *mcTreeIn_Zero_1405    = (TTree*)mcFileIn_Zero_1405->Get("MyTuple");
 
 		mcTreeIn_nonZero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_LL_FinalBDT%d_iso%d_%s_noPID.root",
@@ -1202,6 +1372,12 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		w.factory("Chebychev::Bkg_Run1(Lb_DTF_M_JpsiLConstr, {c0_Run1[0.0,-2.0,2.0], c1_Run1[0.0,-1.0,1.0], c2_Run1[0.0,-1.0,1.0]})");
 		w.factory("Chebychev::Bkg_Run2(Lb_DTF_M_JpsiLConstr, {c0_Run2[0.0,-2.0,2.0], c1_Run2[0.0,-1.0,1.0], c2_Run2[0.0,-1.0,1.0]})");
 	}
+	else if(bkgType == 3)
+	{
+		cout<<"*****UING 4th ORDER CHEBYCHEV BKG SHAPE*****"<<endl;
+		w.factory("Chebychev::Bkg_Run1(Lb_DTF_M_JpsiLConstr, {c0_Run1[0.0,-2.0,2.0], c1_Run1[0.0,-1.0,1.0], c2_Run1[0.0,-1.0,1.0], c3_Run1[0.0,-1.0,1.0]})");
+		w.factory("Chebychev::Bkg_Run2(Lb_DTF_M_JpsiLConstr, {c0_Run2[0.0,-2.0,2.0], c1_Run2[0.0,-1.0,1.0], c2_Run2[0.0,-1.0,1.0], c3_Run2[0.0,-1.0,1.0]})");
+	}
 
 	cout<<"Done defining cont. bkg exp. shapes"<<endl;
 
@@ -1329,7 +1505,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	//************************MAKE COMBINED MODEL************************
 
-	w.factory("R[200,-1000,1000]"); // R*10^5 is the parameter of interest  This is shared b/w Run1 and Run2
+	w.factory("R[0,-5000,1000]"); // R*10^5 is the parameter of interest  This is shared b/w Run1 and Run2
 	// NB: R is allowed to fluctuate negative in the fit. I don't completely understand why.
 	// R*10^5 =  [N(Jpsi Sigma)/N(Jpsi Lambda)] * [eff(Jpsi Lambda)/eff(Jpsi Sigma)]
 	// w.var("R")->setError(0.1);
@@ -1558,6 +1734,11 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	else if(bkgType == 2)
 	{
 		w.extendSet("nuisParams","c0_Run1,c0_Run2,c1_Run1,c1_Run2,c2_Run1,c2_Run2");
+	}
+	else if(bkgType == 3)
+	{
+		w.extendSet("nuisParams","c0_Run1,c0_Run2,c1_Run1,c1_Run2,"
+		            "c2_Run1,c2_Run2,c3_Run1,c3_Run2");
 	}
 	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,alpha1_Run1,alpha2_Run1,nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1");// define set of nuisance parameters
 	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,alpha1_Run2,alpha2_Run2,nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,n1520_Run2");
