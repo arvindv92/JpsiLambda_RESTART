@@ -63,17 +63,27 @@ void AliasFile(Int_t run = 1, Int_t mcType = 1)
 		part = "chic1";
 		break;
 	}
+	case 10:
+	{
+		folder = "JpsiXi";
+		part = "jpsixi";
+		break;
 	}
-	fileIn = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",folder,run,part),"UPDATE");
+	}
+	if(mcType!=10)
+		fileIn = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",folder,run,part),"UPDATE");
+	else
+		fileIn = TFile::Open(Form("../rootFiles/mcFiles/JpsiXi/%s/run%d/%s.root",folder,run,part),"UPDATE");
+
 	treeIn = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
 
-	if(mcType != 3)
+	if(!(mcType == 3 || mcType == 10))
 	{
 		treeIn->SetAlias("Lb_PT","Lambda_b0_TRUEPT");
 		treeIn->SetAlias("Lb_P","sqrt(Lambda_b0_TRUEPT**2+Lambda_b0_TRUEP_Z**2)");
 		treeIn->SetAlias("Lb_ETA","-log(tan(0.5*atan(Lambda_b0_TRUEPT/Lambda_b0_TRUEP_Z)))");
 	}
-	else if(mcType == 3)
+	else if(mcType == 3 || mcType == 10)
 	{
 		treeIn->SetAlias("Lb_PT","Xi_bminus_TRUEPT");
 		treeIn->SetAlias("Lb_P","sqrt(Xi_bminus_TRUEPT**2+Xi_bminus_TRUEP_Z**2)");
