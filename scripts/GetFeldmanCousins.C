@@ -20,6 +20,8 @@ using namespace std;
 
 void GetFeldmanCousins()
 {
+	gSystem->Load("RooHypatia2_cpp.so");
+
 	TFile *file = TFile::Open("tempModel.root");
 // get the workspace out of the file
 	RooWorkspace* w = (RooWorkspace*) file->Get("w");
