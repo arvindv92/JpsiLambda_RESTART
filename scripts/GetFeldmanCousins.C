@@ -74,9 +74,10 @@ void GetFeldmanCousins()
 	//  ToyMCSampler*  toymcsampler = (ToyMCSampler*) fc.GetTestStatSampler();
 	//  toymcsampler->SetProofConfig(&pc); // enable proof
 
-
+	cout<<"poop0"<<endl;
 	// Now get the interval
 	PointSetInterval* interval = fc.GetInterval();
+	cout<<"poop1"<<endl;
 	ConfidenceBelt* belt = fc.GetConfidenceBelt();
 
 	// print out the iterval on the first Parameter of Interest
