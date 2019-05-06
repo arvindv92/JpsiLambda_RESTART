@@ -48,13 +48,19 @@ void GetFeldmanCousins()
 	// to find and plot the 95% confidence interval
 	// on the parameter of interest as specified
 	// in the model config
+	cout<<"poop0"<<endl;
 	FeldmanCousins fc(*data,*mc);
+	cout<<"poop1"<<endl;
 	fc.SetConfidenceLevel(0.95); // 95% interval
+	cout<<"poop2"<<endl;
 	fc.AdditionalNToysFactor(0.1); // to speed up the result
+	cout<<"poop3"<<endl;
 	fc.UseAdaptiveSampling(true); // speed it up a bit
+	cout<<"poop4"<<endl;
 	fc.SetNBins(10); // set how many points per parameter of interest to scan
+	cout<<"poop5"<<endl;
 	fc.CreateConfBelt(true); // save the information in the belt for plotting
-
+	cout<<"poop6"<<endl;
 	// Since this tool needs to throw toy MC the PDF needs to be
 	// extended or the tool needs to know how many entries in a dataset
 	// per pseudo experiment.
