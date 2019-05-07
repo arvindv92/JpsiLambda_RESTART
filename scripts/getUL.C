@@ -344,8 +344,8 @@ void getUL(const char *option)
 		cout<<"Run "<<run<<" Lambda Generator Effs = "<<eff_Lambda_gen[i]*100
 		    <<" % +/- "<<eff_Lambda_gen_err[i]*100<<" %"<<endl;
 
-		mcTreeIn_nonZero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
-		mcTreeIn_Zero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+		mcTreeIn_nonZero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+		mcTreeIn_Zero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 
 		TH1F *wt_lambda_nonZero = (TH1F*)gDirectory->Get("wt_lambda_nonZero");
 		TH1F *wt_lambda_Zero = (TH1F*)gDirectory->Get("wt_lambda_Zero");
@@ -426,7 +426,7 @@ void getUL(const char *option)
 		genWtsTree_Sigma->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
 		                                           sigmaPath,run));
 
-		genWtsTree_Sigma->Draw("gb_wts*wt_tau>>genWt_Sigma");
+		genWtsTree_Sigma->Draw("gb_wts*wt_tau>>genWt_Sigma","","goff");
 		TH1F *genWt_Sigma = (TH1F*)gDirectory->Get("genWt_Sigma");
 
 		nGen_Sigma_wt[i] = genWt_Sigma->GetEntries()*genWt_Sigma->GetMean();
@@ -441,8 +441,8 @@ void getUL(const char *option)
 		    <<" % +/- "<<eff_Sigma_gen_err[i]*100<<" %"<<endl;
 
 
-		mcTreeIn_nonZero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
-		mcTreeIn_Zero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+		mcTreeIn_nonZero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+		mcTreeIn_Zero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 
 		TH1F *wt_Sigma_nonZero = (TH1F*)gDirectory->Get("wt_Sigma_nonZero");
 		TH1F *wt_Sigma_Zero = (TH1F*)gDirectory->Get("wt_Sigma_Zero");
@@ -921,13 +921,14 @@ void getUL(const char *option)
 	for(Int_t i=0; i<=1; i++)
 	{
 		const char *mystr = Form("Lb_Run%d",i+1);
+		const char *myvar = Form("nLb_Run%d",i+1);
 
 		lbInt[i]       = w.pdf(mystr)->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
 		lbINT[i]       = lbInt[i]->getValV();
-		Nlb[i]         = lbINT[i]*(w.var(mystr)->getVal());
-		lbERR[i]       = (lbInt[i]->getValV())*(w.var(mystr)->getError());
-		Nlb_tot[i]     = w.var(mystr)->getVal();
-		Nlb_tot_ERR[i] = w.var(mystr)->getError();
+		Nlb[i]         = lbINT[i]*(w.var(myvar)->getVal());
+		lbERR[i]       = (lbInt[i]->getValV())*(w.var(myvar)->getError());
+		Nlb_tot[i]     = w.var(myvar)->getVal();
+		Nlb_tot_ERR[i] = w.var(myvar)->getError();
 
 		Nsig[i]    = Nobs[i] - Nlb[i] - Nxib[i] - Ncomb[i];
 		nsigERR[i] = sqrt( Nobs[i] + Ncomb[i] + pow(lbERR[i],2) + pow(xibERR[i],2));
