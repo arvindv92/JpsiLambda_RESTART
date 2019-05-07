@@ -170,6 +170,9 @@ void getUL(const char *option)
 	//************POI****************************************************
 	Float_t R[2] = {0.0,0.0};
 	Float_t R_ERR[2] = {0.0,0.0};
+
+	Float_t R_comb     = 0.0;
+	Float_t R_comb_err = 0.0;
 	//*******************************************************************
 	if(!strncmp(option,"best",4)) //Set parameters for best fit
 	{
@@ -690,8 +693,8 @@ void getUL(const char *option)
 
 	//*******************************************************************
 
-	w.factory("nLb_Run1[5000,1000,7000]");
-	w.factory("nLb_Run2[17000,1000,22000]");
+	w.factory("nLb_Run1[5600,2000,7000]");
+	w.factory("nLb_Run2[20000,10000,22000]");
 	w.factory(Form("nBkg_Run1[2000,1,%d]",nentries[0]));
 	w.factory(Form("nBkg_Run2[4000,1,%d]",nentries[1]));
 
@@ -958,5 +961,13 @@ void getUL(const char *option)
 
 		cout<<endl;
 	}
+
+	R_comb_err = 1/sqrt(pow(1/R_ERR[0],2) + pow(1/R_ERR[1],2));
+	R_comb = (R[0]/pow(R_ERR[0],2) + R[1]/pow(R_ERR[1],2)) * pow(R_comb_err,2);
+	cout<<"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl;
+	cout<<"COMBINED R = "<<R_comb<<" +/- "<<R_comb_err<<endl;
+	cout<<"COMBINED 90% CL Upper Limit = "<<R_comb+(1.28*R_comb_err)<<endl;
+	cout<<"COMBINED 95% CL Upper Limit = "<<R_comb+(1.65*R_comb_err)<<endl;
+	cout<<"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl;
 
 }
