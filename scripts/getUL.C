@@ -80,7 +80,48 @@ void getUL(const char *option)
 	Float_t xibnorm_LL_systerr_wt[2] = {0.0,0.0};
 	Float_t xibnorm_LL_err_wt[2]     = {0.0,0.0};
 
-	Float_t xib_syst             = 0.05;
+	// Lb->J/psi L MC eff & errs
+	Int_t nGen_Lambda[2]          = {0,0}; // Generated yield
+	Float_t nGen_Lambda_wt[2]     = {0,0}; // Generated yield weighted
+	Float_t eff_Lambda_gen[2]     = {0.0,0.0}; // Generator Eff.
+	Float_t eff_Lambda_gen_err[2] = {0.0,0.0}; // Generator Eff. Stat. Err.
+
+	Float_t eff_Lambda_rec[2]     = {0.0,0.0}; // Reco. Eff.
+	Float_t eff_Lambda_rec_err[2] = {0.0,0.0}; // Reco. Eff. Stat. Err.
+	Float_t eff_Lambda[2]         = {0.0,0.0}; // Overall Eff.
+	Float_t eff_Lambda_staterr[2] = {0.0,0.0}; // Overall Eff. Stat. Err.
+
+	Float_t eff_Lambda_rec_wt[2]     = {0.0,0.0}; // Reco. Eff.
+	Float_t eff_Lambda_rec_err_wt[2] = {0.0,0.0}; // Reco. Eff. Stat. Err.
+	Float_t eff_Lambda_wt[2]         = {0.0,0.0}; // Overall Eff.
+	Float_t eff_Lambda_staterr_wt[2] = {0.0,0.0}; // Overall Eff. Stat. Err.
+
+	// Lb->J/psi Sigma MC eff & errs
+	Int_t nGen_Sigma[2]          = {0,0};
+	Float_t nGen_Sigma_wt[2]     = {0,0}; // Generated yield weighted
+	Float_t eff_Sigma_gen[2]     = {0.0,0.0};
+	Float_t eff_Sigma_gen_err[2] = {0.0,0.0};
+
+	Float_t eff_Sigma_rec[2]     = {0.0,0.0};
+	Float_t eff_Sigma_rec_err[2] = {0.0,0.0};
+	Float_t eff_Sigma[2]         = {0.0,0.0};
+	Float_t eff_Sigma_staterr[2] = {0.0,0.0};
+
+	Float_t eff_Sigma_rec_wt[2]     = {0.0,0.0};
+	Float_t eff_Sigma_rec_err_wt[2] = {0.0,0.0};
+	Float_t eff_Sigma_wt[2]         = {0.0,0.0};
+	Float_t eff_Sigma_staterr_wt[2] = {0.0,0.0};
+
+	// eff(Lb -> J/psi Sigma) / eff(Lb -> J/psi Lambda)
+	Float_t eff_ratio[2]          = {0.0,0.0};
+	Float_t eff_ratio_staterr[2]  = {0.0,0.0};
+	Float_t eff_ratio_systerr[2]  = {0.0,0.0};
+	Float_t eff_ratio_err[2]      = {0.0,0.0};
+
+	Float_t eff_ratio_wt[2]          = {0.0,0.0};
+	Float_t eff_ratio_staterr_wt[2]  = {0.0,0.0};
+	Float_t eff_ratio_systerr_wt[2]  = {0.0,0.0};
+	Float_t eff_ratio_err_wt[2]      = {0.0,0.0};
 
 	TFile *fileIn_nonZero[2];
 	TFile *fileIn_Zero[2];
@@ -100,21 +141,36 @@ void getUL(const char *option)
 	TH1D *myhist[2];
 	RooDataHist *ds[2];
 
-	Int_t Nobs[2]     = {0,0};
-	Int_t Ncomb[2]    = {0,0};
-	Float_t Nsig[2]   = {0.0,0.0};
-	Float_t Nlb[2]    = {0.0,0.0};
-	Float_t Nxib[2]   = {0.0,0.0};
-	Float_t xibERR[2] = {0.0,0.0};
-	Float_t lbERR[2];
-	Float_t nsigERR[2] = {0.0,0.0};
-	Int_t nentries[2];
+	Int_t Nobs[2]       = {0,0};
+	Int_t Ncomb[2]      = {0,0};
+	Float_t Nsig[2]     = {0.0,0.0};
+
+	Float_t Nlb[2]          = {0.0,0.0};
+	Float_t Nsig_tot[2]     = {0.0,0.0};
+	Float_t Nsig_tot_ERR[2] = {0.0,0.0};
+
+
+	Float_t Nlb_tot[2]     = {0.0,0.0};
+	Float_t Nlb_tot_ERR[2] = {0.0,0.0};
+	Float_t Nxib[2]        = {0.0,0.0};
+	Float_t xibERR[2]      = {0.0,0.0};
+	Float_t lbERR[2]       = {0.0,0.0};
+	Float_t nsigERR[2]     = {0.0,0.0};
+	Int_t nentries[2]      = {0,0};
 
 	RooAbsReal* xibInt[2];
-	Double_t xibINT[2];
+	Double_t xibINT[2]= {0.0,0.0};
 
 	RooAbsReal* lbInt[2];
-	Double_t lbINT[2];
+	Double_t lbINT[2]= {0.0,0.0};
+
+	RooAbsReal* sigmaInt[2];
+	Double_t sigmaINT[2]= {0.0,0.0};
+
+	//************POI****************************************************
+	Float_t R[2] = {0.0,0.0};
+	Float_t R_ERR[2] = {0.0,0.0};
+	//*******************************************************************
 	if(!strncmp(option,"best",4)) //Set parameters for best fit
 	{
 		isoVersion[0] = "v0";//"v1";
@@ -135,6 +191,11 @@ void getUL(const char *option)
 		bdtCut_Zero[0] = 0.365;//0.285;
 		bdtCut_Zero[1] = 0.455;//0.415;
 	}
+
+	//******Systematics that are set by hand now*************************
+	Float_t xib_syst             = 0.05;
+	Float_t eff_ratio_syst       = 0.02;
+
 	// ************************Master Workspace**************************
 	RooWorkspace w("w");
 
@@ -233,6 +294,262 @@ void getUL(const char *option)
 		cout<<"************************************************"<<endl;
 	}
 	//************************************************
+
+	//****Get J/psi Lambda efficiencies from MC*******
+	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
+	cout<<"Get Lb -> J/psi Lambda efficiency"<<endl;
+	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
+	const char* lambdaMCPath = "../rootFiles/mcFiles/JpsiLambda/JpsiLambda";
+
+	for(Int_t run = 1; run<=2; run++)
+	{
+		Int_t i = run-1;
+		TFile *mcFileIn_nonZero_Lambda = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_nonZeroTracks_noPID.root",
+		                                           lambdaMCPath,run));
+		TTree *mcTreeIn_nonZero_Lambda = (TTree*)mcFileIn_nonZero_Lambda->Get("MyTuple");
+
+		TFile *mcFileIn_Zero_Lambda    = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_ZeroTracks_noPID.root",
+		                                           lambdaMCPath,run));
+		TTree *mcTreeIn_Zero_Lambda    = (TTree*)mcFileIn_Zero_Lambda->Get("MyTuple");
+
+		mcTreeIn_nonZero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s_noPID.root",
+		                                                  lambdaMCPath,run,bdtConf_nonZero[i],
+		                                                  isoConf[i],isoVersion[i]));
+		mcTreeIn_Zero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d_noPID.root",
+		                                               lambdaMCPath,run,bdtConf_Zero[i]));
+
+		fstream genFile_Lambda;
+		genFile_Lambda.open((Form("../logs/mc/JpsiLambda/JpsiLambda/run%d/gen_log.txt",run)));
+
+		genFile_Lambda>>nGen_Lambda[i]; //Get number of generated events
+
+		TFile *genWtsFile_Lambda = Open(Form("%s/run%d/RW/gbWeights_gen.root",
+		                                     lambdaMCPath,run));
+		TTree *genWtsTree_Lambda = (TTree*)genWtsFile_Lambda->Get("MyTuple");
+
+		genWtsTree_Lambda->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
+		                                            lambdaMCPath,run));
+
+		genWtsTree_Lambda->Draw("gb_wts*wt_tau>>genWt_Lambda","","goff");
+
+		TH1F *genWt_Lambda = (TH1F*)gDirectory->Get("genWt_Lambda");
+		nGen_Lambda_wt[i] = genWt_Lambda->GetEntries()*genWt_Lambda->GetMean();
+
+		fstream genEffFile_Lambda;
+		genEffFile_Lambda.open(Form("../logs/mc/JpsiLambda/JpsiLambda/run%d/Generator_Effs_Combined.txt",run));
+
+		genEffFile_Lambda>>eff_Lambda_gen[i];    //Get generator efficiency
+		genEffFile_Lambda>>eff_Lambda_gen_err[i];//and error on above
+
+		cout<<"Run "<<run<<" Lambda Generator Effs = "<<eff_Lambda_gen[i]*100
+		    <<" % +/- "<<eff_Lambda_gen_err[i]*100<<" %"<<endl;
+
+		mcTreeIn_nonZero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
+		mcTreeIn_Zero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+
+		TH1F *wt_lambda_nonZero = (TH1F*)gDirectory->Get("wt_lambda_nonZero");
+		TH1F *wt_lambda_Zero = (TH1F*)gDirectory->Get("wt_lambda_Zero");
+
+		Int_t num_Lambda_wt = (wt_lambda_nonZero->GetMean()*wt_lambda_nonZero->GetEntries()) +
+		                      (wt_lambda_Zero->GetMean()*wt_lambda_Zero->GetEntries());
+
+		Int_t num_Lambda = mcTreeIn_nonZero_Lambda->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]))
+		                   + mcTreeIn_Zero_Lambda->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));                                                      //NOTE NO TM HERE
+
+		eff_Lambda_rec[i]     = num_Lambda*1.0/nGen_Lambda[i]; //Calc. reco eff.
+		eff_Lambda_rec_err[i] = sqrt(eff_Lambda_rec[i]*(1-eff_Lambda_rec[i])/nGen_Lambda[i]); //statistical error on recon. eff.
+
+		eff_Lambda_rec_wt[i]     = num_Lambda_wt*1.0/nGen_Lambda_wt[i]; //Calc. weighted reco eff.
+		eff_Lambda_rec_err_wt[i] = sqrt(eff_Lambda_rec_wt[i]*(1-eff_Lambda_rec_wt[i])/nGen_Lambda_wt[i]); //statistical error on weighted recon. eff.
+
+		cout<<"Run "<<run<<" UNWEIGHTED Lambda Recons. Effs = "<<eff_Lambda_rec[i]*100
+		    <<" % +/- "<<eff_Lambda_rec_err[i]*100<<" %"<<endl;
+
+		cout<<"Run "<<run<<" WEIGHTED Lambda Recons. Effs = "<<eff_Lambda_rec_wt[i]*100
+		    <<" % +/- "<<eff_Lambda_rec_err_wt[i]*100<<" %"<<endl;
+
+		eff_Lambda[i]     = eff_Lambda_rec[i]*eff_Lambda_gen[i]; // Calc. total eff.
+		eff_Lambda_staterr[i] = eff_Lambda[i]*sqrt(pow((eff_Lambda_gen_err[i]/eff_Lambda_gen[i]),2) +
+		                                           pow((eff_Lambda_rec_err[i]/eff_Lambda_rec[i]),2));                                                                                                                               // and stat error on tot. eff.
+
+		eff_Lambda_wt[i]     = eff_Lambda_rec_wt[i]*eff_Lambda_gen[i];                                                                                                                                                                          // Calc. total eff.
+		eff_Lambda_staterr_wt[i] = eff_Lambda_wt[i]*sqrt(pow((eff_Lambda_gen_err[i]/eff_Lambda_gen[i]),2) +
+		                                                 pow((eff_Lambda_rec_err_wt[i]/eff_Lambda_rec_wt[i]),2));                                                                                                                                                                                                                                                                                                                                                                                                                                                 // and stat error on tot. eff.
+
+		cout<<"************************************************"<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED Jpsi Lambda Eff = "<<eff_Lambda[i]*100
+		    <<" % +/- "<<eff_Lambda_staterr[i]*100<<" %"<<endl;
+		cout<<"Run "<<run<<" WEIGHTED Jpsi Lambda Eff = "<<eff_Lambda_wt[i]*100
+		    <<" % +/- "<<eff_Lambda_staterr_wt[i]*100<<" %"<<endl;
+		cout<<"************************************************"<<endl;
+	}
+	//*******************************************************************
+
+	RooHistPdf* SIG[2];
+	RooKeysPdf* SIG_KEYS[2];
+	RooDataSet* ds_sig[2];
+
+	//****Get J/psi Sigma efficiencies and shape from MC*****************
+	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
+	cout<<"Get Lb -> J/psi Sigma efficiency and shape"<<endl;
+	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
+
+	const char* sigmaPath = "/data1/avenkate/JpsiLambda_RESTART/"
+	                        "rootFiles/mcFiles/JpsiLambda/JpsiSigma";
+
+	for(Int_t run = 1; run<=2; run++)
+	{
+		Int_t i = run-1;
+		TFile *mcFileIn_nonZero_Sigma = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_nonZeroTracks_noPID.root",
+		                                          sigmaPath,run));
+		TTree *mcTreeIn_nonZero_Sigma = (TTree*)mcFileIn_nonZero_Sigma->Get("MyTuple");
+
+		TFile *mcFileIn_Zero_Sigma    = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_ZeroTracks_noPID.root",
+		                                          sigmaPath,run));
+		TTree *mcTreeIn_Zero_Sigma    = (TTree*)mcFileIn_Zero_Sigma->Get("MyTuple");
+
+		mcTreeIn_nonZero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_LL_FinalBDT%d_iso%d_%s_noPID.root",
+		                                                 sigmaPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+		mcTreeIn_Zero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_zeroTracksLL_FinalBDT%d_noPID.root",
+		                                              sigmaPath,run,bdtConf_Zero[i]));
+
+		//***************Efficiency***************************************
+		fstream genFile_Sigma;
+		genFile_Sigma.open((Form("../logs/mc/JpsiLambda/JpsiSigma/run%d/gen_log.txt",run)));
+
+		genFile_Sigma>>nGen_Sigma[i]; // Get number of generated events
+
+		TFile *genWtsFile_Sigma = Open(Form("%s/run%d/RW/gbWeights_gen.root",
+		                                    sigmaPath,run));
+		TTree *genWtsTree_Sigma = (TTree*)genWtsFile_Sigma->Get("MyTuple");
+
+		genWtsTree_Sigma->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
+		                                           sigmaPath,run));
+
+		genWtsTree_Sigma->Draw("gb_wts*wt_tau>>genWt_Sigma");
+		TH1F *genWt_Sigma = (TH1F*)gDirectory->Get("genWt_Sigma");
+
+		nGen_Sigma_wt[i] = genWt_Sigma->GetEntries()*genWt_Sigma->GetMean();
+
+		fstream genEffFile_Sigma;
+		genEffFile_Sigma.open(Form("../logs/mc/JpsiLambda/JpsiSigma/run%d/Generator_Effs_Combined.txt",run));
+
+		genEffFile_Sigma>>eff_Sigma_gen[i]; // Get generator efficiency
+		genEffFile_Sigma>>eff_Sigma_gen_err[i]; // and error on above
+
+		cout<<"Run "<<run<<" Sigma Generator Effs = "<<eff_Sigma_gen[i]*100
+		    <<" % +/- "<<eff_Sigma_gen_err[i]*100<<" %"<<endl;
+
+
+		mcTreeIn_nonZero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
+		mcTreeIn_Zero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+
+		TH1F *wt_Sigma_nonZero = (TH1F*)gDirectory->Get("wt_Sigma_nonZero");
+		TH1F *wt_Sigma_Zero = (TH1F*)gDirectory->Get("wt_Sigma_Zero");
+
+		Int_t num_Sigma_wt = (wt_Sigma_nonZero->GetMean()*wt_Sigma_nonZero->GetEntries()) +
+		                     (wt_Sigma_Zero->GetMean()*wt_Sigma_Zero->GetEntries());
+
+		Int_t num_Sigma = mcTreeIn_nonZero_Sigma->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
+		                  mcTreeIn_Zero_Sigma->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+
+		eff_Sigma_rec[i]     = num_Sigma*1.0/nGen_Sigma[i]; // Calc. reco. eff.
+		eff_Sigma_rec_err[i] = sqrt(eff_Sigma_rec[i]*(1-eff_Sigma_rec[i])/nGen_Sigma[i]); //stat error on recon. eff.
+
+		eff_Sigma_rec_wt[i]     = num_Sigma_wt*1.0/nGen_Sigma_wt[i]; //Calc. weighted reco eff.
+		eff_Sigma_rec_err_wt[i] = sqrt(eff_Sigma_rec_wt[i]*(1-eff_Sigma_rec_wt[i])/nGen_Sigma_wt[i]); //statistical error on weighted recon. eff.
+
+		cout<<"Run "<<run<<" Sigma Recons. Effs = "
+		    <<eff_Sigma_rec[i]*100<<" % +/- "<<eff_Sigma_rec_err[i]*100<<" %"<<endl;
+
+		cout<<"Run "<<run<<" WEIGHTED Sigma Recons. Effs = "<<eff_Sigma_rec_wt[i]*100
+		    <<" % +/- "<<eff_Sigma_rec_err_wt[i]*100<<" %"<<endl;
+
+		eff_Sigma[i] = eff_Sigma_gen[i] * eff_Sigma_rec[i]; // Calc overall eff.
+		eff_Sigma_staterr[i] = eff_Sigma[i]*sqrt(pow((eff_Sigma_gen_err[i]/eff_Sigma_gen[i]),2) +
+		                                         pow((eff_Sigma_rec_err[i]/eff_Sigma_rec[i]),2));                                                                                                                         // and stat. error on above
+
+		eff_Sigma_wt[i]     = eff_Sigma_rec_wt[i]*eff_Sigma_gen[i];                                                                                                                                                                          // Calc. total eff.
+		eff_Sigma_staterr_wt[i] = eff_Sigma_wt[i]*sqrt(pow((eff_Sigma_gen_err[i]/eff_Sigma_gen[i]),2) +
+		                                               pow((eff_Sigma_rec_err_wt[i]/eff_Sigma_rec_wt[i]),2));                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             // and stat error on tot. eff.
+
+		cout<<"************************************************"<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED Jpsi Sigma Eff = "<<eff_Sigma[i]*100
+		    <<" % +/- "<<eff_Sigma_staterr[i]*100<<" %"<<endl;
+		cout<<"Run "<<run<<" WEIGHTED Jpsi Sigma Eff = "<<eff_Sigma_wt[i]*100
+		    <<" % +/- "<<eff_Sigma_staterr_wt[i]*100<<" %"<<endl;
+		cout<<"************************************************"<<endl;
+
+		eff_ratio[i]         = eff_Sigma[i]/eff_Lambda[i]; // Calc eff ratio.
+		eff_ratio_staterr[i] = eff_ratio[i]*sqrt(pow((eff_Sigma_staterr[i]/eff_Sigma[i]),2)+pow((eff_Lambda_staterr[i]/eff_Lambda[i]),2)); // stat err on ratio
+		eff_ratio_systerr[i] = eff_ratio[i]*eff_ratio_syst;
+		eff_ratio_err[i]     = sqrt(pow(eff_ratio_staterr[i],2) + pow(eff_ratio_systerr[i],2));//combine in quadrature
+
+		eff_ratio_wt[i]         = eff_Sigma_wt[i]/eff_Lambda_wt[i]; // Calc eff ratio.
+		eff_ratio_staterr_wt[i] = eff_ratio_wt[i]*sqrt(pow((eff_Sigma_staterr_wt[i]/eff_Sigma_wt[i]),2)+pow((eff_Lambda_staterr_wt[i]/eff_Lambda_wt[i]),2)); // stat err on ratio
+		eff_ratio_systerr_wt[i] = eff_ratio_wt[i]*eff_ratio_syst;
+		eff_ratio_err_wt[i]     = sqrt(pow(eff_ratio_staterr_wt[i],2) + pow(eff_ratio_systerr_wt[i],2));//combine in quadrature
+
+		cout<<"***************************************"<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED Sigma/Lambda efficiency ratio = "<<eff_ratio[i]<<" +/- "<<eff_ratio_err[i]<<endl;
+		cout<<"Run "<<run<<" WEIGHTED Sigma/Lambda efficiency ratio   = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_err_wt[i]<<endl;
+		cout<<"***************************************"<<endl;
+
+		//******************************************************************
+
+		//****************Shape*********************************************
+
+		mcTreeIn_Zero_Sigma->SetBranchStatus("*",0);
+		mcTreeIn_Zero_Sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		mcTreeIn_Zero_Sigma->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+		mcTreeIn_Zero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
+		mcTreeIn_Zero_Sigma->SetBranchStatus("gb_wts",1);
+		mcTreeIn_Zero_Sigma->SetBranchStatus("wt_tau",1);
+
+		mcTreeIn_nonZero_Sigma->SetBranchStatus("*",0);
+		mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		mcTreeIn_nonZero_Sigma->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+		mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
+		mcTreeIn_nonZero_Sigma->SetBranchStatus("gb_wts",1);
+		mcTreeIn_nonZero_Sigma->SetBranchStatus("wt_tau",1);
+
+		TFile *tempFile = new TFile("tempFile_sig.root","RECREATE");
+
+		TTree* mcTreeIn_Zero_Sigma_cut    = (TTree*)mcTreeIn_Zero_Sigma->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//Not TRUTH MATCHING HERE!
+		TTree* mcTreeIn_nonZero_Sigma_cut = (TTree*)mcTreeIn_nonZero_Sigma->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//Not TRUTH MATCHING HERE!
+
+		TList *list_sig = new TList;
+		list_sig->Add(mcTreeIn_Zero_Sigma_cut);
+		list_sig->Add(mcTreeIn_nonZero_Sigma_cut);
+
+		TTree *combTree_sig = TTree::MergeTrees(list_sig);
+		combTree_sig->SetName("combTree_sig");
+
+		ds_sig[i] = new RooDataSet("ds_sig","ds_sig",combTree_sig,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"gb_wts*wt_tau");
+		ds_sig[i]->Print();
+
+		SIG_KEYS[i] = new RooKeysPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_sig[i]),RooKeysPdf::MirrorBoth,1);
+
+		RooPlot *framesigma = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+		framesigma->SetTitle("J/#psi #Sigma");
+		// ds_sigma->plotOn(framesigma,Name("sigmadata"));
+		ds_sig[i]->plotOn(framesigma,Name("sigmadata"));
+		// sigmashape.plotOn(framesigma,Name("sigmafit"),LineColor(kBlue));
+		(*(SIG_KEYS[i])).plotOn(framesigma,Name("sigmafitsmooth"),LineColor(kRed),LineStyle(kDashed));
+
+		TCanvas *csigma = new TCanvas(Form("JpsiSigma%d",run),Form("JpsiSigma%d",run));
+		framesigma->Draw();
+		w.import(*(SIG_KEYS[i]));
+
+		cout<<"Done importing Jpsi Sigma shape"<<endl;
+
+		sigmaInt[i] = SIG_KEYS[i]->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
+		sigmaINT[i] = sigmaInt[i]->getValV();
+
+		// cout<<"Run "<<run<<" sigma fraction = "<<sigmaINT[i]<<endl;
+	}
+	//********************************************************************
+
 
 	RooDataSet* ds_xi[2];
 	RooKeysPdf* XIB_KEYS[2];
@@ -402,7 +719,7 @@ void getUL(const char *option)
 	w.import(simPdf);
 
 	//************************DO THE FIT***********************
-	RooFitResult *res = simPdf.fitTo(*combData,Extended(), Save(), Hesse(false), Strategy(1), PrintLevel(0), Range(5500,5700));
+	RooFitResult *res = simPdf.fitTo(*combData,Extended(), Save(), Hesse(false), Strategy(1), PrintLevel(0), Range(5500,5800));
 	//*******************************************************************
 
 	//*********************PLOTTING STUFF*********************************************
@@ -601,21 +918,44 @@ void getUL(const char *option)
 	RooAbsPdf *Lb_Run1 = w.pdf("Lb_Run1");
 	RooAbsPdf *Lb_Run2 = w.pdf("Lb_Run2");
 
-	lbInt[0] = w.pdf("Lb_Run1")->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
-	lbINT[0] = lbInt[0]->getValV();
-	Nlb[0]   = lbINT[0]*(w.var("nLb_Run1")->getVal());
-	lbInt[1] = w.pdf("Lb_Run2")->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
-	lbINT[1] = lbInt[1]->getValV();
-	Nlb[1]   = lbINT[1]*(w.var("nLb_Run2")->getVal());
-	lbERR[0] = (lbInt[0]->getValV())*(w.var("nLb_Run1")->getError());
-	lbERR[1] = (lbInt[1]->getValV())*(w.var("nLb_Run2")->getError());
-
 	for(Int_t i=0; i<=1; i++)
 	{
-		Nsig[i] = Nobs[i] - Nlb[i] - Nxib[i] - Ncomb[i];
+		const char *mystr = Form("Lb_Run%d",i+1);
+
+		lbInt[i]       = w.pdf(mystr)->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
+		lbINT[i]       = lbInt[i]->getValV();
+		Nlb[i]         = lbINT[i]*(w.var(mystr)->getVal());
+		lbERR[i]       = (lbInt[i]->getValV())*(w.var(mystr)->getError());
+		Nlb_tot[i]     = w.var(mystr)->getVal();
+		Nlb_tot_ERR[i] = w.var(mystr)->getError();
+
+		Nsig[i]    = Nobs[i] - Nlb[i] - Nxib[i] - Ncomb[i];
 		nsigERR[i] = sqrt( Nobs[i] + Ncomb[i] + pow(lbERR[i],2) + pow(xibERR[i],2));
 
-		cout<<"RUN"<<i+1<<" : nsig = "<<Nsig[i]<<" +/- "<<nsigERR[i]<<endl;
+		Nsig_tot[i]     = Nsig[i]/sigmaINT[i];
+		Nsig_tot_ERR[i] = nsigERR[i]/sigmaINT[i];
+
+		R[i] = (Nsig_tot[i]/Nlb_tot[i])/eff_ratio_wt[i];
+		R_ERR[i] = R[i]*sqrt( pow(Nsig_tot_ERR[i]/Nsig_tot[i],2) +
+		                      pow(Nlb_tot_ERR[i]/Nlb_tot[i],2) +
+		                      pow(eff_ratio_err_wt[i]/eff_ratio_wt[i],2) );
+
+		cout<<"*********RUN "<<i+1<<"***********"<<endl;
+		cout<<"Nobs    = "<<Nobs[i]<<" +/- "<<sqrt((float)Nobs[i])<<endl;
+		cout<<"Ncomb   = "<<Ncomb[i]<<" +/- "<<sqrt((float)Ncomb[i])<<endl;
+		cout<<"Nxib    = "<<Nxib[i]<<" +/- "<<xibERR[i]<<endl;
+		cout<<"NLb     = "<<Nlb[i]<<" +/- "<<lbERR[i]<<endl;
+		cout<<"_____________________________________"<<endl;
+		cout<<"Nsig    = "<<Nsig[i]<<" +/- "<<nsigERR[i]<<endl;
+		cout<<"Frac    = "<<sigmaINT[i]<<endl;
+		cout<<"NLb_tot = "<<Nlb_tot[i]<<" +/- "<<Nlb_tot_ERR[i]<<endl;
+		cout<<"Eff Rat = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_err_wt[i]<<endl;
+		cout<<"_____________________________________"<<endl;
+		cout<<"R       = "<<R[i]<<" +/- "<<R_ERR[i]<<endl;
+		cout<<"90% CL Upper Limit = "<<R[i]+(1.28*R_ERR[i])<<endl;
+		cout<<"*********************************"<<endl;
+
+		cout<<endl;
 	}
 
 }
