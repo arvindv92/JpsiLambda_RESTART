@@ -719,7 +719,7 @@ void getUL(const char *option)
 	w.import(simPdf);
 
 	//************************DO THE FIT***********************
-	RooFitResult *res = simPdf.fitTo(*combData,Extended(), Save(), Hesse(false), Strategy(1), PrintLevel(0), Range(5500,5800));
+	RooFitResult *res = simPdf.fitTo(*combData,Extended(), Save(), Hesse(false), Strategy(1), Range(5500,5800));
 	//*******************************************************************
 
 	//*********************PLOTTING STUFF*********************************************
