@@ -56,8 +56,10 @@ using namespace std;
 using namespace RooFit;
 using namespace RooStats;
 
-void getUL(const char *option)
+void getUL(Int_t logFlag, const char *option, Int_t config)
 {
+	if(logFlag)
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/UpperLimit/config%d.txt",config),"w");
 
 	gSystem->Load("RooHypatia2_cpp.so"); //Load library for Hypatia shape
 
@@ -174,7 +176,114 @@ void getUL(const char *option)
 	Float_t R_comb     = 0.0;
 	Float_t R_comb_err = 0.0;
 	//*******************************************************************
-	if(!strncmp(option,"best",4)) //Set parameters for best fit
+	if(!strncmp(option,"switch",5))
+	{
+		switch(config)
+		{
+		case 1:
+		{
+			isoVersion[0]   = "v0";
+			isoConf[0]      = 1;
+			isoVersion[1]   = "v0";
+			isoConf[1]      = 1;
+			bdtConf_nonZero[0] = 1;
+			bdtConf_nonZero[1] = 1;
+			bdtConf_Zero[0] = 1;
+			bdtConf_Zero[1] = 1;
+			break;
+		}
+		case 2:
+		{
+			isoVersion[0]   = "v0";
+			isoConf[0]      = 1;
+			isoVersion[1]   = "v0";
+			isoConf[1]      = 1;
+			bdtConf_nonZero[0] = 2;
+			bdtConf_nonZero[1] = 2;
+			bdtConf_Zero[0] = 2;
+			bdtConf_Zero[1] = 2;
+			break;
+		}
+		case 3:
+		{
+			isoVersion[0]   = "v0";
+			isoConf[0]      = 2;
+			isoVersion[1]   = "v0";
+			isoConf[1]      = 2;
+			bdtConf_nonZero[0] = 1;
+			bdtConf_nonZero[1] = 1;
+			bdtConf_Zero[0] = 1;
+			bdtConf_Zero[1] = 1;
+			break;
+		}
+		case 4:
+		{
+			isoVersion[0]   = "v0";
+			isoConf[0]      = 2;
+			isoVersion[1]   = "v0";
+			isoConf[1]      = 2;
+			bdtConf_nonZero[0] = 2;
+			bdtConf_nonZero[1] = 2;
+			bdtConf_Zero[0] = 2;
+			bdtConf_Zero[1] = 2;
+			break;
+		}
+		case 5:
+		{
+			isoVersion[0]   = "v1";
+			isoConf[0]      = 1;
+			isoVersion[1]   = "v1";
+			isoConf[1]      = 1;
+			bdtConf_nonZero[0] = 1;
+			bdtConf_nonZero[1] = 1;
+			bdtConf_Zero[0] = 1;
+			bdtConf_Zero[1] = 1;
+			break;
+		}
+		case 6:
+		{
+			isoVersion[0]   = "v1";
+			isoConf[0]      = 1;
+			isoVersion[1]   = "v1";
+			isoConf[1]      = 1;
+			bdtConf_nonZero[0] = 2;
+			bdtConf_nonZero[1] = 2;
+			bdtConf_Zero[0] = 2;
+			bdtConf_Zero[1] = 2;
+			break;
+		}
+		case 7:
+		{
+			isoVersion[0]   = "v1";
+			isoConf[0]      = 2;
+			isoVersion[1]   = "v1";
+			isoConf[1]      = 2;
+			bdtConf_nonZero[0] = 1;
+			bdtConf_nonZero[1] = 1;
+			bdtConf_Zero[0] = 1;
+			bdtConf_Zero[1] = 1;
+			break;
+		}
+		case 8:
+		{
+			isoVersion[0]   = "v1";
+			isoConf[0]      = 2;
+			isoVersion[1]   = "v1";
+			isoConf[1]      = 2;
+			bdtConf_nonZero[0] = 2;
+			bdtConf_nonZero[1] = 2;
+			bdtConf_Zero[0] = 2;
+			bdtConf_Zero[1] = 2;
+			break;
+		}
+		}
+		bdtCut_nonZero[0] = 0.475-0.1;//0.375 - 0.1;
+		bdtCut_nonZero[1] = 0.555-0.1;//0.535 - 0.1;
+
+		bdtCut_Zero[0] = 0.365;//0.285;
+		bdtCut_Zero[1] = 0.455;//0.415;
+	}
+	else if(!strncmp(option,"best",4)) //Set parameters for best fit
 	{
 		isoVersion[0] = "v0";//"v1";
 		isoVersion[1] = "v0";//"v0";
@@ -969,5 +1078,6 @@ void getUL(const char *option)
 	cout<<"COMBINED 90% CL Upper Limit = "<<R_comb+(1.28*R_comb_err)<<endl;
 	cout<<"COMBINED 95% CL Upper Limit = "<<R_comb+(1.65*R_comb_err)<<endl;
 	cout<<"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl;
-
+	if(logFlag)
+		gSystem->RedirectOutput(0);
 }
