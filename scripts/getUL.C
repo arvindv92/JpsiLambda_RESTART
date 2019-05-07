@@ -58,6 +58,9 @@ using namespace RooStats;
 
 void getUL(const char *option)
 {
+
+	gSystem->Load("RooHypatia2_cpp.so"); //Load library for Hypatia shape
+
 	Float_t bdtCut_nonZero[2] = {0.0,0.0};
 	Float_t bdtCut_Zero[2]    = {0.0,0.0};
 
