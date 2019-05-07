@@ -59,7 +59,7 @@ using namespace RooStats;
 void getUL(Int_t logFlag, const char *option, Int_t config)
 {
 	if(logFlag)
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/UpperLimit/config%d.txt",config),"w");
+		gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/UpperLimit/config%d.txt",config),"w");
 
 	gSystem->Load("RooHypatia2_cpp.so"); //Load library for Hypatia shape
 
