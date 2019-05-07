@@ -375,8 +375,8 @@ void getUL(const char *option)
 	w.factory(Form("nBkg_Run1[2000,1,%d]",nentries[0]));
 	w.factory(Form("nBkg_Run2[4000,1,%d]",nentries[1]));
 
-	w.factory("SUM:model1(nLb_Run1*Lb_Run1 + nBkg_Run1*Bkg_Run1)");
-	w.factory("SUM:model2(nLb_Run2*Lb_Run2 + nBkg_Run2*Bkg_Run2)");
+	w.factory("SUM:model1(nLb_Run1*Lb_Run1 , nBkg_Run1*Bkg_Run1)");
+	w.factory("SUM:model2(nLb_Run2*Lb_Run2 , nBkg_Run2*Bkg_Run2)");
 
 	RooAbsPdf* model1 = w.pdf("model1"); // get the model
 	RooAbsPdf* model2 = w.pdf("model2"); // get the model
