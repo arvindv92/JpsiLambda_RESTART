@@ -59,7 +59,7 @@ using namespace RooStats;
 void getUL(Int_t logFlag, const char *option, Int_t config)
 {
 	if(logFlag)
-		gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/UpperLimit/config%d.txt",config),"w");
+		gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/UpperLimit/config%d_tight.txt",config),"w");
 
 	gSystem->Load("RooHypatia2_cpp.so"); //Load library for Hypatia shape
 
@@ -297,8 +297,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 		bdtConf_Zero[0] = 2;//1;
 		bdtConf_Zero[1] = 1;//1;
 
-		bdtCut_nonZero[0] = 0.475-0.1;//0.375 - 0.1;
-		bdtCut_nonZero[1] = 0.555-0.1;//0.535 - 0.1;
+		bdtCut_nonZero[0] = 0.475;//0.375 - 0.1;
+		bdtCut_nonZero[1] = 0.555;//0.535 - 0.1;
 
 		bdtCut_Zero[0] = 0.365;//0.285;
 		bdtCut_Zero[1] = 0.455;//0.415;
@@ -758,12 +758,12 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 	//           "2 ,a2_Run1[2.0,1.0,3.0], 2)");
 
 	w.factory("RooHypatia2::Lb_Run1(Lb_DTF_M_JpsiLConstr,lambda_Run1[-2.0,-4.0,0.0],0,0,"
-	          "sigma_Run1[10.,1.,20.], mean_Run1[5619.6,5619,5621], a1_Run1[1.7,1.0,4.0],"
-	          "2 ,a2_Run1[2.0,1.0,3.0], 2)");
+	          "sigma_Run1[10.,1.,20.], mean_Run1[5619.6,5619,5621], a1_Run1[1.7,1.0,3.0],"
+	          "2 ,a2_Run1[3.0,2.0,4.0], 2)");
 
 	w.factory("RooHypatia2::Lb_Run2(Lb_DTF_M_JpsiLConstr,lambda_Run2[-2.5,-4.0,0.0],0,0,"
 	          "sigma_Run2[10.,1.,20.], mean_Run2[5619.6,5619,5621], a1_Run2[1.5,1.0,3.0],"
-	          "2 ,a2_Run2[1.5,1.0,3.0], 2)");
+	          "2 ,a2_Run2[1.5,2.0,3.0], 2)");
 
 	cout<<"Done defining J/psi Lambda Hypatia shapes"<<endl;
 	//*******************************************************************
@@ -773,8 +773,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 	// if(bkgType == 0)
 	// {
 	cout<<"*****UING EXPONENTIAL BKG SHAPE*****"<<endl;
-	w.factory("Exponential::Bkg_Run1(Lb_DTF_M_JpsiLConstr,tau_Run1[-0.001,-0.01,-0.0000001])");
-	w.factory("Exponential::Bkg_Run2(Lb_DTF_M_JpsiLConstr,tau_Run2[-0.001,-0.01,-0.0000001])");
+	w.factory("Exponential::Bkg_Run1(Lb_DTF_M_JpsiLConstr,tau_Run1[-1e-4,-1e-2,-1e-8])");
+	w.factory("Exponential::Bkg_Run2(Lb_DTF_M_JpsiLConstr,tau_Run2[-1e-4,-1e-2,-1e-8])");
 	// }
 	// else if(bkgType == 1)
 	// {
@@ -804,8 +804,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 
 	w.factory("nLb_Run1[5600,2000,7000]");
 	w.factory("nLb_Run2[20000,10000,22000]");
-	w.factory(Form("nBkg_Run1[2000,1,%d]",nentries[0]));
-	w.factory(Form("nBkg_Run2[4000,1,%d]",nentries[1]));
+	w.factory(Form("nBkg_Run1[200,1,%d]",nentries[0]));
+	w.factory(Form("nBkg_Run2[1000,1,%d]",nentries[1]));
 
 	w.factory("SUM:model1(nLb_Run1*Lb_Run1 , nBkg_Run1*Bkg_Run1)");
 	w.factory("SUM:model2(nLb_Run2*Lb_Run2 , nBkg_Run2*Bkg_Run2)");
