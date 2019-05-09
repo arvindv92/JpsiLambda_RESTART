@@ -1,0 +1,14 @@
+*****************************
+*****************************
+*****************************
+*****************************
+*****************************
+==> Starting TrainFinalBDT: 
+Thu May  2 16:56:47 EDT 2019
+WD = /data1/avenkate/JpsiLambda_RESTART
+*****************************
+hadd Target file: rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_withsw_noPID.root
+hadd compression setting for all ouput: 1
+hadd Source file 1: rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_withsw_nonZeroTracks_noPID.root
+hadd Source file 2: rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_withsw_ZeroTracks_noPID.root
+hadd Target path: rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_withsw_noPID.root:/

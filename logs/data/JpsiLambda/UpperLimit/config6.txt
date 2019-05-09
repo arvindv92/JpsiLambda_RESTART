@@ -1,0 +1,371 @@
+Warning in <TCanvas::Constructor>: Deleting canvas with same name: JpsiSigma1
+Warning in <TCanvas::Constructor>: Deleting canvas with same name: JpsiSigma2
+Warning in <TCanvas::Constructor>: Deleting canvas with same name: JpsiXi1
+Warning in <TCanvas::Constructor>: Deleting canvas with same name: JpsiXi2
+Warning in <TCanvas::Constructor>: Deleting canvas with same name: Run1
+Warning in <TCanvas::Constructor>: Deleting canvas with same name: Run2
+(w) importing dataset ds1
+Run 2 nentries = 29748
+[#1] INFO:DataHandling -- RooDataHist::adjustBinning(ds2): fit range of variable Lb_DTF_M_JpsiLConstr expanded to nearest bin boundaries: [5000,6000] --> [5000,6000]
+Done making RooDataHist
+RooDataHist::ds2[Lb_DTF_M_JpsiLConstr] = 250 bins (29748 weights)
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing dataset ds2
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Get Xib Normalization
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+[?1034h************************************************
+The UNWEIGHTED LL Xib normalization for Run 1 is 24.7235 +/- 3.92786
+The WEIGHTED LL Xib normalization for Run 1 is 28.8149 +/- 4.59363
+************************************************
+[?1034h************************************************
+The UNWEIGHTED LL Xib normalization for Run 2 is 118.445 +/- 9.73418
+The WEIGHTED LL Xib normalization for Run 2 is 125.095 +/- 10.2651
+************************************************
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Get Lb -> J/psi Lambda efficiency
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Run 1 Lambda Generator Effs = 19.2 % +/- 0.08 %
+Run 1 UNWEIGHTED Lambda Recons. Effs = 0.710314 % +/- 0.00709705 %
+Run 1 WEIGHTED Lambda Recons. Effs = 0.797798 % +/- 0.00850982 %
+************************************************
+Run 1 UNWEIGHTED Jpsi Lambda Eff = 0.13638 % +/- 0.00147637 %
+Run 1 WEIGHTED Jpsi Lambda Eff = 0.153177 % +/- 0.00175412 %
+************************************************
+Run 2 Lambda Generator Effs = 19.835 % +/- 0.0667 %
+Run 2 UNWEIGHTED Lambda Recons. Effs = 0.756134 % +/- 0.00420101 %
+Run 2 WEIGHTED Lambda Recons. Effs = 0.777531 % +/- 0.00438483 %
+************************************************
+Run 2 UNWEIGHTED Jpsi Lambda Eff = 0.149979 % +/- 0.000974012 %
+Run 2 WEIGHTED Jpsi Lambda Eff = 0.154223 % +/- 0.00101262 %
+************************************************
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Get Lb -> J/psi Sigma efficiency and shape
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Run 1 Sigma Generator Effs = 33.653 % +/- 0.1167 %
+Run 1 Sigma Recons. Effs = 0.348056 % +/- 0.00596398 %
+Run 1 WEIGHTED Sigma Recons. Effs = 0.409878 % +/- 0.00769989 %
+************************************************
+Run 1 UNWEIGHTED Jpsi Sigma Eff = 0.117131 % +/- 0.00204775 %
+Run 1 WEIGHTED Jpsi Sigma Eff = 0.137936 % +/- 0.00263502 %
+************************************************
+***************************************
+Run 1 UNWEIGHTED Sigma/Lambda efficiency ratio = 0.858858 +/- 0.0246363
+Run 1 WEIGHTED Sigma/Lambda efficiency ratio   = 0.900501 +/- 0.026956
+***************************************
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(ds_sig) Ignored 9 out of range events
+[#0] WARNING:DataHandling -- RooDataSet::RooDataSet(ds_sig) WARNING: designated weight variable gb_wts*wt_tau not found in set of variables, no weighting will be assigned
+RooDataSet::ds_sig[Lb_DTF_M_JpsiLConstr] = 3385 entries
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooKeysPdf::SIG1
+Done importing Jpsi Sigma shape
+Run 2 Sigma Generator Effs = 33.6374 % +/- 0.0966 %
+Run 2 Sigma Recons. Effs = 0.428357 % +/- 0.0034158 %
+Run 2 WEIGHTED Sigma Recons. Effs = 0.462354 % +/- 0.00379083 %
+************************************************
+Run 2 UNWEIGHTED Jpsi Sigma Eff = 0.144088 % +/- 0.00122123 %
+Run 2 WEIGHTED Jpsi Sigma Eff = 0.155524 % +/- 0.0013511 %
+************************************************
+***************************************
+Run 2 UNWEIGHTED Sigma/Lambda efficiency ratio = 0.960722 +/- 0.0217813
+Run 2 WEIGHTED Sigma/Lambda efficiency ratio   = 1.00843 +/- 0.0229644
+***************************************
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(ds_sig) Ignored 29 out of range events
+[#0] WARNING:DataHandling -- RooDataSet::RooDataSet(ds_sig) WARNING: designated weight variable gb_wts*wt_tau not found in set of variables, no weighting will be assigned
+RooDataSet::ds_sig[Lb_DTF_M_JpsiLConstr] = 15630 entries
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooKeysPdf::SIG2
+Done importing Jpsi Sigma shape
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(ds_xi) Ignored 3 out of range events
+[#0] WARNING:DataHandling -- RooDataSet::RooDataSet(ds_xi) WARNING: designated weight variable gb_wts not found in set of variables, no weighting will be assigned
+RooDataSet::ds_xi[Lb_DTF_M_JpsiLConstr] = 808 entries
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooKeysPdf::XIB1
+Done importing Xib shape
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(ds_xi) Ignored 4 out of range events
+[#0] WARNING:DataHandling -- RooDataSet::RooDataSet(ds_xi) WARNING: designated weight variable gb_wts not found in set of variables, no weighting will be assigned
+RooDataSet::ds_xi[Lb_DTF_M_JpsiLConstr] = 833 entries
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooKeysPdf::XIB2
+Done importing Xib shape
+Done defining J/psi Lambda Hypatia shapes
+*****UING EXPONENTIAL BKG SHAPE*****
+Done defining cont. bkg shapes
+[#1] INFO:DataHandling -- RooDataHist::adjustBinning(combData): fit range of variable Lb_DTF_M_JpsiLConstr expanded to nearest bin boundaries: [5000,6000] --> [5000,6000]
+RooDataHist::combData[sample,Lb_DTF_M_JpsiLConstr] = 500 bins (38203 weights)
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing dataset combData
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooCategory::sample
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooSimultaneous::simPdf
+[#1] INFO:Eval -- RooRealVar::setRange(Lb_DTF_M_JpsiLConstr) new range named 'fit' created with bounds [5500,5800]
+[#1] INFO:Minization -- RooMinimizer::optimizeConst: activating const optimization
+RooAbsTestStatistic::initSimMode: creating slave calculator #0 for state run1 (250 dataset entries)
+[#1] INFO:Fitting -- RooAbsOptTestStatistic::ctor(run1) constructing test statistic for sub-range named fit
+[#1] INFO:Eval -- RooRealVar::setRange(Lb_DTF_M_JpsiLConstr) new range named 'NormalizationRangeForfit' created with bounds [5000,6000]
+[#1] INFO:Eval -- RooRealVar::setRange(Lb_DTF_M_JpsiLConstr) new range named 'fit_run1' created with bounds [5500,5800]
+[#1] INFO:Fitting -- RooAbsOptTestStatistic::ctor(run1) fixing interpretation of coefficients of any RooAddPdf to full domain of observables 
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(Lb_Run1_Int[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(Lb_Run1_Int[Lb_DTF_M_JpsiLConstr|NormalizationRangeForfit]_Norm[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+RooAbsTestStatistic::initSimMode: creating slave calculator #1 for state run2 (250 dataset entries)
+[#1] INFO:Fitting -- RooAbsOptTestStatistic::ctor(run2) constructing test statistic for sub-range named fit
+[#1] INFO:Eval -- RooRealVar::setRange(Lb_DTF_M_JpsiLConstr) new range named 'fit_run2' created with bounds [5500,5800]
+[#1] INFO:Fitting -- RooAbsOptTestStatistic::ctor(run2) fixing interpretation of coefficients of any RooAddPdf to full domain of observables 
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(Lb_Run2_Int[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(Lb_Run2_Int[Lb_DTF_M_JpsiLConstr|NormalizationRangeForfit]_Norm[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+[#1] INFO:Fitting -- RooAbsTestStatistic::initSimMode: created 2 slave calculators.
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(Lb_Run1_Int[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(Lb_Run1_Int[Lb_DTF_M_JpsiLConstr|NormalizationRangeForfit]_Norm[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(Lb_Run1_Int[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+[#1] INFO:Minization --  The following expressions will be evaluated in cache-and-track mode: (Lb_Run1,Bkg_Run1)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(Lb_Run2_Int[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(Lb_Run2_Int[Lb_DTF_M_JpsiLConstr|NormalizationRangeForfit]_Norm[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(Lb_Run2_Int[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+[#1] INFO:Minization --  The following expressions will be evaluated in cache-and-track mode: (Lb_Run2,Bkg_Run2)
+ **********
+ **   31 **SET PRINT           1
+ **********
+ **********
+ **   32 **SET NOGRAD
+ **********
+ PARAMETER DEFINITIONS:
+    NO.   NAME         VALUE      STEP SIZE      LIMITS
+     1 a1_Run1      1.70000e+00  3.00000e-01    1.00000e+00  4.00000e+00
+     2 a1_Run2      1.50000e+00  2.00000e-01    1.00000e+00  3.00000e+00
+     3 a2_Run1      2.00000e+00  2.00000e-01    1.00000e+00  3.00000e+00
+     4 a2_Run2      1.50000e+00  2.00000e-01    1.00000e+00  3.00000e+00
+     5 lambda_Run1  -2.00000e+00  4.00000e-01   -4.00000e+00  0.00000e+00
+     6 lambda_Run2  -2.50000e+00  4.00000e-01   -4.00000e+00  0.00000e+00
+     7 mean_Run1    5.61960e+03  2.00000e-01    5.61900e+03  5.62100e+03
+     8 mean_Run2    5.61960e+03  2.00000e-01    5.61900e+03  5.62100e+03
+     9 nBkg_Run1    2.00000e+03  8.45400e+02    1.00000e+00  8.45500e+03
+    10 nBkg_Run2    4.00000e+03  1.99950e+03    1.00000e+00  2.97480e+04
+    11 nLb_Run1     5.60000e+03  5.00000e+02    2.00000e+03  7.00000e+03
+    12 nLb_Run2     2.00000e+04  1.00000e+03    1.00000e+04  2.20000e+04
+    13 sigma_Run1   1.00000e+01  1.90000e+00    1.00000e+00  2.00000e+01
+    14 sigma_Run2   1.00000e+01  1.90000e+00    1.00000e+00  2.00000e+01
+    15 tau_Run1    -1.00000e-03  4.99950e-04   -1.00000e-02 -1.00000e-07
+    16 tau_Run2    -1.00000e-03  4.99950e-04   -1.00000e-02 -1.00000e-07
+ **********
+ **   33 **SET ERR         0.5
+ **********
+ **********
+ **   34 **SET PRINT           1
+ **********
+ **********
+ **   35 **SET STR           1
+ **********
+ NOW USING STRATEGY  1: TRY TO BALANCE SPEED AGAINST RELIABILITY
+ **********
+ **   36 **MIGRAD        8000           1
+ **********
+ FIRST CALL TO USER FUNCTION AT NEW START POINT, WITH IFLAG=4.
+ START MIGRAD MINIMIZATION.  STRATEGY  1.  CONVERGENCE WHEN EDM .LT. 1.00e-03
+ FCN=-107498 FROM MIGRAD    STATUS=INITIATE      267 CALLS         268 TOTAL
+                     EDM= unknown      STRATEGY= 1      NO ERROR MATRIX       
+  EXT PARAMETER               CURRENT GUESS       STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  a1_Run1      1.12183e+00   3.00000e-01   0.00000e+00   3.90232e+01
+   2  a1_Run2      1.00007e+00   2.00000e-01   0.00000e+00  -6.91664e+00
+   3  a2_Run1      1.09449e+00   2.00000e-01   0.00000e+00  -1.17123e+01
+   4  a2_Run2      1.50000e+00   2.00000e-01   0.00000e+00   2.89167e+02
+   5  lambda_Run1  -2.00000e+00   4.00000e-01   0.00000e+00  -6.34830e+02
+   6  lambda_Run2  -2.50000e+00   4.00000e-01   0.00000e+00  -4.83744e+03
+   7  mean_Run1    5.61960e+03   2.00000e-01   0.00000e+00   6.46994e+00
+   8  mean_Run2    5.61960e+03   2.00000e-01   0.00000e+00  -1.84344e+02
+   9  nBkg_Run1    2.00000e+03   8.45400e+02   0.00000e+00   6.05684e+01
+  10  nBkg_Run2    4.00000e+03   1.99950e+03   0.00000e+00   3.03283e+01
+  11  nLb_Run1     5.60000e+03   5.00000e+02   0.00000e+00  -1.76406e+00
+  12  nLb_Run2     2.00000e+04   1.00000e+03   0.00000e+00   4.43378e+01
+  13  sigma_Run1   1.00000e+01   1.90000e+00   0.00000e+00  -1.00598e+03
+  14  sigma_Run2   1.00000e+01   1.90000e+00   0.00000e+00  -8.05174e+03
+  15  tau_Run1    -4.68973e-03   4.99950e-04   0.00000e+00   6.63940e+01
+  16  tau_Run2    -3.71201e-03   4.99950e-04  -6.66777e-01  -1.25063e+00
+                               ERR DEF= 0.5
+ MIGRAD FAILS TO FIND IMPROVEMENT
+ MIGRAD MINIMIZATION HAS CONVERGED.
+ FCN=-109453 FROM MIGRAD    STATUS=CONVERGED    1652 CALLS        1653 TOTAL
+                     EDM=0.000210963    STRATEGY= 1  ERROR MATRIX UNCERTAINTY   4.8 per cent
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  a1_Run1      1.50405e+00   1.20673e-01   0.00000e+00  -3.15857e-03
+   2  a1_Run2      1.59162e+00   1.14280e-01   0.00000e+00  -1.10233e-01
+   3  a2_Run1      2.07426e+00   2.35286e-01  -0.00000e+00   4.55728e-03
+   4  a2_Run2      1.85323e+00   1.68467e-01  -0.00000e+00  -7.44972e-04
+   5  lambda_Run1  -1.89844e+00   8.79860e-02   0.00000e+00  -2.80194e-01
+   6  lambda_Run2  -2.23056e+00   1.22840e-01   0.00000e+00  -8.54002e-03
+   7  mean_Run1    5.61953e+03   1.02375e-01   0.00000e+00  -8.46416e-03
+   8  mean_Run2    5.61977e+03   5.67236e-02  -0.00000e+00   2.29482e-02
+   9  nBkg_Run1    3.03454e+02   6.43961e+01  -0.00000e+00  -1.40946e-02
+  10  nBkg_Run2    1.24837e+03   3.71227e+02   0.00000e+00   4.60516e-01
+  11  nLb_Run1     5.61614e+03   7.65269e+01  -0.00000e+00   3.57115e-02
+  12  nLb_Run2     1.99529e+04   1.47052e+02   0.00000e+00  -4.28023e-03
+  13  sigma_Run1   1.28356e+01   3.82770e-01  -0.00000e+00   2.05344e-01
+  14  sigma_Run2   1.43111e+01   5.02636e-01  -0.00000e+00   3.69872e-01
+  15  tau_Run1    -1.78489e-04   2.54841e-04   0.00000e+00  -4.65703e-02
+  16  tau_Run2    -1.97278e-03   9.00609e-04   0.00000e+00  -6.28400e-02
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR= 16    ERR DEF=0.5
+ ELEMENTS ABOVE DIAGONAL ARE NOT PRINTED.
+  1.462e-02 
+  7.164e-03  1.313e-02 
+  1.111e-02  1.257e-02  5.642e-02 
+  8.797e-03  1.333e-02  1.528e-02  2.866e-02 
+  5.949e-03  7.669e-03  7.032e-03  8.664e-03  7.747e-03 
+ -7.797e-03 -1.146e-02 -1.234e-02 -1.629e-02 -7.475e-03  1.511e-02 
+ -6.516e-04 -1.149e-04 -1.208e-05 -2.510e-04 -3.523e-04  5.440e-04  1.053e-02 
+ -1.508e-04 -9.524e-05 -2.037e-04 -5.204e-04 -5.540e-05  1.976e-04 -2.870e-06  3.221e-03 
+  1.718e+00  3.286e-01  3.776e+00  1.228e+00 -1.208e+00 -6.757e-01 -1.724e-01 -1.408e-02  4.149e+03 
+  1.443e+01  1.460e+01  2.279e+01  4.525e+00  1.924e+01 -1.889e+00 -8.740e-01  9.627e-02 -5.513e+03  1.380e+05 
+ -3.421e-01 -1.167e-02 -1.655e+00 -2.498e-01  4.123e-01  3.953e-01  5.011e-02  2.795e-02 -8.481e+02  1.264e+03  5.859e+03 
+  8.506e-01  9.329e-01  6.681e-01  1.326e+00  8.291e-01  6.464e-01  4.163e-01  8.928e-03 -4.702e+01  7.583e+03  3.752e+01 
+  8.506e-01  9.329e-01  6.681e-01  1.326e+00  8.291e-01  6.464e-01  4.163e-01  8.928e-03 -4.702e+01  7.583e+03  3.752e+01  2.163e+04 
+ -2.076e-02 -3.288e-02 -1.983e-02 -3.689e-02 -3.043e-02  3.124e-02  1.056e-03  1.773e-04  5.063e+00 -8.638e+01 -1.259e+00 
+ -2.076e-02 -3.288e-02 -1.983e-02 -3.689e-02 -3.043e-02  3.124e-02  1.056e-03  1.773e-04  5.063e+00 -8.638e+01 -1.259e+00 -3.157e+00  1.466e-01 
+  3.145e-02  4.516e-02  4.990e-02  6.416e-02  3.046e-02 -6.060e-02 -2.004e-03 -9.446e-04  2.514e+00  8.357e+00 -1.428e+00 
+  3.145e-02  4.516e-02  4.990e-02  6.416e-02  3.046e-02 -6.060e-02 -2.004e-03 -9.446e-04  2.514e+00  8.357e+00 -1.428e+00 -2.493e+00 -1.273e-01  2.529e-01 
+  4.442e-07 -9.023e-06  5.937e-06 -2.123e-05  4.387e-07  1.443e-05  3.990e-08  2.816e-07 -4.974e-03  6.119e-02  4.422e-05 
+  4.442e-07 -9.023e-06  5.937e-06 -2.123e-05  4.387e-07  1.443e-05  3.990e-08  2.816e-07 -4.974e-03  6.119e-02  4.422e-05  1.350e-03 -4.285e-06 -5.626e-05  6.576e-08 
+  3.289e-05  2.261e-05  4.438e-05 -1.637e-05  4.332e-05  5.412e-07 -3.571e-06  7.612e-07 -1.636e-02  3.081e-01  2.774e-03 
+  3.289e-05  2.261e-05  4.438e-05 -1.637e-05  4.332e-05  5.412e-07 -3.571e-06  7.612e-07 -1.636e-02  3.081e-01  2.774e-03  8.677e-03 -1.947e-04 -1.773e-06  1.796e-07  8.253e-07 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL      1      2      3      4      5      6      7      8      9     10     11     12     13     14     15     16
+        1  0.73625   1.000  0.517  0.387  0.430  0.559 -0.525 -0.053 -0.022  0.221  0.321 -0.037  0.048 -0.448  0.517  0.014  0.299
+        2  0.92427   0.517  1.000  0.462  0.687  0.761 -0.813 -0.010 -0.015  0.045  0.343 -0.001  0.055 -0.749  0.784 -0.307  0.217
+        3  0.79440   0.387  0.462  1.000  0.380  0.336 -0.423 -0.000 -0.015  0.247  0.258 -0.091  0.019 -0.218  0.418  0.097  0.206
+        4  0.88787   0.430  0.687  0.380  1.000  0.581 -0.783 -0.014 -0.054  0.113  0.072 -0.019  0.053 -0.569  0.754 -0.489 -0.106
+        5  0.94567   0.559  0.761  0.336  0.581  1.000 -0.691 -0.039 -0.011 -0.213  0.588  0.061  0.064 -0.903  0.688  0.019  0.542
+        6  0.98741  -0.525 -0.813 -0.423 -0.783 -0.691  1.000  0.043  0.028 -0.085 -0.041  0.042  0.036  0.664 -0.980  0.458  0.005
+        7  0.12242  -0.053 -0.010 -0.000 -0.014 -0.039  0.043  1.000 -0.000 -0.026 -0.023  0.006  0.028  0.027 -0.039  0.002 -0.038
+        8  0.07798  -0.022 -0.015 -0.015 -0.054 -0.011  0.028 -0.000  1.000 -0.004  0.005  0.006  0.001  0.008 -0.033  0.019  0.015
+        9  0.67499   0.221  0.045  0.247  0.113 -0.213 -0.085 -0.026 -0.004  1.000 -0.230 -0.172 -0.005  0.205  0.078 -0.301 -0.280
+       10  0.95509   0.321  0.343  0.258  0.072  0.588 -0.041 -0.023  0.005 -0.230  1.000  0.044  0.139 -0.607  0.045  0.642  0.913
+       11  0.22516  -0.037 -0.001 -0.091 -0.019  0.061  0.042  0.006  0.006 -0.172  0.044  1.000  0.003 -0.043 -0.037  0.002  0.040
+       12  0.22903   0.048  0.055  0.019  0.053  0.064  0.036  0.028  0.001 -0.005  0.139  0.003  1.000 -0.056 -0.034  0.036  0.065
+       13  0.95130  -0.448 -0.749 -0.218 -0.569 -0.903  0.664  0.027  0.008  0.205 -0.607 -0.043 -0.056  1.000 -0.661 -0.044 -0.560
+       14  0.98324   0.517  0.784  0.418  0.754  0.688 -0.980 -0.039 -0.033  0.078  0.045 -0.037 -0.034 -0.661  1.000 -0.436 -0.004
+       15  0.94998   0.014 -0.307  0.097 -0.489  0.019  0.458  0.002  0.019 -0.301  0.642  0.002  0.036 -0.044 -0.436  1.000  0.771
+       16  0.97350   0.299  0.217  0.206 -0.106  0.542  0.005 -0.038  0.015 -0.280  0.913  0.040  0.065 -0.560 -0.004  0.771  1.000
+ ELEMENTS ABOVE DIAGONAL ARE NOT PRINTED.
+[#1] INFO:Minization -- RooMinimizer::optimizeConst: deactivating const optimization
+[#1] INFO:Plotting -- RooTreeData::plotOn: plotting 8455 events out of 38203 total events
+[#1] INFO:Plotting -- RooSimultaneous::plotOn(simPdf) plot on Lb_DTF_M_JpsiLConstr represents a slice in the index category (sample)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model1) p.d.f was fitted in range and no explicit plot,norm range was specified, using fit range as default
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model1) only plotting range 'fit_run1'
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model1) p.d.f. curve is normalized using explicit choice of ranges 'fit_run1'
+[#0] WARNING:Plotting -- RooHist::getFitRangeNEvt() WARNING: Number of normalization events associated to histogram is not equal to number of events in histogram
+                           due cut made in RooAbsData::plotOn() call. Automatic normalization over sub-range of plot variable assumes
+                           that the effect of that cut is uniform across the plot, which may be an incorrect assumption. To be sure of
+                           correct normalization explicit pass normalization information to RooAbsPdf::plotOn() call using Normalization()
+[#1] INFO:Plotting -- RooAbsReal::plotOn(model1) slice variable sample was not projected anyway
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(Lb_Run1_Int[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(model1_Int[Lb_DTF_M_JpsiLConstr|fit_run1]_Norm[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+[#1] INFO:Plotting -- RooSimultaneous::plotOn(simPdf) plot on Lb_DTF_M_JpsiLConstr represents a slice in the index category (sample)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model1) p.d.f was fitted in range and no explicit plot,norm range was specified, using fit range as default
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model1) only plotting range 'fit_run1'
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model1) p.d.f. curve is normalized using explicit choice of ranges 'fit_run1'
+[#0] WARNING:Plotting -- RooHist::getFitRangeNEvt() WARNING: Number of normalization events associated to histogram is not equal to number of events in histogram
+                           due cut made in RooAbsData::plotOn() call. Automatic normalization over sub-range of plot variable assumes
+                           that the effect of that cut is uniform across the plot, which may be an incorrect assumption. To be sure of
+                           correct normalization explicit pass normalization information to RooAbsPdf::plotOn() call using Normalization()
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model1) directly selected PDF components: (Lb_Run1)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model1) indirectly selected PDF components: ()
+[#1] INFO:Plotting -- RooAbsReal::plotOn(model1) slice variable sample was not projected anyway
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(Lb_Run1_Int[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(model1_Int[Lb_DTF_M_JpsiLConstr|fit_run1]_Norm[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+[#1] INFO:Plotting -- RooSimultaneous::plotOn(simPdf) plot on Lb_DTF_M_JpsiLConstr represents a slice in the index category (sample)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model1) p.d.f was fitted in range and no explicit plot,norm range was specified, using fit range as default
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model1) only plotting range 'fit_run1'
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model1) p.d.f. curve is normalized using explicit choice of ranges 'fit_run1'
+[#0] WARNING:Plotting -- RooHist::getFitRangeNEvt() WARNING: Number of normalization events associated to histogram is not equal to number of events in histogram
+                           due cut made in RooAbsData::plotOn() call. Automatic normalization over sub-range of plot variable assumes
+                           that the effect of that cut is uniform across the plot, which may be an incorrect assumption. To be sure of
+                           correct normalization explicit pass normalization information to RooAbsPdf::plotOn() call using Normalization()
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model1) directly selected PDF components: (Bkg_Run1)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model1) indirectly selected PDF components: ()
+[#1] INFO:Plotting -- RooAbsReal::plotOn(model1) slice variable sample was not projected anyway
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(Lb_Run1_Int[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(model1_Int[Lb_DTF_M_JpsiLConstr|fit_run1]_Norm[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+RooArgSet::parameters_selection = (a1_Run1,a1_Run2,a2_Run1,a2_Run2,lambda_Run1,lambda_Run2,mean_Run1,mean_Run2,nBkg_Run1,nBkg_Run2,nLb_Run1,nLb_Run2,sample,sigma_Run1,sigma_Run2,tau_Run1,tau_Run2)
+run1 float pars = 16
+chi square2/dof = 0.599676
+chi square2 = 140.324
+Run1 Pull Mean Y = -0.023908
+Run1 Pull RMS Y = 0.756465
+[#1] INFO:Plotting -- RooTreeData::plotOn: plotting 29748 events out of 38203 total events
+[#1] INFO:Plotting -- RooSimultaneous::plotOn(simPdf) plot on Lb_DTF_M_JpsiLConstr represents a slice in the index category (sample)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model2) p.d.f was fitted in range and no explicit plot,norm range was specified, using fit range as default
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model2) only plotting range 'fit_run2'
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model2) p.d.f. curve is normalized using explicit choice of ranges 'fit_run2'
+[#0] WARNING:Plotting -- RooHist::getFitRangeNEvt() WARNING: Number of normalization events associated to histogram is not equal to number of events in histogram
+                           due cut made in RooAbsData::plotOn() call. Automatic normalization over sub-range of plot variable assumes
+                           that the effect of that cut is uniform across the plot, which may be an incorrect assumption. To be sure of
+                           correct normalization explicit pass normalization information to RooAbsPdf::plotOn() call using Normalization()
+[#1] INFO:Plotting -- RooAbsReal::plotOn(model2) slice variable sample was not projected anyway
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(Lb_Run2_Int[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(model2_Int[Lb_DTF_M_JpsiLConstr|fit_run2]_Norm[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+[#1] INFO:Plotting -- RooSimultaneous::plotOn(simPdf) plot on Lb_DTF_M_JpsiLConstr represents a slice in the index category (sample)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model2) p.d.f was fitted in range and no explicit plot,norm range was specified, using fit range as default
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model2) only plotting range 'fit_run2'
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model2) p.d.f. curve is normalized using explicit choice of ranges 'fit_run2'
+[#0] WARNING:Plotting -- RooHist::getFitRangeNEvt() WARNING: Number of normalization events associated to histogram is not equal to number of events in histogram
+                           due cut made in RooAbsData::plotOn() call. Automatic normalization over sub-range of plot variable assumes
+                           that the effect of that cut is uniform across the plot, which may be an incorrect assumption. To be sure of
+                           correct normalization explicit pass normalization information to RooAbsPdf::plotOn() call using Normalization()
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model2) directly selected PDF components: (Lb_Run2)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model2) indirectly selected PDF components: ()
+[#1] INFO:Plotting -- RooAbsReal::plotOn(model2) slice variable sample was not projected anyway
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(Lb_Run2_Int[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(model2_Int[Lb_DTF_M_JpsiLConstr|fit_run2]_Norm[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+[#1] INFO:Plotting -- RooSimultaneous::plotOn(simPdf) plot on Lb_DTF_M_JpsiLConstr represents a slice in the index category (sample)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model2) p.d.f was fitted in range and no explicit plot,norm range was specified, using fit range as default
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model2) only plotting range 'fit_run2'
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model2) p.d.f. curve is normalized using explicit choice of ranges 'fit_run2'
+[#0] WARNING:Plotting -- RooHist::getFitRangeNEvt() WARNING: Number of normalization events associated to histogram is not equal to number of events in histogram
+                           due cut made in RooAbsData::plotOn() call. Automatic normalization over sub-range of plot variable assumes
+                           that the effect of that cut is uniform across the plot, which may be an incorrect assumption. To be sure of
+                           correct normalization explicit pass normalization information to RooAbsPdf::plotOn() call using Normalization()
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model2) directly selected PDF components: (Bkg_Run2)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model2) indirectly selected PDF components: ()
+[#1] INFO:Plotting -- RooAbsReal::plotOn(model2) slice variable sample was not projected anyway
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(Lb_Run2_Int[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(model2_Int[Lb_DTF_M_JpsiLConstr|fit_run2]_Norm[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+RooArgSet::parameters = (a1_Run1,a1_Run2,a2_Run1,a2_Run2,lambda_Run1,lambda_Run2,mean_Run1,mean_Run2,nBkg_Run1,nBkg_Run2,nLb_Run1,nLb_Run2,sample,sigma_Run1,sigma_Run2,tau_Run1,tau_Run2)
+run2 float pars = 16
+chi square2/dof = 1.3711
+chi square2 = 320.837
+****************************
+Global Fit chi2/dof = 0.985387
+****************************
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(Lb_Run1_Int[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(Lb_Run1_Int[Lb_DTF_M_JpsiLConstr|signal_window]_Norm[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+*********RUN 1***********
+Nobs    = 379 +/- 19.4679
+Ncomb   = 54 +/- 7.34847
+Nxib    = 18.5163 +/- 2.95184
+NLb     = 198.632 +/- 2.7066
+_____________________________________
+Nsig    = 107.852 +/- 21.1905
+Frac    = 0.96673
+NLb_tot = 5616.14 +/- 76.5269
+Eff Rat = 0.900501 +/- 0.026956
+_____________________________________
+R       = 0.0220598 +/- 0.00439456
+90% CL Upper Limit = 0.0276848
+*********************************
+
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(Lb_Run2_Int[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(Lb_Run2_Int[Lb_DTF_M_JpsiLConstr|signal_window]_Norm[Lb_DTF_M_JpsiLConstr]) using numeric integrator RooIntegrator1D to calculate Int(Lb_DTF_M_JpsiLConstr)
+*********RUN 2***********
+Nobs    = 1090 +/- 33.0151
+Ncomb   = 141 +/- 11.8743
+Nxib    = 76.3188 +/- 6.26262
+NLb     = 525.783 +/- 3.87497
+_____________________________________
+Nsig    = 346.899 +/- 35.8502
+Frac    = 0.979569
+NLb_tot = 19952.9 +/- 147.052
+Eff Rat = 1.00843 +/- 0.0229644
+_____________________________________
+R       = 0.0176 +/- 0.00186702
+90% CL Upper Limit = 0.0199898
+*********************************
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+COMBINED R = 0.0182819 +/- 0.00171837
+COMBINED 90% CL Upper Limit = 0.0204814
+COMBINED 95% CL Upper Limit = 0.0211172
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
