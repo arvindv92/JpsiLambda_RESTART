@@ -500,6 +500,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 	RooHistPdf* SIG[2];
 	RooKeysPdf* SIG_KEYS[2];
 	RooDataSet* ds_sig[2];
+	RooDataSet* ds_sig_wt[2];
 
 	//****Get J/psi Sigma efficiencies and shape from MC*****************
 	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
@@ -640,15 +641,22 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 		RooRealVar *gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
 		RooRealVar *tauWtVar = new RooRealVar("wt_tau","tau Weight Var",-100.,100.);
 
-		ds_sig[i] = new RooDataSet("ds_sig","ds_sig",combTree_sig,RooArgSet(*myVar,*gbWtVar,*tauWtVar),0,"gb_wts*wt_tau");
+		ds_sig[i] = new RooDataSet("ds_sig","ds_sig",combTree_sig,RooArgSet(*myVar,*gbWtVar,*tauWtVar));
 		ds_sig[i]->Print();
 
-		SIG_KEYS[i] = new RooKeysPdf(Form("SIG%d",run),Form("SIG%d",run),*myVar,*(ds_sig[i]),RooKeysPdf::MirrorBoth,1);
+		RooFormulaVar *totWt = new RooFormulaVar("totWt","@0*@1",RooArgList(*gbWtVar,*tauWtVar));
+		RooRealVar *totWt_var = (RooRealVar*)ds_sig[i]->addColumn(*totWt);
+
+		ds_sig_wt[i] = new RooDataSet("ds_sig_wt","ds_sig_wt",RooArgSet(*myVar,*totWt_var),Import(*(ds_sig[i])),WeightVar(*totWt_var));
+		ds_sig_wt[i]->Print();
+
+		SIG_KEYS[i] = new RooKeysPdf(Form("SIG%d",run),Form("SIG%d",run),*myVar,*(ds_sig_wt[i]),RooKeysPdf::MirrorBoth,1);
 
 		RooPlot *framesigma = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
 		framesigma->SetTitle("J/#psi #Sigma");
 		// ds_sigma->plotOn(framesigma,Name("sigmadata"));
-		ds_sig[i]->plotOn(framesigma,Name("sigmadata"));
+		ds_sig[i]->plotOn(framesigma,Name("sigmadata_nowt"),LineColor(kGreen));
+		ds_sig_wt[i]->plotOn(framesigma,Name("sigmadata"),LineColor(kBlack));
 		// sigmashape.plotOn(framesigma,Name("sigmafit"),LineColor(kBlue));
 		(*(SIG_KEYS[i])).plotOn(framesigma,Name("sigmafitsmooth"),LineColor(kRed),LineStyle(kDashed));
 
@@ -667,6 +675,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 
 
 	RooDataSet* ds_xi[2];
+	RooDataSet* ds_xi_wt[2];
 	RooKeysPdf* XIB_KEYS[2];
 	//******************Get shape from Xib background********************
 	// RooRealVar xibmass("Lb_DTF_M_JpsiLConstr","xibmass",5200.,5740.);
@@ -711,8 +720,11 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 
 		RooRealVar *gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
 
-		ds_xi[i] = new RooDataSet("ds_xi","ds_xi",combTree,RooArgSet(*myVar,*gbWtVar),0,"gb_wts");
+		ds_xi[i] = new RooDataSet("ds_xi","ds_xi",combTree,RooArgSet(*myVar,*gbWtVar));
 		ds_xi[i]->Print();
+
+		ds_xi_wt[i] = new RooDataSet("ds_xi_wt","ds_xi_wt",RooArgSet(*myVar,*gbWtVar),Import(*(ds_xi[i])),WeightVar(*gbWtVar));
+		ds_xi_wt[i]->Print();
 		// treein_xi_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hxib_nonZero%d(%d,%d,%d)",run,nbins,low,high),
 		//                         Form("Lb_BKGCAT==40 && BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");//TRUTH MATCHING HERE
 		// treein_xi_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hxib_Zero%d(%d,%d,%d)",run,nbins,low,high),
@@ -731,12 +743,13 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 		//
 		// ds_xib_smooth->Print();
 
-		XIB_KEYS[i] = new RooKeysPdf(Form("XIB%d",run),Form("XIB%d",run),*myVar,*(ds_xi[i]),RooKeysPdf::NoMirror);
+		XIB_KEYS[i] = new RooKeysPdf(Form("XIB%d",run),Form("XIB%d",run),*myVar,*(ds_xi_wt[i]),RooKeysPdf::NoMirror);
 		// XIB[i] = new RooHistPdf(Form("XIB%d",run),Form("XIB%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_xib_smooth,0);
 
 		RooPlot *framexib = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
 		framexib->SetTitle("J/#psi #Xi");
-		ds_xi[i]->plotOn(framexib,Name("xibdata"));
+		ds_xi[i]->plotOn(framexib,Name("xibdata_nowt"),LineColor(kGreen));
+		ds_xi_wt[i]->plotOn(framexib,Name("xibdata"),LineColor(kBlack));
 		// ds_xib->plotOn(framexib,Name("xibdata"));
 		// (*(XIB[i])).plotOn(framexib,Name("xibfitsmooth"),LineColor(kRed),LineStyle(kDashed));
 		(*(XIB_KEYS[i])).plotOn(framexib,Name("xibfitsmooth"),LineColor(kRed),LineStyle(kDashed));
