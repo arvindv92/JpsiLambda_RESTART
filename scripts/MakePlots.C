@@ -13,28 +13,28 @@ void addGraphics(TH1F *h, TString Xtitle, TString Ytitle, int iCol){
 	h->SetStats(kFALSE);
 	h->SetMinimum(0.1);
 	h->SetMaximum(1.3*h->GetMaximum());
-	h->SetTitleSize(0.1);
-	h->SetLineColor(iCol);
-	h->SetMarkerColor(iCol);
-	h->SetMarkerSize(0.7);
-	h->SetMarkerStyle(20);
-	h->GetXaxis()->SetTitleOffset(1.0);
-	h->GetYaxis()->SetTitleOffset(1.15);
-	h->GetXaxis()->SetTitleSize(0.055);
-	h->GetYaxis()->SetTitleSize(0.055);
-	h->GetXaxis()->SetLabelSize(0.045);
-	h->GetYaxis()->SetLabelSize(0.045);
-	h->SetNdivisions(404,"X");
-	h->SetNdivisions(505,"Y");
-	h->SetLineWidth(2);
+	// h->SetTitleSize(0.1);
+	// h->SetLineColor(iCol);
+	// h->SetMarkerColor(iCol);
+	// h->SetMarkerSize(0.7);
+	// h->SetMarkerStyle(20);
+	// h->GetXaxis()->SetTitleOffset(1.0);
+	// h->GetYaxis()->SetTitleOffset(1.15);
+	// h->GetXaxis()->SetTitleSize(0.055);
+	// h->GetYaxis()->SetTitleSize(0.055);
+	// h->GetXaxis()->SetLabelSize(0.045);
+	// h->GetYaxis()->SetLabelSize(0.045);
+	// h->SetNdivisions(404,"X");
+	// h->SetNdivisions(505,"Y");
+	// h->SetLineWidth(2);
 	h->SetTitle("");
 
 }
 
 void MakePlots()
 {
-	// gROOT->ProcessLine(".x lhcbStyle.C");
-	TString m_jpsiL = "m_{#J/#psi#Lambda}[MeV/#it{c}^{2}]";
+	gROOT->ProcessLine(".x lhcbStyle.C");
+	TString m_jpsiL = "m_{J/#psi#Lambda}[MeV/#it{c}^{2}]";
 	TString bin_4   = "Candidates/(4 MeV/#it{c}^{2})";
 
 	{
