@@ -637,10 +637,13 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 		TTree *combTree_sig = TTree::MergeTrees(list_sig);
 		combTree_sig->SetName("combTree_sig");
 
-		ds_sig[i] = new RooDataSet("ds_sig","ds_sig",combTree_sig,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"gb_wts*wt_tau");
+		RooRealVar *gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
+		RooRealVar *tauWtVar = new RooRealVar("wt_tau","tau Weight Var",-100.,100.);
+
+		ds_sig[i] = new RooDataSet("ds_sig","ds_sig",combTree_sig,RooArgSet(*myVar,*gbWtVar,*tauWtVar),0,"gb_wts*wt_tau");
 		ds_sig[i]->Print();
 
-		SIG_KEYS[i] = new RooKeysPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_sig[i]),RooKeysPdf::MirrorBoth,1);
+		SIG_KEYS[i] = new RooKeysPdf(Form("SIG%d",run),Form("SIG%d",run),*myVar,*(ds_sig[i]),RooKeysPdf::MirrorBoth,1);
 
 		RooPlot *framesigma = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
 		framesigma->SetTitle("J/#psi #Sigma");
@@ -706,7 +709,9 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 		TTree *combTree = TTree::MergeTrees(list);
 		combTree->SetName("combTree");
 
-		ds_xi[i] = new RooDataSet("ds_xi","ds_xi",combTree,RooArgSet(*myVar),0,"gb_wts");
+		RooRealVar *gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
+
+		ds_xi[i] = new RooDataSet("ds_xi","ds_xi",combTree,RooArgSet(*myVar,*gbWtVar),0,"gb_wts");
 		ds_xi[i]->Print();
 		// treein_xi_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hxib_nonZero%d(%d,%d,%d)",run,nbins,low,high),
 		//                         Form("Lb_BKGCAT==40 && BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");//TRUTH MATCHING HERE
@@ -726,7 +731,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 		//
 		// ds_xib_smooth->Print();
 
-		XIB_KEYS[i] = new RooKeysPdf(Form("XIB%d",run),Form("XIB%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_xi[i]),RooKeysPdf::NoMirror);
+		XIB_KEYS[i] = new RooKeysPdf(Form("XIB%d",run),Form("XIB%d",run),*myVar,*(ds_xi[i]),RooKeysPdf::NoMirror);
 		// XIB[i] = new RooHistPdf(Form("XIB%d",run),Form("XIB%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_xib_smooth,0);
 
 		RooPlot *framexib = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
