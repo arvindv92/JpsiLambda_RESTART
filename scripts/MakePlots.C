@@ -34,8 +34,8 @@ void addGraphics(TH1F *h, TString Xtitle, TString Ytitle, int iCol){
 void MakePlots()
 {
 	gROOT->ProcessLine(".x lhcbStyle.C");
-	TString m_jpsiL = "m_{#jpsi#PLambda}[#rm{MeV}/c^{2}]";
-	TString bin_4   = "Candidates/(4 #rm{MeV}/c^{2})";
+	TString m_jpsiL = "m_{#J/#psi#Lambda}[MeV/#it{c}^{2}]";
+	TString bin_4   = "Candidates/(4 MeV/#it{c}^{2})";
 
 	{
 		TFile *fileIn = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiSigma/run2/jpsisigma.root");
