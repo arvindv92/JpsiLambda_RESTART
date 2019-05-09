@@ -33,7 +33,7 @@ void addGraphics(TH1F *h, TString Xtitle, TString Ytitle, int iCol){
 
 void MakePlots()
 {
-	gROOT->ProcessLine(".x lhcbStyle.C");
+	// gROOT->ProcessLine(".x lhcbStyle.C");
 	TString m_jpsiL = "m_{#J/#psi#Lambda}[MeV/#it{c}^{2}]";
 	TString bin_4   = "Candidates/(4 MeV/#it{c}^{2})";
 
