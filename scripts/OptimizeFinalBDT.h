@@ -11,6 +11,7 @@
 #include "TIterator.h"
 #include "TGraph.h"
 #include "TCanvas.h"
+#include "TLatex.h"
 #include <iostream>
 #include <vector>
 using namespace std;

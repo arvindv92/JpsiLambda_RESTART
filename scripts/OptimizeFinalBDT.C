@@ -1,11 +1,38 @@
 #include "OptimizeFinalBDT.h"
 
+void addGraphics(TH1F *h, TString Xtitle, TString Ytitle, int iCol){
+	h->SetXTitle(Xtitle);
+	//h->SetFillColor(30);
+	//int bw = h->GetBinWidth(1);
+	h->SetYTitle(Ytitle);
+	h->SetStats(kFALSE);
+	h->SetMinimum(0.1);
+	h->SetMaximum(1.3*h->GetMaximum());
+	// h->SetTitleSize(0.1);
+	h->SetLineColor(iCol);
+	// h->SetMarkerColor(iCol);
+	// h->SetMarkerSize(0.7);
+	// h->SetMarkerStyle(20);
+	// h->GetXaxis()->SetTitleOffset(1.0);
+	// h->GetYaxis()->SetTitleOffset(1.15);
+	// h->GetXaxis()->SetTitleSize(0.055);
+	// h->GetYaxis()->SetTitleSize(0.055);
+	// h->GetXaxis()->SetLabelSize(0.045);
+	// h->GetYaxis()->SetLabelSize(0.045);
+	// h->SetNdivisions(404,"X");
+	// h->SetNdivisions(505,"Y");
+	// h->SetLineWidth(2);
+	h->SetTitle("");
+
+}
+
 std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t isoConf,
                                         Int_t bdtConf, Bool_t isoFlag,
                                         Bool_t logFlag, const char* FOM,
                                         const char *part)
 
 {
+	gROOT->ProcessLine(".x lhcbStyle.C");
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
 	if(logFlag && isoFlag)
@@ -276,16 +303,47 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 		cuts.push_back(BDT_max);
 		ctr++;
 	}
+	TLatex *myLatex = new TLatex();
+	myLatex->SetTextFont(42);
+	myLatex->SetTextColor(1);
+	myLatex->SetTextAlign(12);
+	myLatex->SetNDC(kTRUE);
+
+	myLatex->SetTextSize(0.065);
+
 	TCanvas *c1 = new TCanvas();
 	TGraph *gr_nonZero = new TGraph(199,bdtArray_nonZero,fomArray_nonZero);
+	gr_nonZero->SetTitle("");
+	gr_nonZero->SetLineWidth(2);
+	gr_nonZero->SetMarkerSize(0.7);
+	gr_nonZero->SetMarkerStyle(20);
+	gr_nonZero->GetXaxis()->SetTitle("nonZeroTracks BDT cut");
+	gr_nonZero->GetYaxis()->SetTitle("S/(#sqrt{B} + 1.5)");
+	// gr_nonZero->SetName("");
 	gr_nonZero->Draw("AC*");
+	myLatex->DrawLatex(0.18,0.85,Form("LHCb Run %d",run));
 
 	TCanvas *c2 = new TCanvas();
 	TGraph *gr_Zero = new TGraph(199,bdtArray_Zero,fomArray_Zero);
+	gr_Zero->SetTitle("");
+	gr_Zero->SetLineWidth(2);
+	gr_Zero->SetMarkerSize(0.7);
+	gr_Zero->SetMarkerStyle(20);
+	gr_Zero->GetXaxis()->SetTitle("ZeroTracks BDT cut");
+	gr_Zero->GetYaxis()->SetTitle("S/(#sqrt{B} + 1.5)");
 	gr_Zero->Draw("AC*");
+	myLatex->DrawLatex(0.18,0.85,Form("LHCb Run %d",run));
 
-	c1->SaveAs(Form("plots/FOM_run%d_nonZeroTracks_bdtConf%d_iso%d_%s_noPID.pdf",run,bdtConf,isoConf,isoVersion));
-	c2->SaveAs(Form("plots/FOM_run%d_ZeroTracks_bdtConf%d_noPID.pdf",run,bdtConf));
+	TFile *fileOut = new TFile(Form("/data1/avenkate/JpsiLambda_RESTART/"
+	                                "rootFiles/dataFiles/JpsiLambda/run%d/FOM"
+	                                "_bdtConf%d_iso%d_%s_noPID.root",
+	                                run,bdtConf,isoConf,isoVersion));
+	gr_nonZero->Write();
+	gr_Zero->Write();
+	fileOut->Close();
+
+	c1->SaveAs(Form("plots/ANA/FOM_run%d_nonZeroTracks_bdtConf%d_iso%d_%s_noPID.pdf",run,bdtConf,isoConf,isoVersion));
+	c2->SaveAs(Form("plots/ANA/FOM_run%d_ZeroTracks_bdtConf%d_noPID.pdf",run,bdtConf));
 
 	if(logFlag) gSystem->RedirectOutput(0);
 	return cuts;
