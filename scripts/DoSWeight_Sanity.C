@@ -96,8 +96,8 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 	// fileOut = new TFile(outFileName,"RECREATE");
 	// treeOut = treeIn->CloneTree(0);
 	//
-	// cout<<"******************************************"<<endl;
-	// cout<<"Input file = "<<fileIn->GetName()<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"Input file = "<<fileIn->GetName()<<endl;
 	// cout<<"sWeighted Output file = "<<fileOut->GetName()<<endl;
 	// cout<<"******************************************"<<endl;
 	//
@@ -130,6 +130,7 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 	wSpace->Print();
 
 	//save workspace in ROOT file so you don't have to make and load input data each time, dummy
+	cout<<"rootFolder = "<<rootFolder<<endl;
 	wSpace->writeToFile(Form("%s/wSpace_sPlot_Sanity_noPID.root",rootFolder));
 
 	// fileOut->cd();
