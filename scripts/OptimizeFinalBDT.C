@@ -337,7 +337,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 	TFile *fileOut = new TFile(Form("/data1/avenkate/JpsiLambda_RESTART/"
 	                                "rootFiles/dataFiles/JpsiLambda/run%d/FOM"
 	                                "_bdtConf%d_iso%d_%s_noPID.root",
-	                                run,bdtConf,isoConf,isoVersion));
+	                                run,bdtConf,isoConf,isoVersion),"RECREATE");
 	gr_nonZero->Write();
 	gr_Zero->Write();
 	fileOut->Close();
