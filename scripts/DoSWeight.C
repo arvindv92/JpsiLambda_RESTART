@@ -149,7 +149,8 @@ Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 	wSpace->Print();
 
 	//save workspace in ROOT file so you don't have to make and load input data each time, dummy
-	wSpace->writeToFile(Form("%s/wSpace_sPlot%s_noPID.root",rootFolder,suffix));
+	wSpace->writeToFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/"
+	                         "wSpace_sPlot%s_noPID.root",run,suffix));
 
 	// fileOut->cd();
 	// treeOut->Write("",TObject::kOverwrite);
