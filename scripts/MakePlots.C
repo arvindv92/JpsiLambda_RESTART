@@ -70,8 +70,10 @@ void MakePlots()
 		c->cd(1);
 		m_sigma->Draw();
 		myLatex->DrawLatex(0.18,0.85,"LHCb Simulation");
+		// lhcbName->Draw();
 		c->cd(2);
 		m_lambda->Draw();
+		// lhcbName->Draw();
 		myLatex->DrawLatex(0.18,0.85,"LHCb Simulation");
 
 		c->SaveAs("../plots/ANA/signal_shapes.pdf");
@@ -106,20 +108,23 @@ void MakePlots()
 		addGraphics(h4,m_pipi,bin_4,1);
 		addGraphics(h5,m_pipi,bin_4,2);
 
-		TCanvas *c1 = new TCanvas("c1","",1200,400);
-		c1->Divide(2,1);
-
-		c1->cd(1);
+		TCanvas *c1 = new TCanvas("c1","",600,400);
+		c1->SetTopMargin(0.07);
 		h2->Draw();
 		h3->Draw("same");
-		myLatex->DrawLatex(0.18,0.85,"LHCb Run 1");
+		lhcbName->Draw();
 
-		c1->cd(2);
+		// myLatex->DrawLatex(0.18,0.85,"LHCb Run 1");
+		TCanvas *d1 = new TCanvas("d1","",600,400);
+		d1->SetTopMargin(0.07);
 		h4->Draw();
 		h5->Draw("same");
-		myLatex->DrawLatex(0.18,0.85,"LHCb Run 2");
+		lhcbName->Draw();
+		// myLatex->DrawLatex(0.18,0.85,"LHCb Run 2");
 
-		c1->SaveAs("../plots/ANA/lambda_veto.pdf");
+		c1->SaveAs("../plots/ANA/lambda_veto_run1.pdf");
+		d1->SaveAs("../plots/ANA/lambda_veto_run2.pdf");
+
 	}
 	{
 		//mass distributions after cutoutks
@@ -138,21 +143,26 @@ void MakePlots()
 		addGraphics(h6,m_jpsiL,bin_4,1);
 		addGraphics(h7,m_jpsiL,bin_4,1);
 
-		TCanvas *c2 = new TCanvas("c2","",1200,400);
-		c2->Divide(2,1);
+		TCanvas *c2 = new TCanvas("c2","",600,400);
 
-		c2->cd(1);
 		h6->Draw();
-		myLatex->DrawLatex(0.18,0.85,"LHCb Run 1");
-		c2->cd(2);
-		h7->Draw();
-		myLatex->DrawLatex(0.18,0.85,"LHCb Run 2");
+		h6->GetYaxis()->SetTitleOffset(1.0);
+		lhcbName->Draw();
+		// myLatex->DrawLatex(0.18,0.85,"LHCb Run 1");
 
-		c2->SaveAs("../plots/ANA/mass_cutoutks.pdf");
+		TCanvas *d2 = new TCanvas("d2","",600,400);
+
+		h7->Draw();
+		lhcbName->Draw();
+		// myLatex->DrawLatex(0.18,0.85,"LHCb Run 2");
+
+		c2->SaveAs("../plots/ANA/mass_cutoutks_run1.pdf");
+		d2->SaveAs("../plots/ANA/mass_cutoutks_run2.pdf");
+
 	}
 	{
 		// isolation BDT output before final BDT
-		TFile *fileIn1 = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_iso1_v0_noPID.root");
+		TFile *fileIn1 = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_iso2_v0_noPID.root");
 		TTree *treeIn1 = (TTree*)fileIn1->Get("MyTuple");
 
 		TFile *fileIn2 = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_LL_iso1_v0_noPID.root");
@@ -167,17 +177,115 @@ void MakePlots()
 		addGraphics(h8,"isolation BDT",bin_4,1);
 		addGraphics(h9,"isolation BDT",bin_4,1);
 
-		TCanvas *c3 = new TCanvas("c3","",1200,400);
-		c3->Divide(2,1);
+		TCanvas *c3 = new TCanvas("c3","",600,400);
 
-		c3->cd(1);
 		h8->Draw();
-		myLatex->DrawLatex(0.18,0.85,"LHCb Run 1");
-		c3->cd(2);
-		h9->Draw();
-		myLatex->DrawLatex(0.18,0.85,"LHCb Run 2");
+		lhcbName->Draw();
+		// myLatex->DrawLatex(0.18,0.85,"LHCb Run 1");
 
-		c3->SaveAs("../plots/ANA/isolation.pdf");
+		TCanvas *d3 = new TCanvas("d3","",600,400);
+		h9->Draw();
+		lhcbName->Draw();
+		// myLatex->DrawLatex(0.18,0.85,"LHCb Run 2");
+
+		c3->SaveAs("../plots/ANA/isolation_run1.pdf");
+		d3->SaveAs("../plots/ANA/isolation_run2.pdf");
+	}
+	{
+		//mass distributions after finalBDT cut
+		TFile *fileIn1_cut = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_cutoutks_LL_nonZeroTracks_noPID.root");
+		TTree *treeIn1_cut = (TTree*)fileIn1_cut->Get("MyTuple");
+
+		treeIn1_cut->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_FinalBDT2_iso2_v0_noPID.root");
+
+		TFile *fileIn2_cut = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL_nonZeroTracks_noPID.root");
+		TTree *treeIn2_cut = (TTree*)fileIn2_cut->Get("MyTuple");
+
+		treeIn2_cut->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_LL_FinalBDT2_iso1_v0_noPID.root");
+
+		TFile *fileIn1_zero_cut = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_cutoutks_LL_ZeroTracks_noPID.root");
+		TTree *treeIn1_zero_cut = (TTree*)fileIn1_zero_cut->Get("MyTuple");
+
+		treeIn1_zero_cut->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_zeroTracksLL_FinalBDT2_noPID.root");
+
+		TFile *fileIn2_zero_cut = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL_ZeroTracks_noPID.root");
+		TTree *treeIn2_zero_cut = (TTree*)fileIn2_zero_cut->Get("MyTuple");
+
+		treeIn2_zero_cut->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_zeroTracksLL_FinalBDT2_noPID.root");
+
+		treeIn1_cut->Draw("Lb_DTF_M_JpsiLConstr>>g1(250,5000,6000)","BDT2 > 0.475","goff");
+		treeIn2_cut->Draw("Lb_DTF_M_JpsiLConstr>>g2(250,5000,6000)","BDT2 > 0.555","goff");
+
+		treeIn1_zero_cut->Draw("Lb_DTF_M_JpsiLConstr>>g3(250,5000,6000)","BDT2 > 0.365","goff");
+		treeIn2_zero_cut->Draw("Lb_DTF_M_JpsiLConstr>>g4(250,5000,6000)","BDT2 > 0.495","goff");
+
+		treeIn1_cut->Draw("Lb_DTF_M_JpsiLConstr>>f1(750,4000,7000)","BDT2 > 0.475","goff");
+		treeIn2_cut->Draw("Lb_DTF_M_JpsiLConstr>>f2(750,4000,7000)","BDT2 > 0.555","goff");
+
+		treeIn1_zero_cut->Draw("Lb_DTF_M_JpsiLConstr>>f3(750,4000,7000)","BDT2 > 0.365","goff");
+		treeIn2_zero_cut->Draw("Lb_DTF_M_JpsiLConstr>>f4(750,4000,7000)","BDT2 > 0.495","goff");
+
+		TH1F *g1 = (TH1F*)gDirectory->Get("g1");
+		TH1F *g2 = (TH1F*)gDirectory->Get("g2");
+		TH1F *g3 = (TH1F*)gDirectory->Get("g3");
+		TH1F *g4 = (TH1F*)gDirectory->Get("g4");
+
+		TH1F *f1 = (TH1F*)gDirectory->Get("f1");
+		TH1F *f2 = (TH1F*)gDirectory->Get("f2");
+		TH1F *f3 = (TH1F*)gDirectory->Get("f3");
+		TH1F *f4 = (TH1F*)gDirectory->Get("f4");
+
+		addGraphics(g1,m_jpsiL,bin_4,1);
+		addGraphics(g2,m_jpsiL,bin_4,1);
+		addGraphics(g3,m_jpsiL,bin_4,1);
+		addGraphics(g4,m_jpsiL,bin_4,1);
+
+		addGraphics(f1,m_jpsiL,bin_4,1);
+		addGraphics(f2,m_jpsiL,bin_4,1);
+		addGraphics(f3,m_jpsiL,bin_4,1);
+		addGraphics(f4,m_jpsiL,bin_4,1);
+
+		TCanvas *c4 = new TCanvas("c4","",600,400);
+		g1->Draw();
+		lhcbName->Draw();
+
+		TCanvas *c5 = new TCanvas("c5","",600,400);
+		g2->Draw();
+		lhcbName->Draw();
+
+		TCanvas *c6 = new TCanvas("c6","",600,400);
+		g3->Draw();
+		lhcbName->Draw();
+
+		TCanvas *c7 = new TCanvas("c7","",600,400);
+		g4->Draw();
+		lhcbName->Draw();
+
+		TCanvas *d4 = new TCanvas("d4","",600,400);
+		f1->Draw();
+		lhcbName->Draw();
+
+		TCanvas *d5 = new TCanvas("d5","",600,400);
+		f2->Draw();
+		lhcbName->Draw();
+
+		TCanvas *d6 = new TCanvas("d6","",600,400);
+		f3->Draw();
+		lhcbName->Draw();
+
+		TCanvas *d7 = new TCanvas("d7","",600,400);
+		f4->Draw();
+		lhcbName->Draw();
+
+		c4->SaveAs("../plots/ANA/mass_run1_finalBDT_nonZeroTracks.pdf");
+		c5->SaveAs("../plots/ANA/mass_run2_finalBDT_nonZeroTracks.pdf");
+		c6->SaveAs("../plots/ANA/mass_run1_finalBDT_ZeroTracks.pdf");
+		c7->SaveAs("../plots/ANA/mass_run2_finalBDT_ZeroTracks.pdf");
+
+		d4->SaveAs("../plots/ANA/mass_run1_finalBDT_nonZeroTracks_wide.pdf");
+		d5->SaveAs("../plots/ANA/mass_run2_finalBDT_nonZeroTracks_wide.pdf");
+		d6->SaveAs("../plots/ANA/mass_run1_finalBDT_ZeroTracks_wide.pdf");
+		d7->SaveAs("../plots/ANA/mass_run2_finalBDT_ZeroTracks_wide.pdf");
 	}
 	// {
 	//      TFile *fileIn1 = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/"
