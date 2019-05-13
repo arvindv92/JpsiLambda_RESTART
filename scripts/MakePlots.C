@@ -4,7 +4,8 @@
 #include "TH1F.h"
 #include "TCanvas.h"
 #include "TLatex.h"
-
+#include "TPaveText.h"
+#include "TStyle.h"
 void addGraphics(TH1F *h, TString Xtitle, TString Ytitle, int iCol){
 	h->SetXTitle(Xtitle);
 	//h->SetFillColor(30);
@@ -45,6 +46,28 @@ void MakePlots()
 	myLatex->SetNDC(kTRUE);
 
 	myLatex->SetTextSize(0.065);
+
+	TPaveText* lhcbName = new TPaveText(gStyle->GetPadLeftMargin() + 0.05,
+	                                    0.87 - gStyle->GetPadTopMargin(),
+	                                    gStyle->GetPadLeftMargin() + 0.20,
+	                                    0.95 - gStyle->GetPadTopMargin(),
+	                                    "BRNDC");
+	lhcbName->AddText("LHCb");
+	lhcbName->SetFillColor(0);
+	lhcbName->SetTextAlign(12);
+	lhcbName->SetBorderSize(0);
+
+	TText *lhcbLabel = new TText();
+	lhcbLabel->SetTextFont(132);
+	lhcbLabel->SetTextColor(1);
+	lhcbLabel->SetTextSize(0.06);
+	lhcbLabel->SetTextAlign(12);
+
+	TLatex *lhcbLatex = new TLatex();
+	lhcbLatex->SetTextFont(132);
+	lhcbLatex->SetTextColor(1);
+	lhcbLatex->SetTextSize(0.06);
+	lhcbLatex->SetTextAlign(12);
 
 	{
 		//jpsi lambda mass in simulation for Lb-> JpsiLambda and Lb-> Jpsi Sigma
