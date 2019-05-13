@@ -130,8 +130,8 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 	wSpace->Print();
 
 	//save workspace in ROOT file so you don't have to make and load input data each time, dummy
-	cout<<"rootFolder = "<<rootFolder<<endl;
-	wSpace->writeToFile(Form("%s/wSpace_sPlot_Sanity_noPID.root",rootFolder));
+	wSpace->writeToFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/"
+	                         "wSpace_sPlot_Sanity_noPID.root",run));
 
 	// fileOut->cd();
 	// treeOut->Write("",TObject::kOverwrite);
