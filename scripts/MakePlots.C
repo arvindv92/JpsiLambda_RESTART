@@ -258,6 +258,21 @@ void MakePlots()
 		TH1F *f3 = (TH1F*)gDirectory->Get("f3");
 		TH1F *f4 = (TH1F*)gDirectory->Get("f4");
 
+		TH1F *tot1 = (TH1F*)g1->Clone();
+		tot1->Add(g3);//Add histograms for nonZeroTracks and ZeroTracks
+
+		TH1F *tot2 = (TH1F*)g2->Clone();
+		tot2->Add(g4);//Add histograms for nonZeroTracks and ZeroTracks
+
+		TH1F *tot1_wide = (TH1F*)f1->Clone();
+		tot1_wide->Add(f3);//Add histograms for nonZeroTracks and ZeroTracks
+
+		TH1F *tot2_wide = (TH1F*)f2->Clone();
+		tot2_wide->Add(f4);//Add histograms for nonZeroTracks and ZeroTracks
+
+		TH1F *tot1_clone = (TH1F*)tot1->Clone();
+		TH1F *tot2_clone = (TH1F*)tot2->Clone();
+
 		addGraphics(g1,m_jpsiL,bin_4,1);
 		addGraphics(g2,m_jpsiL,bin_4,1);
 		addGraphics(g3,m_jpsiL,bin_4,1);
@@ -267,6 +282,17 @@ void MakePlots()
 		addGraphics(f2,m_jpsiL,bin_4,1);
 		addGraphics(f3,m_jpsiL,bin_4,1);
 		addGraphics(f4,m_jpsiL,bin_4,1);
+
+		addGraphics(tot1,m_jpsiL,bin_4,1);
+		addGraphics(tot2,m_jpsiL,bin_4,1);
+		addGraphics(tot1_wide,m_jpsiL,bin_4,1);
+		addGraphics(tot2_wide,m_jpsiL,bin_4,1);
+
+		addGraphics(tot1_clone,m_jpsiL,bin_4,1);
+		addGraphics(tot2_clone,m_jpsiL,bin_4,1);
+
+		tot1_clone->SetMaximum(40);
+		tot2_clone->SetMaximum(100);
 
 		TCanvas *c4 = new TCanvas("c4","",600,400);
 		g1->Draw();
@@ -300,6 +326,30 @@ void MakePlots()
 		f4->Draw();
 		lhcbName->Draw();
 
+		TCanvas *e4 = new TCanvas("e4","",600,400);
+		tot1->Draw();
+		lhcbName->Draw();
+
+		TCanvas *e5 = new TCanvas("e5","",600,400);
+		tot2->Draw();
+		lhcbName->Draw();
+
+		TCanvas *e6 = new TCanvas("e6","",600,400);
+		tot1_wide->Draw();
+		lhcbName->Draw();
+
+		TCanvas *e7 = new TCanvas("e7","",600,400);
+		tot2_wide->Draw();
+		lhcbName->Draw();
+
+		TCanvas *e8 = new TCanvas("e8","",600,400);
+		tot1_clone->Draw();
+		lhcbName->Draw();
+
+		TCanvas *e9 = new TCanvas("e9","",600,400);
+		tot2_clone->Draw();
+		lhcbName->Draw();
+
 		c4->SaveAs("../plots/ANA/mass_run1_finalBDT_nonZeroTracks.pdf");
 		c5->SaveAs("../plots/ANA/mass_run2_finalBDT_nonZeroTracks.pdf");
 		c6->SaveAs("../plots/ANA/mass_run1_finalBDT_ZeroTracks.pdf");
@@ -309,6 +359,14 @@ void MakePlots()
 		d5->SaveAs("../plots/ANA/mass_run2_finalBDT_nonZeroTracks_wide.pdf");
 		d6->SaveAs("../plots/ANA/mass_run1_finalBDT_ZeroTracks_wide.pdf");
 		d7->SaveAs("../plots/ANA/mass_run2_finalBDT_ZeroTracks_wide.pdf");
+
+		e4->SaveAs("../plots/ANA/mass_run1_finalBDT_total.pdf");
+		e5->SaveAs("../plots/ANA/mass_run2_finalBDT_total.pdf");
+		e6->SaveAs("../plots/ANA/mass_run1_finalBDT_total_wide.pdf");
+		e7->SaveAs("../plots/ANA/mass_run2_finalBDT_total_wide.pdf");
+
+		e8->SaveAs("../plots/ANA/mass_run1_finalBDT_total_zoomY.pdf");
+		e9->SaveAs("../plots/ANA/mass_run2_finalBDT_total_zoomY.pdf");
 	}
 	// {
 	//      TFile *fileIn1 = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/"
