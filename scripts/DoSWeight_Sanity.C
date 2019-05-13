@@ -334,7 +334,7 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	// fitCanvas->cd();
 	//
 	// fitCanvas->Update();
-	fitCanvas->SaveAs(Form("plots/fit_sanity_run%d_noPID.pdf",run));
+	fitCanvas->SaveAs(Form("plots/fit_sPlot_sanity_run%d_noPID.pdf",run));
 
 	// cout<<"Pull Mean Y = "<<hpull->GetMean(2)<<endl;
 	// cout<<"Pull RMS  Y = "<<hpull->GetRMS(2)<<endl;
