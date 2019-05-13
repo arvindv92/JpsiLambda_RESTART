@@ -1465,7 +1465,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	cout<<"Done defining J/psi Lambda Hypatia shapes"<<endl;
 	//*******************************************************************
 
-	//*********Exponential shape for continuum backgruond****************
+	//*********Continuum backgruond****************
 
 	if(bkgType == 0)
 	{
