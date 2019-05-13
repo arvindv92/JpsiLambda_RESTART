@@ -37,12 +37,10 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 	TStopwatch sw;
 	sw.Start();
 
+	gROOT->ProcessLine(".x lhcbStyle.C");
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
-	const char *type       = "";
-
-	// suffix        = (zeroFlag) ? ("_ZeroTracks") : ("_nonZeroTracks");
-	type          = (trackType == 3) ? ("LL")    : ("DD");
+	const char *type       = (trackType == 3) ? ("LL")    : ("DD");
 
 	if(logFlag)//Redirect output to log file
 	{
@@ -72,7 +70,8 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 
 	rootFolder    = Form("rootFiles/dataFiles/JpsiLambda/run%d", run);
 	inFileName    = Form("%s/jpsilambda_sanity_%s_noPID.root", rootFolder, type);
-	outFileName   = Form("%s/sWeightSanity/jpsilambda_%s_sanity_withsw_noPID.root", rootFolder, type);
+	outFileName   = Form("%s/sWeightSanity/jpsilambda_%s_sanity_withsw_noPID.root",
+	                     rootFolder, type);
 
 	fileIn = TFile::Open(inFileName,"READ");
 	if (!fileIn)
@@ -82,7 +81,8 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 	}
 	treeIn = (TTree*)fileIn->Get("MyTuple");
 
-	treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nBins,lowRange,highRange),"","goff");
+	treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",
+	                  nBins,lowRange,highRange),"","goff");
 	TH1D *hMass = (TH1D*)gDirectory->Get("hMass");
 
 	entries_init       = treeIn->GetEntries();
@@ -90,27 +90,27 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 	                                             " Lb_DTF_M_JpsiLConstr < %d",
 	                                             lowRange,highRange));
 
-	fileOut = new TFile(outFileName,"RECREATE");
-	treeOut = treeIn->CloneTree(0);
-
 	treeIn->SetBranchAddress("Lb_DTF_M_JpsiLConstr",&Lb_Mass);
 	cout<<"Incoming Entries = "<<entries_init<<endl;
 
-	cout<<"******************************************"<<endl;
-	cout<<"Input file = "<<fileIn->GetName()<<endl;
-	cout<<"sWeighted Output file = "<<fileOut->GetName()<<endl;
-	cout<<"******************************************"<<endl;
-
-	cout<<"Making mass cut on "<<entries_init<<" entries"<<endl;
-	for (Int_t i = 0; i < entries_init; i++)
-	{
-		if(i%100000 == 0) cout<<i<<endl;
-		treeIn->GetEntry(i);
-		if(Lb_Mass > lowRange && Lb_Mass < highRange)
-		{
-			treeOut->Fill();
-		}
-	}
+	// fileOut = new TFile(outFileName,"RECREATE");
+	// treeOut = treeIn->CloneTree(0);
+	//
+	// cout<<"******************************************"<<endl;
+	// cout<<"Input file = "<<fileIn->GetName()<<endl;
+	// cout<<"sWeighted Output file = "<<fileOut->GetName()<<endl;
+	// cout<<"******************************************"<<endl;
+	//
+	// cout<<"Making mass cut on "<<entries_init<<" entries"<<endl;
+	// for (Int_t i = 0; i < entries_init; i++)
+	// {
+	//      if(i%100000 == 0) cout<<i<<endl;
+	//      treeIn->GetEntry(i);
+	//      if(Lb_Mass > lowRange && Lb_Mass < highRange)
+	//      {
+	//              treeOut->Fill();
+	//      }
+	// }
 
 	// Create a new workspace to manage the project.
 	RooWorkspace* wSpace = new RooWorkspace("myWS");
@@ -132,9 +132,9 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 	//save workspace in ROOT file so you don't have to make and load input data each time, dummy
 	wSpace->writeToFile(Form("%s/wSpace_sPlot_Sanity_noPID.root",rootFolder));
 
-	fileOut->cd();
-	treeOut->Write("",TObject::kOverwrite);
-	fileOut->Close();
+	// fileOut->cd();
+	// treeOut->Write("",TObject::kOverwrite);
+	// fileOut->Close();
 
 	delete wSpace;
 
@@ -146,19 +146,18 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 
 	return myChi2;
 }
-void AddModel(RooWorkspace *ws, Int_t lowRange, Int_t highRange, Int_t nEntries, Int_t run)
+void AddModel(RooWorkspace *ws, Int_t lowRange, Int_t highRange,
+              Int_t nEntries, Int_t run)
 {
 	cout<<"Starting AddModel()"<<endl;
 
-	Int_t binSize = 4; /*4 MeV bins.
-	                      Bin size only affects visualization and chi square calculation,
-	                      since we are doing an unbinned fit.*/
+	Int_t binSize = 4; //4 MeV bins.
 
 	// Make models for signal and background
 
 	// make a RooRealVar for the observables
-	RooRealVar Lb_Mass("Lb_DTF_M_JpsiLConstr", "M_{J/#psi#Lambda}",
-	                   lowRange, highRange,"MeV");//discriminating variable
+	RooRealVar Lb_Mass("Lb_DTF_M_JpsiLConstr", "m_{J/#psi#Lambda}",
+	                   lowRange, highRange,"MeV/#it{c}^{2}");//discriminating variable
 
 	Int_t nbins = (Int_t)(highRange-lowRange)/binSize;
 	Lb_Mass.setBins(nbins);
@@ -191,7 +190,7 @@ void AddModel(RooWorkspace *ws, Int_t lowRange, Int_t highRange, Int_t nEntries,
 	else if(run == 2) init_sigval = 27000;
 
 	RooRealVar sigYield("sigYield","fitted yield for sig",init_sigval,0, 35000);
-	RooRealVar bkgYield("bkgYield","fitted yield for bkg",(nEntries/2),0, nEntries);
+	RooRealVar bkgYield("bkgYield","fitted yield for bkg",nEntries-init_sigval,0, nEntries);
 
 	RooAddPdf model("model","signal+background models",
 	                RooArgList(sig, bkg),
@@ -246,6 +245,7 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 
 	RooDataHist *rdh = new RooDataHist("rdh","",*Lb_Mass,hMass);
 
+	ws->import(*rdh,Rename("data_binned"));
 	// fit the model to the data. unbinned extended ML fit
 	//	RooFitResult *r = model->fitTo(*data, Extended(), Strategy(2), Save(true));
 	// Modifying this to try something along the lines of what steve does
@@ -261,34 +261,38 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	cout<<"Starting MakePlots()"<<endl;
 
 	// make our canvas
-	TCanvas *fitCanvas = new TCanvas("sPlot","sPlot demo", 1200, 800);
+	// TCanvas *fitCanvas = new TCanvas("sPlot","sPlot demo", 1200, 800);
+	//
+	// TPad *pad1 = new TPad("pad1","pad1",0.0,0.3,1.0,1.0);
+	// TPad *pad2 = new TPad("pad2","pad2",0.0,0.0,1.0,0.3);
+	// pad1->SetBottomMargin(0);
+	// pad2->SetTopMargin(0);
+	// pad2->SetBottomMargin(0.5);
+	// pad2->SetBorderMode(0);
+	// pad1->SetBorderMode(0);
+	// fitCanvas->SetBorderMode(0);
+	// pad2->Draw();
+	// pad1->Draw();
+	// pad1->cd();
+	//
+	// gPad->SetTopMargin(0.06);
+	// pad1->Update();
 
-	TPad *pad1 = new TPad("pad1","pad1",0.0,0.3,1.0,1.0);
-	TPad *pad2 = new TPad("pad2","pad2",0.0,0.0,1.0,0.3);
-	pad1->SetBottomMargin(0);
-	pad2->SetTopMargin(0);
-	pad2->SetBottomMargin(0.5);
-	pad2->SetBorderMode(0);
-	pad1->SetBorderMode(0);
-	fitCanvas->SetBorderMode(0);
-	pad2->Draw();
-	pad1->Draw();
-	pad1->cd();
-
-	gPad->SetTopMargin(0.06);
-	pad1->Update();
+	TCanvas *fitCanvas = new TCanvas("fitCanvas","",600,400);
 
 	//plot Lb_Mass for data with full model and individual componenets overlayed
 
 	RooPlot* frame = Lb_Mass->frame();
+	frame->GetXaxis()->SetTitle("m_{J/#psi#Lambda}[MeV/#it{c}^{2}]");
+	frame->GetYaxis()->SetTitle("Candidates/(4 MeV/#it{c}^{2})");
 	data->plotOn(frame,Name("Hist"),DataError(RooAbsData::SumW2) );
 	model->plotOn(frame,Name("curvetot") );
 	model->plotOn(frame,Components(*sig1),LineStyle(kDotted),LineColor(kMagenta));
 	model->plotOn(frame,Components(*sig2),LineStyle(kDotted),LineColor(kMagenta));
 	model->plotOn(frame,Components(*sig),LineStyle(kDashed), LineColor(kRed));
 	model->plotOn(frame,Components(*bkg),LineStyle(kDashed),LineColor(kGreen));
-	model->paramOn(frame, Format("NEU"), Layout(0.65,0.85,0.9));
-	frame->SetTitle("Fit of model to discriminating variable");
+	// model->paramOn(frame, Format("NEU"), Layout(0.65,0.85,0.9));
+	// frame->SetTitle("Fit of model to discriminating variable");
 	frame->Draw();
 
 	////Fit chi2
@@ -301,38 +305,38 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	Double_t chi2 = frame->chiSquare("curvetot","Hist",floatpars);
 	cout<<"chi square2 = "<<chi2<<endl;
 
-	TPaveLabel *t1 = new TPaveLabel(0.1,0.8,0.3,0.88, Form("#chi^{2}/dof = %f", chi2),"NDC");
-	t1->Draw();
-	frame->addObject(t1);
-	pad1->Update();
+	// TPaveLabel *t1 = new TPaveLabel(0.1,0.8,0.3,0.88, Form("#chi^{2}/dof = %f", chi2),"NDC");
+	// t1->Draw();
+	// frame->addObject(t1);
+	// pad1->Update();
 
 	// Pull distribution
-	RooPlot *framex2 = Lb_Mass->frame();
-	RooHist* hpull = frame->pullHist("Hist","curvetot");
-	framex2->addPlotable(hpull,"P");
-	hpull->SetLineColor(kBlack);
-	hpull->SetMarkerColor(kBlack);
-	framex2->SetTitle(0);
-	framex2->GetYaxis()->SetTitle("Pull");
-	framex2->GetYaxis()->SetTitleSize(0.11);
-	framex2->GetYaxis()->SetLabelSize(0.15);
-	framex2->GetXaxis()->SetTitleSize(0.15);
-	framex2->GetXaxis()->SetLabelSize(0.15);
-	framex2->GetYaxis()->CenterTitle();
-	framex2->GetYaxis()->SetTitleOffset(0.4);
-	framex2->GetXaxis()->SetTitleOffset(0.7);
-	framex2->GetYaxis()->SetNdivisions(505);
-	framex2->GetYaxis()->SetRangeUser(-8.8,8.8);
-	pad2->cd();
-	framex2->Draw();
+	// RooPlot *framex2 = Lb_Mass->frame();
+	// RooHist* hpull = frame->pullHist("Hist","curvetot");
+	// framex2->addPlotable(hpull,"P");
+	// hpull->SetLineColor(kBlack);
+	// hpull->SetMarkerColor(kBlack);
+	// framex2->SetTitle(0);
+	// framex2->GetYaxis()->SetTitle("Pull");
+	// framex2->GetYaxis()->SetTitleSize(0.11);
+	// framex2->GetYaxis()->SetLabelSize(0.15);
+	// framex2->GetXaxis()->SetTitleSize(0.15);
+	// framex2->GetXaxis()->SetLabelSize(0.15);
+	// framex2->GetYaxis()->CenterTitle();
+	// framex2->GetYaxis()->SetTitleOffset(0.4);
+	// framex2->GetXaxis()->SetTitleOffset(0.7);
+	// framex2->GetYaxis()->SetNdivisions(505);
+	// framex2->GetYaxis()->SetRangeUser(-8.8,8.8);
+	// pad2->cd();
+	// framex2->Draw();
+	//
+	// fitCanvas->cd();
+	//
+	// fitCanvas->Update();
+	fitCanvas->SaveAs(Form("plots/fit_sanity_run%d_noPID.pdf",run));
 
-	fitCanvas->cd();
-
-	fitCanvas->Update();
-	fitCanvas->SaveAs(Form("plots/fit_sanity_run%d%s_noPID.pdf",run,type));
-
-	cout<<"Pull Mean Y = "<<hpull->GetMean(2)<<endl;
-	cout<<"Pull RMS  Y = "<<hpull->GetRMS(2)<<endl;
+	// cout<<"Pull Mean Y = "<<hpull->GetMean(2)<<endl;
+	// cout<<"Pull RMS  Y = "<<hpull->GetRMS(2)<<endl;
 
 	cout<<"***************"<<endl;
 	r->Print("v");
@@ -375,8 +379,7 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 
 	cout << "Yield of background is "
 	     << bkgYield->getVal() << ".  From sWeights it is "
-	     << sData->GetYieldFromSWeight("bkgYield") << endl
-	     << endl;
+	     << sData->GetYieldFromSWeight("bkgYield") << endl;
 
 	for(Int_t i=0; i < 10; i++)
 	{
@@ -387,21 +390,22 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	}
 
 	cout << endl;
+
 	// import this new dataset with sWeights
 	cout << "import new dataset with sWeights" << endl;
 	ws->import(*data, Rename("dataWithSWeights"));
 	cout <<" after splot import data set looks like"<<endl;
 	ws->Print();
 
-	TCanvas *sWeightCanvas = new TCanvas();
-	RooRealVar *sigYield_sw = ws->var("sigYield_sw");
-	sigYield_sw->setRange(-1.0,1.5);
-	RooPlot* frame_sigsw = sigYield_sw->frame();
-	frame_sigsw->SetTitle("Signal sweights");
-	data->plotOn(frame_sigsw);
-	frame_sigsw->Draw();
-	sWeightCanvas->Update();
-	sWeightCanvas->SaveAs(Form("plots/fit_sanity_run%d%s_sWeights_noPID.pdf",run,type));
+	// TCanvas *sWeightCanvas = new TCanvas();
+	// RooRealVar *sigYield_sw = ws->var("sigYield_sw");
+	// sigYield_sw->setRange(-1.0,1.5);
+	// RooPlot* frame_sigsw = sigYield_sw->frame();
+	// frame_sigsw->SetTitle("Signal sweights");
+	// data->plotOn(frame_sigsw);
+	// frame_sigsw->Draw();
+	// sWeightCanvas->Update();
+	// sWeightCanvas->SaveAs(Form("plots/fit_sanity_run%d%s_sWeights_noPID.pdf",run,type));
 
 	// TCanvas *sWeightVsMass = new TCanvas();
 	// RooPlot* frame_sigsw_x = Lb_Mass->frame();
@@ -411,31 +415,31 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	// sWeightVsMass->Update();
 	// sWeightVsMass->SaveAs(Form("plots/fit_sanity_run%d%s_sWeightsVsMass.pdf",run,type));
 
-	// create weightfed data set
-	RooDataSet *dataw_sig = new RooDataSet(data->GetName(),data->GetTitle(),
-	                                       data,*data->get(),0,"sigYield_sw");
-	RooDataSet *dataw_bkg = new RooDataSet(data->GetName(),data->GetTitle(),
-	                                       data,*data->get(),0,"bkgYield_sw");
+	// create weighted data set
+	// RooDataSet *dataw_sig = new RooDataSet(data->GetName(),data->GetTitle(),
+	//                                        data,*data->get(),0,"sigYield_sw");
+	// RooDataSet *dataw_bkg = new RooDataSet(data->GetName(),data->GetTitle(),
+	//                                        data,*data->get(),0,"bkgYield_sw");
 
-	TCanvas *sWeightMass = new TCanvas();
-	sWeightMass->Divide(1,2);
-
-	sWeightMass->cd(1);
-
-	RooPlot* frame2_1 = Lb_Mass->frame();
-	dataw_sig->plotOn(frame2_1, DataError(RooAbsData::SumW2));
-	frame2_1->SetTitle("Lb DTF Mass Distribution (SW)");
-	frame2_1->Draw();
-
-	sWeightMass->cd(2);
-
-	RooPlot* frame2_2 = Lb_Mass->frame();
-	dataw_bkg->plotOn(frame2_2, DataError(RooAbsData::SumW2));
-	frame2_2->SetTitle("Lb DTF Mass Distribution (BW)");
-	frame2_2->Draw();
-
-	sWeightMass->Update();
-	sWeightMass->SaveAs(Form("plots/fit_run%d%s_sWeightedMass_noPID.pdf",run,type));
+	// TCanvas *sWeightMass = new TCanvas();
+	// sWeightMass->Divide(1,2);
+	//
+	// sWeightMass->cd(1);
+	//
+	// RooPlot* frame2_1 = Lb_Mass->frame();
+	// dataw_sig->plotOn(frame2_1, DataError(RooAbsData::SumW2));
+	// frame2_1->SetTitle("Lb DTF Mass Distribution (SW)");
+	// frame2_1->Draw();
+	//
+	// sWeightMass->cd(2);
+	//
+	// RooPlot* frame2_2 = Lb_Mass->frame();
+	// dataw_bkg->plotOn(frame2_2, DataError(RooAbsData::SumW2));
+	// frame2_2->SetTitle("Lb DTF Mass Distribution (BW)");
+	// frame2_2->Draw();
+	//
+	// sWeightMass->Update();
+	// sWeightMass->SaveAs(Form("plots/fit_run%d%s_sWeightedMass_noPID.pdf",run,type));
 
 	Int_t dsentries = data->numEntries();
 	cout<<"No. of entries in dataset = "<<dsentries<<endl;
@@ -445,8 +449,8 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	cout<<"************************************************"<<endl;
 
 	//Add SW & BW branches to output tree
-	sigW  = treeOut->Branch("SW",&SIGW,"SIGW/F");
-	bkgW  = treeOut->Branch("BW",&BKGW,"BKGW/F");
+	// sigW  = treeOut->Branch("SW",&SIGW,"SIGW/F");
+	// bkgW  = treeOut->Branch("BW",&BKGW,"BKGW/F");
 
 	//Add SW & BW branches to isolation training tree
 	// if(!zeroFlag)
@@ -454,15 +458,15 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	//      sigW_training = treeOut_training->Branch("SW",&SIGW,"SIGW/F");
 	//      bkgW_training = treeOut_training->Branch("BW",&BKGW,"BKGW/F");
 	// }
-	for(Int_t i = 0; i < dsentries; i++)
-	{
-		bMASS = (data->get(i))->getRealValue("Lb_DTF_M_JpsiLConstr");
-		SIGW  = (data->get(i))->getRealValue("sigYield_sw");
-		BKGW  = (data->get(i))->getRealValue("bkgYield_sw");
-
-		sigW->Fill();
-		bkgW->Fill();
-	}
+	// for(Int_t i = 0; i < dsentries; i++)
+	// {
+	//      bMASS = (data->get(i))->getRealValue("Lb_DTF_M_JpsiLConstr");
+	//      SIGW  = (data->get(i))->getRealValue("sigYield_sw");
+	//      BKGW  = (data->get(i))->getRealValue("bkgYield_sw");
+	//
+	//      sigW->Fill();
+	//      bkgW->Fill();
+	// }
 
 	cout<<"Finishing DoSPlot()"<<endl;
 
