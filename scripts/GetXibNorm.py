@@ -54,7 +54,7 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
     xibEffErr_wt = math.sqrt(xibEff_wt * (1 - xibEff_wt) / xibden_wt)
     relErr_xibEff_wt = xibEffErr_wt / xibEff_wt
 
-    print 'xibEff = ' + str(xibEff_wt * 100) + ' % +/- ' + str(xibEffErr_wt * 100) + ' %'
+    print 'xibEff = ' + str('%.4f' % (xibEff_wt * 100)) + ' % +/- ' + str('%.4f' % (xibEffErr_wt * 100)) + ' %'
     ###############################
 
     # Get efficiency for reco'ing Xib -> J/psi Lambda
@@ -114,7 +114,7 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
         xibEffErr_JpsiLambda_wt = xibEff_JpsiLambda_wt * math.sqrt((1.0 / num_wt)
                                                                    + (1.0 / den_wt))
     # print xibEff_JpsiLambda
-    print 'xibEff_JpsiLambda = ' + str(xibEff_JpsiLambda_wt * 100) + ' % +/-' + str(xibEffErr_JpsiLambda_wt * 100) + ' %'
+    print 'xibEff_JpsiLambda = ' + str('%.4f' % (xibEff_JpsiLambda_wt * 100)) + ' % +/-' + str('%.4f' % (xibEffErr_JpsiLambda_wt * 100)) + ' %'
 
     # xibMcLog_JpsiLambda = open("../logs/mc/JpsiLambda/JpsiXi/run"
     #                            + str(run) + "/CutFinalBDT"
