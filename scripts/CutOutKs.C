@@ -87,6 +87,12 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 		part = "chic1";
 		break;
 	}
+	case 10:
+	{
+		folder = "JpsiKs";
+		part = "jpsiks";
+		break;
+	}
 	}
 	//Set up logging
 	if(isData && logFlag && run == 1)

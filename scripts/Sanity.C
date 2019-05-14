@@ -91,6 +91,12 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 		part = "chic1";
 		break;
 	}
+	case 10:
+	{
+		folder = "JpsiKs";
+		part = "jpsiks";
+		break;
+	}
 	}
 
 	//Set up logging
@@ -131,7 +137,7 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 	Float_t eff_excl_LL    = 0.0, eff_excl_LL_err = 0.0;
 	Float_t eff_incl_LL    = 0.0, eff_incl_LL_err = 0.0;
 	Float_t eff_excl_DD    = 0.0, eff_excl_DD_err = 0.0;
-	Float_t eff_incl_DD    = 0.0,eff_incl_DD_err  = 0.0;
+	Float_t eff_incl_DD    = 0.0, eff_incl_DD_err = 0.0;
 	Float_t Lb_ConsLb_chi2 = 0.0, Lb_ConsLb_nDOF  = 0.0;
 
 	Double_t Lb_TAU  = 0.0, Lb_ETA  = 0.0, Lb_PT  = 0.0;

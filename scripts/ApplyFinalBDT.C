@@ -90,6 +90,12 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 		part = "chic1";
 		break;
 	}
+	case 10:
+	{
+		folder = "JpsiKs";
+		part = "jpsiks";
+		break;
+	}
 	}
 	//Set up logging
 	if(isData && isoFlag && logFlag)

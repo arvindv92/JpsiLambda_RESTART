@@ -81,6 +81,12 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 		part = "chic1";
 		break;
 	}
+	case 10:
+	{
+		folder = "JpsiKs";
+		part = "jpsiks";
+		break;
+	}
 	}
 	//Set up logging
 	if(isData && logFlag)
