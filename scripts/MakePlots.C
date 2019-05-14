@@ -169,13 +169,13 @@ void MakePlots()
 		TCanvas *c2 = new TCanvas("c2","",600,400);
 
 		h6->Draw();
-		h6->GetYaxis()->SetTitleOffset(1.0);
 		lhcbName->Draw();
 		// myLatex->DrawLatex(0.18,0.85,"LHCb Run 1");
 
 		TCanvas *d2 = new TCanvas("d2","",600,400);
 
 		h7->Draw();
+		h7->GetYaxis()->SetTitleOffset(1.0);
 		lhcbName->Draw();
 		// myLatex->DrawLatex(0.18,0.85,"LHCb Run 2");
 
@@ -367,6 +367,50 @@ void MakePlots()
 
 		e8->SaveAs("../plots/ANA/mass_run1_finalBDT_total_zoomY.pdf");
 		e9->SaveAs("../plots/ANA/mass_run2_finalBDT_total_zoomY.pdf");
+	}
+	{
+		//J/psi Xi mass reco'd as J/psi Lambda, after BDT selection
+		TFile *file1 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_cutoutks_LL_nonZeroTracks_noPID.root");
+		TTree *tree1 = (TTree*)file1->Get("MyTuple");
+		tree1->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_LL_FinalBDT2_iso2_v0_noPID.root");
+
+		TFile *file2 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_cutoutks_LL_ZeroTracks_noPID.root");
+		TTree *tree2 = (TTree*)file2->Get("MyTuple");
+		tree2->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_zeroTracksLL_FinalBDT2_iso2_v0_noPID.root");
+
+		TFile *file3 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiXi/run2/jpsixi_cutoutks_LL_nonZeroTracks_noPID.root");
+		TTree *tree3 = (TTree*)file3->Get("MyTuple");
+		tree3->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiXi/run2/jpsixi_LL_FinalBDT2_iso2_v0_noPID.root");
+
+		TFile *file4 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiXi/run2/jpsixi_cutoutks_LL_ZeroTracks_noPID.root");
+		TTree *tree4 = (TTree*)file4->Get("MyTuple");
+		tree4->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiXi/run2/jpsixi_zeroTracksLL_FinalBDT2_iso2_v0_noPID.root");
+
+		tree1->Draw("Lb_DTF_M_JpsiLConstr>>xi1(250,5000,6000)","BDT2 > 0.475","goff");
+		tree2->Draw("Lb_DTF_M_JpsiLConstr>>xi2(250,5000,6000)","BDT2 > 0.365","goff");
+
+		tree3->Draw("Lb_DTF_M_JpsiLConstr>>xi3(250,5000,6000)","BDT2 > 0.555","goff");
+		tree4->Draw("Lb_DTF_M_JpsiLConstr>>xi4(250,5000,6000)","BDT2 > 0.495","goff");
+
+		TH1F *xi1 = (TH1F*)gDirectory->Get("xi1");
+		TH1F *xi2 = (TH1F*)gDirectory->Get("xi2");
+		TH1F *xi3 = (TH1F*)gDirectory->Get("xi3");
+		TH1F *xi4 = (TH1F*)gDirectory->Get("xi4");
+
+		xi1->Add(xi2);
+		xi3->Add(xi4);
+
+		addGraphics(xi1,m_jpsiL,bin_4,1);
+		addGraphics(xi3,m_jpsiL,bin_4,1);
+
+		TCanvas *can_xi1 = new TCanvas();
+		xi1->Draw();
+
+		TCanvas *can_xi2 = new TCanvas();
+		xi3->Draw();
+
+		can_xi1->SaveAs("../plots/ANA/jpsixi_jpsilambda_run1.pdf");
+		can_xi2->SaveAs("../plots/ANA/jpsixi_jpsilambda_run2.pdf");
 	}
 	// {
 	//      TFile *fileIn1 = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/"
