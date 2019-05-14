@@ -6,6 +6,12 @@
 #include "TLatex.h"
 #include "TPaveText.h"
 #include "TStyle.h"
+#include "TList.h"
+#include "RooRealVar.h"
+#include "RooDataSet.h"
+#include "RooKeysPdf.h"
+#include "RooPlot.h"
+using namespace RooFit;
 void addGraphics(TH1F *h, TString Xtitle, TString Ytitle, int iCol){
 	h->SetXTitle(Xtitle);
 	//h->SetFillColor(30);
@@ -386,28 +392,76 @@ void MakePlots()
 		TTree *tree4 = (TTree*)file4->Get("MyTuple");
 		tree4->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiXi/run2/jpsixi_zeroTracksLL_FinalBDT2_noPID.root");
 
-		tree1->Draw("Lb_DTF_M_JpsiLConstr>>xi1(150,5200,5800)","BDT2 > 0.475","goff");
-		tree2->Draw("Lb_DTF_M_JpsiLConstr>>xi2(150,5200,5800)","BDT2 > 0.365","goff");
+		TTree *tree1_cut = (TTree*)tree1->CopyTree("BDT2 > 0.475");
+		TTree *tree2_cut = (TTree*)tree2->CopyTree("BDT2 > 0.365");
 
-		tree3->Draw("Lb_DTF_M_JpsiLConstr>>xi3(150,5200,5800)","BDT2 > 0.555","goff");
-		tree4->Draw("Lb_DTF_M_JpsiLConstr>>xi4(150,5200,5800)","BDT2 > 0.495","goff");
+		TTree *tree3_cut = (TTree*)tree3->CopyTree("BDT2 > 0.555");
+		TTree *tree4_cut = (TTree*)tree4->CopyTree("BDT2 > 0.495");
 
-		TH1F *xi1 = (TH1F*)gDirectory->Get("xi1");
-		TH1F *xi2 = (TH1F*)gDirectory->Get("xi2");
-		TH1F *xi3 = (TH1F*)gDirectory->Get("xi3");
-		TH1F *xi4 = (TH1F*)gDirectory->Get("xi4");
+		TList *list1 = new TList;
+		list1->Add(tree1_cut);
+		list1->Add(tree2_cut);
 
-		xi1->Add(xi2);
-		xi3->Add(xi4);
+		TTree *combTree1 = TTree::MergeTrees(list1);
+		combTree1->SetName("combTree1");
 
-		addGraphics(xi1,m_jpsiL,bin_4,1);
-		addGraphics(xi3,m_jpsiL,bin_4,1);
+		TList *list2 = new TList;
+		list2->Add(tree3_cut);
+		list2->Add(tree4_cut);
+
+		TTree *combTree2 = TTree::MergeTrees(list2);
+		combTree2->SetName("combTree2");
+
+		RooRealVar *Lb_Mass = new RooRealVar("Lb_DTF_M_JpsiLConstr","",5200,5800);
+		RooDataSet *ds1 = new RooDataSet("ds1","ds1",combTree1,RooArgSet(*Lb_Mass),0,"gb_wts");
+		RooDataSet *ds2 = new RooDataSet("ds2","ds2",combTree2,RooArgSet(*Lb_Mass),0,"gb_wts");
+
+		RooKeysPdf *xibFit1 = new RooKeysPdf("xibFit1","xibFit1",*Lb_Mass,*ds1,RooKeysPdf::NoMirror);
+		RooKeysPdf *xibFit2 = new RooKeysPdf("xibFit2","xibFit2",*Lb_Mass,*ds2,RooKeysPdf::NoMirror);
+
+		RooPlot *frame1 = Lb_Mass->frame();
+		ds1->plotOn(frame1);
+		xibFit1->plotOn(frame1);
+		frame1->GetXaxis()->SetTitle(m_jpsiL);
+		frame1->GetYaxis()->SetTitle(bin_4);
+
+		RooPlot *frame2 = Lb_Mass->frame();
+		ds2->plotOn(frame2);
+		xibFit2->plotOn(frame2);
+		frame2->GetXaxis()->SetTitle(m_jpsiL);
+		frame2->GetYaxis()->SetTitle(bin_4);
+
+		// tree1->Draw("Lb_DTF_M_JpsiLConstr>>xi1(150,5200,5800)","gb_wts*(BDT2 > 0.475)","goff");
+		// tree2->Draw("Lb_DTF_M_JpsiLConstr>>xi2(150,5200,5800)","gb_wts*(BDT2 > 0.365)","goff");
+		// tree3->Draw("Lb_DTF_M_JpsiLConstr>>xi3(150,5200,5800)","gb_wts*(BDT2 > 0.555)","goff");
+		// tree4->Draw("Lb_DTF_M_JpsiLConstr>>xi4(150,5200,5800)","gb_wts*(BDT2 > 0.495)","goff");
+		//
+		// TH1F *xi1 = (TH1F*)gDirectory->Get("xi1");
+		// TH1F *xi2 = (TH1F*)gDirectory->Get("xi2");
+		// TH1F *xi3 = (TH1F*)gDirectory->Get("xi3");
+		// TH1F *xi4 = (TH1F*)gDirectory->Get("xi4");
+		//
+		// xi1->Add(xi2);
+		// xi3->Add(xi4);
+		//
+		// addGraphics(xi1,m_jpsiL,bin_4,1);
+		// addGraphics(xi3,m_jpsiL,bin_4,1);
+		//
+		// TCanvas *can_xi1 = new TCanvas();
+		// xi1->Draw();
+		// myLatex->DrawLatex(0.18,0.85,"LHCb Simulation");
+		//
+		// TCanvas *can_xi2 = new TCanvas();
+		// xi3->Draw();
+		// myLatex->DrawLatex(0.18,0.85,"LHCb Simulation");
 
 		TCanvas *can_xi1 = new TCanvas();
-		xi1->Draw();
+		frame1->Draw();
+		myLatex->DrawLatex(0.18,0.85,"LHCb Simulation");
 
 		TCanvas *can_xi2 = new TCanvas();
-		xi3->Draw();
+		frame2->Draw();
+		myLatex->DrawLatex(0.18,0.85,"LHCb Simulation");
 
 		can_xi1->SaveAs("../plots/ANA/jpsixi_jpsilambda_run1.pdf");
 		can_xi2->SaveAs("../plots/ANA/jpsixi_jpsilambda_run2.pdf");
