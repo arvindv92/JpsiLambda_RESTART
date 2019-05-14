@@ -21,7 +21,7 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
             xibYieldErr = float(line.split()[4])
     relErr_xibYield = xibYieldErr / xibYield
 
-    # print 'xibYield = ' + str(xibYield) + '+/-' + str(xibYieldErr)
+    print 'xibYield = ' + str(xibYield) + '+/-' + str(xibYieldErr)
     ###############################
 
     # Get reconstruction eff of Xib -> J/psi Xi from MC
@@ -54,7 +54,7 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
     xibEffErr_wt = math.sqrt(xibEff_wt * (1 - xibEff_wt) / xibden_wt)
     relErr_xibEff_wt = xibEffErr_wt / xibEff_wt
 
-    # print 'xibEff = ' + str(xibEff) + '+/-' + str(xibEffErr)
+    print 'xibEff = ' + str(xibEff_wt) + '+/-' + str(xibEffErr_wt)
     ###############################
 
     # Get efficiency for reco'ing Xib -> J/psi Lambda
@@ -114,6 +114,7 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
         xibEffErr_JpsiLambda_wt = xibEff_JpsiLambda_wt * math.sqrt((1.0 / num_wt)
                                                                    + (1.0 / den_wt))
     # print xibEff_JpsiLambda
+    print 'xibEff_JpsiLambda = ' + str(xibEff_JpsiLambda_wt) + '+/-' + str(xibEffErr_JpsiLambda_wt)
 
     # xibMcLog_JpsiLambda = open("../logs/mc/JpsiLambda/JpsiXi/run"
     #                            + str(run) + "/CutFinalBDT"
@@ -126,7 +127,8 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
     #         line = line.translate(None, '%')
     #         xibEff_JpsiLambda = float(line.split()[8]) / 100
     #         xibEffErr_JpsiLambda = float(line.split()[10]) / 100
-
+    ###############################
+    # Determine normalization
     if xibEff_JpsiLambda > 0:
         relErr_xibEff_JpsiLambda = xibEffErr_JpsiLambda / xibEff_JpsiLambda
         xibNorm = xibYield * xibEff_JpsiLambda / xibEff
@@ -145,6 +147,7 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
     else:
         xibNorm_wt = 0.0
         xibNormErr_wt = 0.0
+    print 'Norm = ' + str(xibNorm_wt) + '+/-' + str(xibNormErr_wt)
     xibNormLog = open("../logs/mc/JpsiXi/run" + str(run) + "/xibNorm_log.txt",
                       "w")
     xibNormLog.write(str(xibNorm) + "\n")
