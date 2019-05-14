@@ -78,7 +78,7 @@ void MakePlots()
 		TFile *fileIn1 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run2/jpsilambda.root");
 		TTree *treeIn1 = (TTree*)fileIn1->Get("Lb2JpsiLTree/MyTuple");
 
-		treeIn->Draw("Lb_DTF_M_JpsiLConstr>>h0(250,5000,6000)","","goff");
+		treeIn->Draw("Lb_DTF_M_JpsiLConstr>>h0(150,5200,5800)","","goff");
 		treeIn1->Draw("Lb_DTF_M_JpsiLConstr>>h1(100,5400,5800)","","goff");
 
 		TH1F *m_sigma = (TH1F*)gDirectory->Get("h0");
@@ -157,8 +157,8 @@ void MakePlots()
 		TFile *fileIn2_cut = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL_noPID.root");
 		TTree *treeIn2_cut = (TTree*)fileIn2_cut->Get("MyTuple");
 
-		treeIn1_cut->Draw("Lb_DTF_M_JpsiLConstr>>h6(250,5000,6000)","","goff");
-		treeIn2_cut->Draw("Lb_DTF_M_JpsiLConstr>>h7(250,5000,6000)","","goff");
+		treeIn1_cut->Draw("Lb_DTF_M_JpsiLConstr>>h6(150,5200,5800)","","goff");
+		treeIn2_cut->Draw("Lb_DTF_M_JpsiLConstr>>h7(150,5200,5800)","","goff");
 
 		TH1F *h6 = (TH1F*)gDirectory->Get("h6");
 		TH1F *h7 = (TH1F*)gDirectory->Get("h7");
@@ -236,11 +236,11 @@ void MakePlots()
 
 		treeIn2_zero_cut->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_zeroTracksLL_FinalBDT2_noPID.root");
 
-		treeIn1_cut->Draw("Lb_DTF_M_JpsiLConstr>>g1(250,5000,6000)","BDT2 > 0.475","goff");
-		treeIn2_cut->Draw("Lb_DTF_M_JpsiLConstr>>g2(250,5000,6000)","BDT2 > 0.555","goff");
+		treeIn1_cut->Draw("Lb_DTF_M_JpsiLConstr>>g1(150,5200,5800)","BDT2 > 0.475","goff");
+		treeIn2_cut->Draw("Lb_DTF_M_JpsiLConstr>>g2(150,5200,5800)","BDT2 > 0.555","goff");
 
-		treeIn1_zero_cut->Draw("Lb_DTF_M_JpsiLConstr>>g3(250,5000,6000)","BDT2 > 0.365","goff");
-		treeIn2_zero_cut->Draw("Lb_DTF_M_JpsiLConstr>>g4(250,5000,6000)","BDT2 > 0.495","goff");
+		treeIn1_zero_cut->Draw("Lb_DTF_M_JpsiLConstr>>g3(150,5200,5800)","BDT2 > 0.365","goff");
+		treeIn2_zero_cut->Draw("Lb_DTF_M_JpsiLConstr>>g4(150,5200,5800)","BDT2 > 0.495","goff");
 
 		treeIn1_cut->Draw("Lb_DTF_M_JpsiLConstr>>f1(750,4000,7000)","BDT2 > 0.475","goff");
 		treeIn2_cut->Draw("Lb_DTF_M_JpsiLConstr>>f2(750,4000,7000)","BDT2 > 0.555","goff");
@@ -376,7 +376,7 @@ void MakePlots()
 
 		TFile *file2 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_cutoutks_LL_ZeroTracks_noPID.root");
 		TTree *tree2 = (TTree*)file2->Get("MyTuple");
-		tree2->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_zeroTracksLL_FinalBDT2_iso2_v0_noPID.root");
+		tree2->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_zeroTracksLL_FinalBDT2_noPID.root");
 
 		TFile *file3 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiXi/run2/jpsixi_cutoutks_LL_nonZeroTracks_noPID.root");
 		TTree *tree3 = (TTree*)file3->Get("MyTuple");
@@ -384,13 +384,13 @@ void MakePlots()
 
 		TFile *file4 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiXi/run2/jpsixi_cutoutks_LL_ZeroTracks_noPID.root");
 		TTree *tree4 = (TTree*)file4->Get("MyTuple");
-		tree4->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiXi/run2/jpsixi_zeroTracksLL_FinalBDT2_iso2_v0_noPID.root");
+		tree4->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiXi/run2/jpsixi_zeroTracksLL_FinalBDT2_noPID.root");
 
-		tree1->Draw("Lb_DTF_M_JpsiLConstr>>xi1(250,5000,6000)","BDT2 > 0.475","goff");
-		tree2->Draw("Lb_DTF_M_JpsiLConstr>>xi2(250,5000,6000)","BDT2 > 0.365","goff");
+		tree1->Draw("Lb_DTF_M_JpsiLConstr>>xi1(150,5200,5800)","BDT2 > 0.475","goff");
+		tree2->Draw("Lb_DTF_M_JpsiLConstr>>xi2(150,5200,5800)","BDT2 > 0.365","goff");
 
-		tree3->Draw("Lb_DTF_M_JpsiLConstr>>xi3(250,5000,6000)","BDT2 > 0.555","goff");
-		tree4->Draw("Lb_DTF_M_JpsiLConstr>>xi4(250,5000,6000)","BDT2 > 0.495","goff");
+		tree3->Draw("Lb_DTF_M_JpsiLConstr>>xi3(150,5200,5800)","BDT2 > 0.555","goff");
+		tree4->Draw("Lb_DTF_M_JpsiLConstr>>xi4(150,5200,5800)","BDT2 > 0.495","goff");
 
 		TH1F *xi1 = (TH1F*)gDirectory->Get("xi1");
 		TH1F *xi2 = (TH1F*)gDirectory->Get("xi2");
