@@ -419,8 +419,8 @@ void MakePlots()
 		RooDataSet *ds1_nowt = new RooDataSet("ds1_nowt","ds1_nowt",combTree1,RooArgSet(*Lb_Mass,*gbWtVar));
 		RooDataSet *ds2_nowt = new RooDataSet("ds2_nowt","ds2_nowt",combTree2,RooArgSet(*Lb_Mass,*gbWtVar));
 
-		RooDataSet *ds1 = new RooDataSet("ds1","ds1",RooArgSet(*Lb_Mass),Import(*ds1_nowt),WeightVar(*gbWtVar));
-		RooDataSet *ds2 = new RooDataSet("ds2","ds2",RooArgSet(*Lb_Mass),Import(*ds2_nowt),WeightVar(*gbWtVar));
+		RooDataSet *ds1 = new RooDataSet("ds1","ds1",RooArgSet(*Lb_Mass,*gbWtVar),Import(*ds1_nowt),WeightVar(*gbWtVar));
+		RooDataSet *ds2 = new RooDataSet("ds2","ds2",RooArgSet(*Lb_Mass,*gbWtVar),Import(*ds2_nowt),WeightVar(*gbWtVar));
 
 		RooKeysPdf *xibFit1 = new RooKeysPdf("xibFit1","xibFit1",*Lb_Mass,*ds1,RooKeysPdf::NoMirror);
 		RooKeysPdf *xibFit2 = new RooKeysPdf("xibFit2","xibFit2",*Lb_Mass,*ds2,RooKeysPdf::NoMirror);
