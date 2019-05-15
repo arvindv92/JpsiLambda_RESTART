@@ -645,8 +645,8 @@ void MakePlots()
 		RooRealVar sigma1_gaus_run1("sigma1_gaus_run1","Gaussian sigma1",10.0,1.0,20.0,"MeV");
 		RooRealVar sigma2_gaus_run1("sigma2_gaus_run1","Gaussian sigma2",10.0,1.0,20.0,"MeV");
 
-		RooGaussian sig1_gaus_run1("sig_gaus_run1","sig",*Lb_Mass,mean_gaus_run1,sigma1_gaus_run1);
-		RooGaussian sig2_gaus_run1("sig_gaus_run1","sig",*Lb_Mass,mean_gaus_run1,sigma2_gaus_run1);
+		RooGaussian sig1_gaus_run1("sig1_gaus_run1","sig",*Lb_Mass,mean_gaus_run1,sigma1_gaus_run1);
+		RooGaussian sig2_gaus_run1("sig2_gaus_run1","sig",*Lb_Mass,mean_gaus_run1,sigma2_gaus_run1);
 
 		RooRealVar frac1_gaus_run1("frac1_gaus_run1","Fraction of sig1 in signal",0.5,0.0,1.0);
 		RooAddPdf sig_gaus_run1("sig_gaus_run1","Total Gaussian signal",RooArgList(sig1_gaus_run1,sig2_gaus_run1),frac1_gaus_run1);
@@ -672,8 +672,8 @@ void MakePlots()
 		RooRealVar sigma1_gaus_run2("sigma1_gaus_run2","Gaussian sigma1",10.0,1.0,20.0,"MeV");
 		RooRealVar sigma2_gaus_run2("sigma2_gaus_run2","Gaussian sigma2",10.0,1.0,20.0,"MeV");
 
-		RooGaussian sig1_gaus_run2("sig_gaus_run2","sig",*Lb_Mass,mean_gaus_run2,sigma1_gaus_run2);
-		RooGaussian sig2_gaus_run2("sig_gaus_run2","sig",*Lb_Mass,mean_gaus_run2,sigma2_gaus_run2);
+		RooGaussian sig1_gaus_run2("sig1_gaus_run2","sig",*Lb_Mass,mean_gaus_run2,sigma1_gaus_run2);
+		RooGaussian sig2_gaus_run2("sig1_gaus_run2","sig",*Lb_Mass,mean_gaus_run2,sigma2_gaus_run2);
 
 		RooRealVar frac1_gaus_run2("frac1_gaus_run2","Fraction of sig1 in signal",0.5,0.0,1.0);
 		RooAddPdf sig_gaus_run2("sig_gaus_run2","Total Gaussian signal",RooArgList(sig1_gaus_run2,sig2_gaus_run2),frac1_gaus_run2);
