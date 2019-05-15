@@ -390,7 +390,7 @@ void MakePlots()
 
 		TFile *file3 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiXi/run2/jpsixi_cutoutks_LL_nonZeroTracks_noPID.root");
 		TTree *tree3 = (TTree*)file3->Get("MyTuple");
-		tree3->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiXi/run2/jpsixi_LL_FinalBDT2_iso2_v0_noPID.root");
+		tree3->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiXi/run2/jpsixi_LL_FinalBDT2_iso1_v0_noPID.root");
 
 		TFile *file4 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiXi/run2/jpsixi_cutoutks_LL_ZeroTracks_noPID.root");
 		TTree *tree4 = (TTree*)file4->Get("MyTuple");
@@ -491,7 +491,7 @@ void MakePlots()
 
 		TFile *file3 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_cutoutks_LL_nonZeroTracks_noPID.root");
 		TTree *tree3 = (TTree*)file3->Get("MyTuple");
-		tree3->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_LL_FinalBDT2_iso2_v0_noPID.root");
+		tree3->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_LL_FinalBDT2_iso1_v0_noPID.root");
 
 		TFile *file4 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_cutoutks_LL_ZeroTracks_noPID.root");
 		TTree *tree4 = (TTree*)file4->Get("MyTuple");
@@ -585,7 +585,7 @@ void MakePlots()
 
 		TFile *file3 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_cutoutks_LL_nonZeroTracks_noPID.root");
 		TTree *tree3 = (TTree*)file3->Get("MyTuple");
-		tree3->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_LL_FinalBDT2_iso2_v0_noPID.root");
+		tree3->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_LL_FinalBDT2_iso1_v0_noPID.root");
 
 		TFile *file4 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_cutoutks_LL_ZeroTracks_noPID.root");
 		TTree *tree4 = (TTree*)file4->Get("MyTuple");
