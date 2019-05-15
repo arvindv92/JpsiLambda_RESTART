@@ -591,11 +591,17 @@ void MakePlots()
 		TTree *tree4 = (TTree*)file4->Get("MyTuple");
 		tree4->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_zeroTracksLL_FinalBDT2_noPID.root");
 
-		TTree *tree1_cut = (TTree*)tree1->CopyTree("BDT2 > 0.475");
-		TTree *tree2_cut = (TTree*)tree2->CopyTree("BDT2 > 0.365");
+		TFile *file5 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsiks_cutoutks_LL_noPID.root");
+		TTree *tree5 = (TTree*)file5->Get("MyTuple");
 
-		TTree *tree3_cut = (TTree*)tree3->CopyTree("BDT2 > 0.555");
-		TTree *tree4_cut = (TTree*)tree4->CopyTree("BDT2 > 0.495");
+		TFile *file6 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_cutoutks_LL_noPID.root");
+		TTree *tree6 = (TTree*)file6->Get("MyTuple");
+
+		TTree *tree1_cut = (TTree*)tree1->CopyTree("BDT2 > 0.475 && Lb_BKGCAT==30");
+		TTree *tree2_cut = (TTree*)tree2->CopyTree("BDT2 > 0.365 && Lb_BKGCAT==30");
+
+		TTree *tree3_cut = (TTree*)tree3->CopyTree("BDT2 > 0.555 && Lb_BKGCAT==30");
+		TTree *tree4_cut = (TTree*)tree4->CopyTree("BDT2 > 0.495 && Lb_BKGCAT==30");
 
 		TList *list1_cut = new TList;
 		list1_cut->Add(tree1_cut);
@@ -605,13 +611,13 @@ void MakePlots()
 		list2_cut->Add(tree3_cut);
 		list2_cut->Add(tree4_cut);
 
-		TList *list1 = new TList;
-		list1->Add(tree1);
-		list1->Add(tree2);
-
-		TList *list2 = new TList;
-		list2->Add(tree3);
-		list2->Add(tree4);
+		// TList *list1 = new TList;
+		// list1->Add(tree1);
+		// list1->Add(tree2);
+		//
+		// TList *list2 = new TList;
+		// list2->Add(tree3);
+		// list2->Add(tree4);
 
 		TFile *tempFile = new TFile("tempFile.root","RECREATE");
 
@@ -621,25 +627,26 @@ void MakePlots()
 		TTree *combTree2_cut = TTree::MergeTrees(list2_cut);
 		combTree2_cut->SetName("combTree2_cut");
 
-		TTree *combTree1 = TTree::MergeTrees(list1);
-		combTree1->SetName("combTree1");
-
-		TTree *combTree2 = TTree::MergeTrees(list2);
-		combTree2->SetName("combTree2");
+		// TTree *combTree1 = TTree::MergeTrees(list1);
+		// combTree1->SetName("combTree1");
+		//
+		// TTree *combTree2 = TTree::MergeTrees(list2);
+		// combTree2->SetName("combTree2");
 
 		Int_t nentries_run1_cut = combTree1_cut->GetEntries();
 		Int_t nentries_run2_cut = combTree2_cut->GetEntries();
 
-		Int_t nentries_run1 = combTree1->GetEntries();
-		Int_t nentries_run2 = combTree2->GetEntries();
+		Int_t nentries_run1 = tree5->GetEntries();
+		Int_t nentries_run2 = tree6->GetEntries();
 
-		RooRealVar *Lb_Mass = new RooRealVar("Lb_DTF_L_WMpipi_JpsiConstr","",400,600);
+		RooRealVar *Lb_Mass = new RooRealVar("Lb_DTF_L_WMpipi_JpsiConstr","",450,550);
+		RooRealVar *Lb_BKGCAT = new RooRealVar("Lb_BKGCAT","",0,200);
 
 		RooDataSet *ds_run1_cut = new RooDataSet("ds_run1_cut","ds_run1_cut",combTree1_cut,RooArgSet(*Lb_Mass));
 		RooDataSet *ds_run2_cut = new RooDataSet("ds_run2_cut","ds_run2_cut",combTree2_cut,RooArgSet(*Lb_Mass));
 
-		RooDataSet *ds_run1 = new RooDataSet("ds_run1","ds_run1",combTree1,RooArgSet(*Lb_Mass));
-		RooDataSet *ds_run2 = new RooDataSet("ds_run2","ds_run2",combTree2,RooArgSet(*Lb_Mass));
+		RooDataSet *ds_run1 = new RooDataSet("ds_run1","ds_run1",tree5,RooArgSet(*Lb_Mass,*Lb_BKGCAT),"Lb_BKGCAT==30");
+		RooDataSet *ds_run2 = new RooDataSet("ds_run2","ds_run2",tree6,RooArgSet(*Lb_Mass,*Lb_BKGCAT),"Lb_BKGCAT==30");
 
 		RooRealVar mean_gaus_run1("mean_gaus_run1","Gaussian Mean",497.0,490.0,500.0,"MeV");
 		RooRealVar sigma1_gaus_run1("sigma1_gaus_run1","Gaussian sigma1",10.0,1.0,20.0,"MeV");
