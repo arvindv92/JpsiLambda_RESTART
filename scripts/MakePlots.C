@@ -13,6 +13,7 @@
 #include "RooPlot.h"
 #include "RooGaussian.h"
 #include "RooExponential.h"
+#include "RooChebychev.h"
 #include "RooAddPdf.h"
 using namespace RooFit;
 void addGraphics(TH1F *h, TString Xtitle, TString Ytitle, int iCol){
@@ -632,7 +633,7 @@ void MakePlots()
 		Int_t nentries_run1 = combTree1->GetEntries();
 		Int_t nentries_run2 = combTree2->GetEntries();
 
-		RooRealVar *Lb_Mass = new RooRealVar("Lb_DTF_L_WMpipi_JpsiConstr","",300,700);
+		RooRealVar *Lb_Mass = new RooRealVar("Lb_DTF_L_WMpipi_JpsiConstr","",400,600);
 
 		RooDataSet *ds_run1_cut = new RooDataSet("ds_run1_cut","ds_run1_cut",combTree1_cut,RooArgSet(*Lb_Mass));
 		RooDataSet *ds_run2_cut = new RooDataSet("ds_run2_cut","ds_run2_cut",combTree2_cut,RooArgSet(*Lb_Mass));
@@ -641,12 +642,22 @@ void MakePlots()
 		RooDataSet *ds_run2 = new RooDataSet("ds_run2","ds_run2",combTree2,RooArgSet(*Lb_Mass));
 
 		RooRealVar mean_gaus_run1("mean_gaus_run1","Gaussian Mean",497.0,490.0,500.0,"MeV");
-		RooRealVar sigma_gaus_run1("sigma_gaus_run1","Gaussian sigma",10.0,1.0,20.0,"MeV");
+		RooRealVar sigma1_gaus_run1("sigma1_gaus_run1","Gaussian sigma1",10.0,1.0,20.0,"MeV");
+		RooRealVar sigma2_gaus_run1("sigma2_gaus_run1","Gaussian sigma2",10.0,1.0,20.0,"MeV");
 
-		RooGaussian sig_gaus_run1("sig_gaus_run1","sig",*Lb_Mass,mean_gaus_run1,sigma_gaus_run1);
+		RooGaussian sig1_gaus_run1("sig_gaus_run1","sig",*Lb_Mass,mean_gaus_run1,sigma1_gaus_run1);
+		RooGaussian sig2_gaus_run1("sig_gaus_run1","sig",*Lb_Mass,mean_gaus_run1,sigma2_gaus_run1);
 
-		RooRealVar tau_run1("tau_run1","tau_run1",-0.0007,-0.01,-0.0000001);
-		RooExponential bkg_run1("bkg_run1","Exponential bkg_run1",*Lb_Mass,tau_run1);
+		RooRealVar frac1_gaus_run1("frac1_gaus_run1","Fraction of sig1 in signal",0.5,0.0,1.0);
+		RooAddPdf sig_gaus_run1("sig_gaus_run1","Total Gaussian signal",RooArgList(sig1_gaus_run1,sig2_gaus_run1),frac1_gaus_run1);
+
+		RooRealVar c0_run1("c0_run1","c0_run1",0.,-5.,5.);
+		RooRealVar c1_run1("c1_run1","c1_run1",0.,-1.,1.);
+
+		RooChebychev bkg_run1("bkg_run1","Chebychev bkg",*Lb_Mass,RooArgSet(c0_run1,c1_run1));
+
+		// RooRealVar tau_run1("tau_run1","tau_run1",-0.0007,-0.01,-0.0000001);
+		// RooExponential bkg_run1("bkg_run1","Exponential bkg_run1",*Lb_Mass,tau_run1);
 
 		RooRealVar nsig_run1_cut("nsig_run1_cut","nsig_run1_cut",0,nentries_run1_cut);
 		RooRealVar nbkg_run1_cut("nbkg_run1_cut","nbkg_run1_cut",0,nentries_run1_cut);
@@ -658,12 +669,22 @@ void MakePlots()
 		                         RooArgList(sig_gaus_run1,bkg_run1),RooArgList(nsig_run1_cut,nbkg_run1_cut));
 
 		RooRealVar mean_gaus_run2("mean_gaus_run2","Gaussian Mean",497.0,490.0,500.0,"MeV");
-		RooRealVar sigma_gaus_run2("sigma_gaus_run2","Gaussian sigma",10.0,1.0,20.0,"MeV");
+		RooRealVar sigma1_gaus_run2("sigma1_gaus_run2","Gaussian sigma1",10.0,1.0,20.0,"MeV");
+		RooRealVar sigma2_gaus_run2("sigma2_gaus_run2","Gaussian sigma2",10.0,1.0,20.0,"MeV");
 
-		RooGaussian sig_gaus_run2("sig_gaus_run2","sig",*Lb_Mass,mean_gaus_run2,sigma_gaus_run2);
+		RooGaussian sig1_gaus_run2("sig_gaus_run2","sig",*Lb_Mass,mean_gaus_run2,sigma1_gaus_run2);
+		RooGaussian sig2_gaus_run2("sig_gaus_run2","sig",*Lb_Mass,mean_gaus_run2,sigma2_gaus_run2);
 
-		RooRealVar tau_run2("tau_run2","tau_run2",-0.0007,-0.01,-0.0000001);
-		RooExponential bkg_run2("bkg_run2","Exponential bkg_run2",*Lb_Mass,tau_run2);
+		RooRealVar frac1_gaus_run2("frac1_gaus_run2","Fraction of sig1 in signal",0.5,0.0,1.0);
+		RooAddPdf sig_gaus_run2("sig_gaus_run2","Total Gaussian signal",RooArgList(sig1_gaus_run2,sig2_gaus_run2),frac1_gaus_run2);
+
+		RooRealVar c0_run2("c0_run2","c0_run2",0.,-5.,5.);
+		RooRealVar c1_run2("c1_run2","c1_run2",0.,-1.,1.);
+
+		RooChebychev bkg_run2("bkg_run2","Chebychev bkg",*Lb_Mass,RooArgSet(c0_run2,c1_run2));
+
+		// RooRealVar tau_run2("tau_run2","tau_run2",-0.0007,-0.01,-0.0000001);
+		// RooExponential bkg_run2("bkg_run2","Exponential bkg_run2",*Lb_Mass,tau_run2);
 
 		RooRealVar nsig_run2_cut("nsig_run2_cut","nsig_run2_cut",0,nentries_run2_cut);
 		RooRealVar nbkg_run2_cut("nbkg_run2_cut","nbkg_run2_cut",0,nentries_run2_cut);
