@@ -405,6 +405,8 @@ void MakePlots()
 		list1->Add(tree1_cut);
 		list1->Add(tree2_cut);
 
+		TFile *tempFile = new TFile("tempFile.root","RECREATE");
+
 		TTree *combTree1 = TTree::MergeTrees(list1);
 		combTree1->SetName("combTree1");
 
@@ -609,6 +611,8 @@ void MakePlots()
 		TList *list2 = new TList;
 		list2->Add(tree3);
 		list2->Add(tree4);
+
+		TFile *tempFile = new TFile("tempFile.root","RECREATE");
 
 		TTree *combTree1_cut = TTree::MergeTrees(list1_cut);
 		combTree1_cut->SetName("combTree1_cut");
