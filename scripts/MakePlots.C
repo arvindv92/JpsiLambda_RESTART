@@ -11,6 +11,9 @@
 #include "RooDataSet.h"
 #include "RooKeysPdf.h"
 #include "RooPlot.h"
+#include "RooGaussian.h"
+#include "RooExponential.h"
+#include "RooAddPdf.h"
 using namespace RooFit;
 void addGraphics(TH1F *h, TString Xtitle, TString Ytitle, int iCol){
 	h->SetXTitle(Xtitle);
@@ -471,6 +474,289 @@ void MakePlots()
 
 		can_xi1->SaveAs("../plots/ANA/jpsixi_jpsilambda_run1.pdf");
 		can_xi2->SaveAs("../plots/ANA/jpsixi_jpsilambda_run2.pdf");
+	}
+
+	{
+		//J/psi Ks mass reco'd as J/psi Lambda, after BDT selection
+		TFile *file1 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsiks_cutoutks_LL_nonZeroTracks_noPID.root");
+		TTree *tree1 = (TTree*)file1->Get("MyTuple");
+		tree1->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsiks_LL_FinalBDT2_iso2_v0_noPID.root");
+
+		TFile *file2 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsiks_cutoutks_LL_ZeroTracks_noPID.root");
+		TTree *tree2 = (TTree*)file2->Get("MyTuple");
+		tree2->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsiks_zeroTracksLL_FinalBDT2_noPID.root");
+
+		TFile *file3 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_cutoutks_LL_nonZeroTracks_noPID.root");
+		TTree *tree3 = (TTree*)file3->Get("MyTuple");
+		tree3->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_LL_FinalBDT2_iso2_v0_noPID.root");
+
+		TFile *file4 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_cutoutks_LL_ZeroTracks_noPID.root");
+		TTree *tree4 = (TTree*)file4->Get("MyTuple");
+		tree4->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_zeroTracksLL_FinalBDT2_noPID.root");
+
+		// TTree *tree1_cut = (TTree*)tree1->CopyTree("BDT2 > 0.475");
+		// TTree *tree2_cut = (TTree*)tree2->CopyTree("BDT2 > 0.365");
+		//
+		// TTree *tree3_cut = (TTree*)tree3->CopyTree("BDT2 > 0.555");
+		// TTree *tree4_cut = (TTree*)tree4->CopyTree("BDT2 > 0.495");
+		//
+		// TList *list1 = new TList;
+		// list1->Add(tree1_cut);
+		// list1->Add(tree2_cut);
+		//
+		// TTree *combTree1 = TTree::MergeTrees(list1);
+		// combTree1->SetName("combTree1");
+		//
+		// TList *list2 = new TList;
+		// list2->Add(tree3_cut);
+		// list2->Add(tree4_cut);
+		//
+		// TTree *combTree2 = TTree::MergeTrees(list2);
+		// combTree2->SetName("combTree2");
+
+		// RooRealVar *Lb_Mass = new RooRealVar("Lb_DTF_M_JpsiLConstr","",5200,5800);
+		//
+		// RooDataSet *ds1 = new RooDataSet("ds1","ds1",combTree1,RooArgSet(*Lb_Mass));
+		// RooDataSet *ds2 = new RooDataSet("ds2","ds2",combTree2,RooArgSet(*Lb_Mass));
+		//
+		// RooKeysPdf *xibFit1 = new RooKeysPdf("xibFit1","xibFit1",*Lb_Mass,*ds1,RooKeysPdf::NoMirror);
+		// RooKeysPdf *xibFit2 = new RooKeysPdf("xibFit2","xibFit2",*Lb_Mass,*ds2,RooKeysPdf::NoMirror);
+		//
+		// RooPlot *frame1 = Lb_Mass->frame();
+		// ds1->plotOn(frame1);
+		// xibFit1->plotOn(frame1);
+		// frame1->GetXaxis()->SetTitle(m_jpsiL);
+		// frame1->GetYaxis()->SetTitle(bin_4);
+		//
+		// RooPlot *frame2 = Lb_Mass->frame();
+		// ds2->plotOn(frame2);
+		// xibFit2->plotOn(frame2);
+		// frame2->GetXaxis()->SetTitle(m_jpsiL);
+		// frame2->GetYaxis()->SetTitle(bin_4);
+
+		tree1->Draw("Lb_DTF_M_JpsiLConstr>>ks1(150,5200,5800)","(BDT2 > 0.475)","goff");
+		tree2->Draw("Lb_DTF_M_JpsiLConstr>>ks2(150,5200,5800)","(BDT2 > 0.365)","goff");
+		tree3->Draw("Lb_DTF_M_JpsiLConstr>>ks3(150,5200,5800)","(BDT2 > 0.555)","goff");
+		tree4->Draw("Lb_DTF_M_JpsiLConstr>>ks4(150,5200,5800)","(BDT2 > 0.495)","goff");
+
+		TH1F *ks1 = (TH1F*)gDirectory->Get("ks1");
+		TH1F *ks2 = (TH1F*)gDirectory->Get("ks2");
+		TH1F *ks3 = (TH1F*)gDirectory->Get("ks3");
+		TH1F *ks4 = (TH1F*)gDirectory->Get("ks4");
+
+		ks1->Add(ks2);
+		ks3->Add(ks4);
+
+		addGraphics(ks1,m_jpsiL,bin_4,1);
+		addGraphics(ks3,m_jpsiL,bin_4,1);
+
+		TCanvas *can_ks1 = new TCanvas();
+		ks1->Draw();
+		myLatex->DrawLatex(0.18,0.85,"LHCb Simulation");
+
+		TCanvas *can_ks2 = new TCanvas();
+		ks3->Draw();
+		myLatex->DrawLatex(0.18,0.85,"LHCb Simulation");
+
+		// TCanvas *can_xi1 = new TCanvas();
+		// frame1->Draw();
+		// myLatex->DrawLatex(0.18,0.85,"LHCb Simulation");
+		//
+		// TCanvas *can_xi2 = new TCanvas();
+		// frame2->Draw();
+		// myLatex->DrawLatex(0.18,0.85,"LHCb Simulation");
+
+		can_ks1->SaveAs("../plots/ANA/jpsiks_jpsilambda_run1.pdf");
+		can_ks2->SaveAs("../plots/ANA/jpsiks_jpsilambda_run2.pdf");
+	}
+
+	{
+		//J/psi Ks mass reco'd as J/psi Lambda, WMpipi after BDT selection
+		TFile *file1 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsiks_cutoutks_LL_nonZeroTracks_noPID.root");
+		TTree *tree1 = (TTree*)file1->Get("MyTuple");
+		tree1->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsiks_LL_FinalBDT2_iso2_v0_noPID.root");
+
+		TFile *file2 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsiks_cutoutks_LL_ZeroTracks_noPID.root");
+		TTree *tree2 = (TTree*)file2->Get("MyTuple");
+		tree2->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsiks_zeroTracksLL_FinalBDT2_noPID.root");
+
+		TFile *file3 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_cutoutks_LL_nonZeroTracks_noPID.root");
+		TTree *tree3 = (TTree*)file3->Get("MyTuple");
+		tree3->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_LL_FinalBDT2_iso2_v0_noPID.root");
+
+		TFile *file4 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_cutoutks_LL_ZeroTracks_noPID.root");
+		TTree *tree4 = (TTree*)file4->Get("MyTuple");
+		tree4->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_zeroTracksLL_FinalBDT2_noPID.root");
+
+		TTree *tree1_cut = (TTree*)tree1->CopyTree("BDT2 > 0.475");
+		TTree *tree2_cut = (TTree*)tree2->CopyTree("BDT2 > 0.365");
+
+		TTree *tree3_cut = (TTree*)tree3->CopyTree("BDT2 > 0.555");
+		TTree *tree4_cut = (TTree*)tree4->CopyTree("BDT2 > 0.495");
+
+		TList *list1_cut = new TList;
+		list1_cut->Add(tree1_cut);
+		list1_cut->Add(tree2_cut);
+
+		TList *list2_cut = new TList;
+		list2_cut->Add(tree3_cut);
+		list2_cut->Add(tree4_cut);
+
+		TList *list1 = new TList;
+		list1->Add(tree1);
+		list1->Add(tree2);
+
+		TList *list2 = new TList;
+		list2->Add(tree3);
+		list2->Add(tree4);
+
+		TTree *combTree1_cut = TTree::MergeTrees(list1_cut);
+		combTree1_cut->SetName("combTree1_cut");
+
+		TTree *combTree2_cut = TTree::MergeTrees(list2_cut);
+		combTree2_cut->SetName("combTree2_cut");
+
+		TTree *combTree1 = TTree::MergeTrees(list1);
+		combTree1->SetName("combTree1");
+
+		TTree *combTree2 = TTree::MergeTrees(list2);
+		combTree2->SetName("combTree2");
+
+		Int_t nentries_run1_cut = combTree1_cut->GetEntries();
+		Int_t nentries_run2_cut = combTree2_cut->GetEntries();
+
+		Int_t nentries_run1 = combTree1->GetEntries();
+		Int_t nentries_run2 = combTree2->GetEntries();
+
+		RooRealVar *Lb_Mass = new RooRealVar("Lb_DTF_L_WMpipi_JpsiConstr","",300,700);
+
+		RooDataSet *ds_run1_cut = new RooDataSet("ds_run1_cut","ds_run1_cut",combTree1_cut,RooArgSet(*Lb_Mass));
+		RooDataSet *ds_run2_cut = new RooDataSet("ds_run2_cut","ds_run2_cut",combTree2_cut,RooArgSet(*Lb_Mass));
+
+		RooDataSet *ds_run1 = new RooDataSet("ds_run1","ds_run1",combTree1,RooArgSet(*Lb_Mass));
+		RooDataSet *ds_run2 = new RooDataSet("ds_run2","ds_run2",combTree2,RooArgSet(*Lb_Mass));
+
+		RooRealVar mean_gaus_run1("mean_gaus_run1","Gaussian Mean",497.0,490.0,500.0,"MeV");
+		RooRealVar sigma_gaus_run1("sigma_gaus_run1","Gaussian sigma",10.0,1.0,20.0,"MeV");
+
+		RooGaussian sig_gaus_run1("sig_gaus_run1","sig",*Lb_Mass,mean_gaus_run1,sigma_gaus_run1);
+
+		RooRealVar tau_run1("tau_run1","tau_run1",-0.0007,-0.01,-0.0000001);
+		RooExponential bkg_run1("bkg_run1","Exponential bkg_run1",*Lb_Mass,tau_run1);
+
+		RooRealVar nsig_run1_cut("nsig_run1_cut","nsig_run1_cut",0,nentries_run1_cut);
+		RooRealVar nbkg_run1_cut("nbkg_run1_cut","nbkg_run1_cut",0,nentries_run1_cut);
+
+		RooRealVar nsig_run1("nsig_run1","nsig_run1",0,nentries_run1);
+		RooRealVar nbkg_run1("nbkg_run1","nbkg_run1",0,nentries_run1);
+
+		RooAddPdf model_run1_cut("model_run1_cut","Nominal Fit Model_run1",
+		                         RooArgList(sig_gaus_run1,bkg_run1),RooArgList(nsig_run1_cut,nbkg_run1_cut));
+
+		RooRealVar mean_gaus_run2("mean_gaus_run2","Gaussian Mean",497.0,490.0,500.0,"MeV");
+		RooRealVar sigma_gaus_run2("sigma_gaus_run2","Gaussian sigma",10.0,1.0,20.0,"MeV");
+
+		RooGaussian sig_gaus_run2("sig_gaus_run2","sig",*Lb_Mass,mean_gaus_run2,sigma_gaus_run2);
+
+		RooRealVar tau_run2("tau_run2","tau_run2",-0.0007,-0.01,-0.0000001);
+		RooExponential bkg_run2("bkg_run2","Exponential bkg_run2",*Lb_Mass,tau_run2);
+
+		RooRealVar nsig_run2_cut("nsig_run2_cut","nsig_run2_cut",0,nentries_run2_cut);
+		RooRealVar nbkg_run2_cut("nbkg_run2_cut","nbkg_run2_cut",0,nentries_run2_cut);
+
+		RooRealVar nsig_run2("nsig_run2","nsig_run2",0,nentries_run2);
+		RooRealVar nbkg_run2("nbkg_run2","nbkg_run2",0,nentries_run2);
+
+		RooAddPdf model_run2_cut("model_run2_cut","Nominal Fit Model_run2",
+		                         RooArgList(sig_gaus_run2,bkg_run2),RooArgList(nsig_run2_cut,nbkg_run2_cut));
+		RooAddPdf model_run1("model_run1","Nominal Fit Model_run1",
+		                     RooArgList(sig_gaus_run1,bkg_run1),RooArgList(nsig_run1,nbkg_run1));
+		RooAddPdf model_run2("model_run2","Nominal Fit Model_run2",
+		                     RooArgList(sig_gaus_run2,bkg_run2),RooArgList(nsig_run2,nbkg_run2));
+
+		model_run1_cut.fitTo(*ds_run1_cut,Extended());
+		model_run2_cut.fitTo(*ds_run2_cut,Extended());
+
+		model_run1.fitTo(*ds_run1,Extended());
+		model_run2.fitTo(*ds_run2,Extended());
+
+
+		RooPlot *frame_cut_run1 = Lb_Mass->frame();
+		frame_cut_run1->GetXaxis()->SetTitle(m_jpsiL);
+		frame_cut_run1->GetYaxis()->SetTitle(bin_4);
+		ds_run1_cut->plotOn(frame_cut_run1,Name("data_run1"));
+		model_run1_cut.plotOn(frame_cut_run1,Name("fit"));
+		model_run1_cut.plotOn(frame_cut_run1,Components(sig_gaus_run1),LineStyle(kDashed));
+		//  myModel.plotOn(frame_cut_run1,Components(sig1),LineStyle(kDotted),LineColor(kMagenta));
+		//myModel.plotOn(frame_cut_run1,Components(sig2),LineStyle(kDotted),LineColor(kMagenta));
+		model_run1_cut.plotOn(frame_cut_run1,Components(bkg_run1),LineColor(kRed));
+
+		RooPlot *frame_cut_run2 = Lb_Mass->frame();
+		frame_cut_run2->GetXaxis()->SetTitle(m_jpsiL);
+		frame_cut_run2->GetYaxis()->SetTitle(bin_4);
+		ds_run2_cut->plotOn(frame_cut_run2,Name("data_run2"));
+		model_run2_cut.plotOn(frame_cut_run2,Name("fit"));
+		model_run2_cut.plotOn(frame_cut_run2,Components(sig_gaus_run2),LineStyle(kDashed));
+		//  myModel.plotOn(frame_cut_run2,Components(sig1),LineStyle(kDotted),LineColor(kMagenta));
+		//myModel.plotOn(frame_cut_run2,Components(sig2),LineStyle(kDotted),LineColor(kMagenta));
+		model_run2_cut.plotOn(frame_cut_run2,Components(bkg_run2),LineColor(kRed));
+
+		RooPlot *frame_run1 = Lb_Mass->frame();
+		frame_run1->GetXaxis()->SetTitle(m_jpsiL);
+		frame_run1->GetYaxis()->SetTitle(bin_4);
+		ds_run1->plotOn(frame_run1,Name("data_run1"));
+		model_run1.plotOn(frame_run1,Name("fit"));
+		model_run1.plotOn(frame_run1,Components(sig_gaus_run1),LineStyle(kDashed));
+		//  myModel.plotOn(frame_run1,Components(sig1),LineStyle(kDotted),LineColor(kMagenta));
+		//myModel.plotOn(frame_run1,Components(sig2),LineStyle(kDotted),LineColor(kMagenta));
+		model_run1.plotOn(frame_run1,Components(bkg_run1),LineColor(kRed));
+
+		RooPlot *frame_run2 = Lb_Mass->frame();
+		frame_run2->GetXaxis()->SetTitle(m_jpsiL);
+		frame_run2->GetYaxis()->SetTitle(bin_4);
+		ds_run2->plotOn(frame_run2,Name("data_run2"));
+		model_run2.plotOn(frame_run2,Name("fit"));
+		model_run2.plotOn(frame_run2,Components(sig_gaus_run2),LineStyle(kDashed));
+		//  myModel.plotOn(frame_run2,Components(sig1),LineStyle(kDotted),LineColor(kMagenta));
+		//myModel.plotOn(frame_run2,Components(sig2),LineStyle(kDotted),LineColor(kMagenta));
+		model_run2.plotOn(frame_run2,Components(bkg_run2),LineColor(kRed));
+
+		// RooKeysPdf *xibFit1 = new RooKeysPdf("xibFit1","xibFit1",*Lb_Mass,*ds1,RooKeysPdf::NoMirror);
+		// RooKeysPdf *xibFit2 = new RooKeysPdf("xibFit2","xibFit2",*Lb_Mass,*ds2,RooKeysPdf::NoMirror);
+		//
+		// RooPlot *frame1 = Lb_Mass->frame();
+		// ds1->plotOn(frame1);
+		// xibFit1->plotOn(frame1);
+		// frame1->GetXaxis()->SetTitle(m_jpsiL);
+		// frame1->GetYaxis()->SetTitle(bin_4);
+		//
+		// RooPlot *frame2 = Lb_Mass->frame();
+		// ds2->plotOn(frame2);
+		// xibFit2->plotOn(frame2);
+		// frame2->GetXaxis()->SetTitle(m_jpsiL);
+		// frame2->GetYaxis()->SetTitle(bin_4);
+
+		TCanvas *ks_cut_run1 = new TCanvas();
+		frame_cut_run1->Draw();
+		myLatex->DrawLatex(0.18,0.85,"LHCb Simulation");
+
+		TCanvas *ks_cut_run2 = new TCanvas();
+		frame_cut_run2->Draw();
+		myLatex->DrawLatex(0.18,0.85,"LHCb Simulation");
+
+		ks_cut_run1->SaveAs("../plots/ANA/jpsiks_wmpipi_bdtcut_run1.pdf");
+		ks_cut_run2->SaveAs("../plots/ANA/jpsiks_wmpipi_bdtcut_run2.pdf");
+
+		TCanvas *ks_run1 = new TCanvas();
+		frame_run1->Draw();
+		myLatex->DrawLatex(0.18,0.85,"LHCb Simulation");
+
+		TCanvas *ks_run2 = new TCanvas();
+		frame_run2->Draw();
+		myLatex->DrawLatex(0.18,0.85,"LHCb Simulation");
+
+		ks_run1->SaveAs("../plots/ANA/jpsiks_wmpipi_run1.pdf");
+		ks_run2->SaveAs("../plots/ANA/jpsiks_wmpipi_run2.pdf");
 	}
 	// {
 	//      TFile *fileIn1 = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/"
