@@ -44,7 +44,7 @@ void addGraphics(TH1F *h, TString Xtitle, TString Ytitle, int iCol){
 void CompareMcData(Int_t run = 1, Int_t mcType = 0, TString option = "kinematic")
 //option = "kinematic" or "pid" or "finalBDT"
 {
-
+	gROOT->ProcessLine(".x lhcbStyle.C");
 	if(option == "kinematic")
 	{
 		const char* varNameArray[16] = {"Lb_PT","Lb_P","Lb_ETA","Jpsi_PT","Jpsi_P","Jpsi_ETA","L_PT","L_P","L_ETA","p_PT","p_P","p_ETA","pi_PT","pi_P","pi_ETA","ntracks"};
@@ -95,7 +95,6 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0, TString option = "kinematic"
 }
 void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t high, Int_t nBins, TString unit, TString option)
 {
-	gROOT->ProcessLine(".x lhcbStyle.C");
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
 	gStyle->SetOptStat(0);
