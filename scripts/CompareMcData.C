@@ -22,7 +22,7 @@ void addGraphics(TH1F *h, TString Xtitle, TString Ytitle, int iCol){
 	h->SetYTitle(Ytitle);
 	h->SetStats(kFALSE);
 	h->SetMinimum(0.1);
-	h->SetMaximum(1.1*h->GetMaximum());
+	h->SetMaximum(1.2*h->GetMaximum());
 	h->SetMinimum(0);
 	// h->SetTitleSize(0.1);
 	h->SetLineColor(iCol);
@@ -185,15 +185,29 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 		fileIn_data = TFile::Open(Form("rootFiles/dataFiles/JpsiLambda/run%d/sWeightSanity/jpsilambda_LL_sanity_withsw_noPID.root",run),"READ");
 		treeIn_data = (TTree*)fileIn_data->Get("MyTuple");
 		fileIn_mc   = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_sanity_LL_noPID.root",folder,run,part),"READ");
+		treeIn_mc = (TTree*)fileIn_mc->Get("MyTuple");
 	}
 	else if(option == "finalBDT")
 	{
 		fileIn_data = TFile::Open(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_LL_cutoutks_withsw_noPID.root",run),"READ");
 		treeIn_data = (TTree*)fileIn_data->Get("MyTuple");
+
 		fileIn_mc   = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_cutoutks_LL_noPID.root",folder,run,part),"READ");
+		treeIn_mc = (TTree*)fileIn_mc->Get("MyTuple");
+
+		if(run == 1)
+		{
+			treeIn_data->AddFriend("MyTuple","rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_iso2_v0_noPID.root");
+			treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run1/%s_LL_iso2_v0_noPID.root",folder,part));
+		}
+		else if(run == 2)
+		{
+			treeIn_data->AddFriend("MyTuple","rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_LL_iso1_v0_noPID.root");
+			treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run2/%s_LL_iso1_v0_noPID.root",folder,part));
+		}
 	}
 
-	treeIn_mc = (TTree*)fileIn_mc->Get("MyTuple");
+
 
 	// treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/gbWeights_rec.root",folder,run));
 	// treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/tauWeights_rec.root",folder,run));
@@ -225,7 +239,7 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 			dataHist->SetBinContent(i,0);
 	}
 
-	myChi2    = mcHist->Chi2Test(dataHist,"WW CHI2/NDF");
+	myChi2    = mcHist->Chi2Test(dataHist,"UW CHI2/NDF");
 	myChi2_rw = mcHist_rw->Chi2Test(dataHist,"WW CHI2/NDF");
 	// myChi2_corr = mcHist_corr->Chi2Test(dataHist,"WW CHI2/NDF");
 	// myChi2_corr_rw = mcHist_corr_rw->Chi2Test(dataHist,"WW CHI2/NDF");
