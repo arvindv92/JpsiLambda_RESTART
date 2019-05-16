@@ -280,9 +280,9 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 
 	TCanvas *c1 = new TCanvas();
 
+	dataHist->Draw("E0same");
 	mcHist->Draw("HIST");
 	mcHist_rw->Draw("HISTsame");
-	dataHist->Draw("E0same");
 
 	TLatex chi2;
 	chi2.SetTextSize(0.06);
