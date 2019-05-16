@@ -794,22 +794,22 @@ void MakePlots()
 	// }
 	{
 		// J\psi and Lambda mass distributions after all selections. Data and MC overlaid.
-		TFile *fileIn1 = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/jpsilambdaoutks_LL_nonZeroTracks_noPID.root");
+		TFile *fileIn1 = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_cutoutks_LL_nonZeroTracks_noPID.root");
 		TTree *treeIn1 = (TTree*)fileIn1->Get("MyTuple");
 
 		treeIn1->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_FinalBDT2_iso2_v0_noPID.root");
 
-		TFile *fileIn2 = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run2/jpsilambdaoutks_LL_nonZeroTracks_noPID.root");
+		TFile *fileIn2 = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL_nonZeroTracks_noPID.root");
 		TTree *treeIn2 = (TTree*)fileIn2->Get("MyTuple");
 
 		treeIn2->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_LL_FinalBDT2_iso1_v0_noPID.root");
 
-		TFile *fileIn1_zero = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/jpsilambdaoutks_LL_ZeroTracks_noPID.root");
+		TFile *fileIn1_zero = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_cutoutks_LL_ZeroTracks_noPID.root");
 		TTree *treeIn1_zero = (TTree*)fileIn1_zero->Get("MyTuple");
 
 		treeIn1_zero->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_zeroTracksLL_FinalBDT2_noPID.root");
 
-		TFile *fileIn2_zero = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run2/jpsilambdaoutks_LL_ZeroTracks_noPID.root");
+		TFile *fileIn2_zero = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL_ZeroTracks_noPID.root");
 		TTree *treeIn2_zero = (TTree*)fileIn2_zero->Get("MyTuple");
 
 		treeIn2_zero->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_zeroTracksLL_FinalBDT2_noPID.root");
@@ -848,22 +848,22 @@ void MakePlots()
 		addGraphics(lambda1,"m_{p#pi}[MeV/#it{c}^{2}]",bin_half,1);
 		addGraphics(lambda2,"m_{p#pi}[MeV/#it{c}^{2}]",bin_half,1);
 
-		TFile *mcfileIn1 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsilambdaoutks_LL_nonZeroTracks_noPID.root");
+		TFile *mcfileIn1 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsilambda_cutoutks_LL_nonZeroTracks_noPID.root");
 		TTree *mcTreeIn1 = (TTree*)mcfileIn1->Get("MyTuple");
 
 		mcTreeIn1->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsilambda_LL_FinalBDT2_iso2_v0_noPID.root");
 
-		TFile *mcfileIn2 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsilambdaoutks_LL_nonZeroTracks_noPID.root");
+		TFile *mcfileIn2 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsilambda_cutoutks_LL_nonZeroTracks_noPID.root");
 		TTree *mcTreeIn2 = (TTree*)mcfileIn2->Get("MyTuple");
 
 		mcTreeIn2->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsilambda_LL_FinalBDT2_iso1_v0_noPID.root");
 
-		TFile *mcfileIn1_zero = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsilambdaoutks_LL_ZeroTracks_noPID.root");
+		TFile *mcfileIn1_zero = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsilambda_cutoutks_LL_ZeroTracks_noPID.root");
 		TTree *mcTreeIn1_zero = (TTree*)mcfileIn1_zero->Get("MyTuple");
 
 		mcTreeIn1_zero->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsilambda_zeroTracksLL_FinalBDT2_noPID.root");
 
-		TFile *mcfileIn2_zero = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsilambdaoutks_LL_ZeroTracks_noPID.root");
+		TFile *mcfileIn2_zero = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsilambda_cutoutks_LL_ZeroTracks_noPID.root");
 		TTree *mcTreeIn2_zero = (TTree*)mcfileIn2_zero->Get("MyTuple");
 
 		mcTreeIn2_zero->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsilambda_zeroTracksLL_FinalBDT2_noPID.root");
