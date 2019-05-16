@@ -12,8 +12,13 @@ from sklearn.metrics import roc_auc_score
 
 run = int(sys.argv[1])
 
-columns = ['Lb_P', 'Lb_PT', 'Lb_ETA', 'Jpsi_P', 'Jpsi_PT', 'Jpsi_ETA', 'L_P',
-           'L_PT', 'L_ETA', 'p_P', 'p_PT', 'p_ETA', 'pi_P', 'pi_PT', 'pi_ETA',
+# columns = ['Lb_P', 'Lb_PT', 'Lb_ETA', 'Jpsi_P', 'Jpsi_PT', 'Jpsi_ETA', 'L_P',
+#            'L_PT', 'L_ETA', 'p_P', 'p_PT', 'p_ETA', 'pi_P', 'pi_PT', 'pi_ETA',
+#            'SW']
+
+columns = ['Lb_P', 'Lb_PT', 'Jpsi_P', 'Jpsi_PT', 'L_P',
+           'L_PT', 'p_P', 'p_PT', 'p_ETA', 'pi_P', 'pi_PT',
+           'p_ProbNNghost', 'pi_ProbNNghost', 'ntracks',
            'SW']
 
 mcPath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run{}/'.format(run)
@@ -83,7 +88,7 @@ def draw_distributions(myoriginal, mytarget, new_original_weights, targetwts):
         # print('KS over ', column, ' = ', myks)
     plt.draw()
     plt.figure(figsize=[15, 7])
-    for id, column in enumerate(columns[12:15], 1):
+    for id, column in enumerate(columns[12:13], 1):
         xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
                                 [0.01, 99.99])
         plt.subplot(2, 3, id)
@@ -129,10 +134,13 @@ avgks_orig = draw_distributions(original.iloc[:, :-1], target.iloc[:, :-1],
 #                                         gb_args={'subsample': 0.2,
 #                                                  'random_state': 42})
 
+# reweighter = reweight.GBReweighter(n_estimators=50, learning_rate=0.1,
+#                                    max_depth=3, min_samples_leaf=100,
+#                                    gb_args={'subsample': 0.5,
+#                                             'random_state': 42})
 reweighter = reweight.GBReweighter(n_estimators=50, learning_rate=0.1,
                                    max_depth=3, min_samples_leaf=100,
-                                   gb_args={'subsample': 0.5,
-                                            'random_state': 42})
+                                   gb_args={'subsample': 0.5})
 
 # reweighter.fit(original_train.iloc[:, :-1], target_train.iloc[:, :-1],
 #                original_weights_train, target_weights_train)
@@ -154,11 +162,11 @@ avgks_rw = draw_distributions(original.iloc[:, :-1], target.iloc[:, :-1],
                               gb_weights, target_weights)
 
 root_numpy.array2root(gb_weights_noTM,
-                      mcPath + 'jpsilambda_weighted2.root',
+                      mcPath + 'jpsilambda_weighted_temp.root',
                       treename='MyTuple', mode='recreate')
 
 # *******Exporting RW formula for re-use********
-with open(mcPath + 'gb_wts2.pkl', 'w') as f:
+with open(mcPath + 'gb_wts_temp.pkl', 'w') as f:
     pickle.dump(reweighter, f)
 # **********************************************
 
