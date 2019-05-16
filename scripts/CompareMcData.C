@@ -189,7 +189,7 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 	}
 	else if(option == "finalBDT")
 	{
-		fileIn_data = TFile::Open(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_LL_cutoutks_withsw_noPID.root",run),"READ");
+		fileIn_data = TFile::Open(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_LL_withsw_noPID.root",run),"READ");
 		treeIn_data = (TTree*)fileIn_data->Get("MyTuple");
 
 		fileIn_mc   = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_cutoutks_LL_noPID.root",folder,run,part),"READ");
