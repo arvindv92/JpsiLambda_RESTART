@@ -868,17 +868,17 @@ void MakePlots()
 
 		mcTreeIn2_zero->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run2/jpsilambda_zeroTracksLL_FinalBDT2_noPID.root");
 
-		mcTreeIn1->Draw("Jpsi_M>>jpsi1(110,3040,3150)","gb_wts*wt_tau*(BDT2 > 0.475)","goff");
-		mcTreeIn2->Draw("Jpsi_M>>jpsi2(110,3040,3150)","gb_wts*wt_tau*(BDT2 > 0.555)","goff");
+		mcTreeIn1->Draw("Jpsi_M>>mcjpsi1(110,3040,3150)","gb_wts*wt_tau*(BDT2 > 0.475)","goff");
+		mcTreeIn2->Draw("Jpsi_M>>mcjpsi2(110,3040,3150)","gb_wts*wt_tau*(BDT2 > 0.555)","goff");
 
-		mcTreeIn1_zero->Draw("Jpsi_M>>jpsi3(110,3040,3150)","gb_wts*wt_tau*(BDT2 > 0.365)","goff");
-		mcTreeIn2_zero->Draw("Jpsi_M>>jpsi4(110,3040,3150)","gb_wts*wt_tau*(BDT2 > 0.495)","goff");
+		mcTreeIn1_zero->Draw("Jpsi_M>>mcjpsi3(110,3040,3150)","gb_wts*wt_tau*(BDT2 > 0.365)","goff");
+		mcTreeIn2_zero->Draw("Jpsi_M>>mcjpsi4(110,3040,3150)","gb_wts*wt_tau*(BDT2 > 0.495)","goff");
 
-		mcTreeIn1->Draw("L_M>>lambda1(50,1105,1130)","gb_wts*wt_tau*(BDT2 > 0.475)","goff");
-		mcTreeIn2->Draw("L_M>>lambda2(50,1105,1130)","gb_wts*wt_tau*(BDT2 > 0.555)","goff");
+		mcTreeIn1->Draw("L_M>>mclambda1(50,1105,1130)","gb_wts*wt_tau*(BDT2 > 0.475)","goff");
+		mcTreeIn2->Draw("L_M>>mclambda2(50,1105,1130)","gb_wts*wt_tau*(BDT2 > 0.555)","goff");
 
-		mcTreeIn1_zero->Draw("L_M>>lambda3(50,1105,1130)","gb_wts*wt_tau*(BDT2 > 0.365)","goff");
-		mcTreeIn2_zero->Draw("L_M>>lambda4(50,1105,1130)","gb_wts*wt_tau*(BDT2 > 0.495)","goff");
+		mcTreeIn1_zero->Draw("L_M>>mclambda3(50,1105,1130)","gb_wts*wt_tau*(BDT2 > 0.365)","goff");
+		mcTreeIn2_zero->Draw("L_M>>mclambda4(50,1105,1130)","gb_wts*wt_tau*(BDT2 > 0.495)","goff");
 
 		TH1F *mcjpsi1 = (TH1F*)gDirectory->Get("mcjpsi1");
 		TH1F *mcjpsi2 = (TH1F*)gDirectory->Get("mcjpsi2");
