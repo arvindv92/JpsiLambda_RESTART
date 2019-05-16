@@ -78,9 +78,9 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0, TString option = "kinematic"
 	}
 	else if(option == "finalBDT")
 	{
-		const char* varNameArray[20] = {"log10((Lb_ConsLb_chi2)/(Lb_ConsLb_nDOF))","log10(Lb_MINIPCHI2)","log10(acos(Lb_DIRA_OWNPV))","log10(Lb_FD_OWNPV)",
+		const char* varNameArray[20] = {"log10((Lb_ConsLb_chi2))","log10(Lb_MINIPCHI2)","log10(acos(Lb_DIRA_OWNPV))","log10(Lb_FD_OWNPV)",
 			                        "log10(Jpsi_MINIPCHI2)","log10(Jpsi_M)","log10(L_FDCHI2_ORIVX)","log10(acos(L_DIRA_ORIVX))","log10(L_FD_ORIVX)","log10(acos(L_DIRA_OWNPV))",
-			                        "L_dm","log10(L_MINIPCHI2)","p_ProbNNghost","log10(p_PT)","p_ProbNNp","pi_ProbNNghost","log10(pi_MINIPCHI2)","log10(pi_PT)","BDTkMin_v0"};
+			                        "L_dm","log10(L_MINIPCHI2)","p_MINIPCHI2","p_ProbNNghost","log10(p_PT)","p_ProbNNp","pi_ProbNNghost","log10(pi_MINIPCHI2)","log10(pi_PT)","BDTkMin_v0"};
 		Float_t lowArray[20]         = {-1,-4,-5,0,-2,3.48,-2,-6,-1,-5,0,-2,0,0,2,0,0,1,0.5,-1};
 		Float_t highArray[20]        = {3,6,0,3,5,3.5,6,0,4,0,30,6,5,1,4,1,1,5,3.5,1};
 		Float_t nBinArray[20]        = {50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50};
@@ -239,7 +239,7 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 			dataHist->SetBinContent(i,0);
 	}
 
-	myChi2    = mcHist->Chi2Test(dataHist,"UW CHI2/NDF");
+	myChi2    = mcHist->Chi2Test(dataHist,"UW CHI2/NDF NORM");
 	myChi2_rw = mcHist_rw->Chi2Test(dataHist,"WW CHI2/NDF");
 	// myChi2_corr = mcHist_corr->Chi2Test(dataHist,"WW CHI2/NDF");
 	// myChi2_corr_rw = mcHist_corr_rw->Chi2Test(dataHist,"WW CHI2/NDF");
