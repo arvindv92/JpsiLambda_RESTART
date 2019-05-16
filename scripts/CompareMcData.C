@@ -23,6 +23,7 @@ void addGraphics(TH1F *h, TString Xtitle, TString Ytitle, int iCol){
 	h->SetStats(kFALSE);
 	h->SetMinimum(0.1);
 	h->SetMaximum(1.1*h->GetMaximum());
+	h->SetMinimum(0);
 	// h->SetTitleSize(0.1);
 	h->SetLineColor(iCol);
 	h->SetMarkerColor(iCol);
