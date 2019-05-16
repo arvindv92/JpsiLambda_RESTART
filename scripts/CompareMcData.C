@@ -198,12 +198,12 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 		if(run == 1)
 		{
 			treeIn_data->AddFriend("MyTuple","rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LLsig_iso2_v0_noPID.root");
-			treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run1/%s_LLsig_iso2_v0_noPID.root",folder,part));
+			treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run1/%s_LL_iso2_v0_noPID.root",folder,part));
 		}
 		else if(run == 2)
 		{
 			treeIn_data->AddFriend("MyTuple","rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_LLsig_iso1_v0_noPID.root");
-			treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run2/%s_LLsig_iso1_v0_noPID.root",folder,part));
+			treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run2/%s_LL_iso1_v0_noPID.root",folder,part));
 		}
 	}
 
