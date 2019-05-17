@@ -100,9 +100,9 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0, TString option = "kinematic"
 	else if(option == "pid")
 	{
 		const char* varNameArray[2] = {"p_ProbNNp","p_PIDp"};
-		Float_t lowArray[2]         = {0.0,-20.0};
+		Float_t lowArray[2]         = {0.5,-20.0};
 		Float_t highArray[2]        = {1.0,100.0};
-		Float_t nBinArray[2]        = {50,50};
+		Float_t nBinArray[2]        = {25,50};
 		TString units[2]            = {"",""};
 
 		TCanvas *canArray[2];
@@ -403,12 +403,18 @@ TCanvas* routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_
 
 	TCanvas *c1 = new TCanvas(varName,"",600,400);
 
-	dataHist->Draw("E0");
-	mcHist->Draw("HISTsame");
-	mcHist_rw->Draw("HISTsame");
 	if(!strncmp(varName,"p_PIDp",6) || !strncmp(varName,"p_ProbNNp",9))
 	{
 		mcHist_uncorr->Draw("HISTsame");
+		dataHist->Draw("E0");
+		mcHist->Draw("HISTsame");
+		mcHist_rw->Draw("HISTsame");
+	}
+	else
+	{
+		dataHist->Draw("E0");
+		mcHist->Draw("HISTsame");
+		mcHist_rw->Draw("HISTsame");
 	}
 	TLatex chi2;
 	chi2.SetTextSize(0.06);
@@ -422,7 +428,7 @@ TCanvas* routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_
 	{
 		TLatex chi2_uncorr;
 		chi2_uncorr.SetTextSize(0.06);
-		chi2_uncorr.DrawLatexNDC(.65,.65,Form("RW #chi^{2}/ndf = %.1f",myChi2_uncorr));
+		chi2_uncorr.DrawLatexNDC(.65,.65,Form("Uncorr #chi^{2}/ndf = %.1f",myChi2_uncorr));
 	}
 	return c1;
 
