@@ -398,7 +398,7 @@ TCanvas* routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_
 	addGraphics(mcHist_rw,Xtit,"Candidates(normalized)",2);
 	if(!strncmp(varName,"p_PIDp",6) || !strncmp(varName,"p_ProbNNp",9))
 	{
-		addGraphics(mcHist_uncorr,Xtit,"Candidates(normalized)",6);
+		addGraphics(mcHist_uncorr,Xtit,"Candidates(normalized)",8);
 	}
 
 	TCanvas *c1 = new TCanvas(varName,"",600,400);
