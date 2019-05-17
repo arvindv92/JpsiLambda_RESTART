@@ -13,7 +13,8 @@
 using namespace std;
 //Compare sWeighted data weight generated MC
 
-void routine(Int_t run = 1, Int_t mcType = 0,const char *varName = "",Float_t low = 0.0, Float_t high = 0.0, Int_t nBins = 50, TString unit = "", TString option = "kinematic");
+TCanvas* routine(Int_t run = 1, Int_t mcType = 0,const char *varName = "",Float_t low = 0.0,
+                 Float_t high = 0.0, Int_t nBins = 50, TString unit = "", TString option = "kinematic");
 
 void addGraphics(TH1F *h, TString Xtitle, TString Ytitle, int iCol){
 	h->SetXTitle(Xtitle);
@@ -57,12 +58,43 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0, TString option = "kinematic"
 		TString units[16]            = {"MeV/#it{c}^{2}","MeV/#it{c}^{2}","","MeV/#it{c}^{2}","MeV/#it{c}^{2}","","MeV/#it{c}^{2}","MeV/#it{c}^{2}","","MeV/#it{c}^{2}","MeV/#it{c}^{2}","",
 			                        "MeV/#it{c}^{2}","MeV/#it{c}^{2}","",""};
 
+		TCanvas *canArray[16];
+
 		for(Int_t i=0; i<16; i++)
 		{
 			cout<<"********"<<endl;
 			cout<<"VARNAME = "<<varNameArray[i]<<endl;
-			routine(run,mcType,varNameArray[i],lowArray[i],highArray[i],nBinArray[i],units[i],option);
+			canArray[i] = routine(run,mcType,varNameArray[i],lowArray[i],highArray[i],nBinArray[i],units[i],option);
 		}
+
+		TCanvas *c1 = new TCanvas("c1","",1200,1200);
+		c1->Divide(2,3);
+		TCanvas *c2 = new TCanvas("c2","",1200,1200);
+		c2->Divide(2,3);
+		TCanvas *c3 = new TCanvas("c3","",1200,800);
+		c3->Divide(2,2);
+
+		for(Int_t i=0; i<6; i++)
+		{
+			c1->cd(i+1);
+			canArray[i]->DrawClonePad();
+		}
+		for(Int_t i=6; i<12; i++)
+		{
+			c2->cd(i-5);
+			canArray[i]->DrawClonePad();
+		}
+		for(Int_t i=12; i<16; i++)
+		{
+			c3->cd(i-11);
+			canArray[i]->DrawClonePad();
+		}
+
+		gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+		c1->SaveAs("plots/ANA/MC_Data_kinematic_page1.pdf");
+		c2->SaveAs("plots/ANA/MC_Data_kinematic_page2.pdf");
+		c3->SaveAs("plots/ANA/MC_Data_kinematic_page3.pdf");
+
 	}
 	else if(option == "pid")
 	{
@@ -71,12 +103,26 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0, TString option = "kinematic"
 		Float_t highArray[2]        = {1.0,100.0};
 		Float_t nBinArray[2]        = {50,50};
 		TString units[2]            = {"",""};
+
+		TCanvas *canArray[2];
 		for(Int_t i=0; i<2; i++)
 		{
 			cout<<"********"<<endl;
 			cout<<"VARNAME = "<<varNameArray[i]<<endl;
-			routine(run,mcType,varNameArray[i],lowArray[i],highArray[i],nBinArray[i],units[i],option);
+			canArray[i] = routine(run,mcType,varNameArray[i],lowArray[i],highArray[i],nBinArray[i],units[i],option);
 		}
+
+		TCanvas *c1 = new TCanvas("c1","",1200,400);
+		c1->Divide(2,1);
+
+		for(Int_t i=0; i<2; i++)
+		{
+			c1->cd(i+1);
+			canArray[i]->DrawClonePad();
+		}
+
+		gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+		c1->SaveAs("plots/ANA/MC_Data_pid_page1.pdf");
 	}
 	else if(option == "finalBDT")
 	{
@@ -90,19 +136,56 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0, TString option = "kinematic"
 		Float_t nBinArray[20]        = {50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50};
 		TString units[20]            = {"","","","mm","","MeV/#it{c}^{2}","","","mm","","MeV/#it{c}^{2}","","","","MeV/#it{c}^{2}","","","","MeV/#it{c}^{2}",""};
 
+		TCanvas *canArray[20];
 		for(Int_t i=0; i<20; i++)
 		{
 			cout<<"********"<<endl;
 			cout<<"VARNAME = "<<varNameArray[i]<<endl;
-			routine(run,mcType,varNameArray[i],lowArray[i],highArray[i],nBinArray[i],units[i],option);
+			canArray[i] = routine(run,mcType,varNameArray[i],lowArray[i],highArray[i],nBinArray[i],units[i],option);
 		}
+
+		TCanvas *c1 = new TCanvas("c1","",1200,1200);
+		c1->Divide(2,3);
+		TCanvas *c2 = new TCanvas("c2","",1200,1200);
+		c2->Divide(2,3);
+		TCanvas *c3 = new TCanvas("c3","",1200,1200);
+		c3->Divide(2,3);
+		TCanvas *c4 = new TCanvas("c4","",1200,400);
+		c4->Divide(2,1);
+
+		for(Int_t i=0; i<6; i++)
+		{
+			c1->cd(i+1);
+			canArray[i]->DrawClonePad();
+		}
+		for(Int_t i=6; i<12; i++)
+		{
+			c2->cd(i-5);
+			canArray[i]->DrawClonePad();
+		}
+		for(Int_t i=12; i<18; i++)
+		{
+			c3->cd(i-11);
+			canArray[i]->DrawClonePad();
+		}
+		for(Int_t i=18; i<20; i++)
+		{
+			c4->cd(i-17);
+			canArray[i]->DrawClonePad();
+		}
+
+		gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+		c1->SaveAs("plots/ANA/MC_Data_finalBDT_page1.pdf");
+		c2->SaveAs("plots/ANA/MC_Data_finalBDT_page2.pdf");
+		c3->SaveAs("plots/ANA/MC_Data_finalBDT_page3.pdf");
+		c4->SaveAs("plots/ANA/MC_Data_finalBDT_page4.pdf");
 	}
 }
-void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t high, Int_t nBins, TString unit, TString option)
+TCanvas* routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t high, Int_t nBins, TString unit, TString option)
 {
+	gROOT->SetBatch(kTRUE);
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
-
-	gStyle->SetOptStat(0);
+	// gStyle->SetOptStat(0);
 
 	TFile *fileIn_data = nullptr, *fileIn_mc = nullptr;
 	TTree *treeIn_data = nullptr, *treeIn_mc = nullptr, *treeIn_mcgen = nullptr;
@@ -297,7 +380,7 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 	addGraphics(mcHist,Xtit,"Candidates(normalized)",4);
 	addGraphics(mcHist_rw,Xtit,"Candidates(normalized)",2);
 
-	TCanvas *c1 = new TCanvas();
+	TCanvas *c1 = new TCanvas(varName,"",600,400);
 
 	dataHist->Draw("E0");
 	mcHist->Draw("HISTsame");
@@ -310,6 +393,11 @@ void routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t hi
 	TLatex chi2_rw;
 	chi2_rw.SetTextSize(0.06);
 	chi2_rw.DrawLatexNDC(.6,.75,Form("RW #chi^{2}/ndf = %.3f",myChi2_rw));
+
+	return c1;
+
+	gROOT->SetBatch(kFALSE);
+
 	// c1->cd(2);
 
 	// mcHist_rw->Draw("HIST");
