@@ -405,8 +405,8 @@ TCanvas* routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_
 
 	if(!strncmp(varName,"p_PIDp",6) || !strncmp(varName,"p_ProbNNp",9))
 	{
-		mcHist_uncorr->Draw("HISTsame");
-		dataHist->Draw("E0");
+		mcHist_uncorr->Draw("HIST");
+		dataHist->Draw("E0same");
 		mcHist->Draw("HISTsame");
 		mcHist_rw->Draw("HISTsame");
 	}
