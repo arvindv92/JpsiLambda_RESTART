@@ -49,24 +49,25 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0, TString option = "kinematic"
 	gROOT->ProcessLine(".x lhcbStyle.C");
 	if(option == "kinematic")
 	{
-		const char* varNameArray[16] = {"Lb_PT","Lb_P","Lb_ETA","Jpsi_PT","Jpsi_P",
+		const char* varNameArray[15] = {"Lb_PT","Lb_P","Lb_ETA","Jpsi_PT","Jpsi_P",
 			                        "Jpsi_ETA","L_PT","L_P","L_ETA","p_PT","p_P",
-			                        "p_ETA","pi_PT","pi_P","pi_ETA","ntracks"};
-		Float_t lowArray[16]         = {0.0,0.0,2.0,0.0,0.0,1.5,0.0,0.0,1.5,0.0,0.0,1.5,0.0,0.0,1.5,0};
-		Float_t highArray[16]        = {20000,300000,6.0,20000,300000,6.5,15000,200000,5.5,10000,100000,5.5,3000,50000,5.5,500};
-		Float_t nBinArray[16]        = {50,50,20,50,50,20,50,50,20,50,50,20,50,50,20,25};
-		TString units[16]            = {"MeV/#it{c}^{2}","MeV/#it{c}^{2}","","MeV/#it{c}^{2}","MeV/#it{c}^{2}","","MeV/#it{c}^{2}","MeV/#it{c}^{2}","","MeV/#it{c}^{2}","MeV/#it{c}^{2}","",
-			                        "MeV/#it{c}^{2}","MeV/#it{c}^{2}","",""};
+			                        "p_ETA","pi_PT","pi_P","pi_ETA"};
+		Float_t lowArray[15]         = {0.0,0.0,2.0,0.0,0.0,1.5,0.0,0.0,1.5,0.0,0.0,1.5,0.0,0.0,1.5};
+		Float_t highArray[15]        = {20000,300000,6.0,20000,300000,6.5,15000,200000,5.5,10000,100000,5.5,3000,50000,5.5};
+		Float_t nBinArray[15]        = {50,50,20,50,50,20,50,50,20,50,50,20,50,50,20};
+		TString units[15]            = {"MeV/#it{c}^{2}","MeV/#it{c}^{2}","","MeV/#it{c}^{2}",
+			                        "MeV/#it{c}^{2}","","MeV/#it{c}^{2}","MeV/#it{c}^{2}","",
+			                        "MeV/#it{c}^{2}","MeV/#it{c}^{2}","","MeV/#it{c}^{2}","MeV/#it{c}^{2}",""};
 
-		TCanvas *canArray[16];
+		TCanvas *canArray[15];
 
-		for(Int_t i=0; i<16; i++)
+		for(Int_t i=0; i<15; i++)
 		{
 			cout<<"********"<<endl;
 			cout<<"VARNAME = "<<varNameArray[i]<<endl;
 			canArray[i] = routine(run,mcType,varNameArray[i],lowArray[i],highArray[i],nBinArray[i],units[i],option);
 		}
-
+		gROOT->SetBatch(kFALSE);
 		TCanvas *c1 = new TCanvas("c1","",1200,1200);
 		c1->Divide(2,3);
 		TCanvas *c2 = new TCanvas("c2","",1200,1200);
@@ -84,7 +85,7 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0, TString option = "kinematic"
 			c2->cd(i-5);
 			canArray[i]->DrawClonePad();
 		}
-		for(Int_t i=12; i<16; i++)
+		for(Int_t i=12; i<15; i++)
 		{
 			c3->cd(i-11);
 			canArray[i]->DrawClonePad();
@@ -111,7 +112,7 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0, TString option = "kinematic"
 			cout<<"VARNAME = "<<varNameArray[i]<<endl;
 			canArray[i] = routine(run,mcType,varNameArray[i],lowArray[i],highArray[i],nBinArray[i],units[i],option);
 		}
-
+		gROOT->SetBatch(kFALSE);
 		TCanvas *c1 = new TCanvas("c1","",1200,400);
 		c1->Divide(2,1);
 
@@ -143,6 +144,7 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0, TString option = "kinematic"
 			cout<<"VARNAME = "<<varNameArray[i]<<endl;
 			canArray[i] = routine(run,mcType,varNameArray[i],lowArray[i],highArray[i],nBinArray[i],units[i],option);
 		}
+		gROOT->SetBatch(kFALSE);
 
 		TCanvas *c1 = new TCanvas("c1","",1200,1200);
 		c1->Divide(2,3);
