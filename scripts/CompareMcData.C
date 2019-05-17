@@ -390,11 +390,11 @@ TCanvas* routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_
 
 	TLatex chi2;
 	chi2.SetTextSize(0.06);
-	chi2.DrawLatexNDC(.6,.85,Form("Orig. #chi^{2}/ndf = %.3f",myChi2));
+	chi2.DrawLatexNDC(.65,.85,Form("Orig. #chi^{2}/ndf = %.3f",myChi2));
 
 	TLatex chi2_rw;
 	chi2_rw.SetTextSize(0.06);
-	chi2_rw.DrawLatexNDC(.6,.75,Form("RW #chi^{2}/ndf = %.3f",myChi2_rw));
+	chi2_rw.DrawLatexNDC(.65,.75,Form("RW #chi^{2}/ndf = %.3f",myChi2_rw));
 
 	return c1;
 
