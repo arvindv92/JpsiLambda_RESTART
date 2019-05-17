@@ -92,9 +92,9 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0, TString option = "kinematic"
 		}
 
 		gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
-		c1->SaveAs("plots/ANA/MC_Data_kinematic_page1.pdf");
-		c2->SaveAs("plots/ANA/MC_Data_kinematic_page2.pdf");
-		c3->SaveAs("plots/ANA/MC_Data_kinematic_page3.pdf");
+		c1->SaveAs(Form("plots/ANA/MC_Data_kinematic_run%d_page1.pdf",run));
+		c2->SaveAs(Form("plots/ANA/MC_Data_kinematic_run%d_page2.pdf",run));
+		c3->SaveAs(Form("plots/ANA/MC_Data_kinematic_run%d_page3.pdf",run));
 
 	}
 	else if(option == "pid")
@@ -123,7 +123,7 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0, TString option = "kinematic"
 		}
 
 		gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
-		c1->SaveAs("plots/ANA/MC_Data_pid_page1.pdf");
+		c1->SaveAs(Form("plots/ANA/MC_Data_pid_run%d_page1.pdf",run));
 	}
 	else if(option == "finalBDT")
 	{
@@ -177,10 +177,10 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0, TString option = "kinematic"
 		}
 
 		gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
-		c1->SaveAs("plots/ANA/MC_Data_finalBDT_page1.pdf");
-		c2->SaveAs("plots/ANA/MC_Data_finalBDT_page2.pdf");
-		c3->SaveAs("plots/ANA/MC_Data_finalBDT_page3.pdf");
-		c4->SaveAs("plots/ANA/MC_Data_finalBDT_page4.pdf");
+		c1->SaveAs(Form("plots/ANA/MC_Data_finalBDT_run%d_page1.pdf",run));
+		c2->SaveAs(Form("plots/ANA/MC_Data_finalBDT_run%d_page2.pdf",run));
+		c3->SaveAs(Form("plots/ANA/MC_Data_finalBDT_run%d_page3.pdf",run));
+		c4->SaveAs(Form("plots/ANA/MC_Data_finalBDT_run%d_page4.pdf",run));
 	}
 }
 TCanvas* routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t high, Int_t nBins, TString unit, TString option)
@@ -377,6 +377,9 @@ TCanvas* routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_
 		Xtit = TString(varName)+"["+unit+"]";
 	else
 		Xtit = TString(varName);
+
+	if(!strncmp(varName,"BDTkMin_v0",10))
+		Xtit = "isolation BDT";
 
 	addGraphics(dataHist,Xtit,"Candidates(normalized)",1);
 	addGraphics(mcHist,Xtit,"Candidates(normalized)",4);
