@@ -1027,6 +1027,10 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 
 	c_run2->Update();
 
+	c_run1->SaveAs("../plots/ANA/finalFit_run1_zoomY.pdf");
+	c_run2->SaveAs("../plots/ANA/finalFit_run2_zoomY.pdf");
+
+
 	// // Pull distribution
 	// RooPlot *frame_run2x2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),low,high,nbins);
 	// // RooPlot *framex2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")), low,5800,100);
