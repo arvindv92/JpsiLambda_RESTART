@@ -791,8 +791,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 	// if(bkgType == 0)
 	// {
 	cout<<"*****UING EXPONENTIAL BKG SHAPE*****"<<endl;
-	w.factory("Exponential::Bkg_Run1(Lb_DTF_M_JpsiLConstr,tau_Run1[-1e-4,-1e-2,-1e-8])");
-	w.factory("Exponential::Bkg_Run2(Lb_DTF_M_JpsiLConstr,tau_Run2[-1e-4,-1e-2,-1e-8])");
+	w.factory("Exponential::Bkg_Run1(Lb_DTF_M_JpsiLConstr,tau_Run1[-1e-6,-1e-5,-1e-10])");
+	w.factory("Exponential::Bkg_Run2(Lb_DTF_M_JpsiLConstr,tau_Run2[-1e-6,-1e-5,-1e-10])");
 	// }
 	// else if(bkgType == 1)
 	// {
