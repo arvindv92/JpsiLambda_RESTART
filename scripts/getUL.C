@@ -918,8 +918,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 
 	// c_run1->Modified();
 
-	auto legend_run1 = new TLegend(0.7,0.7,0.9,0.9);
-	legend_run1->SetTextSize(0.06);
+	auto legend_run1 = new TLegend(0.65,0.7,0.85,0.9);
+	legend_run1->SetTextSize(0.045);
 	legend_run1->AddEntry("data_Run1","Data","lp");
 	legend_run1->AddEntry("fit_Run1","Total Fit","l");
 	legend_run1->AddEntry("lb_Run1","J/#psi #Lambda shape","l");
@@ -1011,15 +1011,15 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 	frame_run2->Draw();
 	// c_run2->cd();
 
-	auto legend_run2 = new TLegend(0.7,0.7,0.9,0.9);
-	legend_run2->SetTextSize(0.06);
+	auto legend_run2 = new TLegend(0.65,0.7,0.85,0.9);
+	legend_run2->SetTextSize(0.045);
 	legend_run2->AddEntry("data_Run2","Data","lp");
 	legend_run2->AddEntry("fit_Run2","Total Fit","l");
 	legend_run2->AddEntry("lb_Run2","J/#psi #Lambda shape","l");
 	legend_run2->AddEntry("bkg_Run2","Comb. Bkg. shape","l");
 	legend_run2->Draw("same");
 
-	myLatex->DrawLatex(0.18,0.85,"LHCb Run 1");
+	myLatex->DrawLatex(0.18,0.85,"LHCb Run 2");
 
 	// TLatex l_run2;
 	// l_run2.SetTextSize(0.025);
