@@ -850,7 +850,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 
 	//************************DO THE FIT***********************
 	w.var("Lb_DTF_M_JpsiLConstr")->setRange("ref",5500,5800);
-	RooFitResult *res = simPdf.fitTo(*combData,Extended(), Save(), Hesse(false), Strategy(1), SumCoefRange("ref"));
+	RooFitResult *res = simPdf.fitTo(*combData,Extended(), Save(), Hesse(false), Strategy(1), SumCoefRange("ref"),Range("ref"));
 	//*******************************************************************
 
 	//*********************PLOTTING STUFF*********************************************
