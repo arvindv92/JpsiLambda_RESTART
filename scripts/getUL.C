@@ -62,6 +62,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 		gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/UpperLimit/config%d_tight.txt",config),"w");
 
 	gSystem->Load("RooHypatia2_cpp.so"); //Load library for Hypatia shape
+	gROOT->ProcessLine(".x lhcbStyle.C");
 
 	Float_t bdtCut_nonZero[2] = {0.0,0.0};
 	Float_t bdtCut_Zero[2]    = {0.0,0.0};
@@ -777,7 +778,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 
 	w.factory("RooHypatia2::Lb_Run1(Lb_DTF_M_JpsiLConstr,lambda_Run1[-2.0,-4.0,0.0],0,0,"
 	          "sigma_Run1[10.,1.,20.], mean_Run1[5619.6,5619,5621], a1_Run1[1.7,1.0,3.0],"
-	          "2 ,a2_Run1[3.0,2.0,4.0], 2)");
+	          "2 ,a2_Run1[3.0,1.0,4.0], 2)");
 
 	w.factory("RooHypatia2::Lb_Run2(Lb_DTF_M_JpsiLConstr,lambda_Run2[-2.5,-4.0,0.0],0,0,"
 	          "sigma_Run2[10.,1.,20.], mean_Run2[5619.6,5619,5621], a1_Run2[1.5,1.0,3.0],"
@@ -858,7 +859,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 
 	RooPlot *frame_run1 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),low,high,nbins);
 	frame_run1->SetTitle("Run1 Fit");
-	// frame_run1->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
+	frame_run1->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
+	frame_run1->GetYaxis()->SetTitle("Candidates/(4 MeV/#it{c}^{2})");
 
 	combData->plotOn(frame_run1,Name("data_Run1"),Cut("sample==sample::run1"),DataError(RooAbsData::Poisson));
 	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Name("fit_Run1"));
@@ -868,8 +870,6 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Bkg_Run1"))),LineColor(kRed),Name("bkg_Run1"));
 
 	frame_run1->GetYaxis()->SetRangeUser(0,60);
-	// Double_t chiSquare1 = frame_run1->chiSquare("fit_run1","data_Run1");
-	// cout<<"chi square1/dof = "<<chiSquare1<<endl;
 	RooArgSet *allpar_run1 = simPdf.getParameters(*(ds[0]));
 	RooArgSet *floatpar_run1 = (RooArgSet*)allpar_run1->selectByAttrib("Constant",kFALSE);
 	floatpar_run1->Print();
@@ -882,33 +882,33 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 	cout<<"chi square2 = "<<chi2_run1*fit_ndof_run1<<endl;
 
 	///////////
-	TPad *pad1 = new TPad("pad1","pad1",0.0,0.2,1.0,1.0);
-	TPad *pad2 = new TPad("pad2","pad2",0.0,0.0,1.0,0.2);
-
-	pad1->SetGridx();
-	pad1->SetGridy();
-	pad2->SetGridx();
-	pad2->SetGridy();
-
-	pad1->SetBottomMargin(0.04);
-	pad2->SetTopMargin(0);
-	pad2->SetBottomMargin(0.3);
-	pad2->SetBorderMode(0);
-	pad1->SetBorderMode(0);
-	c_run1->SetBorderMode(0);
-	pad2->Draw();
-	pad1->Draw();
-	pad1->cd();
-	gPad->SetTopMargin(0.06);
-	pad1->Update();
+	// TPad *pad1 = new TPad("pad1","pad1",0.0,0.2,1.0,1.0);
+	// TPad *pad2 = new TPad("pad2","pad2",0.0,0.0,1.0,0.2);
+	//
+	// pad1->SetGridx();
+	// pad1->SetGridy();
+	// pad2->SetGridx();
+	// pad2->SetGridy();
+	//
+	// pad1->SetBottomMargin(0.04);
+	// pad2->SetTopMargin(0);
+	// pad2->SetBottomMargin(0.3);
+	// pad2->SetBorderMode(0);
+	// pad1->SetBorderMode(0);
+	// c_run1->SetBorderMode(0);
+	// pad2->Draw();
+	// pad1->Draw();
+	// pad1->cd();
+	// gPad->SetTopMargin(0.06);
+	// pad1->Update();
 
 	frame_run1->Draw();
 
-	TLatex l_run1;
-	l_run1.SetTextSize(0.025);
-	l_run1.DrawLatexNDC(0.8,0.6,Form("#chi^{2}/ndf = %f",chi2_run1));
+	// TLatex l_run1;
+	// l_run1.SetTextSize(0.025);
+	// l_run1.DrawLatexNDC(0.8,0.6,Form("#chi^{2}/ndf = %f",chi2_run1));
 
-	c_run1->Modified();
+	// c_run1->Modified();
 
 	auto legend_run1 = new TLegend(0.1,0.7,0.3,0.9);
 	legend_run1->SetTextSize(0.025);
@@ -920,33 +920,33 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 
 	c_run1->Update();
 
-	// Pull distribution
-	RooPlot *frame_run1x2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),low,high,nbins);
-	// RooPlot *framex2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")), low,5800,100);
-	RooHist* hpull_run1 = frame_run1->pullHist("data_Run1","fit_Run1");
-	frame_run1x2->addPlotable(hpull_run1,"P");
-	hpull_run1->SetLineColor(kBlack);
-	hpull_run1->SetMarkerColor(kBlack);
-	frame_run1x2->SetTitle(0);
-	frame_run1x2->GetYaxis()->SetTitle("Pull");
-	frame_run1x2->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
-	frame_run1x2->GetYaxis()->SetTitleSize(0.15);
-	frame_run1x2->GetYaxis()->SetLabelSize(0.15);
-	frame_run1x2->GetXaxis()->SetTitleSize(0.15);
-	frame_run1x2->GetXaxis()->SetLabelSize(0.15);
-	frame_run1x2->GetYaxis()->CenterTitle();
-	frame_run1x2->GetYaxis()->SetTitleOffset(0.25);
-	frame_run1x2->GetXaxis()->SetTitleOffset(0.75);
-	frame_run1x2->GetYaxis()->SetNdivisions(505);
-	frame_run1x2->GetYaxis()->SetRangeUser(-5.0,5.0);
-	pad2->cd();
-	frame_run1x2->Draw();
+	// // Pull distribution
+	// RooPlot *frame_run1x2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),low,high,nbins);
+	// // RooPlot *framex2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")), low,5800,100);
+	// RooHist* hpull_run1 = frame_run1->pullHist("data_Run1","fit_Run1");
+	// frame_run1x2->addPlotable(hpull_run1,"P");
+	// hpull_run1->SetLineColor(kBlack);
+	// hpull_run1->SetMarkerColor(kBlack);
+	// frame_run1x2->SetTitle(0);
+	// frame_run1x2->GetYaxis()->SetTitle("Pull");
+	// frame_run1x2->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
+	// frame_run1x2->GetYaxis()->SetTitleSize(0.15);
+	// frame_run1x2->GetYaxis()->SetLabelSize(0.15);
+	// frame_run1x2->GetXaxis()->SetTitleSize(0.15);
+	// frame_run1x2->GetXaxis()->SetLabelSize(0.15);
+	// frame_run1x2->GetYaxis()->CenterTitle();
+	// frame_run1x2->GetYaxis()->SetTitleOffset(0.25);
+	// frame_run1x2->GetXaxis()->SetTitleOffset(0.75);
+	// frame_run1x2->GetYaxis()->SetNdivisions(505);
+	// frame_run1x2->GetYaxis()->SetRangeUser(-5.0,5.0);
+	// pad2->cd();
+	// frame_run1x2->Draw();
 
-	c_run1->cd();
+	// c_run1->cd();
 	// pad1->cd();
 
-	cout<<"Run1 Pull Mean Y = "<<hpull_run1->GetMean(2)<<endl;
-	cout<<"Run1 Pull RMS Y = "<<hpull_run1->GetRMS(2)<<endl;
+	// cout<<"Run1 Pull Mean Y = "<<hpull_run1->GetMean(2)<<endl;
+	// cout<<"Run1 Pull RMS Y = "<<hpull_run1->GetRMS(2)<<endl;
 
 	TCanvas* c_run2 = new TCanvas("Run2","Run2", 1200, 800);
 
@@ -954,6 +954,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 
 	frame_run2->SetTitle("Run2 Fit");
 	frame_run2->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
+	frame_run2->GetYaxis()->SetTitle("Candidates/(4 MeV/#it{c}^{2})");
+
 	combData->plotOn(frame_run2,Name("data_Run2"),Cut("sample==sample::run2"),DataError(RooAbsData::Poisson));
 	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Name("fit_Run2"));
 	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Lb_Run2"))),Name("lb_Run2"),LineColor(kMagenta+2));
@@ -975,25 +977,25 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 	cout<<"chi square2 = "<<chi2_run2*fit_ndof_run2<<endl;
 
 	///////////
-	TPad *pad3 = new TPad("pad3","pad3",0.0,0.2,1.0,1.0);
-	TPad *pad4 = new TPad("pad4","pad4",0.0,0.0,1.0,0.2);
-
-	pad3->SetGridx();
-	pad3->SetGridy();
-	pad4->SetGridx();
-	pad4->SetGridy();
-
-	pad3->SetBottomMargin(0.04);
-	pad4->SetTopMargin(0);
-	pad4->SetBottomMargin(0.3);
-	pad4->SetBorderMode(0);
-	pad3->SetBorderMode(0);
-	c_run1->SetBorderMode(0);
-	pad4->Draw();
-	pad3->Draw();
-	pad3->cd();
-	gPad->SetTopMargin(0.06);
-	pad3->Update();
+	// TPad *pad3 = new TPad("pad3","pad3",0.0,0.2,1.0,1.0);
+	// TPad *pad4 = new TPad("pad4","pad4",0.0,0.0,1.0,0.2);
+	//
+	// pad3->SetGridx();
+	// pad3->SetGridy();
+	// pad4->SetGridx();
+	// pad4->SetGridy();
+	//
+	// pad3->SetBottomMargin(0.04);
+	// pad4->SetTopMargin(0);
+	// pad4->SetBottomMargin(0.3);
+	// pad4->SetBorderMode(0);
+	// pad3->SetBorderMode(0);
+	// c_run1->SetBorderMode(0);
+	// pad4->Draw();
+	// pad3->Draw();
+	// pad3->cd();
+	// gPad->SetTopMargin(0.06);
+	// pad3->Update();
 
 	frame_run2->Draw();
 	// c_run2->cd();
@@ -1006,36 +1008,36 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 	legend_run2->AddEntry("bkg_Run2","Comb. Bkg. shape","l");
 	legend_run2->Draw("same");
 
-	TLatex l_run2;
-	l_run2.SetTextSize(0.025);
-	l_run2.DrawLatexNDC(0.8,0.6,Form("#chi^{2}/ndf = %f",chi2_run2));
+	// TLatex l_run2;
+	// l_run2.SetTextSize(0.025);
+	// l_run2.DrawLatexNDC(0.8,0.6,Form("#chi^{2}/ndf = %f",chi2_run2));
 
 	c_run2->Update();
 
-	// Pull distribution
-	RooPlot *frame_run2x2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),low,high,nbins);
-	// RooPlot *framex2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")), low,5800,100);
-	RooHist* hpull_run2 = frame_run2->pullHist("data_Run2","fit_Run2");
-	frame_run2x2->addPlotable(hpull_run2,"P");
-	hpull_run2->SetLineColor(kBlack);
-	hpull_run2->SetMarkerColor(kBlack);
-	frame_run2x2->SetTitle(0);
-	frame_run2x2->GetYaxis()->SetTitle("Pull");
-
-	frame_run2x2->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
-	frame_run2x2->GetYaxis()->SetTitleSize(0.15);
-	frame_run2x2->GetYaxis()->SetLabelSize(0.15);
-	frame_run2x2->GetXaxis()->SetTitleSize(0.15);
-	frame_run2x2->GetXaxis()->SetLabelSize(0.15);
-	frame_run2x2->GetYaxis()->CenterTitle();
-	frame_run2x2->GetYaxis()->SetTitleOffset(0.25);
-	frame_run2x2->GetXaxis()->SetTitleOffset(0.75);
-	frame_run2x2->GetYaxis()->SetNdivisions(505);
-	frame_run2x2->GetYaxis()->SetRangeUser(-5.0,5.0);
-	pad4->cd();
-	frame_run2x2->Draw();
-
-	c_run2->cd();
+	// // Pull distribution
+	// RooPlot *frame_run2x2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),low,high,nbins);
+	// // RooPlot *framex2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")), low,5800,100);
+	// RooHist* hpull_run2 = frame_run2->pullHist("data_Run2","fit_Run2");
+	// frame_run2x2->addPlotable(hpull_run2,"P");
+	// hpull_run2->SetLineColor(kBlack);
+	// hpull_run2->SetMarkerColor(kBlack);
+	// frame_run2x2->SetTitle(0);
+	// frame_run2x2->GetYaxis()->SetTitle("Pull");
+	//
+	// frame_run2x2->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
+	// frame_run2x2->GetYaxis()->SetTitleSize(0.15);
+	// frame_run2x2->GetYaxis()->SetLabelSize(0.15);
+	// frame_run2x2->GetXaxis()->SetTitleSize(0.15);
+	// frame_run2x2->GetXaxis()->SetLabelSize(0.15);
+	// frame_run2x2->GetYaxis()->CenterTitle();
+	// frame_run2x2->GetYaxis()->SetTitleOffset(0.25);
+	// frame_run2x2->GetXaxis()->SetTitleOffset(0.75);
+	// frame_run2x2->GetYaxis()->SetNdivisions(505);
+	// frame_run2x2->GetYaxis()->SetRangeUser(-5.0,5.0);
+	// pad4->cd();
+	// frame_run2x2->Draw();
+	//
+	// c_run2->cd();
 
 	Double_t chi2_global = chi2_run1*fit_ndof_run1 + chi2_run2*fit_ndof_run2;
 	Int_t ndof_global = fit_ndof_run1 + fit_ndof_run2;
