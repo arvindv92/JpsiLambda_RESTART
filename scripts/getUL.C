@@ -855,6 +855,13 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 	//*******************************************************************
 
 	//*********************PLOTTING STUFF*********************************************
+
+	TLatex *myLatex = new TLatex();
+	myLatex->SetTextFont(42);
+	myLatex->SetTextColor(1);
+	myLatex->SetTextAlign(12);
+	myLatex->SetNDC(kTRUE);
+
 	TCanvas* c_run1 = new TCanvas("Run1","Run1", 1200, 800);
 
 	RooPlot *frame_run1 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),low,high,nbins);
@@ -869,7 +876,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 	// simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Lb2_Run1"))),LineStyle(kDotted),LineColor(kMagenta));
 	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Bkg_Run1"))),LineColor(kRed),Name("bkg_Run1"));
 
-	frame_run1->GetYaxis()->SetRangeUser(0,60);
+	frame_run1->GetYaxis()->SetRangeUser(0,20);
+	frame_run1->GetXaxis()->SetRangeUser(5300,5900);
 	RooArgSet *allpar_run1 = simPdf.getParameters(*(ds[0]));
 	RooArgSet *floatpar_run1 = (RooArgSet*)allpar_run1->selectByAttrib("Constant",kFALSE);
 	floatpar_run1->Print();
@@ -910,13 +918,15 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 
 	// c_run1->Modified();
 
-	auto legend_run1 = new TLegend(0.1,0.7,0.3,0.9);
-	legend_run1->SetTextSize(0.025);
+	auto legend_run1 = new TLegend(0.7,0.7,0.9,0.9);
+	legend_run1->SetTextSize(0.06);
 	legend_run1->AddEntry("data_Run1","Data","lp");
 	legend_run1->AddEntry("fit_Run1","Total Fit","l");
 	legend_run1->AddEntry("lb_Run1","J/#psi #Lambda shape","l");
 	legend_run1->AddEntry("bkg_Run1","Comb. Bkg. shape","l");
 	legend_run1->Draw("same");
+
+	myLatex->DrawLatex(0.18,0.85,"LHCb Run 1");
 
 	c_run1->Update();
 
@@ -963,7 +973,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 	// simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Lb2_Run2"))),LineStyle(kDotted),LineColor(kMagenta));
 	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Bkg_Run2"))),LineColor(kRed),Name("bkg_Run2"));
 
-	frame_run2->GetYaxis()->SetRangeUser(0,160);
+	frame_run2->GetYaxis()->SetRangeUser(0,60);
+	frame_run2->GetXaxis()->SetRangeUser(5300,5900);
 	// Double_t chiSquare1 = frame_run2->chiSquare("fit_run2","data_run2");
 	// cout<<"chi square1/dof = "<<chiSquare1<<endl;
 	RooArgSet *floatpar_run2 = simPdf.getParameters(*(ds[1]));
@@ -1000,13 +1011,15 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 	frame_run2->Draw();
 	// c_run2->cd();
 
-	auto legend_run2 = new TLegend(0.1,0.7,0.3,0.9);
-	legend_run2->SetTextSize(0.025);
+	auto legend_run2 = new TLegend(0.7,0.7,0.9,0.9);
+	legend_run2->SetTextSize(0.06);
 	legend_run2->AddEntry("data_Run2","Data","lp");
 	legend_run2->AddEntry("fit_Run2","Total Fit","l");
 	legend_run2->AddEntry("lb_Run2","J/#psi #Lambda shape","l");
 	legend_run2->AddEntry("bkg_Run2","Comb. Bkg. shape","l");
 	legend_run2->Draw("same");
+
+	myLatex->DrawLatex(0.18,0.85,"LHCb Run 1");
 
 	// TLatex l_run2;
 	// l_run2.SetTextSize(0.025);
