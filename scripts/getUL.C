@@ -1027,8 +1027,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 
 	c_run2->Update();
 
-	c_run1->SaveAs("../plots/ANA/finalFit_run1_zoomY.pdf");
-	c_run2->SaveAs("../plots/ANA/finalFit_run2_zoomY.pdf");
+	// c_run1->SaveAs("../plots/ANA/finalFit_run1_zoomY.pdf");
+	// c_run2->SaveAs("../plots/ANA/finalFit_run2_zoomY.pdf");
 
 
 	// // Pull distribution
@@ -1100,6 +1100,10 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 		cout<<"Nsig    = "<<Nsig[i]<<" +/- "<<nsigERR[i]<<endl;
 		cout<<"Frac    = "<<sigmaINT[i]<<endl;
 		cout<<"NLb_tot = "<<Nlb_tot[i]<<" +/- "<<Nlb_tot_ERR[i]<<endl;
+		cout<<"eff_JpsiLambda = "<<eff_Lambda_wt[i]*100<<" % +/- "
+		    <<eff_Lambda_staterr_wt[i]*100<<" %"<<endl;
+		cout<<"eff_JpsiSigma = "<<eff_Sigma_wt[i]*100<<" % +/- "
+		    <<eff_Sigma_staterr_wt[i]*100<<" %"<<endl;
 		cout<<"Eff Rat = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_err_wt[i]<<endl;
 		cout<<"_____________________________________"<<endl;
 		cout<<"R       = "<<R[i]<<" +/- "<<R_ERR[i]<<endl;
