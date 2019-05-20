@@ -42,6 +42,16 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 
 	RooRealVar *myVar = w.var("Lb_DTF_M_JpsiLConstr");
 
+	fileIn_sim = Open(Form("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_pidgen.root",run));
+	treeIn_sim = (TTree*)fileIn_sim->Get("MyTuple");
+
+	treeIn_sim->Draw("Lb_DTF_M_JpsiLConstr>>hMass_sim(150,5500,5800)","Lb_BKGCAT==0||Lb_BKGCAT==50");
+	hMass_sim = (TH1D*)gDirectory->Get("hMass_sim");
+
+	RooDataHist *dh_sim = new RooDataHist("dh_sim","",*myVar,hMass_sim);
+
+	nentries = hMass_sim->GetEntries();
+
 	// w.factory("Gaussian::sig1(Lb_DTF_M_JpsiLConstr,mean[5619.6,5619,5621],"
 	//           "sigma[10.,1.,20.])");
 	// w.factory("Gaussian::sig2(Lb_DTF_M_JpsiLConstr,mean,"
@@ -69,19 +79,9 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 	w.factory(Form("nsig[1,%d]",nentries));
 	w.factory(Form("nbkg[1,%d]",nentries));
 
-	// w.var("nsig")->setError(100);
-	// w.var("nbkg")->setError(1000);
 	w.factory("SUM::model(nsig*sig , nbkg*bkg)");
 
 	RooAbsPdf* model = w.pdf("model"); // get the model
-
-	fileIn_sim = Open(Form("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_pidgen.root",run));
-	treeIn_sim = (TTree*)fileIn_sim->Get("MyTuple");
-
-	treeIn_sim->Draw("Lb_DTF_M_JpsiLConstr>>hMass_sim(150,5500,5800)","Lb_BKGCAT==0||Lb_BKGCAT==50");
-	hMass_sim = (TH1D*)gDirectory->Get("hMass_sim");
-
-	RooDataHist *dh_sim = new RooDataHist("dh_sim","",*myVar,hMass_sim);
 
 	RooFitResult *res = model->fitTo(*dh_sim,Extended(), Save(), Hesse(true), Strategy(2));
 
