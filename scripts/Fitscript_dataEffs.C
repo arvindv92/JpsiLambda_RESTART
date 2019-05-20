@@ -94,7 +94,7 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 
 	if(run == 1)
 	{
-		w.factory("nsig[5600,2000,8000]");
+		w.factory("nsig[6000,5000,10000]");
 	}
 	if(run == 2)
 	{
