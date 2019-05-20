@@ -114,26 +114,28 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 		{
 			fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_2015.root",run));
 			treeIn = (TTree*)fileIn->Get("MyTuple");
-			treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass(150,5500,5800)");
+			treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass(150,5500,5800)","","goff");
 			hMass = (TH1D*)gDirectory->Get("hMass");
 
 			fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_2016.root",run));
 			treeIn = (TTree*)fileIn->Get("MyTuple");
-			treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass1(150,5500,5800)");
+			treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass1(150,5500,5800)","","goff");
 			TH1D *hMass1 = (TH1D*)gDirectory->Get("hMass1");
 			hMass->Add(hMass1);
 
 			fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_2017.root",run));
 			treeIn = (TTree*)fileIn->Get("MyTuple");
-			treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass2(150,5500,5800)");
+			treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass2(150,5500,5800)","","goff");
 			TH1D *hMass2 = (TH1D*)gDirectory->Get("hMass2");
 			hMass->Add(hMass2);
 
 			fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_2018.root",run));
 			treeIn = (TTree*)fileIn->Get("MyTuple");
-			treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass3(150,5500,5800)");
+			treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass3(150,5500,5800)","","goff");
 			TH1D *hMass3 = (TH1D*)gDirectory->Get("hMass3");
 			hMass->Add(hMass3);
+
+			hMass->Draw();
 		}
 
 	}
@@ -183,6 +185,7 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 		hMass->Add(hMass_Zero);
 	}
 	nentries = hMass->GetEntries();
+	cout<<"nentries = "<<nentries<<endl;
 
 	RooDataHist *dh = new RooDataHist("dh","",*myVar,hMass);
 
