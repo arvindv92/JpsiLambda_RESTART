@@ -83,9 +83,16 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 
 	RooDataHist *dh = new RooDataHist("dh","",*myVar,hMass);
 
-	w.factory("RooHypatia2::sig(Lb_DTF_M_JpsiLConstr,lambda[-2.0,-4.0,0.0],0,0,"
-	          "sigma[10.,1.,20.], mean[5619.6,5619,5621], a1[1.7,1.0,3.0],"
-	          "2 ,a2[3.0,1.0,4.0], 2)");
+	// w.factory("RooHypatia2::sig(Lb_DTF_M_JpsiLConstr,lambda[-2.0,-4.0,0.0],0,0,"
+	//           "sigma[10.,1.,20.], mean[5619.6,5619,5621], a1[1.7,1.0,3.0],"
+	//           "2 ,a2[3.0,1.0,4.0], 2)");
+
+	w.factory("Gaussian::sig1(Lb_DTF_M_JpsiLConstr,mean[5619.6,5619,5621],"
+	          "sigma1[10.,1.,20.])");
+	w.factory("Gaussian::sig2(Lb_DTF_M_JpsiLConstr,mean,"
+	          "sigma2[5.,1.,20.])");
+	w.factory("f1[0.5,0.,1.]");
+	w.factory("SUM::sig(f1*sig1,sig2)");
 
 	cout<<"Done defining J/psi Lambda Hypatia shapes"<<endl;
 
@@ -103,11 +110,11 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 
 	w.factory(Form("nbkg[1,%d]",nentries));
 
-	w.factory("SUM:model(nsig*sig , nbkg*bkg)");
+	w.factory("SUM::model(nsig*sig , nbkg*bkg)");
 
 	RooAbsPdf* model = w.pdf("model"); // get the model
 
-	RooFitResult *res = model->fitTo(*dh,Extended(), Save(), Hesse(true), Strategy(1));
+	RooFitResult *res = model->fitTo(*dh,Extended(), Save(), Hesse(true), Strategy(2));
 
 	TCanvas* c = new TCanvas("c","", 1200, 800);
 
