@@ -31,7 +31,7 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 	gSystem->Exec("date");
 	gSystem->Load("RooHypatia2_cpp.so"); //Load library for Hypatia shape
 
-	TFile *fileIn = nullptr, *fileIn_Zero = nullptr;
+	TFile *fileIn = nullptr, *fileIn_Zero = nullptr, *fileIn_sim = nullptr;
 	TTree *treeIn = nullptr, *treeIn_Zero = nullptr;
 	TH1D  *hMass  = nullptr, *hMass_Zero  = nullptr;
 
@@ -41,7 +41,7 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 		fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered.root",run));
 		treeIn = (TTree*)fileIn->Get("MyTuple");
 
-		treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass(75,5500,5800)");
+		treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass(150,5500,5800)");
 		hMass = (TH1D*)gDirectory->Get("hMass");
 	}
 	else if(stage=="Sanity")
@@ -49,7 +49,7 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 		fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_LL_noPID.root",run));
 		treeIn = (TTree*)fileIn->Get("MyTuple");
 
-		treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass(75,5500,5800)");
+		treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass(150,5500,5800)");
 		hMass = (TH1D*)gDirectory->Get("hMass");
 	}
 	else if(stage=="CutOutKs")
@@ -57,19 +57,34 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 		fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_LL_noPID.root",run));
 		treeIn = (TTree*)fileIn->Get("MyTuple");
 
-		treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass(75,5500,5800)");
+		treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass(150,5500,5800)");
 		hMass = (TH1D*)gDirectory->Get("hMass");
 	}
 	else if(stage=="finalBDT")
 	{
 		fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_LL_nonZeroTracks_noPID.root",run));
 		treeIn = (TTree*)fileIn->Get("MyTuple");
-		treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass(75,5500,5800)");
+		treeIn->AddFriend("MyTuple",Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_LL_FinalBDT2_iso1_v0_noPID.root",run));
+		if(run == 1)
+		{
+			treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass(75,5500,5800)","BDT2 > 0.475");
+		}
+		else if(run == 2)
+		{
+			treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass(75,5500,5800)","BDT2 > 0.555");
+		}
 		hMass = (TH1D*)gDirectory->Get("hMass");
 
 		fileIn_Zero = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_LL_ZeroTracks_noPID.root",run));
 		treeIn_Zero = (TTree*)fileIn_Zero->Get("MyTuple");
-		treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass_Zero(75,5500,5800)");
+		if(run == 1)
+		{
+			treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass(75,5500,5800)","BDT2 > 0.365");
+		}
+		else if(run == 2)
+		{
+			treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass(75,5500,5800)","BDT2 > 0.495");
+		}
 		hMass_Zero = (TH1D*)gDirectory->Get("hMass_Zero");
 
 		hMass->Add(hMass_Zero);
