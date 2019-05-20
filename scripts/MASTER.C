@@ -221,19 +221,19 @@ void MASTER(Int_t run = 1, Int_t config = 1, Int_t block = 1, Bool_t isData = tr
 		{
 			if(isData)
 			{
-				// Train Isolation BDT on data. 2 configs train separately,
+				// Train Isolation BDT on nonZeroTracks data. 2 configs train separately,
 				cout<<"***TrainIsolation run "<<run<<" isoVersion "<<isoVersion<<" isoConf "<<isoConf<<"***"<<endl;
 				TrainIsolation(run, trackType, isoVersion, isoConf, logFlag);
 			}
 
-			// Apply isolation BDT on all data/MC
-			cout<<"***ApplyIsolation all data/MC run "<<run<<" isoVersion "<<isoVersion<<
+			// Apply isolation BDT on nonZeroTracks data/MC
+			cout<<"***ApplyIsolation on nonZeroTracks  data/MC run "<<run<<" isoVersion "<<isoVersion<<
 			        " isoConf "<<isoConf<<"***"<<endl;
 			ApplyIsolation(run, isData, mcType, trackType, 1, isoVersion, isoConf, logFlag);
 
 			if(isData)
 			{
-				//Apply isolation BDT on sWeighted data
+				//Apply isolation BDT on nonZeroTracks Weighted data
 				cout<<"***ApplyIsolation sWeight data run "<<run<<" isoVersion "<<isoVersion<<
 				        " isoConf "<<isoConf<<"***"<<endl;
 				ApplyIsolation(run, isData, mcType, trackType, 2, isoVersion, isoConf, logFlag);
