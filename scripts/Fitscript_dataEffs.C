@@ -90,9 +90,8 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 	w.factory("Gaussian::sig1(Lb_DTF_M_JpsiLConstr,mean[5619.6,5619,5621],"
 	          "sigma1[10.,1.,20.])");
 	w.factory("Gaussian::sig2(Lb_DTF_M_JpsiLConstr,mean,"
-	          "sigma2[5.,1.,20.])");
-	w.factory("f1[0.5,0.,1.]");
-	w.factory("SUM::sig(f1*sig1,sig2)");
+	          "sigma2[15.,1.,20.])");
+	w.factory("SUM::sig(f1[0.5,0.,1.]*sig1,sig2)");
 
 	cout<<"Done defining J/psi Lambda Hypatia shapes"<<endl;
 
