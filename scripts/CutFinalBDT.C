@@ -7,7 +7,7 @@
 #include <fstream>
 
 using namespace std;
-void CutFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
+void CutFinalBDT(Int_t run, Bool_t isData, Int_t mcType,
                  const char* isoVersion, Int_t isoConf, Int_t bdtConf_nonZero,
                  Int_t bdtConf_Zero, Float_t bdtCut, Float_t bdtCut_ZeroTracks, Bool_t isoFlag,
                  Bool_t logFlag, const char *FOM, const char *Part)
@@ -56,6 +56,30 @@ void CutFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	{
 		folder = "Bd_JpsiX";
 		part = "bd_jpsix";
+		break;
+	}
+	case 6:
+	{
+		folder = "Lst1405";
+		part = "lst1405";
+		break;
+	}
+	case 7:
+	{
+		folder = "Lst1520";
+		part = "lst1520";
+		break;
+	}
+	case 8:
+	{
+		folder = "Lst1600";
+		part = "lst1600";
+		break;
+	}
+	case 9:
+	{
+		folder = "chiC1";
+		part = "chic1";
 		break;
 	}
 	}
