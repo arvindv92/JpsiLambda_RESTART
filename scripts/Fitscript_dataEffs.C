@@ -190,6 +190,7 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger", Bool_t isData 
 		fileIn = Open(Form("%s/JpsiLambda/run%d/jpsilambda_cutoutks_LL_nonZeroTracks_noPID.root",prefix,run));
 		treeIn = (TTree*)fileIn->Get("MyTuple");
 		treeIn->AddFriend("MyTuple",Form("%s/JpsiLambda/run%d/jpsilambda_LL_FinalBDT2_iso1_v0_noPID.root",prefix,run));
+
 		if(run == 1)
 		{
 			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high),Form("BDT2 > 0.475%s",bdtwtexp));
@@ -202,13 +203,15 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger", Bool_t isData 
 
 		fileIn_Zero = Open(Form("%s/JpsiLambda/run%d/jpsilambda_cutoutks_LL_ZeroTracks_noPID.root",prefix,run));
 		treeIn_Zero = (TTree*)fileIn_Zero->Get("MyTuple");
+		treeIn_Zero->AddFriend("MyTuple",Form("%s/JpsiLambda/run%d/jpsilambda_zeroTracksLL_FinalBDT2_noPID.root",prefix,run));
+
 		if(run == 1)
 		{
-			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high),Form("BDT2 > 0.365%s",bdtwtexp));
+			treeIn_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass_Zero(%d,%d,%d)",nbins,low,high),Form("BDT2 > 0.365%s",bdtwtexp));
 		}
 		else if(run == 2)
 		{
-			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high),Form("BDT2 > 0.495%s",bdtwtexp));
+			treeIn_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass_Zero(%d,%d,%d)",nbins,low,high),Form("BDT2 > 0.495%s",bdtwtexp));
 		}
 		hMass_Zero = (TH1D*)gDirectory->Get("hMass_Zero");
 
