@@ -25,7 +25,8 @@ columns = ['Lb_P', 'Lb_PT', 'Lb_ETA', 'Jpsi_P', 'Jpsi_PT', 'Jpsi_ETA',
            'pi_ETA']
 
 
-mcPath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run{}/'.format(run)
+# mcPath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run{}/'.format(run)
+mcPath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run2/'
 if mcOpt == 1:
     filePath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run{}/'
     part = 'jpsilambda'
