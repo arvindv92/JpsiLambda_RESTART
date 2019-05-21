@@ -36,9 +36,12 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 	TH1D  *hMass  = nullptr, *hMass_Zero  = nullptr, *hMass_sim  = nullptr;
 
 	Int_t nentries = 0;
+	Int_t low = 5400, high = 6000;
+	Int_t binwidth = 2;
+	Int_t nbins = (Int_t)(high-low)/(binwidth);
 
 	RooWorkspace w("w");
-	w.factory(Form("Lb_DTF_M_JpsiLConstr[%d,%d]",5400,6000));
+	w.factory(Form("Lb_DTF_M_JpsiLConstr[%d,%d]",low,high));
 
 	RooRealVar *myVar = w.var("Lb_DTF_M_JpsiLConstr");
 
@@ -110,31 +113,31 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 		{
 			fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered.root",run));
 			treeIn = (TTree*)fileIn->Get("MyTuple");
-			treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass(300,5400,6000)");
+			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high));
 			hMass = (TH1D*)gDirectory->Get("hMass");
 		}
 		else if(run == 2)
 		{
 			fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_2015.root",run));
 			treeIn = (TTree*)fileIn->Get("MyTuple");
-			treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass(300,5400,6000)","","goff");
+			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high),"","goff");
 			hMass = (TH1D*)gDirectory->Get("hMass");
 
 			fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_2016.root",run));
 			treeIn = (TTree*)fileIn->Get("MyTuple");
-			treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass1(300,5400,6000)","","goff");
+			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass1(%d,%d,%d)",nbins,low,high),"","goff");
 			TH1D *hMass1 = (TH1D*)gDirectory->Get("hMass1");
 			hMass->Add(hMass1);
 
 			fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_2017.root",run));
 			treeIn = (TTree*)fileIn->Get("MyTuple");
-			treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass2(300,5400,6000)","","goff");
+			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass2(%d,%d,%d)",nbins,low,high),"","goff");
 			TH1D *hMass2 = (TH1D*)gDirectory->Get("hMass2");
 			hMass->Add(hMass2);
 
 			fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_2018.root",run));
 			treeIn = (TTree*)fileIn->Get("MyTuple");
-			treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass3(300,5400,6000)","","goff");
+			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass3(%d,%d,%d)",nbins,low,high),"","goff");
 			TH1D *hMass3 = (TH1D*)gDirectory->Get("hMass3");
 			hMass->Add(hMass3);
 
@@ -147,7 +150,7 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 		fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_LL_noPID.root",run));
 		treeIn = (TTree*)fileIn->Get("MyTuple");
 
-		treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass(300,5400,6000)");
+		treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high));
 		hMass = (TH1D*)gDirectory->Get("hMass");
 	}
 	else if(stage=="CutOutKs")
@@ -155,7 +158,7 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 		fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_LL_noPID.root",run));
 		treeIn = (TTree*)fileIn->Get("MyTuple");
 
-		treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass(300,5400,6000)");
+		treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high));
 		hMass = (TH1D*)gDirectory->Get("hMass");
 	}
 	else if(stage=="finalBDT")
@@ -165,11 +168,11 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 		treeIn->AddFriend("MyTuple",Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_LL_FinalBDT2_iso1_v0_noPID.root",run));
 		if(run == 1)
 		{
-			treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass(300,5400,6000)","BDT2 > 0.475");
+			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high),"BDT2 > 0.475");
 		}
 		else if(run == 2)
 		{
-			treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass(300,5400,6000)","BDT2 > 0.555");
+			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high),"BDT2 > 0.555");
 		}
 		hMass = (TH1D*)gDirectory->Get("hMass");
 
@@ -177,11 +180,11 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 		treeIn_Zero = (TTree*)fileIn_Zero->Get("MyTuple");
 		if(run == 1)
 		{
-			treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass(300,5400,6000)","BDT2 > 0.365");
+			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high),"BDT2 > 0.365");
 		}
 		else if(run == 2)
 		{
-			treeIn->Draw("Lb_DTF_M_JpsiLConstr>>hMass(300,5400,6000)","BDT2 > 0.495");
+			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high),"BDT2 > 0.495");
 		}
 		hMass_Zero = (TH1D*)gDirectory->Get("hMass_Zero");
 
@@ -226,7 +229,7 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 
 	TCanvas* c = new TCanvas("c","", 1200, 800);
 
-	RooPlot *frame = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),5400,6000,300);
+	RooPlot *frame = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),low,high,nbins);
 	frame->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
 	frame->GetYaxis()->SetTitle("Candidates/(2 MeV/#it{c}^{2})");
 
