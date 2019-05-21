@@ -25,7 +25,7 @@ using namespace RooFit;
 using namespace std;
 
 #define Open TFile::Open
-void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
+void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger", Bool_t isData = true)
 {
 	gROOT->ProcessLine(".x lhcbStyle.C");
 	gSystem->Exec("date");
@@ -45,6 +45,15 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 
 	RooRealVar *myVar = w.var("Lb_DTF_M_JpsiLConstr");
 
+	const char *prefix = "";
+	if(isData)
+	{
+		prefix = "../rootFiles/dataFiles";
+	}
+	else
+	{
+		prefix = "../rootFiles/mcFiles/JpsiLambda";
+	}
 	//*************Fit to simulation to get params****************************
 
 	// fileIn_sim = Open(Form("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_pidgen.root",run));
@@ -111,43 +120,51 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 	{
 		if(run == 1)
 		{
-			fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered.root",run));
+			fileIn = Open(Form("%s/JpsiLambda/run%d/jpsilambda_triggered.root",prefix,run));
 			treeIn = (TTree*)fileIn->Get("MyTuple");
 			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high));
 			hMass = (TH1D*)gDirectory->Get("hMass");
 		}
 		else if(run == 2)
 		{
-			fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_2015.root",run));
-			treeIn = (TTree*)fileIn->Get("MyTuple");
-			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high),"","goff");
-			hMass = (TH1D*)gDirectory->Get("hMass");
+			if(isData)
+			{
+				fileIn = Open(Form("%s/JpsiLambda/run%d/jpsilambda_triggered_2015.root",prefix,run));
+				treeIn = (TTree*)fileIn->Get("MyTuple");
+				treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high),"","goff");
+				hMass = (TH1D*)gDirectory->Get("hMass");
 
-			fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_2016.root",run));
-			treeIn = (TTree*)fileIn->Get("MyTuple");
-			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass1(%d,%d,%d)",nbins,low,high),"","goff");
-			TH1D *hMass1 = (TH1D*)gDirectory->Get("hMass1");
-			hMass->Add(hMass1);
+				fileIn = Open(Form("%s/JpsiLambda/run%d/jpsilambda_triggered_2016.root",prefix,run));
+				treeIn = (TTree*)fileIn->Get("MyTuple");
+				treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass1(%d,%d,%d)",nbins,low,high),"","goff");
+				TH1D *hMass1 = (TH1D*)gDirectory->Get("hMass1");
+				hMass->Add(hMass1);
 
-			fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_2017.root",run));
-			treeIn = (TTree*)fileIn->Get("MyTuple");
-			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass2(%d,%d,%d)",nbins,low,high),"","goff");
-			TH1D *hMass2 = (TH1D*)gDirectory->Get("hMass2");
-			hMass->Add(hMass2);
+				fileIn = Open(Form("%s/JpsiLambda/run%d/jpsilambda_triggered_2017.root",prefix,run));
+				treeIn = (TTree*)fileIn->Get("MyTuple");
+				treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass2(%d,%d,%d)",nbins,low,high),"","goff");
+				TH1D *hMass2 = (TH1D*)gDirectory->Get("hMass2");
+				hMass->Add(hMass2);
 
-			fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_2018.root",run));
-			treeIn = (TTree*)fileIn->Get("MyTuple");
-			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass3(%d,%d,%d)",nbins,low,high),"","goff");
-			TH1D *hMass3 = (TH1D*)gDirectory->Get("hMass3");
-			hMass->Add(hMass3);
-
+				fileIn = Open(Form("%s/JpsiLambda/run%d/jpsilambda_triggered_2018.root",prefix,run));
+				treeIn = (TTree*)fileIn->Get("MyTuple");
+				treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass3(%d,%d,%d)",nbins,low,high),"","goff");
+				TH1D *hMass3 = (TH1D*)gDirectory->Get("hMass3");
+				hMass->Add(hMass3);
+			}
+			else
+			{
+				fileIn = Open(Form("%s/JpsiLambda/run%d/jpsilambda_triggered.root",prefix,run));
+				treeIn = (TTree*)fileIn->Get("MyTuple");
+				treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high));
+				hMass = (TH1D*)gDirectory->Get("hMass");
+			}
 			hMass->Draw();
 		}
-
 	}
 	else if(stage=="Sanity")
 	{
-		fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_LL_noPID.root",run));
+		fileIn = Open(Form("%s/JpsiLambda/run%d/jpsilambda_sanity_LL_noPID.root",prefix,run));
 		treeIn = (TTree*)fileIn->Get("MyTuple");
 
 		treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high));
@@ -155,7 +172,7 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 	}
 	else if(stage=="CutOutKs")
 	{
-		fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_LL_noPID.root",run));
+		fileIn = Open(Form("%s/JpsiLambda/run%d/jpsilambda_cutoutks_LL_noPID.root",prefix,run));
 		treeIn = (TTree*)fileIn->Get("MyTuple");
 
 		treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high));
@@ -163,9 +180,9 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 	}
 	else if(stage=="finalBDT")
 	{
-		fileIn = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_LL_nonZeroTracks_noPID.root",run));
+		fileIn = Open(Form("%s/JpsiLambda/run%d/jpsilambda_cutoutks_LL_nonZeroTracks_noPID.root",prefix,run));
 		treeIn = (TTree*)fileIn->Get("MyTuple");
-		treeIn->AddFriend("MyTuple",Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_LL_FinalBDT2_iso1_v0_noPID.root",run));
+		treeIn->AddFriend("MyTuple",Form("%s/JpsiLambda/run%d/jpsilambda_LL_FinalBDT2_iso1_v0_noPID.root",prefix,run));
 		if(run == 1)
 		{
 			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high),"BDT2 > 0.475");
@@ -176,7 +193,7 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 		}
 		hMass = (TH1D*)gDirectory->Get("hMass");
 
-		fileIn_Zero = Open(Form("../rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_cutoutks_LL_ZeroTracks_noPID.root",run));
+		fileIn_Zero = Open(Form("%s/JpsiLambda/run%d/jpsilambda_cutoutks_LL_ZeroTracks_noPID.root",prefix,run));
 		treeIn_Zero = (TTree*)fileIn_Zero->Get("MyTuple");
 		if(run == 1)
 		{
