@@ -149,11 +149,10 @@ void MASTER(Int_t run = 1, Int_t config = 1, Int_t block = 1, Bool_t isData = tr
 	{
 		if(mcType != 4 && mcType != 5)
 		{
+			cout<<"$$$$$$$$$$$ Processing MC Type "<<mcType<< " $$$$$$$$$$$$$$"<<endl;
+			cout<<"$$$$$$$$$$$ Processing Run "<<run<<" $$$$$$$$$$$"<<endl;
 			if(block == 1)
 			{
-				cout<<"$$$$$$$$$$$ Processing MC Type "<<mcType<< " $$$$$$$$$$$$$$"<<endl;
-
-				cout<<"$$$$$$$$$$$ Processing Run "<<run<<" $$$$$$$$$$$"<<endl;
 				//Trigger Cut
 				cout<<"***Trigger***"<<endl;
 				Trigger(run, year, isData, mcType, testing, loose, logFlag);
