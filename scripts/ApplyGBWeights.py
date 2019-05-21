@@ -77,7 +77,7 @@ with open(mcPath + 'gb_wts.pkl') as f:
     if isGen:
         # Write out weights to separate ROOT file
         root_numpy.array2root(gb_weights,
-                              filePath + 'RW/gbWeights_gen.root',
+                              filePath + 'RW/gbWeights_gen_new.root',
                               treename='MyTuple', mode='recreate')
     else:
         root_numpy.array2root(gb_weights,
