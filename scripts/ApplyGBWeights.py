@@ -72,7 +72,7 @@ with open(mcPath + 'gb_wts.pkl') as f:
 
     # Predict weights
     gb_weights = reweighter.predict_weights(original)
-    gb_weights.dtype = [('gb_wts', 'float64')]
+    gb_weights.dtype = [('gb_wts_new', 'float64')]
     if isGen:
         # Write out weights to separate ROOT file
         root_numpy.array2root(gb_weights,
