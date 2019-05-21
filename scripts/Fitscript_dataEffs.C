@@ -38,14 +38,14 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger")
 	Int_t nentries = 0;
 
 	RooWorkspace w("w");
-	w.factory(Form("Lb_DTF_M_JpsiLConstr[%d,%d]",5500,5800));
+	w.factory(Form("Lb_DTF_M_JpsiLConstr[%d,%d]",5400,6000));
 
 	RooRealVar *myVar = w.var("Lb_DTF_M_JpsiLConstr");
 
 	fileIn_sim = Open(Form("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_pidgen.root",run));
 	treeIn_sim = (TTree*)fileIn_sim->Get("MyTuple");
 
-	treeIn_sim->Draw("Lb_DTF_M_JpsiLConstr>>hMass_sim(150,5500,5800)","Lb_BKGCAT==0||Lb_BKGCAT==50");
+	treeIn_sim->Draw("Lb_DTF_M_JpsiLConstr>>hMass_sim(150,5500,5800)","Lb_BKGCAT==0||Lb_BKGCAT==50","goff");
 	hMass_sim = (TH1D*)gDirectory->Get("hMass_sim");
 
 	RooDataHist *dh_sim = new RooDataHist("dh_sim","",*myVar,hMass_sim);
