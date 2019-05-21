@@ -189,16 +189,17 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger", Bool_t isData 
 	{
 		fileIn = Open(Form("%s/JpsiLambda/run%d/jpsilambda_cutoutks_LL_nonZeroTracks_noPID.root",prefix,run));
 		treeIn = (TTree*)fileIn->Get("MyTuple");
-		treeIn->AddFriend("MyTuple",Form("%s/JpsiLambda/run%d/jpsilambda_LL_FinalBDT2_iso1_v0_noPID.root",prefix,run));
-
 		if(run == 1)
 		{
+			treeIn->AddFriend("MyTuple",Form("%s/JpsiLambda/run%d/jpsilambda_LL_FinalBDT2_iso2_v0_noPID.root",prefix,run));
 			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high),Form("BDT2 > 0.475%s",bdtwtexp));
 		}
 		else if(run == 2)
 		{
+			treeIn->AddFriend("MyTuple",Form("%s/JpsiLambda/run%d/jpsilambda_LL_FinalBDT2_iso1_v0_noPID.root",prefix,run));
 			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high),Form("BDT2 > 0.555%s",bdtwtexp));
 		}
+
 		hMass = (TH1D*)gDirectory->Get("hMass");
 
 		fileIn_Zero = Open(Form("%s/JpsiLambda/run%d/jpsilambda_cutoutks_LL_ZeroTracks_noPID.root",prefix,run));
