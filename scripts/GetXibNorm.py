@@ -38,13 +38,20 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
                         "jpsixi_cut_LL.root".format(run))
     tree_Xi_rec = file_Xi_rec.MyTuple
 
-    file_Xi_gen = TFile("../rootFiles/mcFiles/JpsiXi/run{}/RW/"
-                        "gbWeights_gen.root".format(run))
+    if run == 1:
+        file_Xi_gen = TFile("../rootFiles/mcFiles/JpsiXi/run{}/RW/"
+                            "gbWeights_gen_new.root".format(run))
+    elif run == 2:
+        file_Xi_gen = TFile("../rootFiles/mcFiles/JpsiXi/run{}/RW/"
+                            "gbWeights_gen.root".format(run))
     tree_Xi_gen = file_Xi_gen.MyTuple
 
-    tree_Xi_rec.Draw("gb_wts>>hxi_rec", "", "goff")
-    tree_Xi_gen.Draw("gb_wts>>hxi_gen", "", "goff")
-
+    if run == 1:
+        tree_Xi_rec.Draw("gb_wts_new>>hxi_rec", "", "goff")
+        tree_Xi_gen.Draw("gb_wts_new>>hxi_gen", "", "goff")
+    elif run == 2:
+        tree_Xi_rec.Draw("gb_wts>>hxi_rec", "", "goff")
+        tree_Xi_gen.Draw("gb_wts>>hxi_gen", "", "goff")
     hxi_rec = gDirectory.Get("hxi_rec")
     hxi_gen = gDirectory.Get("hxi_gen")
 
@@ -80,21 +87,33 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
     + ZeroTracksTree.GetEntries("Lb_BKGCAT==40 && BDT" + str(finalBDTConf_Zero)
                                 + ">" + str(bdtCut_Zero))
 
-    nonZeroTracksTree.Draw("gb_wts>>h0", "Lb_BKGCAT==40 && BDT"
-                           + str(finalBDTConf_nonZero) + ">"
-                           + str(bdtCut_nonZero), "goff")
-    ZeroTracksTree.Draw("gb_wts>>h1", "Lb_BKGCAT==40 && BDT"
-                        + str(finalBDTConf_Zero) + ">"
-                        + str(bdtCut_Zero), "goff")
+    if run == 1:
+        nonZeroTracksTree.Draw("gb_wts_new>>h0", "Lb_BKGCAT==40 && BDT"
+                               + str(finalBDTConf_nonZero) + ">"
+                               + str(bdtCut_nonZero), "goff")
+        ZeroTracksTree.Draw("gb_wts_new>>h1", "Lb_BKGCAT==40 && BDT"
+                            + str(finalBDTConf_Zero) + ">"
+                            + str(bdtCut_Zero), "goff")
+    elif run == 2:
+        nonZeroTracksTree.Draw("gb_wts>>h0", "Lb_BKGCAT==40 && BDT"
+                               + str(finalBDTConf_nonZero) + ">"
+                               + str(bdtCut_nonZero), "goff")
+        ZeroTracksTree.Draw("gb_wts>>h1", "Lb_BKGCAT==40 && BDT"
+                            + str(finalBDTConf_Zero) + ">"
+                            + str(bdtCut_Zero), "goff")
     h0 = gDirectory.Get("h0")
     h1 = gDirectory.Get("h1")
 
     num_wt = h0.GetEntries() * h0.GetMean() + h1.GetEntries() * h1.GetMean()
 
-    genWtsFile = TFile(path + "RW/gbWeights_gen.root")
-    genWtsTree = genWtsFile.MyTuple
-    genWtsTree.Draw("gb_wts>>hgen", "", "goff")
-
+    if run == 1:
+        genWtsFile = TFile(path + "RW/gbWeights_gen_new.root")
+        genWtsTree = genWtsFile.MyTuple
+        genWtsTree.Draw("gb_wts_new>>hgen", "", "goff")
+    elif run == 2:
+        genWtsFile = TFile(path + "RW/gbWeights_gen.root")
+        genWtsTree = genWtsFile.MyTuple
+        genWtsTree.Draw("gb_wts>>hgen", "", "goff")
     hgen = gDirectory.Get("hgen")
     den_wt = hgen.GetEntries() * hgen.GetMean()
 
@@ -114,7 +133,8 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
         xibEffErr_JpsiLambda_wt = xibEff_JpsiLambda_wt * math.sqrt((1.0 / num_wt)
                                                                    + (1.0 / den_wt))
     # print xibEff_JpsiLambda
-    print 'xibEff_JpsiLambda = ' + str('%.4f' % (xibEff_JpsiLambda_wt * 100)) + ' % +/-' + str('%.4f' % (xibEffErr_JpsiLambda_wt * 100)) + ' %'
+    print 'xibEff_JpsiLambda = ' + str('%.4f' % (xibEff_JpsiLambda_wt * 100))
+    + ' % +/-' + str('%.4f' % (xibEffErr_JpsiLambda_wt * 100)) + ' %'
 
     # xibMcLog_JpsiLambda = open("../logs/mc/JpsiLambda/JpsiXi/run"
     #                            + str(run) + "/CutFinalBDT"

@@ -436,14 +436,29 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 
 		genFile_Lambda>>nGen_Lambda[i]; //Get number of generated events
 
-		TFile *genWtsFile_Lambda = Open(Form("%s/run%d/RW/gbWeights_gen.root",
-		                                     lambdaMCPath,run));
+		TFile *genWtsFile_Lambda = nullptr;
+		if(run == 1)
+		{
+			genWtsFile_Lambda = Open(Form("%s/run%d/RW/gbWeights_gen_new.root",
+			                              lambdaMCPath,run));
+		}
+		else if(run == 2)
+		{
+			genWtsFile_Lambda = Open(Form("%s/run%d/RW/gbWeights_gen.root",
+			                              lambdaMCPath,run));
+		}
 		TTree *genWtsTree_Lambda = (TTree*)genWtsFile_Lambda->Get("MyTuple");
 
 		genWtsTree_Lambda->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
 		                                            lambdaMCPath,run));
-
-		genWtsTree_Lambda->Draw("gb_wts*wt_tau>>genWt_Lambda","","goff");
+		if(run == 1)
+		{
+			genWtsTree_Lambda->Draw("gb_wts_new*wt_tau>>genWt_Lambda","","goff");
+		}
+		else if(run == 2)
+		{
+			genWtsTree_Lambda->Draw("gb_wts*wt_tau>>genWt_Lambda","","goff");
+		}
 
 		TH1F *genWt_Lambda = (TH1F*)gDirectory->Get("genWt_Lambda");
 		nGen_Lambda_wt[i] = genWt_Lambda->GetEntries()*genWt_Lambda->GetMean();
@@ -457,8 +472,16 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 		cout<<"Run "<<run<<" Lambda Generator Effs = "<<eff_Lambda_gen[i]*100
 		    <<" % +/- "<<eff_Lambda_gen_err[i]*100<<" %"<<endl;
 
-		mcTreeIn_nonZero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-		mcTreeIn_Zero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+		if(run == 1)
+		{
+			mcTreeIn_nonZero_Lambda->Draw("gb_wts_new*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Lambda->Draw("gb_wts_new*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+		}
+		else if(run == 2)
+		{
+			mcTreeIn_nonZero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+		}
 
 		TH1F *wt_lambda_nonZero = (TH1F*)gDirectory->Get("wt_lambda_nonZero");
 		TH1F *wt_lambda_Zero = (TH1F*)gDirectory->Get("wt_lambda_Zero");
@@ -467,7 +490,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 		                      (wt_lambda_Zero->GetMean()*wt_lambda_Zero->GetEntries());
 
 		Int_t num_Lambda = mcTreeIn_nonZero_Lambda->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]))
-		                   + mcTreeIn_Zero_Lambda->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));                                                      //NOTE NO TM HERE
+		                   + mcTreeIn_Zero_Lambda->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i])); //NOTE NO TM HERE
 
 		eff_Lambda_rec[i]     = num_Lambda*1.0/nGen_Lambda[i]; //Calc. reco eff.
 		eff_Lambda_rec_err[i] = sqrt(eff_Lambda_rec[i]*(1-eff_Lambda_rec[i])/nGen_Lambda[i]); //statistical error on recon. eff.
@@ -533,14 +556,31 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 
 		genFile_Sigma>>nGen_Sigma[i]; // Get number of generated events
 
-		TFile *genWtsFile_Sigma = Open(Form("%s/run%d/RW/gbWeights_gen.root",
-		                                    sigmaPath,run));
+		TFile *genWtsFile_Sigma = nullptr;
+
+		if(run == 1)
+		{
+			genWtsFile_Sigma = Open(Form("%s/run%d/RW/gbWeights_gen_new.root",
+			                             sigmaPath,run));
+		}
+		else if(run == 2)
+		{
+			genWtsFile_Sigma = Open(Form("%s/run%d/RW/gbWeights_gen.root",
+			                             sigmaPath,run));
+		}
 		TTree *genWtsTree_Sigma = (TTree*)genWtsFile_Sigma->Get("MyTuple");
 
 		genWtsTree_Sigma->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
 		                                           sigmaPath,run));
 
-		genWtsTree_Sigma->Draw("gb_wts*wt_tau>>genWt_Sigma","","goff");
+		if(run == 1)
+		{
+			genWtsTree_Sigma->Draw("gb_wts_new*wt_tau>>genWt_Sigma","","goff");
+		}
+		else if(run == 2)
+		{
+			genWtsTree_Sigma->Draw("gb_wts*wt_tau>>genWt_Sigma","","goff");
+		}
 		TH1F *genWt_Sigma = (TH1F*)gDirectory->Get("genWt_Sigma");
 
 		nGen_Sigma_wt[i] = genWt_Sigma->GetEntries()*genWt_Sigma->GetMean();
@@ -554,10 +594,16 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 		cout<<"Run "<<run<<" Sigma Generator Effs = "<<eff_Sigma_gen[i]*100
 		    <<" % +/- "<<eff_Sigma_gen_err[i]*100<<" %"<<endl;
 
-
-		mcTreeIn_nonZero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-		mcTreeIn_Zero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
-
+		if(run == 1)
+		{
+			mcTreeIn_nonZero_Sigma->Draw("gb_wts_new*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Sigma->Draw("gb_wts_new*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+		}
+		else if(run == 2)
+		{
+			mcTreeIn_nonZero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+		}
 		TH1F *wt_Sigma_nonZero = (TH1F*)gDirectory->Get("wt_Sigma_nonZero");
 		TH1F *wt_Sigma_Zero = (TH1F*)gDirectory->Get("wt_Sigma_Zero");
 
@@ -619,6 +665,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 		mcTreeIn_Zero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
 		mcTreeIn_Zero_Sigma->SetBranchStatus("gb_wts",1);
 		mcTreeIn_Zero_Sigma->SetBranchStatus("wt_tau",1);
+		if(run == 1)
+			mcTreeIn_Zero_Sigma->SetBranchStatus("gb_wts_new",1);
 
 		mcTreeIn_nonZero_Sigma->SetBranchStatus("*",0);
 		mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
@@ -626,7 +674,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 		mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
 		mcTreeIn_nonZero_Sigma->SetBranchStatus("gb_wts",1);
 		mcTreeIn_nonZero_Sigma->SetBranchStatus("wt_tau",1);
-
+		if(run == 1)
+			mcTreeIn_nonZero_Sigma->SetBranchStatus("gb_wts_new",1);
 		TFile *tempFile = new TFile("tempFile_sig.root","RECREATE");
 
 		TTree* mcTreeIn_Zero_Sigma_cut    = (TTree*)mcTreeIn_Zero_Sigma->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//Not TRUTH MATCHING HERE!
@@ -639,7 +688,17 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 		TTree *combTree_sig = TTree::MergeTrees(list_sig);
 		combTree_sig->SetName("combTree_sig");
 
-		RooRealVar *gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
+		RooRealVar *gbWtVar = nullptr;
+
+		if(run == 1)
+		{
+			gbWtVar  = new RooRealVar("gb_wts_new","gb Weight Var",-100.,100.);
+		}
+		else if(run == 2)
+		{
+			gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
+		}
+
 		RooRealVar *tauWtVar = new RooRealVar("wt_tau","tau Weight Var",-100.,100.);
 
 		ds_sig[i] = new RooDataSet("ds_sig","ds_sig",combTree_sig,RooArgSet(*myVar,*gbWtVar,*tauWtVar));
@@ -700,12 +759,20 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 		treein_xi_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
 		treein_xi_Zero->SetBranchStatus("Lb_BKGCAT",1);
 		treein_xi_Zero->SetBranchStatus("gb_wts",1);
+		if(run == 1)
+		{
+			treein_xi_Zero->SetBranchStatus("gb_wts_new",1);
+		}
 
 		treein_xi_nonZero->SetBranchStatus("*",0);
 		treein_xi_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 		treein_xi_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
 		treein_xi_nonZero->SetBranchStatus("Lb_BKGCAT",1);
 		treein_xi_nonZero->SetBranchStatus("gb_wts",1);
+		if(run == 1)
+		{
+			treein_xi_Zero->SetBranchStatus("gb_wts_new",1);
+		}
 
 		TFile *tempFile = new TFile("tempFile.root","RECREATE");
 
@@ -719,8 +786,16 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 		TTree *combTree = TTree::MergeTrees(list);
 		combTree->SetName("combTree");
 
-		RooRealVar *gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
+		RooRealVar *gbWtVar = nullptr;
 
+		if(run == 1)
+		{
+			gbWtVar  = new RooRealVar("gb_wts_new","gb Weight Var",-100.,100.);
+		}
+		else if(run == 2)
+		{
+			gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
+		}
 		ds_xi[i] = new RooDataSet("ds_xi","ds_xi",combTree,RooArgSet(*myVar,*gbWtVar));
 		ds_xi[i]->Print();
 
