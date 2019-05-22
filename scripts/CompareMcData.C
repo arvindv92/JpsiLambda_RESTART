@@ -201,6 +201,15 @@ TCanvas* routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_
 	Double_t genChi2 = 0.0, genChi2_rw = 0.0, genChi2_corr_rw = 0.0;
 
 	const char *folder = "", *part = "";
+	const char *gbWt = "";
+	if(run == 1)
+	{
+		gbWt = "gb_wts_new";
+	}
+	else if(run == 2)
+	{
+		gbWt = "gb_wts";
+	}
 	switch(mcType)
 	{
 	case 0:
@@ -298,8 +307,6 @@ TCanvas* routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_
 		}
 	}
 
-
-
 	// treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/gbWeights_rec.root",folder,run));
 	// treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/tauWeights_rec.root",folder,run));
 
@@ -309,12 +316,12 @@ TCanvas* routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_
 	{
 		treeIn_mc->Draw(Form("%s>>mcHist_uncorr(%d,%f,%f)",varName,nBins,low,high),"(Lb_BKGCAT==0||Lb_BKGCAT==50)","goff");
 		treeIn_mc->Draw(Form("%s_corr>>mcHist(%d,%f,%f)",varName,nBins,low,high),"(Lb_BKGCAT==0||Lb_BKGCAT==50)","goff");
-		treeIn_mc->Draw(Form("%s_corr>>mcHist_rw(%d,%f,%f)",varName,nBins,low,high),"gb_wts*wt_tau*(Lb_BKGCAT==0||Lb_BKGCAT==50)","goff");
+		treeIn_mc->Draw(Form("%s_corr>>mcHist_rw(%d,%f,%f)",varName,nBins,low,high),Form("%s*wt_tau*(Lb_BKGCAT==0||Lb_BKGCAT==50)",gbWt),"goff");
 	}
 	else
 	{
 		treeIn_mc->Draw(Form("%s>>mcHist(%d,%f,%f)",varName,nBins,low,high),"(Lb_BKGCAT==0||Lb_BKGCAT==50)","goff");
-		treeIn_mc->Draw(Form("%s>>mcHist_rw(%d,%f,%f)",varName,nBins,low,high),"gb_wts*wt_tau*(Lb_BKGCAT==0||Lb_BKGCAT==50)","goff");
+		treeIn_mc->Draw(Form("%s>>mcHist_rw(%d,%f,%f)",varName,nBins,low,high),Form("%s*wt_tau*(Lb_BKGCAT==0||Lb_BKGCAT==50)",gbWt),"goff");
 	}
 
 	TH1F *dataHist    = (TH1F*)gDirectory->Get("dataHist");
@@ -405,6 +412,17 @@ TCanvas* routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_
 
 	if(!strncmp(varName,"p_PIDp",6) || !strncmp(varName,"p_ProbNNp",9))
 	{
+		Double_t max1 = mcHist_uncorr->GetMaximum();
+		Double_t max2 = dataHist->GetMaximum();
+		Double_t max3 = mcHist->GetMaximum();
+		Double_t max4 = mcHist_rw->GetMaximum();
+
+		Double_t max5 = TMath::Max(max1,max2);
+		Double_t max6 = TMath::Max(max5,max3);
+		Double_t max7 = TMath::Max(max6,max4);
+
+		mcHist_uncorr->SetMaximum(max7*1.2);
+
 		mcHist_uncorr->Draw("HIST");
 		dataHist->Draw("E0same");
 		mcHist->Draw("HISTsame");
@@ -412,35 +430,44 @@ TCanvas* routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_
 	}
 	else
 	{
+		Double_t max2 = dataHist->GetMaximum();
+		Double_t max3 = mcHist->GetMaximum();
+		Double_t max4 = mcHist_rw->GetMaximum();
+
+		Double_t max5 = TMath::Max(max2,max3);
+		Double_t max6 = TMath::Max(max5,max4);
+
+		dataHist->SetMaximum(max6*1.2);
+
 		dataHist->Draw("E0");
 		mcHist->Draw("HISTsame");
 		mcHist_rw->Draw("HISTsame");
 	}
 
-	if(!strncmp(varName,"p_PIDp",6) || !strncmp(varName,"p_ProbNNp",9))
-	{
-		TLatex chi2_uncorr;
-		chi2_uncorr.SetTextSize(0.06);
-		chi2_uncorr.DrawLatexNDC(.6,.85,Form("Orig. #chi^{2}/ndf = %.1f",myChi2_uncorr));
-
-		TLatex chi2;
-		chi2.SetTextSize(0.06);
-		chi2.DrawLatexNDC(.6,.75,Form("PIDCorr. #chi^{2}/ndf = %.1f",myChi2));
-
-		TLatex chi2_rw;
-		chi2_rw.SetTextSize(0.06);
-		chi2_rw.DrawLatexNDC(.6,.65,Form("Kin RW. #chi^{2}/ndf = %.1f",myChi2_rw));
-	}
-	else
-	{
-		TLatex chi2;
-		chi2.SetTextSize(0.06);
-		chi2.DrawLatexNDC(.65,.85,Form("Orig. #chi^{2}/ndf = %.1f",myChi2));
-
-		TLatex chi2_rw;
-		chi2_rw.SetTextSize(0.06);
-		chi2_rw.DrawLatexNDC(.65,.75,Form("RW #chi^{2}/ndf = %.1f",myChi2_rw));
-	}
+	// if(!strncmp(varName,"p_PIDp",6) || !strncmp(varName,"p_ProbNNp",9))
+	// {
+	//      TLatex chi2_uncorr;
+	//      chi2_uncorr.SetTextSize(0.06);
+	//      chi2_uncorr.DrawLatexNDC(.6,.85,Form("Orig. #chi^{2}/ndf = %.1f",myChi2_uncorr));
+	//
+	//      TLatex chi2;
+	//      chi2.SetTextSize(0.06);
+	//      chi2.DrawLatexNDC(.6,.75,Form("PIDCorr. #chi^{2}/ndf = %.1f",myChi2));
+	//
+	//      TLatex chi2_rw;
+	//      chi2_rw.SetTextSize(0.06);
+	//      chi2_rw.DrawLatexNDC(.6,.65,Form("Kin RW. #chi^{2}/ndf = %.1f",myChi2_rw));
+	// }
+	// else
+	// {
+	//      TLatex chi2;
+	//      chi2.SetTextSize(0.06);
+	//      chi2.DrawLatexNDC(.65,.85,Form("Orig. #chi^{2}/ndf = %.1f",myChi2));
+	//
+	//      TLatex chi2_rw;
+	//      chi2_rw.SetTextSize(0.06);
+	//      chi2_rw.DrawLatexNDC(.65,.75,Form("RW #chi^{2}/ndf = %.1f",myChi2_rw));
+	// }
 	return c1;
 
 	gROOT->SetBatch(kFALSE);
