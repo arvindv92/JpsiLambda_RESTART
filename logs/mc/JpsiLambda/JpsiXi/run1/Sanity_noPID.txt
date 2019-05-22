@@ -5,7 +5,7 @@
 ******************************************
 ******************************************
 ==> Starting Sanity: 
-Fri May  3 14:31:28 EDT 2019
+Tue May 21 13:56:33 EDT 2019
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
 ******************************************
@@ -26,4 +26,4 @@ Original generated number = 3410720
 ******************************************
 LL Sanity cuts made with inclusive efficiency = 0.933498% +/- 0.00520711 %
 ******************************************
-==> Sanity is done! Mazel Tov!: Real time 0:00:24, CP time 24.160
+==> Sanity is done! Mazel Tov!: Real time 0:00:28, CP time 27.530

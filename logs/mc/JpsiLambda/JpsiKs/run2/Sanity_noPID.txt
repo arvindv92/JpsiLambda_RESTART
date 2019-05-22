@@ -1,0 +1,33 @@
+******************************************
+******************************************
+******************************************
+******************************************
+******************************************
+******************************************
+==> Starting Sanity: 
+Mon May 13 23:07:00 EDT 2019
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+Input file = rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_triggered.root
+LL Output file = rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_sanity_LL_noPID.root
+******************************************
+Incoming entries = 403308
+I am making the following sanity cuts, and then separating in LL and DD files. Sit tight
+OBJ: TCut	CUT	(Lb_TAU > 0)&&(L_TAU > 0)
+OBJ: TCut	CUT	(Lb_ConsLb_chi2/Lb_ConsLb_nDOF > 0 && Lb_ConsLb_chi2/Lb_ConsLb_nDOF < 50)
+OBJ: TCut	CUT	(Lb_ETA > 2 && Lb_ETA < 6 && Lb_PT < 20000)
+0
+100000
+200000
+300000
+400000
+Outgoing LL entries = 238833
+******************************************
+LL Sanity cuts made with exclusive efficiency = 59.2185% +/- 0.0773823 %
+******************************************
+Original generated number = 20398155
+******************************************
+LL Sanity cuts made with inclusive efficiency = 1.17086% +/- 0.00238176 %
+******************************************
+==> Sanity is done! Mazel Tov!: Real time 0:03:29, CP time 194.440

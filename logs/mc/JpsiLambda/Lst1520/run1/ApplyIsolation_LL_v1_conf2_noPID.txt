@@ -1,5 +1,6 @@
 ******************************************
 ==> Start of ApplyIsolation
+Tue May 21 14:47:41 EDT 2019
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
 ******************************************
@@ -18,4 +19,4 @@ Incoming entries = 69266
 --- ... Processing event: 0
 --- ... Processing event: 50000
 --- Created root file: rootFiles/mcFiles/JpsiLambda/Lst1520/run1/lst1520_LL_iso2_v1_noPID.root containing the MVA output histograms
-==> End of ApplyIsolation! Isolated forever!: Real time 0:00:23, CP time 23.770
+==> End of ApplyIsolation! Isolated forever!: Real time 0:00:26, CP time 26.060

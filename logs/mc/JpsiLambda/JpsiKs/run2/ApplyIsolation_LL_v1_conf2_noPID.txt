@@ -1,0 +1,24 @@
+******************************************
+==> Start of ApplyIsolation
+Mon May 13 23:45:45 EDT 2019
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+Processing Run 2 LL MC type 10
+******************************************
+******************************************
+Input file  = rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_cutoutks_LL_nonZeroTracks_noPID.root
+Output file = rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_LL_iso2_v1_noPID.root
+******************************************
+Incoming entries = 162020
+                         : Booking "BDT method" of type "BDT" from dataset/weights/isok_dataRun2_v1_iso2_noPID_isoConf2_300.weights.xml.
+<HEADER> DataSetInfo              : [Default] : Added class "Signal"
+<HEADER> DataSetInfo              : [Default] : Added class "Background"
+                         : Booked classifier "isoConf2_300" of type: "BDT"
+--- Processing: 162020 events
+--- ... Processing event: 0
+--- ... Processing event: 50000
+--- ... Processing event: 100000
+--- ... Processing event: 150000
+--- Created root file: rootFiles/mcFiles/JpsiLambda/JpsiKs/run2/jpsiks_LL_iso2_v1_noPID.root containing the MVA output histograms
+==> End of ApplyIsolation! Isolated forever!: Real time 0:01:28, CP time 88.450
