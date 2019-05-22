@@ -258,7 +258,7 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger", Bool_t isData 
 	// w.factory("RooHypatia2::sig(Lb_DTF_M_JpsiLConstr,lambda[-2.0,-4.0,0.0],0,0,"
 	//           "sigma[10.,1.,20.], mean[5619.6,5619,5621], a1[1.7,1.0,3.0],"
 	//           "2 ,a2[3.0,1.0,4.0], 2)");
-	if(isData)
+	if(isData || !wtMC)
 	{
 		RooFitResult *res = model->fitTo(*dh,Extended(), Save(), Hesse(true), Strategy(2));
 	}
