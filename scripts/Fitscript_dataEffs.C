@@ -57,13 +57,13 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger", Bool_t isData 
 		prefix = "../rootFiles/mcFiles/JpsiLambda";
 		if(wtMC && (run == 1))
 		{
-			wtexp  = "gb_wts_new*wt_tau";
-			bdtwtexp = "*gb_wts_new*wt_tau";
+			wtexp  = "(gb_wts_new*wt_tau)";
+			bdtwtexp = "*(gb_wts_new*wt_tau)";
 		}
 		else if(wtMC && (run == 2))
 		{
-			wtexp  = "gb_wts*wt_tau";
-			bdtwtexp = "*gb_wts*wt_tau";
+			wtexp  = "(gb_wts*wt_tau)";
+			bdtwtexp = "*(gb_wts*wt_tau)";
 		}
 	}
 	//*************Fit to simulation to get params****************************
@@ -197,12 +197,12 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger", Bool_t isData 
 		if(run == 1)
 		{
 			treeIn->AddFriend("MyTuple",Form("%s/JpsiLambda/run%d/jpsilambda_LL_FinalBDT2_iso2_v0_noPID.root",prefix,run));
-			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high),Form("BDT2 > 0.475%s",bdtwtexp));
+			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high),Form("(BDT2 > 0.475)%s",bdtwtexp));
 		}
 		else if(run == 2)
 		{
 			treeIn->AddFriend("MyTuple",Form("%s/JpsiLambda/run%d/jpsilambda_LL_FinalBDT2_iso1_v0_noPID.root",prefix,run));
-			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high),Form("BDT2 > 0.555%s",bdtwtexp));
+			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high),Form("(BDT2 > 0.555)%s",bdtwtexp));
 		}
 
 		hMass = (TH1D*)gDirectory->Get("hMass");
@@ -213,17 +213,17 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger", Bool_t isData 
 
 		if(run == 1)
 		{
-			treeIn_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass_Zero(%d,%d,%d)",nbins,low,high),Form("BDT2 > 0.365%s",bdtwtexp));
+			treeIn_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass_Zero(%d,%d,%d)",nbins,low,high),Form("(BDT2 > 0.365)%s",bdtwtexp));
 		}
 		else if(run == 2)
 		{
-			treeIn_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass_Zero(%d,%d,%d)",nbins,low,high),Form("BDT2 > 0.495%s",bdtwtexp));
+			treeIn_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass_Zero(%d,%d,%d)",nbins,low,high),Form("(BDT2 > 0.495)%s",bdtwtexp));
 		}
 		hMass_Zero = (TH1D*)gDirectory->Get("hMass_Zero");
 
 		hMass->Add(hMass_Zero);
 	}
-	nentries = hMass->GetEntries();
+	nentries = (Int_t)(hMass->Integral()) + 1;
 	cout<<"nentries = "<<nentries<<endl;
 
 	RooDataHist *dh = new RooDataHist("dh","",*myVar,hMass);
