@@ -175,5 +175,5 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
     xibNormLog.write(str(xibNormErr_syst) + "\n")
     xibNormLog.write(str(xibNorm_wt) + "\n")
     xibNormLog.write(str(xibNormErr_wt_stat) + "\n")
-    xibNormLog.write(str(xibNormErr_wt_stat) + "\n")
+    xibNormLog.write(str(xibNormErr_wt_syst) + "\n")
     return xibNorm, xibNormErr
