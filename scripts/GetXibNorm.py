@@ -65,7 +65,7 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
     ###############################
 
     # Get efficiency for reco'ing Xib -> J/psi Lambda
-    # NB Truth Matching used to get eff.
+    # NB Not using TM anymore.
     path = "../rootFiles/mcFiles/JpsiLambda/JpsiXi/run" + str(run) + "/"
     nonZeroTracksFile = TFile(path
                               + "jpsixi_cutoutks_LL_nonZeroTracks_noPID.root")
@@ -81,24 +81,23 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
     ZeroTracksTree.AddFriend("MyTuple", path + "jpsixi_zeroTracksLL_FinalBDT"
                              + str(finalBDTConf_Zero) + "_noPID.root")
 
-    num = nonZeroTracksTree.GetEntries("Lb_BKGCAT==40 && BDT"
-                                       + str(finalBDTConf_nonZero) + ">"
+    num = nonZeroTracksTree.GetEntries("BDT" + str(finalBDTConf_nonZero) + ">"
                                        + str(bdtCut_nonZero))
-    + ZeroTracksTree.GetEntries("Lb_BKGCAT==40 && BDT" + str(finalBDTConf_Zero)
+    + ZeroTracksTree.GetEntries("BDT" + str(finalBDTConf_Zero)
                                 + ">" + str(bdtCut_Zero))
 
     if run == 1:
-        nonZeroTracksTree.Draw("gb_wts_new>>h0", "Lb_BKGCAT==40 && BDT"
+        nonZeroTracksTree.Draw("gb_wts_new>>h0", "BDT"
                                + str(finalBDTConf_nonZero) + ">"
                                + str(bdtCut_nonZero), "goff")
-        ZeroTracksTree.Draw("gb_wts_new>>h1", "Lb_BKGCAT==40 && BDT"
+        ZeroTracksTree.Draw("gb_wts_new>>h1", "BDT"
                             + str(finalBDTConf_Zero) + ">"
                             + str(bdtCut_Zero), "goff")
     elif run == 2:
-        nonZeroTracksTree.Draw("gb_wts>>h0", "Lb_BKGCAT==40 && BDT"
+        nonZeroTracksTree.Draw("gb_wts>>h0", "BDT"
                                + str(finalBDTConf_nonZero) + ">"
                                + str(bdtCut_nonZero), "goff")
-        ZeroTracksTree.Draw("gb_wts>>h1", "Lb_BKGCAT==40 && BDT"
+        ZeroTracksTree.Draw("gb_wts>>h1", "BDT"
                             + str(finalBDTConf_Zero) + ">"
                             + str(bdtCut_Zero), "goff")
     h0 = gDirectory.Get("h0")
@@ -151,26 +150,32 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
     if xibEff_JpsiLambda > 0:
         relErr_xibEff_JpsiLambda = xibEffErr_JpsiLambda / xibEff_JpsiLambda
         xibNorm = xibYield * xibEff_JpsiLambda / xibEff
-        xibNormErr = xibNorm * math.sqrt(pow(relErr_xibYield, 2)
-                                         + pow(relErr_xibEff, 2)
-                                         + pow(relErr_xibEff_JpsiLambda, 2))
+        xibNormErr_stat = xibNorm * relErr_xibYield
+        xibNormErr_syst = xibNorm * math.sqrt(pow(relErr_xibEff, 2)
+                                              + pow(relErr_xibEff_JpsiLambda, 2))
+        xibNormErr = math.sqrt(pow(xibNormErr_stat, 2) + pow(xibNormErr_syst, 2))
     else:
         xibNorm = 0.0
-        xibNormErr = 0.0
+        xibNormErr_stat = 0.0
+        xibNormErr_syst = 0.0
     if xibEff_JpsiLambda_wt > 0:
         relErr_xibEff_JpsiLambda_wt = xibEffErr_JpsiLambda_wt / xibEff_JpsiLambda_wt
         xibNorm_wt = xibYield * xibEff_JpsiLambda_wt / xibEff_wt
-        xibNormErr_wt = xibNorm_wt * math.sqrt(pow(relErr_xibYield, 2)
-                                               + pow(relErr_xibEff_wt, 2)
-                                               + pow(relErr_xibEff_JpsiLambda_wt, 2))
+        xibNormErr_wt_stat = xibNorm_wt * relErr_xibYield
+        xibNormErr_wt_syst = xibNorm_wt * math.sqrt(pow(relErr_xibEff_wt, 2)
+                                                    + pow(relErr_xibEff_JpsiLambda_wt, 2))
+        xibNormErr_wt = math.sqrt(pow(xibNormErr_wt_stat, 2) + pow(xibNormErr_wt_syst, 2))
     else:
         xibNorm_wt = 0.0
-        xibNormErr_wt = 0.0
-    print 'Norm = ' + str(xibNorm_wt) + '+/-' + str(xibNormErr_wt)
+        xibNormErr_wt_stat = 0.0
+        xibNormErr_wt_syst = 0.0
+    print 'Norm = ' + str(xibNorm_wt) + '+/-' + str(xibNormErr_wt_stat) + '+/-' + str(xibNormErr_wt_syst)
     xibNormLog = open("../logs/mc/JpsiXi/run" + str(run) + "/xibNorm_log.txt",
                       "w")
     xibNormLog.write(str(xibNorm) + "\n")
-    xibNormLog.write(str(xibNormErr) + "\n")
+    xibNormLog.write(str(xibNormErr_stat) + "\n")
+    xibNormLog.write(str(xibNormErr_syst) + "\n")
     xibNormLog.write(str(xibNorm_wt) + "\n")
-    xibNormLog.write(str(xibNormErr_wt) + "\n")
+    xibNormLog.write(str(xibNormErr_wt_stat) + "\n")
+    xibNormLog.write(str(xibNormErr_wt_stat) + "\n")
     return xibNorm, xibNormErr
