@@ -40,15 +40,15 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
 
     if run == 1:
         file_Xi_gen = TFile("../rootFiles/mcFiles/JpsiXi/run{}/RW/"
-                            "gbWeights_gen_new.root".format(run))
+                            "gbWeights_gen.root".format(run))
     elif run == 2:
         file_Xi_gen = TFile("../rootFiles/mcFiles/JpsiXi/run{}/RW/"
                             "gbWeights_gen.root".format(run))
     tree_Xi_gen = file_Xi_gen.MyTuple
 
     if run == 1:
-        tree_Xi_rec.Draw("gb_wts_new>>hxi_rec", "", "goff")
-        tree_Xi_gen.Draw("gb_wts_new>>hxi_gen", "", "goff")
+        tree_Xi_rec.Draw("gb_wts>>hxi_rec", "", "goff")
+        tree_Xi_gen.Draw("gb_wts>>hxi_gen", "", "goff")
     elif run == 2:
         tree_Xi_rec.Draw("gb_wts>>hxi_rec", "", "goff")
         tree_Xi_gen.Draw("gb_wts>>hxi_gen", "", "goff")
@@ -87,10 +87,10 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
                                 + ">" + str(bdtCut_Zero))
 
     if run == 1:
-        nonZeroTracksTree.Draw("gb_wts_new>>h0", "BDT"
+        nonZeroTracksTree.Draw("gb_wts>>h0", "BDT"
                                + str(finalBDTConf_nonZero) + ">"
                                + str(bdtCut_nonZero), "goff")
-        ZeroTracksTree.Draw("gb_wts_new>>h1", "BDT"
+        ZeroTracksTree.Draw("gb_wts>>h1", "BDT"
                             + str(finalBDTConf_Zero) + ">"
                             + str(bdtCut_Zero), "goff")
     elif run == 2:
@@ -106,9 +106,9 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
     num_wt = h0.GetEntries() * h0.GetMean() + h1.GetEntries() * h1.GetMean()
 
     if run == 1:
-        genWtsFile = TFile(path + "RW/gbWeights_gen_new.root")
+        genWtsFile = TFile(path + "RW/gbWeights_gen.root")
         genWtsTree = genWtsFile.MyTuple
-        genWtsTree.Draw("gb_wts_new>>hgen", "", "goff")
+        genWtsTree.Draw("gb_wts>>hgen", "", "goff")
     elif run == 2:
         genWtsFile = TFile(path + "RW/gbWeights_gen.root")
         genWtsTree = genWtsFile.MyTuple
