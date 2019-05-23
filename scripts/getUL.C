@@ -407,10 +407,12 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 
 		cout<<"************************************************"<<endl;
 		cout<<"The UNWEIGHTED LL Xib normalization for Run "<<run
-		    <<" is "<<xibnorm_LL[i]<<" +/- "<<xibnorm_LL_err[i]<<endl;
+		    <<" is "<<xibnorm_LL[i]<<" +/- "<<xibnorm_LL_staterr[i]
+		    <<" +/- "<<xibnorm_LL_systerr[i]<<endl;
 
 		cout<<"The WEIGHTED LL Xib normalization for Run "<<run
-		    <<" is "<<xibnorm_LL_wt[i]<<" +/- "<<xibnorm_LL_err_wt[i]<<endl;
+		    <<" is "<<xibnorm_LL_wt[i]<<" +/- "<<xibnorm_LL_staterr_wt[i]
+		    <<" +/- "<<xibnorm_LL_systerr_wt<<endl;
 		cout<<"************************************************"<<endl;
 	}
 	//************************************************
