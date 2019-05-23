@@ -797,7 +797,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 
 		if(run == 1)
 		{
-			gbWtVar  = new RooRealVar("gb_wts_new","gb Weight Var",-100.,100.);
+			gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
 		}
 		else if(run == 2)
 		{
