@@ -124,13 +124,11 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
     if num == 0:
         xibEffErr_JpsiLambda = 0.0
     else:
-        xibEffErr_JpsiLambda = xibEff_JpsiLambda * math.sqrt((1.0 / num)
-                                                             + (1.0 / genYield))
+        xibEffErr_JpsiLambda = math.sqrt((xibEff_JpsiLambda * (1 - xibEff_JpsiLambda)) / genYield)
     if num_wt == 0:
         xibEffErr_JpsiLambda_wt = 0.0
     else:
-        xibEffErr_JpsiLambda_wt = xibEff_JpsiLambda_wt * math.sqrt((1.0 / num_wt)
-                                                                   + (1.0 / den_wt))
+        xibEffErr_JpsiLambda_wt = math.sqrt((xibEff_JpsiLambda_wt * (1 - xibEff_JpsiLambda_wt)) / den_wt)
     # print xibEff_JpsiLambda
     print 'xibEff_JpsiLambda = ' + str('%.4f' % (xibEff_JpsiLambda_wt * 100)) + ' % +/-' + str('%.4f' % (xibEffErr_JpsiLambda_wt * 100)) + ' %'
 
