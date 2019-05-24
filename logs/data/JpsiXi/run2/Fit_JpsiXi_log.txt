@@ -1,13 +1,11 @@
-Info in <TCanvas::Print>: pdf file plots/data/JpsiXi/run2/fit.pdf has been created
-01:06 EST 2019
+Error in <TTree::SetBranchStatus>: unknown branch -> gb_wts
+JpsiXi: 
+Fri May 24 17:37:48 EDT 2019
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
-poop2
 nentries = 6721
 [#1] INFO:Eval -- RooTreeDataStore::loadValues(ds) Ignored 5497 out of range events
 RooDataSet::ds[Xib_DTF_M_JpsiXiLConstr] = 1224 entries
-stage1
-stage2
 [#1] INFO:Minization -- RooMinimizer::optimizeConst: activating const optimization
 [#1] INFO:Minization --  The following expressions will be evaluated in cache-and-track mode: (sig1,sig2,bkg)
  **********
@@ -18,10 +16,13 @@ stage2
  **********
  PARAMETER DEFINITIONS:
     NO.   NAME         VALUE      STEP SIZE      LIMITS
-     1 fs           1.00000e+00  1.50000e-01    5.00000e-01  2.00000e+00
-     2 nbkg         3.36050e+03  6.72100e+02    0.00000e+00  6.72100e+03
-     3 nsig         3.36050e+03  6.72100e+02    0.00000e+00  6.72100e+03
-     4 tau         -7.00000e-04  3.49950e-04   -1.00000e-02 -1.00000e-07
+     1 alpha1       1.04300e+00  1.60000e-02    9.63000e-01  1.12300e+00
+     2 alpha2      -1.08300e+00  1.60000e-02   -1.16300e+00 -1.00300e+00
+     3 fs           1.00000e+00  1.50000e-01    5.00000e-01  2.00000e+00
+     4 mean         5.79495e+03  1.00000e+00    5.79000e+03  5.80000e+03
+     5 nbkg         3.36050e+03  6.72100e+02    0.00000e+00  6.72100e+03
+     6 nsig         3.36300e+03  6.71600e+02    5.00000e+00  6.72100e+03
+     7 tau         -7.00000e-04  3.49950e-04   -1.00000e-02 -1.00000e-07
  **********
  **    3 **SET ERR         0.5
  **********
@@ -33,43 +34,61 @@ stage2
  **********
  NOW USING STRATEGY  2: MAKE SURE MINIMUM TRUE, ERRORS CORRECT  
  **********
- **    6 **MIGRAD        2000           1
+ **    6 **MIGRAD        3500           1
  **********
  FIRST CALL TO USER FUNCTION AT NEW START POINT, WITH IFLAG=4.
  START MIGRAD MINIMIZATION.  STRATEGY  2.  CONVERGENCE WHEN EDM .LT. 1.00e-03
+ MINUIT WARNING IN HESSE   
+ ============== Negative diagonal element 1 in Error Matrix
+ MINUIT WARNING IN HESSE   
+ ============== Negative diagonal element 2 in Error Matrix
+ MINUIT WARNING IN HESSE   
+ ============== 1.46756 added to diagonal of error matrix
  COVARIANCE MATRIX CALCULATED SUCCESSFULLY
- FCN=3895.13 FROM HESSE     STATUS=OK             33 CALLS          34 TOTAL
-                     EDM=28170.1    STRATEGY= 2      ERROR MATRIX ACCURATE 
+ FCN=3897.64 FROM HESSE     STATUS=OK             66 CALLS          67 TOTAL
+                     EDM=29971.3    STRATEGY= 2      ERROR MATRIX ACCURATE 
   EXT PARAMETER                                   STEP         FIRST   
   NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
-   1  fs           1.00000e+00   9.56940e-02   1.61537e-01  -6.98623e+01
-   2  nbkg         3.36050e+03   1.14281e+02   4.50438e-02   2.38488e+03
-   3  nsig         3.36050e+03   2.62026e+02   9.51218e-02   3.11212e+03
-   4  tau         -7.00000e-04   2.27015e-04   1.23302e-01   3.76405e+01
+   1  alpha1       1.04300e+00   6.68137e-02   5.00000e-01   2.33429e+00
+   2  alpha2      -1.08300e+00   1.14390e-01   5.00000e-01  -3.44953e+00
+   3  fs           1.00000e+00   1.03683e-01   1.60756e-01  -7.11252e+01
+   4  mean         5.79495e+03   7.48180e-01   1.90475e-01  -3.57147e+01
+   5  nbkg         3.36050e+03   1.16575e+02   4.50931e-02   2.38566e+03
+   6  nsig         3.36300e+03   2.76341e+02   9.52665e-02   3.10920e+03
+   7  tau         -7.00000e-04   2.26351e-04   1.23630e-01   3.78826e+01
                                ERR DEF= 0.5
  MIGRAD MINIMIZATION HAS CONVERGED.
  MIGRAD WILL VERIFY CONVERGENCE AND ERROR MATRIX.
  COVARIANCE MATRIX CALCULATED SUCCESSFULLY
- FCN=200.156 FROM MIGRAD    STATUS=CONVERGED     171 CALLS         172 TOTAL
-                     EDM=6.85654e-07    STRATEGY= 2      ERROR MATRIX ACCURATE 
+ FCN=192.846 FROM MIGRAD    STATUS=CONVERGED     468 CALLS         469 TOTAL
+                     EDM=2.90292e-05    STRATEGY= 2      ERROR MATRIX ACCURATE 
   EXT PARAMETER                                   STEP         FIRST   
   NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
-   1  fs           9.87640e-01   1.04055e-01   1.37534e-03  -1.82551e-03
-   2  nbkg         1.05272e+03   3.39657e+01   1.33088e-04  -6.20463e-03
-   3  nsig         1.71273e+02   1.65003e+01   1.43264e-04   3.31710e-02
-   4  tau         -1.13184e-03   1.80210e-04   5.56027e-04  -9.61719e-03
+   1  alpha1       1.12300e+00   1.59925e-01   2.93708e-02  -7.41752e-04
+   2  alpha2      -1.00301e+00   1.59868e-01   2.97414e-02   1.38498e-03
+   3  fs           9.38132e-01   9.72049e-02   1.29697e-03  -1.46030e-03
+   4  mean         5.79792e+03   7.50180e-01   1.77925e-03  -8.71383e-03
+   5  nbkg         1.05076e+03   3.38686e+01   1.30578e-04   7.22939e-02
+   6  nsig         1.73281e+02   1.64217e+01   1.41731e-04   7.23523e-02
+   7  tau         -1.14377e-03   1.80473e-04   5.42832e-04  -1.97337e-02
                                ERR DEF= 0.5
- EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  4    ERR DEF=0.5
-  1.091e-02 -5.388e-01 -5.387e-01 -5.606e-07 
- -5.388e-01  1.154e+03  1.010e+02  1.015e-04 
- -5.387e-01  1.010e+02  2.723e+02  1.015e-04 
- -5.606e-07  1.015e-04  1.015e-04  3.251e-08 
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  7    ERR DEF=0.5
+  2.970e-06 -9.137e-12  2.148e-07  1.070e-06 -2.122e-05  2.123e-05  4.929e-12 
+ -9.137e-12  1.036e-05 -1.622e-06  1.175e-05  2.860e-04 -2.862e-04  5.925e-10 
+  2.148e-07 -1.622e-06  9.513e-03 -6.317e-03  4.867e-01 -4.868e-01  5.681e-07 
+  1.070e-06  1.175e-05 -6.317e-03  5.693e-01 -3.911e-01  3.913e-01 -1.925e-06 
+ -2.122e-05  2.860e-04  4.867e-01 -3.911e-01  1.147e+03 -9.638e+01  1.064e-04 
+  2.123e-05 -2.862e-04 -4.868e-01  3.913e-01 -9.638e+01  2.697e+02 -1.064e-04 
+  4.929e-12  5.925e-10  5.681e-07 -1.925e-06  1.064e-04 -1.064e-04  3.261e-08 
  PARAMETER  CORRELATION COEFFICIENTS  
-       NO.  GLOBAL      1      2      3      4
-        1  0.32785   1.000 -0.152 -0.313 -0.030
-        2  0.20658  -0.152  1.000  0.180  0.017
-        3  0.34104  -0.313  0.180  1.000  0.034
-        4  0.04053  -0.030  0.017  0.034  1.000
+       NO.  GLOBAL      1      2      3      4      5      6      7
+        1  0.00202   1.000 -0.000  0.001  0.001 -0.000  0.001  0.000
+        2  0.01036  -0.000  1.000 -0.005  0.005  0.003 -0.005  0.001
+        3  0.32817   0.001 -0.005  1.000 -0.086  0.147 -0.304  0.032
+        4  0.08690   0.001  0.005 -0.086  1.000 -0.015  0.032 -0.014
+        5  0.19996  -0.000  0.003  0.147 -0.015  1.000 -0.173  0.017
+        6  0.33152   0.001 -0.005 -0.304  0.032 -0.173  1.000 -0.036
+        7  0.04473   0.000  0.001  0.032 -0.014  0.017 -0.036  1.000
  **********
  **    7 **SET ERR         0.5
  **********
@@ -77,43 +96,49 @@ stage2
  **    8 **SET PRINT           1
  **********
  **********
- **    9 **HESSE        2000
+ **    9 **HESSE        3500
  **********
  COVARIANCE MATRIX CALCULATED SUCCESSFULLY
- FCN=200.156 FROM HESSE     STATUS=OK             23 CALLS         195 TOTAL
-                     EDM=6.85458e-07    STRATEGY= 2      ERROR MATRIX ACCURATE 
+ FCN=192.846 FROM HESSE     STATUS=OK             50 CALLS         519 TOTAL
+                     EDM=2.90597e-05    STRATEGY= 2      ERROR MATRIX ACCURATE 
   EXT PARAMETER                                INTERNAL      INTERNAL  
   NO.   NAME      VALUE            ERROR       STEP SIZE       VALUE   
-   1  fs           9.87640e-01   1.04063e-01   2.75068e-04  -6.64056e+00
-   2  nbkg         1.05272e+03   3.39661e+01   2.66176e-05  -7.56991e-01
-   3  nsig         1.71273e+02   1.65014e+01   2.86527e-05  -8.17462e+00
-   4  tau         -1.13184e-03   1.80211e-04   1.11205e-04   8.84583e-01
+   1  alpha1       1.12300e+00   1.59925e-01   5.87417e-03   4.55461e+01
+   2  alpha2      -1.00301e+00   1.59867e-01   5.94829e-03  -4.23984e+01
+   3  fs           9.38132e-01   9.71931e-02   2.59393e-04  -1.52791e+01
+   4  mean         5.79792e+03   7.50133e-01   3.55850e-04   6.90762e+00
+   5  nbkg         1.05076e+03   3.38685e+01   2.61156e-05  -7.57792e-01
+   6  nsig         1.73281e+02   1.64207e+01   2.83461e-05  -2.01024e+01
+   7  tau         -1.14377e-03   1.80473e-04   1.08566e-04   8.80824e-01
                                ERR DEF= 0.5
- EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  4    ERR DEF=0.5
-  1.091e-02 -5.392e-01 -5.392e-01 -5.615e-07 
- -5.392e-01  1.154e+03  1.011e+02  1.017e-04 
- -5.392e-01  1.011e+02  2.723e+02  1.017e-04 
- -5.615e-07  1.017e-04  1.017e-04  3.251e-08 
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  7    ERR DEF=0.5
+  2.970e-06  1.466e-12 -1.140e-07 -5.692e-07  1.124e-05 -1.126e-05 -2.631e-12 
+  1.466e-12  1.036e-05 -9.310e-07  6.743e-06  1.644e-04 -1.644e-04  3.406e-10 
+ -1.140e-07 -9.310e-07  9.511e-03 -6.267e-03  4.865e-01 -4.865e-01  5.683e-07 
+ -5.692e-07  6.743e-06 -6.267e-03  5.692e-01 -3.902e-01  3.902e-01 -1.925e-06 
+  1.124e-05  1.644e-04  4.865e-01 -3.902e-01  1.147e+03 -9.637e+01  1.065e-04 
+ -1.126e-05 -1.644e-04 -4.865e-01  3.902e-01 -9.637e+01  2.697e+02 -1.065e-04 
+ -2.631e-12  3.406e-10  5.683e-07 -1.925e-06  1.065e-04 -1.065e-04  3.261e-08 
  PARAMETER  CORRELATION COEFFICIENTS  
-       NO.  GLOBAL      1      2      3      4
-        1  0.32806   1.000 -0.152 -0.313 -0.030
-        2  0.20664  -0.152  1.000  0.180  0.017
-        3  0.34122  -0.313  0.180  1.000  0.034
-        4  0.04058  -0.030  0.017  0.034  1.000
+       NO.  GLOBAL      1      2      3      4      5      6      7
+        1  0.00107   1.000  0.000 -0.001 -0.000  0.000 -0.000 -0.000
+        2  0.00595   0.000  1.000 -0.003  0.003  0.002 -0.003  0.001
+        3  0.32784  -0.001 -0.003  1.000 -0.085  0.147 -0.304  0.032
+        4  0.08617  -0.000  0.003 -0.085  1.000 -0.015  0.031 -0.014
+        5  0.19993   0.000  0.002  0.147 -0.015  1.000 -0.173  0.017
+        6  0.33136  -0.000 -0.003 -0.304  0.031 -0.173  1.000 -0.036
+        7  0.04475  -0.000  0.001  0.032 -0.014  0.017 -0.036  1.000
 [#1] INFO:Minization -- RooMinimizer::optimizeConst: deactivating const optimization
-stage3
-[#1] INFO:Plotting -- RooAbsPdf::plotOn(model) directly selected PDF components: (sig)
-[#1] INFO:Plotting -- RooAbsPdf::plotOn(model) indirectly selected PDF components: (sig1,sigma1,sig2)
-[#1] INFO:Plotting -- RooAbsPdf::plotOn(model) directly selected PDF components: (bkg)
-[#1] INFO:Plotting -- RooAbsPdf::plotOn(model) indirectly selected PDF components: ()
-chi square1 = 0.891415
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model_nom) directly selected PDF components: (sig)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model_nom) indirectly selected PDF components: (sig1,sigma1,sig2)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model_nom) directly selected PDF components: (bkg)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model_nom) indirectly selected PDF components: ()
+chi square1 = 0.792376
 RooArgSet::parameters = (CBn,alpha1,alpha2,frac1,fs,mean,nbkg,nsig,sigma,tau)
-float pars = 4
-chi square2 = 0.928558
-poop1
-poop3
-Pull Mean Y = -0.0171114
-Pull RMS Y = 0.94465
-RooRealVar::nsig = 171.273 +/- 16.5014  L(0 - 6721) 
-RooRealVar::nbkg = 1052.72 +/- 33.9661  L(0 - 6721) 
-==> Fit_JpsiXi is done! Well Fitted!: Real time 0:00:02, CP time 0.580
+float pars = 7
+chi square2 = 0.852017
+Pull Mean Y = -0.0106334
+Pull RMS Y = 0.892702
+RooRealVar::nsig = 173.281 +/- 16.4207  L(5 - 6721) 
+RooRealVar::nbkg = 1050.76 +/- 33.8685  L(0 - 6721) 
+==> Fit_JpsiXi is done! Well Fitted!: Real time 0:00:01, CP time 0.840
