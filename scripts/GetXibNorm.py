@@ -1,10 +1,12 @@
 from __future__ import division
 import math
-from ROOT import TFile, TGraph, gDirectory
+from ROOT import TFile, gDirectory
 
 
 def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
-            finalBDTConf_Zero=1, bdtCut_nonZero=-1.0, bdtCut_Zero=-1.0):
+            finalBDTConf_Zero=1, bdtCut_nonZero=-1.0, bdtCut_Zero=-1.0,
+            shift_trEff=0.0):
+
     # Get generated yield of Xib -> J/psi Xi MC ###############
     genLog = open("../logs/mc/JpsiXi/run" + str(run) + "/gen_log.txt")
     line = genLog.readline()
@@ -19,9 +21,13 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
         if 'RooRealVar::nsig' in line:
             xibYield = float(line.split()[2])
             xibYieldErr = float(line.split()[4])
-    relErr_xibYield = xibYieldErr / xibYield
 
-    print 'xibYield = ' + str(xibYield) + '+/-' + str(xibYieldErr)
+    if run == 1:
+        xibYield_relSyst = 0.09  # relative systematic on Xib yield. Comes from choice of fit model
+    elif run == 2:
+        xibYield_relSyst = 0.06
+
+    print 'xibYield = ' + str(xibYield) + '+/-' + str(xibYieldErr) + '+/-' + str(xibYield * xibYield_relSyst)
     ###############################
 
     # Get reconstruction eff of Xib -> J/psi Xi from MC
@@ -32,36 +38,33 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
         if 'inclusive' in line:
             xibEff = float(line.split()[7]) / 100
             xibEffErr = float(line.split()[10]) / 100
-    relErr_xibEff = xibEffErr / xibEff
+    relErr_xibEff = xibEffErr / xibEff  # Unweighted efficiency for Xib -> J/psi Xi
 
+    # Now get the weighted efficiency
     file_Xi_rec = TFile("../rootFiles/mcFiles/JpsiXi/run{}/"
                         "jpsixi_cut_LL.root".format(run))
     tree_Xi_rec = file_Xi_rec.MyTuple
 
-    if run == 1:
-        file_Xi_gen = TFile("../rootFiles/mcFiles/JpsiXi/run{}/RW/"
-                            "gbWeights_gen.root".format(run))
-    elif run == 2:
-        file_Xi_gen = TFile("../rootFiles/mcFiles/JpsiXi/run{}/RW/"
-                            "gbWeights_gen.root".format(run))
+    file_Xi_gen = TFile("../rootFiles/mcFiles/JpsiXi/run{}/RW/"
+                        "gbWeights_gen.root".format(run))
     tree_Xi_gen = file_Xi_gen.MyTuple
 
-    if run == 1:
-        tree_Xi_rec.Draw("gb_wts>>hxi_rec", "", "goff")
-        tree_Xi_gen.Draw("gb_wts>>hxi_gen", "", "goff")
-    elif run == 2:
-        tree_Xi_rec.Draw("gb_wts>>hxi_rec", "", "goff")
-        tree_Xi_gen.Draw("gb_wts>>hxi_gen", "", "goff")
+    tree_Xi_rec.Draw("gb_wts*(wt_tracking+{}*wtErr_tracking)>>hxi_rec".format(shift_trEff), "", "goff")
+    tree_Xi_gen.Draw("gb_wts>>hxi_gen", "", "goff")
+
     hxi_rec = gDirectory.Get("hxi_rec")
     hxi_gen = gDirectory.Get("hxi_gen")
 
     xibnum_wt = hxi_rec.GetEntries() * hxi_rec.GetMean()
     xibden_wt = hxi_gen.GetEntries() * hxi_gen.GetMean()
-    xibEff_wt = xibnum_wt / xibden_wt
+
+    xibEff_wt = xibnum_wt / xibden_wt  # Weighted efficiency for Xib->JpsiXi
     xibEffErr_wt = math.sqrt(xibEff_wt * (1 - xibEff_wt) / xibden_wt)
+
     relErr_xibEff_wt = xibEffErr_wt / xibEff_wt
 
-    print 'xibEff = ' + str('%.4f' % (xibEff_wt * 100)) + ' % +/- ' + str('%.4f' % (xibEffErr_wt * 100)) + ' %'
+    print 'UNWEIGHTED Xib->JpsiXi Eff = ' + str('%.4f' % (xibEff * 100)) + ' % +/- ' + str('%.4f' % (xibEffErr * 100)) + ' %'
+    print 'WEIGHTED Xib->JpsiXi Eff = ' + str('%.4f' % (xibEff_wt * 100)) + ' % +/- ' + str('%.4f' % (xibEffErr_wt * 100)) + ' %'
     ###############################
 
     # Get efficiency for reco'ing Xib -> J/psi Lambda
@@ -84,90 +87,72 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
     num = nonZeroTracksTree.GetEntries("BDT" + str(finalBDTConf_nonZero) + ">"
                                        + str(bdtCut_nonZero))
     + ZeroTracksTree.GetEntries("BDT" + str(finalBDTConf_Zero)
-                                + ">" + str(bdtCut_Zero))
+                                + ">" + str(bdtCut_Zero))  # counting no. of entries passing BDT cut.
 
-    if run == 1:
-        nonZeroTracksTree.Draw("gb_wts>>h0", "BDT"
-                               + str(finalBDTConf_nonZero) + ">"
-                               + str(bdtCut_nonZero), "goff")
-        ZeroTracksTree.Draw("gb_wts>>h1", "BDT"
-                            + str(finalBDTConf_Zero) + ">"
-                            + str(bdtCut_Zero), "goff")
-    elif run == 2:
-        nonZeroTracksTree.Draw("gb_wts>>h0", "BDT"
-                               + str(finalBDTConf_nonZero) + ">"
-                               + str(bdtCut_nonZero), "goff")
-        ZeroTracksTree.Draw("gb_wts>>h1", "BDT"
-                            + str(finalBDTConf_Zero) + ">"
-                            + str(bdtCut_Zero), "goff")
+    nonZeroTracksTree.Draw("gb_wts>>h0", "BDT"
+                           + str(finalBDTConf_nonZero) + ">"
+                           + str(bdtCut_nonZero), "goff")
+    ZeroTracksTree.Draw("gb_wts>>h1", "BDT"
+                        + str(finalBDTConf_Zero) + ">"
+                        + str(bdtCut_Zero), "goff")
+
     h0 = gDirectory.Get("h0")
     h1 = gDirectory.Get("h1")
 
-    num_wt = h0.GetEntries() * h0.GetMean() + h1.GetEntries() * h1.GetMean()
+    num_wt = h0.GetEntries() * h0.GetMean() + h1.GetEntries() * h1.GetMean()  # sum of weights passing BDT cut
 
-    if run == 1:
-        genWtsFile = TFile(path + "RW/gbWeights_gen.root")
-        genWtsTree = genWtsFile.MyTuple
-        genWtsTree.Draw("gb_wts>>hgen", "", "goff")
-    elif run == 2:
-        genWtsFile = TFile(path + "RW/gbWeights_gen.root")
-        genWtsTree = genWtsFile.MyTuple
-        genWtsTree.Draw("gb_wts>>hgen", "", "goff")
+    genWtsFile = TFile(path + "RW/gbWeights_gen.root")  # Weighted generator MC
+    genWtsTree = genWtsFile.MyTuple
+
+    genWtsTree.Draw("gb_wts>>hgen", "", "goff")
     hgen = gDirectory.Get("hgen")
-    den_wt = hgen.GetEntries() * hgen.GetMean()
+    den_wt = hgen.GetEntries() * hgen.GetMean()  # sum of wts. for generated events
 
-    xibEff_JpsiLambda_wt = (num_wt / den_wt)
-    # print "num =" + str(num)
+    xibEff_JpsiLambda_wt = (num_wt / den_wt)  # Weighted efficiency for Xib->JpsiLambda
 
-    xibEff_JpsiLambda = (num / genYield)
+    xibEff_JpsiLambda = (num / genYield)  # Unweighted efficiency for Xib->JpsiLambda
 
-    if num == 0:
-        xibEffErr_JpsiLambda = 0.0
-    else:
-        xibEffErr_JpsiLambda = math.sqrt((xibEff_JpsiLambda * (1 - xibEff_JpsiLambda)) / genYield)
-    if num_wt == 0:
-        xibEffErr_JpsiLambda_wt = 0.0
-    else:
-        xibEffErr_JpsiLambda_wt = math.sqrt((xibEff_JpsiLambda_wt * (1 - xibEff_JpsiLambda_wt)) / den_wt)
+    xibEffErr_JpsiLambda = math.sqrt((xibEff_JpsiLambda * (1 - xibEff_JpsiLambda)) / genYield)
+    xibEffErr_JpsiLambda_wt = math.sqrt((xibEff_JpsiLambda_wt * (1 - xibEff_JpsiLambda_wt)) / den_wt)
+
+    relErr_xibEff_JpsiLambda = xibEffErr_JpsiLambda / xibEff_JpsiLambda
+    relErr_xibEff_JpsiLambda_wt = xibEffErr_JpsiLambda_wt / xibEff_JpsiLambda_wt
+
     # print xibEff_JpsiLambda
-    print 'xibEff_JpsiLambda = ' + str('%.4f' % (xibEff_JpsiLambda_wt * 100)) + ' % +/-' + str('%.4f' % (xibEffErr_JpsiLambda_wt * 100)) + ' %'
+    print 'UNWEIGHTED Xib->JpsiLambda Eff = ' + str('%.4f' % (xibEff_JpsiLambda * 100)) + ' % +/-' + str('%.4f' % (xibEffErr_JpsiLambda * 100)) + ' %'
+    print 'WEIGHTED Xib->JpsiLambda Eff = ' + str('%.4f' % (xibEff_JpsiLambda_wt * 100)) + ' % +/-' + str('%.4f' % (xibEffErr_JpsiLambda_wt * 100)) + ' %'
 
-    # xibMcLog_JpsiLambda = open("../logs/mc/JpsiLambda/JpsiXi/run"
-    #                            + str(run) + "/CutFinalBDT"
-    #                            + str(finalBDTConf)
-    #                            + "_LL_iso" + str(isoConf) + "_" + isoVersion
-    #                            + ".txt")
-    # lines = xibMcLog_JpsiLambda.readlines()
-    # for line in lines:
-    #     if 'inclusive' in line:
-    #         line = line.translate(None, '%')
-    #         xibEff_JpsiLambda = float(line.split()[8]) / 100
-    #         xibEffErr_JpsiLambda = float(line.split()[10]) / 100
     ###############################
     # Determine normalization
+
+    # Unweighted Norm
     if xibEff_JpsiLambda > 0:
-        relErr_xibEff_JpsiLambda = xibEffErr_JpsiLambda / xibEff_JpsiLambda
-        xibNorm = xibYield * xibEff_JpsiLambda / xibEff
-        xibNormErr_stat = xibNorm * relErr_xibYield
-        xibNormErr_syst = xibNorm * math.sqrt(pow(relErr_xibEff, 2)
-                                              + pow(relErr_xibEff_JpsiLambda, 2))
+        xibNorm = 2 * xibYield * xibEff_JpsiLambda / xibEff  # NB: Accounting for Xib0 right here
+        xibNormErr_stat = 2 * xibYieldErr * xibEff_JpsiLambda / xibEff
+        xibNormErr_syst = xibNorm * math.sqrt(pow(xibYield_relSyst, 2) + pow(relErr_xibEff_JpsiLambda, 2) + pow(relErr_xibEff, 2))
         xibNormErr = math.sqrt(pow(xibNormErr_stat, 2) + pow(xibNormErr_syst, 2))
     else:
         xibNorm = 0.0
         xibNormErr_stat = 0.0
         xibNormErr_syst = 0.0
+        xibNormErr = 0.0
+
+    # Weighted Norm
     if xibEff_JpsiLambda_wt > 0:
-        relErr_xibEff_JpsiLambda_wt = xibEffErr_JpsiLambda_wt / xibEff_JpsiLambda_wt
-        xibNorm_wt = xibYield * xibEff_JpsiLambda_wt / xibEff_wt
-        xibNormErr_wt_stat = xibNorm_wt * relErr_xibYield
-        xibNormErr_wt_syst = xibNorm_wt * math.sqrt(pow(relErr_xibEff_wt, 2)
-                                                    + pow(relErr_xibEff_JpsiLambda_wt, 2))
+        xibNorm_wt = 2 * xibYield * xibEff_JpsiLambda_wt / xibEff_wt
+        xibNormErr_wt_stat = 2 * xibYieldErr * xibEff_JpsiLambda_wt / xibEff_wt
+        xibNormErr_wt_syst = xibNorm_wt * math.sqrt(pow(xibYield_relSyst, 2) + pow(relErr_xibEff_JpsiLambda_wt, 2) + pow(relErr_xibEff_wt, 2))
         xibNormErr_wt = math.sqrt(pow(xibNormErr_wt_stat, 2) + pow(xibNormErr_wt_syst, 2))
     else:
         xibNorm_wt = 0.0
         xibNormErr_wt_stat = 0.0
         xibNormErr_wt_syst = 0.0
-    print 'Norm = ' + str(xibNorm_wt) + '+/-' + str(xibNormErr_wt_stat) + '+/-' + str(xibNormErr_wt_syst)
+        xibNormErr_wt = 0.0
+
+    print 'UNWEIGTED Norm = ' + str(xibNorm) + '+/-' + str(xibNormErr_stat) + '+/-' + str(xibNormErr_syst)
+    print 'WEIGHTED Norm = ' + str(xibNorm_wt) + '+/-' + str(xibNormErr_wt_stat) + '+/-' + str(xibNormErr_wt_syst)
+
+    # Write results out to log file
     xibNormLog = open("../logs/mc/JpsiXi/run" + str(run) + "/xibNorm_log.txt",
                       "w")
     xibNormLog.write(str(xibNorm) + "\n")
