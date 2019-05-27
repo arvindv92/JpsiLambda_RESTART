@@ -125,11 +125,16 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
     ###############################
     # Determine normalization
 
+    trackingErr = 0.05  # rel error. includes 4.5% tracking unc, and 2% uncertainty for material effects from hadronic interactions
+    xiVtxUnc = 0.014  # rel error. Unc from vertexing the Xi-. Comes from Steves ANA
+
     # Unweighted Norm
     if xibEff_JpsiLambda > 0:
         xibNorm = 2 * xibYield * xibEff_JpsiLambda / xibEff  # NB: Accounting for Xib0 right here
         xibNormErr_stat = 2 * xibYieldErr * xibEff_JpsiLambda / xibEff
-        xibNormErr_syst = xibNorm * math.sqrt(pow(xibYield_relSyst, 2) + pow(relErr_xibEff_JpsiLambda, 2) + pow(relErr_xibEff, 2))
+        xibNormErr_syst = xibNorm * math.sqrt(pow(trackingErr, 2) + pow(xibYield_relSyst, 2)
+                                              + pow(relErr_xibEff_JpsiLambda, 2) + pow(relErr_xibEff, 2)
+                                              + pow(xiVtxUnc, 2))
         xibNormErr = math.sqrt(pow(xibNormErr_stat, 2) + pow(xibNormErr_syst, 2))
     else:
         xibNorm = 0.0
@@ -141,7 +146,9 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
     if xibEff_JpsiLambda_wt > 0:
         xibNorm_wt = 2 * xibYield * xibEff_JpsiLambda_wt / xibEff_wt
         xibNormErr_wt_stat = 2 * xibYieldErr * xibEff_JpsiLambda_wt / xibEff_wt
-        xibNormErr_wt_syst = xibNorm_wt * math.sqrt(pow(xibYield_relSyst, 2) + pow(relErr_xibEff_JpsiLambda_wt, 2) + pow(relErr_xibEff_wt, 2))
+        xibNormErr_wt_syst = xibNorm_wt * math.sqrt(pow(trackingErr, 2) + pow(xibYield_relSyst, 2)
+                                                    + pow(relErr_xibEff_JpsiLambda_wt, 2) + pow(relErr_xibEff_wt, 2)
+                                                    + pow(xiVtxUnc, 2))
         xibNormErr_wt = math.sqrt(pow(xibNormErr_wt_stat, 2) + pow(xibNormErr_wt_syst, 2))
     else:
         xibNorm_wt = 0.0
