@@ -387,23 +387,17 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 
 		infile>>xibnorm_LL[i];         // Get normalization
 		infile>>xibnorm_LL_staterr[i]; // Get statistical error on norm. This comes from fit error
-		infile>>xibnorm_LL_systerr[i]; // Get systematic error on norm. This comes for MC effs. so far.
+		infile>>xibnorm_LL_systerr[i]; // Get systematic error on norm.
 
 		infile>>xibnorm_LL_wt[i];         // Get weighted normalization
 		infile>>xibnorm_LL_staterr_wt[i]; // Get weighted statistical error on norm. This comes from the fit error
-		infile>>xibnorm_LL_systerr_wt[i]; // Get weighted systematic error on norm. This comes for MC effs. so far.
+		infile>>xibnorm_LL_systerr_wt[i]; // Get weighted systematic error on norm.
 
 		// xibnorm_LL_systerr[i] = xibnorm_LL[i]*xib_syst;
 		xibnorm_LL_err[i]     = sqrt(pow(xibnorm_LL_staterr[i],2) + pow(xibnorm_LL_systerr[i],2)); //Combining stat and syst in quadrature
 
 		// xibnorm_LL_systerr_wt[i] = xibnorm_LL_wt[i]*xib_syst;
 		xibnorm_LL_err_wt[i]     = sqrt(pow(xibnorm_LL_staterr_wt[i],2) + pow(xibnorm_LL_systerr_wt[i],2)); //Combining stat and syst in quadrature
-
-		xibnorm_LL[i]         = xibnorm_LL[i]*2; //ACCOUNT FOR XIB0
-		xibnorm_LL_err[i]     = xibnorm_LL_err[i]*1.414; //ACCOUNT FOR XIB0
-
-		xibnorm_LL_wt[i]         = xibnorm_LL_wt[i]*2; //ACCOUNT FOR XIB0
-		xibnorm_LL_err_wt[i]     = xibnorm_LL_err_wt[i]*1.414; //ACCOUNT FOR XIB0
 
 		cout<<"************************************************"<<endl;
 		cout<<"The UNWEIGHTED LL Xib normalization for Run "<<run
@@ -854,6 +848,12 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 		Nxib[i]     = xibnorm_LL_wt[i]*xibINT[i];
 		xib_STATERR[i] = xibnorm_LL_staterr_wt[i]*xibINT[i];
 		xib_SYSTERR[i] = xibnorm_LL_systerr_wt[i]*xibINT[i];
+
+		cout<<"************************************************"<<endl;
+		cout<<"The WEIGHTED Xib normalization inside signal region for Run "<<run
+		    <<" is "<<Nxib[i]<<" +/- "<<xib_STATERR[i]
+		    <<" +/- "<<xib_SYSTERR[i]<<endl;
+		cout<<"************************************************"<<endl;
 
 	}
 	//*********Hypatia signal shape for Lambda_b0************************
