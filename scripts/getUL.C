@@ -1,4 +1,4 @@
-#include "TFile.h"
+fitPdffitPdf #include "TFile.h"
 #include "TTree.h"
 #include "TString.h"
 #include "TLegend.h"
@@ -56,7 +56,9 @@ using namespace std;
 using namespace RooFit;
 using namespace RooStats;
 
-void getUL(Int_t logFlag, const char *option, Int_t config)
+void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
+//fitType = 0 for nomial fit. Hypatia2 signal + Exponential bkg
+//fitType = 1 for alternate fit. Double Gaussian signal + Exponential bkg
 {
 	if(logFlag)
 		gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/UpperLimit/config%d_tight.txt",config),"w");
@@ -870,6 +872,15 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 	          "sigma_Run2[10.,1.,20.], mean_Run2[5619.6,5619,5621], a1_Run2[1.5,1.0,3.0],"
 	          "2 ,a2_Run2[1.5,1.0,3.0], 2)");
 
+	w.factory("Gaussian::Lb_Run1_Gaus1(Lb_DTF_M_JpsiLConstr, mean_Run1_Gaus1[5619.6,5619,5621],"
+	          "sigma_Run1_Gaus1[10.,1.,20.])");
+	w.factory("Gaussian::Lb_Run1_Gaus2(Lb_DTF_M_JpsiLConstr, mean_Run1_Gaus2[5619.6,5619,5621],"
+	          "sigma_Run1_Gaus2[10.,1.,20.])");
+	w.factory("Gaussian::Lb_Run2_Gaus1(Lb_DTF_M_JpsiLConstr, mean_Run2_Gaus1[5619.6,5619,5621],"
+	          "sigma_Run2_Gaus1[10.,1.,20.])");
+	w.factory("Gaussian::Lb_Run2_Gaus2(Lb_DTF_M_JpsiLConstr, mean_Run2_Gaus2[5619.6,5619,5621],"
+	          "sigma_Run2_Gaus2[10.,1.,20.])");
+
 	cout<<"Done defining J/psi Lambda Hypatia shapes"<<endl;
 	//*******************************************************************
 
@@ -915,8 +926,17 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 	w.factory("SUM:model1(nLb_Run1*Lb_Run1 , nBkg_Run1*Bkg_Run1)");
 	w.factory("SUM:model2(nLb_Run2*Lb_Run2 , nBkg_Run2*Bkg_Run2)");
 
+	w.factory("SUM:Lb_Run1_Gaus(0.5*Lb_Run1_Gaus1 , 0.5*Lb_Run1_Gaus2)");
+	w.factory("SUM:Lb_Run2_Gaus(0.5*Lb_Run2_Gaus1 , 0.5*Lb_Run2_Gaus2)");
+
+	w.factory("SUM:model1_Gaus(nLb_Run1*Lb_Run1_Gaus , nBkg_Run1*Bkg_Run1)");
+	w.factory("SUM:model2_Gaus(nLb_Run2*Lb_Run2_Gaus , nBkg_Run2*Bkg_Run2)");
+
 	RooAbsPdf* model1 = w.pdf("model1"); // get the model
 	RooAbsPdf* model2 = w.pdf("model2"); // get the model
+
+	RooAbsPdf* model1_Gaus = w.pdf("model1_Gaus"); // get the model
+	RooAbsPdf* model2_Gaus = w.pdf("model2_Gaus"); // get the model
 
 	//***********************MAKE COMBINED DATASET************************************
 	RooCategory sample("sample","sample");
@@ -929,15 +949,26 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 	                           Import("run2",*myhist[1]));
 	combData->Print();
 	RooSimultaneous simPdf("simPdf","simultaneous pdf",sample);
-	// Associate model with the physics state and model_ctl with the control state
 	simPdf.addPdf(*model1,"run1");
 	simPdf.addPdf(*model2,"run2");
 	w.import(*combData);
 	w.import(simPdf);
 
+	RooSimultaneous simPdf_Gaus("simPdf_Gaus","simultaneous Gaussian pdf",sample);
+	simPdf_Gaus.addPdf(*model1_Gaus,"run1");
+	simPdf_Gaus.addPdf(*model2_Gaus,"run2");
+	w.import(simPdf_Gaus);
+
 	//************************DO THE FIT***********************
 	w.var("Lb_DTF_M_JpsiLConstr")->setRange("ref",5500,5800);
-	RooFitResult *res = simPdf.fitTo(*combData,Extended(), Save(), Hesse(false), Strategy(1), SumCoefRange("ref"),Range("ref"));
+	RooSimultaneous *fitPdf = nullptr;
+
+	if(fitType == 0)
+		fitPdf = &simPdf;
+	else if(fitType == 1)
+		fitPdf = &simPdf_Gaus;
+
+	RooFitResult *res = fitPdf->fitTo(*combData,Extended(), Save(), Hesse(false), Strategy(1), SumCoefRange("ref"),Range("ref"));
 	//*******************************************************************
 
 	//*********************PLOTTING STUFF*********************************************
@@ -956,15 +987,15 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 	frame_run1->GetYaxis()->SetTitle("Candidates/(4 MeV/#it{c}^{2})");
 
 	combData->plotOn(frame_run1,Name("data_Run1"),Cut("sample==sample::run1"),DataError(RooAbsData::Poisson));
-	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Name("fit_Run1"));
-	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Lb_Run1"))),Name("lb_Run1"),LineColor(kMagenta+2));
-	// simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Lb1_Run1"))),LineStyle(kDotted),LineColor(kMagenta));
-	// simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Lb2_Run1"))),LineStyle(kDotted),LineColor(kMagenta));
-	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Bkg_Run1"))),LineColor(kRed),Name("bkg_Run1"));
+	fitPdf->plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Name("fit_Run1"));
+	fitPdf->plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Lb_Run1"))),Name("lb_Run1"),LineColor(kMagenta+2));
+	// fitPdf->plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Lb1_Run1"))),LineStyle(kDotted),LineColor(kMagenta));
+	// fitPdf->plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Lb2_Run1"))),LineStyle(kDotted),LineColor(kMagenta));
+	fitPdf->plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Bkg_Run1"))),LineColor(kRed),Name("bkg_Run1"));
 
 	frame_run1->GetYaxis()->SetRangeUser(0,20);
 	frame_run1->GetXaxis()->SetRangeUser(5300,5900);
-	RooArgSet *allpar_run1 = simPdf.getParameters(*(ds[0]));
+	RooArgSet *allpar_run1 = fitPdf->getParameters(*(ds[0]));
 	RooArgSet *floatpar_run1 = (RooArgSet*)allpar_run1->selectByAttrib("Constant",kFALSE);
 	floatpar_run1->Print();
 	int floatpars_run1 = (floatpar_run1->selectByAttrib("Constant",kFALSE))->getSize() - 1;//-1 because sample also gets included in this list
@@ -1053,17 +1084,17 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 	frame_run2->GetYaxis()->SetTitle("Candidates/(4 MeV/#it{c}^{2})");
 
 	combData->plotOn(frame_run2,Name("data_Run2"),Cut("sample==sample::run2"),DataError(RooAbsData::Poisson));
-	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Name("fit_Run2"));
-	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Lb_Run2"))),Name("lb_Run2"),LineColor(kMagenta+2));
-	// simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Lb1_Run2"))),LineStyle(kDotted),LineColor(kMagenta));
-	// simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Lb2_Run2"))),LineStyle(kDotted),LineColor(kMagenta));
-	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Bkg_Run2"))),LineColor(kRed),Name("bkg_Run2"));
+	fitPdf->plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Name("fit_Run2"));
+	fitPdf->plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Lb_Run2"))),Name("lb_Run2"),LineColor(kMagenta+2));
+	// fitPdf->plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Lb1_Run2"))),LineStyle(kDotted),LineColor(kMagenta));
+	// fitPdf->plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Lb2_Run2"))),LineStyle(kDotted),LineColor(kMagenta));
+	fitPdf->plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Bkg_Run2"))),LineColor(kRed),Name("bkg_Run2"));
 
 	frame_run2->GetYaxis()->SetRangeUser(0,60);
 	frame_run2->GetXaxis()->SetRangeUser(5300,5900);
 	// Double_t chiSquare1 = frame_run2->chiSquare("fit_run2","data_run2");
 	// cout<<"chi square1/dof = "<<chiSquare1<<endl;
-	RooArgSet *floatpar_run2 = simPdf.getParameters(*(ds[1]));
+	RooArgSet *floatpar_run2 = fitPdf->getParameters(*(ds[1]));
 	floatpar_run2->Print();
 	int floatpars_run2 = (floatpar_run2->selectByAttrib("Constant",kFALSE))->getSize() -1;//-1 because sample also gets included in this list
 	cout<<"run2 float pars = "<<floatpars_run2<<endl;
@@ -1151,14 +1182,32 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 	cout<<"Global Fit chi2/dof = "<<chi2_ndof_global<<endl;
 	cout<<"****************************"<<endl;
 
-	RooAbsPdf *Lb_Run1 = w.pdf("Lb_Run1");
-	RooAbsPdf *Lb_Run2 = w.pdf("Lb_Run2");
+	RooAbsPdf *Lb_Run1 = nullptr, *Lb_Run2 = nullptr;
+
+	if(fitType == 0)
+	{
+		Lb_Run1 = w.pdf("Lb_Run1");
+		Lb_Run2 = w.pdf("Lb_Run2");
+	}
+	else if(fitType == 1)
+	{
+		Lb_Run1 = w.pdf("Lb_Run1_Gaus");
+		Lb_Run2 = w.pdf("Lb_Run2_Gaus");
+	}
 
 	for(Int_t i=0; i<=1; i++)
 	{
-		const char *mystr = Form("Lb_Run%d",i+1);
 		const char *myvar = Form("nLb_Run%d",i+1);
+		const char *mystr = nullptr;
 
+		if(fitType == 0)
+		{
+			mystr = Form("Lb_Run%d",i+1);
+		}
+		else if(fitType == 1)
+		{
+			mystr = Form("Lb_Run%d_Gaus",i+1);
+		}
 		lbInt[i]       = w.pdf(mystr)->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
 		lbINT[i]       = lbInt[i]->getValV();
 		Nlb[i]         = lbINT[i]*(w.var(myvar)->getVal());
