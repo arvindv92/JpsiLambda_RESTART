@@ -379,7 +379,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config)
 	{
 		Int_t i = run-1;
 		gSystem->Exec(Form("python -c \'from GetXibNorm import GetNorm;"
-		                   " GetNorm(%d, \"%s\", %d, %d, %d, %f, %f)\'",
+		                   " GetNorm(%d, \"%s\", %d, %d, %d, %f, %f, 0)\'",
 		                   run, isoVersion[i], isoConf[i], bdtConf_nonZero[i],
 		                   bdtConf_Zero[i], bdtCut_nonZero[i], bdtCut_Zero[i]));
 
