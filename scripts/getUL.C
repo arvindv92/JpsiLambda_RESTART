@@ -59,7 +59,7 @@ using namespace RooStats;
 void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 //fitType = 0 for nomial fit. Hypatia2 signal + Exponential bkg
 //fitType = 1 for alternate fit. Double Gaussian signal + Exponential bkg
-//fitType = 2 for alternate fit. Hypatia2 signal + Second order cheby background.
+//fitType = 2 for alternate fit. Hypatia2 signal + First order order cheby background.
 {
 	if(logFlag)
 		gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/UpperLimit/config%d_tight.txt",config),"w");
@@ -896,8 +896,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	// else if(bkgType == 1)
 	// {
 	//      cout<<"*****UING 2nd ORDER CHEBYCHEV BKG SHAPE*****"<<endl;
-	w.factory("Chebychev::Bkg_Run1_Cheby(Lb_DTF_M_JpsiLConstr, {c0_Run1[0.0,-2.0,2.0], c1_Run1[0.0,-1.0,1.0]})");
-	w.factory("Chebychev::Bkg_Run2_Cheby(Lb_DTF_M_JpsiLConstr, {c0_Run2[0.0,-2.0,2.0], c1_Run2[0.0,-1.0,1.0]})");
+	w.factory("Chebychev::Bkg_Run1_Cheby(Lb_DTF_M_JpsiLConstr, {c0_Run1[0.0,-2.0,2.0]})");
+	w.factory("Chebychev::Bkg_Run2_Cheby(Lb_DTF_M_JpsiLConstr, {c0_Run2[0.0,-2.0,2.0]})");
 	// }
 	// else if(bkgType == 2)
 	// {
@@ -1215,24 +1215,24 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	cout<<"****************************"<<endl;
 	cout<<"Global Fit chi2/dof = "<<chi2_ndof_global<<endl;
 	cout<<"****************************"<<endl;
-
-	RooAbsPdf *Lb_Run1 = nullptr, *Lb_Run2 = nullptr;
-
-	if(fitType == 0)
-	{
-		Lb_Run1 = w.pdf("Lb_Run1");
-		Lb_Run2 = w.pdf("Lb_Run2");
-	}
-	else if(fitType == 1)
-	{
-		Lb_Run1 = w.pdf("Lb_Run1_Gaus");
-		Lb_Run2 = w.pdf("Lb_Run2_Gaus");
-	}
-	else if(fitType == 2)
-	{
-		Lb_Run1 = w.pdf("Lb_Run1_Cheby");
-		Lb_Run2 = w.pdf("Lb_Run2_Cheby");
-	}
+	//
+	// RooAbsPdf *Lb_Run1 = nullptr, *Lb_Run2 = nullptr;
+	//
+	// if(fitType == 0)
+	// {
+	//      Lb_Run1 = w.pdf("Lb_Run1");
+	//      Lb_Run2 = w.pdf("Lb_Run2");
+	// }
+	// else if(fitType == 1)
+	// {
+	//      Lb_Run1 = w.pdf("Lb_Run1_Gaus");
+	//      Lb_Run2 = w.pdf("Lb_Run2_Gaus");
+	// }
+	// else if(fitType == 2)
+	// {
+	//      Lb_Run1 = w.pdf("Lb_Run1_Cheby");
+	//      Lb_Run2 = w.pdf("Lb_Run2_Cheby");
+	// }
 
 	for(Int_t i=0; i<=1; i++)
 	{
