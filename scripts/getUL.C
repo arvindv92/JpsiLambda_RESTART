@@ -59,6 +59,7 @@ using namespace RooStats;
 void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 //fitType = 0 for nomial fit. Hypatia2 signal + Exponential bkg
 //fitType = 1 for alternate fit. Double Gaussian signal + Exponential bkg
+//fitType = 2 for alternate fit. Hypatia2 signal + Second order cheby background.
 {
 	if(logFlag)
 		gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/UpperLimit/config%d_tight.txt",config),"w");
@@ -872,13 +873,13 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	          "sigma_Run2[10.,1.,20.], mean_Run2[5619.6,5619,5621], a1_Run2[1.5,1.0,3.0],"
 	          "2 ,a2_Run2[1.5,1.0,3.0], 2)");
 
-	w.factory("Gaussian::Lb_Run1_Gaus1(Lb_DTF_M_JpsiLConstr, mean_Run1_Gaus1[5619.6,5619,5621],"
-	          "sigma_Run1_Gaus1[10.,1.,20.])");
-	w.factory("Gaussian::Lb_Run1_Gaus2(Lb_DTF_M_JpsiLConstr, mean_Run1_Gaus2[5619.6,5619,5621],"
+	w.factory("Gaussian::Lb_Run1_Gaus1(Lb_DTF_M_JpsiLConstr, mean_Run1_Gaus[5619.6,5619,5621],"
+	          "sigma_Run1_Gaus1[5.,1.,20.])");
+	w.factory("Gaussian::Lb_Run1_Gaus2(Lb_DTF_M_JpsiLConstr, mean_Run1_Gaus,"
 	          "sigma_Run1_Gaus2[10.,1.,20.])");
-	w.factory("Gaussian::Lb_Run2_Gaus1(Lb_DTF_M_JpsiLConstr, mean_Run2_Gaus1[5619.6,5619,5621],"
-	          "sigma_Run2_Gaus1[10.,1.,20.])");
-	w.factory("Gaussian::Lb_Run2_Gaus2(Lb_DTF_M_JpsiLConstr, mean_Run2_Gaus2[5619.6,5619,5621],"
+	w.factory("Gaussian::Lb_Run2_Gaus1(Lb_DTF_M_JpsiLConstr, mean_Run2_Gaus[5619.6,5619,5621],"
+	          "sigma_Run2_Gaus1[5.,1.,20.])");
+	w.factory("Gaussian::Lb_Run2_Gaus2(Lb_DTF_M_JpsiLConstr, mean_Run2_Gaus,"
 	          "sigma_Run2_Gaus2[10.,1.,20.])");
 
 	cout<<"Done defining J/psi Lambda Hypatia shapes"<<endl;
@@ -889,14 +890,14 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	// if(bkgType == 0)
 	// {
 	cout<<"*****UING EXPONENTIAL BKG SHAPE*****"<<endl;
-	w.factory("Exponential::Bkg_Run1(Lb_DTF_M_JpsiLConstr,tau_Run1[-1e-6,-1e-5,-1e-10])");
-	w.factory("Exponential::Bkg_Run2(Lb_DTF_M_JpsiLConstr,tau_Run2[-1e-6,-1e-5,-1e-10])");
+	w.factory("Exponential::Bkg_Run1(Lb_DTF_M_JpsiLConstr,tau_Run1[-1e-6,-1e-4,-1e-9])");
+	w.factory("Exponential::Bkg_Run2(Lb_DTF_M_JpsiLConstr,tau_Run2[-1e-6,-1e-4,-1e-9])");
 	// }
 	// else if(bkgType == 1)
 	// {
 	//      cout<<"*****UING 2nd ORDER CHEBYCHEV BKG SHAPE*****"<<endl;
-	//      w.factory("Chebychev::Bkg_Run1(Lb_DTF_M_JpsiLConstr, {c0_Run1[0.0,-2.0,2.0], c1_Run1[0.0,-1.0,1.0]})");
-	//      w.factory("Chebychev::Bkg_Run2(Lb_DTF_M_JpsiLConstr, {c0_Run2[0.0,-2.0,2.0], c1_Run2[0.0,-1.0,1.0]})");
+	w.factory("Chebychev::Bkg_Run1_Cheby(Lb_DTF_M_JpsiLConstr, {c0_Run1[0.0,-2.0,2.0], c1_Run1[0.0,-1.0,1.0]})");
+	w.factory("Chebychev::Bkg_Run2_Cheby(Lb_DTF_M_JpsiLConstr, {c0_Run2[0.0,-2.0,2.0], c1_Run2[0.0,-1.0,1.0]})");
 	// }
 	// else if(bkgType == 2)
 	// {
@@ -920,20 +921,27 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 
 	w.factory("nLb_Run1[5600,2000,7000]");
 	w.factory("nLb_Run2[20000,10000,22000]");
+
 	w.factory(Form("nBkg_Run1[200,1,%d]",nentries[0]));
 	w.factory(Form("nBkg_Run2[1000,1,%d]",nentries[1]));
 
 	w.factory("SUM:model1(nLb_Run1*Lb_Run1 , nBkg_Run1*Bkg_Run1)");
 	w.factory("SUM:model2(nLb_Run2*Lb_Run2 , nBkg_Run2*Bkg_Run2)");
 
-	w.factory("SUM:Lb_Run1_Gaus(0.5*Lb_Run1_Gaus1 , 0.5*Lb_Run1_Gaus2)");
-	w.factory("SUM:Lb_Run2_Gaus(0.5*Lb_Run2_Gaus1 , 0.5*Lb_Run2_Gaus2)");
+	w.factory("SUM:model1_Cheby(nLb_Run1*Lb_Run1 , nBkg_Run1*Bkg_Run1_Cheby)");
+	w.factory("SUM:model2_Cheby(nLb_Run2*Lb_Run2 , nBkg_Run2*Bkg_Run2_Cheby)");
+
+	w.factory("SUM:Lb_Run1_Gaus(f_Run1[0.5,0.0,1.0]*Lb_Run1_Gaus1 , Lb_Run1_Gaus2)");
+	w.factory("SUM:Lb_Run2_Gaus(f_Run2[0.5,0.0,1.0]*Lb_Run2_Gaus1 , Lb_Run2_Gaus2)");
 
 	w.factory("SUM:model1_Gaus(nLb_Run1*Lb_Run1_Gaus , nBkg_Run1*Bkg_Run1)");
 	w.factory("SUM:model2_Gaus(nLb_Run2*Lb_Run2_Gaus , nBkg_Run2*Bkg_Run2)");
 
 	RooAbsPdf* model1 = w.pdf("model1"); // get the model
 	RooAbsPdf* model2 = w.pdf("model2"); // get the model
+
+	RooAbsPdf* model1_Cheby = w.pdf("model1_Cheby"); // get the model
+	RooAbsPdf* model2_Cheby = w.pdf("model2_Cheby"); // get the model
 
 	RooAbsPdf* model1_Gaus = w.pdf("model1_Gaus"); // get the model
 	RooAbsPdf* model2_Gaus = w.pdf("model2_Gaus"); // get the model
@@ -954,6 +962,11 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	w.import(*combData);
 	w.import(simPdf);
 
+	RooSimultaneous simPdf_Cheby("simPdf_Cheby","simultaneous pdf",sample);
+	simPdf_Cheby.addPdf(*model1_Cheby,"run1");
+	simPdf_Cheby.addPdf(*model2_Cheby,"run2");
+	w.import(simPdf_Cheby);
+
 	RooSimultaneous simPdf_Gaus("simPdf_Gaus","simultaneous Gaussian pdf",sample);
 	simPdf_Gaus.addPdf(*model1_Gaus,"run1");
 	simPdf_Gaus.addPdf(*model2_Gaus,"run2");
@@ -967,6 +980,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		fitPdf = &simPdf;
 	else if(fitType == 1)
 		fitPdf = &simPdf_Gaus;
+	else if(fitType == 2)
+		fitPdf = &simPdf_Cheby;
 
 	RooFitResult *res = fitPdf->fitTo(*combData,Extended(), Save(), Hesse(false), Strategy(1), SumCoefRange("ref"),Range("ref"));
 	//*******************************************************************
