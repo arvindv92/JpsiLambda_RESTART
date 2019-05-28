@@ -1233,7 +1233,9 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		cout<<"NLb     = "<<Nlb[i]<<" +/- "<<lb_STATERR[i]<<endl;
 		cout<<"_____________________________________"<<endl;
 		cout<<"Nsig    = "<<Nsig[i]<<" +/- "<<nsig_STATERR[i]<<" +/- "<<nsig_SYSTERR[i]<<endl;
-		cout<<"Frac    = "<<sigmaINT[i]<<endl;
+		cout<<"JpsiSigma signal window frac    = "<<sigmaINT[i]<<endl;
+		cout<<"JpsiLambda signal window frac    = "<<lbINT[i]<<endl;
+		cout<<"JpsiXi signal window frac    = "<<xibINT[i]<<endl;
 		cout<<"NLb_tot = "<<Nlb_tot[i]<<" +/- "<<Nlb_tot_STATERR[i]<<endl;
 		cout<<"eff_JpsiLambda = "<<eff_Lambda_wt[i]*100<<" % +/- "
 		    <<eff_Lambda_systerr_wt[i]*100<<" %"<<endl;
