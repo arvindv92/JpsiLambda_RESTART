@@ -1228,6 +1228,11 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		Lb_Run1 = w.pdf("Lb_Run1_Gaus");
 		Lb_Run2 = w.pdf("Lb_Run2_Gaus");
 	}
+	else if(fitType == 2)
+	{
+		Lb_Run1 = w.pdf("Lb_Run1_Cheby");
+		Lb_Run2 = w.pdf("Lb_Run2_Cheby");
+	}
 
 	for(Int_t i=0; i<=1; i++)
 	{
@@ -1241,6 +1246,10 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		else if(fitType == 1)
 		{
 			mystr = Form("Lb_Run%d_Gaus",i+1);
+		}
+		else if(fitType == 1)
+		{
+			mystr = Form("Lb_Run%d_Cheby",i+1);
 		}
 		lbInt[i]       = w.pdf(mystr)->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
 		lbINT[i]       = lbInt[i]->getValV();
