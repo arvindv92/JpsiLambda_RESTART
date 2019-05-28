@@ -975,14 +975,33 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	//************************DO THE FIT***********************
 	w.var("Lb_DTF_M_JpsiLConstr")->setRange("ref",5500,5800);
 	RooSimultaneous *fitPdf = nullptr;
+	const char *sigPdf_Run1 = "", *bkgPdf_Run1 = "";
+	const char *sigPdf_Run2 = "", *bkgPdf_Run2 = "";
 
 	if(fitType == 0)
+	{
 		fitPdf = &simPdf;
+		sigPdf_Run1 = "Lb_Run1";
+		bkgPdf_Run1 = "Bkg_Run1";
+		sigPdf_Run2 = "Lb_Run2";
+		bkgPdf_Run2 = "Bkg_Run2";
+	}
 	else if(fitType == 1)
+	{
 		fitPdf = &simPdf_Gaus;
+		sigPdf_Run1 = "Lb_Run1_Gaus";
+		bkgPdf_Run1 = "Bkg_Run1";
+		sigPdf_Run2 = "Lb_Run2_Gaus";
+		bkgPdf_Run2 = "Bkg_Run2";
+	}
 	else if(fitType == 2)
+	{
 		fitPdf = &simPdf_Cheby;
-
+		sigPdf_Run1 = "Lb_Run1";
+		bkgPdf_Run1 = "Bkg_Run1_Cheby";
+		sigPdf_Run2 = "Lb_Run2";
+		bkgPdf_Run2 = "Bkg_Run2_Cheby";
+	}
 	RooFitResult *res = fitPdf->fitTo(*combData,Extended(), Save(), Hesse(false), Strategy(1), SumCoefRange("ref"),Range("ref"));
 	//*******************************************************************
 
@@ -1003,10 +1022,10 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 
 	combData->plotOn(frame_run1,Name("data_Run1"),Cut("sample==sample::run1"),DataError(RooAbsData::Poisson));
 	fitPdf->plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Name("fit_Run1"));
-	fitPdf->plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Lb_Run1"))),Name("lb_Run1"),LineColor(kMagenta+2));
+	fitPdf->plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf(sigPdf_Run1))),Name("lb_Run1"),LineColor(kMagenta+2));
 	// fitPdf->plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Lb1_Run1"))),LineStyle(kDotted),LineColor(kMagenta));
 	// fitPdf->plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Lb2_Run1"))),LineStyle(kDotted),LineColor(kMagenta));
-	fitPdf->plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Bkg_Run1"))),LineColor(kRed),Name("bkg_Run1"));
+	fitPdf->plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf(bkgPdf_Run1))),LineColor(kRed),Name("bkg_Run1"));
 
 	frame_run1->GetYaxis()->SetRangeUser(0,20);
 	frame_run1->GetXaxis()->SetRangeUser(5300,5900);
@@ -1100,10 +1119,10 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 
 	combData->plotOn(frame_run2,Name("data_Run2"),Cut("sample==sample::run2"),DataError(RooAbsData::Poisson));
 	fitPdf->plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Name("fit_Run2"));
-	fitPdf->plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Lb_Run2"))),Name("lb_Run2"),LineColor(kMagenta+2));
+	fitPdf->plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf(sigPdf_Run2))),Name("lb_Run2"),LineColor(kMagenta+2));
 	// fitPdf->plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Lb1_Run2"))),LineStyle(kDotted),LineColor(kMagenta));
 	// fitPdf->plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Lb2_Run2"))),LineStyle(kDotted),LineColor(kMagenta));
-	fitPdf->plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Bkg_Run2"))),LineColor(kRed),Name("bkg_Run2"));
+	fitPdf->plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf(bkgPdf_Run2))),LineColor(kRed),Name("bkg_Run2"));
 
 	frame_run2->GetYaxis()->SetRangeUser(0,60);
 	frame_run2->GetXaxis()->SetRangeUser(5300,5900);
