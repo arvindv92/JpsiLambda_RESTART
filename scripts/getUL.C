@@ -861,10 +861,6 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	}
 	//*********Hypatia signal shape for Lambda_b0************************
 
-	// w.factory("RooHypatia2::Lb_Run1(Lb_DTF_M_JpsiLConstr,lambda_Run1[-2.0,-4.0,0.0],0,0,"
-	//           "sigma_Run1[10.,1.,20.], mean_Run1[5619.6,5619,5621], a1_Run1[1.7,1.0,3.0],"
-	//           "2 ,a2_Run1[2.0,1.0,3.0], 2)");
-
 	w.factory("RooHypatia2::Lb_Run1(Lb_DTF_M_JpsiLConstr,lambda_Run1[-2.0,-4.0,0.0],0,0,"
 	          "sigma_Run1[10.,1.,20.], mean_Run1[5619.6,5619,5621], a1_Run1[1.7,1.0,3.0],"
 	          "2 ,a2_Run1[3.0,1.0,4.0], 2)");
@@ -886,37 +882,16 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	//*******************************************************************
 
 	//*********Continuum backgruond****************
+	w.factory("Exponential::Bkg_Run1(Lb_DTF_M_JpsiLConstr,expr('-1*pow(10,slope_Run1)',slope_Run1[-6.0,-11.0,-2.0]))");
+	w.factory("Exponential::Bkg_Run2(Lb_DTF_M_JpsiLConstr,expr('-1*pow(10,slope_Run2)',slope_Run2[-6.0,-11.0,-2.0]))");
 
-	// if(bkgType == 0)
-	// {
-	cout<<"*****UING EXPONENTIAL BKG SHAPE*****"<<endl;
-	w.factory("Exponential::Bkg_Run1(Lb_DTF_M_JpsiLConstr,tau_Run1[-1e-6,-1e-4,-1e-9])");
-	w.factory("Exponential::Bkg_Run2(Lb_DTF_M_JpsiLConstr,tau_Run2[-1e-6,-1e-4,-1e-9])");
-	// }
-	// else if(bkgType == 1)
-	// {
-	//      cout<<"*****UING 2nd ORDER CHEBYCHEV BKG SHAPE*****"<<endl;
+	w.var("slope_Run1")->setError(0.25);
+	w.var("slope_Run2")->setError(0.25);
+
 	w.factory("Chebychev::Bkg_Run1_Cheby(Lb_DTF_M_JpsiLConstr, {c0_Run1[0.0,-2.0,2.0]})");
-	w.factory("Chebychev::Bkg_Run2_Cheby(Lb_DTF_M_JpsiLConstr, {c0_Run2[0.0,-2.0,2.0]})");
-	// }
-	// else if(bkgType == 2)
-	// {
-	//      cout<<"*****UING 3rd ORDER CHEBYCHEV BKG SHAPE*****"<<endl;
-	//      w.factory("Chebychev::Bkg_Run1(Lb_DTF_M_JpsiLConstr, {c0_Run1[0.0,-2.0,2.0], c1_Run1[0.0,-1.0,1.0], c2_Run1[0.0,-1.0,1.0]})");
-	//      w.factory("Chebychev::Bkg_Run2(Lb_DTF_M_JpsiLConstr, {c0_Run2[0.0,-2.0,2.0], c1_Run2[0.0,-1.0,1.0], c2_Run2[0.0,-1.0,1.0]})");
-	// }
-	// else if(bkgType == 3)
-	// {
-	//      cout<<"*****UING 4th ORDER CHEBYCHEV BKG SHAPE*****"<<endl;
-	//      w.factory("Chebychev::Bkg_Run1(Lb_DTF_M_JpsiLConstr, {c0_Run1[0.0,-2.0,2.0], c1_Run1[0.0,-1.0,1.0], c2_Run1[0.0,-1.0,1.0], c3_Run1[0.0,-1.0,1.0]})");
-	//      w.factory("Chebychev::Bkg_Run2(Lb_DTF_M_JpsiLConstr, {c0_Run2[0.0,-2.0,2.0], c1_Run2[0.0,-1.0,1.0], c2_Run2[0.0,-1.0,1.0], c3_Run2[0.0,-1.0,1.0]})");
-	// }
+	w.factory("Chebychev::Bkg_Run2_Cheby(Lb_DTF_M_JpsiLConstr, {c0_Run2[0.0,-0.1,0.1]})");
 
 	cout<<"Done defining cont. bkg shapes"<<endl;
-
-	// w.factory("Chebychev::Bkg_Run1(Lb_DTF_M_JpsiLConstr, {c0_Run1[-0.5,-2.0,2.0], c1_Run1[0.5,-1.0,1.0], c2_Run1[0.,-1.0,1.0]})");
-	// w.factory("Chebychev::Bkg_Run2(Lb_DTF_M_JpsiLConstr, {c0_Run2[-0.5,-2.0,2.0], c1_Run2[-0.5,-1.0,1.0], c2_Run2[0.,-1.0,1.0]})");
-
 	//*******************************************************************
 
 	w.factory("nLb_Run1[5600,2000,7000]");
@@ -1215,41 +1190,19 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	cout<<"****************************"<<endl;
 	cout<<"Global Fit chi2/dof = "<<chi2_ndof_global<<endl;
 	cout<<"****************************"<<endl;
-	//
-	// RooAbsPdf *Lb_Run1 = nullptr, *Lb_Run2 = nullptr;
-	//
-	// if(fitType == 0)
-	// {
-	//      Lb_Run1 = w.pdf("Lb_Run1");
-	//      Lb_Run2 = w.pdf("Lb_Run2");
-	// }
-	// else if(fitType == 1)
-	// {
-	//      Lb_Run1 = w.pdf("Lb_Run1_Gaus");
-	//      Lb_Run2 = w.pdf("Lb_Run2_Gaus");
-	// }
-	// else if(fitType == 2)
-	// {
-	//      Lb_Run1 = w.pdf("Lb_Run1_Cheby");
-	//      Lb_Run2 = w.pdf("Lb_Run2_Cheby");
-	// }
 
 	for(Int_t i=0; i<=1; i++)
 	{
 		const char *myvar = Form("nLb_Run%d",i+1);
 		const char *mystr = nullptr;
 
-		if(fitType == 0)
+		if(fitType == 0 || fitType == 2)
 		{
 			mystr = Form("Lb_Run%d",i+1);
 		}
 		else if(fitType == 1)
 		{
 			mystr = Form("Lb_Run%d_Gaus",i+1);
-		}
-		else if(fitType == 1)
-		{
-			mystr = Form("Lb_Run%d_Cheby",i+1);
 		}
 		lbInt[i]       = w.pdf(mystr)->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
 		lbINT[i]       = lbInt[i]->getValV();
