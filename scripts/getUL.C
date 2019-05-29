@@ -1363,6 +1363,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		cout<<"*N_JpsiSigma   = "<<(N_JpsiSigma_wt_SystErr[i]/N_JpsiSigma_wt[i])*100<<"%"<<endl;
 		cout<<"**N_JpsiLambda_window_SystErr = "<<(N_JpsiLambda_window_SystErr[i]/(window_JpsiSigma[i]*N_JpsiSigma_wt[i]))*100<<"%"<<endl;
 		cout<<"**XibNorm_wt_SystErr          = "<<(XibNorm_wt_SystErr[i]/(window_JpsiSigma[i]*N_JpsiSigma_wt[i]))*100<<"%"<<endl;
+		cout<<"***Bachelor Pion Tracking = "<<(XibNorm_wt_SystErr[i]*0.05/(window_JpsiSigma[i]*N_JpsiSigma_wt[i]))*100<<"%"<<endl;
 		cout<<"*eff_ratio     = "<<(eff_ratio_wt_SystErr[i]/eff_ratio_wt[i])*100<<"%"<<endl;
 		cout<<"**eff_JpsiSigma_wt_SystErr  = "<<(eff_JpsiSigma_wt_SystErr[i]/eff_JpsiSigma_wt[i])*100<<"%"<<endl;
 		cout<<"**eff_JpsiLambda_wt_SystErr = "<<(eff_JpsiLambda_wt_SystErr[i]/eff_JpsiLambda_wt[i])*100<<"%"<<endl;
