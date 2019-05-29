@@ -421,7 +421,7 @@ TCanvas* routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_
 		Double_t max6 = TMath::Max(max5,max3);
 		Double_t max7 = TMath::Max(max6,max4);
 
-		mcHist_uncorr->SetMaximum(max7*1.2);
+		mcHist_uncorr->SetMaximum(max7*1.05);
 
 		mcHist_uncorr->Draw("HIST");
 		dataHist->Draw("E0same");
@@ -437,7 +437,7 @@ TCanvas* routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_
 		Double_t max5 = TMath::Max(max2,max3);
 		Double_t max6 = TMath::Max(max5,max4);
 
-		dataHist->SetMaximum(max6*1.2);
+		dataHist->SetMaximum(max6*1.05);
 
 		dataHist->Draw("E0");
 		mcHist->Draw("HISTsame");
