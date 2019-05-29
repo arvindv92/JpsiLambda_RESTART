@@ -213,9 +213,9 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	Float_t XibNorm_StatErr[2] = {0.0,0.0}; // Abs. error
 	Float_t XibNorm_SystErr[2] = {0.0,0.0}; // Abs. error
 
-	Float_t XibNorm_wt[2]         = {0.0,0.0}; //Weighted normalization inside signal window
-	Float_t XibNorm_wt_StatErr[2] = {0.0,0.0}; // Abs. error
-	Float_t XibNorm_wt_SystErr[2] = {0.0,0.0}; // Abs. error
+	Float_t XibNorm_wt[2]                = {0.0,0.0}; //Weighted normalization inside signal window
+	Float_t XibNorm_wt_StatErr[2]        = {0.0,0.0}; // Abs. error
+	Float_t XibNorm_wt_SystErr[2]        = {0.0,0.0}; // Abs. error
 
 	Float_t Nobs[2]       = {0.0,0.0}; // no. of events observed in data inside signal window
 	Float_t Nobs_StatErr[2] = {0.0,0.0};
@@ -251,23 +251,25 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	// Double_t sigmaINT[2]= {0.0,0.0};
 
 	//************POI****************************************************
-	Float_t R[2]         = {0.0,0.0};
-	Float_t R_StatErr[2] = {0.0,0.0};
-	Float_t R_SystErr[2] = {0.0,0.0};
-	Float_t R_Err[2]     = {0.0,0.0};
+	Float_t R[2]                = {0.0,0.0};
+	Float_t R_StatErr[2]        = {0.0,0.0};
+	Float_t R_SystErr[2]        = {0.0,0.0};
+	Float_t R_Err[2]            = {0.0,0.0};
 
-	Float_t R_wt[2]         = {0.0,0.0};
-	Float_t R_wt_StatErr[2] = {0.0,0.0};
-	Float_t R_wt_SystErr[2] = {0.0,0.0};
-	Float_t R_wt_Err[2]     = {0.0,0.0};
+	Float_t R_wt[2]                = {0.0,0.0};
+	Float_t R_wt_StatErr[2]        = {0.0,0.0};
+	Float_t R_wt_SystErr[2]        = {0.0,0.0};
+	Float_t R_wt_Err[2]            = {0.0,0.0};
 
-	Float_t R_comb     = 0.0;
+	Float_t R_comb         = 0.0;
 	Float_t R_comb_StatErr = 0.0;
 	Float_t R_comb_SystErr = 0.0;
+	Float_t R_comb_Err     = 0.0;
 
-	Float_t R_comb_wt     = 0.0;
-	Float_t R_comb_wt_StatErr = 0.0;
-	Float_t R_comb_wt_SystErr = 0.0;
+	Float_t R_wt_comb         = 0.0;
+	Float_t R_wt_comb_StatErr = 0.0;
+	Float_t R_wt_comb_SystErr = 0.0;
+	Float_t R_wt_comb_Err           = 0.0;
 
 	//*******************************************************************
 	if(!strncmp(option,"switch",5))
@@ -930,9 +932,9 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		xibInt[i] = XIB_KEYS[i]->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
 		window_JpsiXi[i] = xibInt[i]->getValV();
 
-		XibNorm[i]     = XibNorm[i]*window_JpsiXi[i];
-		XibNorm_StatErr[i] = XibNorm_StatErr[i]*window_JpsiXi[i];
-		XibNorm_SystErr[i] = XibNorm_SystErr[i]*window_JpsiXi[i];
+		XibNorm[i]                = XibNorm[i]*window_JpsiXi[i];
+		XibNorm_StatErr[i]        = XibNorm_StatErr[i]*window_JpsiXi[i];
+		XibNorm_SystErr[i]        = XibNorm_SystErr[i]*window_JpsiXi[i];
 
 		XibNorm_wt[i]     = XibNorm_wt[i]*window_JpsiXi[i];
 		XibNorm_wt_StatErr[i] = XibNorm_wt_StatErr[i]*window_JpsiXi[i];
@@ -1318,6 +1320,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		R_SystErr[i] = R[i]*sqrt( pow(N_JpsiLambda_SystErr[i]/N_JpsiLambda[i],2) +
 		                          pow(N_JpsiSigma_SystErr[i]/N_JpsiSigma[i], 2) +
 		                          pow(eff_ratio_SystErr[i]/eff_ratio[i],2) );
+
 		R_Err[i] = sqrt(pow(R_StatErr[i],2) + pow(R_SystErr[i],2));
 
 		R_wt[i] = (N_JpsiSigma_wt[i]/N_JpsiLambda[i])*eff_ratio_wt[i];
@@ -1329,6 +1332,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		                                pow(eff_ratio_wt_SystErr[i]/eff_ratio_wt[i],2) );
 
 		R_wt_Err[i] = sqrt(pow(R_wt_StatErr[i],2) + pow(R_wt_SystErr[i],2));
+
 		// R_ERR[i] = sqrt( pow(R_STATERR[i],2) + pow(R_SYSTERR[i],2) );
 
 		cout<<"*********RUN "<<i+1<<"***********"<<endl;
@@ -1390,13 +1394,28 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		cout<<endl;
 	}
 
-	// R_comb_err = 1/sqrt(pow(1/R_Err[0],2) + pow(1/R_Err[1],2));
-	// R_comb = (R[0]/pow(R_Err[0],2) + R[1]/pow(R_Err[1],2)) * pow(R_comb_err,2);
-	// cout<<"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl;
-	// cout<<"COMBINED R = "<<R_comb<<" +/- "<<R_comb_err<<endl;
-	// cout<<"COMBINED 90% CL Upper Limit = "<<R_comb+(1.28*R_comb_err)<<endl;
-	// cout<<"COMBINED 95% CL Upper Limit = "<<R_comb+(1.65*R_comb_err)<<endl;
-	// cout<<"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl;
+	R_comb_StatErr = 1/sqrt(pow(1/R_StatErr[0],2) + pow(1/R_StatErr[1],2));
+	R_comb_Err     = 1/sqrt(pow(R_Err[0],-2) + pow(R_Err[1],-2));
+	R_comb = (R[0]/pow(R_Err[0],2) + R[1]/pow(R_Err[1],2)) / (pow(R_Err[0],-2) + pow(R_Err[1],-2));
+	R_comb_SystErr = sqrt(pow(R_comb_Err,2) - pow(R_comb_StatErr,2));
+
+
+	R_wt_comb_StatErr = 1/sqrt(pow(1/R_wt_StatErr[0],2) + pow(1/R_wt_StatErr[1],2));
+	R_wt_comb_Err     = 1/sqrt(pow(R_wt_Err[0],-2) + pow(R_wt_Err[1],-2));
+	R_wt_comb = (R_wt[0]/pow(R_wt_Err[0],2) + R_wt[1]/pow(R_wt_Err[1],2)) / (pow(R_wt_Err[0],-2) + pow(R_wt_Err[1],-2));
+	R_wt_comb_SystErr = sqrt(pow(R_wt_comb_Err,2) - pow(R_wt_comb_StatErr,2));
+
+	cout<<"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl;
+	cout<<"COMBINED UNWEIGHTED R = "<<R_comb<<" +/- "<<R_comb_StatErr<<" +/- "<<R_comb_SystErr<<endl;
+	cout<<"COMBINED 90% CL Upper Limit = "<<R_comb+(1.28*R_comb_Err)<<endl;
+	cout<<"COMBINED 95% CL Upper Limit = "<<R_comb+(1.64*R_comb_Err)<<endl;
+	cout<<"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl;
+
+	cout<<"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl;
+	cout<<"COMBINED WEIGHTED R = "<<R_wt_comb<<" +/- "<<R_wt_comb_StatErr<<" +/- "<<R_wt_comb_SystErr<<endl;
+	cout<<"COMBINED 90% CL Upper Limit = "<<R_wt_comb+(1.28*R_wt_comb_Err)<<endl;
+	cout<<"COMBINED 95% CL Upper Limit = "<<R_wt_comb+(1.64*R_wt_comb_Err)<<endl;
+	cout<<"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl;
 	if(logFlag)
 		gSystem->RedirectOutput(0);
 }
