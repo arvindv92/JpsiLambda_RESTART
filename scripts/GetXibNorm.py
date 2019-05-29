@@ -36,9 +36,9 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
     lines = xibMcLog.readlines()
     for line in lines:
         if 'inclusive' in line:
-            xibEff = float(line.split()[7]) / 100
+            xibEff = float(line.split()[7]) / 100  # Unweighted efficiency for Xib -> J/psi Xi
             xibEffErr = float(line.split()[10]) / 100
-    relErr_xibEff = xibEffErr / xibEff  # Unweighted efficiency for Xib -> J/psi Xi
+    relErr_xibEff = xibEffErr / xibEff
 
     # Now get the weighted efficiency
     file_Xi_rec = TFile("../rootFiles/mcFiles/JpsiXi/run{}/"
@@ -59,7 +59,7 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
     xibden_wt = hxi_gen.GetEntries() * hxi_gen.GetMean()
 
     xibEff_wt = xibnum_wt / xibden_wt  # Weighted efficiency for Xib->JpsiXi
-    xibEffErr_wt = math.sqrt(xibEff_wt * (1 - xibEff_wt) / xibden_wt)
+    xibEffErr_wt = math.sqrt(xibEff_wt * (1 - xibEff_wt) / xibden_wt)  # Binomial uncertainty
 
     relErr_xibEff_wt = xibEffErr_wt / xibEff_wt
 
