@@ -1309,7 +1309,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 
 		N_JpsiSigma_wt[i]         = (Nobs[i] - Ncomb[i] - N_JpsiLambda_window[i] - XibNorm_wt[i])/window_JpsiSigma[i];
 		N_JpsiSigma_wt_StatErr[i] = (sqrt(pow(Nobs_StatErr[i],2) + pow(Ncomb_StatErr[i],2) + pow(N_JpsiLambda_window_StatErr[i],2) + pow(XibNorm_wt_StatErr[i],2)))/window_JpsiSigma[i];
-		N_JpsiSigma_wt_SystErr[i] = (sqrt(pow(N_JpsiLambda_SystErr[i],2) + pow(XibNorm_wt_SystErr[i],2)))/window_JpsiSigma[i];
+		N_JpsiSigma_wt_SystErr[i] = (sqrt(pow(N_JpsiLambda_window_SystErr[i],2) + pow(XibNorm_wt_SystErr[i],2)))/window_JpsiSigma[i];
 
 		R[i] = (N_JpsiSigma[i]/N_JpsiLambda[i])*eff_ratio[i];
 		R_StatErr[i] = R[i]*sqrt( pow(N_JpsiSigma_StatErr[i]/N_JpsiSigma[i],2) +
