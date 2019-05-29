@@ -1356,6 +1356,12 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		cout<<"R_wt       = "<<R_wt[i]<<" +/- "<<R_wt_StatErr[i]<<" +/- "<<R_wt_SystErr[i]<<endl;
 		cout<<"90% CL Upper Limit = "<<R_wt[i]+(1.28*R_wt_Err[i])<<endl;
 		cout<<"95% CL Upper Limit = "<<R_wt[i]+(1.65*R_wt_Err[i])<<endl;
+
+		cout<<"Components of Systematic"<<endl;
+		cout<<"Overall syst % = "<<(R_wt_SystErr[i]/R_wt[i])*100<<endl;
+		cout<<"N_JpsiLambda % = "<<(N_JpsiLambda_SystErr[i]/N_JpsiLambda[i])*100<<endl;
+		cout<<"N_JpsiSigma %  = "<<(N_JpsiSigma_wt_SystErr[i]/N_JpsiSigma_wt[i])*100<<endl;
+		cout<<"eff_ratio   %  = "<<(eff_ratio_wt_SystErr[i]/eff_ratio_wt[i])*100<<endl;
 		cout<<"*********************************"<<endl;
 
 		cout<<endl;
