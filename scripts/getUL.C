@@ -61,8 +61,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 //fitType = 1 for alternate fit. Double Gaussian signal + Exponential bkg
 //fitType = 2 for alternate fit. Hypatia2 signal + First order order cheby background.
 {
-	if(logFlag)
-		gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/UpperLimit/config%d_tight.txt",config),"w");
+	if(logFlag && !strncmp(option,"best",4))
+		gSystem->RedirectOutput("../logs/data/JpsiLambda/UpperLimit/UL_best.txt","w");
 
 	gSystem->Load("RooHypatia2_cpp.so"); //Load library for Hypatia shape
 	gROOT->ProcessLine(".x lhcbStyle.C");
@@ -76,15 +76,15 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 
 	const char *isoVersion[2] = {"",""};
 
-	Float_t xibnorm_LL[2]         = {0.0,0.0};
-	Float_t xibnorm_LL_staterr[2] = {0.0,0.0};
-	Float_t xibnorm_LL_systerr[2] = {0.0,0.0};
-	Float_t xibnorm_LL_err[2]     = {0.0,0.0};
-
-	Float_t xibnorm_LL_wt[2]         = {0.0,0.0};
-	Float_t xibnorm_LL_staterr_wt[2] = {0.0,0.0};
-	Float_t xibnorm_LL_systerr_wt[2] = {0.0,0.0};
-	Float_t xibnorm_LL_err_wt[2]     = {0.0,0.0};
+	// Float_t xibnorm_LL[2]         = {0.0,0.0};
+	// Float_t xibnorm_LL_staterr[2] = {0.0,0.0};
+	// Float_t xibnorm_LL_systerr[2] = {0.0,0.0};
+	// Float_t xibnorm_LL_err[2]     = {0.0,0.0};
+	//
+	// Float_t xibnorm_LL_wt[2]         = {0.0,0.0};
+	// Float_t xibnorm_LL_staterr_wt[2] = {0.0,0.0};
+	// Float_t xibnorm_LL_systerr_wt[2] = {0.0,0.0};
+	// Float_t xibnorm_LL_err_wt[2]     = {0.0,0.0};
 
 	// Lb->J/psi L MC eff & errs
 	Int_t nGen_Lambda[2]          = {0,0}; // Generated yield
@@ -94,13 +94,13 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 
 	Float_t eff_Lambda_rec[2]     = {0.0,0.0}; // Reco. Eff.
 	Float_t eff_Lambda_rec_err[2] = {0.0,0.0}; // Reco. Eff. Stat. Err.
-	Float_t eff_Lambda[2]         = {0.0,0.0}; // Overall Eff.
-	Float_t eff_Lambda_systerr[2] = {0.0,0.0}; // Overall Eff. Stat. Err.
+	// Float_t eff_Lambda[2]         = {0.0,0.0}; // Overall Eff.
+	// Float_t eff_Lambda_systerr[2] = {0.0,0.0}; // Overall Eff. Stat. Err.
 
 	Float_t eff_Lambda_rec_wt[2]     = {0.0,0.0}; // Reco. Eff.
 	Float_t eff_Lambda_rec_err_wt[2] = {0.0,0.0}; // Reco. Eff. Stat. Err.
-	Float_t eff_Lambda_wt[2]         = {0.0,0.0}; // Overall Eff.
-	Float_t eff_Lambda_systerr_wt[2] = {0.0,0.0}; // Overall Eff. Stat. Err.
+	// Float_t eff_Lambda_wt[2]         = {0.0,0.0}; // Overall Eff.
+	// Float_t eff_Lambda_systerr_wt[2] = {0.0,0.0}; // Overall Eff. Stat. Err.
 
 	// Lb->J/psi Sigma MC eff & errs
 	Int_t nGen_Sigma[2]          = {0,0};
@@ -110,24 +110,24 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 
 	Float_t eff_Sigma_rec[2]     = {0.0,0.0};
 	Float_t eff_Sigma_rec_err[2] = {0.0,0.0};
-	Float_t eff_Sigma[2]         = {0.0,0.0};
-	Float_t eff_Sigma_systerr[2] = {0.0,0.0};
+	// Float_t eff_Sigma[2]         = {0.0,0.0};
+	// Float_t eff_Sigma_systerr[2] = {0.0,0.0};
 
 	Float_t eff_Sigma_rec_wt[2]     = {0.0,0.0};
 	Float_t eff_Sigma_rec_err_wt[2] = {0.0,0.0};
-	Float_t eff_Sigma_wt[2]         = {0.0,0.0};
-	Float_t eff_Sigma_systerr_wt[2] = {0.0,0.0};
+	// Float_t eff_Sigma_wt[2]         = {0.0,0.0};
+	// Float_t eff_Sigma_systerr_wt[2] = {0.0,0.0};
 
 	// eff(Lb -> J/psi Sigma) / eff(Lb -> J/psi Lambda)
-	Float_t eff_ratio[2]          = {0.0,0.0};
-	Float_t eff_ratio_staterr[2]  = {0.0,0.0};
-	Float_t eff_ratio_systerr[2]  = {0.0,0.0};
-	Float_t eff_ratio_err[2]      = {0.0,0.0};
-
-	Float_t eff_ratio_wt[2]          = {0.0,0.0};
-	Float_t eff_ratio_staterr_wt[2]  = {0.0,0.0};
-	Float_t eff_ratio_systerr_wt[2]  = {0.0,0.0};
-	Float_t eff_ratio_err_wt[2]      = {0.0,0.0};
+	// Float_t eff_ratio[2]         = {0.0,0.0};
+	// Float_t eff_ratio_staterr[2] = {0.0,0.0};
+	// Float_t eff_ratio_systerr[2] = {0.0,0.0};
+	// Float_t eff_ratio_err[2]     = {0.0,0.0};
+	//
+	// Float_t eff_ratio_wt[2]         = {0.0,0.0};
+	// Float_t eff_ratio_staterr_wt[2] = {0.0,0.0};
+	// Float_t eff_ratio_systerr_wt[2] = {0.0,0.0};
+	// Float_t eff_ratio_err_wt[2]     = {0.0,0.0};
 
 	TFile *fileIn_nonZero[2];
 	TFile *fileIn_Zero[2];
@@ -140,50 +140,135 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	Int_t bkgWindow_low  = 5700;
 	Int_t bkgWindow_high = 5935;
 
-	Int_t low = 5000;
-	Int_t high = 6000;
+	Int_t low      = 5000;
+	Int_t high     = 6000;
 	Int_t binwidth = 4;
 	Int_t nbins    = (Int_t)(high-low)/binwidth;
+
 	TH1D *myhist[2];
 	RooDataHist *ds[2];
 
-	Int_t Nobs[2]       = {0,0};
-	Int_t Ncomb[2]      = {0,0};
-	Float_t Nsig[2]     = {0.0,0.0};
+	Float_t N_JpsiLambda[2]         = {0.0,0.0};
+	Float_t N_JpsiLambda_StatErr[2] = {0.0,0.0}; // abs. error. = fit error on yield
+	Float_t N_JpsiLambda_RelSyst[2] = {0.9,0.8}; // relative % unc. comes from choice of fit model
+	Float_t N_JpsiLambda_SystErr[2] = {0.0,0.0}; // abs. error
 
-	Float_t Nlb[2]              = {0.0,0.0};
-	Float_t Nsig_tot[2]         = {0.0,0.0};
-	Float_t Nsig_tot_STATERR[2] = {0.0,0.0};
-	Float_t Nsig_tot_SYSTERR[2] = {0.0,0.0};
+	Float_t N_JpsiSigma[2] = {0.0,0.0};
+	Float_t N_JpsiSigma_StatErr[2] = {0.0,0.0};
+	Float_t N_JpsiSigma_SystErr[2] = {0.0,0.0};
 
-	Float_t Nlb_tot[2]     = {0.0,0.0};
-	Float_t Nlb_tot_STATERR[2] = {0.0,0.0};
-	Float_t Nxib[2]        = {0.0,0.0};
-	Float_t xib_STATERR[2]  = {0.0,0.0};
-	Float_t xib_SYSTERR[2]  = {0.0,0.0};
+	Float_t N_JpsiSigma_wt[2] = {0.0,0.0};
+	Float_t N_JpsiSigma_wt_StatErr[2] = {0.0,0.0};
+	Float_t N_JpsiSigma_wt_SystErr[2] = {0.0,0.0};
 
-	Float_t lb_STATERR[2]   = {0.0,0.0};
-	Float_t nsig_STATERR[2] = {0.0,0.0};
-	Float_t nsig_SYSTERR[2] = {0.0,0.0};
-	Int_t nentries[2]      = {0,0};
+	Float_t window_JpsiLambda[2] = {0.0,0.0};
+	Float_t window_JpsiSigma[2]  = {0.0,0.0};
+	Float_t window_JpsiXi[2]     = {0.0,0.0};
+
+	Float_t N_JpsiLambda_window[2] = {0.0,0.0};
+	Float_t N_JpsiLambda_window_StatErr[2] = {0.0,0.0};
+	Float_t N_JpsiLambda_window_SystErr[2] = {0.0,0.0};
+
+	// Float_t N_Xib_data[2]         = {0.0,0.0};
+	// Float_t N_Xib_data_StatErr[2] = {0.0,0.0}; // abs. error = error on yield from fit to fully reco'd Xib->JpsiXi data
+	// Float_t N_Xib_data_RelSyst[2] = {0.0,0.0}; // relative % unc. comes from choice of fit model
+	// Float_t N_Xib_data_SystErr[2] = {0.0,0.0}; // abs. error
+	//
+	// Float_t eff_Xib_JpsiLambda[2]         = {0.0,0.0}; //% Unweighted efficiency
+	// Float_t eff_Xib_JpsiLambda_SystErr[2] = {0.0,0.0}; //% Binomial uncertainty
+	//
+	// Float_t eff_Xib_JpsiXi[2]         = {0.0,0.0}; //% Unweighted efficiency
+	// Float_t eff_Xib_JpsiXi_SystErr[2] = {0.0,0.0}; //% Binomial uncertainty
+	//
+	// Float_t eff_Xib_JpsiLambda_wt[2]         = {0.0,0.0}; //% Weighted efficiency
+	// Float_t eff_Xib_JpsiLambda_wt_SystErr[2] = {0.0,0.0}; //% Binomial uncertainty
+	//
+	// Float_t eff_Xib_JpsiXi_wt[2]         = {0.0,0.0}; //% Weighted efficiency
+	// Float_t eff_Xib_JpsiXi_wt_SystErr[2] = {0.0,0.0}; //% Binomial uncertainty
+
+	Float_t eff_JpsiLambda[2]         = {0.0,0.0}; //% Unweighted efficiency
+	Float_t eff_JpsiLambda_SystErr[2] = {0.0,0.0}; //% Binomial uncertainty
+
+	Float_t eff_JpsiSigma[2]         = {0.0,0.0}; //% Unweighted efficiency
+	Float_t eff_JpsiSigma_SystErr[2] = {0.0,0.0}; //% Binomial uncertainty
+
+	Float_t eff_JpsiLambda_wt[2]         = {0.0,0.0}; //% Weighted efficiency
+	Float_t eff_JpsiLambda_wt_SystErr[2] = {0.0,0.0}; //% Binomial uncertainty
+
+	Float_t eff_JpsiSigma_wt[2]         = {0.0,0.0}; //% Weighted efficiency
+	Float_t eff_JpsiSigma_wt_SystErr[2] = {0.0,0.0}; //% Binomial uncertainty
+
+	Float_t eff_ratio[2]         = {0.0,0.0}; // Ratio of unweighted efficiencies
+	Float_t eff_ratio_StatErr[2] = {0.0,0.0}; // Absolute error. Will remain zero
+	Float_t eff_ratio_SystErr[2] = {0.0,0.0}; // Comes from binomial uncertainties
+
+	Float_t eff_ratio_wt[2]         = {0.0,0.0}; // Ratio of Weighted efficiencies
+	Float_t eff_ratio_wt_StatErr[2] = {0.0,0.0}; // Absolute error. Will remain zero
+	Float_t eff_ratio_wt_SystErr[2] = {0.0,0.0}; // Comes from binomial uncertainties
+
+	Float_t trackingErr = 0.05; // rel error. on Xib Norm includes 4.5% tracking unc, and 2% uncertainty for material effects from hadronic interactions
+	Float_t xiVtxUnc    = 0.014; // rel error. on Xib Norm Unc from vertexing the Xi-. Comes from Steves ANA
+
+	Float_t XibNorm[2]         = {0.0,0.0}; // Unweighted normalization inside signal window
+	Float_t XibNorm_StatErr[2] = {0.0,0.0}; // Abs. error
+	Float_t XibNorm_SystErr[2] = {0.0,0.0}; // Abs. error
+
+	Float_t XibNorm_wt[2]         = {0.0,0.0}; //Weighted normalization inside signal window
+	Float_t XibNorm_wt_StatErr[2] = {0.0,0.0}; // Abs. error
+	Float_t XibNorm_wt_SystErr[2] = {0.0,0.0}; // Abs. error
+
+	Float_t Nobs[2]       = {0.0,0.0}; // no. of events observed in data inside signal window
+	Float_t Nobs_StatErr[2] = {0.0,0.0};
+
+	Float_t Ncomb[2]      = {0.0,0.0}; // no. of events counted in sideband window above peak in data
+	Float_t Ncomb_StatErr[2] = {0.0,0.0};
+
+//	Float_t Nsig[2]     = {0.0,0.0}
+
+	// Float_t Nlb[2]              = {0.0,0.0};
+	// Float_t Nsig_tot[2]         = {0.0,0.0};
+	// Float_t Nsig_tot_STATERR[2] = {0.0,0.0};
+	// Float_t Nsig_tot_SYSTERR[2] = {0.0,0.0};
+	//
+	// Float_t Nlb_tot[2]     = {0.0,0.0};
+	// Float_t Nlb_tot_STATERR[2] = {0.0,0.0};
+	// Float_t Nxib[2]        = {0.0,0.0};
+	// Float_t xib_STATERR[2]  = {0.0,0.0};
+	// Float_t xib_SYSTERR[2]  = {0.0,0.0};
+	//
+	// Float_t lb_STATERR[2]   = {0.0,0.0};
+	// Float_t nsig_STATERR[2] = {0.0,0.0};
+	// Float_t nsig_SYSTERR[2] = {0.0,0.0};
+	Int_t nEntries[2]      = {0,0};
 
 	RooAbsReal* xibInt[2];
-	Double_t xibINT[2]= {0.0,0.0};
+	// Double_t xibINT[2]= {0.0,0.0};
 
 	RooAbsReal* lbInt[2];
-	Double_t lbINT[2]= {0.0,0.0};
+	// Double_t lbINT[2]= {0.0,0.0};
 
 	RooAbsReal* sigmaInt[2];
-	Double_t sigmaINT[2]= {0.0,0.0};
+	// Double_t sigmaINT[2]= {0.0,0.0};
 
 	//************POI****************************************************
-	Float_t R[2] = {0.0,0.0};
-	Float_t R_STATERR[2] = {0.0,0.0};
-	Float_t R_SYSTERR[2] = {0.0,0.0};
-	Float_t R_ERR[2] = {0.0,0.0};
+	Float_t R[2]         = {0.0,0.0};
+	Float_t R_StatErr[2] = {0.0,0.0};
+	Float_t R_SystErr[2] = {0.0,0.0};
+	Float_t R_Err[2]     = {0.0,0.0};
+
+	Float_t R_wt[2]         = {0.0,0.0};
+	Float_t R_wt_StatErr[2] = {0.0,0.0};
+	Float_t R_wt_SystErr[2] = {0.0,0.0};
+	Float_t R_wt_Err[2]     = {0.0,0.0};
 
 	Float_t R_comb     = 0.0;
-	Float_t R_comb_err = 0.0;
+	Float_t R_comb_StatErr = 0.0;
+	Float_t R_comb_SystErr = 0.0;
+
+	Float_t R_comb_wt     = 0.0;
+	Float_t R_comb_wt_StatErr = 0.0;
+	Float_t R_comb_wt_SystErr = 0.0;
+
 	//*******************************************************************
 	if(!strncmp(option,"switch",5))
 	{
@@ -313,10 +398,6 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		bdtCut_Zero[1] = 0.495;//0.455;
 	}
 
-	//******Systematics that are set by hand now*************************
-	Float_t xib_syst             = 0.00;
-	Float_t eff_ratio_syst       = 0.00;
-
 	// ************************Master Workspace**************************
 	RooWorkspace w("w");
 
@@ -346,8 +427,11 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		Nobs[i] = treeIn_nonZero[i]->GetEntries(Form("Lb_DTF_M_JpsiLConstr > %d && Lb_DTF_M_JpsiLConstr < %d && BDT%d > %f",sigWindow_low,sigWindow_high,bdtConf_nonZero[i],bdtCut_nonZero[i]))
 		          + treeIn_Zero[i]->GetEntries(Form("Lb_DTF_M_JpsiLConstr > %d && Lb_DTF_M_JpsiLConstr < %d && BDT%d > %f",sigWindow_low,sigWindow_high,bdtConf_Zero[i],bdtCut_Zero[i]));
 
+		Nobs_StatErr[i] = sqrt(Nobs[i]);
 		Ncomb[i] = treeIn_nonZero[i]->GetEntries(Form("Lb_DTF_M_JpsiLConstr > %d && Lb_DTF_M_JpsiLConstr < %d && BDT%d > %f",bkgWindow_low,bkgWindow_high,bdtConf_nonZero[i],bdtCut_nonZero[i]))
 		           + treeIn_Zero[i]->GetEntries(Form("Lb_DTF_M_JpsiLConstr > %d && Lb_DTF_M_JpsiLConstr < %d && BDT%d > %f",bkgWindow_low,bkgWindow_high,bdtConf_Zero[i],bdtCut_Zero[i]));
+
+		Ncomb_StatErr[i] = sqrt(Ncomb[i]);
 
 		treeIn_nonZero[i]->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist_nonzero%d(%d,%d,%d)",run,nbins,low,high),
 		                        Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
@@ -362,8 +446,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 
 		myhist[i]->Add(myhist_zero,myhist_nonzero);
 
-		nentries[i] = myhist[i]->Integral();
-		cout<<"Run "<<run<<" nentries = "<<nentries[i]<<endl;
+		nEntries[i] = myhist[i]->Integral();
+		cout<<"Run "<<run<<" nEntries = "<<nEntries[i]<<endl;
 
 		ds[i] = new RooDataHist(Form("ds%d",run),Form("ds%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),myhist[i]);
 
@@ -388,28 +472,28 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 
 		ifstream infile(Form("../logs/mc/JpsiXi/run%d/xibNorm_log.txt",run));
 
-		infile>>xibnorm_LL[i];         // Get normalization
-		infile>>xibnorm_LL_staterr[i]; // Get statistical error on norm. This comes from fit error
-		infile>>xibnorm_LL_systerr[i]; // Get systematic error on norm.
+		infile>>XibNorm[i];         // Get normalization
+		infile>>XibNorm_StatErr[i]; // Get statistical error on norm. This comes from fit error
+		infile>>XibNorm_SystErr[i]; // Get systematic error on norm.
 
-		infile>>xibnorm_LL_wt[i];         // Get weighted normalization
-		infile>>xibnorm_LL_staterr_wt[i]; // Get weighted statistical error on norm. This comes from the fit error
-		infile>>xibnorm_LL_systerr_wt[i]; // Get weighted systematic error on norm.
+		infile>>XibNorm_wt[i];         // Get weighted normalization
+		infile>>XibNorm_wt_StatErr[i]; // Get weighted statistical error on norm. This comes from the fit error
+		infile>>XibNorm_wt_SystErr[i]; // Get weighted systematic error on norm.
 
 		// xibnorm_LL_systerr[i] = xibnorm_LL[i]*xib_syst;
-		xibnorm_LL_err[i]     = sqrt(pow(xibnorm_LL_staterr[i],2) + pow(xibnorm_LL_systerr[i],2)); //Combining stat and syst in quadrature
+		// xibnorm_LL_err[i]     = sqrt(pow(xibnorm_LL_staterr[i],2) + pow(xibnorm_LL_systerr[i],2)); //Combining stat and syst in quadrature
 
 		// xibnorm_LL_systerr_wt[i] = xibnorm_LL_wt[i]*xib_syst;
-		xibnorm_LL_err_wt[i]     = sqrt(pow(xibnorm_LL_staterr_wt[i],2) + pow(xibnorm_LL_systerr_wt[i],2)); //Combining stat and syst in quadrature
+		// xibnorm_LL_err_wt[i]     = sqrt(pow(xibnorm_LL_staterr_wt[i],2) + pow(xibnorm_LL_systerr_wt[i],2)); //Combining stat and syst in quadrature
 
 		cout<<"************************************************"<<endl;
 		cout<<"The UNWEIGHTED LL Xib normalization for Run "<<run
-		    <<" is "<<xibnorm_LL[i]<<" +/- "<<xibnorm_LL_staterr[i]
-		    <<" +/- "<<xibnorm_LL_systerr[i]<<endl;
+		    <<" is "<<XibNorm[i]<<" +/- "<<XibNorm_StatErr[i]
+		    <<" +/- "<<XibNorm_SystErr[i]<<endl;
 
 		cout<<"The WEIGHTED LL Xib normalization for Run "<<run
-		    <<" is "<<xibnorm_LL_wt[i]<<" +/- "<<xibnorm_LL_staterr_wt[i]
-		    <<" +/- "<<xibnorm_LL_systerr_wt[i]<<endl;
+		    <<" is "<<XibNorm_wt[i]<<" +/- "<<XibNorm_wt_StatErr[i]
+		    <<" +/- "<<XibNorm_wt_SystErr[i]<<endl;
 		cout<<"************************************************"<<endl;
 	}
 	//************************************************
@@ -510,19 +594,19 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		cout<<"Run "<<run<<" WEIGHTED Lambda Recons. Effs = "<<eff_Lambda_rec_wt[i]*100
 		    <<" % +/- "<<eff_Lambda_rec_err_wt[i]*100<<" %"<<endl;
 
-		eff_Lambda[i]     = eff_Lambda_rec[i]*eff_Lambda_gen[i]; // Calc. total eff.
-		eff_Lambda_systerr[i] = eff_Lambda[i]*sqrt(pow((eff_Lambda_gen_err[i]/eff_Lambda_gen[i]),2) +
-		                                           pow((eff_Lambda_rec_err[i]/eff_Lambda_rec[i]),2));                                                                                                                               // and stat error on tot. eff.
+		eff_JpsiLambda[i]     = eff_Lambda_rec[i]*eff_Lambda_gen[i]; // Calc. total eff.
+		eff_JpsiLambda_SystErr[i] = eff_JpsiLambda[i]*sqrt(pow((eff_Lambda_gen_err[i]/eff_Lambda_gen[i]),2) +
+		                                                   pow((eff_Lambda_rec_err[i]/eff_Lambda_rec[i]),2));                                                                                                                       // and stat error on tot. eff.
 
-		eff_Lambda_wt[i]     = eff_Lambda_rec_wt[i]*eff_Lambda_gen[i];                                                                                                                                                                          // Calc. total eff.
-		eff_Lambda_systerr_wt[i] = eff_Lambda_wt[i]*sqrt(pow((eff_Lambda_gen_err[i]/eff_Lambda_gen[i]),2) +
-		                                                 pow((eff_Lambda_rec_err_wt[i]/eff_Lambda_rec_wt[i]),2));                                                                                                                                                                                                                                                                                                                                                                                                                                                 // and stat error on tot. eff.
+		eff_JpsiLambda_wt[i]     = eff_Lambda_rec_wt[i]*eff_Lambda_gen[i];                                                                                                                                                                          // Calc. total eff.
+		eff_JpsiLambda_wt_SystErr[i] = eff_JpsiLambda_wt[i]*sqrt(pow((eff_Lambda_gen_err[i]/eff_Lambda_gen[i]),2) +
+		                                                         pow((eff_Lambda_rec_err_wt[i]/eff_Lambda_rec_wt[i]),2));                                                                                                                                                                                                                                                                                                                                                                                                                                         // and stat error on tot. eff.
 
 		cout<<"************************************************"<<endl;
-		cout<<"Run "<<run<<" UNWEIGHTED Jpsi Lambda Eff = "<<eff_Lambda[i]*100
-		    <<" % +/- "<<eff_Lambda_systerr[i]*100<<" %"<<endl;
-		cout<<"Run "<<run<<" WEIGHTED Jpsi Lambda Eff = "<<eff_Lambda_wt[i]*100
-		    <<" % +/- "<<eff_Lambda_systerr_wt[i]*100<<" %"<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED Jpsi Lambda Eff = "<<eff_JpsiLambda[i]*100
+		    <<" % +/- "<<eff_JpsiLambda_SystErr[i]*100<<" %"<<endl;
+		cout<<"Run "<<run<<" WEIGHTED Jpsi Lambda Eff = "<<eff_JpsiLambda_wt[i]*100
+		    <<" % +/- "<<eff_JpsiLambda_wt_SystErr[i]*100<<" %"<<endl;
 		cout<<"************************************************"<<endl;
 	}
 	//*******************************************************************
@@ -631,34 +715,32 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		cout<<"Run "<<run<<" WEIGHTED Sigma Recons. Effs = "<<eff_Sigma_rec_wt[i]*100
 		    <<" % +/- "<<eff_Sigma_rec_err_wt[i]*100<<" %"<<endl;
 
-		eff_Sigma[i] = eff_Sigma_gen[i] * eff_Sigma_rec[i]; // Calc overall eff.
-		eff_Sigma_systerr[i] = eff_Sigma[i]*sqrt(pow((eff_Sigma_gen_err[i]/eff_Sigma_gen[i]),2) +
-		                                         pow((eff_Sigma_rec_err[i]/eff_Sigma_rec[i]),2));                                                                                                                         // and stat. error on above
+		eff_JpsiSigma[i] = eff_Sigma_gen[i] * eff_Sigma_rec[i]; // Calc overall eff.
+		eff_JpsiSigma_SystErr[i] = eff_JpsiSigma[i]*sqrt(pow((eff_Sigma_gen_err[i]/eff_Sigma_gen[i]),2) +
+		                                                 pow((eff_Sigma_rec_err[i]/eff_Sigma_rec[i]),2));                                                                                                                 // and stat. error on above
 
-		eff_Sigma_wt[i]     = eff_Sigma_rec_wt[i]*eff_Sigma_gen[i];                                                                                                                                                                          // Calc. total eff.
-		eff_Sigma_systerr_wt[i] = eff_Sigma_wt[i]*sqrt(pow((eff_Sigma_gen_err[i]/eff_Sigma_gen[i]),2) +
-		                                               pow((eff_Sigma_rec_err_wt[i]/eff_Sigma_rec_wt[i]),2));                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             // and stat error on tot. eff.
+		eff_JpsiSigma_wt[i]     = eff_Sigma_rec_wt[i]*eff_Sigma_gen[i];                                                                                                                                                                          // Calc. total eff.
+		eff_JpsiSigma_wt_SystErr[i] = eff_JpsiSigma_wt[i]*sqrt(pow((eff_Sigma_gen_err[i]/eff_Sigma_gen[i]),2) +
+		                                                       pow((eff_Sigma_rec_err_wt[i]/eff_Sigma_rec_wt[i]),2));                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     // and stat error on tot. eff.
 
 		cout<<"************************************************"<<endl;
-		cout<<"Run "<<run<<" UNWEIGHTED Jpsi Sigma Eff = "<<eff_Sigma[i]*100
-		    <<" % +/- "<<eff_Sigma_systerr[i]*100<<" %"<<endl;
-		cout<<"Run "<<run<<" WEIGHTED Jpsi Sigma Eff = "<<eff_Sigma_wt[i]*100
-		    <<" % +/- "<<eff_Sigma_systerr_wt[i]*100<<" %"<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED Jpsi Sigma Eff = "<<eff_JpsiSigma[i]*100
+		    <<" % +/- "<<eff_JpsiSigma_SystErr[i]*100<<" %"<<endl;
+		cout<<"Run "<<run<<" WEIGHTED Jpsi Sigma Eff = "<<eff_JpsiSigma_wt[i]*100
+		    <<" % +/- "<<eff_JpsiSigma_wt_SystErr[i]*100<<" %"<<endl;
 		cout<<"************************************************"<<endl;
 
-		eff_ratio[i]         = eff_Lambda[i]/eff_Sigma[i]; // Calc eff ratio.
-		eff_ratio_systerr[i] = eff_ratio[i]*sqrt(pow((eff_Sigma_systerr[i]/eff_Sigma[i]),2)+pow((eff_Lambda_systerr[i]/eff_Lambda[i]),2)); // stat err on ratio
-		eff_ratio_staterr[i] = 0;
-		eff_ratio_err[i]     = sqrt(pow(eff_ratio_staterr[i],2) + pow(eff_ratio_systerr[i],2));//combine in quadrature
+		eff_ratio[i]         = eff_JpsiLambda[i]/eff_JpsiSigma[i]; // Calc eff ratio.
+		eff_ratio_SystErr[i] = eff_ratio[i]*sqrt(pow((eff_JpsiSigma_SystErr[i]/eff_JpsiSigma[i]),2)+pow((eff_JpsiLambda_SystErr[i]/eff_JpsiLambda[i]),2)); // stat err on ratio
+		eff_ratio_StatErr[i] = 0;
 
-		eff_ratio_wt[i]         = eff_Lambda_wt[i]/eff_Sigma_wt[i]; // Calc eff ratio.
-		eff_ratio_systerr_wt[i] = eff_ratio_wt[i]*sqrt(pow((eff_Sigma_systerr_wt[i]/eff_Sigma_wt[i]),2)+pow((eff_Lambda_systerr_wt[i]/eff_Lambda_wt[i]),2)); // stat err on ratio
-		eff_ratio_staterr_wt[i] = 0;
-		eff_ratio_err_wt[i]     = sqrt(pow(eff_ratio_staterr_wt[i],2) + pow(eff_ratio_systerr_wt[i],2));//combine in quadrature
+		eff_ratio_wt[i]         = eff_JpsiLambda_wt[i]/eff_JpsiSigma_wt[i]; // Calc eff ratio.
+		eff_ratio_wt_SystErr[i] = eff_ratio_wt[i]*sqrt(pow((eff_JpsiSigma_wt_SystErr[i]/eff_JpsiSigma_wt[i]),2)+pow((eff_JpsiLambda_wt_SystErr[i]/eff_JpsiLambda_wt[i]),2)); // stat err on ratio
+		eff_ratio_wt_StatErr[i] = 0;
 
 		cout<<"***************************************"<<endl;
-		cout<<"Run "<<run<<" UNWEIGHTED Sigma/Lambda efficiency ratio = "<<eff_ratio[i]<<" +/- "<<eff_ratio_err[i]<<endl;
-		cout<<"Run "<<run<<" WEIGHTED Sigma/Lambda efficiency ratio   = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_err_wt[i]<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED Sigma/Lambda efficiency ratio = "<<eff_ratio[i]<<" +/- "<<eff_ratio_SystErr[i]<<endl;
+		cout<<"Run "<<run<<" WEIGHTED Sigma/Lambda efficiency ratio   = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_wt_SystErr[i]<<endl;
 		cout<<"***************************************"<<endl;
 
 		//******************************************************************
@@ -733,7 +815,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		cout<<"Done importing Jpsi Sigma shape"<<endl;
 
 		sigmaInt[i] = SIG_KEYS[i]->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
-		sigmaINT[i] = sigmaInt[i]->getValV();
+		window_JpsiSigma[i] = sigmaInt[i]->getValV();
 
 		// cout<<"Run "<<run<<" sigma fraction = "<<sigmaINT[i]<<endl;
 	}
@@ -846,16 +928,23 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		cout<<"Done importing Xib shape"<<endl;
 
 		xibInt[i] = XIB_KEYS[i]->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
-		xibINT[i] = xibInt[i]->getValV();
+		window_JpsiXi[i] = xibInt[i]->getValV();
 
-		Nxib[i]     = xibnorm_LL_wt[i]*xibINT[i];
-		xib_STATERR[i] = xibnorm_LL_staterr_wt[i]*xibINT[i];
-		xib_SYSTERR[i] = xibnorm_LL_systerr_wt[i]*xibINT[i];
+		XibNorm[i]     = XibNorm[i]*window_JpsiXi[i];
+		XibNorm_StatErr[i] = XibNorm_StatErr[i]*window_JpsiXi[i];
+		XibNorm_SystErr[i] = XibNorm_SystErr[i]*window_JpsiXi[i];
+
+		XibNorm_wt[i]     = XibNorm_wt[i]*window_JpsiXi[i];
+		XibNorm_wt_StatErr[i] = XibNorm_wt_StatErr[i]*window_JpsiXi[i];
+		XibNorm_wt_SystErr[i] = XibNorm_wt_SystErr[i]*window_JpsiXi[i];
 
 		cout<<"************************************************"<<endl;
+		cout<<"The UNWEIGHTED Xib normalization inside signal region for Run "<<run
+		    <<" is "<<XibNorm[i]<<" +/- "<<XibNorm_StatErr[i]
+		    <<" +/- "<<XibNorm_SystErr[i]<<endl;
 		cout<<"The WEIGHTED Xib normalization inside signal region for Run "<<run
-		    <<" is "<<Nxib[i]<<" +/- "<<xib_STATERR[i]
-		    <<" +/- "<<xib_SYSTERR[i]<<endl;
+		    <<" is "<<XibNorm_wt[i]<<" +/- "<<XibNorm_wt_StatErr[i]
+		    <<" +/- "<<XibNorm_wt_SystErr[i]<<endl;
 		cout<<"************************************************"<<endl;
 
 	}
@@ -897,8 +986,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	w.factory("nLb_Run1[5600,2000,7000]");
 	w.factory("nLb_Run2[20000,10000,22000]");
 
-	w.factory(Form("nBkg_Run1[200,1,%d]",nentries[0]));
-	w.factory(Form("nBkg_Run2[1000,1,%d]",nentries[1]));
+	w.factory(Form("nBkg_Run1[200,1,%d]",nEntries[0]));
+	w.factory(Form("nBkg_Run2[1000,1,%d]",nEntries[1]));
 
 	w.factory("SUM:model1(nLb_Run1*Lb_Run1 , nBkg_Run1*Bkg_Run1)");
 	w.factory("SUM:model2(nLb_Run2*Lb_Run2 , nBkg_Run2*Bkg_Run2)");
@@ -1204,61 +1293,81 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		{
 			mystr = Form("Lb_Run%d_Gaus",i+1);
 		}
-		lbInt[i]       = w.pdf(mystr)->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
-		lbINT[i]       = lbInt[i]->getValV();
-		Nlb[i]         = lbINT[i]*(w.var(myvar)->getVal());
-		lb_STATERR[i]   = (lbInt[i]->getValV())*(w.var(myvar)->getError());
-		Nlb_tot[i]     = w.var(myvar)->getVal();
-		Nlb_tot_STATERR[i] = w.var(myvar)->getError();
+		N_JpsiLambda[i]         = w.var(myvar)->getVal();
+		N_JpsiLambda_StatErr[i] = w.var(myvar)->getError();
+		N_JpsiLambda_SystErr[i] = N_JpsiLambda[i] * (N_JpsiLambda_RelSyst[i]/100);
 
-		Nsig[i]        = Nobs[i] - Nlb[i] - Nxib[i] - Ncomb[i];
-		nsig_STATERR[i] = sqrt( Nobs[i] + Ncomb[i] + pow(lb_STATERR[i],2) + pow(xib_STATERR[i],2));
-		nsig_SYSTERR[i] = sqrt( pow(xib_SYSTERR[i],2));
-		Nsig_tot[i]     = Nsig[i]/sigmaINT[i];
-		Nsig_tot_STATERR[i] = nsig_STATERR[i]/sigmaINT[i];
-		Nsig_tot_SYSTERR[i] = nsig_SYSTERR[i]/sigmaINT[i];
+		lbInt[i]                       = w.pdf(mystr)->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
+		window_JpsiLambda[i]           = lbInt[i]->getValV();
+		N_JpsiLambda_window[i]         = window_JpsiLambda[i]*(w.var(myvar)->getVal());
+		N_JpsiLambda_window_StatErr[i] = (lbInt[i]->getValV())*(w.var(myvar)->getError());
+		N_JpsiLambda_window_SystErr[i] = N_JpsiLambda_SystErr[i]*window_JpsiLambda[i];
 
-		R[i] = (Nsig_tot[i]/Nlb_tot[i])*eff_ratio_wt[i];
-		R_STATERR[i] = R[i]*sqrt( pow(Nsig_tot_STATERR[i]/Nsig_tot[i],2) +
-		                          pow(Nlb_tot_STATERR[i]/Nlb_tot[i],2));
+		N_JpsiSigma[i]         = (Nobs[i] - Ncomb[i] - N_JpsiLambda_window[i] - XibNorm[i])/window_JpsiSigma[i];
+		N_JpsiSigma_StatErr[i] = (sqrt(pow(Nobs_StatErr[i],2) + pow(Ncomb_StatErr[i],2) + pow(N_JpsiLambda_window_StatErr[i],2) + pow(XibNorm_StatErr[i],2)))/window_JpsiSigma[i];
+		N_JpsiSigma_SystErr[i] = (sqrt(pow(N_JpsiLambda_SystErr[i],2) + pow(XibNorm_SystErr[i],2)))/window_JpsiSigma[i];
 
-		R_SYSTERR[i] = R[i]*sqrt( pow(Nsig_tot_SYSTERR[i]/Nsig_tot[i], 2) +
-		                          pow(eff_ratio_systerr_wt[i]/eff_ratio_wt[i],2) );
-		
-		R_ERR[i] = sqrt( pow(R_STATERR[i],2) + pow(R_SYSTERR[i],2) );
+		N_JpsiSigma_wt[i]         = (Nobs[i] - Ncomb[i] - N_JpsiLambda_window[i] - XibNorm_wt[i])/window_JpsiSigma[i];
+		N_JpsiSigma_wt_StatErr[i] = (sqrt(pow(Nobs_StatErr[i],2) + pow(Ncomb_StatErr[i],2) + pow(N_JpsiLambda_window_StatErr[i],2) + pow(XibNorm_wt_StatErr[i],2)))/window_JpsiSigma[i];
+		N_JpsiSigma_wt_SystErr[i] = (sqrt(pow(N_JpsiLambda_SystErr[i],2) + pow(XibNorm_wt_SystErr[i],2)))/window_JpsiSigma[i];
+
+		R[i] = (N_JpsiSigma[i]/N_JpsiLambda[i])*eff_ratio[i];
+		R_StatErr[i] = R[i]*sqrt( pow(N_JpsiSigma_StatErr[i]/N_JpsiSigma[i],2) +
+		                          pow(N_JpsiLambda_StatErr[i]/N_JpsiLambda[i],2));
+
+		R_SystErr[i] = R[i]*sqrt( pow(N_JpsiLambda_SystErr[i]/N_JpsiLambda[i],2) +
+		                          pow(N_JpsiSigma_SystErr[i]/N_JpsiSigma[i], 2) +
+		                          pow(eff_ratio_SystErr[i]/eff_ratio[i],2) );
+		R_Err[i] = sqrt(pow(R_StatErr[i],2) + pow(R_SystErr[i],2));
+
+		R_wt[i] = (N_JpsiSigma_wt[i]/N_JpsiLambda[i])*eff_ratio_wt[i];
+		R_wt_StatErr[i] = R_wt[i]*sqrt( pow(N_JpsiSigma_wt_StatErr[i]/N_JpsiSigma_wt[i],2) +
+		                                pow(N_JpsiLambda_StatErr[i]/N_JpsiLambda[i],2));
+
+		R_wt_SystErr[i] = R_wt[i]*sqrt( pow(N_JpsiLambda_SystErr[i]/N_JpsiLambda[i],2) +
+		                                pow(N_JpsiSigma_wt_SystErr[i]/N_JpsiSigma_wt[i], 2) +
+		                                pow(eff_ratio_wt_SystErr[i]/eff_ratio_wt[i],2) );
+
+		R_wt_Err[i] = sqrt(pow(R_wt_StatErr[i],2) + pow(R_wt_SystErr[i],2));
+		// R_ERR[i] = sqrt( pow(R_STATERR[i],2) + pow(R_SYSTERR[i],2) );
 
 		cout<<"*********RUN "<<i+1<<"***********"<<endl;
-		cout<<"Nobs    = "<<Nobs[i]<<" +/- "<<sqrt((float)Nobs[i])<<endl;
-		cout<<"Ncomb   = "<<Ncomb[i]<<" +/- "<<sqrt((float)Ncomb[i])<<endl;
-		cout<<"Nxib    = "<<Nxib[i]<<" +/- "<<xib_STATERR[i]<<" +/- "<<xib_SYSTERR[i]<<endl;
-		cout<<"NLb     = "<<Nlb[i]<<" +/- "<<lb_STATERR[i]<<endl;
-		cout<<"_____________________________________"<<endl;
-		cout<<"Nsig    = "<<Nsig[i]<<" +/- "<<nsig_STATERR[i]<<" +/- "<<nsig_SYSTERR[i]<<endl;
-		cout<<"Nsig_tot    = "<<Nsig_tot[i]<<" +/- "<<Nsig_tot_STATERR[i]<<" +/- "<<Nsig_tot_SYSTERR[i]<<endl;
-		cout<<"JpsiSigma signal window frac    = "<<sigmaINT[i]<<endl;
-		cout<<"JpsiLambda signal window frac    = "<<lbINT[i]<<endl;
-		cout<<"JpsiXi signal window frac    = "<<xibINT[i]<<endl;
-		cout<<"NLb_tot = "<<Nlb_tot[i]<<" +/- "<<Nlb_tot_STATERR[i]<<endl;
-		cout<<"eff_JpsiLambda = "<<eff_Lambda_wt[i]*100<<" % +/- "
-		    <<eff_Lambda_systerr_wt[i]*100<<" %"<<endl;
-		cout<<"eff_JpsiSigma = "<<eff_Sigma_wt[i]*100<<" % +/- "
-		    <<eff_Sigma_systerr_wt[i]*100<<" %"<<endl;
-		cout<<"Eff Rat = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_err_wt[i]<<endl;
-		cout<<"_____________________________________"<<endl;
-		cout<<"R       = "<<R[i]<<" +/- "<<R_STATERR[i]<<" +/- "<<R_SYSTERR[i]<<endl;
-		cout<<"90% CL Upper Limit = "<<R[i]+(1.28*R_ERR[i])<<endl;
+		// cout<<"Nobs         = "<<Nobs[i]<<" +/- "<<sqrt((float)Nobs[i])<<endl;
+		// cout<<"Ncomb        = "<<Ncomb[i]<<" +/- "<<sqrt((float)Ncomb[i])<<endl;
+		// cout<<"XibNorm_wt   = "<<XibNorm_wt[i]<<" +/- "<<XibNorm_wt_StatErr[i]<<" +/- "<<XibNorm_wt_SystErr[i]<<endl;
+		// cout<<"N_JpsiLambda = "<<N_JpsiLambda[i]<<" +/- "<<N_JpsiLambda_StatErr[i]<<" +/- "<<N_JpsiLambda_SystErr[i]<<endl;
+		// cout<<"_____________________________________"<<endl;
+		// cout<<"N_JpsiSigma    = "<<N_JpsiSigma_wt[i]<<" +/- "<<N_JpsiSigma_wt_StatErr[i]<<" +/- "<<N_JpsiSigma_wt_SystErr[i]<<endl;
+		// cout<<"JpsiSigma signal window frac    = "<<sigmaINT[i]<<endl;
+		// cout<<"JpsiLambda signal window frac    = "<<lbINT[i]<<endl;
+		// cout<<"JpsiXi signal window frac    = "<<xibINT[i]<<endl;
+		// cout<<"NLb_tot = "<<Nlb_tot[i]<<" +/- "<<Nlb_tot_STATERR[i]<<endl;
+		// cout<<"eff_JpsiLambda = "<<eff_Lambda_wt[i]*100<<" % +/- "
+		//     <<eff_Lambda_systerr_wt[i]*100<<" %"<<endl;
+		// cout<<"eff_JpsiSigma = "<<eff_Sigma_wt[i]*100<<" % +/- "
+		//     <<eff_Sigma_systerr_wt[i]*100<<" %"<<endl;
+		// cout<<"Eff Rat = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_err_wt[i]<<endl;
+		// cout<<"_____________________________________"<<endl;
+		cout<<"R       = "<<R[i]<<" +/- "<<R_StatErr[i]<<" +/- "<<R_SystErr[i]<<endl;
+		cout<<"90% CL Upper Limit = "<<R[i]+(1.28*R_Err[i])<<endl;
+		cout<<"95% CL Upper Limit = "<<R[i]+(1.65*R_Err[i])<<endl;
+		cout<<endl;
+
+		cout<<"R_wt       = "<<R_wt[i]<<" +/- "<<R_wt_StatErr[i]<<" +/- "<<R_wt_SystErr[i]<<endl;
+		cout<<"90% CL Upper Limit = "<<R_wt[i]+(1.28*R_wt_Err[i])<<endl;
+		cout<<"95% CL Upper Limit = "<<R_wt[i]+(1.65*R_wt_Err[i])<<endl;
 		cout<<"*********************************"<<endl;
 
 		cout<<endl;
 	}
 
-	R_comb_err = 1/sqrt(pow(1/R_ERR[0],2) + pow(1/R_ERR[1],2));
-	R_comb = (R[0]/pow(R_ERR[0],2) + R[1]/pow(R_ERR[1],2)) * pow(R_comb_err,2);
-	cout<<"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl;
-	cout<<"COMBINED R = "<<R_comb<<" +/- "<<R_comb_err<<endl;
-	cout<<"COMBINED 90% CL Upper Limit = "<<R_comb+(1.28*R_comb_err)<<endl;
-	cout<<"COMBINED 95% CL Upper Limit = "<<R_comb+(1.65*R_comb_err)<<endl;
-	cout<<"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl;
+	// R_comb_err = 1/sqrt(pow(1/R_Err[0],2) + pow(1/R_Err[1],2));
+	// R_comb = (R[0]/pow(R_Err[0],2) + R[1]/pow(R_Err[1],2)) * pow(R_comb_err,2);
+	// cout<<"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl;
+	// cout<<"COMBINED R = "<<R_comb<<" +/- "<<R_comb_err<<endl;
+	// cout<<"COMBINED 90% CL Upper Limit = "<<R_comb+(1.28*R_comb_err)<<endl;
+	// cout<<"COMBINED 95% CL Upper Limit = "<<R_comb+(1.65*R_comb_err)<<endl;
+	// cout<<"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl;
 	if(logFlag)
 		gSystem->RedirectOutput(0);
 }
