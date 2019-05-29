@@ -1357,6 +1357,20 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		cout<<"90% CL Upper Limit = "<<R_wt[i]+(1.28*R_wt_Err[i])<<endl;
 		cout<<"95% CL Upper Limit = "<<R_wt[i]+(1.65*R_wt_Err[i])<<endl;
 
+		Float_t XibYieldFactor = 0.0, Xib_JpsiLEffFactor = 0.0, Xib_JpsiXiEffFactor = 0.0;
+		if(i == 0)
+		{
+			XibYieldFactor = 0.09;
+			Xib_JpsiLEffFactor = 0.046494;
+			Xib_JpsiXiEffFactor = 0.024519;
+		}
+		else if(i == 1)
+		{
+			XibYieldFactor = 0.06;
+			Xib_JpsiLEffFactor = 0.042352;
+			Xib_JpsiXiEffFactor = 0.021684;
+		}
+
 		cout<<"Components of Systematic"<<endl;
 		cout<<"Overall syst  = "<<(R_wt_SystErr[i]/R_wt[i])*100<<"%"<<endl;
 		cout<<"*N_JpsiLambda  = "<<(N_JpsiLambda_SystErr[i]/N_JpsiLambda[i])*100<<"%"<<endl;
@@ -1364,6 +1378,10 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		cout<<"**N_JpsiLambda_window_SystErr = "<<(N_JpsiLambda_window_SystErr[i]/(window_JpsiSigma[i]*N_JpsiSigma_wt[i]))*100<<"%"<<endl;
 		cout<<"**XibNorm_wt_SystErr          = "<<(XibNorm_wt_SystErr[i]/(window_JpsiSigma[i]*N_JpsiSigma_wt[i]))*100<<"%"<<endl;
 		cout<<"***Bachelor Pion Tracking = "<<(XibNorm_wt[i]*0.05/(window_JpsiSigma[i]*N_JpsiSigma_wt[i]))*100<<"%"<<endl;
+		cout<<"***Xi vertexing           = "<<(XibNorm_wt[i]*0.014/(window_JpsiSigma[i]*N_JpsiSigma_wt[i]))*100<<"%"<<endl;
+		cout<<"***XibYield               = "<<(XibNorm_wt[i]*XibYieldFactor/(window_JpsiSigma[i]*N_JpsiSigma_wt[i]))*100<<"%"<<endl;
+		cout<<"***Xib->JpsiLEff         = "<<(XibNorm_wt[i]*Xib_JpsiLEffFactor/(window_JpsiSigma[i]*N_JpsiSigma_wt[i]))*100<<"%"<<endl;
+		cout<<"***Xib->JpsiXiEff         = "<<(XibNorm_wt[i]*Xib_JpsiXiEffFactor/(window_JpsiSigma[i]*N_JpsiSigma_wt[i]))*100<<"%"<<endl;
 		cout<<"*eff_ratio     = "<<(eff_ratio_wt_SystErr[i]/eff_ratio_wt[i])*100<<"%"<<endl;
 		cout<<"**eff_JpsiSigma_wt_SystErr  = "<<(eff_JpsiSigma_wt_SystErr[i]/eff_JpsiSigma_wt[i])*100<<"%"<<endl;
 		cout<<"**eff_JpsiLambda_wt_SystErr = "<<(eff_JpsiLambda_wt_SystErr[i]/eff_JpsiLambda_wt[i])*100<<"%"<<endl;
