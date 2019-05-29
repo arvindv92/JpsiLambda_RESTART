@@ -158,6 +158,13 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
 
     print 'UNWEIGTED Norm = ' + str(xibNorm) + '+/-' + str(xibNormErr_stat) + '+/-' + str(xibNormErr_syst)
     print 'WEIGHTED Norm = ' + str(xibNorm_wt) + '+/-' + str(xibNormErr_wt_stat) + '+/-' + str(xibNormErr_wt_syst)
+    print 'BREAKUP OF SYSTEMATICS:'
+    print 'Overall Syst = ' + (xibNormErr_wt_syst / xibNorm_wt) * 100 + '%'
+    print '*Tracking    = ' + trackingErr * 100 + '%'
+    print '*Xi Vtx      = ' + xiVtxUnc * 100 + '%'
+    print '*Xib Yield   = ' + xibYield_relSyst * 100 + '%'
+    print '*Xib->JpsiL eff = ' + relErr_xibEff_JpsiLambda_wt * 100 + '%'
+    print '*Xib->JpsiXi eff = ' + relErr_xibEff_wt * 100 + '%'
 
     # Write results out to log file
     xibNormLog = open("../logs/mc/JpsiXi/run" + str(run) + "/xibNorm_log.txt",
