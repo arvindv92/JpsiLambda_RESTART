@@ -314,8 +314,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	}
 
 	//******Systematics that are set by hand now*************************
-	Float_t xib_syst             = 0.05;
-	Float_t eff_ratio_syst       = 0.02;
+	Float_t xib_syst             = 0.00;
+	Float_t eff_ratio_syst       = 0.00;
 
 	// ************************Master Workspace**************************
 	RooWorkspace w("w");
@@ -646,14 +646,14 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		    <<" % +/- "<<eff_Sigma_systerr_wt[i]*100<<" %"<<endl;
 		cout<<"************************************************"<<endl;
 
-		eff_ratio[i]         = eff_Sigma[i]/eff_Lambda[i]; // Calc eff ratio.
-		eff_ratio_staterr[i] = eff_ratio[i]*sqrt(pow((eff_Sigma_systerr[i]/eff_Sigma[i]),2)+pow((eff_Lambda_systerr[i]/eff_Lambda[i]),2)); // stat err on ratio
-		eff_ratio_systerr[i] = eff_ratio[i]*eff_ratio_syst;
+		eff_ratio[i]         = eff_Lambda[i]/eff_Sigma[i]; // Calc eff ratio.
+		eff_ratio_systerr[i] = eff_ratio[i]*sqrt(pow((eff_Sigma_systerr[i]/eff_Sigma[i]),2)+pow((eff_Lambda_systerr[i]/eff_Lambda[i]),2)); // stat err on ratio
+		eff_ratio_staterr[i] = 0;
 		eff_ratio_err[i]     = sqrt(pow(eff_ratio_staterr[i],2) + pow(eff_ratio_systerr[i],2));//combine in quadrature
 
-		eff_ratio_wt[i]         = eff_Sigma_wt[i]/eff_Lambda_wt[i]; // Calc eff ratio.
-		eff_ratio_staterr_wt[i] = eff_ratio_wt[i]*sqrt(pow((eff_Sigma_systerr_wt[i]/eff_Sigma_wt[i]),2)+pow((eff_Lambda_systerr_wt[i]/eff_Lambda_wt[i]),2)); // stat err on ratio
-		eff_ratio_systerr_wt[i] = eff_ratio_wt[i]*eff_ratio_syst;
+		eff_ratio_wt[i]         = eff_Lambda_wt[i]/eff_Sigma_wt[i]; // Calc eff ratio.
+		eff_ratio_systerr_wt[i] = eff_ratio_wt[i]*sqrt(pow((eff_Sigma_systerr_wt[i]/eff_Sigma_wt[i]),2)+pow((eff_Lambda_systerr_wt[i]/eff_Lambda_wt[i]),2)); // stat err on ratio
+		eff_ratio_staterr_wt[i] = 0;
 		eff_ratio_err_wt[i]     = sqrt(pow(eff_ratio_staterr_wt[i],2) + pow(eff_ratio_systerr_wt[i],2));//combine in quadrature
 
 		cout<<"***************************************"<<endl;
@@ -1218,12 +1218,13 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		Nsig_tot_STATERR[i] = nsig_STATERR[i]/sigmaINT[i];
 		Nsig_tot_SYSTERR[i] = nsig_SYSTERR[i]/sigmaINT[i];
 
-		R[i] = (Nsig_tot[i]/Nlb_tot[i])/eff_ratio_wt[i];
+		R[i] = (Nsig_tot[i]/Nlb_tot[i])*eff_ratio_wt[i];
 		R_STATERR[i] = R[i]*sqrt( pow(Nsig_tot_STATERR[i]/Nsig_tot[i],2) +
 		                          pow(Nlb_tot_STATERR[i]/Nlb_tot[i],2));
 
 		R_SYSTERR[i] = R[i]*sqrt( pow(Nsig_tot_SYSTERR[i]/Nsig_tot[i], 2) +
-		                          pow(eff_ratio_err_wt[i]/eff_ratio_wt[i],2) );
+		                          pow(eff_ratio_systerr_wt[i]/eff_ratio_wt[i],2) );
+		
 		R_ERR[i] = sqrt( pow(R_STATERR[i],2) + pow(R_SYSTERR[i],2) );
 
 		cout<<"*********RUN "<<i+1<<"***********"<<endl;
@@ -1233,6 +1234,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		cout<<"NLb     = "<<Nlb[i]<<" +/- "<<lb_STATERR[i]<<endl;
 		cout<<"_____________________________________"<<endl;
 		cout<<"Nsig    = "<<Nsig[i]<<" +/- "<<nsig_STATERR[i]<<" +/- "<<nsig_SYSTERR[i]<<endl;
+		cout<<"Nsig_tot    = "<<Nsig_tot[i]<<" +/- "<<Nsig_tot_STATERR[i]<<" +/- "<<Nsig_tot_SYSTERR[i]<<endl;
 		cout<<"JpsiSigma signal window frac    = "<<sigmaINT[i]<<endl;
 		cout<<"JpsiLambda signal window frac    = "<<lbINT[i]<<endl;
 		cout<<"JpsiXi signal window frac    = "<<xibINT[i]<<endl;
