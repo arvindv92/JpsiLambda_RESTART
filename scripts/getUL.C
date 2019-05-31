@@ -941,7 +941,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 
 		xibFitInt[i] = XIB_KEYS[i]->createIntegral(*myVar,NormSet(*myVar),Range("fit_window"));
 		fitwindow_JpsiXi[i] = xibFitInt[i]->getValV();
-		
+
 		cout<<"fitwindow_JpsiXi = "<<fitwindow_JpsiXi[i]<<endl;
 
 		xibCentral_Run1 = XibNorm_wt[0]*fitwindow_JpsiXi[0];
@@ -958,7 +958,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		XibNorm_StatErr[i]        = XibNorm_StatErr[i]*window_JpsiXi[i];
 		XibNorm_SystErr[i]        = XibNorm_SystErr[i]*window_JpsiXi[i];
 
-		XibNorm_wt[i]     = XibNorm_wt[i]*window_JpsiXi[i];
+		XibNorm_wt[i]         = XibNorm_wt[i]*window_JpsiXi[i];
 		XibNorm_wt_StatErr[i] = XibNorm_wt_StatErr[i]*window_JpsiXi[i];
 		XibNorm_wt_SystErr[i] = XibNorm_wt_SystErr[i]*window_JpsiXi[i];
 
@@ -1356,7 +1356,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		N_JpsiSigma_wt_StatErr[i] = (sqrt(pow(Nobs_StatErr[i],2) + pow(Ncomb_StatErr[i],2) + pow(N_JpsiLambda_window_StatErr[i],2) + pow(XibNorm_wt_StatErr[i],2)))/window_JpsiSigma[i];
 		N_JpsiSigma_wt_SystErr[i] = (sqrt(pow(N_JpsiLambda_window_SystErr[i],2) + pow(XibNorm_wt_SystErr[i],2)))/window_JpsiSigma[i];
 
-		R[i] = (N_JpsiSigma[i]/N_JpsiLambda[i])*eff_ratio[i];
+		//************* Calculate R*****************************************
+		R[i] = (N_JpsiSigma[i]/N_JpsiLambda[i])*eff_ratio[i]*1.058; // 1.058 is the phase space correction factor.
 		R_StatErr[i] = R[i]*sqrt( pow(N_JpsiSigma_StatErr[i]/N_JpsiSigma[i],2) +
 		                          pow(N_JpsiLambda_StatErr[i]/N_JpsiLambda[i],2));
 
@@ -1366,7 +1367,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 
 		R_Err[i] = sqrt(pow(R_StatErr[i],2) + pow(R_SystErr[i],2));
 
-		R_wt[i] = (N_JpsiSigma_wt[i]/N_JpsiLambda[i])*eff_ratio_wt[i];
+		R_wt[i] = (N_JpsiSigma_wt[i]/N_JpsiLambda[i])*eff_ratio_wt[i]*1.058;
 		R_wt_StatErr[i] = R_wt[i]*sqrt( pow(N_JpsiSigma_wt_StatErr[i]/N_JpsiSigma_wt[i],2) +
 		                                pow(N_JpsiLambda_StatErr[i]/N_JpsiLambda[i],2));
 
