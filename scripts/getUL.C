@@ -1336,22 +1336,22 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		// R_ERR[i] = sqrt( pow(R_STATERR[i],2) + pow(R_SYSTERR[i],2) );
 
 		cout<<"*********RUN "<<i+1<<"***********"<<endl;
-		// cout<<"Nobs         = "<<Nobs[i]<<" +/- "<<sqrt((float)Nobs[i])<<endl;
-		// cout<<"Ncomb        = "<<Ncomb[i]<<" +/- "<<sqrt((float)Ncomb[i])<<endl;
-		// cout<<"XibNorm_wt   = "<<XibNorm_wt[i]<<" +/- "<<XibNorm_wt_StatErr[i]<<" +/- "<<XibNorm_wt_SystErr[i]<<endl;
-		// cout<<"N_JpsiLambda = "<<N_JpsiLambda[i]<<" +/- "<<N_JpsiLambda_StatErr[i]<<" +/- "<<N_JpsiLambda_SystErr[i]<<endl;
-		// cout<<"_____________________________________"<<endl;
-		// cout<<"N_JpsiSigma    = "<<N_JpsiSigma_wt[i]<<" +/- "<<N_JpsiSigma_wt_StatErr[i]<<" +/- "<<N_JpsiSigma_wt_SystErr[i]<<endl;
-		// cout<<"JpsiSigma signal window frac    = "<<sigmaINT[i]<<endl;
-		// cout<<"JpsiLambda signal window frac    = "<<lbINT[i]<<endl;
-		// cout<<"JpsiXi signal window frac    = "<<xibINT[i]<<endl;
-		// cout<<"NLb_tot = "<<Nlb_tot[i]<<" +/- "<<Nlb_tot_STATERR[i]<<endl;
-		// cout<<"eff_JpsiLambda = "<<eff_Lambda_wt[i]*100<<" % +/- "
-		//     <<eff_Lambda_systerr_wt[i]*100<<" %"<<endl;
-		// cout<<"eff_JpsiSigma = "<<eff_Sigma_wt[i]*100<<" % +/- "
-		//     <<eff_Sigma_systerr_wt[i]*100<<" %"<<endl;
-		// cout<<"Eff Rat = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_err_wt[i]<<endl;
-		// cout<<"_____________________________________"<<endl;
+		cout<<"Nobs         = "<<Nobs[i]<<" +/- "<<sqrt((float)Nobs[i])<<endl;
+		cout<<"Ncomb        = "<<Ncomb[i]<<" +/- "<<sqrt((float)Ncomb[i])<<endl;
+		cout<<"XibNorm_wt   = "<<XibNorm_wt[i]<<" +/- "<<XibNorm_wt_StatErr[i]<<" +/- "<<XibNorm_wt_SystErr[i]<<endl;
+		cout<<"N_JpsiLambda = "<<N_JpsiLambda_window[i]<<" +/- "<<N_JpsiLambda_window_StatErr[i]<<" +/- "<<N_JpsiLambda_window_SystErr[i]<<endl;
+		cout<<"_____________________________________"<<endl;
+		cout<<"N_JpsiSigma    = "<<N_JpsiSigma_wt[i]<<" +/- "<<N_JpsiSigma_wt_StatErr[i]<<" +/- "<<N_JpsiSigma_wt_SystErr[i]<<endl;
+		cout<<"JpsiSigma signal window frac    = "<<window_JpsiSigma[i]<<endl;
+		cout<<"JpsiLambda signal window frac    = "<<window_JpsiLambda[i]<<endl;
+		cout<<"JpsiXi signal window frac    = "<<window_JpsiXi[i]<<endl;
+		cout<<"NLb_tot = "<<N_JpsiLambda[i]<<" +/- "<<N_JpsiLambda_StatErr[i]<<endl;
+	        cout<<"eff_JpsiLambda = "<<eff_JpsiLambda_wt[i]*100<<" % +/- "
+		     <<eff_JpsiLambda_wt_SystErr[i]*100<<" %"<<endl;
+		cout<<"eff_JpsiSigma = "<<eff_JpsiSigma_wt[i]*100<<" % +/- "
+		     <<eff_JpsiSigma_wt_SystErr[i]*100<<" %"<<endl;
+		cout<<"Eff Rat = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_wt_StatErr[i]<<endl;
+		cout<<"_____________________________________"<<endl;
 		cout<<"R       = "<<R[i]<<" +/- "<<R_StatErr[i]<<" +/- "<<R_SystErr[i]<<endl;
 		cout<<"90% CL Upper Limit = "<<R[i]+(1.28*R_Err[i])<<endl;
 		cout<<"95% CL Upper Limit = "<<R[i]+(1.65*R_Err[i])<<endl;
