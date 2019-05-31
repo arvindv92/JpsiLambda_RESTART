@@ -827,6 +827,9 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	RooDataSet* ds_xi[2];
 	RooDataSet* ds_xi_wt[2];
 	RooKeysPdf* XIB_KEYS[2];
+
+	Double_t xibCentral_Run1 = 0.0, xibErr_Run1 = 0.0, xibLow_Run1 = 0.0, xibHigh_Run1 = 0.0;
+	Double_t xibCentral_Run2 = 0.0, xibErr_Run2 = 0.0, xibLow_Run2 = 0.0, xibHigh_Run2 = 0.0;
 	//******************Get shape from Xib background********************
 	// RooRealVar xibmass("Lb_DTF_M_JpsiLConstr","xibmass",5200.,5740.);
 	const char* xibPath = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi";
@@ -932,6 +935,16 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		xibInt[i] = XIB_KEYS[i]->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
 		window_JpsiXi[i] = xibInt[i]->getValV();
 
+		xibCentral_Run1 = XibNorm[0];
+		xibErr_Run1     = sqrt(pow(XibNorm_StatErr[0],2)+pow(XibNorm_SystErr[0],2));
+		xibLow_Run1     = 0;
+		xibHigh_Run1    = 200;
+
+		xibCentral_Run2 = XibNorm[1];
+		xibErr_Run2     = sqrt(pow(XibNorm_StatErr[1],2)+pow(XibNorm_SystErr[1],2));
+		xibLow_Run2     = 0;
+		xibHigh_Run2    = 400;
+
 		XibNorm[i]                = XibNorm[i]*window_JpsiXi[i];
 		XibNorm_StatErr[i]        = XibNorm_StatErr[i]*window_JpsiXi[i];
 		XibNorm_SystErr[i]        = XibNorm_SystErr[i]*window_JpsiXi[i];
@@ -950,6 +963,20 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		cout<<"************************************************"<<endl;
 
 	}
+	//****************Xib Bkg Yield**************************************
+
+	//What should the limits on nXib be?
+
+
+	w.factory(Form("nXib1[%f,%f,%f]",xibCentral_Run1,xibLow_Run1,xibHigh_Run1));
+	w.factory(Form("nXib2[%f,%f,%f]",xibCentral_Run2,xibLow_Run2,xibHigh_Run2));
+
+	w.factory(Form("Gaussian::nXib_constraint1(gnXib1[%f,%f,%f],nXib1,%f)",xibCentral_Run1,xibLow_Run1,xibHigh_Run1,xibErr_Run1));
+	w.factory(Form("Gaussian::nXib_constraint2(gnXib2[%f,%f,%f],nXib2,%f)",xibCentral_Run2,xibLow_Run2,xibHigh_Run2,xibErr_Run2));
+
+	w.var("gnXib1")->setConstant();
+	w.var("gnXib2")->setConstant();
+
 	//*********Hypatia signal shape for Lambda_b0************************
 
 	w.factory("RooHypatia2::Lb_Run1(Lb_DTF_M_JpsiLConstr,lambda_Run1[-2.0,-4.0,0.0],0,0,"
@@ -991,8 +1018,11 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	w.factory(Form("nBkg_Run1[200,1,%d]",nEntries[0]));
 	w.factory(Form("nBkg_Run2[1000,1,%d]",nEntries[1]));
 
-	w.factory("SUM:model1(nLb_Run1*Lb_Run1 , nBkg_Run1*Bkg_Run1)");
-	w.factory("SUM:model2(nLb_Run2*Lb_Run2 , nBkg_Run2*Bkg_Run2)");
+	w.factory("SUM:model1(nLb_Run1*Lb_Run1 , nBkg_Run1*Bkg_Run1, nXib1*XIB1)");
+	w.factory("SUM:model2(nLb_Run2*Lb_Run2 , nBkg_Run2*Bkg_Run2, nXib2*XIB2)");
+
+	w.factory("PROD::model1_const(model1,nXib_constraint1)");
+	w.factory("PROD::model2_const(model2,nXib_constraint2)");
 
 	w.factory("SUM:model1_Cheby(nLb_Run1*Lb_Run1 , nBkg_Run1*Bkg_Run1_Cheby)");
 	w.factory("SUM:model2_Cheby(nLb_Run2*Lb_Run2 , nBkg_Run2*Bkg_Run2_Cheby)");
@@ -1003,8 +1033,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	w.factory("SUM:model1_Gaus(nLb_Run1*Lb_Run1_Gaus , nBkg_Run1*Bkg_Run1)");
 	w.factory("SUM:model2_Gaus(nLb_Run2*Lb_Run2_Gaus , nBkg_Run2*Bkg_Run2)");
 
-	RooAbsPdf* model1 = w.pdf("model1"); // get the model
-	RooAbsPdf* model2 = w.pdf("model2"); // get the model
+	RooAbsPdf* model1 = w.pdf("model1_const"); // get the model
+	RooAbsPdf* model2 = w.pdf("model2_const"); // get the model
 
 	RooAbsPdf* model1_Cheby = w.pdf("model1_Cheby"); // get the model
 	RooAbsPdf* model2_Cheby = w.pdf("model2_Cheby"); // get the model
@@ -1092,6 +1122,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	// fitPdf->plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Lb1_Run1"))),LineStyle(kDotted),LineColor(kMagenta));
 	// fitPdf->plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Lb2_Run1"))),LineStyle(kDotted),LineColor(kMagenta));
 	fitPdf->plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf(bkgPdf_Run1))),LineColor(kRed),Name("bkg_Run1"));
+	fitPdf->plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("XIB1"))),LineColor(kGreen),Name("xib_Run1"));
 
 	frame_run1->GetYaxis()->SetRangeUser(0,20);
 	frame_run1->GetXaxis()->SetRangeUser(5300,5900);
@@ -1141,6 +1172,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	legend_run1->AddEntry("fit_Run1","Total Fit","l");
 	legend_run1->AddEntry("lb_Run1","J/#psi #Lambda shape","l");
 	legend_run1->AddEntry("bkg_Run1","Comb. Bkg. shape","l");
+	legend_run1->AddEntry("xib_Run1","J/#psi #Xi shape","l");
+
 	legend_run1->Draw("same");
 
 	myLatex->DrawLatex(0.18,0.85,"LHCb Run 1");
@@ -1189,6 +1222,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	// fitPdf->plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Lb1_Run2"))),LineStyle(kDotted),LineColor(kMagenta));
 	// fitPdf->plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Lb2_Run2"))),LineStyle(kDotted),LineColor(kMagenta));
 	fitPdf->plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf(bkgPdf_Run2))),LineColor(kRed),Name("bkg_Run2"));
+	fitPdf->plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("XIB2"))),LineColor(kGreen),Name("xib_Run2"));
 
 	frame_run2->GetYaxis()->SetRangeUser(0,60);
 	frame_run2->GetXaxis()->SetRangeUser(5300,5900);
@@ -1234,6 +1268,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	legend_run2->AddEntry("fit_Run2","Total Fit","l");
 	legend_run2->AddEntry("lb_Run2","J/#psi #Lambda shape","l");
 	legend_run2->AddEntry("bkg_Run2","Comb. Bkg. shape","l");
+	legend_run2->AddEntry("xib_Run2","J/#psi #Xi shape","l");
 	legend_run2->Draw("same");
 
 	myLatex->DrawLatex(0.18,0.85,"LHCb Run 2");
@@ -1346,10 +1381,10 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		cout<<"JpsiLambda signal window frac    = "<<window_JpsiLambda[i]<<endl;
 		cout<<"JpsiXi signal window frac    = "<<window_JpsiXi[i]<<endl;
 		cout<<"NLb_tot = "<<N_JpsiLambda[i]<<" +/- "<<N_JpsiLambda_StatErr[i]<<endl;
-	        cout<<"eff_JpsiLambda = "<<eff_JpsiLambda_wt[i]*100<<" % +/- "
-		     <<eff_JpsiLambda_wt_SystErr[i]*100<<" %"<<endl;
+		cout<<"eff_JpsiLambda = "<<eff_JpsiLambda_wt[i]*100<<" % +/- "
+		    <<eff_JpsiLambda_wt_SystErr[i]*100<<" %"<<endl;
 		cout<<"eff_JpsiSigma = "<<eff_JpsiSigma_wt[i]*100<<" % +/- "
-		     <<eff_JpsiSigma_wt_SystErr[i]*100<<" %"<<endl;
+		    <<eff_JpsiSigma_wt_SystErr[i]*100<<" %"<<endl;
 		cout<<"Eff Rat = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_wt_StatErr[i]<<endl;
 		cout<<"_____________________________________"<<endl;
 		cout<<"R       = "<<R[i]<<" +/- "<<R_StatErr[i]<<" +/- "<<R_SystErr[i]<<endl;
