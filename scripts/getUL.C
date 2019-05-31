@@ -745,8 +745,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		eff_ratio_wt_StatErr[i] = 0;
 
 		cout<<"***************************************"<<endl;
-		cout<<"Run "<<run<<" UNWEIGHTED Sigma/Lambda efficiency ratio = "<<eff_ratio[i]<<" +/- "<<eff_ratio_SystErr[i]<<endl;
-		cout<<"Run "<<run<<" WEIGHTED Sigma/Lambda efficiency ratio   = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_wt_SystErr[i]<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED Lambda/Sigma efficiency ratio = "<<eff_ratio[i]<<" +/- "<<eff_ratio_SystErr[i]<<endl;
+		cout<<"Run "<<run<<" WEIGHTED Lambda/Sigma efficiency ratio   = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_wt_SystErr[i]<<endl;
 		cout<<"***************************************"<<endl;
 
 		//******************************************************************
