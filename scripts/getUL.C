@@ -164,6 +164,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	Float_t window_JpsiLambda[2] = {0.0,0.0};
 	Float_t window_JpsiSigma[2]  = {0.0,0.0};
 	Float_t window_JpsiXi[2]     = {0.0,0.0};
+	Float_t fitwindow_JpsiXi[2]  = {0.0,0.0};
 
 	Float_t N_JpsiLambda_window[2] = {0.0,0.0};
 	Float_t N_JpsiLambda_window_StatErr[2] = {0.0,0.0};
@@ -242,6 +243,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	Int_t nEntries[2]      = {0,0};
 
 	RooAbsReal* xibInt[2];
+	RooAbsReal* xibFitInt[2];
 	// Double_t xibINT[2]= {0.0,0.0};
 
 	RooAbsReal* lbInt[2];
@@ -408,7 +410,9 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 
 	RooRealVar *myVar = w.var("Lb_DTF_M_JpsiLConstr");
 
-	myVar->setRange("signal_window",sigWindow_low,sigWindow_high);
+	myVar->setRange("signal_window",sigWindow_low,sigWindow_high); //this define the signal window
+	myVar->setRange("fit_window",5500,5800); // this defines the fit window for the lambda_b fit
+
 	//********Get data*******************************
 	const char *dataPath = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda";
 	for(Int_t run=1; run<=2; run++)
@@ -935,13 +939,16 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		xibInt[i] = XIB_KEYS[i]->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
 		window_JpsiXi[i] = xibInt[i]->getValV();
 
-		xibCentral_Run1 = XibNorm[0];
-		xibErr_Run1     = sqrt(pow(XibNorm_StatErr[0],2)+pow(XibNorm_SystErr[0],2));
+		xibFitInt[i] = XIB_KEYS[i]->createIntegral(*myVar,NormSet(*myVar),Range("fit_window"));
+		fitwindow_JpsiXi[i] = xibFitInt[i]->getValV();
+
+		xibCentral_Run1 = XibNorm_wt[0]*fitwindow_JpsiXi[0];
+		xibErr_Run1     = sqrt(pow(XibNorm_wt_StatErr[0]*fitwindow_JpsiXi[0],2)+pow(XibNorm_wt_SystErr[0]*fitwindow_JpsiXi[0],2));
 		xibLow_Run1     = 0;
 		xibHigh_Run1    = 200;
 
-		xibCentral_Run2 = XibNorm[1];
-		xibErr_Run2     = sqrt(pow(XibNorm_StatErr[1],2)+pow(XibNorm_SystErr[1],2));
+		xibCentral_Run2 = XibNorm_wt[1]*fitwindow_JpsiXi[1];
+		xibErr_Run2     = sqrt(pow(XibNorm_wt_StatErr[1]*fitwindow_JpsiXi[1],2)+pow(XibNorm_wt_SystErr[1]*fitwindow_JpsiXi[1],2));
 		xibLow_Run2     = 0;
 		xibHigh_Run2    = 400;
 
@@ -1069,7 +1076,6 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	w.import(simPdf_Gaus);
 
 	//************************DO THE FIT***********************
-	w.var("Lb_DTF_M_JpsiLConstr")->setRange("ref",5500,5800);
 	RooSimultaneous *fitPdf = nullptr;
 	const char *sigPdf_Run1 = "", *bkgPdf_Run1 = "";
 	const char *sigPdf_Run2 = "", *bkgPdf_Run2 = "";
@@ -1098,7 +1104,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		sigPdf_Run2 = "Lb_Run2";
 		bkgPdf_Run2 = "Bkg_Run2_Cheby";
 	}
-	RooFitResult *res = fitPdf->fitTo(*combData,Extended(), Save(), Hesse(false), Strategy(1), SumCoefRange("ref"),Range("ref"));
+	RooFitResult *res = fitPdf->fitTo(*combData,Extended(), Save(), Hesse(false), Strategy(1), SumCoefRange("fit_window"),Range("fit_window"));
 	//*******************************************************************
 
 	//*********************PLOTTING STUFF*********************************************
