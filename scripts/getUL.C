@@ -941,16 +941,18 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 
 		xibFitInt[i] = XIB_KEYS[i]->createIntegral(*myVar,NormSet(*myVar),Range("fit_window"));
 		fitwindow_JpsiXi[i] = xibFitInt[i]->getValV();
+		
+		cout<<"fitwindow_JpsiXi = "<<fitwindow_JpsiXi[i]<<endl;
 
 		xibCentral_Run1 = XibNorm_wt[0]*fitwindow_JpsiXi[0];
 		xibErr_Run1     = sqrt(pow(XibNorm_wt_StatErr[0]*fitwindow_JpsiXi[0],2)+pow(XibNorm_wt_SystErr[0]*fitwindow_JpsiXi[0],2));
 		xibLow_Run1     = 0;
-		xibHigh_Run1    = 200;
+		xibHigh_Run1    = 50;
 
 		xibCentral_Run2 = XibNorm_wt[1]*fitwindow_JpsiXi[1];
 		xibErr_Run2     = sqrt(pow(XibNorm_wt_StatErr[1]*fitwindow_JpsiXi[1],2)+pow(XibNorm_wt_SystErr[1]*fitwindow_JpsiXi[1],2));
 		xibLow_Run2     = 0;
-		xibHigh_Run2    = 400;
+		xibHigh_Run2    = 80;
 
 		XibNorm[i]                = XibNorm[i]*window_JpsiXi[i];
 		XibNorm_StatErr[i]        = XibNorm_StatErr[i]*window_JpsiXi[i];
