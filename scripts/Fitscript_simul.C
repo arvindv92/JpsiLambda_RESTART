@@ -22,10 +22,15 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	Int_t binwidth = 4;
 	Int_t nbins    = (Int_t)(high-low)/binwidth;
 
+	Int_t sigWindow_low  = 5365;
+	Int_t sigWindow_high = 5600;
+
+
 	// gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/UpperLimit/Fit_HypatiaSig_ExpoBkg_%d_%d_%dMeVBins.txt",
 	//                              myLow,myHigh,binwidth),"w");
 
 	// gSystem->RedirectOutput("tempLog.txt","a");
+
 	gSystem->Exec("date");
 	gSystem->Load("RooHypatia2_cpp.so"); //Load library for Hypatia shape
 
@@ -59,26 +64,38 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		bdtConf_nonZero[1] = 2;//1;
 
 		bdtConf_Zero[0] = 2;//1;
-		bdtConf_Zero[1] = 1;//1;
+		bdtConf_Zero[1] = 2;//1;
 
 		bdtCut_nonZero[0] = 0.475-0.1;//0.375 - 0.1;
 		bdtCut_nonZero[1] = 0.555-0.1;//0.535 - 0.1;
 
 		bdtCut_Zero[0] = 0.365;//0.285;
-		bdtCut_Zero[1] = 0.455;//0.415;
+		bdtCut_Zero[1] = 0.495;//0.415;
 	}
 
 	// Xib normalization & errs
-	Float_t xibnorm_LL[2]         = {0.0,0.0};
-	Float_t xibnorm_LL_staterr[2] = {0.0,0.0};
-	Float_t xibnorm_LL_systerr[2] = {0.0,0.0};
-	Float_t xibnorm_LL_err[2]     = {0.0,0.0};
 
-	Float_t xibnorm_LL_wt[2]         = {0.0,0.0};
-	Float_t xibnorm_LL_staterr_wt[2] = {0.0,0.0};
-	Float_t xibnorm_LL_systerr_wt[2] = {0.0,0.0};
-	Float_t xibnorm_LL_err_wt[2]     = {0.0,0.0};
+	Float_t trackingErr = 0.05; // rel error. on Xib Norm includes 4.5% tracking unc, and 2% uncertainty for material effects from hadronic interactions
+	Float_t xiVtxUnc    = 0.014; // rel error. on Xib Norm Unc from vertexing the Xi-. Comes from Steves ANA
 
+	Float_t XibNorm[2]         = {0.0,0.0}; // Unweighted normalization inside signal window
+	Float_t XibNorm_StatErr[2] = {0.0,0.0}; // Abs. error
+	Float_t XibNorm_SystErr[2] = {0.0,0.0}; // Abs. error
+
+	Float_t XibNorm_wt[2]                = {0.0,0.0}; //Weighted normalization inside signal window
+	Float_t XibNorm_wt_StatErr[2]        = {0.0,0.0}; // Abs. error
+	Float_t XibNorm_wt_SystErr[2]        = {0.0,0.0}; // Abs. error
+
+	// Float_t XibNorm[2]         = {0.0,0.0};
+	// Float_t XibNorm_StatErr[2] = {0.0,0.0};
+	// Float_t XibNorm_systerr[2] = {0.0,0.0};
+	// Float_t XibNorm_err[2]     = {0.0,0.0};
+	//
+	// Float_t XibNorm_wt[2]         = {0.0,0.0};
+	// Float_t XibNorm_wt_StatErr[2] = {0.0,0.0};
+	// Float_t XibNorm_systerr_wt[2] = {0.0,0.0};
+	// Float_t XibNorm_err_wt[2]     = {0.0,0.0};
+	//
 	// Lb->J/psi L MC eff & errs
 	Int_t nGen_Lambda[2]          = {0,0}; // Generated yield
 	Float_t nGen_Lambda_wt[2]     = {0,0}; // Generated yield weighted
@@ -87,13 +104,13 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	Float_t eff_Lambda_rec[2]     = {0.0,0.0}; // Reco. Eff.
 	Float_t eff_Lambda_rec_err[2] = {0.0,0.0}; // Reco. Eff. Stat. Err.
-	Float_t eff_Lambda[2]         = {0.0,0.0}; // Overall Eff.
-	Float_t eff_Lambda_staterr[2] = {0.0,0.0}; // Overall Eff. Stat. Err.
+	// Float_t eff_Lambda[2]         = {0.0,0.0}; // Overall Eff.
+	// Float_t eff_Lambda_staterr[2] = {0.0,0.0}; // Overall Eff. Stat. Err.
 
 	Float_t eff_Lambda_rec_wt[2]     = {0.0,0.0}; // Reco. Eff.
 	Float_t eff_Lambda_rec_err_wt[2] = {0.0,0.0}; // Reco. Eff. Stat. Err.
-	Float_t eff_Lambda_wt[2]         = {0.0,0.0}; // Overall Eff.
-	Float_t eff_Lambda_staterr_wt[2] = {0.0,0.0}; // Overall Eff. Stat. Err.
+	// Float_t eff_Lambda_wt[2]         = {0.0,0.0}; // Overall Eff.
+	// Float_t eff_Lambda_staterr_wt[2] = {0.0,0.0}; // Overall Eff. Stat. Err.
 
 	// Lb->J/psi 1405 MC eff & errs
 	Int_t nGen_1405[2]          = {0,0};
@@ -104,12 +121,12 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	Float_t eff_1405_rec[2]      = {0.0,0.0};
 	Float_t eff_1405_rec_err[2]  = {0.0,0.0};
 	Float_t eff_1405[2]          = {0.0,0.0};
-	Float_t eff_1405_staterr[2]  = {0.0,0.0};
+	Float_t eff_1405_SystErr[2]  = {0.0,0.0};
 
-	Float_t eff_1405_rec_wt[2]      = {0.0,0.0};
-	Float_t eff_1405_rec_err_wt[2]  = {0.0,0.0};
+	Float_t eff_1405_wt_rec[2]      = {0.0,0.0};
+	Float_t eff_1405_wt_rec_err[2]  = {0.0,0.0};
 	Float_t eff_1405_wt[2]          = {0.0,0.0};
-	Float_t eff_1405_staterr_wt[2]  = {0.0,0.0};
+	Float_t eff_1405_wt_SystErr[2]  = {0.0,0.0};
 
 	// Lb->J/psi 1520 MC eff & errs
 	Int_t nGen_1520[2]          = {0,0};
@@ -120,12 +137,12 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	Float_t eff_1520_rec[2]      = {0.0,0.0};
 	Float_t eff_1520_rec_err[2]  = {0.0,0.0};
 	Float_t eff_1520[2]          = {0.0,0.0};
-	Float_t eff_1520_staterr[2]  = {0.0,0.0};
+	Float_t eff_1520_SystErr[2]  = {0.0,0.0};
 
 	Float_t eff_1520_rec_wt[2]      = {0.0,0.0};
-	Float_t eff_1520_rec_err_wt[2]  = {0.0,0.0};
+	Float_t eff_1520_wt_rec_err[2]  = {0.0,0.0};
 	Float_t eff_1520_wt[2]          = {0.0,0.0};
-	Float_t eff_1520_staterr_wt[2]  = {0.0,0.0};
+	Float_t eff_1520_wt_SystErr[2]  = {0.0,0.0};
 
 	// Lb->J/psi 1600 MC eff & errs
 	Int_t nGen_1600[2]          = {0,0};
@@ -136,29 +153,29 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	Float_t eff_1600_rec[2]      = {0.0,0.0};
 	Float_t eff_1600_rec_err[2]  = {0.0,0.0};
 	Float_t eff_1600[2]          = {0.0,0.0};
-	Float_t eff_1600_staterr[2]  = {0.0,0.0};
+	Float_t eff_1600_SystErr[2]  = {0.0,0.0};
 
 	Float_t eff_1600_rec_wt[2]      = {0.0,0.0};
-	Float_t eff_1600_rec_err_wt[2]  = {0.0,0.0};
+	Float_t eff_1600_wt_rec_err[2]  = {0.0,0.0};
 	Float_t eff_1600_wt[2]          = {0.0,0.0};
-	Float_t eff_1600_staterr_wt[2]  = {0.0,0.0};
+	Float_t eff_1600_wt_SystErr[2]  = {0.0,0.0};
 
-	// Lb->chiC1 Lambda MC eff & errs
-	Int_t nGen_chic1[2]          = {0,0};
-	Float_t nGen_chic1_wt[2]          = {0,0};
-	Float_t nGen_chiC1_wt[2]     = {0,0}; // Generated yield weighted
-	Float_t eff_chic1_gen[2]     = {0.0,0.0};
-	Float_t eff_chic1_gen_err[2] = {0.0,0.0};
-
-	Float_t eff_chic1_rec[2]      = {0.0,0.0};
-	Float_t eff_chic1_rec_err[2]  = {0.0,0.0};
-	Float_t eff_chic1[2]          = {0.0,0.0};
-	Float_t eff_chic1_staterr[2]  = {0.0,0.0};
-
-	Float_t eff_chic1_rec_wt[2]      = {0.0,0.0};
-	Float_t eff_chic1_rec_err_wt[2]  = {0.0,0.0};
-	Float_t eff_chic1_wt[2]          = {0.0,0.0};
-	Float_t eff_chic1_staterr_wt[2]  = {0.0,0.0};
+	// // Lb->chiC1 Lambda MC eff & errs
+	// Int_t nGen_chic1[2]          = {0,0};
+	// Float_t nGen_chic1_wt[2]          = {0,0};
+	// Float_t nGen_chiC1_wt[2]     = {0,0}; // Generated yield weighted
+	// Float_t eff_chic1_gen[2]     = {0.0,0.0};
+	// Float_t eff_chic1_gen_err[2] = {0.0,0.0};
+	//
+	// Float_t eff_chic1_rec[2]      = {0.0,0.0};
+	// Float_t eff_chic1_rec_err[2]  = {0.0,0.0};
+	// Float_t eff_chic1[2]          = {0.0,0.0};
+	// Float_t eff_chic1_staterr[2]  = {0.0,0.0};
+	//
+	// Float_t eff_chic1_rec_wt[2]      = {0.0,0.0};
+	// Float_t eff_chic1_rec_err_wt[2]  = {0.0,0.0};
+	// Float_t eff_chic1_wt[2]          = {0.0,0.0};
+	// Float_t eff_chic1_staterr_wt[2]  = {0.0,0.0};
 
 	// Lb->J/psi Sigma MC eff & errs
 	Int_t nGen_Sigma[2]          = {0,0};
@@ -168,83 +185,132 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	Float_t eff_Sigma_rec[2]     = {0.0,0.0};
 	Float_t eff_Sigma_rec_err[2] = {0.0,0.0};
-	Float_t eff_Sigma[2]         = {0.0,0.0};
-	Float_t eff_Sigma_staterr[2] = {0.0,0.0};
+	// Float_t eff_Sigma[2]         = {0.0,0.0};
+	// Float_t eff_Sigma_staterr[2] = {0.0,0.0};
 
 	Float_t eff_Sigma_rec_wt[2]     = {0.0,0.0};
 	Float_t eff_Sigma_rec_err_wt[2] = {0.0,0.0};
-	Float_t eff_Sigma_wt[2]         = {0.0,0.0};
-	Float_t eff_Sigma_staterr_wt[2] = {0.0,0.0};
+	// Float_t eff_Sigma_wt[2]         = {0.0,0.0};
+	// Float_t eff_Sigma_staterr_wt[2] = {0.0,0.0};
 
 	// eff(Lb -> J/psi Sigma) / eff(Lb -> J/psi Lambda)
-	Float_t eff_ratio[2]          = {0.0,0.0};
-	Float_t eff_ratio_staterr[2]  = {0.0,0.0};
-	Float_t eff_ratio_systerr[2]  = {0.0,0.0};
-	Float_t eff_ratio_err[2]      = {0.0,0.0};
-
-	Float_t eff_ratio_wt[2]          = {0.0,0.0};
-	Float_t eff_ratio_staterr_wt[2]  = {0.0,0.0};
-	Float_t eff_ratio_systerr_wt[2]  = {0.0,0.0};
-	Float_t eff_ratio_err_wt[2]      = {0.0,0.0};
+	// Float_t eff_ratio[2]          = {0.0,0.0};
+	// Float_t eff_ratio_StatErr[2]  = {0.0,0.0};
+	// Float_t eff_ratio_SystErr[2]  = {0.0,0.0};
+	// Float_t eff_ratio_Err[2]      = {0.0,0.0};
+	//
+	// Float_t eff_ratio_wt[2]          = {0.0,0.0};
+	// Float_t eff_ratio_wt_StatErr[2]  = {0.0,0.0};
+	// Float_t eff_ratio_wt_SystErr[2]  = {0.0,0.0};
+	// Float_t eff_ratio_Err_wt[2]      = {0.0,0.0};
 
 	// eff(Lb -> J/psi LAMBDA(1405)) / eff(Lb -> J/psi Lambda)
 	Float_t eff_ratio_1405[2]          = {0.0,0.0};
-	Float_t eff_ratio_staterr_1405[2]  = {0.0,0.0};
-	Float_t eff_ratio_systerr_1405[2]  = {0.0,0.0};
-	Float_t eff_ratio_err_1405[2]      = {0.0,0.0};
+	Float_t eff_ratio_StatErr_1405[2]  = {0.0,0.0};
+	Float_t eff_ratio_SystErr_1405[2]  = {0.0,0.0};
+	Float_t eff_ratio_Err_1405[2]      = {0.0,0.0};
 
-	Float_t eff_ratio_1405_wt[2]          = {0.0,0.0};
-	Float_t eff_ratio_staterr_1405_wt[2]  = {0.0,0.0};
-	Float_t eff_ratio_systerr_1405_wt[2]  = {0.0,0.0};
-	Float_t eff_ratio_err_1405_wt[2]      = {0.0,0.0};
+	Float_t eff_ratio_wt_1405[2]          = {0.0,0.0};
+	Float_t eff_ratio_wt_StatErr_1405[2]  = {0.0,0.0};
+	Float_t eff_ratio_wt_SystErr_1405[2]  = {0.0,0.0};
+	Float_t eff_ratio_Err_1405_wt[2]      = {0.0,0.0};
 
 	// eff(Lb -> J/psi LAMBDA(1520)) / eff(Lb -> J/psi Lambda)
 	Float_t eff_ratio_1520[2]          = {0.0,0.0};
-	Float_t eff_ratio_staterr_1520[2]  = {0.0,0.0};
-	Float_t eff_ratio_systerr_1520[2]  = {0.0,0.0};
-	Float_t eff_ratio_err_1520[2]      = {0.0,0.0};
+	Float_t eff_ratio_StatErr_1520[2]  = {0.0,0.0};
+	Float_t eff_ratio_SystErr_1520[2]  = {0.0,0.0};
+	Float_t eff_ratio_Err_1520[2]      = {0.0,0.0};
 
-	Float_t eff_ratio_1520_wt[2]          = {0.0,0.0};
-	Float_t eff_ratio_staterr_1520_wt[2]  = {0.0,0.0};
-	Float_t eff_ratio_systerr_1520_wt[2]  = {0.0,0.0};
-	Float_t eff_ratio_err_1520_wt[2]      = {0.0,0.0};
+	Float_t eff_ratio_wt_1520[2]          = {0.0,0.0};
+	Float_t eff_ratio_wt_StatErr_1520[2]  = {0.0,0.0};
+	Float_t eff_ratio_wt_SystErr_1520[2]  = {0.0,0.0};
+	Float_t eff_ratio_Err_1520_wt[2]      = {0.0,0.0};
 
 	// eff(Lb -> J/psi LAMBDA(1600)) / eff(Lb -> J/psi Lambda)
 	Float_t eff_ratio_1600[2]          = {0.0,0.0};
-	Float_t eff_ratio_staterr_1600[2]  = {0.0,0.0};
-	Float_t eff_ratio_systerr_1600[2]  = {0.0,0.0};
-	Float_t eff_ratio_err_1600[2]      = {0.0,0.0};
+	Float_t eff_ratio_StatErr_1600[2]  = {0.0,0.0};
+	Float_t eff_ratio_SystErr_1600[2]  = {0.0,0.0};
+	Float_t eff_ratio_Err_1600[2]      = {0.0,0.0};
 
-	Float_t eff_ratio_1600_wt[2]          = {0.0,0.0};
-	Float_t eff_ratio_staterr_1600_wt[2]  = {0.0,0.0};
-	Float_t eff_ratio_systerr_1600_wt[2]  = {0.0,0.0};
-	Float_t eff_ratio_err_1600_wt[2]      = {0.0,0.0};
+	Float_t eff_ratio_wt_1600[2]          = {0.0,0.0};
+	Float_t eff_ratio_wt_StatErr_1600[2]  = {0.0,0.0};
+	Float_t eff_ratio_wt_SystErr_1600[2]  = {0.0,0.0};
+	Float_t eff_ratio_Err_1600_wt[2]      = {0.0,0.0};
 
-	// eff(Lb -> chiC1 Lambda) / eff(Lb -> J/psi Lambda)
-	Float_t eff_ratio_chic1[2]          = {0.0,0.0};
-	Float_t eff_ratio_staterr_chic1[2]  = {0.0,0.0};
-	Float_t eff_ratio_systerr_chic1[2]  = {0.0,0.0};
-	Float_t eff_ratio_err_chic1[2]      = {0.0,0.0};
+	// // eff(Lb -> chiC1 Lambda) / eff(Lb -> J/psi Lambda)
+	// Float_t eff_ratio_chic1[2]          = {0.0,0.0};
+	// Float_t eff_ratio_StatErr_chic1[2]  = {0.0,0.0};
+	// Float_t eff_ratio_SystErr_chic1[2]  = {0.0,0.0};
+	// Float_t eff_ratio_Err_chic1[2]      = {0.0,0.0};
+	//
+	// Float_t eff_ratio_chic1_wt[2]          = {0.0,0.0};
+	// Float_t eff_ratio_StatErr_chic1_wt[2]  = {0.0,0.0};
+	// Float_t eff_ratio_SystErr_chic1_wt[2]  = {0.0,0.0};
+	// Float_t eff_ratio_Err_chic1_wt[2]      = {0.0,0.0};
 
-	Float_t eff_ratio_chic1_wt[2]          = {0.0,0.0};
-	Float_t eff_ratio_staterr_chic1_wt[2]  = {0.0,0.0};
-	Float_t eff_ratio_systerr_chic1_wt[2]  = {0.0,0.0};
-	Float_t eff_ratio_err_chic1_wt[2]      = {0.0,0.0};
+	Float_t N_JpsiLambda[2]         = {0.0,0.0};
+	Float_t N_JpsiLambda_StatErr[2] = {0.0,0.0}; // abs. error. = fit error on yield
+	Float_t N_JpsiLambda_RelSyst[2] = {0.9,0.8}; // relative % unc. comes from choice of fit model
+	Float_t N_JpsiLambda_SystErr[2] = {0.0,0.0}; // abs. error
+
+	Float_t N_JpsiSigma[2] = {0.0,0.0};
+	Float_t N_JpsiSigma_StatErr[2] = {0.0,0.0};
+	Float_t N_JpsiSigma_SystErr[2] = {0.0,0.0};
+
+	Float_t N_JpsiSigma_wt[2] = {0.0,0.0};
+	Float_t N_JpsiSigma_wt_StatErr[2] = {0.0,0.0};
+	Float_t N_JpsiSigma_wt_SystErr[2] = {0.0,0.0};
+
+	Float_t window_JpsiLambda[2] = {0.0,0.0};
+	Float_t window_JpsiSigma[2]  = {0.0,0.0};
+	Float_t window_JpsiXi[2]     = {0.0,0.0};
+	Float_t fitwindow_JpsiXi[2]  = {0.0,0.0};
+
+	Float_t N_JpsiLambda_window[2] = {0.0,0.0};
+	Float_t N_JpsiLambda_window_StatErr[2] = {0.0,0.0};
+	Float_t N_JpsiLambda_window_SystErr[2] = {0.0,0.0};
+
+	Float_t Nobs[2]       = {0.0,0.0}; // no. of events observed in data inside signal window
+	Float_t Nobs_StatErr[2] = {0.0,0.0};
+
+	Float_t Ncomb[2]      = {0.0,0.0}; // no. of events counted in sideband window above peak in data
+	Float_t Ncomb_StatErr[2] = {0.0,0.0};
+
+	Float_t eff_JpsiLambda[2]         = {0.0,0.0}; //% Unweighted efficiency
+	Float_t eff_JpsiLambda_SystErr[2] = {0.0,0.0}; //% Binomial uncertainty
+
+	Float_t eff_JpsiSigma[2]         = {0.0,0.0}; //% Unweighted efficiency
+	Float_t eff_JpsiSigma_SystErr[2] = {0.0,0.0}; //% Binomial uncertainty
+
+	Float_t eff_JpsiLambda_wt[2]         = {0.0,0.0}; //% Weighted efficiency
+	Float_t eff_JpsiLambda_wt_SystErr[2] = {0.0,0.0}; //% Binomial uncertainty
+
+	Float_t eff_JpsiSigma_wt[2]         = {0.0,0.0}; //% Weighted efficiency
+	Float_t eff_JpsiSigma_wt_SystErr[2] = {0.0,0.0}; //% Binomial uncertainty
+
+	Float_t eff_ratio[2]         = {0.0,0.0}; // Ratio of unweighted efficiencies
+	Float_t eff_ratio_StatErr[2] = {0.0,0.0}; // Absolute error. Will remain zero
+	Float_t eff_ratio_SystErr[2] = {0.0,0.0}; // Comes from binomial uncertainties
+
+	Float_t eff_ratio_wt[2]         = {0.0,0.0}; // Ratio of Weighted efficiencies
+	Float_t eff_ratio_wt_StatErr[2] = {0.0,0.0}; // Absolute error. Will remain zero
+	Float_t eff_ratio_wt_SystErr[2] = {0.0,0.0}; // Comes from binomial uncertainties
+
 
 	// ***************Systematics put in by hand ************************
-	Float_t xib_syst             = 0.05;
-	Float_t eff_ratio_syst       = 0.02;
-	Float_t eff_ratio_syst_1405  = 0.02;
-	Float_t eff_ratio_syst_1520  = 0.02;
-	Float_t eff_ratio_syst_1600  = 0.02;
-	Float_t eff_ratio_syst_chic1 = 0.02;
+	// Float_t xib_syst             = 0.05;
+	// Float_t eff_ratio_syst       = 0.02;
+	// Float_t eff_ratio_syst_1405  = 0.02;
+	// Float_t eff_ratio_syst_1520  = 0.02;
+	// Float_t eff_ratio_syst_1600  = 0.02;
+	// Float_t eff_ratio_syst_chic1 = 0.02;
 	// ***************************Flags**********************************
 	// Flags controlling shapes
 	Int_t lst1405flag    = 1;
 	Int_t lst1520flag    = 1;
 	Int_t lst1600flag    = 1;
 	Int_t lst1810flag    = 0;
-	Int_t chic1flag      = 1;
+	// Int_t chic1flag      = 0;
 	Int_t xibflag        = 1;
 	Int_t sigmaflag      = 1;
 
@@ -253,6 +319,12 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	//*********MASTER VARIABLE*******************************************
 	w.factory(Form("Lb_DTF_M_JpsiLConstr[%d,%d]",low,high));
+
+	RooRealVar *myVar = w.var("Lb_DTF_M_JpsiLConstr");
+
+	myVar->setRange("signal_window",sigWindow_low,sigWindow_high); //this define the signal window
+	myVar->setRange("fit_window",5500,5800); // this defines the fit window for the lambda_b fit
+
 	w.var("Lb_DTF_M_JpsiLConstr")->setBins((Int_t)(high-low)/binwidth);
 	//*******************************************************************
 
@@ -268,38 +340,41 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	{
 		Int_t i = run-1;
 		gSystem->Exec(Form("python -c \'from GetXibNorm import GetNorm;"
-		                   " GetNorm(%d, \"%s\", %d, %d, %d, %f, %f)\'",
+		                   " GetNorm(%d, \"%s\", %d, %d, %d, %f, %f, 0)\'",
 		                   run, isoVersion[i], isoConf[i], bdtConf_nonZero[i],
 		                   bdtConf_Zero[i], bdtCut_nonZero[i], bdtCut_Zero[i]));
 
 		ifstream infile(Form("../logs/mc/JpsiXi/run%d/xibNorm_log.txt",run));
 
-		infile>>xibnorm_LL[i];         // Get normalization
-		infile>>xibnorm_LL_staterr[i]; // Get statistical error on norm. This is the fit error
+		infile>>XibNorm[i];         // Get normalization
+		infile>>XibNorm_StatErr[i]; // Get statistical error on norm. This is the fit error
+		infile>>XibNorm_SystErr[i]; // Get systematic error on norm.
 
-		infile>>xibnorm_LL_wt[i];         // Get weighted normalization
-		infile>>xibnorm_LL_staterr_wt[i]; // Get weighted statistical error on norm. This is the fit error
-
-		xibnorm_LL_systerr[i] = xibnorm_LL[i]*xib_syst;
-		xibnorm_LL_err[i]     = sqrt(pow(xibnorm_LL_staterr[i],2) + pow(xibnorm_LL_systerr[i],2)); //Combining stat and syst in quadrature
-
-		xibnorm_LL_systerr_wt[i] = xibnorm_LL_wt[i]*xib_syst;
-		xibnorm_LL_err_wt[i]     = sqrt(pow(xibnorm_LL_staterr_wt[i],2) + pow(xibnorm_LL_systerr_wt[i],2)); //Combining stat and syst in quadrature
-
-		xibnorm_LL[i]         = xibnorm_LL[i]*2; //ACCOUNT FOR XIB0
-		xibnorm_LL_err[i]     = xibnorm_LL_err[i]*1.414; //ACCOUNT FOR XIB0
-
-		xibnorm_LL_wt[i]         = xibnorm_LL_wt[i]*2; //ACCOUNT FOR XIB0
-		xibnorm_LL_err_wt[i]     = xibnorm_LL_err_wt[i]*1.414; //ACCOUNT FOR XIB0
+		infile>>XibNorm_wt[i];         // Get weighted normalization
+		infile>>XibNorm_wt_StatErr[i]; // Get weighted statistical error on norm. This is the fit error
+		infile>>XibNorm_wt_SystErr[i]; // Get weighted systematic error on norm.
+		//
+		// XibNorm_systerr[i] = XibNorm[i]*xib_syst;
+		// XibNorm_err[i]     = sqrt(pow(XibNorm_StatErr[i],2) + pow(XibNorm_systerr[i],2)); //Combining stat and syst in quadrature
+		//
+		// XibNorm_systerr_wt[i] = XibNorm_wt[i]*xib_syst;
+		// XibNorm_err_wt[i]     = sqrt(pow(XibNorm_wt_StatErr[i],2) + pow(XibNorm_systerr_wt[i],2)); //Combining stat and syst in quadrature
+		//
+		// XibNorm[i]         = XibNorm[i]*2; //ACCOUNT FOR XIB0
+		// XibNorm_err[i]     = XibNorm_err[i]*1.414; //ACCOUNT FOR XIB0
+		//
+		// XibNorm_wt[i]         = XibNorm_wt[i]*2; //ACCOUNT FOR XIB0
+		// XibNorm_err_wt[i]     = XibNorm_err_wt[i]*1.414; //ACCOUNT FOR XIB0
 
 		cout<<"************************************************"<<endl;
 		cout<<"The UNWEIGHTED LL Xib normalization for Run "<<run
-		    <<" is "<<xibnorm_LL[i]<<" +/- "<<xibnorm_LL_err[i]<<endl;
+		    <<" is "<<XibNorm[i]<<" +/- "<<XibNorm_StatErr[i]
+		    <<" +/- "<<XibNorm_SystErr[i]<<endl;
 
 		cout<<"The WEIGHTED LL Xib normalization for Run "<<run
-		    <<" is "<<xibnorm_LL_wt[i]<<" +/- "<<xibnorm_LL_err_wt[i]<<endl;
+		    <<" is "<<XibNorm_wt[i]<<" +/- "<<XibNorm_wt_StatErr[i]
+		    <<" +/- "<<XibNorm_wt_SystErr[i]<<endl;
 		cout<<"************************************************"<<endl;
-
 	}
 	//************************************************
 
@@ -331,14 +406,29 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 		genFile_Lambda>>nGen_Lambda[i]; //Get number of generated events
 
-		TFile *genWtsFile_Lambda = Open(Form("%s/run%d/RW/gbWeights_gen.root",
-		                                     lambdaMCPath,run));
+		TFile *genWtsFile_Lambda = nullptr;
+		if(run == 1)
+		{
+			genWtsFile_Lambda = Open(Form("%s/run%d/RW/gbWeights_gen_new.root",
+			                              lambdaMCPath,run));
+		}
+		else if(run == 2)
+		{
+			genWtsFile_Lambda = Open(Form("%s/run%d/RW/gbWeights_gen.root",
+			                              lambdaMCPath,run));
+		}
 		TTree *genWtsTree_Lambda = (TTree*)genWtsFile_Lambda->Get("MyTuple");
 
 		genWtsTree_Lambda->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
 		                                            lambdaMCPath,run));
-
-		genWtsTree_Lambda->Draw("gb_wts*wt_tau>>genWt_Lambda","","goff");
+		if(run == 1)
+		{
+			genWtsTree_Lambda->Draw("gb_wts_new*wt_tau>>genWt_Lambda","","goff");
+		}
+		else if(run == 2)
+		{
+			genWtsTree_Lambda->Draw("gb_wts*wt_tau>>genWt_Lambda","","goff");
+		}
 
 		TH1F *genWt_Lambda = (TH1F*)gDirectory->Get("genWt_Lambda");
 		nGen_Lambda_wt[i] = genWt_Lambda->GetEntries()*genWt_Lambda->GetMean();
@@ -352,8 +442,16 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		cout<<"Run "<<run<<" Lambda Generator Effs = "<<eff_Lambda_gen[i]*100
 		    <<" % +/- "<<eff_Lambda_gen_err[i]*100<<" %"<<endl;
 
-		mcTreeIn_nonZero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
-		mcTreeIn_Zero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+		if(run == 1)
+		{
+			mcTreeIn_nonZero_Lambda->Draw("gb_wts_new*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Lambda->Draw("gb_wts_new*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+		}
+		else if(run == 2)
+		{
+			mcTreeIn_nonZero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+		}
 
 		TH1F *wt_lambda_nonZero = (TH1F*)gDirectory->Get("wt_lambda_nonZero");
 		TH1F *wt_lambda_Zero = (TH1F*)gDirectory->Get("wt_lambda_Zero");
@@ -362,7 +460,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		                      (wt_lambda_Zero->GetMean()*wt_lambda_Zero->GetEntries());
 
 		Int_t num_Lambda = mcTreeIn_nonZero_Lambda->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]))
-		                   + mcTreeIn_Zero_Lambda->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TM HERE
+		                   + mcTreeIn_Zero_Lambda->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));                                                       //NOTE NO TM HERE
 
 		eff_Lambda_rec[i]     = num_Lambda*1.0/nGen_Lambda[i]; //Calc. reco eff.
 		eff_Lambda_rec_err[i] = sqrt(eff_Lambda_rec[i]*(1-eff_Lambda_rec[i])/nGen_Lambda[i]); //statistical error on recon. eff.
@@ -376,19 +474,19 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		cout<<"Run "<<run<<" WEIGHTED Lambda Recons. Effs = "<<eff_Lambda_rec_wt[i]*100
 		    <<" % +/- "<<eff_Lambda_rec_err_wt[i]*100<<" %"<<endl;
 
-		eff_Lambda[i]     = eff_Lambda_rec[i]*eff_Lambda_gen[i]; // Calc. total eff.
-		eff_Lambda_staterr[i] = eff_Lambda[i]*sqrt(pow((eff_Lambda_gen_err[i]/eff_Lambda_gen[i]),2) +
-		                                           pow((eff_Lambda_rec_err[i]/eff_Lambda_rec[i]),2)); // and stat error on tot. eff.
+		eff_JpsiLambda[i]     = eff_Lambda_rec[i]*eff_Lambda_gen[i]; // Calc. total eff.
+		eff_JpsiLambda_SystErr[i] = eff_JpsiLambda[i]*sqrt(pow((eff_Lambda_gen_err[i]/eff_Lambda_gen[i]),2) +
+		                                                   pow((eff_Lambda_rec_err[i]/eff_Lambda_rec[i]),2));                                                                                                                                                                                                                                                                             // and stat error on tot. eff.
 
-		eff_Lambda_wt[i]     = eff_Lambda_rec_wt[i]*eff_Lambda_gen[i];                                                                                                                                                                          // Calc. total eff.
-		eff_Lambda_staterr_wt[i] = eff_Lambda_wt[i]*sqrt(pow((eff_Lambda_gen_err[i]/eff_Lambda_gen[i]),2) +
-		                                                 pow((eff_Lambda_rec_err_wt[i]/eff_Lambda_rec_wt[i]),2));                                                                                                                                                                                                                                                                                                 // and stat error on tot. eff.
+		eff_JpsiLambda_wt[i]     = eff_Lambda_rec_wt[i]*eff_Lambda_gen[i];                                                                                                                                                                          // Calc. total eff.
+		eff_JpsiLambda_wt_SystErr[i] = eff_JpsiLambda_wt[i]*sqrt(pow((eff_Lambda_gen_err[i]/eff_Lambda_gen[i]),2) +
+		                                                         pow((eff_Lambda_rec_err_wt[i]/eff_Lambda_rec_wt[i]),2));                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 // and stat error on tot. eff.
 
 		cout<<"************************************************"<<endl;
-		cout<<"Run "<<run<<" UNWEIGHTED Jpsi Lambda Eff = "<<eff_Lambda[i]*100
-		    <<" % +/- "<<eff_Lambda_staterr[i]*100<<" %"<<endl;
-		cout<<"Run "<<run<<" WEIGHTED Jpsi Lambda Eff = "<<eff_Lambda_wt[i]*100
-		    <<" % +/- "<<eff_Lambda_staterr_wt[i]*100<<" %"<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED Jpsi Lambda Eff = "<<eff_JpsiLambda[i]*100
+		    <<" % +/- "<<eff_JpsiLambda_SystErr[i]*100<<" %"<<endl;
+		cout<<"Run "<<run<<" WEIGHTED Jpsi Lambda Eff = "<<eff_JpsiLambda_wt[i]*100
+		    <<" % +/- "<<eff_JpsiLambda_wt_SystErr[i]*100<<" %"<<endl;
 		cout<<"************************************************"<<endl;
 	}
 	//*******************************************************************
@@ -396,6 +494,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	RooHistPdf* SIG[2];
 	RooKeysPdf* SIG_KEYS[2];
 	RooDataSet* ds_sig[2];
+	RooDataSet* ds_sig_wt[2];
+	RooAbsReal* sigmaInt[2];
 
 	//****Get J/psi Sigma efficiencies and shape from MC*****************
 	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
@@ -425,16 +525,33 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		fstream genFile_Sigma;
 		genFile_Sigma.open((Form("../logs/mc/JpsiLambda/JpsiSigma/run%d/gen_log.txt",run)));
 
-		genFile_Sigma>>nGen_Sigma[i]; // Get number of generated events
+		genFile_Sigma>>nGen_Sigma[i];                                                                                                 // Get number of generated events
 
-		TFile *genWtsFile_Sigma = Open(Form("%s/run%d/RW/gbWeights_gen.root",
-		                                    sigmaPath,run));
+		TFile *genWtsFile_Sigma = nullptr;
+
+		if(run == 1)
+		{
+			genWtsFile_Sigma = Open(Form("%s/run%d/RW/gbWeights_gen_new.root",
+			                             sigmaPath,run));
+		}
+		else if(run == 2)
+		{
+			genWtsFile_Sigma = Open(Form("%s/run%d/RW/gbWeights_gen.root",
+			                             sigmaPath,run));
+		}
 		TTree *genWtsTree_Sigma = (TTree*)genWtsFile_Sigma->Get("MyTuple");
 
 		genWtsTree_Sigma->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
 		                                           sigmaPath,run));
 
-		genWtsTree_Sigma->Draw("gb_wts*wt_tau>>genWt_Sigma");
+		if(run == 1)
+		{
+			genWtsTree_Sigma->Draw("gb_wts_new*wt_tau>>genWt_Sigma","","goff");
+		}
+		else if(run == 2)
+		{
+			genWtsTree_Sigma->Draw("gb_wts*wt_tau>>genWt_Sigma","","goff");
+		}
 		TH1F *genWt_Sigma = (TH1F*)gDirectory->Get("genWt_Sigma");
 
 		nGen_Sigma_wt[i] = genWt_Sigma->GetEntries()*genWt_Sigma->GetMean();
@@ -442,16 +559,22 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		fstream genEffFile_Sigma;
 		genEffFile_Sigma.open(Form("../logs/mc/JpsiLambda/JpsiSigma/run%d/Generator_Effs_Combined.txt",run));
 
-		genEffFile_Sigma>>eff_Sigma_gen[i]; // Get generator efficiency
-		genEffFile_Sigma>>eff_Sigma_gen_err[i]; // and error on above
+		genEffFile_Sigma>>eff_Sigma_gen[i];                                                                                                 // Get generator efficiency
+		genEffFile_Sigma>>eff_Sigma_gen_err[i];                                                                                                 // and error on above
 
 		cout<<"Run "<<run<<" Sigma Generator Effs = "<<eff_Sigma_gen[i]*100
 		    <<" % +/- "<<eff_Sigma_gen_err[i]*100<<" %"<<endl;
 
-
-		mcTreeIn_nonZero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
-		mcTreeIn_Zero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
-
+		if(run == 1)
+		{
+			mcTreeIn_nonZero_Sigma->Draw("gb_wts_new*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Sigma->Draw("gb_wts_new*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+		}
+		else if(run == 2)
+		{
+			mcTreeIn_nonZero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+		}
 		TH1F *wt_Sigma_nonZero = (TH1F*)gDirectory->Get("wt_Sigma_nonZero");
 		TH1F *wt_Sigma_Zero = (TH1F*)gDirectory->Get("wt_Sigma_Zero");
 
@@ -461,11 +584,11 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		Int_t num_Sigma = mcTreeIn_nonZero_Sigma->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
 		                  mcTreeIn_Zero_Sigma->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
 
-		eff_Sigma_rec[i]     = num_Sigma*1.0/nGen_Sigma[i]; // Calc. reco. eff.
-		eff_Sigma_rec_err[i] = sqrt(eff_Sigma_rec[i]*(1-eff_Sigma_rec[i])/nGen_Sigma[i]); //stat error on recon. eff.
+		eff_Sigma_rec[i]     = num_Sigma*1.0/nGen_Sigma[i];                                                                                                 // Calc. reco. eff.
+		eff_Sigma_rec_err[i] = sqrt(eff_Sigma_rec[i]*(1-eff_Sigma_rec[i])/nGen_Sigma[i]);                                                                                                 //stat error on recon. eff.
 
-		eff_Sigma_rec_wt[i]     = num_Sigma_wt*1.0/nGen_Sigma_wt[i]; //Calc. weighted reco eff.
-		eff_Sigma_rec_err_wt[i] = sqrt(eff_Sigma_rec_wt[i]*(1-eff_Sigma_rec_wt[i])/nGen_Sigma_wt[i]); //statistical error on weighted recon. eff.
+		eff_Sigma_rec_wt[i]     = num_Sigma_wt*1.0/nGen_Sigma_wt[i];                                                                                                 //Calc. weighted reco eff.
+		eff_Sigma_rec_err_wt[i] = sqrt(eff_Sigma_rec_wt[i]*(1-eff_Sigma_rec_wt[i])/nGen_Sigma_wt[i]);                                                                                                 //statistical error on weighted recon. eff.
 
 		cout<<"Run "<<run<<" Sigma Recons. Effs = "
 		    <<eff_Sigma_rec[i]*100<<" % +/- "<<eff_Sigma_rec_err[i]*100<<" %"<<endl;
@@ -473,34 +596,32 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		cout<<"Run "<<run<<" WEIGHTED Sigma Recons. Effs = "<<eff_Sigma_rec_wt[i]*100
 		    <<" % +/- "<<eff_Sigma_rec_err_wt[i]*100<<" %"<<endl;
 
-		eff_Sigma[i] = eff_Sigma_gen[i] * eff_Sigma_rec[i]; // Calc overall eff.
-		eff_Sigma_staterr[i] = eff_Sigma[i]*sqrt(pow((eff_Sigma_gen_err[i]/eff_Sigma_gen[i]),2) +
-		                                         pow((eff_Sigma_rec_err[i]/eff_Sigma_rec[i]),2)); // and stat. error on above
+		eff_JpsiSigma[i] = eff_Sigma_gen[i] * eff_Sigma_rec[i];                                                                                                 // Calc overall eff.
+		eff_JpsiSigma_SystErr[i] = eff_JpsiSigma[i]*sqrt(pow((eff_Sigma_gen_err[i]/eff_Sigma_gen[i]),2) +
+		                                                 pow((eff_Sigma_rec_err[i]/eff_Sigma_rec[i]),2));                                                                                                                                                                                                                 // and stat. error on above
 
-		eff_Sigma_wt[i]     = eff_Sigma_rec_wt[i]*eff_Sigma_gen[i];                                                                                                                                                                          // Calc. total eff.
-		eff_Sigma_staterr_wt[i] = eff_Sigma_wt[i]*sqrt(pow((eff_Sigma_gen_err[i]/eff_Sigma_gen[i]),2) +
-		                                               pow((eff_Sigma_rec_err_wt[i]/eff_Sigma_rec_wt[i]),2));                                                                                                                                                                                                                                                                                                                                                                                                                                                   // and stat error on tot. eff.
+		eff_JpsiSigma_wt[i]     = eff_Sigma_rec_wt[i]*eff_Sigma_gen[i];                                                                                                                                                                                                                                                                          // Calc. total eff.
+		eff_JpsiSigma_wt_SystErr[i] = eff_JpsiSigma_wt[i]*sqrt(pow((eff_Sigma_gen_err[i]/eff_Sigma_gen[i]),2) +
+		                                                       pow((eff_Sigma_rec_err_wt[i]/eff_Sigma_rec_wt[i]),2));                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     // and stat error on tot. eff.
 
 		cout<<"************************************************"<<endl;
-		cout<<"Run "<<run<<" UNWEIGHTED Jpsi Sigma Eff = "<<eff_Sigma[i]*100
-		    <<" % +/- "<<eff_Sigma_staterr[i]*100<<" %"<<endl;
-		cout<<"Run "<<run<<" WEIGHTED Jpsi Sigma Eff = "<<eff_Sigma_wt[i]*100
-		    <<" % +/- "<<eff_Sigma_staterr_wt[i]*100<<" %"<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED Jpsi Sigma Eff = "<<eff_JpsiSigma[i]*100
+		    <<" % +/- "<<eff_JpsiSigma_SystErr[i]*100<<" %"<<endl;
+		cout<<"Run "<<run<<" WEIGHTED Jpsi Sigma Eff = "<<eff_JpsiSigma_wt[i]*100
+		    <<" % +/- "<<eff_JpsiSigma_wt_SystErr[i]*100<<" %"<<endl;
 		cout<<"************************************************"<<endl;
 
-		eff_ratio[i]         = eff_Sigma[i]/eff_Lambda[i]; // Calc eff ratio.
-		eff_ratio_staterr[i] = eff_ratio[i]*sqrt(pow((eff_Sigma_staterr[i]/eff_Sigma[i]),2)+pow((eff_Lambda_staterr[i]/eff_Lambda[i]),2)); // stat err on ratio
-		eff_ratio_systerr[i] = eff_ratio[i]*eff_ratio_syst;
-		eff_ratio_err[i]     = sqrt(pow(eff_ratio_staterr[i],2) + pow(eff_ratio_systerr[i],2));//combine in quadrature
+		eff_ratio[i]         = eff_JpsiLambda[i]/eff_JpsiSigma[i];                                                                                                 // Calc eff ratio.
+		eff_ratio_SystErr[i] = eff_ratio[i]*sqrt(pow((eff_JpsiSigma_SystErr[i]/eff_JpsiSigma[i]),2)+pow((eff_JpsiLambda_SystErr[i]/eff_JpsiLambda[i]),2));                                                                                                 // stat err on ratio
+		eff_ratio_StatErr[i] = 0;
 
-		eff_ratio_wt[i]         = eff_Sigma_wt[i]/eff_Lambda_wt[i]; // Calc eff ratio.
-		eff_ratio_staterr_wt[i] = eff_ratio_wt[i]*sqrt(pow((eff_Sigma_staterr_wt[i]/eff_Sigma_wt[i]),2)+pow((eff_Lambda_staterr_wt[i]/eff_Lambda_wt[i]),2)); // stat err on ratio
-		eff_ratio_systerr_wt[i] = eff_ratio_wt[i]*eff_ratio_syst;
-		eff_ratio_err_wt[i]     = sqrt(pow(eff_ratio_staterr_wt[i],2) + pow(eff_ratio_systerr_wt[i],2));//combine in quadrature
+		eff_ratio_wt[i]         = eff_JpsiLambda_wt[i]/eff_JpsiSigma_wt[i];                                                                                                 // Calc eff ratio.
+		eff_ratio_wt_SystErr[i] = eff_ratio_wt[i]*sqrt(pow((eff_JpsiSigma_wt_SystErr[i]/eff_JpsiSigma_wt[i]),2)+pow((eff_JpsiLambda_wt_SystErr[i]/eff_JpsiLambda_wt[i]),2));                                                                                                 // stat err on ratio
+		eff_ratio_wt_StatErr[i] = 0;
 
 		cout<<"***************************************"<<endl;
-		cout<<"Run "<<run<<" UNWEIGHTED Sigma/Lambda efficiency ratio = "<<eff_ratio[i]<<" +/- "<<eff_ratio_err[i]<<endl;
-		cout<<"Run "<<run<<" WEIGHTED Sigma/Lambda efficiency ratio   = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_err_wt[i]<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED Lambda/Sigma efficiency ratio = "<<eff_ratio[i]<<" +/- "<<eff_ratio_SystErr[i]<<endl;
+		cout<<"Run "<<run<<" WEIGHTED Lambda/Sigma efficiency ratio   = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_wt_SystErr[i]<<endl;
 		cout<<"***************************************"<<endl;
 
 		//******************************************************************
@@ -513,6 +634,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		mcTreeIn_Zero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
 		mcTreeIn_Zero_Sigma->SetBranchStatus("gb_wts",1);
 		mcTreeIn_Zero_Sigma->SetBranchStatus("wt_tau",1);
+		if(run == 1)
+			mcTreeIn_Zero_Sigma->SetBranchStatus("gb_wts_new",1);
 
 		mcTreeIn_nonZero_Sigma->SetBranchStatus("*",0);
 		mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
@@ -520,11 +643,12 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
 		mcTreeIn_nonZero_Sigma->SetBranchStatus("gb_wts",1);
 		mcTreeIn_nonZero_Sigma->SetBranchStatus("wt_tau",1);
-
+		if(run == 1)
+			mcTreeIn_nonZero_Sigma->SetBranchStatus("gb_wts_new",1);
 		TFile *tempFile = new TFile("tempFile_sig.root","RECREATE");
 
-		TTree* mcTreeIn_Zero_Sigma_cut    = (TTree*)mcTreeIn_Zero_Sigma->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//Not TRUTH MATCHING HERE!
-		TTree* mcTreeIn_nonZero_Sigma_cut = (TTree*)mcTreeIn_nonZero_Sigma->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//Not TRUTH MATCHING HERE!
+		TTree* mcTreeIn_Zero_Sigma_cut    = (TTree*)mcTreeIn_Zero_Sigma->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));                                                                                                //Not TRUTH MATCHING HERE!
+		TTree* mcTreeIn_nonZero_Sigma_cut = (TTree*)mcTreeIn_nonZero_Sigma->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));                                                                                                //Not TRUTH MATCHING HERE!
 
 		TList *list_sig = new TList;
 		list_sig->Add(mcTreeIn_Zero_Sigma_cut);
@@ -533,15 +657,35 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		TTree *combTree_sig = TTree::MergeTrees(list_sig);
 		combTree_sig->SetName("combTree_sig");
 
-		ds_sig[i] = new RooDataSet("ds_sig","ds_sig",combTree_sig,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"gb_wts*wt_tau");
+		RooRealVar *gbWtVar = nullptr;
+
+		if(run == 1)
+		{
+			gbWtVar  = new RooRealVar("gb_wts_new","gb Weight Var",-100.,100.);
+		}
+		else if(run == 2)
+		{
+			gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
+		}
+
+		RooRealVar *tauWtVar = new RooRealVar("wt_tau","tau Weight Var",-100.,100.);
+
+		ds_sig[i] = new RooDataSet("ds_sig","ds_sig",combTree_sig,RooArgSet(*myVar,*gbWtVar,*tauWtVar));
 		ds_sig[i]->Print();
 
-		SIG_KEYS[i] = new RooKeysPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_sig[i]),RooKeysPdf::MirrorBoth,1);
+		RooFormulaVar *totWt = new RooFormulaVar("totWt","@0*@1",RooArgList(*gbWtVar,*tauWtVar));
+		RooRealVar *totWt_var = (RooRealVar*)ds_sig[i]->addColumn(*totWt);
+
+		ds_sig_wt[i] = new RooDataSet("ds_sig_wt","ds_sig_wt",RooArgSet(*myVar,*totWt_var),Import(*(ds_sig[i])),WeightVar(*totWt_var));
+		ds_sig_wt[i]->Print();
+
+		SIG_KEYS[i] = new RooKeysPdf(Form("SIG%d",run),Form("SIG%d",run),*myVar,*(ds_sig_wt[i]),RooKeysPdf::MirrorBoth,1);
 
 		RooPlot *framesigma = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
 		framesigma->SetTitle("J/#psi #Sigma");
 		// ds_sigma->plotOn(framesigma,Name("sigmadata"));
-		ds_sig[i]->plotOn(framesigma,Name("sigmadata"));
+		ds_sig[i]->plotOn(framesigma,Name("sigmadata_nowt"),LineColor(kGreen));
+		ds_sig_wt[i]->plotOn(framesigma,Name("sigmadata"),LineColor(kBlack));
 		// sigmashape.plotOn(framesigma,Name("sigmafit"),LineColor(kBlue));
 		(*(SIG_KEYS[i])).plotOn(framesigma,Name("sigmafitsmooth"),LineColor(kRed),LineStyle(kDashed));
 
@@ -550,6 +694,11 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		w.import(*(SIG_KEYS[i]));
 
 		cout<<"Done importing Jpsi Sigma shape"<<endl;
+
+		sigmaInt[i] = SIG_KEYS[i]->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
+		window_JpsiSigma[i] = sigmaInt[i]->getValV();
+
+		// cout<<"Run "<<run<<" sigma fraction = "<<sigmaINT[i]<<endl;
 	}
 	//********************************************************************
 
@@ -571,15 +720,15 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	}
 	else if(Lst1405_rwtype==1)//MV RW
 	{
-		nGen_1405[0] = 3890604;
-		nGen_1405[1] = 3449849;
+		nGen_1405[0] = 3890603;
+		nGen_1405[1] = 3450028;
 		rwSuffix     = "_MV";
 		rwType       = "MV";
 	}
 	else if(Lst1405_rwtype==2)//BONN RW
 	{
-		nGen_1405[0] = 3901944;
-		nGen_1405[1] = 3459901;
+		nGen_1405[0] = 3901943;
+		nGen_1405[1] = 3460080;
 		rwSuffix     = "_BONN";
 		rwType       = "BONN";
 	}
@@ -600,34 +749,43 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		mcTreeIn_Zero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_zeroTracksLL_FinalBDT%d_noPID.root",
 		                                             Lst1405Path,run,bdtConf_Zero[i]));
 
-		TFile *genWtsFile_1405 = Open(Form("%s/run%d/RW/gbWeights_gen.root",
-		                                   Lst1405Path,run));
-		TTree *genWtsTree_1405 = (TTree*)genWtsFile_1405->Get("MyTuple");
+		TFile *genWtsFile_1405 = nullptr;
+		TTree *genWtsTree_1405 = nullptr;
+		if(run == 1)
+		{
+			genWtsFile_1405 = Open(Form("%s/run%d/RW/gbWeights_gen_new.root",
+			                            Lst1405Path,run));
+		}
+		else if(run == 2)
+		{
+			genWtsFile_1405 = Open(Form("%s/run%d/RW/gbWeights_gen.root",
+			                            Lst1405Path,run));
+		}
+		genWtsTree_1405 = (TTree*)genWtsFile_1405->Get("MyTuple");
 
 		genWtsTree_1405->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
 		                                          Lst1405Path,run));
 
-		genWtsTree_1405->Draw("gb_wts*wt_tau>>genWt_1405","","goff");
+		if(run == 1)
+		{
+			genWtsTree_1405->Draw("gb_wts_new*wt_tau>>genWt_1405","","goff");
+		}
+		else if(run == 2)
+		{
+			genWtsTree_1405->Draw("gb_wts*wt_tau>>genWt_1405","","goff");
+		}
 
 		TH1F *genWt_1405 = (TH1F*)gDirectory->Get("genWt_1405");
-		nGen_1405_wt[i] = genWt_1405->GetEntries()*genWt_1405->GetMean();
+		nGen_1405_wt[i]  = genWt_1405->GetEntries()*genWt_1405->GetMean();
 
-		// fstream genFile_1405;
-		// genFile_1405.open((Form("../logs/mc/JpsiLambda/Lst1405/run%d/gen_log.txt",run)));
-		//
-		// genFile_1405>>nGen_1405[i]; // Get number of generated events
+		fstream genEffFile_1405;
+		genEffFile_1405.open(Form("../logs/mc/JpsiLambda/Lst1405/run%d/Generator_Effs_Combined.txt",run));
 
-		//***** DONT HAVE GENERATOR EFFS FOR LST(1405) YET
-		// fstream genEffFile_1405;
-		// genEffFile_1405.open(Form("../logs/mc/JpsiLambda/Lst1405/run%d/Generator_Effs_Combined.txt",run));
-		//
-		// genEffFile_1405>>eff_1405_gen[i]; // Get generator efficiency
-		// genEffFile_1405>>eff_1405_gen_err[i]; // and error on above
-		//
-		// cout<<"Run "<<run<<" Lst1405 Generator Effs = "<<eff_1405_gen[i]*100
-		//     <<" % +/- "<<eff_1405_gen_err[i]*100<<" %"<<endl;
+		genEffFile_1405>>eff_1405_gen[i]; // Get generator efficiency
+		genEffFile_1405>>eff_1405_gen_err[i]; // and error on above
 
-		//FOR NOW, EFF RATIO IS JUST RATIO OF RECO EFFS. ONCE I GET GENERATOR EFFS, I'LL PUT THEM IN
+		cout<<"Run "<<run<<" Lst1405 Generator Effs = "<<eff_1405_gen[i]*100
+		    <<" % +/- "<<eff_1405_gen_err[i]*100<<" %"<<endl;
 
 		Int_t num_1405 = 0, num_1405_wt;
 		if(Lst1405_rwtype==0)
@@ -635,9 +793,16 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 			num_1405 = mcTreeIn_nonZero_1405->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
 			           mcTreeIn_Zero_1405->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));      //NOTE NO TM HERE
 
-			mcTreeIn_nonZero_1405->Draw("gb_wts*wt_tau>>wt_1405_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
-			mcTreeIn_Zero_1405->Draw("gb_wts*wt_tau>>wt_1405_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
-
+			if(run == 1)
+			{
+				mcTreeIn_nonZero_1405->Draw("gb_wts_new*wt_tau>>wt_1405_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
+				mcTreeIn_Zero_1405->Draw("gb_wts_new*wt_tau>>wt_1405_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+			}
+			else if(run == 2)
+			{
+				mcTreeIn_nonZero_1405->Draw("gb_wts*wt_tau>>wt_1405_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
+				mcTreeIn_Zero_1405->Draw("gb_wts*wt_tau>>wt_1405_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+			}
 			TH1F *wt_1405_nonZero = (TH1F*)gDirectory->Get("wt_1405_nonZero");
 			TH1F *wt_1405_Zero    = (TH1F*)gDirectory->Get("wt_1405_Zero");
 
@@ -645,7 +810,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 			              (wt_1405_Zero->GetMean()*wt_1405_Zero->GetEntries());
 
 		}
-		else
+		else //HAVE TO DEAL WITH THIS
 		{
 			mcTreeIn_nonZero_1405->Draw(Form("%sweight>>hrw0",rwType),Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
 			mcTreeIn_Zero_1405->Draw(Form("%sweight>>hrw1",rwType),Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
@@ -667,49 +832,43 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		eff_1405_rec[i]     = num_1405*1.0/nGen_1405[i]; // Calc. reco. eff.
 		eff_1405_rec_err[i] = sqrt(eff_1405_rec[i]*(1-eff_1405_rec[i])/nGen_1405[i]); //stat error on recon. eff.
 
-		eff_1405_rec_wt[i]     = num_1405_wt*1.0/nGen_1405_wt[i]; //Calc. weighted reco eff.
-		eff_1405_rec_err_wt[i] = sqrt(eff_1405_rec_wt[i]*(1-eff_1405_rec_wt[i])/nGen_1405_wt[i]); //statistical error on weighted recon. eff.
+		eff_1405_wt_rec[i]     = num_1405_wt*1.0/nGen_1405_wt[i]; //Calc. weighted reco eff.
+		eff_1405_wt_rec_err[i] = sqrt(eff_1405_wt_rec[i]*(1-eff_1405_wt_rec[i])/nGen_1405_wt[i]); //statistical error on weighted recon. eff.
 
 		cout<<"Run "<<run<<" UNWEIGHTED /\(1405) Recons. Effs = "<<eff_1405_rec[i]*100
 		    <<" % +/- "<<eff_1405_rec_err[i]*100<<" %"<<endl;
 
-		cout<<"Run "<<run<<" WEIGHTED /\(1405) Recons. Effs = "<<eff_1405_rec_wt[i]*100
-		    <<" % +/- "<<eff_1405_rec_err_wt[i]*100<<" %"<<endl;
+		cout<<"Run "<<run<<" WEIGHTED /\(1405) Recons. Effs = "<<eff_1405_wt_rec[i]*100
+		    <<" % +/- "<<eff_1405_wt_rec_err[i]*100<<" %"<<endl;
 
-		eff_1405[i]         = eff_1405_rec[i]; //TEMPORARY
-		eff_1405_staterr[i] = eff_1405_rec_err[i]; //TEMPORARY
+		eff_1405[i]         = eff_1405_rec[i]*eff_1405_gen[i];
+		eff_1405_SystErr[i] = eff_1405[i]*sqrt(pow((eff_1405_gen_err[i]/eff_1405_gen[i]),2) +
+		                                       pow((eff_1405_rec_err[i]/eff_1405_rec[i]),2));
 
-		eff_1405_wt[i]         = eff_1405_rec_wt[i]; //TEMPORARY
-		eff_1405_staterr_wt[i] = eff_1405_rec_err_wt[i]; //TEMPORARY
-
-		// eff_1405[i] = eff_1405_gen[i] * eff_1405_rec[i]; // Calc overall eff.
-		// eff_1405_staterr[i] = eff_1405[i]*sqrt(pow((eff_1405_gen_err[i]/eff_1405_gen[i]),2) +
-		//                                        pow((eff_1405_rec_err[i]/eff_1405_rec[i]),2));   // and stat. error on above
+		eff_1405_wt[i]         = eff_1405_wt_rec[i]*eff_1405_gen[i];
+		eff_1405_wt_SystErr[i] = eff_1405_wt[i]*sqrt(pow((eff_1405_gen_err[i]/eff_1405_gen[i]),2) +
+		                                             pow((eff_1405_wt_rec_err[i]/eff_1405_wt_rec[i]),2));
 
 		cout<<"************************************************"<<endl;
 		cout<<"Run "<<run<<" UNWEIGHTED Jpsi /\(1405) Eff = "<<eff_1405[i]*100
-		    <<" % +/- "<<eff_1405_staterr[i]*100<<" %"<<endl;
+		    <<" % +/- "<<eff_1405_SystErr[i]*100<<" %"<<endl;
 		cout<<"Run "<<run<<" WEIGHTED Jpsi /\(1405) Eff = "<<eff_1405_wt[i]*100
-		    <<" % +/- "<<eff_1405_staterr_wt[i]*100<<" %"<<endl;
+		    <<" % +/- "<<eff_1405_wt_SystErr[i]*100<<" %"<<endl;
 		cout<<"************************************************"<<endl;
 
-		// eff_ratio[i]         = eff_1405[i]/eff_Lambda[i]; // Calc eff ratio.
+		eff_ratio_1405[i]            = eff_1405[i]/eff_JpsiLambda[i];
+		eff_ratio_SystErr_1405[i]    = eff_ratio_1405[i]*sqrt(pow((eff_1405_SystErr[i]/eff_1405[i]),2)+pow((eff_JpsiLambda_SystErr[i]/eff_JpsiLambda[i]),2)); // stat err on ratio
+		eff_ratio_StatErr_1405[i]    = 0.0;
+		eff_ratio_Err_1405[i]        = sqrt(pow(eff_ratio_StatErr_1405[i],2) + pow(eff_ratio_SystErr_1405[i],2));//combine in quadrature
 
-		eff_ratio_1405[i]            = eff_1405[i]/eff_Lambda_rec[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
-		// eff_ratio_staterr_1405[i] = eff_ratio_1405[i]*sqrt(pow((eff_1405_staterr[i]/eff_1405[i]),2)+pow((eff_Lambda_staterr[i]/eff_Lambda[i]),2)); // stat err on ratio
-		eff_ratio_staterr_1405[i]    = eff_ratio_1405[i]*sqrt(pow((eff_1405_staterr[i]/eff_1405[i]),2)+pow((eff_Lambda_rec_err[i]/eff_Lambda_rec[i]),2)); // TEMPORARY
-		eff_ratio_systerr_1405[i]    = eff_ratio_1405[i]*eff_ratio_syst_1405;
-		eff_ratio_err_1405[i]        = sqrt(pow(eff_ratio_staterr_1405[i],2) + pow(eff_ratio_systerr_1405[i],2));//combine in quadrature
-
-		eff_ratio_1405_wt[i]            = eff_1405_wt[i]/eff_Lambda_rec_wt[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
-		// eff_ratio_staterr_1405_wt[i] = eff_ratio_1405_wt[i]*sqrt(pow((eff_1405_staterr_wt[i]/eff_1405_wt[i]),2)+pow((eff_Lambda_staterr_wt[i]/eff_Lambda_wt[i]),2)); // stat err on ratio
-		eff_ratio_staterr_1405_wt[i]    = eff_ratio_1405_wt[i]*sqrt(pow((eff_1405_staterr_wt[i]/eff_1405_wt[i]),2)+pow((eff_Lambda_rec_err_wt[i]/eff_Lambda_rec_wt[i]),2)); // TEMPORARY
-		eff_ratio_systerr_1405_wt[i]    = eff_ratio_1405_wt[i]*eff_ratio_syst_1405;
-		eff_ratio_err_1405_wt[i]        = sqrt(pow(eff_ratio_staterr_1405_wt[i],2) + pow(eff_ratio_systerr_1405_wt[i],2));//combine in quadrature
+		eff_ratio_wt_1405[i]            = eff_1405_wt[i]/eff_JpsiLambda_wt[i];
+		eff_ratio_wt_SystErr_1405[i]    = eff_ratio_wt_1405[i]*sqrt(pow((eff_1405_wt_SystErr[i]/eff_1405_wt[i]),2)+pow((eff_JpsiLambda_wt_SystErr[i]/eff_JpsiLambda_wt[i]),2)); // stat err on ratio
+		eff_ratio_wt_StatErr_1405[i]    = 0.0;
+		eff_ratio_Err_1405_wt[i]        = sqrt(pow(eff_ratio_wt_StatErr_1405[i],2) + pow(eff_ratio_wt_SystErr_1405[i],2));//combine in quadrature
 
 		cout<<"***************************************"<<endl;
-		cout<<"Run "<<run<<" UNWEIGHTED /\(1405)/Lambda efficiency ratio = "<<eff_ratio[i]<<" +/- "<<eff_ratio_err[i]<<endl;
-		cout<<"Run "<<run<<" WEIGHTED /\(1405)/Lambda efficiency ratio   = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_err_wt[i]<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED /\(1405)/Lambda efficiency ratio = "<<eff_ratio_1405[i]<<" +/- "<<eff_ratio_Err_1405[i] <<endl;
+		cout<<"Run "<<run<<" WEIGHTED /\(1405)/Lambda efficiency ratio   = "<<eff_ratio_wt_1405[i]<<" +/- "<<eff_ratio_Err_1405_wt[i]<<endl;
 		cout<<"***************************************"<<endl;
 
 		//*******************************************************************
@@ -733,6 +892,12 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		mcTreeIn_nonZero_1405->SetBranchStatus("gb_wts",1);
 		mcTreeIn_nonZero_1405->SetBranchStatus("wt_tau",1);
 
+		if(run == 1)
+		{
+			mcTreeIn_Zero_1405->SetBranchStatus("gb_wts_new",1);
+			mcTreeIn_nonZero_1405->SetBranchStatus("gb_wts_new",1);
+		}
+
 		TFile *tempFile_1405 = new TFile("tempFile_1405.root","RECREATE");
 
 		TTree* mcTreeIn_Zero_1405_cut    = (TTree*)mcTreeIn_Zero_1405->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TRUTH MATCHING HERE!
@@ -747,11 +912,25 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 		if(Lst1405_rwtype!=0)
 		{
-			ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,Form("%sweight*gb_wts*wt_tau",rwType));
+			if(run == 1)
+			{
+				ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,Form("%sweight*gb_wts_new*wt_tau",rwType));
+			}
+			else if(run == 2)
+			{
+				ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,Form("%sweight*gb_wts*wt_tau",rwType));
+			}
 		}
 		else
 		{
-			ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"gb_wts*wt_tau");
+			if(run == 1)
+			{
+				ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"gb_wts_new*wt_tau");
+			}
+			else if(run == 2)
+			{
+				ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"gb_wts*wt_tau");
+			}
 		}
 		ds_1405[i]->Print();
 
@@ -832,24 +1011,29 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		TH1F *genWt_1520 = (TH1F*)gDirectory->Get("genWt_1520");
 		nGen_1520_wt[i] = genWt_1520->GetEntries()*genWt_1520->GetMean();
 
-		//***** DONT HAVE GENERATOR EFFS FOR LST(1520) YET
-		// fstream genEffFile_1520;
-		// genEffFile_1520.open(Form("../logs/mc/JpsiLambda/Lst1520/run%d/Generator_Effs_Combined.txt",run));
-		//
-		// genEffFile_1520>>eff_1520_gen[i]; // Get generator efficiency
-		// genEffFile_1520>>eff_1520_gen_err[i]; // and error on above
-		//
-		// cout<<"Run "<<run<<" Lst1520 Generator Effs = "<<eff_1520_gen[i]*100
-		//     <<" % +/- "<<eff_1520_gen_err[i]*100<<" %"<<endl;
+		fstream genEffFile_1520;
+		genEffFile_1520.open(Form("../logs/mc/JpsiLambda/Lst1520/run%d/Generator_Effs_Combined.txt",run));
 
-		//FOR NOW, EFF RATIO IS JUST RATIO OF RECO EFFS. ONCE I GET GENERATOR EFFS, I'LL PUT THEM IN
+		genEffFile_1520>>eff_1520_gen[i]; // Get generator efficiency
+		genEffFile_1520>>eff_1520_gen_err[i]; // and error on above
+
+		cout<<"Run "<<run<<" Lst1520 Generator Effs = "<<eff_1520_gen[i]*100
+		    <<" % +/- "<<eff_1520_gen_err[i]*100<<" %"<<endl;
 
 		Int_t num_1520 = mcTreeIn_nonZero_1520->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
-		                 mcTreeIn_Zero_1520->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
-		//NOTE NO TM HERE
-		mcTreeIn_nonZero_1520->Draw("gb_wts*wt_tau>>wt_1520_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
-		mcTreeIn_Zero_1520->Draw("gb_wts*wt_tau>>wt_1520_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+		                 mcTreeIn_Zero_1520->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));    //NOTE NO TM HERE
 
+		if(run == 1)
+		{
+			mcTreeIn_nonZero_1520->Draw("gb_wts_new*wt_tau>>wt_1520_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
+			mcTreeIn_Zero_1520->Draw("gb_wts_new*wt_tau>>wt_1520_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+		}
+		else if(run == 2)
+		{
+			mcTreeIn_nonZero_1520->Draw("gb_wts*wt_tau>>wt_1520_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
+			mcTreeIn_Zero_1520->Draw("gb_wts*wt_tau>>wt_1520_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+
+		}
 		TH1F *wt_1520_nonZero = (TH1F*)gDirectory->Get("wt_1520_nonZero");
 		TH1F *wt_1520_Zero    = (TH1F*)gDirectory->Get("wt_1520_Zero");
 
@@ -857,51 +1041,45 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		                    (wt_1520_Zero->GetMean()*wt_1520_Zero->GetEntries());
 
 		eff_1520_rec[i]     = num_1520*1.0/nGen_1520[i]; // Calc. reco. eff.
-		eff_1520_rec_err[i] = sqrt(eff_1520_rec[i]*(1-eff_1520_rec[i])/nGen_1520[i]); //stat error on recon. eff.
+		eff_1520_rec_err[i] = sqrt(eff_1520_rec[i]*(1-eff_1520_rec[i])/nGen_1520[i]); //syst error on recon. eff.
 
 		eff_1520_rec_wt[i]     = num_1520_wt*1.0/nGen_1520_wt[i]; //Calc. weighted reco eff.
-		eff_1520_rec_err_wt[i] = sqrt(eff_1520_rec_wt[i]*(1-eff_1520_rec_wt[i])/nGen_1520_wt[i]); //statistical error on weighted recon. eff.
+		eff_1520_wt_rec_err[i] = sqrt(eff_1520_rec_wt[i]*(1-eff_1520_rec_wt[i])/nGen_1520_wt[i]); //syst error on weighted recon. eff.
 
 		cout<<"Run "<<run<<" UNWEIGHTED /\(1520) Recons. Effs = "<<eff_1520_rec[i]*100
 		    <<" % +/- "<<eff_1520_rec_err[i]*100<<" %"<<endl;
 
 		cout<<"Run "<<run<<" WEIGHTED /\(1520) Recons. Effs = "<<eff_1520_rec_wt[i]*100
-		    <<" % +/- "<<eff_1520_rec_err_wt[i]*100<<" %"<<endl;
+		    <<" % +/- "<<eff_1520_wt_rec_err[i]*100<<" %"<<endl;
 
-		eff_1520[i] = eff_1520_rec[i]; //TEMPORARY
-		eff_1520_staterr[i] = eff_1520_rec_err[i]; //TEMPORARY
+		eff_1520[i]         = eff_1520_rec[i]*eff_1520_gen[i];
+		eff_1520_SystErr[i] = eff_1520[i]*sqrt(pow((eff_1520_gen_err[i]/eff_1520_gen[i]),2) +
+		                                       pow((eff_1520_rec_err[i]/eff_1520_rec[i]),2));
 
-		eff_1520_wt[i]         = eff_1520_rec_wt[i]; //TEMPORARY
-		eff_1520_staterr_wt[i] = eff_1520_rec_err_wt[i]; //TEMPORARY
-
-		// eff_1520[i] = eff_1520_gen[i] * eff_1520_rec[i]; // Calc overall eff.
-		// eff_1520_staterr[i] = eff_1520[i]*sqrt(pow((eff_1520_gen_err[i]/eff_1520_gen[i]),2) +
-		//                                        pow((eff_1520_rec_err[i]/eff_1520_rec[i]),2));   // and stat. error on above
+		eff_1520_wt[i]         = eff_1520_rec_wt[i]*eff_1520_gen[i];
+		eff_1520_wt_SystErr[i] = eff_1520_wt[i]*sqrt(pow((eff_1520_gen_err[i]/eff_1520_gen[i]),2) +
+		                                             pow((eff_1520_wt_rec_err[i]/eff_1520_rec_wt[i]),2));
 
 		cout<<"************************************************"<<endl;
 		cout<<"Run "<<run<<" UNWEIGHTED Jpsi /\(1520) Eff = "<<eff_1520[i]*100
-		    <<" % +/- "<<eff_1520_staterr[i]*100<<" %"<<endl;
+		    <<" % +/- "<<eff_1520_SystErr[i]*100<<" %"<<endl;
 		cout<<"Run "<<run<<" WEIGHTED Jpsi /\(1520) Eff = "<<eff_1520_wt[i]*100
-		    <<" % +/- "<<eff_1520_staterr_wt[i]*100<<" %"<<endl;
+		    <<" % +/- "<<eff_1520_wt_SystErr[i]*100<<" %"<<endl;
 		cout<<"************************************************"<<endl;
 
-		// eff_ratio[i]         = eff_1520[i]/eff_Lambda[i]; // Calc eff ratio.
+		eff_ratio_1520[i]            = eff_1520[i]/eff_JpsiLambda[i];
+		eff_ratio_SystErr_1520[i]    = eff_ratio_1520[i]*sqrt(pow((eff_1520_SystErr[i]/eff_1520[i]),2)+pow((eff_JpsiLambda_SystErr[i]/eff_JpsiLambda[i]),2)); // stat err on ratio
+		eff_ratio_StatErr_1520[i]    = 0.0;
+		eff_ratio_Err_1520[i]        = sqrt(pow(eff_ratio_StatErr_1520[i],2) + pow(eff_ratio_SystErr_1520[i],2));//combine in quadrature
 
-		eff_ratio_1520[i] = eff_1520[i]/eff_Lambda_rec[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
-		// eff_ratio_staterr_1520[i] = eff_ratio_1520[i]*sqrt(pow((eff_1520_staterr[i]/eff_1520[i]),2)+pow((eff_Lambda_staterr[i]/eff_Lambda[i]),2)); // stat err on ratio
-		eff_ratio_staterr_1520[i] = eff_ratio_1520[i]*sqrt(pow((eff_1520_staterr[i]/eff_1520[i]),2)+pow((eff_Lambda_rec_err[i]/eff_Lambda_rec[i]),2)); // TEMPORARY
-		eff_ratio_systerr_1520[i] = eff_ratio_1520[i]*eff_ratio_syst_1520;
-		eff_ratio_err_1520[i] = sqrt(pow(eff_ratio_staterr_1520[i],2) + pow(eff_ratio_systerr_1520[i],2));//combine in quadrature
-
-		eff_ratio_1520_wt[i]            = eff_1520_wt[i]/eff_Lambda_rec_wt[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
-		// eff_ratio_staterr_1520_wt[i] = eff_ratio_1520_wt[i]*sqrt(pow((eff_1520_staterr_wt[i]/eff_1520_wt[i]),2)+pow((eff_Lambda_staterr_wt[i]/eff_Lambda_wt[i]),2)); // stat err on ratio
-		eff_ratio_staterr_1520_wt[i]    = eff_ratio_1520_wt[i]*sqrt(pow((eff_1520_staterr_wt[i]/eff_1520_wt[i]),2)+pow((eff_Lambda_rec_err_wt[i]/eff_Lambda_rec_wt[i]),2)); // TEMPORARY
-		eff_ratio_systerr_1520_wt[i]    = eff_ratio_1520_wt[i]*eff_ratio_syst_1520;
-		eff_ratio_err_1520_wt[i]        = sqrt(pow(eff_ratio_staterr_1520_wt[i],2) + pow(eff_ratio_systerr_1520_wt[i],2));//combine in quadrature
+		eff_ratio_wt_1520[i]            = eff_1520_wt[i]/eff_JpsiLambda_wt[i];
+		eff_ratio_wt_SystErr_1520[i]    = eff_ratio_wt_1520[i]*sqrt(pow((eff_1520_wt_SystErr[i]/eff_1520_wt[i]),2)+pow((eff_JpsiLambda_wt_SystErr[i]/eff_JpsiLambda_wt[i]),2)); // stat err on ratio
+		eff_ratio_wt_StatErr_1520[i]    = 0.0;
+		eff_ratio_Err_1520_wt[i]        = sqrt(pow(eff_ratio_wt_StatErr_1520[i],2) + pow(eff_ratio_wt_SystErr_1520[i],2));//combine in quadrature
 
 		cout<<"***************************************"<<endl;
-		cout<<"Run "<<run<<" UNWEIGHTED /\(1520)/Lambda efficiency ratio = "<<eff_ratio[i]<<" +/- "<<eff_ratio_err[i]<<endl;
-		cout<<"Run "<<run<<" WEIGHTED /\(1520)/Lambda efficiency ratio   = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_err_wt[i]<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED /\(1520)/Lambda efficiency ratio = "<<eff_ratio_1520[i]<<" +/- "<<eff_ratio_Err_1520[i] <<endl;
+		cout<<"Run "<<run<<" WEIGHTED /\(1520)/Lambda efficiency ratio   = "<<eff_ratio_wt_1520[i]<<" +/- "<<eff_ratio_Err_1520_wt[i]<<endl;
 		cout<<"***************************************"<<endl;
 
 		//*******************************************************************
@@ -924,6 +1102,12 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		mcTreeIn_nonZero_1520->SetBranchStatus("Lb_BKGCAT",1);
 		mcTreeIn_nonZero_1520->SetBranchStatus("gb_wts",1);
 		mcTreeIn_nonZero_1520->SetBranchStatus("wt_tau",1);
+
+		if(run == 1)
+		{
+			mcTreeIn_Zero_1520->SetBranchStatus("gb_wts_new",1);
+			mcTreeIn_nonZero_1520->SetBranchStatus("gb_wts_new",1);
+		}
 
 		TFile *tempFile_1520 = new TFile("tempFile_1520.root","RECREATE");
 
@@ -1017,24 +1201,29 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		TH1F *genWt_1600 = (TH1F*)gDirectory->Get("genWt_1600");
 		nGen_1600_wt[i] = genWt_1600->GetEntries()*genWt_1600->GetMean();
 
-		//***** DONT HAVE GENERATOR EFFS FOR LST(1600) YET
-		// fstream genEffFile_1600;
-		// genEffFile_1600.open(Form("../logs/mc/JpsiLambda/Lst1600/run%d/Generator_Effs_Combined.txt",run));
-		//
-		// genEffFile_1600>>eff_1600_gen[i]; // Get generator efficiency
-		// genEffFile_1600>>eff_1600_gen_err[i]; // and error on above
-		//
-		// cout<<"Run "<<run<<" Lst1600 Generator Effs = "<<eff_1600_gen[i]*100
-		//     <<" % +/- "<<eff_1600_gen_err[i]*100<<" %"<<endl;
+		fstream genEffFile_1600;
+		genEffFile_1600.open(Form("../logs/mc/JpsiLambda/Lst1600/run%d/Generator_Effs_Combined.txt",run));
 
-		//FOR NOW, EFF RATIO IS JUST RATIO OF RECO EFFS. ONCE I GET GENERATOR EFFS, I'LL PUT THEM IN
+		genEffFile_1600>>eff_1600_gen[i]; // Get generator efficiency
+		genEffFile_1600>>eff_1600_gen_err[i]; // and error on above
+
+		cout<<"Run "<<run<<" Lst1600 Generator Effs = "<<eff_1600_gen[i]*100
+		    <<" % +/- "<<eff_1600_gen_err[i]*100<<" %"<<endl;
 
 		Int_t num_1600 = mcTreeIn_nonZero_1600->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
-		                 mcTreeIn_Zero_1600->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));                                                //NOTE NO TM HERE
+		                 mcTreeIn_Zero_1600->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));    //NOTE NO TM HERE
 
-		mcTreeIn_nonZero_1600->Draw("gb_wts*wt_tau>>wt_1600_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
-		mcTreeIn_Zero_1600->Draw("gb_wts*wt_tau>>wt_1600_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+		if(run == 1)
+		{
+			mcTreeIn_nonZero_1600->Draw("gb_wts_new*wt_tau>>wt_1600_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
+			mcTreeIn_Zero_1600->Draw("gb_wts_new*wt_tau>>wt_1600_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+		}
+		else if(run == 2)
+		{
+			mcTreeIn_nonZero_1600->Draw("gb_wts*wt_tau>>wt_1600_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
+			mcTreeIn_Zero_1600->Draw("gb_wts*wt_tau>>wt_1600_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
 
+		}
 		TH1F *wt_1600_nonZero = (TH1F*)gDirectory->Get("wt_1600_nonZero");
 		TH1F *wt_1600_Zero    = (TH1F*)gDirectory->Get("wt_1600_Zero");
 
@@ -1042,50 +1231,45 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		                    (wt_1600_Zero->GetMean()*wt_1600_Zero->GetEntries());
 
 		eff_1600_rec[i]     = num_1600*1.0/nGen_1600[i]; // Calc. reco. eff.
-		eff_1600_rec_err[i] = sqrt(eff_1600_rec[i]*(1-eff_1600_rec[i])/nGen_1600[i]); //stat error on recon. eff.
+		eff_1600_rec_err[i] = sqrt(eff_1600_rec[i]*(1-eff_1600_rec[i])/nGen_1600[i]); //syst error on recon. eff.
 
 		eff_1600_rec_wt[i]     = num_1600_wt*1.0/nGen_1600_wt[i]; //Calc. weighted reco eff.
-		eff_1600_rec_err_wt[i] = sqrt(eff_1600_rec_wt[i]*(1-eff_1600_rec_wt[i])/nGen_1600_wt[i]); //statistical error on weighted recon. eff.
+		eff_1600_wt_rec_err[i] = sqrt(eff_1600_rec_wt[i]*(1-eff_1600_rec_wt[i])/nGen_1600_wt[i]); //syst error on weighted recon. eff.
 
 		cout<<"Run "<<run<<" UNWEIGHTED /\(1600) Recons. Effs = "<<eff_1600_rec[i]*100
 		    <<" % +/- "<<eff_1600_rec_err[i]*100<<" %"<<endl;
 
 		cout<<"Run "<<run<<" WEIGHTED /\(1600) Recons. Effs = "<<eff_1600_rec_wt[i]*100
-		    <<" % +/- "<<eff_1600_rec_err_wt[i]*100<<" %"<<endl;
+		    <<" % +/- "<<eff_1600_wt_rec_err[i]*100<<" %"<<endl;
 
-		eff_1600[i] = eff_1600_rec[i]; //TEMPORARY
-		eff_1600_staterr[i] = eff_1600_rec_err[i]; //TEMPORARY
+		eff_1600[i]         = eff_1600_rec[i]*eff_1600_gen[i];
+		eff_1600_SystErr[i] = eff_1600[i]*sqrt(pow((eff_1600_gen_err[i]/eff_1600_gen[i]),2) +
+		                                       pow((eff_1600_rec_err[i]/eff_1600_rec[i]),2));
 
-		eff_1600_wt[i]         = eff_1600_rec_wt[i]; //TEMPORARY
-		eff_1600_staterr_wt[i] = eff_1600_rec_err_wt[i]; //TEMPORARY
-
-		// eff_1600[i] = eff_1600_gen[i] * eff_1600_rec[i]; // Calc overall eff.
-		// eff_1600_staterr[i] = eff_1600[i]*sqrt(pow((eff_1600_gen_err[i]/eff_1600_gen[i]),2) +
-		//                                        pow((eff_1600_rec_err[i]/eff_1600_rec[i]),2));   // and stat. error on above
+		eff_1600_wt[i]         = eff_1600_rec_wt[i]*eff_1600_gen[i];
+		eff_1600_wt_SystErr[i] = eff_1600_wt[i]*sqrt(pow((eff_1600_gen_err[i]/eff_1600_gen[i]),2) +
+		                                             pow((eff_1600_wt_rec_err[i]/eff_1600_rec_wt[i]),2));
 
 		cout<<"************************************************"<<endl;
 		cout<<"Run "<<run<<" UNWEIGHTED Jpsi /\(1600) Eff = "<<eff_1600[i]*100
-		    <<" % +/- "<<eff_1600_staterr[i]*100<<" %"<<endl;
+		    <<" % +/- "<<eff_1600_SystErr[i]*100<<" %"<<endl;
 		cout<<"Run "<<run<<" WEIGHTED Jpsi /\(1600) Eff = "<<eff_1600_wt[i]*100
-		    <<" % +/- "<<eff_1600_staterr_wt[i]*100<<" %"<<endl;
+		    <<" % +/- "<<eff_1600_wt_SystErr[i]*100<<" %"<<endl;
 		cout<<"************************************************"<<endl;
-		// eff_ratio[i]         = eff_1600[i]/eff_Lambda[i]; // Calc eff ratio.
 
-		eff_ratio_1600[i] = eff_1600[i]/eff_Lambda_rec[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
-		// eff_ratio_staterr_1600[i] = eff_ratio_1600[i]*sqrt(pow((eff_1600_staterr[i]/eff_1600[i]),2)+pow((eff_Lambda_staterr[i]/eff_Lambda[i]),2)); // stat err on ratio
-		eff_ratio_staterr_1600[i] = eff_ratio_1600[i]*sqrt(pow((eff_1600_staterr[i]/eff_1600[i]),2)+pow((eff_Lambda_rec_err[i]/eff_Lambda_rec[i]),2)); // TEMPORARY
-		eff_ratio_systerr_1600[i] = eff_ratio_1600[i]*eff_ratio_syst_1600;
-		eff_ratio_err_1600[i] = sqrt(pow(eff_ratio_staterr_1600[i],2) + pow(eff_ratio_systerr_1600[i],2));//combine in quadrature
+		eff_ratio_1600[i]            = eff_1600[i]/eff_JpsiLambda[i];
+		eff_ratio_SystErr_1600[i]    = eff_ratio_1600[i]*sqrt(pow((eff_1600_SystErr[i]/eff_1600[i]),2)+pow((eff_JpsiLambda_SystErr[i]/eff_JpsiLambda[i]),2)); // stat err on ratio
+		eff_ratio_StatErr_1600[i]    = 0.0;
+		eff_ratio_Err_1600[i]        = sqrt(pow(eff_ratio_StatErr_1600[i],2) + pow(eff_ratio_SystErr_1600[i],2));//combine in quadrature
 
-		eff_ratio_1600_wt[i]            = eff_1600_wt[i]/eff_Lambda_rec_wt[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
-		// eff_ratio_staterr_1600_wt[i] = eff_ratio_1600_wt[i]*sqrt(pow((eff_1600_staterr_wt[i]/eff_1600_wt[i]),2)+pow((eff_Lambda_staterr_wt[i]/eff_Lambda_wt[i]),2)); // stat err on ratio
-		eff_ratio_staterr_1600_wt[i]    = eff_ratio_1600_wt[i]*sqrt(pow((eff_1600_staterr_wt[i]/eff_1600_wt[i]),2)+pow((eff_Lambda_rec_err_wt[i]/eff_Lambda_rec_wt[i]),2)); // TEMPORARY
-		eff_ratio_systerr_1600_wt[i]    = eff_ratio_1600_wt[i]*eff_ratio_syst_1600;
-		eff_ratio_err_1600_wt[i]        = sqrt(pow(eff_ratio_staterr_1600_wt[i],2) + pow(eff_ratio_systerr_1600_wt[i],2));//combine in quadrature
+		eff_ratio_wt_1600[i]            = eff_1600_wt[i]/eff_JpsiLambda_wt[i];
+		eff_ratio_wt_SystErr_1600[i]    = eff_ratio_wt_1600[i]*sqrt(pow((eff_1600_wt_SystErr[i]/eff_1600_wt[i]),2)+pow((eff_JpsiLambda_wt_SystErr[i]/eff_JpsiLambda_wt[i]),2)); // stat err on ratio
+		eff_ratio_wt_StatErr_1600[i]    = 0.0;
+		eff_ratio_Err_1600_wt[i]        = sqrt(pow(eff_ratio_wt_StatErr_1600[i],2) + pow(eff_ratio_wt_SystErr_1600[i],2));//combine in quadrature
 
 		cout<<"***************************************"<<endl;
-		cout<<"Run "<<run<<" UNWEIGHTED /\(1600)/Lambda efficiency ratio = "<<eff_ratio[i]<<" +/- "<<eff_ratio_err[i]<<endl;
-		cout<<"Run "<<run<<" WEIGHTED /\(1600)/Lambda efficiency ratio   = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_err_wt[i]<<endl;
+		cout<<"Run "<<run<<" UNWEIGHTED /\(1600)/Lambda efficiency ratio = "<<eff_ratio_1600[i]<<" +/- "<<eff_ratio_Err_1600[i] <<endl;
+		cout<<"Run "<<run<<" WEIGHTED /\(1600)/Lambda efficiency ratio   = "<<eff_ratio_wt_1600[i]<<" +/- "<<eff_ratio_Err_1600_wt[i]<<endl;
 		cout<<"***************************************"<<endl;
 
 		//*******************************************************************
@@ -1108,6 +1292,12 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		mcTreeIn_nonZero_1600->SetBranchStatus("Lb_BKGCAT",1);
 		mcTreeIn_nonZero_1600->SetBranchStatus("gb_wts",1);
 		mcTreeIn_nonZero_1600->SetBranchStatus("wt_tau",1);
+
+		if(run == 1)
+		{
+			mcTreeIn_Zero_1600->SetBranchStatus("gb_wts_new",1);
+			mcTreeIn_nonZero_1600->SetBranchStatus("gb_wts_new",1);
+		}
 
 		TFile *tempFile_1600 = new TFile("tempFile_1600.root","RECREATE");
 
@@ -1162,198 +1352,206 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		cout<<"Done importing Jpsi Lst(1600) shape"<<endl;
 	}
 	//*******************************************************************
-
-	RooDataSet* ds_chic1[2];
-	RooKeysPdf* KEYS_chic1[2];
-
-	//****Get chiC1 Lambda efficiencies and shape from MC*******
-	const char* chiC1Path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/chiC1";
-
-	for(Int_t run = 1; run<=2; run++)
-	{
-		Int_t i = run-1;
-		TFile *mcFileIn_nonZero_chic1 = Open(Form("%s/run%d/chic1_cutoutks_LL_nonZeroTracks_noPID.root",
-		                                          chiC1Path,run));
-		TTree *mcTreeIn_nonZero_chic1 = (TTree*)mcFileIn_nonZero_chic1->Get("MyTuple");
-
-		TFile *mcFileIn_Zero_chic1    = Open(Form("%s/run%d/chic1_cutoutks_LL_ZeroTracks_noPID.root",
-		                                          chiC1Path,run));
-		TTree *mcTreeIn_Zero_chic1    = (TTree*)mcFileIn_Zero_chic1->Get("MyTuple");
-
-		mcTreeIn_nonZero_chic1->AddFriend("MyTuple",Form("%s/run%d/chic1_LL_FinalBDT%d_iso%d_%s_noPID.root",
-		                                                 chiC1Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-		mcTreeIn_Zero_chic1->AddFriend("MyTuple",Form("%s/run%d/chic1_zeroTracksLL_FinalBDT%d_noPID.root",
-		                                              chiC1Path,run,bdtConf_Zero[i]));
-		fstream genFile_chic1;
-		genFile_chic1.open((Form("../logs/mc/JpsiLambda/chiC1/run%d/gen_log.txt",run)));
-
-		genFile_chic1>>nGen_chic1[i]; // Get number of generated events
-
-		TFile *genWtsFile_chic1 = Open(Form("%s/run%d/RW/gbWeights_gen.root",
-		                                    chiC1Path,run));
-		TTree *genWtsTree_chic1 = (TTree*)genWtsFile_chic1->Get("MyTuple");
-
-		genWtsTree_chic1->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
-		                                           chiC1Path,run));
-
-		genWtsTree_chic1->Draw("gb_wts*wt_tau>>genWt_chic1","","goff");
-
-		TH1F *genWt_chic1 = (TH1F*)gDirectory->Get("genWt_chic1");
-		nGen_chic1_wt[i] = genWt_chic1->GetEntries()*genWt_chic1->GetMean();
-
-		//***** DONT HAVE GENERATOR EFFS FOR chic1 YET
-		// fstream genEffFile_chic1;
-		// genEffFile_chic1.open(Form("../logs/mc/JpsiLambda/chiC1/run%d/Generator_Effs_Combined.txt",run));
-		//
-		// genEffFile_chic1>>eff_chic1_gen[i]; // Get generator efficiency
-		// genEffFile_chic1>>eff_chic1_gen_err[i]; // and error on above
-		//
-		// cout<<"Run "<<run<<" chic1 Generator Effs = "<<eff_chic1_gen[i]*100
-		//     <<" % +/- "<<eff_chic1_gen_err[i]*100<<" %"<<endl;
-
-		//FOR NOW, EFF RATIO IS JUST RATIO OF RECO EFFS. ONCE I GET GENERATOR EFFS, I'LL PUT THEM IN
-
-		Int_t num_chic1 = mcTreeIn_nonZero_chic1->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
-		                  mcTreeIn_Zero_chic1->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));                                               //NOTE NO TM HERE
-
-		mcTreeIn_nonZero_chic1->Draw("gb_wts*wt_tau>>wt_chic1_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
-		mcTreeIn_Zero_chic1->Draw("gb_wts*wt_tau>>wt_chic1_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
-
-		TH1F *wt_chic1_nonZero = (TH1F*)gDirectory->Get("wt_chic1_nonZero");
-		TH1F *wt_chic1_Zero    = (TH1F*)gDirectory->Get("wt_chic1_Zero");
-
-		Int_t num_chic1_wt = (wt_chic1_nonZero->GetMean()*wt_chic1_nonZero->GetEntries()) +
-		                     (wt_chic1_Zero->GetMean()*wt_chic1_Zero->GetEntries());
-
-		eff_chic1_rec[i]     = num_chic1*1.0/nGen_chic1[i]; // Calc. reco. eff.
-		eff_chic1_rec_err[i] = sqrt(eff_chic1_rec[i]*(1-eff_chic1_rec[i])/nGen_chic1[i]); //stat error on recon. eff.
-
-		eff_chic1_rec_wt[i]     = num_chic1_wt*1.0/nGen_chic1_wt[i]; //Calc. weighted reco eff.
-		eff_chic1_rec_err_wt[i] = sqrt(eff_chic1_rec_wt[i]*(1-eff_chic1_rec_wt[i])/nGen_chic1_wt[i]); //statistical error on weighted recon. eff.
-
-		cout<<"Run "<<run<<" UNWEIGHTED chic1 Recons. Effs = "<<eff_chic1_rec[i]*100
-		    <<" % +/- "<<eff_chic1_rec_err[i]*100<<" %"<<endl;
-
-		cout<<"Run "<<run<<" WEIGHTED chic1 Recons. Effs = "<<eff_chic1_rec_wt[i]*100
-		    <<" % +/- "<<eff_chic1_rec_err_wt[i]*100<<" %"<<endl;
-
-		eff_chic1[i] = eff_chic1_rec[i]; //TEMPORARY
-		eff_chic1_staterr[i] = eff_chic1_rec_err[i]; //TEMPORARY
-
-		eff_chic1_wt[i]         = eff_chic1_rec_wt[i]; //TEMPORARY
-		eff_chic1_staterr_wt[i] = eff_chic1_rec_err_wt[i]; //TEMPORARY
-
-		// eff_chic1[i] = eff_chic1_gen[i] * eff_chic1_rec[i]; // Calc overall eff.
-		// eff_chic1_staterr[i] = eff_chic1[i]*sqrt(pow((eff_chic1_gen_err[i]/eff_chic1_gen[i]),2) +
-		//                                        pow((eff_chic1_rec_err[i]/eff_chic1_rec[i]),2));   // and stat. error on above
-
-		cout<<"************************************************"<<endl;
-		cout<<"Run "<<run<<" UNWEIGHTED Jpsi chic1 Eff = "<<eff_chic1[i]*100
-		    <<" % +/- "<<eff_chic1_staterr[i]*100<<" %"<<endl;
-		cout<<"Run "<<run<<" WEIGHTED Jpsi chic1 Eff = "<<eff_chic1_wt[i]*100
-		    <<" % +/- "<<eff_chic1_staterr_wt[i]*100<<" %"<<endl;
-		cout<<"************************************************"<<endl;
-
-		// eff_ratio[i]         = eff_chic1[i]/eff_Lambda[i]; // Calc eff ratio.
-
-		eff_ratio_chic1[i] = eff_chic1[i]/eff_Lambda_rec[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
-		// eff_ratio_staterr_chic1[i] = eff_ratio_chic1[i]*sqrt(pow((eff_chic1_staterr[i]/eff_chic1[i]),2)+pow((eff_Lambda_staterr[i]/eff_Lambda[i]),2)); // stat err on ratio
-		eff_ratio_staterr_chic1[i] = eff_ratio_chic1[i]*sqrt(pow((eff_chic1_staterr[i]/eff_chic1[i]),2)+pow((eff_Lambda_rec_err[i]/eff_Lambda_rec[i]),2)); // TEMPORARY
-		eff_ratio_systerr_chic1[i] = eff_ratio_chic1[i]*eff_ratio_syst_chic1;
-		eff_ratio_err_chic1[i] = sqrt(pow(eff_ratio_staterr_chic1[i],2) + pow(eff_ratio_systerr_chic1[i],2));//combine in quadrature
-
-		eff_ratio_chic1_wt[i]            = eff_chic1_wt[i]/eff_Lambda_rec_wt[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
-		// eff_ratio_staterr_chic1_wt[i] = eff_ratio_chic1_wt[i]*sqrt(pow((eff_chic1_staterr_wt[i]/eff_chic1_wt[i]),2)+pow((eff_Lambda_staterr_wt[i]/eff_Lambda_wt[i]),2)); // stat err on ratio
-		eff_ratio_staterr_chic1_wt[i]    = eff_ratio_chic1_wt[i]*sqrt(pow((eff_chic1_staterr_wt[i]/eff_chic1_wt[i]),2)+pow((eff_Lambda_rec_err_wt[i]/eff_Lambda_rec_wt[i]),2)); // TEMPORARY
-		eff_ratio_systerr_chic1_wt[i]    = eff_ratio_chic1_wt[i]*eff_ratio_syst_chic1;
-		eff_ratio_err_chic1_wt[i]        = sqrt(pow(eff_ratio_staterr_chic1_wt[i],2) + pow(eff_ratio_systerr_chic1_wt[i],2));//combine in quadrature
-
-		cout<<"***************************************"<<endl;
-		cout<<"Run "<<run<<" UNWEIGHTED chic1/Lambda efficiency ratio = "<<eff_ratio[i]<<" +/- "<<eff_ratio_err[i]<<endl;
-		cout<<"Run "<<run<<" WEIGHTED chic1/Lambda efficiency ratio   = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_err_wt[i]<<endl;
-		cout<<"***************************************"<<endl;
-		//*******************************************************************
-
-		//****************Shape*********************************************
-		cout<<"***************************************"<<endl;
-		cout<<"Get J/psi Lambda(chic1) shape from MC"<<endl;
-		cout<<"***************************************"<<endl;
-
-		mcTreeIn_Zero_chic1->SetBranchStatus("*",0);
-		mcTreeIn_Zero_chic1->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		mcTreeIn_Zero_chic1->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
-		mcTreeIn_Zero_chic1->SetBranchStatus("Lb_BKGCAT",1);
-		mcTreeIn_Zero_chic1->SetBranchStatus("gb_wts",1);
-		mcTreeIn_Zero_chic1->SetBranchStatus("wt_tau",1);
-
-		mcTreeIn_nonZero_chic1->SetBranchStatus("*",0);
-		mcTreeIn_nonZero_chic1->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		mcTreeIn_nonZero_chic1->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
-		mcTreeIn_nonZero_chic1->SetBranchStatus("Lb_BKGCAT",1);
-		mcTreeIn_nonZero_chic1->SetBranchStatus("gb_wts",1);
-		mcTreeIn_nonZero_chic1->SetBranchStatus("wt_tau",1);
-
-		TFile *tempFile_chic1 = new TFile("tempFile_chic1.root","RECREATE");
-
-		TTree* mcTreeIn_Zero_chic1_cut    = (TTree*)mcTreeIn_Zero_chic1->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TRUTH MATCHING HERE!
-		TTree* mcTreeIn_nonZero_chic1_cut = (TTree*)mcTreeIn_nonZero_chic1->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//NOTE NO TRUTH MATCHING HERE!
-
-		TList *list_chic1 = new TList;
-		list_chic1->Add(mcTreeIn_Zero_chic1_cut);
-		list_chic1->Add(mcTreeIn_nonZero_chic1_cut);
-
-		TTree *combTree_chic1 = TTree::MergeTrees(list_chic1);
-		combTree_chic1->SetName("combTree_chic1");
-
-		ds_chic1[i] = new RooDataSet("ds_chic1","ds_chic1",combTree_chic1,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"gb_wts*wt_tau");
-		ds_chic1[i]->Print();
-
-		KEYS_chic1[i] = new RooKeysPdf(Form("chic1_Run%d",run),Form("chic1_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_chic1[i]),RooKeysPdf::MirrorBoth,1);
-
-		// mcTreeIn_nonZero_chic1->Draw(Form("Lb_DTF_M_JpsiLConstr>>hchic1_nonZero%d(%d,%d,%d)",run,nbins,low,high),
-		//                            Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");        //Not TRUTH MATCHING HERE!
-		//
-		// mcTreeIn_Zero_chic1->Draw(Form("Lb_DTF_M_JpsiLConstr>>hchic1_Zero%d(%d,%d,%d)",run,nbins,low,high),
-		//                         Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");        //Not TRUTH MATCHING HERE!
-		//
-		// TH1D *hchic1_nonZero = (TH1D*)gDirectory->Get(Form("hchic1_nonZero%d",run));
-		// TH1D *hchic1_Zero    = (TH1D*)gDirectory->Get(Form("hchic1_Zero%d",run));
-		// TH1D *hchic1         = new TH1D(Form("hchic1%d",run),"",nbins,low,high);
-		//
-		// hchic1->Add(hchic1_nonZero,hchic1_Zero);
-		// TH1D *hchic1_smooth  = (TH1D*)hchic1->Clone(Form("hchic1_smooth%d",run));
-		// hchic1_smooth->Smooth(2);
-		//
-		// RooDataHist *ds_chic1        = new RooDataHist(Form("ds_chic1%d",run),Form("ds_chic1%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),hchic1);
-		// RooDataHist *ds_chic1_smooth = new RooDataHist(Form("ds_chic1_smooth%d",run),Form("ds_chic1_smooth%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),hchic1_smooth);
-		//
-		// ds_chic1->Print();
-		//
-		// RooHistPdf chic1shape(Form("chic1shape%d",run),Form("chic1shape%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_chic1,0);
-		// SIG[i] = new RooHistPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_chic1_smooth,0);
-
-		RooPlot *framechic1 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
-		framechic1->SetTitle("#chi_{C1} #Lambda");
-		// ds_chic1->plotOn(framechic1,Name("chic1data"));
-		ds_chic1[i]->plotOn(framechic1,Name("chiC1data"));
-		// chic1shape.plotOn(framechic1,Name("chic1fit"),LineColor(kBlue));
-		(*(KEYS_chic1[i])).plotOn(framechic1,Name("chiC1fitsmooth"),LineColor(kRed),LineStyle(kDashed));
-
-		TCanvas *cchic1 = new TCanvas(Form("chic1_Run%d",run),Form("chic1_Run%d",run));
-		framechic1->Draw();
-		w.import(*(KEYS_chic1[i]));
-
-		cout<<"Done importing chiC1 Lambda shape"<<endl;
-	}
+	//
+	// RooDataSet* ds_chic1[2];
+	// RooKeysPdf* KEYS_chic1[2];
+	//
+	// //****Get chiC1 Lambda efficiencies and shape from MC*******
+	// const char* chiC1Path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/chiC1";
+	//
+	// for(Int_t run = 1; run<=2; run++)
+	// {
+	//      Int_t i = run-1;
+	//      TFile *mcFileIn_nonZero_chic1 = Open(Form("%s/run%d/chic1_cutoutks_LL_nonZeroTracks_noPID.root",
+	//                                                chiC1Path,run));
+	//      TTree *mcTreeIn_nonZero_chic1 = (TTree*)mcFileIn_nonZero_chic1->Get("MyTuple");
+	//
+	//      TFile *mcFileIn_Zero_chic1    = Open(Form("%s/run%d/chic1_cutoutks_LL_ZeroTracks_noPID.root",
+	//                                                chiC1Path,run));
+	//      TTree *mcTreeIn_Zero_chic1    = (TTree*)mcFileIn_Zero_chic1->Get("MyTuple");
+	//
+	//      mcTreeIn_nonZero_chic1->AddFriend("MyTuple",Form("%s/run%d/chic1_LL_FinalBDT%d_iso%d_%s_noPID.root",
+	//                                                       chiC1Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+	//      mcTreeIn_Zero_chic1->AddFriend("MyTuple",Form("%s/run%d/chic1_zeroTracksLL_FinalBDT%d_noPID.root",
+	//                                                    chiC1Path,run,bdtConf_Zero[i]));
+	//      fstream genFile_chic1;
+	//      genFile_chic1.open((Form("../logs/mc/JpsiLambda/chiC1/run%d/gen_log.txt",run)));
+	//
+	//      genFile_chic1>>nGen_chic1[i]; // Get number of generated events
+	//
+	//      TFile *genWtsFile_chic1 = Open(Form("%s/run%d/RW/gbWeights_gen.root",
+	//                                          chiC1Path,run));
+	//      TTree *genWtsTree_chic1 = (TTree*)genWtsFile_chic1->Get("MyTuple");
+	//
+	//      genWtsTree_chic1->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
+	//                                                 chiC1Path,run));
+	//
+	//      genWtsTree_chic1->Draw("gb_wts*wt_tau>>genWt_chic1","","goff");
+	//
+	//      TH1F *genWt_chic1 = (TH1F*)gDirectory->Get("genWt_chic1");
+	//      nGen_chic1_wt[i] = genWt_chic1->GetEntries()*genWt_chic1->GetMean();
+	//
+	//      //***** DONT HAVE GENERATOR EFFS FOR chic1 YET
+	//      // fstream genEffFile_chic1;
+	//      // genEffFile_chic1.open(Form("../logs/mc/JpsiLambda/chiC1/run%d/Generator_Effs_Combined.txt",run));
+	//      //
+	//      // genEffFile_chic1>>eff_chic1_gen[i]; // Get generator efficiency
+	//      // genEffFile_chic1>>eff_chic1_gen_err[i]; // and error on above
+	//      //
+	//      // cout<<"Run "<<run<<" chic1 Generator Effs = "<<eff_chic1_gen[i]*100
+	//      //     <<" % +/- "<<eff_chic1_gen_err[i]*100<<" %"<<endl;
+	//
+	//      //FOR NOW, EFF RATIO IS JUST RATIO OF RECO EFFS. ONCE I GET GENERATOR EFFS, I'LL PUT THEM IN
+	//
+	//      Int_t num_chic1 = mcTreeIn_nonZero_chic1->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
+	//                        mcTreeIn_Zero_chic1->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));                                               //NOTE NO TM HERE
+	//
+	//      mcTreeIn_nonZero_chic1->Draw("gb_wts*wt_tau>>wt_chic1_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
+	//      mcTreeIn_Zero_chic1->Draw("gb_wts*wt_tau>>wt_chic1_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+	//
+	//      TH1F *wt_chic1_nonZero = (TH1F*)gDirectory->Get("wt_chic1_nonZero");
+	//      TH1F *wt_chic1_Zero    = (TH1F*)gDirectory->Get("wt_chic1_Zero");
+	//
+	//      Int_t num_chic1_wt = (wt_chic1_nonZero->GetMean()*wt_chic1_nonZero->GetEntries()) +
+	//                           (wt_chic1_Zero->GetMean()*wt_chic1_Zero->GetEntries());
+	//
+	//      eff_chic1_rec[i]     = num_chic1*1.0/nGen_chic1[i]; // Calc. reco. eff.
+	//      eff_chic1_rec_err[i] = sqrt(eff_chic1_rec[i]*(1-eff_chic1_rec[i])/nGen_chic1[i]); //stat error on recon. eff.
+	//
+	//      eff_chic1_rec_wt[i]     = num_chic1_wt*1.0/nGen_chic1_wt[i]; //Calc. weighted reco eff.
+	//      eff_chic1_rec_err_wt[i] = sqrt(eff_chic1_rec_wt[i]*(1-eff_chic1_rec_wt[i])/nGen_chic1_wt[i]); //statistical error on weighted recon. eff.
+	//
+	//      cout<<"Run "<<run<<" UNWEIGHTED chic1 Recons. Effs = "<<eff_chic1_rec[i]*100
+	//          <<" % +/- "<<eff_chic1_rec_err[i]*100<<" %"<<endl;
+	//
+	//      cout<<"Run "<<run<<" WEIGHTED chic1 Recons. Effs = "<<eff_chic1_rec_wt[i]*100
+	//          <<" % +/- "<<eff_chic1_rec_err_wt[i]*100<<" %"<<endl;
+	//
+	//      eff_chic1[i] = eff_chic1_rec[i]; //TEMPORARY
+	//      eff_chic1_staterr[i] = eff_chic1_rec_err[i]; //TEMPORARY
+	//
+	//      eff_chic1_wt[i]         = eff_chic1_rec_wt[i]; //TEMPORARY
+	//      eff_chic1_staterr_wt[i] = eff_chic1_rec_err_wt[i]; //TEMPORARY
+	//
+	//      // eff_chic1[i] = eff_chic1_gen[i] * eff_chic1_rec[i]; // Calc overall eff.
+	//      // eff_chic1_staterr[i] = eff_chic1[i]*sqrt(pow((eff_chic1_gen_err[i]/eff_chic1_gen[i]),2) +
+	//      //                                        pow((eff_chic1_rec_err[i]/eff_chic1_rec[i]),2));   // and stat. error on above
+	//
+	//      cout<<"************************************************"<<endl;
+	//      cout<<"Run "<<run<<" UNWEIGHTED Jpsi chic1 Eff = "<<eff_chic1[i]*100
+	//          <<" % +/- "<<eff_chic1_staterr[i]*100<<" %"<<endl;
+	//      cout<<"Run "<<run<<" WEIGHTED Jpsi chic1 Eff = "<<eff_chic1_wt[i]*100
+	//          <<" % +/- "<<eff_chic1_staterr_wt[i]*100<<" %"<<endl;
+	//      cout<<"************************************************"<<endl;
+	//
+	//      // eff_ratio[i]         = eff_chic1[i]/eff_JpsiLambda[i]; // Calc eff ratio.
+	//
+	//      eff_ratio_chic1[i] = eff_chic1[i]/eff_Lambda_rec[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
+	//      // eff_ratio_StatErr_chic1[i] = eff_ratio_chic1[i]*sqrt(pow((eff_chic1_staterr[i]/eff_chic1[i]),2)+pow((eff_JpsiLambda_SystErr[i]/eff_JpsiLambda[i]),2)); // stat err on ratio
+	//      eff_ratio_StatErr_chic1[i] = eff_ratio_chic1[i]*sqrt(pow((eff_chic1_staterr[i]/eff_chic1[i]),2)+pow((eff_Lambda_rec_err[i]/eff_Lambda_rec[i]),2)); // TEMPORARY
+	//      eff_ratio_SystErr_chic1[i] = eff_ratio_chic1[i]*eff_ratio_syst_chic1;
+	//      eff_ratio_Err_chic1[i] = sqrt(pow(eff_ratio_StatErr_chic1[i],2) + pow(eff_ratio_SystErr_chic1[i],2));//combine in quadrature
+	//
+	//      eff_ratio_chic1_wt[i]            = eff_chic1_wt[i]/eff_Lambda_rec_wt[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
+	//      // eff_ratio_StatErr_chic1_wt[i] = eff_ratio_chic1_wt[i]*sqrt(pow((eff_chic1_staterr_wt[i]/eff_chic1_wt[i]),2)+pow((eff_JpsiLambda_wt_SystErr[i]/eff_JpsiLambda_wt[i]),2)); // stat err on ratio
+	//      eff_ratio_StatErr_chic1_wt[i]    = eff_ratio_chic1_wt[i]*sqrt(pow((eff_chic1_staterr_wt[i]/eff_chic1_wt[i]),2)+pow((eff_Lambda_rec_err_wt[i]/eff_Lambda_rec_wt[i]),2)); // TEMPORARY
+	//      eff_ratio_SystErr_chic1_wt[i]    = eff_ratio_chic1_wt[i]*eff_ratio_syst_chic1;
+	//      eff_ratio_Err_chic1_wt[i]        = sqrt(pow(eff_ratio_StatErr_chic1_wt[i],2) + pow(eff_ratio_SystErr_chic1_wt[i],2));//combine in quadrature
+	//
+	//      cout<<"***************************************"<<endl;
+	//      cout<<"Run "<<run<<" UNWEIGHTED chic1/Lambda efficiency ratio = "<<eff_ratio[i]<<" +/- "<<eff_ratio_Err[i]<<endl;
+	//      cout<<"Run "<<run<<" WEIGHTED chic1/Lambda efficiency ratio   = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_Err_wt[i]<<endl;
+	//      cout<<"***************************************"<<endl;
+	//      //*******************************************************************
+	//
+	//      //****************Shape*********************************************
+	//      cout<<"***************************************"<<endl;
+	//      cout<<"Get J/psi Lambda(chic1) shape from MC"<<endl;
+	//      cout<<"***************************************"<<endl;
+	//
+	//      mcTreeIn_Zero_chic1->SetBranchStatus("*",0);
+	//      mcTreeIn_Zero_chic1->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+	//      mcTreeIn_Zero_chic1->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+	//      mcTreeIn_Zero_chic1->SetBranchStatus("Lb_BKGCAT",1);
+	//      mcTreeIn_Zero_chic1->SetBranchStatus("gb_wts",1);
+	//      mcTreeIn_Zero_chic1->SetBranchStatus("wt_tau",1);
+	//
+	//      mcTreeIn_nonZero_chic1->SetBranchStatus("*",0);
+	//      mcTreeIn_nonZero_chic1->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+	//      mcTreeIn_nonZero_chic1->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+	//      mcTreeIn_nonZero_chic1->SetBranchStatus("Lb_BKGCAT",1);
+	//      mcTreeIn_nonZero_chic1->SetBranchStatus("gb_wts",1);
+	//      mcTreeIn_nonZero_chic1->SetBranchStatus("wt_tau",1);
+	//
+	//      TFile *tempFile_chic1 = new TFile("tempFile_chic1.root","RECREATE");
+	//
+	//      TTree* mcTreeIn_Zero_chic1_cut    = (TTree*)mcTreeIn_Zero_chic1->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TRUTH MATCHING HERE!
+	//      TTree* mcTreeIn_nonZero_chic1_cut = (TTree*)mcTreeIn_nonZero_chic1->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//NOTE NO TRUTH MATCHING HERE!
+	//
+	//      TList *list_chic1 = new TList;
+	//      list_chic1->Add(mcTreeIn_Zero_chic1_cut);
+	//      list_chic1->Add(mcTreeIn_nonZero_chic1_cut);
+	//
+	//      TTree *combTree_chic1 = TTree::MergeTrees(list_chic1);
+	//      combTree_chic1->SetName("combTree_chic1");
+	//
+	//      ds_chic1[i] = new RooDataSet("ds_chic1","ds_chic1",combTree_chic1,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"gb_wts*wt_tau");
+	//      ds_chic1[i]->Print();
+	//
+	//      KEYS_chic1[i] = new RooKeysPdf(Form("chic1_Run%d",run),Form("chic1_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_chic1[i]),RooKeysPdf::MirrorBoth,1);
+	//
+	//      // mcTreeIn_nonZero_chic1->Draw(Form("Lb_DTF_M_JpsiLConstr>>hchic1_nonZero%d(%d,%d,%d)",run,nbins,low,high),
+	//      //                            Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");        //Not TRUTH MATCHING HERE!
+	//      //
+	//      // mcTreeIn_Zero_chic1->Draw(Form("Lb_DTF_M_JpsiLConstr>>hchic1_Zero%d(%d,%d,%d)",run,nbins,low,high),
+	//      //                         Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");        //Not TRUTH MATCHING HERE!
+	//      //
+	//      // TH1D *hchic1_nonZero = (TH1D*)gDirectory->Get(Form("hchic1_nonZero%d",run));
+	//      // TH1D *hchic1_Zero    = (TH1D*)gDirectory->Get(Form("hchic1_Zero%d",run));
+	//      // TH1D *hchic1         = new TH1D(Form("hchic1%d",run),"",nbins,low,high);
+	//      //
+	//      // hchic1->Add(hchic1_nonZero,hchic1_Zero);
+	//      // TH1D *hchic1_smooth  = (TH1D*)hchic1->Clone(Form("hchic1_smooth%d",run));
+	//      // hchic1_smooth->Smooth(2);
+	//      //
+	//      // RooDataHist *ds_chic1        = new RooDataHist(Form("ds_chic1%d",run),Form("ds_chic1%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),hchic1);
+	//      // RooDataHist *ds_chic1_smooth = new RooDataHist(Form("ds_chic1_smooth%d",run),Form("ds_chic1_smooth%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),hchic1_smooth);
+	//      //
+	//      // ds_chic1->Print();
+	//      //
+	//      // RooHistPdf chic1shape(Form("chic1shape%d",run),Form("chic1shape%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_chic1,0);
+	//      // SIG[i] = new RooHistPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_chic1_smooth,0);
+	//
+	//      RooPlot *framechic1 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+	//      framechic1->SetTitle("#chi_{C1} #Lambda");
+	//      // ds_chic1->plotOn(framechic1,Name("chic1data"));
+	//      ds_chic1[i]->plotOn(framechic1,Name("chiC1data"));
+	//      // chic1shape.plotOn(framechic1,Name("chic1fit"),LineColor(kBlue));
+	//      (*(KEYS_chic1[i])).plotOn(framechic1,Name("chiC1fitsmooth"),LineColor(kRed),LineStyle(kDashed));
+	//
+	//      TCanvas *cchic1 = new TCanvas(Form("chic1_Run%d",run),Form("chic1_Run%d",run));
+	//      framechic1->Draw();
+	//      w.import(*(KEYS_chic1[i]));
+	//
+	//      cout<<"Done importing chiC1 Lambda shape"<<endl;
+	// }
 	//*******************************************************************
 
-	RooHistPdf* XIB[2];
-	RooKeysPdf* XIB_KEYS[2];
 	RooDataSet* ds_xi[2];
+	RooDataSet* ds_xi_wt[2];
+	RooKeysPdf* XIB_KEYS[2];
+
+	Double_t xibCentral[2], xibErr[2], xibLow[2], xibHigh[2];
+	xibLow[0] = 0;
+	xibLow[1] = 0;
+
+	xibHigh[0] = 0;
+	xibHigh[1] = 0;
 
 	//******************Get shape from Xib background********************
 	// RooRealVar xibmass("Lb_DTF_M_JpsiLConstr","xibmass",5200.,5740.);
 	const char* xibPath = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi";
+	RooAbsReal* xibInt[2];
 
 	for(Int_t run = 1; run<=2; run++)
 	{
@@ -1373,12 +1571,20 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		treein_xi_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
 		treein_xi_Zero->SetBranchStatus("Lb_BKGCAT",1);
 		treein_xi_Zero->SetBranchStatus("gb_wts",1);
+		if(run == 1)
+		{
+			treein_xi_Zero->SetBranchStatus("gb_wts_new",1);
+		}
 
 		treein_xi_nonZero->SetBranchStatus("*",0);
 		treein_xi_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 		treein_xi_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
 		treein_xi_nonZero->SetBranchStatus("Lb_BKGCAT",1);
 		treein_xi_nonZero->SetBranchStatus("gb_wts",1);
+		if(run == 1)
+		{
+			treein_xi_Zero->SetBranchStatus("gb_wts_new",1);
+		}
 
 		TFile *tempFile = new TFile("tempFile.root","RECREATE");
 
@@ -1392,8 +1598,21 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		TTree *combTree = TTree::MergeTrees(list);
 		combTree->SetName("combTree");
 
-		ds_xi[i] = new RooDataSet("ds_xi","ds_xi",combTree,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"gb_wts");
+		RooRealVar *gbWtVar = nullptr;
+
+		if(run == 1)
+		{
+			gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
+		}
+		else if(run == 2)
+		{
+			gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
+		}
+		ds_xi[i] = new RooDataSet("ds_xi","ds_xi",combTree,RooArgSet(*myVar,*gbWtVar));
 		ds_xi[i]->Print();
+
+		ds_xi_wt[i] = new RooDataSet("ds_xi_wt","ds_xi_wt",RooArgSet(*myVar,*gbWtVar),Import(*(ds_xi[i])),WeightVar(*gbWtVar));
+		ds_xi_wt[i]->Print();
 		// treein_xi_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hxib_nonZero%d(%d,%d,%d)",run,nbins,low,high),
 		//                         Form("Lb_BKGCAT==40 && BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");//TRUTH MATCHING HERE
 		// treein_xi_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hxib_Zero%d(%d,%d,%d)",run,nbins,low,high),
@@ -1412,12 +1631,13 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		//
 		// ds_xib_smooth->Print();
 
-		XIB_KEYS[i] = new RooKeysPdf(Form("XIB%d",run),Form("XIB%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_xi[i]),RooKeysPdf::NoMirror);
+		XIB_KEYS[i] = new RooKeysPdf(Form("XIB%d",run),Form("XIB%d",run),*myVar,*(ds_xi_wt[i]),RooKeysPdf::NoMirror);
 		// XIB[i] = new RooHistPdf(Form("XIB%d",run),Form("XIB%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_xib_smooth,0);
 
 		RooPlot *framexib = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
 		framexib->SetTitle("J/#psi #Xi");
-		ds_xi[i]->plotOn(framexib,Name("xibdata"));
+		ds_xi[i]->plotOn(framexib,Name("xibdata_nowt"),LineColor(kGreen));
+		ds_xi_wt[i]->plotOn(framexib,Name("xibdata"),LineColor(kBlack));
 		// ds_xib->plotOn(framexib,Name("xibdata"));
 		// (*(XIB[i])).plotOn(framexib,Name("xibfitsmooth"),LineColor(kRed),LineStyle(kDashed));
 		(*(XIB_KEYS[i])).plotOn(framexib,Name("xibfitsmooth"),LineColor(kRed),LineStyle(kDashed));
@@ -1430,11 +1650,26 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		w.import(*(XIB_KEYS[i]));
 
 		cout<<"Done importing Xib shape"<<endl;
+
+		xibInt[i] = XIB_KEYS[i]->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
+		window_JpsiXi[i] = xibInt[i]->getValV();
+
+		xibCentral[i] = XibNorm_wt[i];
+		xibErr[i]     = sqrt(pow(XibNorm_wt_StatErr[i],2)+pow(XibNorm_wt_SystErr[i],2));
+
+		cout<<"************************************************"<<endl;
+		cout<<"The UNWEIGHTED Xib normalization inside signal region for Run "<<run
+		    <<" is "<<XibNorm[i]<<" +/- "<<XibNorm_StatErr[i]
+		    <<" +/- "<<XibNorm_SystErr[i]<<endl;
+		cout<<"The WEIGHTED Xib normalization inside signal region for Run "<<run
+		    <<" is "<<XibNorm_wt[i]<<" +/- "<<XibNorm_wt_StatErr[i]
+		    <<" +/- "<<XibNorm_wt_SystErr[i]<<endl;
+		cout<<"************************************************"<<endl;
+
 	}
 	//*******************************************************************
 
 	//*********Double Crystal Ball signal shape for Lambda_b0************
-
 	// w.factory("RooCBShape::Lb1_Run1(Lb_DTF_M_JpsiLConstr,mean_Run1[5619.6,5619,5621],"
 	//           "sigma_Run1[10.,0.,20.], alpha1_Run1[1.028, 0.8,1.3], 10.0)" );
 	// w.factory("RooCBShape::Lb2_Run1(Lb_DTF_M_JpsiLConstr,mean_Run1,sigma_Run1,alpha2_Run1[-1.097,-1.4,-0.7], 10.0)");
@@ -1446,8 +1681,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	// w.factory("SUM::Lb_Run2(0.5*Lb1_Run2 , 0.5*Lb2_Run2)");
 	//*******************************************************************
 
-	//*******************************************************************
-
 	//*********Hypatia signal shape for Lambda_b0************************
 
 	// w.factory("RooHypatia2::Lb_Run1(Lb_DTF_M_JpsiLConstr,lambda_Run1[-2.0,-4.0,0.0],0,0,"
@@ -1455,8 +1688,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	//           "2 ,a2_Run1[2.0,1.0,3.0], 2)");
 
 	w.factory("RooHypatia2::Lb_Run1(Lb_DTF_M_JpsiLConstr,lambda_Run1[-2.0,-4.0,0.0],0,0,"
-	          "sigma_Run1[10.,1.,20.], mean_Run1[5619.6,5619,5621], a1_Run1[1.7,1.0,4.0],"
-	          "2 ,a2_Run1[2.0,1.0,3.0], 2)");
+	          "sigma_Run1[10.,1.,20.], mean_Run1[5619.6,5619,5621], a1_Run1[1.7,1.0,3.0],"
+	          "2 ,a2_Run1[3.0,1.0,4.0], 2)");
 
 	w.factory("RooHypatia2::Lb_Run2(Lb_DTF_M_JpsiLConstr,lambda_Run2[-2.5,-4.0,0.0],0,0,"
 	          "sigma_Run2[10.,1.,20.], mean_Run2[5619.6,5619,5621], a1_Run2[1.5,1.0,3.0],"
@@ -1470,8 +1703,11 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	if(bkgType == 0)
 	{
 		cout<<"*****UING EXPONENTIAL BKG SHAPE*****"<<endl;
-		w.factory("Exponential::Bkg_Run1(Lb_DTF_M_JpsiLConstr,tau_Run1[-0.001,-0.01,-0.0000001])");
-		w.factory("Exponential::Bkg_Run2(Lb_DTF_M_JpsiLConstr,tau_Run2[-0.001,-0.01,-0.0000001])");
+		w.factory("Exponential::Bkg_Run1(Lb_DTF_M_JpsiLConstr,expr('-1*pow(10,slope_Run1)',slope_Run1[-6.0,-11.0,-2.0]))");
+		w.factory("Exponential::Bkg_Run2(Lb_DTF_M_JpsiLConstr,expr('-1*pow(10,slope_Run2)',slope_Run2[-6.0,-11.0,-2.0]))");
+
+		w.var("slope_Run1")->setError(0.25);
+		w.var("slope_Run2")->setError(0.25);
 	}
 	else if(bkgType == 1)
 	{
@@ -1514,7 +1750,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	TH1D *myhist[2];
 
 	//********Data for Fit to simulation*********************************
-
 	// TH1D *mcHist[2];
 	// RooDataHist *mc_ds[2];
 	// Int_t mcNentries[2];
@@ -1647,58 +1882,58 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 
 	//**************** Sigma/Lb Efficiency Ratio*************************
-	w.factory(Form("eff_ratio1[%f,0.,1.]",eff_ratio_wt[0])); //eff(Lb -> Jpsi Sigma)/eff(Lb -> Jpsi Lambda)
-	w.factory(Form("eff_ratio2[%f,0.,1.]",eff_ratio_wt[1]));
+	w.factory(Form("eff_ratio1[%f,0.,5.]",eff_ratio_wt[0])); //eff(Lb -> Jpsi Lambda)/eff(Lb -> Jpsi Sigma)
+	w.factory(Form("eff_ratio2[%f,0.,5.]",eff_ratio_wt[1]));
 
-	w.factory(Form("Gaussian::eff_ratio_constraint1(geff_ratio1[%f,0,1],eff_ratio1,%f)",eff_ratio_wt[0],eff_ratio_err_wt[0]));
-	w.factory(Form("Gaussian::eff_ratio_constraint2(geff_ratio2[%f,0,1],eff_ratio2,%f)",eff_ratio_wt[1],eff_ratio_err_wt[1]));
+	w.factory(Form("Gaussian::eff_ratio_constraint1(geff_ratio1[%f,0,5],eff_ratio1,%f)",eff_ratio_wt[0],eff_ratio_wt_SystErr[0]));
+	w.factory(Form("Gaussian::eff_ratio_constraint2(geff_ratio2[%f,0,5],eff_ratio2,%f)",eff_ratio_wt[1],eff_ratio_wt_SystErr[1]));
 
 	w.var("geff_ratio1")->setConstant();
 	w.var("geff_ratio2")->setConstant();
 	//*******************************************************************
 
 	//**************** 1405/Lb Efficiency Ratio**************************
-	w.factory(Form("eff_ratio_1405_1[%f,0.,1.]",eff_ratio_1405_wt[0])); //eff(Lb -> Jpsi Lambda(1405))/eff(Lb -> Jpsi Lambda)
-	w.factory(Form("eff_ratio_1405_2[%f,0.,1.]",eff_ratio_1405_wt[1]));
+	w.factory(Form("eff_ratio_1405_1[%f,0.,5.]",eff_ratio_wt_1405[0])); //eff(Lb -> Jpsi Lambda(1405))/eff(Lb -> Jpsi Lambda)
+	w.factory(Form("eff_ratio_1405_2[%f,0.,5.]",eff_ratio_wt_1405[1]));
 
-	w.factory(Form("Gaussian::eff_ratio_1405_constraint1(geff_ratio_1405_1[%f,0,1],eff_ratio_1405_1,%f)",eff_ratio_1405_wt[0],eff_ratio_err_1405_wt[0]));
-	w.factory(Form("Gaussian::eff_ratio_1405_constraint2(geff_ratio_1405_2[%f,0,1],eff_ratio_1405_2,%f)",eff_ratio_1405_wt[1],eff_ratio_err_1405_wt[1]));
+	w.factory(Form("Gaussian::eff_ratio_1405_constraint1(geff_ratio_1405_1[%f,0,5],eff_ratio_1405_1,%f)",eff_ratio_wt_1405[0],eff_ratio_Err_1405_wt[0]));
+	w.factory(Form("Gaussian::eff_ratio_1405_constraint2(geff_ratio_1405_2[%f,0,5],eff_ratio_1405_2,%f)",eff_ratio_wt_1405[1],eff_ratio_Err_1405_wt[1]));
 
 	w.var("geff_ratio_1405_1")->setConstant();
 	w.var("geff_ratio_1405_2")->setConstant();
 	//*******************************************************************
 
 	//**************** 1520/Lb Efficiency Ratio**************************
-	w.factory(Form("eff_ratio_1520_1[%f,0.,1.]",eff_ratio_1520_wt[0])); //eff(Lb -> Jpsi Lambda(1520))/eff(Lb -> Jpsi Lambda)
-	w.factory(Form("eff_ratio_1520_2[%f,0.,1.]",eff_ratio_1520_wt[1]));
+	w.factory(Form("eff_ratio_1520_1[%f,0.,5.]",eff_ratio_wt_1520[0])); //eff(Lb -> Jpsi Lambda(1520))/eff(Lb -> Jpsi Lambda)
+	w.factory(Form("eff_ratio_1520_2[%f,0.,5.]",eff_ratio_wt_1520[1]));
 
-	w.factory(Form("Gaussian::eff_ratio_1520_constraint1(geff_ratio_1520_1[%f,0,1],eff_ratio_1520_1,%f)",eff_ratio_1520_wt[0],eff_ratio_err_1520_wt[0]));
-	w.factory(Form("Gaussian::eff_ratio_1520_constraint2(geff_ratio_1520_2[%f,0,1],eff_ratio_1520_2,%f)",eff_ratio_1520_wt[1],eff_ratio_err_1520_wt[1]));
+	w.factory(Form("Gaussian::eff_ratio_1520_constraint1(geff_ratio_1520_1[%f,0,5],eff_ratio_1520_1,%f)",eff_ratio_wt_1520[0],eff_ratio_Err_1520_wt[0]));
+	w.factory(Form("Gaussian::eff_ratio_1520_constraint2(geff_ratio_1520_2[%f,0,5],eff_ratio_1520_2,%f)",eff_ratio_wt_1520[1],eff_ratio_Err_1520_wt[1]));
 
 	w.var("geff_ratio_1520_1")->setConstant();
 	w.var("geff_ratio_1520_2")->setConstant();
 	//*******************************************************************
 
 	//**************** 1600/Lb Efficiency Ratio**************************
-	w.factory(Form("eff_ratio_1600_1[%f,0.,1.]",eff_ratio_1600_wt[0])); //eff(Lb -> Jpsi Lambda(1600))/eff(Lb -> Jpsi Lambda)
-	w.factory(Form("eff_ratio_1600_2[%f,0.,1.]",eff_ratio_1600_wt[1]));
+	w.factory(Form("eff_ratio_1600_1[%f,0.,5.]",eff_ratio_wt_1600[0])); //eff(Lb -> Jpsi Lambda(1600))/eff(Lb -> Jpsi Lambda)
+	w.factory(Form("eff_ratio_1600_2[%f,0.,5.]",eff_ratio_wt_1600[1]));
 
-	w.factory(Form("Gaussian::eff_ratio_1600_constraint1(geff_ratio_1600_1[%f,0,1],eff_ratio_1600_1,%f)",eff_ratio_1600_wt[0],eff_ratio_err_1600_wt[0]));
-	w.factory(Form("Gaussian::eff_ratio_1600_constraint2(geff_ratio_1600_2[%f,0,1],eff_ratio_1600_2,%f)",eff_ratio_1600_wt[1],eff_ratio_err_1600_wt[1]));
+	w.factory(Form("Gaussian::eff_ratio_1600_constraint1(geff_ratio_1600_1[%f,0,5],eff_ratio_1600_1,%f)",eff_ratio_wt_1600[0],eff_ratio_Err_1600_wt[0]));
+	w.factory(Form("Gaussian::eff_ratio_1600_constraint2(geff_ratio_1600_2[%f,0,5],eff_ratio_1600_2,%f)",eff_ratio_wt_1600[1],eff_ratio_Err_1600_wt[1]));
 
 	w.var("geff_ratio_1600_1")->setConstant();
 	w.var("geff_ratio_1600_2")->setConstant();
 	//*******************************************************************
 
 	//**************** chic1/Lb Efficiency Ratio**************************
-	w.factory(Form("eff_ratio_chic1_1[%f,0.,1.]",eff_ratio_chic1_wt[0])); //eff(Lb -> Jpsi Lambda(chic1))/eff(Lb -> Jpsi Lambda)
-	w.factory(Form("eff_ratio_chic1_2[%f,0.,1.]",eff_ratio_chic1_wt[1]));
-
-	w.factory(Form("Gaussian::eff_ratio_chic1_constraint1(geff_ratio_chic1_1[%f,0,1],eff_ratio_chic1_1,%f)",eff_ratio_chic1_wt[0],eff_ratio_err_chic1_wt[0]));
-	w.factory(Form("Gaussian::eff_ratio_chic1_constraint2(geff_ratio_chic1_2[%f,0,1],eff_ratio_chic1_2,%f)",eff_ratio_chic1_wt[1],eff_ratio_err_chic1_wt[1]));
-
-	w.var("geff_ratio_chic1_1")->setConstant();
-	w.var("geff_ratio_chic1_2")->setConstant();
+	// w.factory(Form("eff_ratio_chic1_1[%f,0.,1.]",eff_ratio_chic1_wt[0])); //eff(Lb -> Jpsi Lambda(chic1))/eff(Lb -> Jpsi Lambda)
+	// w.factory(Form("eff_ratio_chic1_2[%f,0.,1.]",eff_ratio_chic1_wt[1]));
+	//
+	// w.factory(Form("Gaussian::eff_ratio_chic1_constraint1(geff_ratio_chic1_1[%f,0,1],eff_ratio_chic1_1,%f)",eff_ratio_chic1_wt[0],eff_ratio_Err_chic1_wt[0]));
+	// w.factory(Form("Gaussian::eff_ratio_chic1_constraint2(geff_ratio_chic1_2[%f,0,1],eff_ratio_chic1_2,%f)",eff_ratio_chic1_wt[1],eff_ratio_Err_chic1_wt[1]));
+	//
+	// w.var("geff_ratio_chic1_1")->setConstant();
+	// w.var("geff_ratio_chic1_2")->setConstant();
 	//*******************************************************************
 
 	w.factory("nLb_Run1[5000,1000,7000]");
@@ -1711,29 +1946,19 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	// w.factory("n1600_Run1[3000,1,10000]");
 	// w.factory("n1600_Run2[3000,1,10000]");
 	w.factory("nMiscLst_Run1[1500,1,5000]");
-	// w.factory("nMiscLst_Run2[2500,1,5000]");
 	w.factory("nMiscLst_Run2[4000,1,10000]");
 	w.factory(Form("nBkg_Run1[2000,1,%d]",nentries[0]));
 	w.factory(Form("nBkg_Run2[4000,1,%d]",nentries[1]));
 
-	//What should the limits on nXib be?
-	Double_t xibCentral_run1 = xibnorm_LL_wt[0];
-	Double_t xibErr_run1     = xibnorm_LL_err_wt[0];
-	Double_t xibLow_run1     = 0;
-	Double_t xibHigh_run1    = 200;
-
-	Double_t xibCentral_run2 = xibnorm_LL_wt[1];
-	Double_t xibErr_run2     = xibnorm_LL_err_wt[1];
-	Double_t xibLow_run2     = 0;
-	// Double_t xibHigh_run2    = 200;
-	Double_t xibHigh_run2    = 400;
-
 	//****************Xib Bkg Yield**************************************
-	w.factory(Form("nXib1[%f,%f,%f]",xibCentral_run1,xibLow_run1,xibHigh_run1));
-	w.factory(Form("nXib2[%f,%f,%f]",xibCentral_run2,xibLow_run2,xibHigh_run2));
 
-	w.factory(Form("Gaussian::nXib_constraint1(gnXib1[%f,%f,%f],nXib1,%f)",xibCentral_run1,xibLow_run1,xibHigh_run1,xibErr_run1));
-	w.factory(Form("Gaussian::nXib_constraint2(gnXib2[%f,%f,%f],nXib2,%f)",xibCentral_run2,xibLow_run2,xibHigh_run2,xibErr_run2));
+	//What should the limits on nXib be?
+
+	w.factory(Form("nXib1[%f,%f,%f]",xibCentral[0],xibLow[0],xibHigh[0]));
+	w.factory(Form("nXib2[%f,%f,%f]",xibCentral[1],xibLow[1],xibHigh[1]));
+
+	w.factory(Form("Gaussian::nXib_constraint1(gnXib1[%f,%f,%f],nXib1,%f)",xibCentral[0],xibLow[0],xibHigh[0],xibErr[0]));
+	w.factory(Form("Gaussian::nXib_constraint2(gnXib2[%f,%f,%f],nXib2,%f)",xibCentral[1],xibLow[1],xibHigh[1],xibErr[1]));
 
 	w.var("gnXib1")->setConstant();
 	w.var("gnXib2")->setConstant();
@@ -1742,8 +1967,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	// w.factory("expr::nSigma2('pow(10,-5)*R*nLb_Run2*sigmaEff2/(lambdaEff2)',R,nLb_Run2,sigmaEff2,lambdaEff2)");
 
 	//*****************Jpsi Sigma yield**********************************
-	w.factory("expr::nSigma1('pow(10,-5)*R*nLb_Run1*eff_ratio1',R,nLb_Run1,eff_ratio1)");
-	w.factory("expr::nSigma2('pow(10,-5)*R*nLb_Run2*eff_ratio2',R,nLb_Run2,eff_ratio2)");
+	w.factory("expr::nSigma1('pow(10,-5)*R*nLb_Run1/eff_ratio1',R,nLb_Run1,eff_ratio1)");
+	w.factory("expr::nSigma2('pow(10,-5)*R*nLb_Run2/eff_ratio2',R,nLb_Run2,eff_ratio2)");
 	//*******************************************************************
 
 	//*****************Jpsi Lambda(1405) yield***************************
@@ -1762,13 +1987,13 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	//*******************************************************************
 
 	//*****************chic1 Lambda yield***************************
-	w.factory("expr::nchic1_Run1('R_chic1*nLb_Run1*eff_ratio_chic1_1',R_chic1,nLb_Run1,eff_ratio_chic1_1)");
-	w.factory("expr::nchic1_Run2('R_chic1*nLb_Run2*eff_ratio_chic1_2',R_chic1,nLb_Run2,eff_ratio_chic1_2)");
+	// w.factory("expr::nchic1_Run1('R_chic1*nLb_Run1*eff_ratio_chic1_1',R_chic1,nLb_Run1,eff_ratio_chic1_1)");
+	// w.factory("expr::nchic1_Run2('R_chic1*nLb_Run2*eff_ratio_chic1_2',R_chic1,nLb_Run2,eff_ratio_chic1_2)");
 	//*******************************************************************
 	w.factory("SUM:model1(nSigma1*SIG1 , nLb_Run1*Lb_Run1 , nXib1*XIB1 , n1405_Run1*LST1405_Run1 ,"
-	          " n1520_Run1*LST1520_Run1 , n1600_Run1*LST1600_Run1 , nMiscLst_Run1*lstLump_Run1 , nchic1_Run1*chic1_Run1, nBkg_Run1*Bkg_Run1)");
+	          " n1520_Run1*LST1520_Run1 , n1600_Run1*LST1600_Run1 , nMiscLst_Run1*lstLump_Run1 , nBkg_Run1*Bkg_Run1)");
 	w.factory("SUM:model2(nSigma2*SIG2 , nLb_Run2*Lb_Run2 , nXib2*XIB2 , n1405_Run2*LST1405_Run2 ,"
-	          " n1520_Run2*LST1520_Run2 , n1600_Run2*LST1600_Run2 , nMiscLst_Run2*lstLump_Run2 , nchic1_Run2*chic1_Run2, nBkg_Run2*Bkg_Run2)");
+	          " n1520_Run2*LST1520_Run2 , n1600_Run2*LST1600_Run2 , nMiscLst_Run2*lstLump_Run2 , nBkg_Run2*Bkg_Run2)");
 
 	if(!lst1405flag)
 	{
@@ -1785,21 +2010,21 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		w.var("R_1600")->setVal(0);
 		w.var("R_1600")->setConstant();
 	}
-	if(!chic1flag)
-	{
-		w.var("R_chic1")->setVal(0);
-		w.var("R_chic1")->setConstant();
-	}
+	// if(!chic1flag)
+	// {
+	//      w.var("R_chic1")->setVal(0);
+	//      w.var("R_chic1")->setConstant();
+	// }
 
 	// w.factory("PROD::model_const1(model1,sigmaEff_constraint1,lambdaEff_constraint1,nXib_constraint1)");//Multiply model by constraint terms
 	// w.factory("PROD::model_const2(model2,sigmaEff_constraint2,lambdaEff_constraint2,nXib_constraint2)");//Multiply model by constraint terms
 
 	w.factory("PROD::model_const1(model1,eff_ratio_constraint1,nXib_constraint1,"
 	          "eff_ratio_1405_constraint1,eff_ratio_1520_constraint1,"
-	          "eff_ratio_1600_constraint1,eff_ratio_chic1_constraint1)"); //Multiply model by constraint terms
+	          "eff_ratio_1600_constraint1)"); //Multiply model by constraint terms
 	w.factory("PROD::model_const2(model2,eff_ratio_constraint2,nXib_constraint2,"
 	          "eff_ratio_1405_constraint2,eff_ratio_1520_constraint2,"
-	          "eff_ratio_1600_constraint2,eff_ratio_chic1_constraint2)"); //Multiply model by constraint terms
+	          "eff_ratio_1600_constraint2)"); //Multiply model by constraint terms
 
 	RooAbsPdf* model_const1 = w.pdf("model_const1"); // get the model
 	RooAbsPdf* model_const2 = w.pdf("model_const2"); // get the model
@@ -1832,13 +2057,13 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	            "lambda_Run1,a1_Run1,a2_Run1,"
 	            "nBkg_Run1,nMiscLst_Run1,miscLstMean_Run1,"
 	            "miscLstSigma_Run1,eff_ratio1,nXib1,eff_ratio_1405_1,"
-	            "eff_ratio_1520_1,eff_ratio_1600_1,eff_ratio_chic1_1");
+	            "eff_ratio_1520_1,eff_ratio_1600_1");
 
 	w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,"
 	            "lambda_Run2,a1_Run2,a2_Run2,"
 	            "nBkg_Run2,nMiscLst_Run2,miscLstMean_Run2,"
 	            "miscLstSigma_Run2,eff_ratio2,nXib2,eff_ratio_1405_2,"
-	            "eff_ratio_1520_2,eff_ratio_1600_2,eff_ratio_chic1_2");
+	            "eff_ratio_1520_2,eff_ratio_1600_2");
 
 	if(bkgType == 0)
 	{
@@ -1870,8 +2095,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		w.defineSet("globObs","geff_ratio1,gnXib1,geff_ratio2,"
 		            "gnXib2,geff_ratio_1405_1,geff_ratio_1405_2,"
 		            "geff_ratio_1520_1,geff_ratio_1520_2,"
-		            "geff_ratio_1600_1,geff_ratio_1600_2,"
-		            "geff_ratio_chic1_1,geff_ratio_chic1_2");   //define set of global observables
+		            "geff_ratio_1600_1,geff_ratio_1600_2");   //define set of global observables
 	}
 	//*******************************************************************
 	//***********************MAKE COMBINED DATASET************************************
@@ -1991,8 +2215,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 			simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("LST1520_Run1"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1520_Run1"));
 		if(lst1600flag)
 			simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("LST1600_Run1"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1600_Run1"));
-		if(chic1flag)
-			simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("chic1_Run1"))),LineColor(kMagenta+2),LineStyle(kDashed),Name("chic1_Run1"));
+		// if(chic1flag)
+		//      simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("chic1_Run1"))),LineColor(kMagenta+2),LineStyle(kDashed),Name("chic1_Run1"));
 		//simPdf.plotOn(frame_run1,Components(lst1810shape),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1810"));
 		// if(sigmaflag!=0)
 		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("SIG1"))),LineColor(kBlack),Name("sig_Run1"));
@@ -2064,10 +2288,10 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		{
 			legend_run1->AddEntry("lst1600_Run1","J/#psi #Lambda(1600) shape","l");
 		}
-		if(chic1flag)
-		{
-			legend_run1->AddEntry("chic1_Run1","#chi_{c1} #Lambda shape","l");
-		}
+		// if(chic1flag)
+		// {
+		//      legend_run1->AddEntry("chic1_Run1","#chi_{c1} #Lambda shape","l");
+		// }
 		// if(lst1810flag)
 		//      legend_run1->AddEntry("lst1810","J/#psi #Lambda(1810) shape","l");
 		legend_run1->AddEntry("misclst_Run1","misc. J/#psi #Lambda* shapes","l");
@@ -2126,8 +2350,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 			simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("LST1520_Run2"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1520_Run2"));
 		if(lst1600flag)
 			simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("LST1600_Run2"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1600_Run2"));
-		if(chic1flag)
-			simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("chic1_Run2"))),LineColor(kMagenta+2),LineStyle(kDashed),Name("chic1_Run2"));
+		// if(chic1flag)
+		// simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("chic1_Run2"))),LineColor(kMagenta+2),LineStyle(kDashed),Name("chic1_Run2"));
 		//simPdf.plotOn(frame_run2,Components(lst1810shape),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1810"));
 		// if(sigmaflag!=0)
 		simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("SIG2"))),LineColor(kBlack),Name("sig_Run2"));
@@ -2192,10 +2416,10 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		{
 			legend_run2->AddEntry("lst1600_Run2","J/#psi #Lambda(1600) shape","l");
 		}
-		if(chic1flag)
-		{
-			legend_run2->AddEntry("chic1_Run2","#chi_{c1} #Lambda shape","l");
-		}
+		// if(chic1flag)
+		// {
+		//      legend_run2->AddEntry("chic1_Run2","#chi_{c1} #Lambda shape","l");
+		// }
 		// if(lst1810flag)
 		//      legend_run2->AddEntry("lst1810","J/#psi #Lambda(1810) shape","l");
 		legend_run2->AddEntry("misclst_Run2","misc. J/#psi #Lambda* shapes","l");
