@@ -1,0 +1,5 @@
+eff_2016_mu = 0.1666
+err_eff_2016_mu = 0.0014
+
+eff_run2 = 0.1666
+err_eff_run2 = 0.0014

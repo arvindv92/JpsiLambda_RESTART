@@ -1,0 +1,11 @@
+eff_2011_md =	0.15037
+err_eff_2011_md = 0.00031
+eff_2011_mu = 0.15029
+err_eff_2011_mu = 0.00031
+eff_2012_md = 0.15445
+err_eff_2012_md = 0.00029
+eff_2012_mu = 0.15445  #dont have numbers for 2012 mu yet. copying from 2012 md
+err_eff_2012_mu = 0.00029
+
+eff_run1 = 0.15364
+err_eff_run1 = 0.00029
