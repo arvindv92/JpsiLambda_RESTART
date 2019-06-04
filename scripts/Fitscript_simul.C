@@ -1543,10 +1543,10 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	Double_t xibCentral[2], xibErr[2], xibLow[2], xibHigh[2];
 	xibLow[0] = 0;
-	xibLow[1] = 0;
+	xibLow[1] = 100;
 
 	xibHigh[0] = 0;
-	xibHigh[1] = 0;
+	xibHigh[1] = 300;
 
 	//******************Get shape from Xib background********************
 	// RooRealVar xibmass("Lb_DTF_M_JpsiLConstr","xibmass",5200.,5740.);
