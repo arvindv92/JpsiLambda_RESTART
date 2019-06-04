@@ -12,7 +12,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 //rwType 0 is no RW, 1 is MV RW, 2 is BONN RW
 //bkgType = 0 for Exponential. 1 for 2nd order Chebychev. 2 for 3rd order Chebychev
 {
-	Bool_t calcUL   = true;
+	Bool_t calcUL   = false;
 	Bool_t isBinned = true; //set to false if you want unbinned ML fit.
 
 	// Fit params
@@ -2031,25 +2031,25 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	w.defineSet("poi","R"); //parameters of interest
 
-	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,lambda_Run1,a1_Run1,a2_Run1,nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1");// define set of nuisance parameters
-	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,lambda_Run2,a1_Run2,a2_Run2,nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,sigmaEff1,lambdaEff1,nXib1,n1405_Run2,n1520_Run2");
+	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,lambda_Run1,a1_Run1,a2_Run1,nBkg_Run1,slope_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1");// define set of nuisance parameters
+	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,lambda_Run2,a1_Run2,a2_Run2,nBkg_Run2,slope_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,sigmaEff1,lambdaEff1,nXib1,n1405_Run2,n1520_Run2");
 
 	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,lambda_Run1,a1_Run1,"
-	//             "a2_Run1,nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,"
+	//             "a2_Run1,nBkg_Run1,slope_Run1,nMiscLst_Run1,miscLstMean_Run1,"
 	//             "miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,"
 	//             "n1520_Run1");
 	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,lambda_Run2,a1_Run2,"
-	//             "a2_Run2,nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,"
+	//             "a2_Run2,nBkg_Run2,slope_Run2,nMiscLst_Run2,miscLstMean_Run2,"
 	//             "miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,"
 	//             "n1520_Run2");// define set of nuisance parameters
 
 
 	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,"
-	//             "nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,"
+	//             "nBkg_Run1,slope_Run1,nMiscLst_Run1,miscLstMean_Run1,"
 	//             "miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,"
 	//             "n1520_Run1");
 	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,"
-	//             "nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,"
+	//             "nBkg_Run2,slope_Run2,nMiscLst_Run2,miscLstMean_Run2,"
 	//             "miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,"
 	//             "n1520_Run2");// define set of nuisance parameters
 
@@ -2067,7 +2067,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	if(bkgType == 0)
 	{
-		w.extendSet("nuisParams","tau_Run1,tau_Run2");
+		w.extendSet("nuisParams","slope_Run1,slope_Run2");
 	}
 	else if(bkgType == 1)
 	{
@@ -2082,8 +2082,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		w.extendSet("nuisParams","c0_Run1,c0_Run2,c1_Run1,c1_Run2,"
 		            "c2_Run1,c2_Run2,c3_Run1,c3_Run2");
 	}
-	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,alpha1_Run1,alpha2_Run1,nBkg_Run1,tau_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1");// define set of nuisance parameters
-	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,alpha1_Run2,alpha2_Run2,nBkg_Run2,tau_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,n1520_Run2");
+	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,alpha1_Run1,alpha2_Run1,nBkg_Run1,slope_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1");// define set of nuisance parameters
+	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,alpha1_Run2,alpha2_Run2,nBkg_Run2,slope_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,n1520_Run2");
 
 	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,alpha1_Run1,alpha2_Run1,nBkg_Run1,a0_Run1,a1_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1");// define set of nuisance parameters
 	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,alpha1_Run2,alpha2_Run2,nBkg_Run2,a0_Run2,a1_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,n1520_Run2");
