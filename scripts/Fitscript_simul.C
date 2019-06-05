@@ -1775,13 +1775,13 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 		if(run == 1)
 		{
-			mcTreeIn_nonZero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero(%d,%d,%d)",nbins,myLow,myHigh),Form("(BDT%d > %f)*gb_wts_new*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero(%d,%d,%d)",nbins,myLow,myHigh),Form("(BDT%d > %f)*gb_wts_new*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+			mcTreeIn_nonZero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*gb_wts_new*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*gb_wts_new*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 		}
 		else if(run == 2)
 		{
-			mcTreeIn_nonZero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero(%d,%d,%d)",nbins,myLow,myHigh),Form("(BDT%d > %f)*gb_wts*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero(%d,%d,%d)",nbins,myLow,myHigh),Form("(BDT%d > %f)*gb_wts*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+			mcTreeIn_nonZero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*gb_wts*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*gb_wts*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 		}
 
 		mcHist[i] = new TH1D(Form("mcHist%d",run),"",nbins,myLow,myHigh);
@@ -1815,8 +1815,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	w.factory("SUM:mcFit_Run1(mcnsig_run1*Lb_Run1, mcnbkg_run1*mcbkg_run1)");
 	w.factory("SUM:mcFit_Run2(mcnsig_run2*Lb_Run2, mcnbkg_run2*mcbkg_run2)");
 
-	(w.pdf("mcFit_Run1"))->chi2FitTo(*(mc_ds[0]),Range(5500,5800));
-	(w.pdf("mcFit_Run2"))->chi2FitTo(*(mc_ds[1]),Range(5500,5800));
+	(w.pdf("mcFit_Run1"))->fitTo(*(mc_ds[0]),Range(5500,5700));
+	(w.pdf("mcFit_Run2"))->fitTo(*(mc_ds[1]),Range(5500,5700));
 
 	auto mcvars1 = w.pdf("Lb_Run1")->getVariables();
 	auto mcp1 = (RooRealVar*)mcvars1->find("a1_Run1");
@@ -2245,8 +2245,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	//************************DO THE FIT***********************
 
 	//First fit background shapes to data above peak
-	w.pdf("Bkg_Run1")->fitTo(*(ds[0]),Range(5800,myHigh));
-	w.pdf("Bkg_Run2")->fitTo(*(ds[1]),Range(5800,myHigh));
+	w.pdf("Bkg_Run1")->fitTo(*(ds[0]),Range(5900,myHigh));
+	w.pdf("Bkg_Run2")->fitTo(*(ds[1]),Range(5900,myHigh));
 
 	if(bkgType == 0)
 	{
@@ -2737,6 +2737,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	w.writeToFile(fileName,true);
 	cout << "workspace written to file " << fileName << endl;
 
-	gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(%s,\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,2,true,20,100,2000,100,false,0,%d,%d)",fileName,myLow,myHigh));
+	gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,2,true,20,100,2000,100,false,0,%d,%d)",fileName,myLow,myHigh));
 	// gSystem->RedirectOutput(0);
 }
