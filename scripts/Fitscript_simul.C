@@ -1747,34 +1747,82 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	TH1D *myhist[2];
 
 	//********Data for Fit to simulation*********************************
-	// TH1D *mcHist[2];
-	// RooDataHist *mc_ds[2];
-	// Int_t mcNentries[2];
-	// if(!strncmp(option,"mcFit",5))//if MC fit
-	// {
-	//      for(Int_t run = 1; run<=2; run++)
-	//      {
-	//              Int_t i = run-1;
-	//
-	//              TFile *mcFileIn = TFile::Open(Form("%s/run%d/jpsilambda_LL_BDTCut_temp.root",lambdaMCPath,run),"READ");
-	//              TTree *mcTreeIn = (TTree*)mcFileIn->Get("MyTuple");
-	//
-	//              mcTreeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hmc%d(%d,%d,%d)",run,nbins,low,high));
-	//
-	//              mcHist[i] = (TH1D*)gDirectory->Get(Form("hmc%d",run));
-	//
-	//              mcNentries[i] = mcHist[i]->Integral();
-	//              cout<<"mcNentries = "<<mcNentries[i]<<endl;
-	//
-	//              mc_ds[i] = new RooDataHist(Form("mc_ds%d",run),Form("mc_ds%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),mcHist[i]);
-	//              //  RooDataSet ds("ds","ds",treein,Lb_DTF_M_JpsiLConstr);
-	//              cout<<"Done making MC RooDataHist"<<endl;
-	//              (mc_ds[i])->Print();
-	//
-	//              w.import(*(mc_ds[i]));
-	//
-	//      }
-	// }
+	TH1D *mcHist[2];
+	RooDataHist *mc_ds[2];
+	Int_t mcNentries[2];
+
+	for(Int_t run = 1; run<=2; run++)
+	{
+		Int_t i = run-1;
+
+		TFile *mcFileIn_nonZero_Lambda = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_nonZeroTracks_noPID.root",
+		                                           lambdaMCPath,run));
+		TTree *mcTreeIn_nonZero_Lambda = (TTree*)mcFileIn_nonZero_Lambda->Get("MyTuple");
+
+		TFile *mcFileIn_Zero_Lambda    = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_ZeroTracks_noPID.root",
+		                                           lambdaMCPath,run));
+		TTree *mcTreeIn_Zero_Lambda    = (TTree*)mcFileIn_Zero_Lambda->Get("MyTuple");
+
+		mcTreeIn_nonZero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s_noPID.root",
+		                                                  lambdaMCPath,run,bdtConf_nonZero[i],
+		                                                  isoConf[i],isoVersion[i]));
+		mcTreeIn_Zero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d_noPID.root",
+		                                               lambdaMCPath,run,bdtConf_Zero[i]));
+		if(run == 1)
+		{
+			mcTreeIn_nonZero_Lambda->Draw("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero",Form("(BDT%d > %f)*gb_wts_new*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Lambda->Draw("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero",Form("(BDT%d > %f)*gb_wts_new*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+		}
+		if(run == 2)
+		{
+			mcTreeIn_nonZero_Lambda->Draw("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero",Form("(BDT%d > %f)*gb_wts*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Lambda->Draw("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero",Form("(BDT%d > %f)*gb_wts*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+		}
+		TH1F *wt_Lambda_nonZero = (TH1F*)gDirectory->Get("wt_Lambda_nonZero");
+		TH1F *wt_Lambda_Zero = (TH1F*)gDirectory->Get("wt_Lambda_Zero");
+
+		(mcHist[i])->Add(wt_Lambda_nonZero,wt_Lambda_Zero);
+
+		mcNentries[i] = mcHist[i]->Integral();
+		cout<<"mcNentries = "<<mcNentries[i]<<endl;
+
+		mc_ds[i] = new RooDataHist(Form("mc_ds%d",run),Form("mc_ds%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),mcHist[i]);
+		//  RooDataSet ds("ds","ds",treein,Lb_DTF_M_JpsiLConstr);
+		cout<<"Done making MC RooDataHist"<<endl;
+		(mc_ds[i])->Print();
+
+		w.import(*(mc_ds[i]));
+
+	}
+
+	w.factory("Exponential::mcbkg_run1(Lb_DTF_M_JpsiLConstr,tau_run1[-0.0007,-0.01,-0.0000001])");
+	w.factory("Exponential::mcbkg_run2(Lb_DTF_M_JpsiLConstr,tau_run2[-0.0007,-0.01,-0.0000001])");
+
+	w.factory(Form("mcnsig_run1[1,%d]",mcNentries[0]));
+	w.factory(Form("mcnsig_run2[1,%d]",mcNentries[1]));
+
+	w.factory(Form("mcnbkg_run1[1,%d]",mcNentries[0]));
+	w.factory(Form("mcnbkg_run2[1,%d]",mcNentries[1]));
+
+	w.factory("SUM:mcFit_Run1(mcnsig_run1*Lb_Run1, mcnbkg_run1*mcbkg_run1)");
+	w.factory("SUM:mcFit_Run2(mcnsig_run2*Lb_Run2, mcnbkg_run2*mcbkg_run2)");
+
+	(w.pdf("mcFit_Run1"))->fitTo(*(mc_ds[0]),Range(5400,5800));
+	(w.pdf("mcFit_Run2"))->fitTo(*(mc_ds[1]),Range(5400,5800));
+
+	auto mcvars1 = w.pdf("Lb_Run1")->getVariables();
+	auto mcp1 = (RooRealVar*)mcvars1->find("a1_Run1");
+	mcp1->setConstant(kTRUE);
+	auto mcp2 = (RooRealVar*)mcvars1->find("a2_Run1");
+	mcp2->setConstant(kTRUE);
+	delete mcvars1;
+
+	auto mcvars2 = w.pdf("Lb_Run2")->getVariables();
+	auto mcp3 = (RooRealVar*)mcvars2->find("a1_Run2");
+	mcp3->setConstant(kTRUE);
+	auto mcp4 = (RooRealVar*)mcvars2->find("a2_Run2");
+	mcp4->setConstant(kTRUE);
+	delete mcvars2;
 	//*******************************************************************
 
 	//*********Input Data************************************************
@@ -2188,8 +2236,19 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	//************************DO THE FIT***********************
 
 	//First fit background shapes to data above peak
-	w.pdf("Bkg_Run1")->fitTo(*(ds[0]),Range(5700,myHigh));
-	w.pdf("Bkg_Run2")->fitTo(*(ds[1]),Range(5700,myHigh));
+	w.pdf("Bkg_Run1")->fitTo(*(ds[0]),Range(5800,myHigh));
+	w.pdf("Bkg_Run2")->fitTo(*(ds[1]),Range(5800,myHigh));
+
+	auto vars1 = w.pdf("Bkg_Run1")->getVariables();
+	auto p1 = (RooRealVar*)vars1->find("slope_Run1");
+	p1->setConstant(kTRUE);
+	delete vars1;
+
+	auto vars2 = w.pdf("Bkg_Run2")->getVariables();
+	auto p2 = (RooRealVar*)vars2->find("slope_Run2");
+	p2->setConstant(kTRUE);
+	delete vars2;
+
 	RooFitResult *res = simPdf.fitTo(*combData,Minos(*w.set("poi")),Extended(), Save(), Hesse(false), Strategy(1), PrintLevel(0));
 	//*******************************************************************
 
@@ -2608,7 +2667,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	//      fileName = Form("../rootFiles/dataFiles/JpsiLambda/ModelConfigs/MyModel_HypatiaSig_ExpBkg_%d_%d_unbinned.root",low,high);
 	// }
 
-	fileName = "tempModel.root";
+	fileName = "tempModel_f.root";
 
 	w.writeToFile(fileName,true);
 	cout << "workspace written to file " << fileName << endl;
