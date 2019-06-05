@@ -1748,6 +1748,10 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	//********Data for Fit to simulation*********************************
 	TH1D *mcHist[2];
+
+	//	mcHist[0] = new TH1D("","",nbins,low,high);
+	//	mcHist[1] = new TH1D("","",nbins,low,high);
+
 	RooDataHist *mc_ds[2];
 	Int_t mcNentries[2];
 
@@ -1757,30 +1761,42 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 		TFile *mcFileIn_nonZero_Lambda = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_nonZeroTracks_noPID.root",
 		                                           lambdaMCPath,run));
+
 		TTree *mcTreeIn_nonZero_Lambda = (TTree*)mcFileIn_nonZero_Lambda->Get("MyTuple");
 
 		TFile *mcFileIn_Zero_Lambda    = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_ZeroTracks_noPID.root",
 		                                           lambdaMCPath,run));
+
 		TTree *mcTreeIn_Zero_Lambda    = (TTree*)mcFileIn_Zero_Lambda->Get("MyTuple");
 
 		mcTreeIn_nonZero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s_noPID.root",
 		                                                  lambdaMCPath,run,bdtConf_nonZero[i],
 		                                                  isoConf[i],isoVersion[i]));
+
 		mcTreeIn_Zero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d_noPID.root",
 		                                               lambdaMCPath,run,bdtConf_Zero[i]));
+
 		if(run == 1)
 		{
-			mcTreeIn_nonZero_Lambda->Draw("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero",Form("(BDT%d > %f)*gb_wts_new*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_Lambda->Draw("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero",Form("(BDT%d > %f)*gb_wts_new*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
-		}
-		if(run == 2)
-		{
-			mcTreeIn_nonZero_Lambda->Draw("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero",Form("(BDT%d > %f)*gb_wts*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_Lambda->Draw("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero",Form("(BDT%d > %f)*gb_wts*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
-		}
-		TH1F *wt_Lambda_nonZero = (TH1F*)gDirectory->Get("wt_Lambda_nonZero");
-		TH1F *wt_Lambda_Zero = (TH1F*)gDirectory->Get("wt_Lambda_Zero");
+		  mcTreeIn_nonZero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero(%d,%d,%d)",nbins,low,high),Form("(BDT%d > %f)*gb_wts_new*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
 
+		  mcTreeIn_Zero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero(%d,%d,%d)",nbins,low,high),Form("(BDT%d > %f)*gb_wts_new*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+
+		}
+		else if(run == 2)
+		{
+		  mcTreeIn_nonZero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero(%d,%d,%d)",nbins,low,high),Form("(BDT%d > %f)*gb_wts*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+
+		  mcTreeIn_Zero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero(%d,%d,%d)",nbins,low,high),Form("(BDT%d > %f)*gb_wts*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+
+		}
+		mcHist[i] = new TH1D(Form("mcHist%d",run),"",nbins,low,high);
+		TH1D *wt_Lambda_nonZero = (TH1D*)gDirectory->Get("wt_Lambda_nonZero");
+		TH1D *wt_Lambda_Zero = (TH1D*)gDirectory->Get("wt_Lambda_Zero");
+		
+		if(wt_Lambda_nonZero == nullptr || wt_Lambda_Zero == nullptr)
+		  cout<<"null histos"<<endl;
+		(mcHist[i])->Sumw2();
 		(mcHist[i])->Add(wt_Lambda_nonZero,wt_Lambda_Zero);
 
 		mcNentries[i] = mcHist[i]->Integral();
@@ -1878,7 +1894,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 			TH1D *myhist_zero = (TH1D*)gDirectory->Get(Form("myhist_zero%d",run));
 
 			myhist[i] = new TH1D(Form("myhist%d",run),"",nbins,low,high);
-
+			
+			myhist[i]->Sumw2();
 			myhist[i]->Add(myhist_zero,myhist_nonzero);
 
 			nentries[i] = myhist[i]->Integral();
