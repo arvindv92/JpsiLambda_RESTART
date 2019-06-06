@@ -1680,17 +1680,13 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	//*********Hypatia signal shape for Lambda_b0************************
 
-	// w.factory("RooHypatia2::Lb_Run1(Lb_DTF_M_JpsiLConstr,lambda_Run1[-2.0,-4.0,0.0],0,0,"
-	//           "sigma_Run1[10.,1.,20.], mean_Run1[5619.6,5619,5621], a1_Run1[1.7,1.0,3.0],"
-	//           "2 ,a2_Run1[2.0,1.0,3.0], 2)");
+	w.factory("RooHypatia2::Lb_Run1(Lb_DTF_M_JpsiLConstr,lambda_Run1[-2.3,-2.7,-1.9],0,0,"
+	          "sigma_Run1[10.,1.,20.], mean_Run1[5619.6,5619,5621], a1_Run1[1.6,1.3,1.9],"
+	          "2 ,a2_Run1[1.7,1.4,2.0], 2)");
 
-	w.factory("RooHypatia2::Lb_Run1(Lb_DTF_M_JpsiLConstr,lambda_Run1[-2.0,-4.0,0.0],0,0,"
-	          "sigma_Run1[10.,1.,20.], mean_Run1[5619.6,5619,5621], a1_Run1[1.7,1.0,3.0],"
-	          "2 ,a2_Run1[3.0,1.0,4.0], 2)");
-
-	w.factory("RooHypatia2::Lb_Run2(Lb_DTF_M_JpsiLConstr,lambda_Run2[-2.5,-4.0,0.0],0,0,"
-	          "sigma_Run2[10.,1.,20.], mean_Run2[5619.6,5619,5621], a1_Run2[1.5,1.0,3.0],"
-	          "2 ,a2_Run2[1.5,1.0,3.0], 2)");
+	w.factory("RooHypatia2::Lb_Run2(Lb_DTF_M_JpsiLConstr,lambda_Run2[-2.5,-2.8,-2.2],0,0,"
+	          "sigma_Run2[10.,1.,20.], mean_Run2[5619.6,5619,5621], a1_Run2[1.8,1.5,2.1],"
+	          "2 ,a2_Run2[1.8,1.5,2.1], 2)");
 
 	cout<<"Done defining J/psi Lambda Hypatia shapes"<<endl;
 	//*******************************************************************
