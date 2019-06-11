@@ -1753,10 +1753,11 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	//********Data for Fit to simulation*********************************
 	TH1D *mcHist[2];
 
-	//	mcHist[0] = new TH1D("","",nbins,myLow,myHigh);
-	//	mcHist[1] = new TH1D("","",nbins,myLow,myHigh);
+//	mcHist[0] = new TH1D("","",nbins,myLow,myHigh);
+//	mcHist[1] = new TH1D("","",nbins,myLow,myHigh);
 
 	RooDataHist *mc_ds[2];
+	RooDataSet *ds_sim[2], *ds_sim_wt[2];
 	Int_t mcNentries[2];
 
 	for(Int_t run = 1; run<=2; run++)
@@ -1777,18 +1778,70 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		mcTreeIn_Zero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d_noPID.root",
 		                                               lambdaMCPath,run,bdtConf_Zero[i]));
 
+		mcTreeIn_Zero_Lambda->SetBranchStatus("*",0);
+		mcTreeIn_Zero_Lambda->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		mcTreeIn_Zero_Lambda->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+		mcTreeIn_Zero_Lambda->SetBranchStatus("Lb_BKGCAT",1);
+		mcTreeIn_Zero_Lambda->SetBranchStatus("gb_wts",1);
+		mcTreeIn_Zero_Lambda->SetBranchStatus("wt_tau",1);
+		if(run == 1)
+			mcTreeIn_Zero_Lambda->SetBranchStatus("gb_wts_new",1);
+
+		mcTreeIn_nonZero_Lambda->SetBranchStatus("*",0);
+		mcTreeIn_nonZero_Lambda->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		mcTreeIn_nonZero_Lambda->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+		mcTreeIn_nonZero_Lambda->SetBranchStatus("Lb_BKGCAT",1);
+		mcTreeIn_nonZero_Lambda->SetBranchStatus("gb_wts",1);
+		mcTreeIn_nonZero_Lambda->SetBranchStatus("wt_tau",1);
+		if(run == 1)
+			mcTreeIn_nonZero_Lambda->SetBranchStatus("gb_wts_new",1);
+
+		TFile *tempFile = new TFile("tempFile_sim.root","RECREATE");
+
+		TTree* mcTreeIn_Zero_Lambda_cut    = (TTree*)mcTreeIn_Zero_Lambda->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));                                                                                        //Not TRUTH MATCHING HERE!
+		TTree* mcTreeIn_nonZero_Lambda_cut = (TTree*)mcTreeIn_nonZero_Lambda->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));                                                                                        //Not TRUTH MATCHING HERE!
+
+		TList *list_sim = new TList;
+		list_sim->Add(mcTreeIn_Zero_Lambda_cut);
+		list_sim->Add(mcTreeIn_nonZero_Lambda_cut);
+
+		TTree *combTree_sim = TTree::MergeTrees(list_sim);
+		combTree_sim->SetName("combTree_sim");
+
+		RooRealVar *gbWtVar = nullptr;
+
 		if(run == 1)
 		{
-			mcTreeIn_nonZero_Lambda->Draw("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero(100,5500,5700)",Form("(BDT%d > %f)*gb_wts_new*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_Lambda->Draw("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero(100,5500,5700)",Form("(BDT%d > %f)*gb_wts_new*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+			gbWtVar  = new RooRealVar("gb_wts_new","gb Weight Var",-100.,100.);
 		}
 		else if(run == 2)
 		{
-			mcTreeIn_nonZero_Lambda->Draw("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero(100,5500,5700)",Form("(BDT%d > %f)*gb_wts*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_Lambda->Draw("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero(100,5500,5700)",Form("(BDT%d > %f)*gb_wts*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+			gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
 		}
 
-		mcHist[i] = new TH1D(Form("mcHist%d",run),"",nbins,myLow,myHigh);
+		RooRealVar *tauWtVar = new RooRealVar("wt_tau","tau Weight Var",-100.,100.);
+
+		ds_sim[i] = new RooDataSet(Form("ds_sim%d",run),Form("ds_sim%d",run),combTree_sim,RooArgSet(*myVar,*gbWtVar,*tauWtVar));
+		ds_sim[i]->Print();
+
+		RooFormulaVar *totWt = new RooFormulaVar("totWt","@0*@1",RooArgList(*gbWtVar,*tauWtVar));
+		RooRealVar *totWt_var = (RooRealVar*)ds_sim[i]->addColumn(*totWt);
+
+		ds_sim_wt[i] = new RooDataSet(Form("ds_sim_wt%d",run),Form("ds_sim_wt%d",run),RooArgSet(*myVar,*totWt_var),Import(*(ds_sim[i])),WeightVar(*totWt_var));
+		ds_sim_wt[i]->Print();
+
+		if(run == 1)
+		{
+			mcTreeIn_nonZero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*gb_wts_new*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*gb_wts_new*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+		}
+		else if(run == 2)
+		{
+			mcTreeIn_nonZero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*gb_wts*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*gb_wts*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+		}
+
+		mcHist[i] = new TH1D(Form("mcHist%d",run),"",nbins*2,myLow,myHigh);
 		TH1D *wt_Lambda_nonZero = (TH1D*)gDirectory->Get("wt_Lambda_nonZero");
 		TH1D *wt_Lambda_Zero = (TH1D*)gDirectory->Get("wt_Lambda_Zero");
 
@@ -1798,13 +1851,13 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		mcNentries[i] = mcHist[i]->Integral();
 		cout<<"mcNentries = "<<mcNentries[i]<<endl;
 
-		mc_ds[i] = new RooDataHist(Form("mc_ds%d",run),Form("mc_ds%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),mcHist[i]);
-		//  RooDataSet ds("ds","ds",treein,Lb_DTF_M_JpsiLConstr);
-		cout<<"Done making MC RooDataHist"<<endl;
-		(mc_ds[i])->Print();
+		// mc_ds[i] = new RooDataHist(Form("mc_ds%d",run),Form("mc_ds%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),mcHist[i]);
+		// //  RooDataSet ds("ds","ds",treein,Lb_DTF_M_JpsiLConstr);
+		// cout<<"Done making MC RooDataHist"<<endl;
+		// (mc_ds[i])->Print();
 
-		w.import(*(mc_ds[i]));
-
+		// w.import(*(mc_ds[i]));
+		w.import(*(ds_sim_wt[i]));
 	}
 
 	w.factory("Exponential::mcbkg_run1(Lb_DTF_M_JpsiLConstr,tau_run1[-0.0007,-0.01,-0.0000001])");
@@ -1819,37 +1872,42 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	w.factory("SUM:mcFit_Run1(mcnsig_run1*Lb_Run1, mcnbkg_run1*mcbkg_run1)");
 	w.factory("SUM:mcFit_Run2(mcnsig_run2*Lb_Run2, mcnbkg_run2*mcbkg_run2)");
 
-	(w.pdf("mcFit_Run1"))->fitTo(*(mc_ds[0]),Range(5500,5700));
-	(w.pdf("mcFit_Run2"))->fitTo(*(mc_ds[1]),Range(5500,5700));
+// (w.pdf("mcFit_Run1"))->fitTo(*(mc_ds[0]),Range(5500,5740));
+// (w.pdf("mcFit_Run2"))->fitTo(*(mc_ds[1]),Range(5500,5740));
+
+	(w.pdf("mcFit_Run1"))->fitTo(*(ds_sim_wt[0]),Range(5500,5740),Strategy(2));
+	(w.pdf("mcFit_Run2"))->fitTo(*(ds_sim_wt[1]),Range(5500,5740),Strategy(2));
 
 	TCanvas *sim_Run1      = new TCanvas("sim_Run1","sim_Run1",1200,800);
-	RooPlot *simframe_Run1 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),5500,5700,100);
+	RooPlot *simframe_Run1 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),5500,5740,120);
 
-	(mc_ds[0])->plotOn(simframe_Run1,Name("simdata_Run1"),DataError(RooAbsData::Poisson));
+//	(mc_ds[0])->plotOn(simframe_Run1,Name("simdata_Run1"),DataError(RooAbsData::Poisson));
+	(ds_sim_wt[0])->plotOn(simframe_Run1,Name("simdata_Run1"),DataError(RooAbsData::Poisson));
 	(w.pdf("mcFit_Run1"))->plotOn(simframe_Run1,Name("simfit_Run1"));
 	simframe_Run1->Draw();
 
 	TCanvas *sim_Run2      = new TCanvas("sim_Run2","sim_Run2",1200,800);
-	RooPlot *simframe_Run2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),5500,5700,100);
+	RooPlot *simframe_Run2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),5500,5740,120);
 
-	(mc_ds[1])->plotOn(simframe_Run2,Name("simdata_Run2"),DataError(RooAbsData::Poisson));
+//	(mc_ds[1])->plotOn(simframe_Run2,Name("simdata_Run2"),DataError(RooAbsData::Poisson));
+	(ds_sim_wt[1])->plotOn(simframe_Run2,Name("simdata_Run2"),DataError(RooAbsData::Poisson));
 	(w.pdf("mcFit_Run2"))->plotOn(simframe_Run2,Name("simfit_Run2"));
 	simframe_Run2->Draw();
 
 	auto mcvars1 = w.pdf("Lb_Run1")->getVariables();
-	auto mcp1 = (RooRealVar*)mcvars1->find("a1_Run1");
-	mcp1->setConstant(kTRUE);
-	auto mcp2 = (RooRealVar*)mcvars1->find("a2_Run1");
-	mcp2->setConstant(kTRUE);
+// auto mcp1 = (RooRealVar*)mcvars1->find("a1_Run1");
+// mcp1->setConstant(kTRUE);
+// auto mcp2 = (RooRealVar*)mcvars1->find("a2_Run1");
+// mcp2->setConstant(kTRUE);
 	auto mcp3 = (RooRealVar*)mcvars1->find("lambda_Run1");
 	mcp3->setConstant(kTRUE);
 	delete mcvars1;
 
 	auto mcvars2 = w.pdf("Lb_Run2")->getVariables();
-	auto mcp4 = (RooRealVar*)mcvars2->find("a1_Run2");
-	mcp4->setConstant(kTRUE);
-	auto mcp5 = (RooRealVar*)mcvars2->find("a2_Run2");
-	mcp5->setConstant(kTRUE);
+// auto mcp4 = (RooRealVar*)mcvars2->find("a1_Run2");
+// mcp4->setConstant(kTRUE);
+// auto mcp5 = (RooRealVar*)mcvars2->find("a2_Run2");
+// mcp5->setConstant(kTRUE);
 	auto mcp6 = (RooRealVar*)mcvars2->find("lambda_Run2");
 	mcp6->setConstant(kTRUE);
 	delete mcvars2;
