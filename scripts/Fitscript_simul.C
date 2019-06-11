@@ -2507,6 +2507,29 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	w.var("gnLb_Run2")->setConstant();
 
 	w.extendSet("globObs","gnLb_Run1,gnLb_Run2");
+
+	w.factory(Form("Gaussian::nLb_Run1_syst(gnLb_Run1[%f,1000,8000],nLb_Run1,%f)",w.var("nLb_Run1")->getValV(),0.09*(w.var("nLb_Run1")->getValV())));
+	w.var("gnLb_Run1")->setConstant();
+	w.factory(Form("Gaussian::nLb_Run2_syst(gnLb_Run2[%f,1000,24000],nLb_Run2,%f)",w.var("nLb_Run2")->getValV(),0.08*(w.var("nLb_Run2")->getValV())));
+	w.var("gnLb_Run2")->setConstant();
+
+	w.extendSet("globObs","gnLb_Run1,gnLb_Run2");
+
+	w.factory("PROD::model_const_new1(model_const1,nLb_Run1_syst)");
+	w.factory("PROD::model_const_new2(model_const2,nLb_Run2_syst)");
+
+	RooAbsPdf* model_const_new1 = w.pdf("model_const_new1");
+	RooAbsPdf* model_const_new2 = w.pdf("model_const_new2");
+
+	RooSimultaneous simPdf_new("simPdf_new","simultaneous pdf",sample);
+
+	simPdf_new.addPdf(*model_const_new1,"run1");
+	simPdf_new.addPdf(*model_const_new2,"run2");
+
+	w.import(simPdf_new);
+
+	cout<<"*********After importing new simPDF**********"<<endl;
+	w.Print();
 	//*********************PLOTTING STUFF*********************************************
 	TCanvas* c_run1 = new TCanvas("Run1","Run1", 1200, 800);
 
@@ -2787,7 +2810,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 		cout<<"Starting Model Config"<<endl;
 		RooStats::ModelConfig mc("ModelConfig",&w);
-		mc.SetPdf(*(w.pdf("simPdf")));
+		mc.SetPdf(*(w.pdf("simPdf_new")));
 		mc.SetParametersOfInterest(*w.set("poi"));
 		mc.SetObservables(*w.set("obs"));
 		mc.SetGlobalObservables(*w.set("globObs"));
