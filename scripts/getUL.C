@@ -1030,8 +1030,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType, Float
 	cout<<"Done defining cont. bkg shapes"<<endl;
 	//*******************************************************************
 
-	w.factory("nLb_Run1[5600,2000,7000]");
-	w.factory("nLb_Run2[20000,10000,22000]");
+	w.factory("nLb_Run1[5600,2000,8000]");
+	w.factory("nLb_Run2[20000,10000,24000]");
 
 	w.factory(Form("nBkg_Run1[200,1,%d]",nEntries[0]));
 	w.factory(Form("nBkg_Run2[1000,1,%d]",nEntries[1]));
