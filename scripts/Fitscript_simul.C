@@ -1689,12 +1689,12 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	//           "2 ,a2_Run2[1.5,1.0,3.0], 2)");
 
 	w.factory("RooHypatia2::Lb_Run1(Lb_DTF_M_JpsiLConstr,lambda_Run1[-2.0,-4.0,0.0],0,0,"
-	          "sigma_Run1[10.,1.,20.], mean_Run1[5619.6,5619,5621], a1_Run1[0.0,10.0],"
-	          "2 ,a2_Run1[0.0,10.0], 2)");
+	          "sigma_Run1[10.,1.,20.], mean_Run1[5619.6,5619,5621], a1_Run1[15.0],"
+	          "2 ,a2_Run1[15.0], 2)");
 
 	w.factory("RooHypatia2::Lb_Run2(Lb_DTF_M_JpsiLConstr,lambda_Run2[-2.5,-4.0,0.0],0,0,"
-	          "sigma_Run2[10.,1.,20.], mean_Run2[5619.6,5619,5621], a1_Run2[0.0,10.0],"
-	          "2 ,a2_Run2[0.0,10.0], 2)");
+	          "sigma_Run2[10.,1.,20.], mean_Run2[5619.6,5619,5621], a1_Run2[15.0],"
+	          "2 ,a2_Run2[15.0], 2)");
 
 	cout<<"Done defining J/psi Lambda Hypatia shapes"<<endl;
 	//*******************************************************************
