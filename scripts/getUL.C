@@ -1399,8 +1399,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		// R_ERR[i] = sqrt( pow(R_STATERR[i],2) + pow(R_SYSTERR[i],2) );
 
 		cout<<"*********RUN "<<i+1<<"***********"<<endl;
-		cout<<"Nobs         = "<<Nobs[i]<<" +/- "<<sqrt((float)Nobs[i])<<endl;
-		cout<<"Ncomb        = "<<Ncomb[i]<<" +/- "<<sqrt((float)Ncomb[i])<<endl;
+		cout<<"Nobs         = "<<Nobs[i]<<" +/- "<<Nobs_StatErr[i]<<endl;
+		cout<<"Ncomb        = "<<Ncomb[i]<<" +/- "<<Ncomb_StatErr[i]<<endl;
 		cout<<"XibNorm_wt   = "<<XibNorm_wt[i]<<" +/- "<<XibNorm_wt_StatErr[i]<<" +/- "<<XibNorm_wt_SystErr[i]<<endl;
 		cout<<"N_JpsiLambda = "<<N_JpsiLambda_window[i]<<" +/- "<<N_JpsiLambda_window_StatErr[i]<<" +/- "<<N_JpsiLambda_window_SystErr[i]<<endl;
 		cout<<"_____________________________________"<<endl;
