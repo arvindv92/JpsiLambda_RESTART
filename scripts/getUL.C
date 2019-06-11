@@ -56,7 +56,7 @@ using namespace std;
 using namespace RooFit;
 using namespace RooStats;
 
-void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
+void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType, Float_t loosenBDT = 0.0)
 //fitType = 0 for nomial fit. Hypatia2 signal + Exponential bkg
 //fitType = 1 for alternate fit. Double Gaussian signal + Exponential bkg
 //fitType = 2 for alternate fit. Hypatia2 signal + First order order cheby background.
@@ -404,8 +404,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		bdtConf_Zero[0] = 2;//1;
 		bdtConf_Zero[1] = 2;//1;
 
-		bdtCut_nonZero[0] = 0.475;//0.375 - 0.1;
-		bdtCut_nonZero[1] = 0.555;//0.535 - 0.1;
+		bdtCut_nonZero[0] = 0.475 - loosenBDT;//0.375 - 0.1;
+		bdtCut_nonZero[1] = 0.555 - loosenBDT;//0.535 - 0.1;
 
 		bdtCut_Zero[0] = 0.365;//0.285;
 		bdtCut_Zero[1] = 0.495;//0.455;
