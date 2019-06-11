@@ -1737,11 +1737,11 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	//*******************************************************************
 
 	//*********Gaussian Lump for misc. Lambda*'s ************************
-	w.factory("Gaussian::lstLump_Run1(Lb_DTF_M_JpsiLConstr,miscLstMean_Run1[5009.,4980.,5050.],"
-	          "miscLstSigma_Run1[60.,20.,100.])");
+	w.factory("Gaussian::lstLump_Run1(Lb_DTF_M_JpsiLConstr,miscLstMean_Run1[5009.,4990.,5040.],"
+	          "miscLstSigma_Run1[60.,30.,90.])");
 
-	w.factory("Gaussian::lstLump_Run2(Lb_DTF_M_JpsiLConstr,miscLstMean_Run2[5009.,4980.,5050.],"
-	          "miscLstSigma_Run2[60.,20.,100.])");
+	w.factory("Gaussian::lstLump_Run2(Lb_DTF_M_JpsiLConstr,miscLstMean_Run2[5009.,4990.,5040.],"
+	          "miscLstSigma_Run2[60.,30.,90.])");
 	cout<<"Done defining Misc Lambda* Gaussian shapes"<<endl;
 	//*******************************************************************
 
