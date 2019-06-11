@@ -2443,6 +2443,12 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	RooFitResult *res = simPdf.fitTo(*combData,Minos(*w.set("poi")),Extended(), Save(), Hesse(false), Strategy(1), PrintLevel(0));
 	//*******************************************************************
 
+	w.factory(Form("Gaussian::nLb_Run1_syst(gnLb_Run1[%f,1000,8000],nLb_Run1,%f)",w.var("nLb_Run1")->getValV(),0.09*(w.var("nLb_Run1")->getValV())));
+	w.var("gnLb_Run1")->setConstant();
+	w.factory(Form("Gaussian::nLb_Run2_syst(gnLb_Run2[%f,1000,24000],nLb_Run2,%f)",w.var("nLb_Run2")->getValV(),0.08*(w.var("nLb_Run2")->getValV())));
+	w.var("gnLb_Run2")->setConstant();
+
+	w.extendSet("globObs","gnLb_Run1,gnLb_Run2");
 	//*********************PLOTTING STUFF*********************************************
 	TCanvas* c_run1 = new TCanvas("Run1","Run1", 1200, 800);
 
