@@ -166,9 +166,15 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	Float_t window_JpsiXi[2]     = {0.0,0.0};
 	Float_t fitwindow_JpsiXi[2]  = {0.0,0.0};
 
+	Float_t sideband_JpsiLambda[2] = {0.0,0.0};
+
 	Float_t N_JpsiLambda_window[2] = {0.0,0.0};
 	Float_t N_JpsiLambda_window_StatErr[2] = {0.0,0.0};
 	Float_t N_JpsiLambda_window_SystErr[2] = {0.0,0.0};
+
+	Float_t N_JpsiLambda_sideband[2] = {0.0,0.0};
+	Float_t N_JpsiLambda_sideband_StatErr[2] = {0.0,0.0};
+	Float_t N_JpsiLambda_sideband_SystErr[2] = {0.0,0.0};
 
 	// Float_t N_Xib_data[2]         = {0.0,0.0};
 	// Float_t N_Xib_data_StatErr[2] = {0.0,0.0}; // abs. error = error on yield from fit to fully reco'd Xib->JpsiXi data
@@ -218,11 +224,12 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	Float_t XibNorm_wt_StatErr[2]        = {0.0,0.0}; // Abs. error
 	Float_t XibNorm_wt_SystErr[2]        = {0.0,0.0}; // Abs. error
 
-	Float_t Nobs[2]       = {0.0,0.0}; // no. of events observed in data inside signal window
+	Float_t Nobs[2]         = {0.0,0.0}; // no. of events observed in data inside signal window
 	Float_t Nobs_StatErr[2] = {0.0,0.0};
 
-	Float_t Ncomb[2]      = {0.0,0.0}; // no. of events counted in sideband window above peak in data
+	Float_t Ncomb[2]         = {0.0,0.0}; // no. of events counted in sideband window above peak in data
 	Float_t Ncomb_StatErr[2] = {0.0,0.0};
+	Float_t Ncomb_SystErr[2] = {0.0,0.0};
 
 //	Float_t Nsig[2]     = {0.0,0.0}
 
@@ -247,6 +254,8 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 	// Double_t xibINT[2]= {0.0,0.0};
 
 	RooAbsReal* lbInt[2];
+	RooAbsReal* lbInt_sideband[2];
+
 	// Double_t lbINT[2]= {0.0,0.0};
 
 	RooAbsReal* sigmaInt[2];
@@ -412,7 +421,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 
 	myVar->setRange("signal_window",sigWindow_low,sigWindow_high); //this define the signal window
 	myVar->setRange("fit_window",5500,5800); // this defines the fit window for the lambda_b fit
-
+	myVar->setRange("sideband",bkgWindow_low,bkgWindow_high);
 	//********Get data*******************************
 	const char *dataPath = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda";
 	for(Int_t run=1; run<=2; run++)
@@ -1345,16 +1354,26 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType)
 		lbInt[i]                       = w.pdf(mystr)->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
 		window_JpsiLambda[i]           = lbInt[i]->getValV();
 		N_JpsiLambda_window[i]         = window_JpsiLambda[i]*(w.var(myvar)->getVal());
-		N_JpsiLambda_window_StatErr[i] = (lbInt[i]->getValV())*(w.var(myvar)->getError());
+		N_JpsiLambda_window_StatErr[i] = (window_JpsiLambda[i])*(w.var(myvar)->getError());
 		N_JpsiLambda_window_SystErr[i] = N_JpsiLambda_SystErr[i]*window_JpsiLambda[i];
+
+		lbInt_sideband[i]                = w.pdf(mystr)->createIntegral(*myVar,NormSet(*myVar),Range("sideband"));
+		sideband_JpsiLambda[i]           = lbInt_sideband[i]->getValV();
+		N_JpsiLambda_sideband[i]         = sideband_JpsiLambda[i]*(w.var(myvar)->getVal());
+		N_JpsiLambda_sideband_StatErr[i] = sideband_JpsiLambda[i]*(w.var(myvar)->getError());
+		N_JpsiLambda_sideband_SystErr[i] = N_JpsiLambda_SystErr[i]*sideband_JpsiLambda[i];
+
+		Ncomb[i]         = Ncomb[i] - N_JpsiLambda_sideband[i];
+		Ncomb_StatErr[i] = sqrt(pow(Ncomb_StatErr[i],2) + pow(N_JpsiLambda_sideband_StatErr[i],2));
+		Ncomb_SystErr[i] = N_JpsiLambda_sideband_SystErr[i];
 
 		N_JpsiSigma[i]         = (Nobs[i] - Ncomb[i] - N_JpsiLambda_window[i] - XibNorm[i])/window_JpsiSigma[i];
 		N_JpsiSigma_StatErr[i] = (sqrt(pow(Nobs_StatErr[i],2) + pow(Ncomb_StatErr[i],2) + pow(N_JpsiLambda_window_StatErr[i],2) + pow(XibNorm_StatErr[i],2)))/window_JpsiSigma[i];
-		N_JpsiSigma_SystErr[i] = (sqrt(pow(N_JpsiLambda_SystErr[i],2) + pow(XibNorm_SystErr[i],2)))/window_JpsiSigma[i];
+		N_JpsiSigma_SystErr[i] = (sqrt(pow(N_JpsiLambda_SystErr[i],2) + pow(XibNorm_SystErr[i],2) + pow(Ncomb_SystErr[i],2)))/window_JpsiSigma[i];
 
 		N_JpsiSigma_wt[i]         = (Nobs[i] - Ncomb[i] - N_JpsiLambda_window[i] - XibNorm_wt[i])/window_JpsiSigma[i];
 		N_JpsiSigma_wt_StatErr[i] = (sqrt(pow(Nobs_StatErr[i],2) + pow(Ncomb_StatErr[i],2) + pow(N_JpsiLambda_window_StatErr[i],2) + pow(XibNorm_wt_StatErr[i],2)))/window_JpsiSigma[i];
-		N_JpsiSigma_wt_SystErr[i] = (sqrt(pow(N_JpsiLambda_window_SystErr[i],2) + pow(XibNorm_wt_SystErr[i],2)))/window_JpsiSigma[i];
+		N_JpsiSigma_wt_SystErr[i] = (sqrt(pow(N_JpsiLambda_window_SystErr[i],2) + pow(XibNorm_wt_SystErr[i],2) + pow(Ncomb_SystErr[i],2)))/window_JpsiSigma[i];
 
 		//************* Calculate R*****************************************
 		R[i] = (N_JpsiSigma[i]/N_JpsiLambda[i])*eff_ratio[i]*1.058; // 1.058 is the phase space correction factor.
