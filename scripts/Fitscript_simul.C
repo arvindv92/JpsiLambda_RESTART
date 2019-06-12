@@ -2178,16 +2178,17 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	//             "n1520_Run2");// define set of nuisance parameters
 
 	w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,"
-	            "lambda_Run1,a1_Run1,a2_Run1,"
+	            // "lambda_Run1,a1_Run1,a2_Run1,"
 	            "nBkg_Run1,nMiscLst_Run1,miscLstMean_Run1,"
 	            "miscLstSigma_Run1,eff_ratio1,nXib1,eff_ratio_1405_1,"
 	            "eff_ratio_1520_1,eff_ratio_1600_1");
 
 	w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,"
-	            "lambda_Run2,a1_Run2,a2_Run2,"
+	            // "lambda_Run2,a1_Run2,a2_Run2,"
 	            "nBkg_Run2,nMiscLst_Run2,miscLstMean_Run2,"
 	            "miscLstSigma_Run2,eff_ratio2,nXib2,eff_ratio_1405_2,"
 	            "eff_ratio_1520_2,eff_ratio_1600_2");
+	w.extendSet("nuisParams","R_1405,R_1520,R_1600");
 
 	if(bkgType == 0)
 	{
@@ -2500,13 +2501,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	RooFitResult *res = simPdf.fitTo(*combData,Minos(*w.set("poi")),Extended(), Save(), Hesse(false), Strategy(1), PrintLevel(0));
 	//*******************************************************************
-
-	w.factory(Form("Gaussian::nLb_Run1_syst(gnLb_Run1[%f,1000,8000],nLb_Run1,%f)",w.var("nLb_Run1")->getValV(),0.009*(w.var("nLb_Run1")->getValV())));
-	w.var("gnLb_Run1")->setConstant();
-	w.factory(Form("Gaussian::nLb_Run2_syst(gnLb_Run2[%f,1000,24000],nLb_Run2,%f)",w.var("nLb_Run2")->getValV(),0.008*(w.var("nLb_Run2")->getValV())));
-	w.var("gnLb_Run2")->setConstant();
-
-	w.extendSet("globObs","gnLb_Run1,gnLb_Run2");
 
 	w.factory(Form("Gaussian::nLb_Run1_syst(gnLb_Run1[%f,1000,8000],nLb_Run1,%f)",w.var("nLb_Run1")->getValV(),0.009*(w.var("nLb_Run1")->getValV())));
 	w.var("gnLb_Run1")->setConstant();
@@ -2945,6 +2939,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	w.writeToFile(fileName,true);
 	cout << "workspace written to file " << fileName << endl;
 
-	// gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,2,true,20,100,2000,100,false,0,%d,%d)",fileName,myLow,myHigh));
+	gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,2,true,20,100,2000,100,false,0,%d,%d)",fileName,myLow,myHigh));
 	// gSystem->RedirectOutput(0);
 }
