@@ -12,6 +12,11 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 //rwType 0 is no RW, 1 is MV RW, 2 is BONN RW
 //bkgType = 0 for Exponential. 1 for 2nd order Chebychev. 2 for 3rd order Chebychev
 {
+	// gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/UpperLimit/Fit_HypatiaSig_ExpoBkg_%d_%d_%dMeVBins.txt",
+	//                              myLow,myHigh,binwidth),"w");
+
+	// gSystem->RedirectOutput("tempLog.txt","a");
+
 	Bool_t calcUL   = true;
 	Bool_t isBinned = true; //set to false if you want unbinned ML fit.
 
@@ -25,23 +30,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	Int_t sigWindow_low  = 5365;
 	Int_t sigWindow_high = 5600;
 
-
-	// gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/UpperLimit/Fit_HypatiaSig_ExpoBkg_%d_%d_%dMeVBins.txt",
-	//                              myLow,myHigh,binwidth),"w");
-
-	// gSystem->RedirectOutput("tempLog.txt","a");
-
 	gSystem->Exec("date");
 	gSystem->Load("RooHypatia2_cpp.so"); //Load library for Hypatia shape
-
-	// Tail params for Lb Hypatia
-	// Float_t a1[2]  = {1.98,2.68};
-	// Float_t a2[2]  = {1.89,3.00};
-	// Float_t lam[2] = {-2.32,-2.01};
-	//
-	// Float_t a1_err[2]  = {0.25,0.22};
-	// Float_t a2_err[2]  = {0.29,0.33};
-	// Float_t lam_err[2] = {0.19,0.07};
 
 	Float_t bdtCut_nonZero[2] = {0.0,0.0};
 	Float_t bdtCut_Zero[2]    = {0.0,0.0};
@@ -83,16 +73,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	Float_t XibNorm_wt_StatErr[2]        = {0.0,0.0}; // Abs. error
 	Float_t XibNorm_wt_SystErr[2]        = {0.0,0.0}; // Abs. error
 
-	// Float_t XibNorm[2]         = {0.0,0.0};
-	// Float_t XibNorm_StatErr[2] = {0.0,0.0};
-	// Float_t XibNorm_systerr[2] = {0.0,0.0};
-	// Float_t XibNorm_err[2]     = {0.0,0.0};
-	//
-	// Float_t XibNorm_wt[2]         = {0.0,0.0};
-	// Float_t XibNorm_wt_StatErr[2] = {0.0,0.0};
-	// Float_t XibNorm_systerr_wt[2] = {0.0,0.0};
-	// Float_t XibNorm_err_wt[2]     = {0.0,0.0};
-	//
 	// Lb->J/psi L MC eff & errs
 	Int_t nGen_Lambda[2]          = {0,0}; // Generated yield
 	Float_t nGen_Lambda_wt[2]     = {0,0}; // Generated yield weighted
@@ -101,13 +81,33 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	Float_t eff_Lambda_rec[2]     = {0.0,0.0}; // Reco. Eff.
 	Float_t eff_Lambda_rec_err[2] = {0.0,0.0}; // Reco. Eff. Stat. Err.
-	// Float_t eff_Lambda[2]         = {0.0,0.0}; // Overall Eff.
-	// Float_t eff_Lambda_staterr[2] = {0.0,0.0}; // Overall Eff. Stat. Err.
 
-	Float_t eff_Lambda_rec_wt[2]     = {0.0,0.0}; // Reco. Eff.
+	Float_t eff_Lambda_rec_wt[2]     = {0.0,0.0}; // Weighted Reco. Eff.
 	Float_t eff_Lambda_rec_err_wt[2] = {0.0,0.0}; // Reco. Eff. Stat. Err.
-	// Float_t eff_Lambda_wt[2]         = {0.0,0.0}; // Overall Eff.
-	// Float_t eff_Lambda_staterr_wt[2] = {0.0,0.0}; // Overall Eff. Stat. Err.
+
+	Float_t eff_JpsiLambda[2]         = {0.0,0.0}; //% Unweighted efficiency
+	Float_t eff_JpsiLambda_SystErr[2] = {0.0,0.0}; //% Binomial uncertainty
+
+	Float_t eff_JpsiLambda_wt[2]         = {0.0,0.0}; //% Weighted efficiency
+	Float_t eff_JpsiLambda_wt_SystErr[2] = {0.0,0.0}; //% Binomial uncertainty
+
+	// Lb->J/psi Sigma MC eff & errs
+	Int_t nGen_Sigma[2]          = {0,0};
+	Float_t nGen_Sigma_wt[2]     = {0,0}; // Generated yield weighted
+	Float_t eff_Sigma_gen[2]     = {0.0,0.0};
+	Float_t eff_Sigma_gen_err[2] = {0.0,0.0};
+
+	Float_t eff_Sigma_rec[2]     = {0.0,0.0};
+	Float_t eff_Sigma_rec_err[2] = {0.0,0.0};
+
+	Float_t eff_Sigma_rec_wt[2]     = {0.0,0.0};
+	Float_t eff_Sigma_rec_err_wt[2] = {0.0,0.0};
+
+	Float_t eff_JpsiSigma[2]         = {0.0,0.0}; //% Unweighted efficiency
+	Float_t eff_JpsiSigma_SystErr[2] = {0.0,0.0}; //% Binomial uncertainty
+
+	Float_t eff_JpsiSigma_wt[2]         = {0.0,0.0}; //% Weighted efficiency
+	Float_t eff_JpsiSigma_wt_SystErr[2] = {0.0,0.0}; //% Binomial uncertainty
 
 	// Lb->J/psi 1405 MC eff & errs
 	Int_t nGen_1405[2]          = {0,0};
@@ -174,32 +174,14 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	// Float_t eff_chic1_wt[2]          = {0.0,0.0};
 	// Float_t eff_chic1_staterr_wt[2]  = {0.0,0.0};
 
-	// Lb->J/psi Sigma MC eff & errs
-	Int_t nGen_Sigma[2]          = {0,0};
-	Float_t nGen_Sigma_wt[2]     = {0,0}; // Generated yield weighted
-	Float_t eff_Sigma_gen[2]     = {0.0,0.0};
-	Float_t eff_Sigma_gen_err[2] = {0.0,0.0};
+	// eff(Lb -> J/psi Lambda) / eff(Lb -> J/psi Sigma)
+	Float_t eff_ratio[2]         = {0.0,0.0}; // Ratio of unweighted efficiencies
+	Float_t eff_ratio_StatErr[2] = {0.0,0.0}; // Absolute error. Will remain zero
+	Float_t eff_ratio_SystErr[2] = {0.0,0.0}; // Comes from binomial uncertainties
 
-	Float_t eff_Sigma_rec[2]     = {0.0,0.0};
-	Float_t eff_Sigma_rec_err[2] = {0.0,0.0};
-	// Float_t eff_Sigma[2]         = {0.0,0.0};
-	// Float_t eff_Sigma_staterr[2] = {0.0,0.0};
-
-	Float_t eff_Sigma_rec_wt[2]     = {0.0,0.0};
-	Float_t eff_Sigma_rec_err_wt[2] = {0.0,0.0};
-	// Float_t eff_Sigma_wt[2]         = {0.0,0.0};
-	// Float_t eff_Sigma_staterr_wt[2] = {0.0,0.0};
-
-	// eff(Lb -> J/psi Sigma) / eff(Lb -> J/psi Lambda)
-	// Float_t eff_ratio[2]          = {0.0,0.0};
-	// Float_t eff_ratio_StatErr[2]  = {0.0,0.0};
-	// Float_t eff_ratio_SystErr[2]  = {0.0,0.0};
-	// Float_t eff_ratio_Err[2]      = {0.0,0.0};
-	//
-	// Float_t eff_ratio_wt[2]          = {0.0,0.0};
-	// Float_t eff_ratio_wt_StatErr[2]  = {0.0,0.0};
-	// Float_t eff_ratio_wt_SystErr[2]  = {0.0,0.0};
-	// Float_t eff_ratio_Err_wt[2]      = {0.0,0.0};
+	Float_t eff_ratio_wt[2]         = {0.0,0.0}; // Ratio of Weighted efficiencies
+	Float_t eff_ratio_wt_StatErr[2] = {0.0,0.0}; // Absolute error. Will remain zero
+	Float_t eff_ratio_wt_SystErr[2] = {0.0,0.0}; // Comes from binomial uncertainties
 
 	// eff(Lb -> J/psi LAMBDA(1405)) / eff(Lb -> J/psi Lambda)
 	Float_t eff_ratio_1405[2]          = {0.0,0.0};
@@ -245,16 +227,22 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	// Float_t eff_ratio_SystErr_chic1_wt[2]  = {0.0,0.0};
 	// Float_t eff_ratio_Err_chic1_wt[2]      = {0.0,0.0};
 
+	//yield for Lb -> J/psi Lambda
 	Float_t N_JpsiLambda[2]         = {0.0,0.0};
 	Float_t N_JpsiLambda_StatErr[2] = {0.0,0.0}; // abs. error. = fit error on yield
 	Float_t N_JpsiLambda_RelSyst[2] = {0.9,0.8}; // relative % unc. comes from choice of fit model
 	Float_t N_JpsiLambda_SystErr[2] = {0.0,0.0}; // abs. error
 
-	Float_t N_JpsiSigma[2] = {0.0,0.0};
+	Float_t N_JpsiLambda_window[2]         = {0.0,0.0};
+	Float_t N_JpsiLambda_window_StatErr[2] = {0.0,0.0};
+	Float_t N_JpsiLambda_window_SystErr[2] = {0.0,0.0};
+
+	//yield for Lb -> J/psi Sigma
+	Float_t N_JpsiSigma[2]         = {0.0,0.0};
 	Float_t N_JpsiSigma_StatErr[2] = {0.0,0.0};
 	Float_t N_JpsiSigma_SystErr[2] = {0.0,0.0};
 
-	Float_t N_JpsiSigma_wt[2] = {0.0,0.0};
+	Float_t N_JpsiSigma_wt[2]         = {0.0,0.0};
 	Float_t N_JpsiSigma_wt_StatErr[2] = {0.0,0.0};
 	Float_t N_JpsiSigma_wt_SystErr[2] = {0.0,0.0};
 
@@ -263,44 +251,12 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	Float_t window_JpsiXi[2]     = {0.0,0.0};
 	Float_t fitwindow_JpsiXi[2]  = {0.0,0.0};
 
-	Float_t N_JpsiLambda_window[2] = {0.0,0.0};
-	Float_t N_JpsiLambda_window_StatErr[2] = {0.0,0.0};
-	Float_t N_JpsiLambda_window_SystErr[2] = {0.0,0.0};
-
 	Float_t Nobs[2]       = {0.0,0.0}; // no. of events observed in data inside signal window
 	Float_t Nobs_StatErr[2] = {0.0,0.0};
 
 	Float_t Ncomb[2]      = {0.0,0.0}; // no. of events counted in sideband window above peak in data
 	Float_t Ncomb_StatErr[2] = {0.0,0.0};
 
-	Float_t eff_JpsiLambda[2]         = {0.0,0.0}; //% Unweighted efficiency
-	Float_t eff_JpsiLambda_SystErr[2] = {0.0,0.0}; //% Binomial uncertainty
-
-	Float_t eff_JpsiSigma[2]         = {0.0,0.0}; //% Unweighted efficiency
-	Float_t eff_JpsiSigma_SystErr[2] = {0.0,0.0}; //% Binomial uncertainty
-
-	Float_t eff_JpsiLambda_wt[2]         = {0.0,0.0}; //% Weighted efficiency
-	Float_t eff_JpsiLambda_wt_SystErr[2] = {0.0,0.0}; //% Binomial uncertainty
-
-	Float_t eff_JpsiSigma_wt[2]         = {0.0,0.0}; //% Weighted efficiency
-	Float_t eff_JpsiSigma_wt_SystErr[2] = {0.0,0.0}; //% Binomial uncertainty
-
-	Float_t eff_ratio[2]         = {0.0,0.0}; // Ratio of unweighted efficiencies
-	Float_t eff_ratio_StatErr[2] = {0.0,0.0}; // Absolute error. Will remain zero
-	Float_t eff_ratio_SystErr[2] = {0.0,0.0}; // Comes from binomial uncertainties
-
-	Float_t eff_ratio_wt[2]         = {0.0,0.0}; // Ratio of Weighted efficiencies
-	Float_t eff_ratio_wt_StatErr[2] = {0.0,0.0}; // Absolute error. Will remain zero
-	Float_t eff_ratio_wt_SystErr[2] = {0.0,0.0}; // Comes from binomial uncertainties
-
-
-	// ***************Systematics put in by hand ************************
-	// Float_t xib_syst             = 0.05;
-	// Float_t eff_ratio_syst       = 0.02;
-	// Float_t eff_ratio_syst_1405  = 0.02;
-	// Float_t eff_ratio_syst_1520  = 0.02;
-	// Float_t eff_ratio_syst_1600  = 0.02;
-	// Float_t eff_ratio_syst_chic1 = 0.02;
 	// ***************************Flags**********************************
 	// Flags controlling shapes
 	Int_t lst1405flag    = 1;
@@ -350,18 +306,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		infile>>XibNorm_wt[i];         // Get weighted normalization
 		infile>>XibNorm_wt_StatErr[i]; // Get weighted statistical error on norm. This is the fit error
 		infile>>XibNorm_wt_SystErr[i]; // Get weighted systematic error on norm.
-		//
-		// XibNorm_systerr[i] = XibNorm[i]*xib_syst;
-		// XibNorm_err[i]     = sqrt(pow(XibNorm_StatErr[i],2) + pow(XibNorm_systerr[i],2)); //Combining stat and syst in quadrature
-		//
-		// XibNorm_systerr_wt[i] = XibNorm_wt[i]*xib_syst;
-		// XibNorm_err_wt[i]     = sqrt(pow(XibNorm_wt_StatErr[i],2) + pow(XibNorm_systerr_wt[i],2)); //Combining stat and syst in quadrature
-		//
-		// XibNorm[i]         = XibNorm[i]*2; //ACCOUNT FOR XIB0
-		// XibNorm_err[i]     = XibNorm_err[i]*1.414; //ACCOUNT FOR XIB0
-		//
-		// XibNorm_wt[i]         = XibNorm_wt[i]*2; //ACCOUNT FOR XIB0
-		// XibNorm_err_wt[i]     = XibNorm_err_wt[i]*1.414; //ACCOUNT FOR XIB0
 
 		cout<<"************************************************"<<endl;
 		cout<<"The UNWEIGHTED LL Xib normalization for Run "<<run
@@ -477,8 +421,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 		eff_JpsiLambda_wt[i]     = eff_Lambda_rec_wt[i]*eff_Lambda_gen[i];                                                                                                                                                                          // Calc. total eff.
 		eff_JpsiLambda_wt_SystErr[i] = eff_JpsiLambda_wt[i]*sqrt(pow((eff_Lambda_gen_err[i]/eff_Lambda_gen[i]),2) +
-		                                                         pow((eff_Lambda_rec_err_wt[i]/eff_Lambda_rec_wt[i]),2));                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 // and stat error on tot. eff.
-
+		                                                         pow((eff_Lambda_rec_err_wt[i]/eff_Lambda_rec_wt[i]),2));                                                                                                                                                                                    // and stat error on tot. eff.
 		cout<<"************************************************"<<endl;
 		cout<<"Run "<<run<<" UNWEIGHTED Jpsi Lambda Eff = "<<eff_JpsiLambda[i]*100
 		    <<" % +/- "<<eff_JpsiLambda_SystErr[i]*100<<" %"<<endl;
@@ -556,8 +499,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		fstream genEffFile_Sigma;
 		genEffFile_Sigma.open(Form("../logs/mc/JpsiLambda/JpsiSigma/run%d/Generator_Effs_Combined.txt",run));
 
-		genEffFile_Sigma>>eff_Sigma_gen[i];                                                                                                 // Get generator efficiency
-		genEffFile_Sigma>>eff_Sigma_gen_err[i];                                                                                                 // and error on above
+		genEffFile_Sigma>>eff_Sigma_gen[i]; // Get generator efficiency
+		genEffFile_Sigma>>eff_Sigma_gen_err[i]; // and error on above
 
 		cout<<"Run "<<run<<" Sigma Generator Effs = "<<eff_Sigma_gen[i]*100
 		    <<" % +/- "<<eff_Sigma_gen_err[i]*100<<" %"<<endl;
@@ -599,8 +542,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 		eff_JpsiSigma_wt[i]     = eff_Sigma_rec_wt[i]*eff_Sigma_gen[i];                                                                                                                                                                                                                                                                          // Calc. total eff.
 		eff_JpsiSigma_wt_SystErr[i] = eff_JpsiSigma_wt[i]*sqrt(pow((eff_Sigma_gen_err[i]/eff_Sigma_gen[i]),2) +
-		                                                       pow((eff_Sigma_rec_err_wt[i]/eff_Sigma_rec_wt[i]),2));                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     // and stat error on tot. eff.
-
+		                                                       pow((eff_Sigma_rec_err_wt[i]/eff_Sigma_rec_wt[i]),2));
 		cout<<"************************************************"<<endl;
 		cout<<"Run "<<run<<" UNWEIGHTED Jpsi Sigma Eff = "<<eff_JpsiSigma[i]*100
 		    <<" % +/- "<<eff_JpsiSigma_SystErr[i]*100<<" %"<<endl;
@@ -854,15 +796,19 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		    <<" % +/- "<<eff_1405_wt_SystErr[i]*100<<" %"<<endl;
 		cout<<"************************************************"<<endl;
 
-		eff_ratio_1405[i]            = eff_1405[i]/eff_JpsiLambda[i];
-		eff_ratio_SystErr_1405[i]    = eff_ratio_1405[i]*sqrt(pow((eff_1405_SystErr[i]/eff_1405[i]),2)+pow((eff_JpsiLambda_SystErr[i]/eff_JpsiLambda[i]),2)); // stat err on ratio
-		eff_ratio_StatErr_1405[i]    = 0.0;
-		eff_ratio_Err_1405[i]        = sqrt(pow(eff_ratio_StatErr_1405[i],2) + pow(eff_ratio_SystErr_1405[i],2));//combine in quadrature
+		eff_ratio_1405[i]         = eff_1405[i]/eff_JpsiLambda[i];
+		eff_ratio_SystErr_1405[i] = eff_ratio_1405[i]*sqrt(pow((eff_1405_SystErr[i]/eff_1405[i]),2)+
+		                                                   pow((eff_JpsiLambda_SystErr[i]/eff_JpsiLambda[i]),2));    // stat err on ratio
+		eff_ratio_StatErr_1405[i] = 0.0;
+		eff_ratio_Err_1405[i]     = sqrt(pow(eff_ratio_StatErr_1405[i],2) +
+		                                 pow(eff_ratio_SystErr_1405[i],2));   //combine in quadrature
 
-		eff_ratio_wt_1405[i]            = eff_1405_wt[i]/eff_JpsiLambda_wt[i];
-		eff_ratio_wt_SystErr_1405[i]    = eff_ratio_wt_1405[i]*sqrt(pow((eff_1405_wt_SystErr[i]/eff_1405_wt[i]),2)+pow((eff_JpsiLambda_wt_SystErr[i]/eff_JpsiLambda_wt[i]),2)); // stat err on ratio
-		eff_ratio_wt_StatErr_1405[i]    = 0.0;
-		eff_ratio_Err_1405_wt[i]        = sqrt(pow(eff_ratio_wt_StatErr_1405[i],2) + pow(eff_ratio_wt_SystErr_1405[i],2));//combine in quadrature
+		eff_ratio_wt_1405[i]         = eff_1405_wt[i]/eff_JpsiLambda_wt[i];
+		eff_ratio_wt_SystErr_1405[i] = eff_ratio_wt_1405[i]*sqrt(pow((eff_1405_wt_SystErr[i]/eff_1405_wt[i]),2)+
+		                                                         pow((eff_JpsiLambda_wt_SystErr[i]/eff_JpsiLambda_wt[i]),2));    // stat err on ratio
+		eff_ratio_wt_StatErr_1405[i] = 0.0;
+		eff_ratio_Err_1405_wt[i]     = sqrt(pow(eff_ratio_wt_StatErr_1405[i],2) +
+		                                    pow(eff_ratio_wt_SystErr_1405[i],2));   //combine in quadrature
 
 		cout<<"***************************************"<<endl;
 		cout<<"Run "<<run<<" UNWEIGHTED /\(1405)/Lambda efficiency ratio = "<<eff_ratio_1405[i]<<" +/- "<<eff_ratio_Err_1405[i] <<endl;
@@ -912,58 +858,36 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		{
 			if(run == 1)
 			{
-				ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,Form("%sweight*gb_wts_new*wt_tau",rwType));
+				ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
+				                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
+				                            Form("%sweight*gb_wts_new*wt_tau",rwType));
 			}
 			else if(run == 2)
 			{
-				ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,Form("%sweight*gb_wts*wt_tau",rwType));
+				ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
+				                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
+				                            Form("%sweight*gb_wts*wt_tau",rwType));
 			}
 		}
 		else
 		{
 			if(run == 1)
 			{
-				ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"gb_wts_new*wt_tau");
+				ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
+				                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
+				                            "gb_wts_new*wt_tau");
 			}
 			else if(run == 2)
 			{
-				ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"gb_wts*wt_tau");
+				ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
+				                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
+				                            "gb_wts*wt_tau");
 			}
 		}
 		ds_1405[i]->Print();
 
-		KEYS_1405[i] = new RooKeysPdf(Form("LST1405_Run%d",run),Form("LST1405_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1405[i]),RooKeysPdf::MirrorBoth,1);
-
-		// mcTreeIn_nonZero_1405->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1405_nonZero%d(%d,%d,%d)",run,nbins,myLow,myHigh),
-		//                            Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");        //Not TRUTH MATCHING HERE!
-		//
-		// mcTreeIn_Zero_1405->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1405_Zero%d(%d,%d,%d)",run,nbins,myLow,myHigh),
-		//                         Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");        //Not TRUTH MATCHING HERE!
-		//
-		// TH1D *h1405_nonZero = (TH1D*)gDirectory->Get(Form("h1405_nonZero%d",run));
-		// TH1D *h1405_Zero    = (TH1D*)gDirectory->Get(Form("h1405_Zero%d",run));
-		// TH1D *h1405         = new TH1D(Form("h1405%d",run),"",nbins,myLow,myHigh);
-		//
-		// h1405->Add(h1405_nonZero,h1405_Zero);
-		// TH1D *h1405_smooth  = (TH1D*)h1405->Clone(Form("h1405_smooth%d",run));
-		// h1405_smooth->Smooth(2);
-		//
-		// RooDataHist *ds_1405        = new RooDataHist(Form("ds_1405%d",run),Form("ds_1405%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),h1405);
-		// RooDataHist *ds_1405_smooth = new RooDataHist(Form("ds_1405_smooth%d",run),Form("ds_1405_smooth%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),h1405_smooth);
-		//
-		// ds_1405->Print();
-		//
-		// RooHistPdf 1405shape(Form("1405shape%d",run),Form("1405shape%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_1405,0);
-		// SIG[i] = new RooHistPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_1405_smooth,0);
-
-		// RooPlot *frame1405 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
-		// frame1405->SetTitle("J/#psi #Lambda(1405)");
-		// ds_1405[i]->plotOn(frame1405,Name("1405data"));
-		// // 1405shape.plotOn(frame1405,Name("1405fit"),LineColor(kBlue));
-		// (*(KEYS_1405[i])).plotOn(frame1405,Name("1405fitsmooth"),LineColor(kRed),LineStyle(kDashed));
-		//
-		// TCanvas *c1405 = new TCanvas(Form("JpsiLst(1405)%d",run),Form("JpsiLst(1405)%d",run));
-		// frame1405->Draw();
+		KEYS_1405[i] = new RooKeysPdf(Form("LST1405_Run%d",run),Form("LST1405_Run%d",run),
+		                              *(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1405[i]),RooKeysPdf::MirrorBoth,1);
 
 		w.import(*(KEYS_1405[i]));
 
@@ -1065,15 +989,17 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		    <<" % +/- "<<eff_1520_wt_SystErr[i]*100<<" %"<<endl;
 		cout<<"************************************************"<<endl;
 
-		eff_ratio_1520[i]            = eff_1520[i]/eff_JpsiLambda[i];
-		eff_ratio_SystErr_1520[i]    = eff_ratio_1520[i]*sqrt(pow((eff_1520_SystErr[i]/eff_1520[i]),2)+pow((eff_JpsiLambda_SystErr[i]/eff_JpsiLambda[i]),2)); // stat err on ratio
-		eff_ratio_StatErr_1520[i]    = 0.0;
-		eff_ratio_Err_1520[i]        = sqrt(pow(eff_ratio_StatErr_1520[i],2) + pow(eff_ratio_SystErr_1520[i],2));//combine in quadrature
+		eff_ratio_1520[i]         = eff_1520[i]/eff_JpsiLambda[i];
+		eff_ratio_SystErr_1520[i] = eff_ratio_1520[i]*sqrt(pow((eff_1520_SystErr[i]/eff_1520[i]),2)+
+		                                                   pow((eff_JpsiLambda_SystErr[i]/eff_JpsiLambda[i]),2));    // stat err on ratio
+		eff_ratio_StatErr_1520[i] = 0.0;
+		eff_ratio_Err_1520[i]     = sqrt(pow(eff_ratio_StatErr_1520[i],2) + pow(eff_ratio_SystErr_1520[i],2));//combine in quadrature
 
-		eff_ratio_wt_1520[i]            = eff_1520_wt[i]/eff_JpsiLambda_wt[i];
-		eff_ratio_wt_SystErr_1520[i]    = eff_ratio_wt_1520[i]*sqrt(pow((eff_1520_wt_SystErr[i]/eff_1520_wt[i]),2)+pow((eff_JpsiLambda_wt_SystErr[i]/eff_JpsiLambda_wt[i]),2)); // stat err on ratio
-		eff_ratio_wt_StatErr_1520[i]    = 0.0;
-		eff_ratio_Err_1520_wt[i]        = sqrt(pow(eff_ratio_wt_StatErr_1520[i],2) + pow(eff_ratio_wt_SystErr_1520[i],2));//combine in quadrature
+		eff_ratio_wt_1520[i]         = eff_1520_wt[i]/eff_JpsiLambda_wt[i];
+		eff_ratio_wt_SystErr_1520[i] = eff_ratio_wt_1520[i]*sqrt(pow((eff_1520_wt_SystErr[i]/eff_1520_wt[i]),2)+
+		                                                         pow((eff_JpsiLambda_wt_SystErr[i]/eff_JpsiLambda_wt[i]),2));    // stat err on ratio
+		eff_ratio_wt_StatErr_1520[i] = 0.0;
+		eff_ratio_Err_1520_wt[i]     = sqrt(pow(eff_ratio_wt_StatErr_1520[i],2) + pow(eff_ratio_wt_SystErr_1520[i],2));//combine in quadrature
 
 		cout<<"***************************************"<<endl;
 		cout<<"Run "<<run<<" UNWEIGHTED /\(1520)/Lambda efficiency ratio = "<<eff_ratio_1520[i]<<" +/- "<<eff_ratio_Err_1520[i] <<endl;
@@ -1123,36 +1049,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		ds_1520[i]->Print();
 
 		KEYS_1520[i] = new RooKeysPdf(Form("LST1520_Run%d",run),Form("LST1520_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1520[i]),RooKeysPdf::MirrorBoth,1);
-
-		// mcTreeIn_nonZero_1520->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1520_nonZero%d(%d,%d,%d)",run,nbins,myLow,myHigh),
-		//                            Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");        //Not TRUTH MATCHING HERE!
-		//
-		// mcTreeIn_Zero_1520->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1520_Zero%d(%d,%d,%d)",run,nbins,myLow,myHigh),
-		//                         Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");        //Not TRUTH MATCHING HERE!
-		//
-		// TH1D *h1520_nonZero = (TH1D*)gDirectory->Get(Form("h1520_nonZero%d",run));
-		// TH1D *h1520_Zero    = (TH1D*)gDirectory->Get(Form("h1520_Zero%d",run));
-		// TH1D *h1520         = new TH1D(Form("h1520%d",run),"",nbins,myLow,myHigh);
-		//
-		// h1520->Add(h1520_nonZero,h1520_Zero);
-		// TH1D *h1520_smooth  = (TH1D*)h1520->Clone(Form("h1520_smooth%d",run));
-		// h1520_smooth->Smooth(2);
-		//
-		// RooDataHist *ds_1520        = new RooDataHist(Form("ds_1520%d",run),Form("ds_1520%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),h1520);
-		// RooDataHist *ds_1520_smooth = new RooDataHist(Form("ds_1520_smooth%d",run),Form("ds_1520_smooth%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),h1520_smooth);
-		//
-		// ds_1520->Print();
-		//
-		// RooHistPdf 1520shape(Form("1520shape%d",run),Form("1520shape%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_1520,0);
-		// SIG[i] = new RooHistPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_1520_smooth,0);
-
-		// RooPlot *frame1520 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
-		// frame1520->SetTitle("J/#psi #Lambda(1520)");
-		// ds_1520[i]->plotOn(frame1520,Name("1520data"));
-		// (*(KEYS_1520[i])).plotOn(frame1520,Name("1520fitsmooth"),LineColor(kRed),LineStyle(kDashed));
-
-		// TCanvas *c1520 = new TCanvas(Form("JpsiLst(1520)%d",run),Form("JpsiLst(1520)%d",run));
-		// frame1520->Draw();
 
 		w.import(*(KEYS_1520[i]));
 
@@ -1312,36 +1208,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		ds_1600[i]->Print();
 
 		KEYS_1600[i] = new RooKeysPdf(Form("LST1600_Run%d",run),Form("LST1600_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1600[i]),RooKeysPdf::MirrorBoth,1);
-
-		// mcTreeIn_nonZero_1600->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1600_nonZero%d(%d,%d,%d)",run,nbins,myLow,myHigh),
-		//                            Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");        //Not TRUTH MATCHING HERE!
-		//
-		// mcTreeIn_Zero_1600->Draw(Form("Lb_DTF_M_JpsiLConstr>>h1600_Zero%d(%d,%d,%d)",run,nbins,myLow,myHigh),
-		//                         Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");        //Not TRUTH MATCHING HERE!
-		//
-		// TH1D *h1600_nonZero = (TH1D*)gDirectory->Get(Form("h1600_nonZero%d",run));
-		// TH1D *h1600_Zero    = (TH1D*)gDirectory->Get(Form("h1600_Zero%d",run));
-		// TH1D *h1600         = new TH1D(Form("h1600%d",run),"",nbins,myLow,myHigh);
-		//
-		// h1600->Add(h1600_nonZero,h1600_Zero);
-		// TH1D *h1600_smooth  = (TH1D*)h1600->Clone(Form("h1600_smooth%d",run));
-		// h1600_smooth->Smooth(2);
-		//
-		// RooDataHist *ds_1600        = new RooDataHist(Form("ds_1600%d",run),Form("ds_1600%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),h1600);
-		// RooDataHist *ds_1600_smooth = new RooDataHist(Form("ds_1600_smooth%d",run),Form("ds_1600_smooth%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),h1600_smooth);
-		//
-		// ds_1600->Print();
-		//
-		// RooHistPdf 1600shape(Form("1600shape%d",run),Form("1600shape%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_1600,0);
-		// SIG[i] = new RooHistPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_1600_smooth,0);
-
-		// RooPlot *frame1600 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
-		// frame1600->SetTitle("J/#psi #Lambda(1600)");
-		// ds_1600[i]->plotOn(frame1600,Name("1600data"));
-		// (*(KEYS_1600[i])).plotOn(frame1600,Name("1600fitsmooth"),LineColor(kRed),LineStyle(kDashed));
-
-		// TCanvas *c1600 = new TCanvas(Form("JpsiLst(1600)%d",run),Form("JpsiLst(1600)%d",run));
-		// frame1600->Draw();
 
 		w.import(*(KEYS_1600[i]));
 
@@ -1609,23 +1475,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 		ds_xi_wt[i] = new RooDataSet("ds_xi_wt","ds_xi_wt",RooArgSet(*myVar,*gbWtVar),Import(*(ds_xi[i])),WeightVar(*gbWtVar));
 		ds_xi_wt[i]->Print();
-		// treein_xi_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hxib_nonZero%d(%d,%d,%d)",run,nbins,myLow,myHigh),
-		//                         Form("Lb_BKGCAT==40 && BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");//TRUTH MATCHING HERE
-		// treein_xi_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hxib_Zero%d(%d,%d,%d)",run,nbins,myLow,myHigh),
-		//                      Form("Lb_BKGCAT==40 && BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");//TRUTH MATCHING HERE
-		//
-		// TH1D *hxib_nonZero = (TH1D*)gDirectory->Get(Form("hxib_nonZero%d",run));
-		// TH1D *hxib_Zero    = (TH1D*)gDirectory->Get(Form("hxib_Zero%d",run));
-		// TH1D *hxib         = new TH1D(Form("hxib%d",run),"",nbins,myLow,myHigh);
-		// hxib->Add(hxib_nonZero,hxib_Zero);
-		//
-		// TH1D *hxib_smooth  = (TH1D*)hxib->Clone(Form("hxib_smooth%d",run));
-		// hxib_smooth->Smooth(40);//TODO TWEAK THIS
-		//
-		// RooDataHist *ds_xib        = new RooDataHist(Form("ds_xib%d",run),Form("ds_xib%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),hxib);
-		// RooDataHist *ds_xib_smooth = new RooDataHist(Form("ds_xib_smooth%d",run),Form("ds_xib_smooth%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),hxib_smooth);
-		//
-		// ds_xib_smooth->Print();
 
 		XIB_KEYS[i] = new RooKeysPdf(Form("XIB%d",run),Form("XIB%d",run),*myVar,*(ds_xi_wt[i]),RooKeysPdf::NoMirror);
 		// XIB[i] = new RooHistPdf(Form("XIB%d",run),Form("XIB%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_xib_smooth,0);
@@ -1728,9 +1577,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	cout<<"Done defining cont. bkg exp. shapes"<<endl;
 
-	// w.factory("Chebychev::Bkg_Run1(Lb_DTF_M_JpsiLConstr, {c0_Run1[-0.5,-2.0,2.0], c1_Run1[0.5,-1.0,1.0], c2_Run1[0.,-1.0,1.0]})");
-	// w.factory("Chebychev::Bkg_Run2(Lb_DTF_M_JpsiLConstr, {c0_Run2[-0.5,-2.0,2.0], c1_Run2[-0.5,-1.0,1.0], c2_Run2[0.,-1.0,1.0]})");
-
 	//*******************************************************************
 
 	//*********Gaussian Lump for misc. Lambda*'s ************************
@@ -1749,10 +1595,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	//********Data for Fit to simulation*********************************
 	TH1D *mcHist[2];
-
-//	mcHist[0] = new TH1D("","",nbins,myLow,myHigh);
-//	mcHist[1] = new TH1D("","",nbins,myLow,myHigh);
-
 	RooDataHist *mc_ds[2];
 	RooDataSet *ds_sim[2], *ds_sim_wt[2];
 	Int_t mcNentries[2];
@@ -1994,24 +1836,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	w.factory("R_1600[0.2,0.0,1.0]"); //R_1600 = N_corr(Lb -> Jpsi Lambda(1600)) / N_corr(Lb -> Jpsi Lambda)
 	w.factory("R_chic1[0.1,0.0,0.5]"); //R_chic1 = N_corr(Lb -> chic1 Lambda / N_corr(Lb -> Jpsi Lambda)
 
-	// w.factory(Form("sigmaEff1[%f,0,1]",eff_Sigma[0]));
-	// w.factory(Form("lambdaEff1[%f,0,1]",eff_Lambda[0]));
-	// w.factory(Form("sigmaEff2[%f,0,1]",eff_Sigma[1]));
-	// w.factory(Form("lambdaEff2[%f,0,1]",eff_Lambda[1]));
-	//
-	// w.factory(Form("Gaussian::sigmaEff_constraint1(gsigmaEff1[%f,0,1],sigmaEff1,%f)",eff_Sigma[0],eff_Sigma_err[0]));
-	// w.factory(Form("Gaussian::lambdaEff_constraint1(glambdaEff1[%f,0,1],lambdaEff1,%f)",eff_Lambda[0],eff_Lambda_err[0]));
-	//
-	// w.factory(Form("Gaussian::sigmaEff_constraint2(gsigmaEff2[%f,0,1],sigmaEff2,%f)",eff_Sigma[1],eff_Sigma_err[1]));
-	// w.factory(Form("Gaussian::lambdaEff_constraint2(glambdaEff2[%f,0,1],lambdaEff2,%f)",eff_Lambda[1],eff_Lambda_err[1]));
-	//
-	// w.var("gsigmaEff1")->setConstant();
-	// w.var("glambdaEff1")->setConstant();
-	//
-	// w.var("gsigmaEff2")->setConstant();
-	// w.var("glambdaEff2")->setConstant();
-
-
 	//**************** Sigma/Lb Efficiency Ratio*************************
 	w.factory(Form("eff_ratio1[%f,0.,5.]",eff_ratio_wt[0])); //eff(Lb -> Jpsi Lambda)/eff(Lb -> Jpsi Sigma)
 	w.factory(Form("eff_ratio2[%f,0.,5.]",eff_ratio_wt[1]));
@@ -2070,12 +1894,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	w.factory("nLb_Run1[5000,1000,8000]");
 	w.factory("nLb_Run2[17000,1000,24000]");
 
-	// w.factory("n1405_Run1[500,1,5000]");
-	// w.factory("n1405_Run2[500,1,5000]");
-	// w.factory("n1520_Run1[3000,1,5000]");
-	// w.factory("n1520_Run2[3000,1,5000]");
-	// w.factory("n1600_Run1[3000,1,10000]");
-	// w.factory("n1600_Run2[3000,1,10000]");
 	w.factory("nMiscLst_Run1[1500,1,4000]");
 	w.factory("nMiscLst_Run2[4000,1,9000]");
 	w.factory(Form("nBkg_Run1[1,%d]",nentries[0]));
@@ -2094,8 +1912,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	w.var("gnXib1")->setConstant();
 	w.var("gnXib2")->setConstant();
 	//*******************************************************************
-	// w.factory("expr::nSigma1('pow(10,-5)*R*nLb_Run1*sigmaEff1/(lambdaEff1)',R,nLb_Run1,sigmaEff1,lambdaEff1)");
-	// w.factory("expr::nSigma2('pow(10,-5)*R*nLb_Run2*sigmaEff2/(lambdaEff2)',R,nLb_Run2,sigmaEff2,lambdaEff2)");
 
 	//*****************Jpsi Sigma yield**********************************
 	w.factory("expr::nSigma1('pow(10,-5)*R*nLb_Run1/eff_ratio1',R,nLb_Run1,eff_ratio1)");
@@ -2147,32 +1963,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	//      w.var("R_chic1")->setConstant();
 	// }
 
-	// w.factory("PROD::model_const1(model1,sigmaEff_constraint1,lambdaEff_constraint1,nXib_constraint1)");//Multiply model by constraint terms
-	// w.factory("PROD::model_const2(model2,sigmaEff_constraint2,lambdaEff_constraint2,nXib_constraint2)");//Multiply model by constraint terms
-
 	w.defineSet("poi","R"); //parameters of interest
-
-	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,lambda_Run1,a1_Run1,a2_Run1,nBkg_Run1,slope_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1");// define set of nuisance parameters
-	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,lambda_Run2,a1_Run2,a2_Run2,nBkg_Run2,slope_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,sigmaEff1,lambdaEff1,nXib1,n1405_Run2,n1520_Run2");
-
-	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,lambda_Run1,a1_Run1,"
-	//             "a2_Run1,nBkg_Run1,slope_Run1,nMiscLst_Run1,miscLstMean_Run1,"
-	//             "miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,"
-	//             "n1520_Run1");
-	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,lambda_Run2,a1_Run2,"
-	//             "a2_Run2,nBkg_Run2,slope_Run2,nMiscLst_Run2,miscLstMean_Run2,"
-	//             "miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,"
-	//             "n1520_Run2");// define set of nuisance parameters
-
-
-	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,"
-	//             "nBkg_Run1,slope_Run1,nMiscLst_Run1,miscLstMean_Run1,"
-	//             "miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,"
-	//             "n1520_Run1");
-	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,"
-	//             "nBkg_Run2,slope_Run2,nMiscLst_Run2,miscLstMean_Run2,"
-	//             "miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,"
-	//             "n1520_Run2");// define set of nuisance parameters
 
 	w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,"
 	            // "lambda_Run1,a1_Run1,a2_Run1,"
@@ -2195,26 +1986,19 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	{
 		w.extendSet("nuisParams","c0_Run1,c0_Run2,c1_Run1,c1_Run2");
 		if(bkgType == 2 || bkgType == 3)
-		  {
-		    w.extendSet("nuisParams","c2_Run1,c2_Run2");
-		    if(bkgType == 3)
-		      {
-			w.extendSet("nuisParams","c3_Run1,c3_Run2");
-		      }
-		  }
+		{
+			w.extendSet("nuisParams","c2_Run1,c2_Run2");
+			if(bkgType == 3)
+			{
+				w.extendSet("nuisParams","c3_Run1,c3_Run2");
+			}
+		}
 	}
-	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,alpha1_Run1,alpha2_Run1,nBkg_Run1,slope_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1");// define set of nuisance parameters
-	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,alpha1_Run2,alpha2_Run2,nBkg_Run2,slope_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,n1520_Run2");
 
-	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,alpha1_Run1,alpha2_Run1,nBkg_Run1,a0_Run1,a1_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1");// define set of nuisance parameters
-	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,alpha1_Run2,alpha2_Run2,nBkg_Run2,a0_Run2,a1_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,n1520_Run2");
-
-	// w.defineSet("globObs","gsigmaEff1,glambdaEff1,gnXib1,gsigmaEff2,"
-	//             "glambdaEff2,gnXib2"); //define set of global observables
 	w.defineSet("globObs","geff_ratio1,gnXib1,geff_ratio2,"
-		    "gnXib2,geff_ratio_1405_1,geff_ratio_1405_2,"
-		    "geff_ratio_1520_1,geff_ratio_1520_2,"
-		    "geff_ratio_1600_1,geff_ratio_1600_2");   //define set of global observables
+	            "gnXib2,geff_ratio_1405_1,geff_ratio_1405_2,"
+	            "geff_ratio_1520_1,geff_ratio_1520_2,"
+	            "geff_ratio_1600_1,geff_ratio_1600_2");   //define set of global observables
 
 	//*******************************************************************
 
@@ -2493,34 +2277,37 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	//************************DO THE FIT***********************
 
-	RooArgSet constrainParams(*(w.var("eff_ratio1")), *(w.var("eff_ratio2")), *(w.var("eff_ratio_1405_1")), *(w.var("eff_ratio_1405_2")), *(w.var("eff_ratio_1520_1")), *(w.var("eff_ratio_1520_2")), *(w.var("eff_ratio_1600_1")), *(w.var("eff_ratio_1600_2")));
-	
+	RooArgSet constrainParams(*(w.var("eff_ratio1")), *(w.var("eff_ratio2")),
+	                          *(w.var("eff_ratio_1405_1")), *(w.var("eff_ratio_1405_2")),
+	                          *(w.var("eff_ratio_1520_1")), *(w.var("eff_ratio_1520_2")),
+	                          *(w.var("eff_ratio_1600_1")), *(w.var("eff_ratio_1600_2")));
+
 	constrainParams.add( *(w.var("nXib1")) );
-	constrainParams.add( *(w.var("nXib2")) ); 
+	constrainParams.add( *(w.var("nXib2")) );
 
 	if(bkgType == 0)
-	  {
-	    constrainParams.add( *(w.var("slope_Run1")) );
-	    constrainParams.add( *(w.var("slope_Run2")) );
-	  }
+	{
+		constrainParams.add( *(w.var("slope_Run1")) );
+		constrainParams.add( *(w.var("slope_Run2")) );
+	}
 	else
-	  {
-	    constrainParams.add( *(w.var("c0_Run1")) );
-            constrainParams.add( *(w.var("c0_Run2")) );
-	    constrainParams.add( *(w.var("c1_Run1")) );
-            constrainParams.add( *(w.var("c1_Run2")) );
-	    if(bkgType == 2 || bkgType == 3)
-	      {
-		constrainParams.add( *(w.var("c2_Run1")) );
-		constrainParams.add( *(w.var("c2_Run2")) );
-		if(bkgType == 3)
-		  {
-		    constrainParams.add( *(w.var("c3_Run1")) );
-		    constrainParams.add( *(w.var("c3_Run2")) );
-		  }
-	      }
-	  }
-	
+	{
+		constrainParams.add( *(w.var("c0_Run1")) );
+		constrainParams.add( *(w.var("c0_Run2")) );
+		constrainParams.add( *(w.var("c1_Run1")) );
+		constrainParams.add( *(w.var("c1_Run2")) );
+		if(bkgType == 2 || bkgType == 3)
+		{
+			constrainParams.add( *(w.var("c2_Run1")) );
+			constrainParams.add( *(w.var("c2_Run2")) );
+			if(bkgType == 3)
+			{
+				constrainParams.add( *(w.var("c3_Run1")) );
+				constrainParams.add( *(w.var("c3_Run2")) );
+			}
+		}
+	}
+
 	RooFitResult *res = simPdf.fitTo(*combData,Minos(*w.set("poi")),Extended(), Save(), Hesse(false), Strategy(1), PrintLevel(0), Constrain(constrainParams) );
 
 	//*******************************************************************
@@ -2561,24 +2348,20 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	// simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Lb2_Run1"))),LineStyle(kDotted),LineColor(kMagenta));
 	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Bkg_Run1"))),LineColor(kRed),Name("bkg_Run1"));
 	//  if(xibflag!=0)
-	if(strncmp(option,"mcFit",5))//if not MC fit
-	{
-		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("XIB1"))),LineColor(kGreen),Name("xib_Run1"));
-		if(lst1405flag)
-			simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("LST1405_Run1"))),LineColor(kGreen+2),LineStyle(kDashed),Name("lst1405_Run1"));
-		if(lst1520flag)
-			simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("LST1520_Run1"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1520_Run1"));
-		if(lst1600flag)
-			simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("LST1600_Run1"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1600_Run1"));
-		// if(chic1flag)
-		//      simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("chic1_Run1"))),LineColor(kMagenta+2),LineStyle(kDashed),Name("chic1_Run1"));
-		//simPdf.plotOn(frame_run1,Components(lst1810shape),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1810"));
-		// if(sigmaflag!=0)
-		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("SIG1"))),LineColor(kBlack),Name("sig_Run1"));
-		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("lstLump_Run1"))),LineColor(kRed+2),LineStyle(kDashed),Name("misclst_Run1"));
 
-		frame_run1->GetYaxis()->SetRangeUser(0,60);
-	}
+	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("XIB1"))),LineColor(kGreen),Name("xib_Run1"));
+	if(lst1405flag)
+		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("LST1405_Run1"))),LineColor(kGreen+2),LineStyle(kDashed),Name("lst1405_Run1"));
+	if(lst1520flag)
+		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("LST1520_Run1"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1520_Run1"));
+	if(lst1600flag)
+		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("LST1600_Run1"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1600_Run1"));
+	// if(chic1flag)
+	//      simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("chic1_Run1"))),LineColor(kMagenta+2),LineStyle(kDashed),Name("chic1_Run1"));
+	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("SIG1"))),LineColor(kBlack),Name("sig_Run1"));
+	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("lstLump_Run1"))),LineColor(kRed+2),LineStyle(kDashed),Name("misclst_Run1"));
+
+	frame_run1->GetYaxis()->SetRangeUser(0,60);
 	// Double_t chiSquare1 = frame_run1->chiSquare("fit_run1","data_Run1");
 	// cout<<"chi square1/dof = "<<chiSquare1<<endl;
 	RooArgSet *allpar_run1 = simPdf.getParameters(*(ds[0]));
@@ -2627,37 +2410,32 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	legend_run1->AddEntry("fit_Run1","Total Fit","l");
 	legend_run1->AddEntry("lb_Run1","J/#psi #Lambda shape","l");
 	legend_run1->AddEntry("bkg_Run1","Comb. Bkg. shape","l");
-	if(strncmp(option,"mcFit",5))//if not MC fit
+
+	legend_run1->AddEntry("sig_Run1","J/#psi #Sigma shape","l");
+	legend_run1->AddEntry("xib_Run1","J/#psi #Xi shape","l");
+	if(lst1405flag)
 	{
-		legend_run1->AddEntry("sig_Run1","J/#psi #Sigma shape","l");
-		legend_run1->AddEntry("xib_Run1","J/#psi #Xi shape","l");
-		if(lst1405flag)
-		{
-			legend_run1->AddEntry("lst1405_Run1","J/#psi #Lambda(1405) shape","l");
-		}
-		if(lst1520flag)
-		{
-			legend_run1->AddEntry("lst1520_Run1","J/#psi #Lambda(1520) shape","l");
-		}
-		if(lst1600flag)
-		{
-			legend_run1->AddEntry("lst1600_Run1","J/#psi #Lambda(1600) shape","l");
-		}
-		// if(chic1flag)
-		// {
-		//      legend_run1->AddEntry("chic1_Run1","#chi_{c1} #Lambda shape","l");
-		// }
-		// if(lst1810flag)
-		//      legend_run1->AddEntry("lst1810","J/#psi #Lambda(1810) shape","l");
-		legend_run1->AddEntry("misclst_Run1","misc. J/#psi #Lambda* shapes","l");
+		legend_run1->AddEntry("lst1405_Run1","J/#psi #Lambda(1405) shape","l");
 	}
+	if(lst1520flag)
+	{
+		legend_run1->AddEntry("lst1520_Run1","J/#psi #Lambda(1520) shape","l");
+	}
+	if(lst1600flag)
+	{
+		legend_run1->AddEntry("lst1600_Run1","J/#psi #Lambda(1600) shape","l");
+	}
+	// if(chic1flag)
+	// {
+	//      legend_run1->AddEntry("chic1_Run1","#chi_{c1} #Lambda shape","l");
+	// }
+	legend_run1->AddEntry("misclst_Run1","misc. J/#psi #Lambda* shapes","l");
 	legend_run1->Draw("same");
 
 	c_run1->Update();
 
 	// Pull distribution
 	RooPlot *frame_run1x2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),myLow,myHigh,nbins);
-	// RooPlot *framex2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")), myLow,5800,100);
 	RooHist* hpull_run1 = frame_run1->pullHist("data_Run1","fit_Run1");
 	frame_run1x2->addPlotable(hpull_run1,"P");
 	hpull_run1->SetLineColor(kBlack);
@@ -2695,24 +2473,20 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	// simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Lb1_Run2"))),LineStyle(kDotted),LineColor(kMagenta));
 	// simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Lb2_Run2"))),LineStyle(kDotted),LineColor(kMagenta));
 	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Bkg_Run2"))),LineColor(kRed),Name("bkg_Run2"));
-	if(strncmp(option,"mcFit",5))//if not MC fit
-	{
-		//  if(xibflag!=0)
-		simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("XIB2"))),LineColor(kGreen),Name("xib_Run2"));
-		if(lst1405flag)
-			simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("LST1405_Run2"))),LineColor(kGreen+2),LineStyle(kDashed),Name("lst1405_Run2"));
-		if(lst1520flag)
-			simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("LST1520_Run2"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1520_Run2"));
-		if(lst1600flag)
-			simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("LST1600_Run2"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1600_Run2"));
-		// if(chic1flag)
-		// simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("chic1_Run2"))),LineColor(kMagenta+2),LineStyle(kDashed),Name("chic1_Run2"));
-		//simPdf.plotOn(frame_run2,Components(lst1810shape),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1810"));
-		// if(sigmaflag!=0)
-		simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("SIG2"))),LineColor(kBlack),Name("sig_Run2"));
-		simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("lstLump_Run2"))),LineColor(kRed+2),LineStyle(kDashed),Name("misclst_Run2"));
-		frame_run2->GetYaxis()->SetRangeUser(0,160);
-	}
+	//  if(xibflag!=0)
+	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("XIB2"))),LineColor(kGreen),Name("xib_Run2"));
+	if(lst1405flag)
+		simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("LST1405_Run2"))),LineColor(kGreen+2),LineStyle(kDashed),Name("lst1405_Run2"));
+	if(lst1520flag)
+		simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("LST1520_Run2"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1520_Run2"));
+	if(lst1600flag)
+		simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("LST1600_Run2"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1600_Run2"));
+	// if(chic1flag)
+	// simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("chic1_Run2"))),LineColor(kMagenta+2),LineStyle(kDashed),Name("chic1_Run2"));
+	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("SIG2"))),LineColor(kBlack),Name("sig_Run2"));
+	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("lstLump_Run2"))),LineColor(kRed+2),LineStyle(kDashed),Name("misclst_Run2"));
+
+	frame_run2->GetYaxis()->SetRangeUser(0,160);
 	// Double_t chiSquare1 = frame_run2->chiSquare("fit_run2","data_run2");
 	// cout<<"chi square1/dof = "<<chiSquare1<<endl;
 	RooArgSet *floatpar_run2 = simPdf.getParameters(*(ds[1]));
@@ -2755,30 +2529,26 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	legend_run2->AddEntry("fit_Run2","Total Fit","l");
 	legend_run2->AddEntry("lb_Run2","J/#psi #Lambda shape","l");
 	legend_run2->AddEntry("bkg_Run2","Comb. Bkg. shape","l");
-	if(strncmp(option,"mcFit",5))//if not MC fit
+
+	legend_run2->AddEntry("sig_Run2","J/#psi #Sigma shape","l");
+	legend_run2->AddEntry("xib_Run2","J/#psi #Xi shape","l");
+	if(lst1405flag)
 	{
-		legend_run2->AddEntry("sig_Run2","J/#psi #Sigma shape","l");
-		legend_run2->AddEntry("xib_Run2","J/#psi #Xi shape","l");
-		if(lst1405flag)
-		{
-			legend_run2->AddEntry("lst1405_Run2","J/#psi #Lambda(1405) shape","l");
-		}
-		if(lst1520flag)
-		{
-			legend_run2->AddEntry("lst1520_Run2","J/#psi #Lambda(1520) shape","l");
-		}
-		if(lst1600flag)
-		{
-			legend_run2->AddEntry("lst1600_Run2","J/#psi #Lambda(1600) shape","l");
-		}
-		// if(chic1flag)
-		// {
-		//      legend_run2->AddEntry("chic1_Run2","#chi_{c1} #Lambda shape","l");
-		// }
-		// if(lst1810flag)
-		//      legend_run2->AddEntry("lst1810","J/#psi #Lambda(1810) shape","l");
-		legend_run2->AddEntry("misclst_Run2","misc. J/#psi #Lambda* shapes","l");
+		legend_run2->AddEntry("lst1405_Run2","J/#psi #Lambda(1405) shape","l");
 	}
+	if(lst1520flag)
+	{
+		legend_run2->AddEntry("lst1520_Run2","J/#psi #Lambda(1520) shape","l");
+	}
+	if(lst1600flag)
+	{
+		legend_run2->AddEntry("lst1600_Run2","J/#psi #Lambda(1600) shape","l");
+	}
+	// if(chic1flag)
+	// {
+	//      legend_run2->AddEntry("chic1_Run2","#chi_{c1} #Lambda shape","l");
+	// }
+	legend_run2->AddEntry("misclst_Run2","misc. J/#psi #Lambda* shapes","l");
 	legend_run2->Draw("same");
 
 	TLatex l_run2;
@@ -2789,7 +2559,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	// Pull distribution
 	RooPlot *frame_run2x2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),myLow,myHigh,nbins);
-	// RooPlot *framex2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")), myLow,5800,100);
 	RooHist* hpull_run2 = frame_run2->pullHist("data_Run2","fit_Run2");
 	frame_run2x2->addPlotable(hpull_run2,"P");
 	hpull_run2->SetLineColor(kBlack);
@@ -2843,7 +2612,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	LikelihoodInterval* lr_int = plc.GetInterval();  // that was easy.
 
 	//*******************************************************************
-		
+
 	//***************ASIMOV DATASET*************************************
 	cout<<"Starting Asimov Dataset"<<endl;
 	RooDataSet *asimovData = (RooDataSet*)RooStats::AsymptoticCalculator::GenerateAsimovData(*(mc.GetPdf()),*(mc.GetObservables()));
@@ -2867,41 +2636,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	w.import(*bkgOnlyModel);
 	// w.Write();
 	//*******************************************************************
-
-	//**************Fit like Matt****************************************
-
-	/*	cout<<"Starting Fit like Matt"<<endl;
-		RooAbsReal* nll = w.pdf("simPdf")->createNLL(*combData);
-		RooMinimizer min_nll(*nll);
-		min_nll.setErrorLevel(0.5);
-		min_nll.setStrategy(2);
-
-		Double_t initnll = nll->getVal();
-
-		RooArgSet *pars = w.pdf("simPdf")->getParameters( *combData );
-		// RooArgSet *initpars = (RooArgSet*)pars->snapshot();
-		// cout<<"YYYY"<<pars<<endl;
-		// print "YYYY", initpars
-
-		// TIterator *it = initpars->createIterator();
-		// RooRealVar *par = (RooRealVar*)it->Next();
-		// cout<<"YYYY All par list"<<endl;
-		// while(par)
-		// {
-		//      cout<<"YYYY"<<par<<par->GetName()<<par->getVal()<<par->getError()<<endl;
-		//      par = (RooRealVar*)it->Next();
-		// }
-		min_nll.minimize("Minuit","Migrad");
-
-		min_nll.minos(*(w.var("R")));
-
-		RooFitResult *res1 = min_nll.save();
-
-		Double_t finalnll = nll->getVal();*/
-
-	Double_t origval = w.var("R")->getVal();
-	Double_t errhi   = w.var("R")->getErrorHi();
-	Double_t errlo   = w.var("R")->getErrorLo();
 
 	//**************Upper Limit Calculation*****************************
 
@@ -2968,7 +2702,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	w.writeToFile(fileName,true);
 	cout << "workspace written to file " << fileName << endl;
-	
+
 	// Get Lower and Upper limits from Profile Calculator
 	//	cout << "Profile lower limit on s = " << ((LikelihoodInterval*) lr_int)->LowerLimit(*(w.var("R"))) << endl;
 	// cout << "Profile upper limit on R = " << ((LikelihoodInterval*)lr_int)->UpperLimit(*(w.var("R"))) << endl;
