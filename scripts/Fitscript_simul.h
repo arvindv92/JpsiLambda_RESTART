@@ -38,11 +38,16 @@
 #include "RooStats/HypoTestInverterPlot.h"
 #include "RooStats/TestStatSampler.h"
 #include "RooStats/ProfileLikelihoodTestStat.h"
+#include "RooStats/ProfileLikelihoodCalculator.h"
+#include "RooStats/ConfInterval.h"
 #include "RooStats/TestStatistic.h"
+#include "RooStats/FeldmanCousins.h"
+#include "RooStats/LikelihoodIntervalPlot.h"
 #include "RooHypatia2.h"
 #include "RooMinimizer.h"
 #include "RooCategory.h"
 #include "RooSimultaneous.h"
+#include "RooNLLVar.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
