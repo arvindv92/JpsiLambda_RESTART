@@ -75,9 +75,6 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	// Xib normalization & errs
 
-	Float_t trackingErr = 0.05; // rel error. on Xib Norm includes 4.5% tracking unc, and 2% uncertainty for material effects from hadronic interactions
-	Float_t xiVtxUnc    = 0.014; // rel error. on Xib Norm Unc from vertexing the Xi-. Comes from Steves ANA
-
 	Float_t XibNorm[2]         = {0.0,0.0}; // Unweighted normalization inside signal window
 	Float_t XibNorm_StatErr[2] = {0.0,0.0}; // Abs. error
 	Float_t XibNorm_SystErr[2] = {0.0,0.0}; // Abs. error
@@ -1987,7 +1984,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	//************************MAKE COMBINED MODEL************************
 
-	w.factory("R[0,-5000,5000]"); // R*10^5 is the parameter of interest  This is shared b/w Run1 and Run2
+	w.factory("R[0,-1000,1000]"); // R*10^5 is the parameter of interest  This is shared b/w Run1 and Run2
 	// NB: R is allowed to fluctuate negative in the fit. I don't completely understand why.
 	// R*10^5 =  [N(Jpsi Sigma)/N(Jpsi Lambda)] * [eff(Jpsi Lambda)/eff(Jpsi Sigma)]
 	// w.var("R")->setError(0.1);
@@ -2194,18 +2191,17 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	{
 		w.extendSet("nuisParams","slope_Run1,slope_Run2");
 	}
-	else if(bkgType == 1)
+	else
 	{
 		w.extendSet("nuisParams","c0_Run1,c0_Run2,c1_Run1,c1_Run2");
-	}
-	else if(bkgType == 2)
-	{
-		w.extendSet("nuisParams","c0_Run1,c0_Run2,c1_Run1,c1_Run2,c2_Run1,c2_Run2");
-	}
-	else if(bkgType == 3)
-	{
-		w.extendSet("nuisParams","c0_Run1,c0_Run2,c1_Run1,c1_Run2,"
-		            "c2_Run1,c2_Run2,c3_Run1,c3_Run2");
+		if(bkgType == 2 || bkgType == 3)
+		  {
+		    w.extendSet("nuisParams","c2_Run1,c2_Run2");
+		    if(bkgType == 3)
+		      {
+			w.extendSet("nuisParams","c3_Run1,c3_Run2");
+		      }
+		  }
 	}
 	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,alpha1_Run1,alpha2_Run1,nBkg_Run1,slope_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1");// define set of nuisance parameters
 	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,alpha1_Run2,alpha2_Run2,nBkg_Run2,slope_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,n1520_Run2");
@@ -2213,15 +2209,13 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	// w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,alpha1_Run1,alpha2_Run1,nBkg_Run1,a0_Run1,a1_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,sigmaEff1,lambdaEff1,nXib1,n1405_Run1,n1520_Run1");// define set of nuisance parameters
 	// w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,alpha1_Run2,alpha2_Run2,nBkg_Run2,a0_Run2,a1_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,sigmaEff2,lambdaEff2,nXib2,n1405_Run2,n1520_Run2");
 
-	if(strncmp(option,"mcFit",5))//Define global obs if not MC fit
-	{
-		// w.defineSet("globObs","gsigmaEff1,glambdaEff1,gnXib1,gsigmaEff2,"
-		//             "glambdaEff2,gnXib2"); //define set of global observables
-		w.defineSet("globObs","geff_ratio1,gnXib1,geff_ratio2,"
-		            "gnXib2,geff_ratio_1405_1,geff_ratio_1405_2,"
-		            "geff_ratio_1520_1,geff_ratio_1520_2,"
-		            "geff_ratio_1600_1,geff_ratio_1600_2");   //define set of global observables
-	}
+	// w.defineSet("globObs","gsigmaEff1,glambdaEff1,gnXib1,gsigmaEff2,"
+	//             "glambdaEff2,gnXib2"); //define set of global observables
+	w.defineSet("globObs","geff_ratio1,gnXib1,geff_ratio2,"
+		    "gnXib2,geff_ratio_1405_1,geff_ratio_1405_2,"
+		    "geff_ratio_1520_1,geff_ratio_1520_2,"
+		    "geff_ratio_1600_1,geff_ratio_1600_2");   //define set of global observables
+
 	//*******************************************************************
 
 	//First fit background shapes to data above peak
@@ -2499,7 +2493,36 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	//************************DO THE FIT***********************
 
-	RooFitResult *res = simPdf.fitTo(*combData,Minos(*w.set("poi")),Extended(), Save(), Hesse(false), Strategy(1), PrintLevel(0));
+	RooArgSet constrainParams(*(w.var("eff_ratio1")), *(w.var("eff_ratio2")), *(w.var("eff_ratio_1405_1")), *(w.var("eff_ratio_1405_2")), *(w.var("eff_ratio_1520_1")), *(w.var("eff_ratio_1520_2")), *(w.var("eff_ratio_1600_1")), *(w.var("eff_ratio_1600_2")));
+	
+	constrainParams.add( *(w.var("nXib1")) );
+	constrainParams.add( *(w.var("nXib2")) ); 
+
+	if(bkgType == 0)
+	  {
+	    constrainParams.add( *(w.var("slope_Run1")) );
+	    constrainParams.add( *(w.var("slope_Run2")) );
+	  }
+	else
+	  {
+	    constrainParams.add( *(w.var("c0_Run1")) );
+            constrainParams.add( *(w.var("c0_Run2")) );
+	    constrainParams.add( *(w.var("c1_Run1")) );
+            constrainParams.add( *(w.var("c1_Run2")) );
+	    if(bkgType == 2 || bkgType == 3)
+	      {
+		constrainParams.add( *(w.var("c2_Run1")) );
+		constrainParams.add( *(w.var("c2_Run2")) );
+		if(bkgType == 3)
+		  {
+		    constrainParams.add( *(w.var("c3_Run1")) );
+		    constrainParams.add( *(w.var("c3_Run2")) );
+		  }
+	      }
+	  }
+	
+	RooFitResult *res = simPdf.fitTo(*combData,Minos(*w.set("poi")),Extended(), Save(), Hesse(false), Strategy(1), PrintLevel(0), Constrain(constrainParams) );
+
 	//*******************************************************************
 
 	w.factory(Form("Gaussian::nLb_Run1_syst(gnLb_Run1[%f,1000,8000],nLb_Run1,%f)",w.var("nLb_Run1")->getValV(),0.009*(w.var("nLb_Run1")->getValV())));
@@ -2798,121 +2821,128 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	cout<<"Global Fit chi2/dof = "<<chi2_ndof_global<<endl;
 	cout<<"****************************"<<endl;
 
-	if(calcUL)
-	{
-		//*************ROOSTATS MODEL CONFIG*********************************
+	//*************ROOSTATS MODEL CONFIG*********************************
 
-		cout<<"Starting Model Config"<<endl;
-		RooStats::ModelConfig mc("ModelConfig",&w);
-		mc.SetPdf(*(w.pdf("simPdf_new")));
-		mc.SetParametersOfInterest(*w.set("poi"));
-		mc.SetObservables(*w.set("obs"));
-		mc.SetGlobalObservables(*w.set("globObs"));
-		mc.SetNuisanceParameters(*w.set("nuisParams"));
+	cout<<"Starting Model Config"<<endl;
+	RooStats::ModelConfig mc("ModelConfig",&w);
+	mc.SetPdf(*(w.pdf("simPdf_new")));
+	mc.SetParametersOfInterest(*w.set("poi"));
+	mc.SetObservables(*w.set("obs"));
+	mc.SetGlobalObservables(*w.set("globObs"));
+	mc.SetNuisanceParameters(*w.set("nuisParams"));
 
-		// import model in the workspace
-		w.import(mc);
-		//*******************************************************************
+	// import model in the workspace
+	w.import(mc);
+	//*******************************************************************
 
-		//***************ASIMOV DATASET*************************************
-		cout<<"Starting Asimov Dataset"<<endl;
-		RooDataSet *asimovData = (RooDataSet*)RooStats::AsymptoticCalculator::GenerateAsimovData(*(mc.GetPdf()),*(mc.GetObservables()));
-		RooPlot *frame_asim = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")), myLow,myHigh,nbins);
+	//*******************************************************************
+	//UL from Profile Likelihood Calculator
 
-		TCanvas *asim = new TCanvas();
-		asimovData->plotOn(frame_asim);
-		frame_asim->Draw();
+	ProfileLikelihoodCalculator plc(*combData, mc);
+	plc.SetTestSize(.05);
+	LikelihoodInterval* lr_int = plc.GetInterval();  // that was easy.
 
-		mc.SetSnapshot(*(w.var("R")));
+	//*******************************************************************
+		
+	//***************ASIMOV DATASET*************************************
+	cout<<"Starting Asimov Dataset"<<endl;
+	RooDataSet *asimovData = (RooDataSet*)RooStats::AsymptoticCalculator::GenerateAsimovData(*(mc.GetPdf()),*(mc.GetObservables()));
+	RooPlot *frame_asim = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")), myLow,myHigh,nbins);
 
-		RooStats::ModelConfig *bkgOnlyModel = mc.Clone();
-		bkgOnlyModel->SetName("bkgOnlyModel");
-		Double_t oldval = w.var("R")->getVal();
+	TCanvas *asim = new TCanvas();
+	asimovData->plotOn(frame_asim);
+	frame_asim->Draw();
 
-		w.var("R")->setVal(0);
-		bkgOnlyModel->SetSnapshot(*(w.var("R")));
+	mc.SetSnapshot(*(w.var("R")));
 
-		w.var("R")->setVal(oldval);
+	RooStats::ModelConfig *bkgOnlyModel = mc.Clone();
+	bkgOnlyModel->SetName("bkgOnlyModel");
+	Double_t oldval = w.var("R")->getVal();
 
-		w.import(*bkgOnlyModel);
-		// w.Write();
-		//*******************************************************************
+	w.var("R")->setVal(0);
+	bkgOnlyModel->SetSnapshot(*(w.var("R")));
 
-		//**************Fit like Matt****************************************
+	w.var("R")->setVal(oldval);
 
-/*	cout<<"Starting Fit like Matt"<<endl;
-        RooAbsReal* nll = w.pdf("simPdf")->createNLL(*combData);
-        RooMinimizer min_nll(*nll);
-        min_nll.setErrorLevel(0.5);
-        min_nll.setStrategy(2);
+	w.import(*bkgOnlyModel);
+	// w.Write();
+	//*******************************************************************
 
-        Double_t initnll = nll->getVal();
+	//**************Fit like Matt****************************************
 
-        RooArgSet *pars = w.pdf("simPdf")->getParameters( *combData );
-        // RooArgSet *initpars = (RooArgSet*)pars->snapshot();
-        // cout<<"YYYY"<<pars<<endl;
-        // print "YYYY", initpars
+	/*	cout<<"Starting Fit like Matt"<<endl;
+		RooAbsReal* nll = w.pdf("simPdf")->createNLL(*combData);
+		RooMinimizer min_nll(*nll);
+		min_nll.setErrorLevel(0.5);
+		min_nll.setStrategy(2);
 
-        // TIterator *it = initpars->createIterator();
-        // RooRealVar *par = (RooRealVar*)it->Next();
-        // cout<<"YYYY All par list"<<endl;
-        // while(par)
-        // {
-        //      cout<<"YYYY"<<par<<par->GetName()<<par->getVal()<<par->getError()<<endl;
-        //      par = (RooRealVar*)it->Next();
-        // }
-        min_nll.minimize("Minuit","Migrad");
+		Double_t initnll = nll->getVal();
 
-        min_nll.minos(*(w.var("R")));
+		RooArgSet *pars = w.pdf("simPdf")->getParameters( *combData );
+		// RooArgSet *initpars = (RooArgSet*)pars->snapshot();
+		// cout<<"YYYY"<<pars<<endl;
+		// print "YYYY", initpars
 
-        RooFitResult *res1 = min_nll.save();
+		// TIterator *it = initpars->createIterator();
+		// RooRealVar *par = (RooRealVar*)it->Next();
+		// cout<<"YYYY All par list"<<endl;
+		// while(par)
+		// {
+		//      cout<<"YYYY"<<par<<par->GetName()<<par->getVal()<<par->getError()<<endl;
+		//      par = (RooRealVar*)it->Next();
+		// }
+		min_nll.minimize("Minuit","Migrad");
 
-        Double_t finalnll = nll->getVal();*/
+		min_nll.minos(*(w.var("R")));
 
-		Double_t origval = w.var("R")->getVal();
-		Double_t errhi   = w.var("R")->getErrorHi();
-		Double_t errlo   = w.var("R")->getErrorLo();
+		RooFitResult *res1 = min_nll.save();
 
-		//**************Upper Limit Calculation*****************************
+		Double_t finalnll = nll->getVal();*/
 
-		// cout<<"Starting Upper Limit Calculation"<<endl;
+	Double_t origval = w.var("R")->getVal();
+	Double_t errhi   = w.var("R")->getErrorHi();
+	Double_t errlo   = w.var("R")->getErrorLo();
 
-		//**************AsymptoticCalculator********************************
-		// RooStats::AsymptoticCalculator hc(*combData, *bkgOnlyModel, mc, true);
-		// hc.SetOneSided(true);
-		// RooStats::HypoTestInverter calc(hc);
-		//
-		// calc.SetConfidenceLevel(0.95);
-		// // calc.SetFixedScan(100,-7, -1);
-		// calc.SetFixedScan(20,0, 1000);
-		// calc.UseCLs(true);
-		// // calc.SetVerbose(true);
-		// HypoTestInverterResult *r = calc.GetInterval();
-		//
-		// cout<<"origval = "<<origval<<" error myHigh = "
-		//     <<errhi<<" error myLow = "<<errlo<<endl;
-		// cout<<"UL = "<<r->UpperLimit()<<" +/- "<<r->UpperLimitEstimatedError()<<endl;
-		//
-		// new TCanvas();
-		// RooStats::HypoTestInverterPlot plot("hti_plot", "hti_plot", r);
-		// plot.Draw("CLb 2CL");
+	//**************Upper Limit Calculation*****************************
 
-		//******************************************************************
+	// cout<<"Starting Upper Limit Calculation"<<endl;
 
-		//**************FrequentistCalculator*******************************
-		// RooStats::FrequentistCalculator hc(combData, *bkgOnlyModel, mc);
-		// TestStatSampler *toymcs = hc.GetTestStatSampler();
-		//
-		// RooStats::ProfileLikelihoodTestStat teststat(*(mc.GetPdf()));
-		// teststat.SetOneSided(true);
-		//
-		// teststat.SetPrintLevel(1);
-		// teststat.SetStrategy(0);
-		//
-		// toymcs->SetTestStatistic(teststat);
-		// toymcs->SetGenerateBinned(false);
-		// toymcs->SetUseMultiGen(false);
-	}
+	//**************AsymptoticCalculator********************************
+	// RooStats::AsymptoticCalculator hc(*combData, *bkgOnlyModel, mc, true);
+	// hc.SetOneSided(true);
+	// RooStats::HypoTestInverter calc(hc);
+	//
+	// calc.SetConfidenceLevel(0.95);
+	// // calc.SetFixedScan(100,-7, -1);
+	// calc.SetFixedScan(20,0, 1000);
+	// calc.UseCLs(true);
+	// // calc.SetVerbose(true);
+	// HypoTestInverterResult *r = calc.GetInterval();
+	//
+	// cout<<"origval = "<<origval<<" error myHigh = "
+	//     <<errhi<<" error myLow = "<<errlo<<endl;
+	// cout<<"UL = "<<r->UpperLimit()<<" +/- "<<r->UpperLimitEstimatedError()<<endl;
+	//
+	// new TCanvas();
+	// RooStats::HypoTestInverterPlot plot("hti_plot", "hti_plot", r);
+	// plot.Draw("CLb 2CL");
+
+	//******************************************************************
+
+	//**************FrequentistCalculator*******************************
+	// RooStats::FrequentistCalculator hc(combData, *bkgOnlyModel, mc);
+	// TestStatSampler *toymcs = hc.GetTestStatSampler();
+	//
+	// RooStats::ProfileLikelihoodTestStat teststat(*(mc.GetPdf()));
+	// teststat.SetOneSided(true);
+	//
+	// teststat.SetPrintLevel(1);
+	// teststat.SetStrategy(0);
+	//
+	// toymcs->SetTestStatistic(teststat);
+	// toymcs->SetGenerateBinned(false);
+	// toymcs->SetUseMultiGen(false);
+
 
 	//Save Canvases
 	//
@@ -2938,7 +2968,67 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	w.writeToFile(fileName,true);
 	cout << "workspace written to file " << fileName << endl;
+	
+	// Get Lower and Upper limits from Profile Calculator
+	//	cout << "Profile lower limit on s = " << ((LikelihoodInterval*) lr_int)->LowerLimit(*(w.var("R"))) << endl;
+	// cout << "Profile upper limit on R = " << ((LikelihoodInterval*)lr_int)->UpperLimit(*(w.var("R"))) << endl;
 
-	gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,2,true,20,100,2000,100,false,0,%d,%d)",fileName,myLow,myHigh));
-	// gSystem->RedirectOutput(0);
+	// TCanvas* dataCanvas = new TCanvas("dataCanvas");
+	// //dataCanvas->Divide(2,1);
+	// cout<<"poop0"<<endl;
+	// // dataCanvas->cd(1);
+	// LikelihoodIntervalPlot plotInt((LikelihoodInterval*)lr_int);
+	// cout<<"poop0.1"<<endl;
+	// plotInt.SetTitle("Profile Likelihood Ratio and Posterior for S");
+	// cout<<"poop0.2"<<endl;
+	// plotInt.Draw();
+	// cout<<"poop0.3"<<endl;
+	// //gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,2,true,20,100,2000,100,false,0,%d,%d)",fileName,myLow,myHigh));
+	// // gSystem->RedirectOutput(0);
+
+
+	// RooRealVar x("x","x",0,1000);
+
+	// cout<<"poop0.4"<<endl;
+	// RooDataSet d("d","d",RooArgSet(x));
+	// cout<<"poop0.5"<<endl;
+
+	// for(Int_t i=0;i<=1000;i+=100)
+	//   {
+	//     x = i;
+	//     d.add(RooArgSet(x));
+	//   }
+
+	// // Second, use a Calculator based on the Feldman Cousins technique
+	// cout<<"starting fc"<<endl;
+	// FeldmanCousins fc(*combData, mc);
+	// cout<<"poop1"<<endl;
+	// fc.UseAdaptiveSampling(true);
+	// cout<<"poop2"<<endl;
+	// fc.SetPOIPointsToTest(d);
+	// cout<<"poop3"<<endl;
+	// fc.FluctuateNumDataEntries(true);
+	// cout<<"poop4"<<endl;
+	// //	fc.SetNBins(20); // number of points to test per parameter
+	// fc.SetTestSize(.05);
+	// cout<<"poop5"<<endl;
+	// //  fc.SaveBeltToFile(true); // optional
+	// ConfInterval* fcint = NULL;
+	// cout<<"poop6"<<endl;
+	// fcint = fc.GetInterval();  // that was easy.
+	// cout<<"poop7"<<endl;
+
+	// if (fcint != NULL) {
+	//   double fcul = ((PointSetInterval*) fcint)->UpperLimit(*(w.var("R")));
+	//   //	  double fcll = ((PointSetInterval*) fcint)->LowerLimit(*s);
+	//   //	  cout << "FC lower limit on s = " << fcll << endl;
+	//   cout << "FC upper limit on s = " << fcul << endl;
+	//   //	  TLine* fcllLine = new TLine(fcll, 0, fcll, 1);
+	//   TLine* fculLine = new TLine(fcul, 0, fcul, 1);
+	//   //	  fcllLine->SetLineColor(kRed);
+	//   fculLine->SetLineColor(kRed);
+	//   //	  fcllLine->Draw("same");
+	//   fculLine->Draw("same");
+	//   dataCanvas->Update();
+	// }
 }
