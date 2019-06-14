@@ -796,9 +796,9 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		    <<" % +/- "<<eff_1405_wt_SystErr[i]*100<<" %"<<endl;
 		cout<<"************************************************"<<endl;
 
-		eff_ratio_1405[i]         = eff_1405[i]/eff_JpsiLambda[i];
+		eff_ratio_1405[i]         = eff_1405[i]/eff_JpsiLambda_wt[i];
 		eff_ratio_SystErr_1405[i] = eff_ratio_1405[i]*sqrt(pow((eff_1405_SystErr[i]/eff_1405[i]),2)+
-		                                                   pow((eff_JpsiLambda_SystErr[i]/eff_JpsiLambda[i]),2));    // stat err on ratio
+		                                                   pow((eff_JpsiLambda_wt_SystErr[i]/eff_JpsiLambda_wt[i]),2));    // stat err on ratio
 		eff_ratio_StatErr_1405[i] = 0.0;
 		eff_ratio_Err_1405[i]     = sqrt(pow(eff_ratio_StatErr_1405[i],2) +
 		                                 pow(eff_ratio_SystErr_1405[i],2));   //combine in quadrature
@@ -875,13 +875,13 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 			{
 				ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
 				                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
-				                            "gb_wts_new*wt_tau");
+				                            "wt_tau");
 			}
 			else if(run == 2)
 			{
 				ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
 				                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
-				                            "gb_wts*wt_tau");
+				                            "wt_tau");
 			}
 		}
 		ds_1405[i]->Print();
@@ -989,9 +989,9 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		    <<" % +/- "<<eff_1520_wt_SystErr[i]*100<<" %"<<endl;
 		cout<<"************************************************"<<endl;
 
-		eff_ratio_1520[i]         = eff_1520[i]/eff_JpsiLambda[i];
+		eff_ratio_1520[i]         = eff_1520[i]/eff_JpsiLambda_wt[i];
 		eff_ratio_SystErr_1520[i] = eff_ratio_1520[i]*sqrt(pow((eff_1520_SystErr[i]/eff_1520[i]),2)+
-		                                                   pow((eff_JpsiLambda_SystErr[i]/eff_JpsiLambda[i]),2));    // stat err on ratio
+		                                                   pow((eff_JpsiLambda_wt_SystErr[i]/eff_JpsiLambda_wt[i]),2));    // stat err on ratio
 		eff_ratio_StatErr_1520[i] = 0.0;
 		eff_ratio_Err_1520[i]     = sqrt(pow(eff_ratio_StatErr_1520[i],2) + pow(eff_ratio_SystErr_1520[i],2));//combine in quadrature
 
@@ -1045,7 +1045,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		TTree *combTree_1520 = TTree::MergeTrees(list_1520);
 		combTree_1520->SetName("combTree_1520");
 
-		ds_1520[i] = new RooDataSet("ds_1520","ds_1520",combTree_1520,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"gb_wts*wt_tau");
+		ds_1520[i] = new RooDataSet("ds_1520","ds_1520",combTree_1520,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"wt_tau");
 		ds_1520[i]->Print();
 
 		KEYS_1520[i] = new RooKeysPdf(Form("LST1520_Run%d",run),Form("LST1520_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1520[i]),RooKeysPdf::MirrorBoth,1);
@@ -1150,13 +1150,15 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		    <<" % +/- "<<eff_1600_wt_SystErr[i]*100<<" %"<<endl;
 		cout<<"************************************************"<<endl;
 
-		eff_ratio_1600[i]            = eff_1600[i]/eff_JpsiLambda[i];
-		eff_ratio_SystErr_1600[i]    = eff_ratio_1600[i]*sqrt(pow((eff_1600_SystErr[i]/eff_1600[i]),2)+pow((eff_JpsiLambda_SystErr[i]/eff_JpsiLambda[i]),2)); // stat err on ratio
+		eff_ratio_1600[i]            = eff_1600[i]/eff_JpsiLambda_wt[i];
+		eff_ratio_SystErr_1600[i]    = eff_ratio_1600[i]*sqrt(pow((eff_1600_SystErr[i]/eff_1600[i]),2)+
+		                                                      pow((eff_JpsiLambda_wt_SystErr[i]/eff_JpsiLambda_wt[i]),2)); // stat err on ratio
 		eff_ratio_StatErr_1600[i]    = 0.0;
 		eff_ratio_Err_1600[i]        = sqrt(pow(eff_ratio_StatErr_1600[i],2) + pow(eff_ratio_SystErr_1600[i],2));//combine in quadrature
 
 		eff_ratio_wt_1600[i]            = eff_1600_wt[i]/eff_JpsiLambda_wt[i];
-		eff_ratio_wt_SystErr_1600[i]    = eff_ratio_wt_1600[i]*sqrt(pow((eff_1600_wt_SystErr[i]/eff_1600_wt[i]),2)+pow((eff_JpsiLambda_wt_SystErr[i]/eff_JpsiLambda_wt[i]),2)); // stat err on ratio
+		eff_ratio_wt_SystErr_1600[i]    = eff_ratio_wt_1600[i]*sqrt(pow((eff_1600_wt_SystErr[i]/eff_1600_wt[i]),2)+
+		                                                            pow((eff_JpsiLambda_wt_SystErr[i]/eff_JpsiLambda_wt[i]),2)); // stat err on ratio
 		eff_ratio_wt_StatErr_1600[i]    = 0.0;
 		eff_ratio_Err_1600_wt[i]        = sqrt(pow(eff_ratio_wt_StatErr_1600[i],2) + pow(eff_ratio_wt_SystErr_1600[i],2));//combine in quadrature
 
@@ -1204,7 +1206,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		TTree *combTree_1600 = TTree::MergeTrees(list_1600);
 		combTree_1600->SetName("combTree_1600");
 
-		ds_1600[i] = new RooDataSet("ds_1600","ds_1600",combTree_1600,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"gb_wts*wt_tau");
+		ds_1600[i] = new RooDataSet("ds_1600","ds_1600",combTree_1600,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"*wt_tau");
 		ds_1600[i]->Print();
 
 		KEYS_1600[i] = new RooKeysPdf(Form("LST1600_Run%d",run),Form("LST1600_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1600[i]),RooKeysPdf::MirrorBoth,1);
@@ -1848,33 +1850,33 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	//*******************************************************************
 
 	//**************** 1405/Lb Efficiency Ratio**************************
-	w.factory(Form("eff_ratio_1405_1[%f,0.,5.]",eff_ratio_wt_1405[0])); //eff(Lb -> Jpsi Lambda(1405))/eff(Lb -> Jpsi Lambda)
-	w.factory(Form("eff_ratio_1405_2[%f,0.,5.]",eff_ratio_wt_1405[1]));
+	w.factory(Form("eff_ratio_1405_1[%f,0.,5.]",eff_ratio_1405[0])); //eff(Lb -> Jpsi Lambda(1405))/eff(Lb -> Jpsi Lambda)
+	w.factory(Form("eff_ratio_1405_2[%f,0.,5.]",eff_ratio_1405[1]));
 
-	w.factory(Form("Gaussian::eff_ratio_1405_constraint1(geff_ratio_1405_1[%f,0,5],eff_ratio_1405_1,%f)",eff_ratio_wt_1405[0],eff_ratio_Err_1405_wt[0]));
-	w.factory(Form("Gaussian::eff_ratio_1405_constraint2(geff_ratio_1405_2[%f,0,5],eff_ratio_1405_2,%f)",eff_ratio_wt_1405[1],eff_ratio_Err_1405_wt[1]));
+	w.factory(Form("Gaussian::eff_ratio_1405_constraint1(geff_ratio_1405_1[%f,0,5],eff_ratio_1405_1,%f)",eff_ratio_1405[0],eff_ratio_Err_1405[0]));
+	w.factory(Form("Gaussian::eff_ratio_1405_constraint2(geff_ratio_1405_2[%f,0,5],eff_ratio_1405_2,%f)",eff_ratio_1405[1],eff_ratio_Err_1405[1]));
 
 	w.var("geff_ratio_1405_1")->setConstant();
 	w.var("geff_ratio_1405_2")->setConstant();
 	//*******************************************************************
 
 	//**************** 1520/Lb Efficiency Ratio**************************
-	w.factory(Form("eff_ratio_1520_1[%f,0.,5.]",eff_ratio_wt_1520[0])); //eff(Lb -> Jpsi Lambda(1520))/eff(Lb -> Jpsi Lambda)
-	w.factory(Form("eff_ratio_1520_2[%f,0.,5.]",eff_ratio_wt_1520[1]));
+	w.factory(Form("eff_ratio_1520_1[%f,0.,5.]",eff_ratio_1520[0])); //eff(Lb -> Jpsi Lambda(1520))/eff(Lb -> Jpsi Lambda)
+	w.factory(Form("eff_ratio_1520_2[%f,0.,5.]",eff_ratio_1520[1]));
 
-	w.factory(Form("Gaussian::eff_ratio_1520_constraint1(geff_ratio_1520_1[%f,0,5],eff_ratio_1520_1,%f)",eff_ratio_wt_1520[0],eff_ratio_Err_1520_wt[0]));
-	w.factory(Form("Gaussian::eff_ratio_1520_constraint2(geff_ratio_1520_2[%f,0,5],eff_ratio_1520_2,%f)",eff_ratio_wt_1520[1],eff_ratio_Err_1520_wt[1]));
+	w.factory(Form("Gaussian::eff_ratio_1520_constraint1(geff_ratio_1520_1[%f,0,5],eff_ratio_1520_1,%f)",eff_ratio_1520[0],eff_ratio_Err_1520[0]));
+	w.factory(Form("Gaussian::eff_ratio_1520_constraint2(geff_ratio_1520_2[%f,0,5],eff_ratio_1520_2,%f)",eff_ratio_1520[1],eff_ratio_Err_1520[1]));
 
 	w.var("geff_ratio_1520_1")->setConstant();
 	w.var("geff_ratio_1520_2")->setConstant();
 	//*******************************************************************
 
 	//**************** 1600/Lb Efficiency Ratio**************************
-	w.factory(Form("eff_ratio_1600_1[%f,0.,5.]",eff_ratio_wt_1600[0])); //eff(Lb -> Jpsi Lambda(1600))/eff(Lb -> Jpsi Lambda)
-	w.factory(Form("eff_ratio_1600_2[%f,0.,5.]",eff_ratio_wt_1600[1]));
+	w.factory(Form("eff_ratio_1600_1[%f,0.,5.]",eff_ratio_1600[0])); //eff(Lb -> Jpsi Lambda(1600))/eff(Lb -> Jpsi Lambda)
+	w.factory(Form("eff_ratio_1600_2[%f,0.,5.]",eff_ratio_1600[1]));
 
-	w.factory(Form("Gaussian::eff_ratio_1600_constraint1(geff_ratio_1600_1[%f,0,5],eff_ratio_1600_1,%f)",eff_ratio_wt_1600[0],eff_ratio_Err_1600_wt[0]));
-	w.factory(Form("Gaussian::eff_ratio_1600_constraint2(geff_ratio_1600_2[%f,0,5],eff_ratio_1600_2,%f)",eff_ratio_wt_1600[1],eff_ratio_Err_1600_wt[1]));
+	w.factory(Form("Gaussian::eff_ratio_1600_constraint1(geff_ratio_1600_1[%f,0,5],eff_ratio_1600_1,%f)",eff_ratio_1600[0],eff_ratio_Err_1600[0]));
+	w.factory(Form("Gaussian::eff_ratio_1600_constraint2(geff_ratio_1600_2[%f,0,5],eff_ratio_1600_2,%f)",eff_ratio_1600[1],eff_ratio_Err_1600[1]));
 
 	w.var("geff_ratio_1600_1")->setConstant();
 	w.var("geff_ratio_1600_2")->setConstant();
@@ -2703,6 +2705,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	w.writeToFile(fileName,true);
 	cout << "workspace written to file " << fileName << endl;
 
+	// gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,2,true,20,100,2000,100,false,0,%d,%d)",fileName,myLow,myHigh));
 	// Get Lower and Upper limits from Profile Calculator
 	//	cout << "Profile lower limit on s = " << ((LikelihoodInterval*) lr_int)->LowerLimit(*(w.var("R"))) << endl;
 	// cout << "Profile upper limit on R = " << ((LikelihoodInterval*)lr_int)->UpperLimit(*(w.var("R"))) << endl;
@@ -2717,7 +2720,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	// cout<<"poop0.2"<<endl;
 	// plotInt.Draw();
 	// cout<<"poop0.3"<<endl;
-	// //gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,2,true,20,100,2000,100,false,0,%d,%d)",fileName,myLow,myHigh));
+
 	// // gSystem->RedirectOutput(0);
 
 
