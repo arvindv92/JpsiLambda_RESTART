@@ -708,11 +708,11 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 		if(run == 1)
 		{
-			genWtsTree_1405->Draw("gb_wts_new*wt_tau>>genWt_1405","","goff");
+			genWtsTree_1405->Draw("wt_tau>>genWt_1405","","goff");
 		}
 		else if(run == 2)
 		{
-			genWtsTree_1405->Draw("gb_wts*wt_tau>>genWt_1405","","goff");
+			genWtsTree_1405->Draw("wt_tau>>genWt_1405","","goff");
 		}
 
 		TH1F *genWt_1405 = (TH1F*)gDirectory->Get("genWt_1405");
@@ -735,13 +735,13 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 			if(run == 1)
 			{
-				mcTreeIn_nonZero_1405->Draw("gb_wts_new*wt_tau>>wt_1405_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-				mcTreeIn_Zero_1405->Draw("gb_wts_new*wt_tau>>wt_1405_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+				mcTreeIn_nonZero_1405->Draw("wt_tau>>wt_1405_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+				mcTreeIn_Zero_1405->Draw("wt_tau>>wt_1405_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 			}
 			else if(run == 2)
 			{
-				mcTreeIn_nonZero_1405->Draw("gb_wts*wt_tau>>wt_1405_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-				mcTreeIn_Zero_1405->Draw("gb_wts*wt_tau>>wt_1405_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+				mcTreeIn_nonZero_1405->Draw("wt_tau>>wt_1405_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+				mcTreeIn_Zero_1405->Draw("wt_tau>>wt_1405_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 			}
 			TH1F *wt_1405_nonZero = (TH1F*)gDirectory->Get("wt_1405_nonZero");
 			TH1F *wt_1405_Zero    = (TH1F*)gDirectory->Get("wt_1405_Zero");
@@ -758,8 +758,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 			TH1D* hrw1 = (TH1D*)gDirectory->Get("hrw1");
 			num_1405   = (hrw0->GetMean()*hrw0->GetEntries()) +(hrw1->GetMean()*hrw1->GetEntries());
 
-			mcTreeIn_nonZero_1405->Draw(Form("%sweight*gb_wts*wt_tau>>wt_1405_nonZero",rwType),Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_1405->Draw(Form("%sweight*gb_wts*wt_tau>>wt_1405_Zero",rwType),Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+			mcTreeIn_nonZero_1405->Draw(Form("%sweight*wt_tau>>wt_1405_nonZero",rwType),Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_1405->Draw(Form("%sweight*wt_tau>>wt_1405_Zero",rwType),Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 
 			TH1F *wt_1405_nonZero = (TH1F*)gDirectory->Get("wt_1405_nonZero");
 			TH1F *wt_1405_Zero    = (TH1F*)gDirectory->Get("wt_1405_Zero");
@@ -860,13 +860,13 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 			{
 				ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
 				                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
-				                            Form("%sweight*gb_wts_new*wt_tau",rwType));
+				                            Form("%sweight*wt_tau",rwType));
 			}
 			else if(run == 2)
 			{
 				ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
 				                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
-				                            Form("%sweight*gb_wts*wt_tau",rwType));
+				                            Form("%sweight*wt_tau",rwType));
 			}
 		}
 		else
@@ -928,7 +928,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		genWtsTree_1520->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
 		                                          Lst1520Path,run));
 
-		genWtsTree_1520->Draw("gb_wts*wt_tau>>genWt_1520","","goff");
+		genWtsTree_1520->Draw("wt_tau>>genWt_1520","","goff");
 
 		TH1F *genWt_1520 = (TH1F*)gDirectory->Get("genWt_1520");
 		nGen_1520_wt[i] = genWt_1520->GetEntries()*genWt_1520->GetMean();
@@ -947,13 +947,13 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 		if(run == 1)
 		{
-			mcTreeIn_nonZero_1520->Draw("gb_wts_new*wt_tau>>wt_1520_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_1520->Draw("gb_wts_new*wt_tau>>wt_1520_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+			mcTreeIn_nonZero_1520->Draw("wt_tau>>wt_1520_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_1520->Draw("wt_tau>>wt_1520_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 		}
 		else if(run == 2)
 		{
-			mcTreeIn_nonZero_1520->Draw("gb_wts*wt_tau>>wt_1520_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_1520->Draw("gb_wts*wt_tau>>wt_1520_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+			mcTreeIn_nonZero_1520->Draw("wt_tau>>wt_1520_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_1520->Draw("wt_tau>>wt_1520_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 
 		}
 		TH1F *wt_1520_nonZero = (TH1F*)gDirectory->Get("wt_1520_nonZero");
@@ -1089,7 +1089,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		genWtsTree_1600->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
 		                                          Lst1600Path,run));
 
-		genWtsTree_1600->Draw("gb_wts*wt_tau>>genWt_1600","","goff");
+		genWtsTree_1600->Draw("wt_tau>>genWt_1600","","goff");
 
 		TH1F *genWt_1600 = (TH1F*)gDirectory->Get("genWt_1600");
 		nGen_1600_wt[i] = genWt_1600->GetEntries()*genWt_1600->GetMean();
@@ -1108,13 +1108,13 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 		if(run == 1)
 		{
-			mcTreeIn_nonZero_1600->Draw("gb_wts_new*wt_tau>>wt_1600_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_1600->Draw("gb_wts_new*wt_tau>>wt_1600_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+			mcTreeIn_nonZero_1600->Draw("wt_tau>>wt_1600_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_1600->Draw("wt_tau>>wt_1600_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 		}
 		else if(run == 2)
 		{
-			mcTreeIn_nonZero_1600->Draw("gb_wts*wt_tau>>wt_1600_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_1600->Draw("gb_wts*wt_tau>>wt_1600_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+			mcTreeIn_nonZero_1600->Draw("wt_tau>>wt_1600_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_1600->Draw("wt_tau>>wt_1600_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 
 		}
 		TH1F *wt_1600_nonZero = (TH1F*)gDirectory->Get("wt_1600_nonZero");
@@ -1850,33 +1850,33 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	//*******************************************************************
 
 	//**************** 1405/Lb Efficiency Ratio**************************
-	w.factory(Form("eff_ratio_1405_1[%f,0.,5.]",eff_ratio_1405[0])); //eff(Lb -> Jpsi Lambda(1405))/eff(Lb -> Jpsi Lambda)
-	w.factory(Form("eff_ratio_1405_2[%f,0.,5.]",eff_ratio_1405[1]));
+	w.factory(Form("eff_ratio_1405_1[%f,0.,5.]",eff_ratio_wt_1405[0])); //eff(Lb -> Jpsi Lambda(1405))/eff(Lb -> Jpsi Lambda)
+	w.factory(Form("eff_ratio_1405_2[%f,0.,5.]",eff_ratio_wt_1405[1]));
 
-	w.factory(Form("Gaussian::eff_ratio_1405_constraint1(geff_ratio_1405_1[%f,0,5],eff_ratio_1405_1,%f)",eff_ratio_1405[0],eff_ratio_Err_1405[0]));
-	w.factory(Form("Gaussian::eff_ratio_1405_constraint2(geff_ratio_1405_2[%f,0,5],eff_ratio_1405_2,%f)",eff_ratio_1405[1],eff_ratio_Err_1405[1]));
+	w.factory(Form("Gaussian::eff_ratio_1405_constraint1(geff_ratio_1405_1[%f,0,5],eff_ratio_1405_1,%f)",eff_ratio_wt_1405[0],eff_ratio_Err_1405_wt[0]));
+	w.factory(Form("Gaussian::eff_ratio_1405_constraint2(geff_ratio_1405_2[%f,0,5],eff_ratio_1405_2,%f)",eff_ratio_wt_1405[1],eff_ratio_Err_1405_wt[1]));
 
 	w.var("geff_ratio_1405_1")->setConstant();
 	w.var("geff_ratio_1405_2")->setConstant();
 	//*******************************************************************
 
 	//**************** 1520/Lb Efficiency Ratio**************************
-	w.factory(Form("eff_ratio_1520_1[%f,0.,5.]",eff_ratio_1520[0])); //eff(Lb -> Jpsi Lambda(1520))/eff(Lb -> Jpsi Lambda)
-	w.factory(Form("eff_ratio_1520_2[%f,0.,5.]",eff_ratio_1520[1]));
+	w.factory(Form("eff_ratio_1520_1[%f,0.,5.]",eff_ratio_wt_1520[0])); //eff(Lb -> Jpsi Lambda(1520))/eff(Lb -> Jpsi Lambda)
+	w.factory(Form("eff_ratio_1520_2[%f,0.,5.]",eff_ratio_wt_1520[1]));
 
-	w.factory(Form("Gaussian::eff_ratio_1520_constraint1(geff_ratio_1520_1[%f,0,5],eff_ratio_1520_1,%f)",eff_ratio_1520[0],eff_ratio_Err_1520[0]));
-	w.factory(Form("Gaussian::eff_ratio_1520_constraint2(geff_ratio_1520_2[%f,0,5],eff_ratio_1520_2,%f)",eff_ratio_1520[1],eff_ratio_Err_1520[1]));
+	w.factory(Form("Gaussian::eff_ratio_1520_constraint1(geff_ratio_1520_1[%f,0,5],eff_ratio_1520_1,%f)",eff_ratio_wt_1520[0],eff_ratio_Err_1520_wt[0]));
+	w.factory(Form("Gaussian::eff_ratio_1520_constraint2(geff_ratio_1520_2[%f,0,5],eff_ratio_1520_2,%f)",eff_ratio_wt_1520[1],eff_ratio_Err_1520_wt[1]));
 
 	w.var("geff_ratio_1520_1")->setConstant();
 	w.var("geff_ratio_1520_2")->setConstant();
 	//*******************************************************************
 
 	//**************** 1600/Lb Efficiency Ratio**************************
-	w.factory(Form("eff_ratio_1600_1[%f,0.,5.]",eff_ratio_1600[0])); //eff(Lb -> Jpsi Lambda(1600))/eff(Lb -> Jpsi Lambda)
-	w.factory(Form("eff_ratio_1600_2[%f,0.,5.]",eff_ratio_1600[1]));
+	w.factory(Form("eff_ratio_1600_1[%f,0.,5.]",eff_ratio_wt_1600[0])); //eff(Lb -> Jpsi Lambda(1600))/eff(Lb -> Jpsi Lambda)
+	w.factory(Form("eff_ratio_1600_2[%f,0.,5.]",eff_ratio_wt_1600[1]));
 
-	w.factory(Form("Gaussian::eff_ratio_1600_constraint1(geff_ratio_1600_1[%f,0,5],eff_ratio_1600_1,%f)",eff_ratio_1600[0],eff_ratio_Err_1600[0]));
-	w.factory(Form("Gaussian::eff_ratio_1600_constraint2(geff_ratio_1600_2[%f,0,5],eff_ratio_1600_2,%f)",eff_ratio_1600[1],eff_ratio_Err_1600[1]));
+	w.factory(Form("Gaussian::eff_ratio_1600_constraint1(geff_ratio_1600_1[%f,0,5],eff_ratio_1600_1,%f)",eff_ratio_wt_1600[0],eff_ratio_Err_1600_wt[0]));
+	w.factory(Form("Gaussian::eff_ratio_1600_constraint2(geff_ratio_1600_2[%f,0,5],eff_ratio_1600_2,%f)",eff_ratio_wt_1600[1],eff_ratio_Err_1600_wt[1]));
 
 	w.var("geff_ratio_1600_1")->setConstant();
 	w.var("geff_ratio_1600_2")->setConstant();
