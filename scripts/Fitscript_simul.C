@@ -2574,7 +2574,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	cout<<"Starting Model Config"<<endl;
 	RooStats::ModelConfig mc("ModelConfig",&w);
-	mc.SetPdf(*(w.pdf("simPdf_new")));
+	mc.SetPdf(*(w.pdf("simPdf")));
 	mc.SetParametersOfInterest(*w.set("poi"));
 	mc.SetObservables(*w.set("obs"));
 	mc.SetGlobalObservables(*w.set("globObs"));
