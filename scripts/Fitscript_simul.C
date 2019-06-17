@@ -1552,8 +1552,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	if(bkgType == 0)
 	{
 		cout<<"*****UING EXPONENTIAL BKG SHAPE*****"<<endl;
-		w.factory("Exponential::Bkg_Run1(Lb_DTF_M_JpsiLConstr,expr('-1*pow(10,slope_Run1)',slope_Run1[-6.0,-11.0,-2.0]))");
-		w.factory("Exponential::Bkg_Run2(Lb_DTF_M_JpsiLConstr,expr('-1*pow(10,slope_Run2)',slope_Run2[-6.0,-11.0,-2.0]))");
+		w.factory("Exponential::Bkg_Run1(Lb_DTF_M_JpsiLConstr,expr('-1*pow(10,slope_Run1)',slope_Run1[-2.0,-5.0,0.0]))");
+		w.factory("Exponential::Bkg_Run2(Lb_DTF_M_JpsiLConstr,expr('-1*pow(10,slope_Run2)',slope_Run2[-2.0,-5.0,0.0]))");
 
 		w.var("slope_Run1")->setError(0.25);
 		w.var("slope_Run2")->setError(0.25);
@@ -1916,8 +1916,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	//*******************************************************************
 
 	//*****************Jpsi Sigma yield**********************************
-	w.factory("expr::nSigma1('pow(10,-5)*R*nLb_Run1/eff_ratio1',R,nLb_Run1,eff_ratio1)");
-	w.factory("expr::nSigma2('pow(10,-5)*R*nLb_Run2/eff_ratio2',R,nLb_Run2,eff_ratio2)");
+	w.factory("expr::nSigma1('pow(10,-5)*R*nLb_Run1/(eff_ratio1*1.058)',R,nLb_Run1,eff_ratio1)");
+	w.factory("expr::nSigma2('pow(10,-5)*R*nLb_Run2/(eff_ratio2*1.058)',R,nLb_Run2,eff_ratio2)");
 	//*******************************************************************
 
 	//*****************Jpsi Lambda(1405) yield***************************
