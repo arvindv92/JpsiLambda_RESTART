@@ -1567,10 +1567,10 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	w.factory("expr::XibMean_Run2('mean_Run2+shift_Xib',mean_Run2,shift_Xib)");
 
 	w.factory("Gaussian::Xib_Run1(Lb_DTF_M_JpsiLConstr,XibMean_Run1,"
-	          "sigma_Run1");
+	          "sigma_Run1)");
 
 	w.factory("Gaussian::Xib_Run2(Lb_DTF_M_JpsiLConstr,XibMean_Run2,"
-	          "sigma_Run2");
+	          "sigma_Run2)");
 
 	w.factory("nXib_JpsiLambda_Run1[5.0,0.0,50]");
 	w.factory("nXib_JpsiLambda_Run2[10.0,0.0,100]");
