@@ -1562,15 +1562,15 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	//*******************************************************************
 
 	//*********Hypatia signal shape for Xib -> J/psi Lambda************************
-	w.factory("shift_Xib[177.5,176.0,179.0]"); //PDG difference for Xib- and Lb masses
+	w.factory("shift_Xib[177.5,175.0,179.0]"); //PDG difference for Xib- and Lb masses
 	w.factory("expr::XibMean_Run1('mean_Run1+shift_Xib',mean_Run1,shift_Xib)");
 	w.factory("expr::XibMean_Run2('mean_Run2+shift_Xib',mean_Run2,shift_Xib)");
 
 	w.factory("Gaussian::Xib_Run1(Lb_DTF_M_JpsiLConstr,XibMean_Run1,"
-	          "sigma_Run1)");
+	          "XibSigma_Run1[10.,1.,20.])");
 
 	w.factory("Gaussian::Xib_Run2(Lb_DTF_M_JpsiLConstr,XibMean_Run2,"
-	          "sigma_Run2)");
+	          "XibSigma_Run2[10.,1.,20.])");
 
 	w.factory("nXib_JpsiLambda_Run1[5.0,0.0,50]");
 	w.factory("nXib_JpsiLambda_Run2[10.0,0.0,100]");
@@ -2014,13 +2014,16 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	            "lambda_Run1,"//a1_Run1,a2_Run1,"
 	            "nBkg_Run1,nMiscLst_Run1,miscLstMean_Run1,"
 	            "miscLstSigma_Run1,eff_ratio1,nXib1,eff_ratio_1405_1,"
-	            "eff_ratio_1520_1,eff_ratio_1600_1,nXib_JpsiLambda_Run1");
+	            "eff_ratio_1520_1,eff_ratio_1600_1,nXib_JpsiLambda_Run1,shift_Xib,"
+	            "XibSigma_Run1");
 
 	w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,"
 	            "lambda_Run2,"//a1_Run2,a2_Run2,"
 	            "nBkg_Run2,nMiscLst_Run2,miscLstMean_Run2,"
 	            "miscLstSigma_Run2,eff_ratio2,nXib2,eff_ratio_1405_2,"
-	            "eff_ratio_1520_2,eff_ratio_1600_2,nXib_JpsiLambda_Run1");
+	            "eff_ratio_1520_2,eff_ratio_1600_2,nXib_JpsiLambda_Run1,"
+	            "XibSigma_Run2");
+
 	w.extendSet("nuisParams","R_1405,R_1520,R_1600");
 
 	if(bkgType == 0)
