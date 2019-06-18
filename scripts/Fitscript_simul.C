@@ -628,7 +628,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		//		ds_sig[i]->plotOn(framesigma,Name("sigmadata_nowt"),LineColor(kGreen));
 		ds_sig_wt[i]->plotOn(framesigma,Name("sigmadata"),LineColor(kBlack));
 		(*(SIG_KEYS[i])).plotOn(framesigma,Name("sigmafitsmooth"),LineColor(kRed),LineStyle(kDashed));
-		
+
 		TCanvas *csigma = new TCanvas(Form("JpsiSigma%d",run),Form("JpsiSigma%d",run));
 		framesigma->Draw();
 
@@ -889,7 +889,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 		KEYS_1405[i] = new RooKeysPdf(Form("LST1405_Run%d",run),Form("LST1405_Run%d",run),
 		                              *(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1405[i]),RooKeysPdf::MirrorBoth,1);
-		
+
 		RooPlot *frame1405 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
 		frame1405->SetTitle("#Lambda_{b} #rightarrow J/#psi #Lambda(1405)");
 		frame1405->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
@@ -897,7 +897,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		frame1405->SetTitle("J/#psi #Sigma");
 		ds_1405[i]->plotOn(frame1405,Name("1405data"),LineColor(kBlack));
 		(*(KEYS_1405[i])).plotOn(frame1405,Name("1405fitsmooth"),LineColor(kRed),LineStyle(kDashed));
-		
+
 		TCanvas *c1405 = new TCanvas(Form("Jpsi1405%d",run),Form("Jpsi1405%d",run));
 		frame1405->Draw();
 
@@ -1501,7 +1501,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		ds_xi_wt[i]->plotOn(framexib,Name("xibdata"),LineColor(kBlack));
 		// (*(XIB[i])).plotOn(framexib,Name("xibfitsmooth"),LineColor(kRed),LineStyle(kDashed));
 		(*(XIB_KEYS[i])).plotOn(framexib,Name("xibfitsmooth"),LineColor(kRed),LineStyle(kDashed));
-		
+
 		TCanvas *cxib = new TCanvas(Form("JpsiXi%d",run),Form("JpsiXi%d",run));
 		framexib->Draw();
 
@@ -1533,7 +1533,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	//           "sigma_Run1[10.,0.,20.], alpha1_Run1[1.028, 0.8,1.3], 10.0)" );
 	// w.factory("RooCBShape::Lb2_Run1(Lb_DTF_M_JpsiLConstr,mean_Run1,sigma_Run1,alpha2_Run1[-1.097,-1.4,-0.7], 10.0)");
 	// w.factory("SUM::Lb_Run1(0.5*Lb1_Run1 , 0.5*Lb2_Run1)");
-	
+
 	// w.factory("RooCBShape::Lb1_Run2(Lb_DTF_M_JpsiLConstr,mean_Run2[5619.6,5619,5621],"
 	//           "sigma_Run2[10.,0.,20.], alpha1_Run2[1.028, 0.8,1.3], 10.0)" );
 	// w.factory("RooCBShape::Lb2_Run2(Lb_DTF_M_JpsiLConstr,mean_Run2,sigma_Run2,alpha2_Run2[-1.097,-1.4,-0.7], 10.0)");
@@ -1560,6 +1560,20 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	cout<<"Done defining J/psi Lambda Hypatia shapes"<<endl;
 	//*******************************************************************
+
+	//*********Hypatia signal shape for Xib -> J/psi Lambda************************
+	w.factory("shift_Xib[177.5,176.0,179.0]"); //PDG difference for Xib- and Lb masses
+	w.factory("expr::XibMean_Run1('mean_Run1+shift_Xib',mean_Run1,shift_Xib)");
+	w.factory("expr::XibMean_Run2('mean_Run2+shift_Xib',mean_Run2,shift_Xib)");
+
+	w.factory("Gaussian::Xib_Run1(Lb_DTF_M_JpsiLConstr,XibMean_Run1,"
+	          "sigma_Run1");
+
+	w.factory("Gaussian::Xib_Run2(Lb_DTF_M_JpsiLConstr,XibMean_Run2,"
+	          "sigma_Run2");
+
+	w.factory("nXib_JpsiLambda_Run1[5.0,0.0,50]");
+	w.factory("nXib_JpsiLambda_Run2[10.0,0.0,100]");
 
 	//*********Continuum backgruond****************
 
@@ -1591,21 +1605,21 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		w.factory("Chebychev::Bkg_Run2(Lb_DTF_M_JpsiLConstr, {c0_Run2[0.0,-2.0,2.0], c1_Run2[0.0,-1.0,1.0], c2_Run2[0.0,-1.0,1.0], c3_Run2[0.0,-1.0,1.0]})");
 	}
 	else if(bkgType == 4)
-	  {
-	    cout<<"*****UING EXPONENTIAL*POLYNOMIAL BKG SHAPE*****"<<endl;
+	{
+		cout<<"*****UING EXPONENTIAL*POLYNOMIAL BKG SHAPE*****"<<endl;
 
-	    w.factory("Exponential::Expo_Run1(Lb_DTF_M_JpsiLConstr,expr('-1*pow(10,slope_Run1)',slope_Run1[-3.0,-5.0,0.0]))");
-	    w.factory("Exponential::Expo_Run2(Lb_DTF_M_JpsiLConstr,expr('-1*pow(10,slope_Run2)',slope_Run2[-3.0,-5.0,0.0]))");
-	    
-	    w.var("slope_Run1")->setError(0.25);
-	    w.var("slope_Run2")->setError(0.25);
+		w.factory("Exponential::Expo_Run1(Lb_DTF_M_JpsiLConstr,expr('-1*pow(10,slope_Run1)',slope_Run1[-3.0,-5.0,0.0]))");
+		w.factory("Exponential::Expo_Run2(Lb_DTF_M_JpsiLConstr,expr('-1*pow(10,slope_Run2)',slope_Run2[-3.0,-5.0,0.0]))");
 
-	    w.factory("Chebychev::Poly_Run1(Lb_DTF_M_JpsiLConstr, {c0_Run1[-0.25,-0.5,0.0]})");
-	    w.factory("Chebychev::Poly_Run2(Lb_DTF_M_JpsiLConstr, {c0_Run2[-0.25,-0.5,0.0]})");
-	    
-	    w.factory("PROD::Bkg_Run1(Expo_Run1,Poly_Run1)");
-	    w.factory("PROD::Bkg_Run2(Expo_Run2,Poly_Run2)");
-	  }
+		w.var("slope_Run1")->setError(0.25);
+		w.var("slope_Run2")->setError(0.25);
+
+		w.factory("Chebychev::Poly_Run1(Lb_DTF_M_JpsiLConstr, {c0_Run1[-0.25,-0.5,0.0]})");
+		w.factory("Chebychev::Poly_Run2(Lb_DTF_M_JpsiLConstr, {c0_Run2[-0.25,-0.5,0.0]})");
+
+		w.factory("PROD::Bkg_Run1(Expo_Run1,Poly_Run1)");
+		w.factory("PROD::Bkg_Run2(Expo_Run2,Poly_Run2)");
+	}
 	cout<<"Done defining cont. bkg exp. shapes"<<endl;
 
 	//*******************************************************************
@@ -1625,162 +1639,162 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	TH1D *myhist[2];
 
 	/*	//********Data for Fit to simulation*********************************
-	TH1D *mcHist[2];
-	RooDataHist *mc_ds[2];
-	RooDataSet *ds_sim[2], *ds_sim_wt[2];
-	Int_t mcNentries[2];
+	   TH1D *mcHist[2];
+	   RooDataHist *mc_ds[2];
+	   RooDataSet *ds_sim[2], *ds_sim_wt[2];
+	   Int_t mcNentries[2];
 
-	for(Int_t run = 1; run<=2; run++)
-	{
-		Int_t i = run-1;
+	   for(Int_t run = 1; run<=2; run++)
+	   {
+	        Int_t i = run-1;
 
-		TFile *mcFileIn_nonZero_Lambda = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_nonZeroTracks_noPID.root",
-		                                           lambdaMCPath,run));
-		TTree *mcTreeIn_nonZero_Lambda = (TTree*)mcFileIn_nonZero_Lambda->Get("MyTuple");
+	        TFile *mcFileIn_nonZero_Lambda = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_nonZeroTracks_noPID.root",
+	                                                   lambdaMCPath,run));
+	        TTree *mcTreeIn_nonZero_Lambda = (TTree*)mcFileIn_nonZero_Lambda->Get("MyTuple");
 
-		TFile *mcFileIn_Zero_Lambda    = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_ZeroTracks_noPID.root",
-		                                           lambdaMCPath,run));
-		TTree *mcTreeIn_Zero_Lambda    = (TTree*)mcFileIn_Zero_Lambda->Get("MyTuple");
+	        TFile *mcFileIn_Zero_Lambda    = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_ZeroTracks_noPID.root",
+	                                                   lambdaMCPath,run));
+	        TTree *mcTreeIn_Zero_Lambda    = (TTree*)mcFileIn_Zero_Lambda->Get("MyTuple");
 
-		mcTreeIn_nonZero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s_noPID.root",
-		                                                  lambdaMCPath,run,bdtConf_nonZero[i],
-		                                                  isoConf[i],isoVersion[i]));
-		mcTreeIn_Zero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d_noPID.root",
-		                                               lambdaMCPath,run,bdtConf_Zero[i]));
+	        mcTreeIn_nonZero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s_noPID.root",
+	                                                          lambdaMCPath,run,bdtConf_nonZero[i],
+	                                                          isoConf[i],isoVersion[i]));
+	        mcTreeIn_Zero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d_noPID.root",
+	                                                       lambdaMCPath,run,bdtConf_Zero[i]));
 
-		mcTreeIn_Zero_Lambda->SetBranchStatus("*",0);
-		mcTreeIn_Zero_Lambda->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		mcTreeIn_Zero_Lambda->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
-		mcTreeIn_Zero_Lambda->SetBranchStatus("Lb_BKGCAT",1);
-		mcTreeIn_Zero_Lambda->SetBranchStatus("gb_wts",1);
-		mcTreeIn_Zero_Lambda->SetBranchStatus("wt_tau",1);
-		if(run == 1)
-			mcTreeIn_Zero_Lambda->SetBranchStatus("gb_wts_new",1);
+	        mcTreeIn_Zero_Lambda->SetBranchStatus("*",0);
+	        mcTreeIn_Zero_Lambda->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+	        mcTreeIn_Zero_Lambda->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+	        mcTreeIn_Zero_Lambda->SetBranchStatus("Lb_BKGCAT",1);
+	        mcTreeIn_Zero_Lambda->SetBranchStatus("gb_wts",1);
+	        mcTreeIn_Zero_Lambda->SetBranchStatus("wt_tau",1);
+	        if(run == 1)
+	                mcTreeIn_Zero_Lambda->SetBranchStatus("gb_wts_new",1);
 
-		mcTreeIn_nonZero_Lambda->SetBranchStatus("*",0);
-		mcTreeIn_nonZero_Lambda->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		mcTreeIn_nonZero_Lambda->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
-		mcTreeIn_nonZero_Lambda->SetBranchStatus("Lb_BKGCAT",1);
-		mcTreeIn_nonZero_Lambda->SetBranchStatus("gb_wts",1);
-		mcTreeIn_nonZero_Lambda->SetBranchStatus("wt_tau",1);
-		if(run == 1)
-			mcTreeIn_nonZero_Lambda->SetBranchStatus("gb_wts_new",1);
+	        mcTreeIn_nonZero_Lambda->SetBranchStatus("*",0);
+	        mcTreeIn_nonZero_Lambda->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+	        mcTreeIn_nonZero_Lambda->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+	        mcTreeIn_nonZero_Lambda->SetBranchStatus("Lb_BKGCAT",1);
+	        mcTreeIn_nonZero_Lambda->SetBranchStatus("gb_wts",1);
+	        mcTreeIn_nonZero_Lambda->SetBranchStatus("wt_tau",1);
+	        if(run == 1)
+	                mcTreeIn_nonZero_Lambda->SetBranchStatus("gb_wts_new",1);
 
-		TFile *tempFile = new TFile("tempFile_sim.root","RECREATE");
+	        TFile *tempFile = new TFile("tempFile_sim.root","RECREATE");
 
-		TTree* mcTreeIn_Zero_Lambda_cut    = (TTree*)mcTreeIn_Zero_Lambda->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));                                                                                        //Not TRUTH MATCHING HERE!
-		TTree* mcTreeIn_nonZero_Lambda_cut = (TTree*)mcTreeIn_nonZero_Lambda->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));                                                                                        //Not TRUTH MATCHING HERE!
+	        TTree* mcTreeIn_Zero_Lambda_cut    = (TTree*)mcTreeIn_Zero_Lambda->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));                                                                                        //Not TRUTH MATCHING HERE!
+	        TTree* mcTreeIn_nonZero_Lambda_cut = (TTree*)mcTreeIn_nonZero_Lambda->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));                                                                                        //Not TRUTH MATCHING HERE!
 
-		TList *list_sim = new TList;
-		list_sim->Add(mcTreeIn_Zero_Lambda_cut);
-		list_sim->Add(mcTreeIn_nonZero_Lambda_cut);
+	        TList *list_sim = new TList;
+	        list_sim->Add(mcTreeIn_Zero_Lambda_cut);
+	        list_sim->Add(mcTreeIn_nonZero_Lambda_cut);
 
-		TTree *combTree_sim = TTree::MergeTrees(list_sim);
-		combTree_sim->SetName("combTree_sim");
+	        TTree *combTree_sim = TTree::MergeTrees(list_sim);
+	        combTree_sim->SetName("combTree_sim");
 
-		RooRealVar *gbWtVar = nullptr;
+	        RooRealVar *gbWtVar = nullptr;
 
-		if(run == 1)
-		{
-			gbWtVar  = new RooRealVar("gb_wts_new","gb Weight Var",-100.,100.);
-		}
-		else if(run == 2)
-		{
-			gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
-		}
+	        if(run == 1)
+	        {
+	                gbWtVar  = new RooRealVar("gb_wts_new","gb Weight Var",-100.,100.);
+	        }
+	        else if(run == 2)
+	        {
+	                gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
+	        }
 
-		RooRealVar *tauWtVar = new RooRealVar("wt_tau","tau Weight Var",-100.,100.);
+	        RooRealVar *tauWtVar = new RooRealVar("wt_tau","tau Weight Var",-100.,100.);
 
-		ds_sim[i] = new RooDataSet(Form("ds_sim%d",run),Form("ds_sim%d",run),combTree_sim,RooArgSet(*myVar,*gbWtVar,*tauWtVar));
-		ds_sim[i]->Print();
+	        ds_sim[i] = new RooDataSet(Form("ds_sim%d",run),Form("ds_sim%d",run),combTree_sim,RooArgSet(*myVar,*gbWtVar,*tauWtVar));
+	        ds_sim[i]->Print();
 
-		RooFormulaVar *totWt = new RooFormulaVar("totWt","@0*@1",RooArgList(*gbWtVar,*tauWtVar));
-		RooRealVar *totWt_var = (RooRealVar*)ds_sim[i]->addColumn(*totWt);
+	        RooFormulaVar *totWt = new RooFormulaVar("totWt","@0*@1",RooArgList(*gbWtVar,*tauWtVar));
+	        RooRealVar *totWt_var = (RooRealVar*)ds_sim[i]->addColumn(*totWt);
 
-		ds_sim_wt[i] = new RooDataSet(Form("ds_sim_wt%d",run),Form("ds_sim_wt%d",run),RooArgSet(*myVar,*totWt_var),Import(*(ds_sim[i])),WeightVar(*totWt_var));
-		ds_sim_wt[i]->Print();
+	        ds_sim_wt[i] = new RooDataSet(Form("ds_sim_wt%d",run),Form("ds_sim_wt%d",run),RooArgSet(*myVar,*totWt_var),Import(*(ds_sim[i])),WeightVar(*totWt_var));
+	        ds_sim_wt[i]->Print();
 
-		if(run == 1)
-		{
-			mcTreeIn_nonZero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*gb_wts_new*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*gb_wts_new*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
-		}
-		else if(run == 2)
-		{
-			mcTreeIn_nonZero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*gb_wts*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*gb_wts*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
-		}
+	        if(run == 1)
+	        {
+	                mcTreeIn_nonZero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*gb_wts_new*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+	                mcTreeIn_Zero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*gb_wts_new*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+	        }
+	        else if(run == 2)
+	        {
+	                mcTreeIn_nonZero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*gb_wts*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+	                mcTreeIn_Zero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*gb_wts*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+	        }
 
-		mcHist[i] = new TH1D(Form("mcHist%d",run),"",nbins*2,myLow,myHigh);
-		TH1D *wt_Lambda_nonZero = (TH1D*)gDirectory->Get("wt_Lambda_nonZero");
-		TH1D *wt_Lambda_Zero = (TH1D*)gDirectory->Get("wt_Lambda_Zero");
+	        mcHist[i] = new TH1D(Form("mcHist%d",run),"",nbins*2,myLow,myHigh);
+	        TH1D *wt_Lambda_nonZero = (TH1D*)gDirectory->Get("wt_Lambda_nonZero");
+	        TH1D *wt_Lambda_Zero = (TH1D*)gDirectory->Get("wt_Lambda_Zero");
 
-		(mcHist[i])->Sumw2();
-		(mcHist[i])->Add(wt_Lambda_nonZero,wt_Lambda_Zero);
+	        (mcHist[i])->Sumw2();
+	        (mcHist[i])->Add(wt_Lambda_nonZero,wt_Lambda_Zero);
 
-		mcNentries[i] = mcHist[i]->Integral();
-		cout<<"mcNentries = "<<mcNentries[i]<<endl;
+	        mcNentries[i] = mcHist[i]->Integral();
+	        cout<<"mcNentries = "<<mcNentries[i]<<endl;
 
-		// mc_ds[i] = new RooDataHist(Form("mc_ds%d",run),Form("mc_ds%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),mcHist[i]);
-		// //  RooDataSet ds("ds","ds",treein,Lb_DTF_M_JpsiLConstr);
-		// cout<<"Done making MC RooDataHist"<<endl;
-		// (mc_ds[i])->Print();
+	        // mc_ds[i] = new RooDataHist(Form("mc_ds%d",run),Form("mc_ds%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),mcHist[i]);
+	        // //  RooDataSet ds("ds","ds",treein,Lb_DTF_M_JpsiLConstr);
+	        // cout<<"Done making MC RooDataHist"<<endl;
+	        // (mc_ds[i])->Print();
 
-		// w.import(*(mc_ds[i]));
-		w.import(*(ds_sim_wt[i]));
-	}
+	        // w.import(*(mc_ds[i]));
+	        w.import(*(ds_sim_wt[i]));
+	   }
 
-	w.factory("Exponential::mcbkg_run1(Lb_DTF_M_JpsiLConstr,tau_run1[-0.0007,-0.01,-0.0000001])");
-	w.factory("Exponential::mcbkg_run2(Lb_DTF_M_JpsiLConstr,tau_run2[-0.0007,-0.01,-0.0000001])");
+	   w.factory("Exponential::mcbkg_run1(Lb_DTF_M_JpsiLConstr,tau_run1[-0.0007,-0.01,-0.0000001])");
+	   w.factory("Exponential::mcbkg_run2(Lb_DTF_M_JpsiLConstr,tau_run2[-0.0007,-0.01,-0.0000001])");
 
-	w.factory(Form("mcnsig_run1[1,%d]",mcNentries[0]));
-	w.factory(Form("mcnsig_run2[1,%d]",mcNentries[1]));
+	   w.factory(Form("mcnsig_run1[1,%d]",mcNentries[0]));
+	   w.factory(Form("mcnsig_run2[1,%d]",mcNentries[1]));
 
-	w.factory(Form("mcnbkg_run1[1,%d]",mcNentries[0]));
-	w.factory(Form("mcnbkg_run2[1,%d]",mcNentries[1]));
+	   w.factory(Form("mcnbkg_run1[1,%d]",mcNentries[0]));
+	   w.factory(Form("mcnbkg_run2[1,%d]",mcNentries[1]));
 
-	w.factory("SUM:mcFit_Run1(mcnsig_run1*Lb_Run1, mcnbkg_run1*mcbkg_run1)");
-	w.factory("SUM:mcFit_Run2(mcnsig_run2*Lb_Run2, mcnbkg_run2*mcbkg_run2)");
+	   w.factory("SUM:mcFit_Run1(mcnsig_run1*Lb_Run1, mcnbkg_run1*mcbkg_run1)");
+	   w.factory("SUM:mcFit_Run2(mcnsig_run2*Lb_Run2, mcnbkg_run2*mcbkg_run2)");
 
-// (w.pdf("mcFit_Run1"))->fitTo(*(mc_ds[0]),Range(5500,5740));
-// (w.pdf("mcFit_Run2"))->fitTo(*(mc_ds[1]),Range(5500,5740));
+	   // (w.pdf("mcFit_Run1"))->fitTo(*(mc_ds[0]),Range(5500,5740));
+	   // (w.pdf("mcFit_Run2"))->fitTo(*(mc_ds[1]),Range(5500,5740));
 
-	(w.pdf("mcFit_Run1"))->fitTo(*(ds_sim_wt[0]),Range(5500,5740),Strategy(2));
-	(w.pdf("mcFit_Run2"))->fitTo(*(ds_sim_wt[1]),Range(5500,5740),Strategy(2));
+	   (w.pdf("mcFit_Run1"))->fitTo(*(ds_sim_wt[0]),Range(5500,5740),Strategy(2));
+	   (w.pdf("mcFit_Run2"))->fitTo(*(ds_sim_wt[1]),Range(5500,5740),Strategy(2));
 
-	TCanvas *sim_Run1      = new TCanvas("sim_Run1","sim_Run1",1200,800);
-	RooPlot *simframe_Run1 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),5500,5740,120);
+	   TCanvas *sim_Run1      = new TCanvas("sim_Run1","sim_Run1",1200,800);
+	   RooPlot *simframe_Run1 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),5500,5740,120);
 
-//	(mc_ds[0])->plotOn(simframe_Run1,Name("simdata_Run1"),DataError(RooAbsData::Poisson));
-	(ds_sim_wt[0])->plotOn(simframe_Run1,Name("simdata_Run1"),DataError(RooAbsData::Poisson));
-	(w.pdf("mcFit_Run1"))->plotOn(simframe_Run1,Name("simfit_Run1"));
-	simframe_Run1->Draw();
+	   //	(mc_ds[0])->plotOn(simframe_Run1,Name("simdata_Run1"),DataError(RooAbsData::Poisson));
+	   (ds_sim_wt[0])->plotOn(simframe_Run1,Name("simdata_Run1"),DataError(RooAbsData::Poisson));
+	   (w.pdf("mcFit_Run1"))->plotOn(simframe_Run1,Name("simfit_Run1"));
+	   simframe_Run1->Draw();
 
-	TCanvas *sim_Run2      = new TCanvas("sim_Run2","sim_Run2",1200,800);
-	RooPlot *simframe_Run2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),5500,5740,120);
+	   TCanvas *sim_Run2      = new TCanvas("sim_Run2","sim_Run2",1200,800);
+	   RooPlot *simframe_Run2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),5500,5740,120);
 
-//	(mc_ds[1])->plotOn(simframe_Run2,Name("simdata_Run2"),DataError(RooAbsData::Poisson));
-	(ds_sim_wt[1])->plotOn(simframe_Run2,Name("simdata_Run2"),DataError(RooAbsData::Poisson));
-	(w.pdf("mcFit_Run2"))->plotOn(simframe_Run2,Name("simfit_Run2"));
-	simframe_Run2->Draw();
+	   //	(mc_ds[1])->plotOn(simframe_Run2,Name("simdata_Run2"),DataError(RooAbsData::Poisson));
+	   (ds_sim_wt[1])->plotOn(simframe_Run2,Name("simdata_Run2"),DataError(RooAbsData::Poisson));
+	   (w.pdf("mcFit_Run2"))->plotOn(simframe_Run2,Name("simfit_Run2"));
+	   simframe_Run2->Draw();
 
-	auto mcvars1 = w.pdf("Lb_Run1")->getVariables();
-// auto mcp1 = (RooRealVar*)mcvars1->find("a1_Run1");
-// mcp1->setConstant(kTRUE);
-// auto mcp2 = (RooRealVar*)mcvars1->find("a2_Run1");
-// mcp2->setConstant(kTRUE);
-	auto mcp3 = (RooRealVar*)mcvars1->find("lambda_Run1");
-	mcp3->setConstant(kTRUE);
-	delete mcvars1;
+	   auto mcvars1 = w.pdf("Lb_Run1")->getVariables();
+	   // auto mcp1 = (RooRealVar*)mcvars1->find("a1_Run1");
+	   // mcp1->setConstant(kTRUE);
+	   // auto mcp2 = (RooRealVar*)mcvars1->find("a2_Run1");
+	   // mcp2->setConstant(kTRUE);
+	   auto mcp3 = (RooRealVar*)mcvars1->find("lambda_Run1");
+	   mcp3->setConstant(kTRUE);
+	   delete mcvars1;
 
-	auto mcvars2 = w.pdf("Lb_Run2")->getVariables();
-// auto mcp4 = (RooRealVar*)mcvars2->find("a1_Run2");
-// mcp4->setConstant(kTRUE);
-// auto mcp5 = (RooRealVar*)mcvars2->find("a2_Run2");
-// mcp5->setConstant(kTRUE);
-	auto mcp6 = (RooRealVar*)mcvars2->find("lambda_Run2");
-	mcp6->setConstant(kTRUE);
-	delete mcvars2;*/
+	   auto mcvars2 = w.pdf("Lb_Run2")->getVariables();
+	   // auto mcp4 = (RooRealVar*)mcvars2->find("a1_Run2");
+	   // mcp4->setConstant(kTRUE);
+	   // auto mcp5 = (RooRealVar*)mcvars2->find("a2_Run2");
+	   // mcp5->setConstant(kTRUE);
+	   auto mcp6 = (RooRealVar*)mcvars2->find("lambda_Run2");
+	   mcp6->setConstant(kTRUE);
+	   delete mcvars2;*/
 	//*******************************************************************
 
 	//*********Input Data************************************************
@@ -1969,9 +1983,9 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	// w.factory("expr::nchic1_Run2('R_chic1*nLb_Run2*eff_ratio_chic1_2',R_chic1,nLb_Run2,eff_ratio_chic1_2)");
 	//*******************************************************************
 	w.factory("SUM:model1(nSigma1*SIG1 , nLb_Run1*Lb_Run1 , nXib1*XIB1 , n1405_Run1*LST1405_Run1 ,"
-	          " n1520_Run1*LST1520_Run1 , n1600_Run1*LST1600_Run1 , nMiscLst_Run1*lstLump_Run1 , nBkg_Run1*Bkg_Run1)");
+	          " n1520_Run1*LST1520_Run1 , n1600_Run1*LST1600_Run1 , nMiscLst_Run1*lstLump_Run1 , nBkg_Run1*Bkg_Run1, nXib_JpsiLambda_Run1*Xib_Run1)");
 	w.factory("SUM:model2(nSigma2*SIG2 , nLb_Run2*Lb_Run2 , nXib2*XIB2 , n1405_Run2*LST1405_Run2 ,"
-	          " n1520_Run2*LST1520_Run2 , n1600_Run2*LST1600_Run2 , nMiscLst_Run2*lstLump_Run2 , nBkg_Run2*Bkg_Run2)");
+	          " n1520_Run2*LST1520_Run2 , n1600_Run2*LST1600_Run2 , nMiscLst_Run2*lstLump_Run2 , nBkg_Run2*Bkg_Run2, nXib_JpsiLambda_Run2*Xib_Run2)");
 
 	if(!lst1405flag)
 	{
@@ -2000,13 +2014,13 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	            "lambda_Run1,"//a1_Run1,a2_Run1,"
 	            "nBkg_Run1,nMiscLst_Run1,miscLstMean_Run1,"
 	            "miscLstSigma_Run1,eff_ratio1,nXib1,eff_ratio_1405_1,"
-	            "eff_ratio_1520_1,eff_ratio_1600_1");
+	            "eff_ratio_1520_1,eff_ratio_1600_1,nXib_JpsiLambda_Run1");
 
 	w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,"
 	            "lambda_Run2,"//a1_Run2,a2_Run2,"
 	            "nBkg_Run2,nMiscLst_Run2,miscLstMean_Run2,"
 	            "miscLstSigma_Run2,eff_ratio2,nXib2,eff_ratio_1405_2,"
-	            "eff_ratio_1520_2,eff_ratio_1600_2");
+	            "eff_ratio_1520_2,eff_ratio_1600_2,nXib_JpsiLambda_Run1");
 	w.extendSet("nuisParams","R_1405,R_1520,R_1600");
 
 	if(bkgType == 0)
@@ -2026,9 +2040,9 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		}
 	}
 	else if(bkgType == 4)
-	  {
-	    w.extendSet("nuisParams","slope_Run1,slope_Run2,c0_Run1,c0_Run2");
-	  }
+	{
+		w.extendSet("nuisParams","slope_Run1,slope_Run2,c0_Run1,c0_Run2");
+	}
 	w.defineSet("globObs","geff_ratio1,gnXib1,geff_ratio2,"
 	            "gnXib2,geff_ratio_1405_1,geff_ratio_1405_2,"
 	            "geff_ratio_1520_1,geff_ratio_1520_2,"
@@ -2038,143 +2052,143 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	//First fit background shapes to data above peak
 	/*	w.pdf("Bkg_Run1")->fitTo(*(ds[0]),Range(5900,myHigh));
-	w.pdf("Bkg_Run2")->fitTo(*(ds[1]),Range(5900,myHigh));
+	   w.pdf("Bkg_Run2")->fitTo(*(ds[1]),Range(5900,myHigh));
 
-	TCanvas *SB_Run1      = new TCanvas("SB_Run1","SB_Run1",1200,800);
-	RooPlot *SBframe_Run1 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),5900,myHigh,(myHigh-5900)/4);
+	   TCanvas *SB_Run1      = new TCanvas("SB_Run1","SB_Run1",1200,800);
+	   RooPlot *SBframe_Run1 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),5900,myHigh,(myHigh-5900)/4);
 
-	(ds[0])->plotOn(SBframe_Run1,Name("SBdata_Run1"),DataError(RooAbsData::Poisson));
-	(w.pdf("Bkg_Run1"))->plotOn(SBframe_Run1,Name("SBfit_Run1"));
-	SBframe_Run1->Draw();
+	   (ds[0])->plotOn(SBframe_Run1,Name("SBdata_Run1"),DataError(RooAbsData::Poisson));
+	   (w.pdf("Bkg_Run1"))->plotOn(SBframe_Run1,Name("SBfit_Run1"));
+	   SBframe_Run1->Draw();
 
-	TCanvas *SB_Run2      = new TCanvas("SB_Run2","SB_Run2",1200,800);
-	RooPlot *SBframe_Run2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),5900,myHigh,(myHigh-5900)/4);
+	   TCanvas *SB_Run2      = new TCanvas("SB_Run2","SB_Run2",1200,800);
+	   RooPlot *SBframe_Run2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),5900,myHigh,(myHigh-5900)/4);
 
-	(ds[1])->plotOn(SBframe_Run2,Name("SBdata_Run2"),DataError(RooAbsData::Poisson));
-	(w.pdf("Bkg_Run2"))->plotOn(SBframe_Run2,Name("SBfit_Run2"));
-	SBframe_Run2->Draw();
+	   (ds[1])->plotOn(SBframe_Run2,Name("SBdata_Run2"),DataError(RooAbsData::Poisson));
+	   (w.pdf("Bkg_Run2"))->plotOn(SBframe_Run2,Name("SBfit_Run2"));
+	   SBframe_Run2->Draw();
 
-	if(bkgType == 0)
-	{
-		w.factory(Form("Gaussian::slope_Run1_constraint(gslope_Run1[%f,-5.0,0.0],slope_Run1,%f)",w.var("slope_Run1")->getValV(),w.var("slope_Run1")->getError()));
-		w.var("gslope_Run1")->setConstant();
-		w.factory(Form("Gaussian::slope_Run2_constraint(gslope_Run2[%f,-5.0,0.0],slope_Run2,%f)",w.var("slope_Run2")->getValV(),w.var("slope_Run2")->getError()));
-		w.var("gslope_Run2")->setConstant();
+	   if(bkgType == 0)
+	   {
+	        w.factory(Form("Gaussian::slope_Run1_constraint(gslope_Run1[%f,-5.0,0.0],slope_Run1,%f)",w.var("slope_Run1")->getValV(),w.var("slope_Run1")->getError()));
+	        w.var("gslope_Run1")->setConstant();
+	        w.factory(Form("Gaussian::slope_Run2_constraint(gslope_Run2[%f,-5.0,0.0],slope_Run2,%f)",w.var("slope_Run2")->getValV(),w.var("slope_Run2")->getError()));
+	        w.var("gslope_Run2")->setConstant();
 
-		w.extendSet("globObs","gslope_Run1,gslope_Run2");
+	        w.extendSet("globObs","gslope_Run1,gslope_Run2");
 
-		// auto vars1 = w.pdf("Bkg_Run1")->getVariables();
-		// /  / auto p1 = (RooRealVar*)vars1->find("slope_Run1");
-		// ((RooRealVar*)vars1->find("slope_Run1"))->setConstant(kTRUE);
-		// // p1->setConstant(kTRUE);
-		// delete vars1;
-		//
-		// auto vars2 = w.pdf("Bkg_Run2")->getVariables();
-		// // auto p2 = (RooRealVar*)vars2->find("slope_Run2");
-		// ((RooRealVar*)vars2->find("slope_Run2"))->setConstant(kTRUE);
-		// // p2->setConstant(kTRUE);
-		// delete vars2;
-	}
-	else if(bkgType == 1)
-	{
-		w.factory(Form("Gaussian::c0_Run1_constraint(gc0_Run1[%f,-2.0,2.0],c0_Run1,%f)",w.var("c0_Run1")->getValV(),w.var("c0_Run1")->getError()));
-		w.var("gc0_Run1")->setConstant();
-		w.factory(Form("Gaussian::c1_Run1_constraint(gc1_Run1[%f,-1.0,1.0],c1_Run1,%f)",w.var("c1_Run1")->getValV(),w.var("c1_Run1")->getError()));
-		w.var("gc1_Run1")->setConstant();
-		w.factory(Form("Gaussian::c0_Run2_constraint(gc0_Run2[%f,-2.0,2.0],c0_Run2,%f)",w.var("c0_Run2")->getValV(),w.var("c0_Run2")->getError()));
-		w.var("gc0_Run2")->setConstant();
-		w.factory(Form("Gaussian::c1_Run2_constraint(gc1_Run2[%f,-1.0,1.0],c1_Run2,%f)",w.var("c1_Run2")->getValV(),w.var("c1_Run2")->getError()));
-		w.var("gc1_Run2")->setConstant();
+	        // auto vars1 = w.pdf("Bkg_Run1")->getVariables();
+	        // /  / auto p1 = (RooRealVar*)vars1->find("slope_Run1");
+	        // ((RooRealVar*)vars1->find("slope_Run1"))->setConstant(kTRUE);
+	        // // p1->setConstant(kTRUE);
+	        // delete vars1;
+	        //
+	        // auto vars2 = w.pdf("Bkg_Run2")->getVariables();
+	        // // auto p2 = (RooRealVar*)vars2->find("slope_Run2");
+	        // ((RooRealVar*)vars2->find("slope_Run2"))->setConstant(kTRUE);
+	        // // p2->setConstant(kTRUE);
+	        // delete vars2;
+	   }
+	   else if(bkgType == 1)
+	   {
+	        w.factory(Form("Gaussian::c0_Run1_constraint(gc0_Run1[%f,-2.0,2.0],c0_Run1,%f)",w.var("c0_Run1")->getValV(),w.var("c0_Run1")->getError()));
+	        w.var("gc0_Run1")->setConstant();
+	        w.factory(Form("Gaussian::c1_Run1_constraint(gc1_Run1[%f,-1.0,1.0],c1_Run1,%f)",w.var("c1_Run1")->getValV(),w.var("c1_Run1")->getError()));
+	        w.var("gc1_Run1")->setConstant();
+	        w.factory(Form("Gaussian::c0_Run2_constraint(gc0_Run2[%f,-2.0,2.0],c0_Run2,%f)",w.var("c0_Run2")->getValV(),w.var("c0_Run2")->getError()));
+	        w.var("gc0_Run2")->setConstant();
+	        w.factory(Form("Gaussian::c1_Run2_constraint(gc1_Run2[%f,-1.0,1.0],c1_Run2,%f)",w.var("c1_Run2")->getValV(),w.var("c1_Run2")->getError()));
+	        w.var("gc1_Run2")->setConstant();
 
-		w.extendSet("globObs","gc0_Run1,gc1_Run1,gc0_Run2,gc1_Run2");
-		// auto vars1 = w.pdf("Bkg_Run1")->getVariables();
-		// // auto p1 = (RooRealVar*)vars1->find("slope_Run1");
-		// ((RooRealVar*)vars1->find("c0_Run1"))->setConstant(kTRUE);
-		// ((RooRealVar*)vars1->find("c1_Run1"))->setConstant(kTRUE);
-		// // p1->setConstant(kTRUE);
-		// delete vars1;
-		//
-		// auto vars2 = w.pdf("Bkg_Run2")->getVariables();
-		// // auto p2 = (RooRealVar*)vars2->find("slope_Run2");
-		// ((RooRealVar*)vars2->find("c0_Run2"))->setConstant(kTRUE);
-		// ((RooRealVar*)vars2->find("c1_Run2"))->setConstant(kTRUE);
-		// // p2->setConstant(kTRUE);
-		// delete vars2;
-	}
-	else if(bkgType == 2)
-	{
-		w.factory(Form("Gaussian::c0_Run1_constraint(gc0_Run1[%f,-2.0,2.0],c0_Run1,%f)",w.var("c0_Run1")->getValV(),w.var("c0_Run1")->getError()));
-		w.var("gc0_Run1")->setConstant();
-		w.factory(Form("Gaussian::c1_Run1_constraint(gc1_Run1[%f,-1.0,1.0],c1_Run1,%f)",w.var("c1_Run1")->getValV(),w.var("c1_Run1")->getError()));
-		w.var("gc1_Run1")->setConstant();
-		w.factory(Form("Gaussian::c2_Run1_constraint(gc2_Run1[%f,-1.0,1.0],c2_Run1,%f)",w.var("c2_Run1")->getValV(),w.var("c2_Run1")->getError()));
-		w.var("gc2_Run1")->setConstant();
-		w.factory(Form("Gaussian::c0_Run2_constraint(gc0_Run2[%f,-2.0,2.0],c0_Run2,%f)",w.var("c0_Run2")->getValV(),w.var("c0_Run2")->getError()));
-		w.var("gc0_Run2")->setConstant();
-		w.factory(Form("Gaussian::c1_Run2_constraint(gc1_Run2[%f,-1.0,1.0],c1_Run2,%f)",w.var("c1_Run2")->getValV(),w.var("c1_Run2")->getError()));
-		w.var("gc1_Run2")->setConstant();
-		w.factory(Form("Gaussian::c2_Run2_constraint(gc2_Run2[%f,-1.0,1.0],c2_Run2,%f)",w.var("c2_Run2")->getValV(),w.var("c2_Run2")->getError()));
-		w.var("gc2_Run2")->setConstant();
+	        w.extendSet("globObs","gc0_Run1,gc1_Run1,gc0_Run2,gc1_Run2");
+	        // auto vars1 = w.pdf("Bkg_Run1")->getVariables();
+	        // // auto p1 = (RooRealVar*)vars1->find("slope_Run1");
+	        // ((RooRealVar*)vars1->find("c0_Run1"))->setConstant(kTRUE);
+	        // ((RooRealVar*)vars1->find("c1_Run1"))->setConstant(kTRUE);
+	        // // p1->setConstant(kTRUE);
+	        // delete vars1;
+	        //
+	        // auto vars2 = w.pdf("Bkg_Run2")->getVariables();
+	        // // auto p2 = (RooRealVar*)vars2->find("slope_Run2");
+	        // ((RooRealVar*)vars2->find("c0_Run2"))->setConstant(kTRUE);
+	        // ((RooRealVar*)vars2->find("c1_Run2"))->setConstant(kTRUE);
+	        // // p2->setConstant(kTRUE);
+	        // delete vars2;
+	   }
+	   else if(bkgType == 2)
+	   {
+	        w.factory(Form("Gaussian::c0_Run1_constraint(gc0_Run1[%f,-2.0,2.0],c0_Run1,%f)",w.var("c0_Run1")->getValV(),w.var("c0_Run1")->getError()));
+	        w.var("gc0_Run1")->setConstant();
+	        w.factory(Form("Gaussian::c1_Run1_constraint(gc1_Run1[%f,-1.0,1.0],c1_Run1,%f)",w.var("c1_Run1")->getValV(),w.var("c1_Run1")->getError()));
+	        w.var("gc1_Run1")->setConstant();
+	        w.factory(Form("Gaussian::c2_Run1_constraint(gc2_Run1[%f,-1.0,1.0],c2_Run1,%f)",w.var("c2_Run1")->getValV(),w.var("c2_Run1")->getError()));
+	        w.var("gc2_Run1")->setConstant();
+	        w.factory(Form("Gaussian::c0_Run2_constraint(gc0_Run2[%f,-2.0,2.0],c0_Run2,%f)",w.var("c0_Run2")->getValV(),w.var("c0_Run2")->getError()));
+	        w.var("gc0_Run2")->setConstant();
+	        w.factory(Form("Gaussian::c1_Run2_constraint(gc1_Run2[%f,-1.0,1.0],c1_Run2,%f)",w.var("c1_Run2")->getValV(),w.var("c1_Run2")->getError()));
+	        w.var("gc1_Run2")->setConstant();
+	        w.factory(Form("Gaussian::c2_Run2_constraint(gc2_Run2[%f,-1.0,1.0],c2_Run2,%f)",w.var("c2_Run2")->getValV(),w.var("c2_Run2")->getError()));
+	        w.var("gc2_Run2")->setConstant();
 
-		w.extendSet("globObs","gc0_Run1,gc1_Run1,gc2_Run1,gc0_Run2,gc1_Run2,gc2_Run2");
-		// auto vars1 = w.pdf("Bkg_Run1")->getVariables();
-		// // auto p1 = (RooRealVar*)vars1->find("slope_Run1");
-		// ((RooRealVar*)vars1->find("c0_Run1"))->setConstant(kTRUE);
-		// ((RooRealVar*)vars1->find("c1_Run1"))->setConstant(kTRUE);
-		// ((RooRealVar*)vars1->find("c2_Run1"))->setConstant(kTRUE);
-		//
-		// // p1->setConstant(kTRUE);
-		// delete vars1;
-		//
-		// auto vars2 = w.pdf("Bkg_Run2")->getVariables();
-		// // auto p2 = (RooRealVar*)vars2->find("slope_Run2");
-		// ((RooRealVar*)vars2->find("c0_Run2"))->setConstant(kTRUE);
-		// ((RooRealVar*)vars2->find("c1_Run2"))->setConstant(kTRUE);
-		// ((RooRealVar*)vars2->find("c2_Run2"))->setConstant(kTRUE);
-		//
-		// // p2->setConstant(kTRUE);
-		// delete vars2;
-	}
-	else if(bkgType == 3)
-	{
-		w.factory(Form("Gaussian::c0_Run1_constraint(gc0_Run1[%f,-2.0,2.0],c0_Run1,%f)",w.var("c0_Run1")->getValV(),w.var("c0_Run1")->getError()));
-		w.var("gc0_Run1")->setConstant();
-		w.factory(Form("Gaussian::c1_Run1_constraint(gc1_Run1[%f,-1.0,1.0],c1_Run1,%f)",w.var("c1_Run1")->getValV(),w.var("c1_Run1")->getError()));
-		w.var("gc1_Run1")->setConstant();
-		w.factory(Form("Gaussian::c2_Run1_constraint(gc2_Run1[%f,-1.0,1.0],c2_Run1,%f)",w.var("c2_Run1")->getValV(),w.var("c2_Run1")->getError()));
-		w.var("gc2_Run1")->setConstant();
-		w.factory(Form("Gaussian::c3_Run1_constraint(gc3_Run1[%f,-1.0,1.0],c3_Run1,%f)",w.var("c3_Run1")->getValV(),w.var("c3_Run1")->getError()));
-		w.var("gc3_Run1")->setConstant();
-		w.factory(Form("Gaussian::c0_Run2_constraint(gc0_Run2[%f,-2.0,2.0],c0_Run2,%f)",w.var("c0_Run2")->getValV(),w.var("c0_Run2")->getError()));
-		w.var("gc0_Run2")->setConstant();
-		w.factory(Form("Gaussian::c1_Run2_constraint(gc1_Run2[%f,-1.0,1.0],c1_Run2,%f)",w.var("c1_Run2")->getValV(),w.var("c1_Run2")->getError()));
-		w.var("gc1_Run2")->setConstant();
-		w.factory(Form("Gaussian::c2_Run2_constraint(gc2_Run2[%f,-1.0,1.0],c2_Run2,%f)",w.var("c2_Run2")->getValV(),w.var("c2_Run2")->getError()));
-		w.var("gc2_Run2")->setConstant();
-		w.factory(Form("Gaussian::c3_Run2_constraint(gc3_Run2[%f,-1.0,1.0],c3_Run2,%f)",w.var("c3_Run2")->getValV(),w.var("c3_Run2")->getError()));
-		w.var("gc3_Run2")->setConstant();
-		w.extendSet("globObs","gc0_Run1,gc1_Run1,gc2_Run1,gc3_Run1,gc0_Run2,gc1_Run2,gc2_Run2,gc3_Run2");
-		// auto vars1 = w.pdf("Bkg_Run1")->getVariables();
-		// // auto p1 = (RooRealVar*)vars1->find("slope_Run1");
-		// ((RooRealVar*)vars1->find("c0_Run1"))->setConstant(kTRUE);
-		// ((RooRealVar*)vars1->find("c1_Run1"))->setConstant(kTRUE);
-		// ((RooRealVar*)vars1->find("c2_Run1"))->setConstant(kTRUE);
-		// ((RooRealVar*)vars1->find("c3_Run1"))->setConstant(kTRUE);
-		//
-		// // p1->setConstant(kTRUE);
-		// delete vars1;
-		//
-		// auto vars2 = w.pdf("Bkg_Run2")->getVariables();
-		// // auto p2 = (RooRealVar*)vars2->find("slope_Run2");
-		// ((RooRealVar*)vars2->find("c0_Run2"))->setConstant(kTRUE);
-		// ((RooRealVar*)vars2->find("c1_Run2"))->setConstant(kTRUE);
-		// ((RooRealVar*)vars2->find("c2_Run2"))->setConstant(kTRUE);
-		// ((RooRealVar*)vars2->find("c3_Run2"))->setConstant(kTRUE);
-		// // p2->setConstant(kTRUE);
-		// delete vars2;
-	}
-	else if(bkgType == 4)
-	  {
+	        w.extendSet("globObs","gc0_Run1,gc1_Run1,gc2_Run1,gc0_Run2,gc1_Run2,gc2_Run2");
+	        // auto vars1 = w.pdf("Bkg_Run1")->getVariables();
+	        // // auto p1 = (RooRealVar*)vars1->find("slope_Run1");
+	        // ((RooRealVar*)vars1->find("c0_Run1"))->setConstant(kTRUE);
+	        // ((RooRealVar*)vars1->find("c1_Run1"))->setConstant(kTRUE);
+	        // ((RooRealVar*)vars1->find("c2_Run1"))->setConstant(kTRUE);
+	        //
+	        // // p1->setConstant(kTRUE);
+	        // delete vars1;
+	        //
+	        // auto vars2 = w.pdf("Bkg_Run2")->getVariables();
+	        // // auto p2 = (RooRealVar*)vars2->find("slope_Run2");
+	        // ((RooRealVar*)vars2->find("c0_Run2"))->setConstant(kTRUE);
+	        // ((RooRealVar*)vars2->find("c1_Run2"))->setConstant(kTRUE);
+	        // ((RooRealVar*)vars2->find("c2_Run2"))->setConstant(kTRUE);
+	        //
+	        // // p2->setConstant(kTRUE);
+	        // delete vars2;
+	   }
+	   else if(bkgType == 3)
+	   {
+	        w.factory(Form("Gaussian::c0_Run1_constraint(gc0_Run1[%f,-2.0,2.0],c0_Run1,%f)",w.var("c0_Run1")->getValV(),w.var("c0_Run1")->getError()));
+	        w.var("gc0_Run1")->setConstant();
+	        w.factory(Form("Gaussian::c1_Run1_constraint(gc1_Run1[%f,-1.0,1.0],c1_Run1,%f)",w.var("c1_Run1")->getValV(),w.var("c1_Run1")->getError()));
+	        w.var("gc1_Run1")->setConstant();
+	        w.factory(Form("Gaussian::c2_Run1_constraint(gc2_Run1[%f,-1.0,1.0],c2_Run1,%f)",w.var("c2_Run1")->getValV(),w.var("c2_Run1")->getError()));
+	        w.var("gc2_Run1")->setConstant();
+	        w.factory(Form("Gaussian::c3_Run1_constraint(gc3_Run1[%f,-1.0,1.0],c3_Run1,%f)",w.var("c3_Run1")->getValV(),w.var("c3_Run1")->getError()));
+	        w.var("gc3_Run1")->setConstant();
+	        w.factory(Form("Gaussian::c0_Run2_constraint(gc0_Run2[%f,-2.0,2.0],c0_Run2,%f)",w.var("c0_Run2")->getValV(),w.var("c0_Run2")->getError()));
+	        w.var("gc0_Run2")->setConstant();
+	        w.factory(Form("Gaussian::c1_Run2_constraint(gc1_Run2[%f,-1.0,1.0],c1_Run2,%f)",w.var("c1_Run2")->getValV(),w.var("c1_Run2")->getError()));
+	        w.var("gc1_Run2")->setConstant();
+	        w.factory(Form("Gaussian::c2_Run2_constraint(gc2_Run2[%f,-1.0,1.0],c2_Run2,%f)",w.var("c2_Run2")->getValV(),w.var("c2_Run2")->getError()));
+	        w.var("gc2_Run2")->setConstant();
+	        w.factory(Form("Gaussian::c3_Run2_constraint(gc3_Run2[%f,-1.0,1.0],c3_Run2,%f)",w.var("c3_Run2")->getValV(),w.var("c3_Run2")->getError()));
+	        w.var("gc3_Run2")->setConstant();
+	        w.extendSet("globObs","gc0_Run1,gc1_Run1,gc2_Run1,gc3_Run1,gc0_Run2,gc1_Run2,gc2_Run2,gc3_Run2");
+	        // auto vars1 = w.pdf("Bkg_Run1")->getVariables();
+	        // // auto p1 = (RooRealVar*)vars1->find("slope_Run1");
+	        // ((RooRealVar*)vars1->find("c0_Run1"))->setConstant(kTRUE);
+	        // ((RooRealVar*)vars1->find("c1_Run1"))->setConstant(kTRUE);
+	        // ((RooRealVar*)vars1->find("c2_Run1"))->setConstant(kTRUE);
+	        // ((RooRealVar*)vars1->find("c3_Run1"))->setConstant(kTRUE);
+	        //
+	        // // p1->setConstant(kTRUE);
+	        // delete vars1;
+	        //
+	        // auto vars2 = w.pdf("Bkg_Run2")->getVariables();
+	        // // auto p2 = (RooRealVar*)vars2->find("slope_Run2");
+	        // ((RooRealVar*)vars2->find("c0_Run2"))->setConstant(kTRUE);
+	        // ((RooRealVar*)vars2->find("c1_Run2"))->setConstant(kTRUE);
+	        // ((RooRealVar*)vars2->find("c2_Run2"))->setConstant(kTRUE);
+	        // ((RooRealVar*)vars2->find("c3_Run2"))->setConstant(kTRUE);
+	        // // p2->setConstant(kTRUE);
+	        // delete vars2;
+	   }
+	   else if(bkgType == 4)
+	   {
 	    w.factory(Form("Gaussian::slope_Run1_constraint(gslope_Run1[%f,-5.0,0.0],slope_Run1,%f)",w.var("slope_Run1")->getValV(),w.var("slope_Run1")->getError()));
 	    w.var("gslope_Run1")->setConstant();
 	    w.factory(Form("Gaussian::slope_Run2_constraint(gslope_Run2[%f,-5.0,0.0],slope_Run2,%f)",w.var("slope_Run2")->getValV(),w.var("slope_Run2")->getError()));
@@ -2185,8 +2199,8 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 	    w.var("gc0_Run2")->setConstant();
 
 	    w.extendSet("globObs","gslope_Run1,gslope_Run2,gc0_Run1,gc0_Run2");
-	  }
-	*/
+	   }
+	 */
 
 	if(bkgType == 0)
 	{
@@ -2231,12 +2245,12 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		//           "eff_ratio_1600_constraint2,c0_Run2_constraint,c1_Run2_constraint,"
 		//           "c2_Run2_constraint)");                               //Multiply model by constraint terms
 
-	w.factory("PROD::model_const1(model1,eff_ratio_constraint1,nXib_constraint1,"
-		  "eff_ratio_1405_constraint1,eff_ratio_1520_constraint1,"
-		  "eff_ratio_1600_constraint1)");                               //Multiply model by constraint terms
-	w.factory("PROD::model_const2(model2,eff_ratio_constraint2,nXib_constraint2,"
-		  "eff_ratio_1405_constraint2,eff_ratio_1520_constraint2,"
-		  "eff_ratio_1600_constraint2)");                               //Multiply model by constraint terms
+		w.factory("PROD::model_const1(model1,eff_ratio_constraint1,nXib_constraint1,"
+		          "eff_ratio_1405_constraint1,eff_ratio_1520_constraint1,"
+		          "eff_ratio_1600_constraint1)");                       //Multiply model by constraint terms
+		w.factory("PROD::model_const2(model2,eff_ratio_constraint2,nXib_constraint2,"
+		          "eff_ratio_1405_constraint2,eff_ratio_1520_constraint2,"
+		          "eff_ratio_1600_constraint2)");                       //Multiply model by constraint terms
 
 	}
 	else if(bkgType == 3)
@@ -2251,7 +2265,7 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 		//           "c2_Run2_constraint,c3_Run2_constraint)");                               //Multiply model by constraint terms
 
 		w.factory("PROD::model_const1(model1,eff_ratio_constraint1,nXib_constraint1,"
-			  "eff_ratio_1405_constraint1,eff_ratio_1520_constraint1,"
+		          "eff_ratio_1405_constraint1,eff_ratio_1520_constraint1,"
 		          "eff_ratio_1600_constraint1)");                               //Multiply model by constraint terms
 		w.factory("PROD::model_const2(model2,eff_ratio_constraint2,nXib_constraint2,"
 		          "eff_ratio_1405_constraint2,eff_ratio_1520_constraint2,"
@@ -2259,22 +2273,22 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	}
 	else if(bkgType == 4)
-	  {
-	    // w.factory("PROD::model_const1(model1,eff_ratio_constraint1,nXib_constraint1,"
-	    // 	      "eff_ratio_1405_constraint1,eff_ratio_1520_constraint1,"
-	    // 	      "eff_ratio_1600_constraint1,slope_Run1_constraint,c0_Run1_constraint)"); //Multiply model by constraint terms
-	    // w.factory("PROD::model_const2(model2,eff_ratio_constraint2,nXib_constraint2,"
-	    // 	      "eff_ratio_1405_constraint2,eff_ratio_1520_constraint2,"
-	    // 	      "eff_ratio_1600_constraint2,slope_Run2_constraint,c0_Run2_constraint)"); //Multiply model by constraint terms
+	{
+		// w.factory("PROD::model_const1(model1,eff_ratio_constraint1,nXib_constraint1,"
+		//            "eff_ratio_1405_constraint1,eff_ratio_1520_constraint1,"
+		//            "eff_ratio_1600_constraint1,slope_Run1_constraint,c0_Run1_constraint)"); //Multiply model by constraint terms
+		// w.factory("PROD::model_const2(model2,eff_ratio_constraint2,nXib_constraint2,"
+		//            "eff_ratio_1405_constraint2,eff_ratio_1520_constraint2,"
+		//            "eff_ratio_1600_constraint2,slope_Run2_constraint,c0_Run2_constraint)"); //Multiply model by constraint terms
 
-	    w.factory("PROD::model_const1(model1,eff_ratio_constraint1,nXib_constraint1,"
-		      "eff_ratio_1405_constraint1,eff_ratio_1520_constraint1,"
-		      "eff_ratio_1600_constraint1)"); //Multiply model by constraint terms
-	    w.factory("PROD::model_const2(model2,eff_ratio_constraint2,nXib_constraint2,"
-		      "eff_ratio_1405_constraint2,eff_ratio_1520_constraint2,"
-		      "eff_ratio_1600_constraint2)"); //Multiply model by constraint terms
+		w.factory("PROD::model_const1(model1,eff_ratio_constraint1,nXib_constraint1,"
+		          "eff_ratio_1405_constraint1,eff_ratio_1520_constraint1,"
+		          "eff_ratio_1600_constraint1)"); //Multiply model by constraint terms
+		w.factory("PROD::model_const2(model2,eff_ratio_constraint2,nXib_constraint2,"
+		          "eff_ratio_1405_constraint2,eff_ratio_1520_constraint2,"
+		          "eff_ratio_1600_constraint2)"); //Multiply model by constraint terms
 
-	  }
+	}
 	RooAbsPdf* model_const1 = w.pdf("model_const1"); // get the model
 	RooAbsPdf* model_const2 = w.pdf("model_const2"); // get the model
 
@@ -2381,33 +2395,33 @@ void Fitscript_simul(const char *option, Int_t myLow, Int_t myHigh, Int_t Lst140
 
 	// if(bkgType == 0)
 	// {
-	// 	constrainParams.add( *(w.var("slope_Run1")) );
-	// 	constrainParams.add( *(w.var("slope_Run2")) );
+	//      constrainParams.add( *(w.var("slope_Run1")) );
+	//      constrainParams.add( *(w.var("slope_Run2")) );
 	// }
 	// else if(bkgType != 4)
 	// {
-	// 	constrainParams.add( *(w.var("c0_Run1")) );
-	// 	constrainParams.add( *(w.var("c0_Run2")) );
-	// 	constrainParams.add( *(w.var("c1_Run1")) );
-	// 	constrainParams.add( *(w.var("c1_Run2")) );
-	// 	if(bkgType == 2 || bkgType == 3)
-	// 	{
-	// 		constrainParams.add( *(w.var("c2_Run1")) );
-	// 		constrainParams.add( *(w.var("c2_Run2")) );
-	// 		if(bkgType == 3)
-	// 		{
-	// 			constrainParams.add( *(w.var("c3_Run1")) );
-	// 			constrainParams.add( *(w.var("c3_Run2")) );
-	// 		}
-	// 	}
+	//      constrainParams.add( *(w.var("c0_Run1")) );
+	//      constrainParams.add( *(w.var("c0_Run2")) );
+	//      constrainParams.add( *(w.var("c1_Run1")) );
+	//      constrainParams.add( *(w.var("c1_Run2")) );
+	//      if(bkgType == 2 || bkgType == 3)
+	//      {
+	//              constrainParams.add( *(w.var("c2_Run1")) );
+	//              constrainParams.add( *(w.var("c2_Run2")) );
+	//              if(bkgType == 3)
+	//              {
+	//                      constrainParams.add( *(w.var("c3_Run1")) );
+	//                      constrainParams.add( *(w.var("c3_Run2")) );
+	//              }
+	//      }
 	// }
 	// else if(bkgType == 4)
 	//   {
-	// 	constrainParams.add( *(w.var("slope_Run1")) );
-	// 	constrainParams.add( *(w.var("slope_Run2")) );
-	// 	constrainParams.add( *(w.var("c0_Run1")) );
-	// 	constrainParams.add( *(w.var("c0_Run2")) );
-	//   }	    
+	//      constrainParams.add( *(w.var("slope_Run1")) );
+	//      constrainParams.add( *(w.var("slope_Run2")) );
+	//      constrainParams.add( *(w.var("c0_Run1")) );
+	//      constrainParams.add( *(w.var("c0_Run2")) );
+	//   }
 	RooFitResult *res = simPdf.fitTo(*combData,Minos(*w.set("poi")),Extended(), Save(), Hesse(false), Strategy(1), PrintLevel(0), Constrain(constrainParams) );
 
 	//*******************************************************************
