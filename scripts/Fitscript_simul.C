@@ -262,18 +262,18 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	// Int_t chic1flag      = 0;
 	Int_t xibflag        = 1;
 	Int_t sigmaflag      = 1;
-
 	// ************************Master Workspace**************************
 	RooWorkspace w("w");
 	// ************************Workspace for input data**************************
 	Bool_t inputFlag = false;
-	if(!(gSystem->AccessPathName(Form("Inputs_%d_%d_%f.root",myLow,myHigh,bdtCut))))
+      
+	if(!(gSystem->AccessPathName(Form("Inputs_%d_%d_%.2f.root",myLow,myHigh,bdtCut))))
 	{
 		inputFlag = true;
 	}
+	cout<<"inputFlag = "<<inputFlag<<endl;
 
-	RooWorkspace *w1;
-	w1->SetName("w1");
+	RooWorkspace *w1 = new RooWorkspace("w1","w1");
 	if(!inputFlag)
 	{
 		w1->factory(Form("Lb_DTF_M_JpsiLConstr[%d,%d]",myLow,myHigh));
@@ -282,7 +282,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	else
 	{
 		cout<<"Input file exists! Hurray!"<<endl;
-		TFile *inputFile = Open(Form("Inputs_%d_%d_%f.root",myLow,myHigh,bdtCut));
+		TFile *inputFile = Open(Form("Inputs_%d_%d_%.2f.root",myLow,myHigh,bdtCut));
 		w1 = (RooWorkspace*)inputFile->Get("w1");
 		cout<<"Printing contents of w1 from input file"<<endl;
 		w1->Print("v");
@@ -297,11 +297,9 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 	w.var("Lb_DTF_M_JpsiLConstr")->setBins((Int_t)(myHigh-myLow)/binwidth);
 	//*******************************************************************
-
 	//*********CONTROL VERBOSITY*****************************************
 	RooMsgService::instance().setGlobalKillBelow(RooFit::ERROR);
 	//*******************************************************************
-
 	//*****Run script to get Xib normalization***************************
 	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
 	cout<<"Get Xib Normalization"<<endl;
@@ -335,7 +333,6 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		cout<<"************************************************"<<endl;
 	}
 	//************************************************
-
 	//****Get J/psi Lambda efficiencies from MC*******
 	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
 	cout<<"Get Lb -> J/psi Lambda efficiency"<<endl;
@@ -447,7 +444,6 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		cout<<"************************************************"<<endl;
 	}
 	//*******************************************************************
-
 	//****Get J/psi Sigma efficiencies and shape from MC*****************
 	RooHistPdf* SIG[2];
 	RooKeysPdf* SIG_KEYS[2];
@@ -650,7 +646,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		framesigma->GetYaxis()->SetTitle("Candidates/(4 MeV)");
 		framesigma->SetTitle("J/#psi #Sigma");
 		//		ds_sig[i]->plotOn(framesigma,Name("sigmadata_nowt"),LineColor(kGreen));
-		ds_sig_wt[i]->plotOn(framesigma,Name("sigmadata"),LineColor(kBlack));
+		//		ds_sig_wt[i]->plotOn(framesigma,Name("sigmadata"),LineColor(kBlack));
 		(*(SIG_KEYS[i])).plotOn(framesigma,Name("sigmafitsmooth"),LineColor(kRed),LineStyle(kDashed));
 
 		TCanvas *csigma = new TCanvas(Form("JpsiSigma%d",run),Form("JpsiSigma%d",run));
@@ -670,7 +666,6 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		// cout<<"Run "<<run<<" sigma fraction = "<<sigmaINT[i]<<endl;
 	}
 	//********************************************************************
-
 	//****Get J/psi Lst(1405) efficiencies and shape from MC*******
 
 	RooDataSet* ds_1405[2];
@@ -934,7 +929,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		frame1405->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
 		frame1405->GetYaxis()->SetTitle("Candidates/(4 MeV)");
 		frame1405->SetTitle("J/#psi #Sigma");
-		ds_1405[i]->plotOn(frame1405,Name("1405data"),LineColor(kBlack));
+		//		ds_1405[i]->plotOn(frame1405,Name("1405data"),LineColor(kBlack));
 		(*(KEYS_1405[i])).plotOn(frame1405,Name("1405fitsmooth"),LineColor(kRed),LineStyle(kDashed));
 
 		TCanvas *c1405 = new TCanvas(Form("Jpsi1405%d",run),Form("Jpsi1405%d",run));
@@ -948,7 +943,6 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		cout<<"Done importing Jpsi Lst(1405) shape"<<endl;
 	}
 	//*******************************************************************
-
 	//****Get J/psi Lst(1520) efficiencies and shape from MC*******
 	RooDataSet* ds_1520[2];
 	RooKeysPdf* KEYS_1520[2];
@@ -1121,7 +1115,6 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		cout<<"Done importing Jpsi Lst(1520) shape"<<endl;
 	}
 	//*******************************************************************
-
 	//****Get J/psi Lst(1600) efficiencies and shape from MC*******
 	RooDataSet* ds_1600[2];
 	RooKeysPdf* KEYS_1600[2];
@@ -1477,7 +1470,6 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	//      cout<<"Done importing chiC1 Lambda shape"<<endl;
 	// }
 	//*******************************************************************
-
 	//******************Get shape from Xib background********************
 	RooDataSet* ds_xi[2];
 	RooDataSet* ds_xi_wt[2];
@@ -1499,7 +1491,6 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		XIB_KEYS[0] = (RooKeysPdf*)w1->pdf("XIB1");
 		XIB_KEYS[1] = (RooKeysPdf*)w1->pdf("XIB2");
 	}
-
 	for(Int_t run = 1; run<=2; run++)
 	{
 		Int_t i = run-1;
@@ -1562,16 +1553,17 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 			ds_xi_wt[i] = new RooDataSet("ds_xi_wt","ds_xi_wt",RooArgSet(*myVar,*gbWtVar),Import(*(ds_xi[i])),WeightVar(*gbWtVar));
 			ds_xi_wt[i]->Print();
+		
+			XIB_KEYS[i] = new RooKeysPdf(Form("XIB%d",run),Form("XIB%d",run),*myVar,*(ds_xi_wt[i]),RooKeysPdf::NoMirror);
 		}
-		XIB_KEYS[i] = new RooKeysPdf(Form("XIB%d",run),Form("XIB%d",run),*myVar,*(ds_xi_wt[i]),RooKeysPdf::NoMirror);
 		// XIB[i] = new RooHistPdf(Form("XIB%d",run),Form("XIB%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_xib_smooth,0);
 
 		RooPlot *framexib = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
 		framexib->SetTitle("#Xi_{b} #rightarrow J/#psi #Xi");
 		framexib->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
 		framexib->GetYaxis()->SetTitle("Candidates/(4 MeV)");
-		ds_xi[i]->plotOn(framexib,Name("xibdata_nowt"),LineColor(kGreen));
-		ds_xi_wt[i]->plotOn(framexib,Name("xibdata"),LineColor(kBlack));
+		// ds_xi[i]->plotOn(framexib,Name("xibdata_nowt"),LineColor(kGreen));
+		// ds_xi_wt[i]->plotOn(framexib,Name("xibdata"),LineColor(kBlack));
 		// (*(XIB[i])).plotOn(framexib,Name("xibfitsmooth"),LineColor(kRed),LineStyle(kDashed));
 		(*(XIB_KEYS[i])).plotOn(framexib,Name("xibfitsmooth"),LineColor(kRed),LineStyle(kDashed));
 
@@ -1943,6 +1935,9 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 			{
 				ds[0] = (RooDataHist*)w1->data("ds1");
 				ds[1] = (RooDataHist*)w1->data("ds2");
+
+				nentries[0] = (ds[0])->sum(kFALSE);
+				nentries[1] = (ds[1])->sum(kFALSE);
 			}
 			else
 			{
@@ -1975,6 +1970,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 		cout<<"Done importing Run "<<run<<" data"<<endl;
 	}
+
 	//*******************************************************************
 
 	//************************MAKE COMBINED MODEL************************
@@ -2053,17 +2049,14 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	// w.var("geff_ratio_chic1_1")->setConstant();
 	// w.var("geff_ratio_chic1_2")->setConstant();
 	//*******************************************************************
-
 	w.factory("nLb_Run1[5000,1000,8000]");
 	w.factory("nLb_Run2[17000,1000,24000]");
-
 	w.factory("nMiscLst_Run1[1500,1,4000]");
 	w.factory("nMiscLst_Run2[4000,1,9000]");
 	w.factory(Form("nBkg_Run1[1,%d]",nentries[0]));
 	w.factory(Form("nBkg_Run2[1,%d]",nentries[1]));
-
 	//****************Xib Bkg Yield**************************************
-
+	
 	//What should the limits on nXib be?
 
 	w.factory(Form("nXib1[%f,%f,%f]",xibCentral[0],xibLow[0],xibHigh[0]));
@@ -2079,7 +2072,6 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	//*****************Jpsi Sigma yield**********************************
 	w.factory("expr::nSigma1('pow(10,-5)*R*nLb_Run1/(eff_ratio1*1.058)',R,nLb_Run1,eff_ratio1)");
 	w.factory("expr::nSigma2('pow(10,-5)*R*nLb_Run2/(eff_ratio2*1.058)',R,nLb_Run2,eff_ratio2)");
-
 	//*******************************************************************
 
 	//*****************Jpsi Lambda(1405) yield***************************
@@ -2096,7 +2088,6 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	w.factory("expr::n1600_Run1('R_1600*nLb_Run1*eff_ratio_1600_1',R_1600,nLb_Run1,eff_ratio_1600_1)");
 	w.factory("expr::n1600_Run2('R_1600*nLb_Run2*eff_ratio_1600_2',R_1600,nLb_Run2,eff_ratio_1600_2)");
 	//*******************************************************************
-
 	//*****************chic1 Lambda yield***************************
 	// w.factory("expr::nchic1_Run1('R_chic1*nLb_Run1*eff_ratio_chic1_1',R_chic1,nLb_Run1,eff_ratio_chic1_1)");
 	// w.factory("expr::nchic1_Run2('R_chic1*nLb_Run2*eff_ratio_chic1_2',R_chic1,nLb_Run2,eff_ratio_chic1_2)");
@@ -2105,7 +2096,6 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	          " n1520_Run1*LST1520_Run1 , n1600_Run1*LST1600_Run1 , nMiscLst_Run1*lstLump_Run1 , nBkg_Run1*Bkg_Run1, nXib_JpsiLambda_Run1*Xib_Run1)");
 	w.factory("SUM:model2(nSigma2*SIG2 , nLb_Run2*Lb_Run2 , nXib2*XIB2 , n1405_Run2*LST1405_Run2 ,"
 	          " n1520_Run2*LST1520_Run2 , n1600_Run2*LST1600_Run2 , nMiscLst_Run2*lstLump_Run2 , nBkg_Run2*Bkg_Run2, nXib_JpsiLambda_Run2*Xib_Run2)");
-
 	if(!lst1405flag)
 	{
 		w.var("R_1405")->setVal(-20);
@@ -2142,7 +2132,6 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	            "XibSigma_Run2");
 
 	w.extendSet("nuisParams","shift_Xib");
-
 	if(sigType == 0)//Hypatia
 	{
 		w.extendSet("nuisParams","lambda_Run1");
@@ -2190,7 +2179,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	//*******************************************************************
 
 	//First fit background shapes to data above peak, just to help set initial values.
-
+	cout<<"before sb fit"<<endl;
 	w.pdf("Bkg_Run1")->fitTo(*(ds[0]),Range("sideband_window"));
 	w.pdf("Bkg_Run2")->fitTo(*(ds[1]),Range("sideband_window"));
 
@@ -2207,6 +2196,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	(ds[1])->plotOn(SBframe_Run2,Name("SBdata_Run2"),DataError(RooAbsData::Poisson));
 	(w.pdf("Bkg_Run2"))->plotOn(SBframe_Run2,Name("SBfit_Run2"));
 	SBframe_Run2->Draw();
+	cout<<"after sb fit"<<endl;
 	/*
 	   if(bkgType == 0)
 	   {
@@ -2409,6 +2399,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	sample.defineType("run2");
 
 	RooAbsData *combData;
+
 	if(isBinned)
 	{
 		if(inputFlag)
