@@ -266,10 +266,29 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	// ************************Master Workspace**************************
 	RooWorkspace w("w");
 	// ************************Workspace for input data**************************
-	RooWorkspace w1("w1");
+	Bool_t inputFlag = false;
+	if(!(gSystem->AccessPathName(Form("Inputs_%d_%d_%f.root",myLow,myHigh,bdtCut))))
+	{
+		inputFlag = true;
+	}
+
+	RooWorkspace *w1;
+	w1->SetName("w1");
+	if(!inputFlag)
+	{
+		w1->factory(Form("Lb_DTF_M_JpsiLConstr[%d,%d]",myLow,myHigh));
+		w1->var("Lb_DTF_M_JpsiLConstr")->setBins((Int_t)(myHigh-myLow)/binwidth);
+	}
+	else
+	{
+		cout<<"Input file exists! Hurray!"<<endl;
+		TFile *inputFile = Open(Form("Inputs_%d_%d_%f.root",myLow,myHigh,bdtCut));
+		w1 = (RooWorkspace*)inputFile->Get("w1");
+		cout<<"Printing contents of w1 from input file"<<endl;
+		w1->Print("v");
+	}
 	//*********MASTER VARIABLE*******************************************
 	w.factory(Form("Lb_DTF_M_JpsiLConstr[%d,%d]",myLow,myHigh));
-	w1.factory(Form("Lb_DTF_M_JpsiLConstr[%d,%d]",myLow,myHigh));
 
 	RooRealVar *myVar = w.var("Lb_DTF_M_JpsiLConstr");
 
@@ -277,7 +296,6 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	myVar->setRange("sideband_window",5800,myHigh);
 
 	w.var("Lb_DTF_M_JpsiLConstr")->setBins((Int_t)(myHigh-myLow)/binwidth);
-	w1.var("Lb_DTF_M_JpsiLConstr")->setBins((Int_t)(myHigh-myLow)/binwidth);
 	//*******************************************************************
 
 	//*********CONTROL VERBOSITY*****************************************
@@ -430,13 +448,13 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	}
 	//*******************************************************************
 
+	//****Get J/psi Sigma efficiencies and shape from MC*****************
 	RooHistPdf* SIG[2];
 	RooKeysPdf* SIG_KEYS[2];
 	RooDataSet* ds_sig[2];
 	RooDataSet* ds_sig_wt[2];
 	RooAbsReal* sigmaInt[2];
 
-	//****Get J/psi Sigma efficiencies and shape from MC*****************
 	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
 	cout<<"Get Lb -> J/psi Sigma efficiency and shape"<<endl;
 	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
@@ -444,6 +462,11 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	const char* sigmaPath = "/data1/avenkate/JpsiLambda_RESTART/"
 	                        "rootFiles/mcFiles/JpsiLambda/JpsiSigma";
 
+	if(inputFlag)
+	{
+		SIG_KEYS[0] = (RooKeysPdf*)w1->pdf("SIG1");
+		SIG_KEYS[1] = (RooKeysPdf*)w1->pdf("SIG2");
+	}
 	for(Int_t run = 1; run<=2; run++)
 	{
 		Int_t i = run-1;
@@ -564,61 +587,63 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 		//******************************************************************
 
-		//****************Shape*********************************************
-
-		mcTreeIn_Zero_Sigma->SetBranchStatus("*",0);
-		mcTreeIn_Zero_Sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		mcTreeIn_Zero_Sigma->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
-		mcTreeIn_Zero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
-		mcTreeIn_Zero_Sigma->SetBranchStatus("gb_wts",1);
-		mcTreeIn_Zero_Sigma->SetBranchStatus("wt_tau",1);
-		if(run == 1)
-			mcTreeIn_Zero_Sigma->SetBranchStatus("gb_wts_new",1);
-
-		mcTreeIn_nonZero_Sigma->SetBranchStatus("*",0);
-		mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		mcTreeIn_nonZero_Sigma->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
-		mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
-		mcTreeIn_nonZero_Sigma->SetBranchStatus("gb_wts",1);
-		mcTreeIn_nonZero_Sigma->SetBranchStatus("wt_tau",1);
-		if(run == 1)
-			mcTreeIn_nonZero_Sigma->SetBranchStatus("gb_wts_new",1);
-		TFile *tempFile = new TFile("tempFile_sig.root","RECREATE");
-
-		TTree* mcTreeIn_Zero_Sigma_cut    = (TTree*)mcTreeIn_Zero_Sigma->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));                                                                                                //Not TRUTH MATCHING HERE!
-		TTree* mcTreeIn_nonZero_Sigma_cut = (TTree*)mcTreeIn_nonZero_Sigma->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));                                                                                                //Not TRUTH MATCHING HERE!
-
-		TList *list_sig = new TList;
-		list_sig->Add(mcTreeIn_Zero_Sigma_cut);
-		list_sig->Add(mcTreeIn_nonZero_Sigma_cut);
-
-		TTree *combTree_sig = TTree::MergeTrees(list_sig);
-		combTree_sig->SetName("combTree_sig");
-
-		RooRealVar *gbWtVar = nullptr;
-
-		if(run == 1)
+		if(!inputFlag)
 		{
-			gbWtVar  = new RooRealVar("gb_wts_new","gb Weight Var",-100.,100.);
+			//****************Shape*********************************************
+
+			mcTreeIn_Zero_Sigma->SetBranchStatus("*",0);
+			mcTreeIn_Zero_Sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+			mcTreeIn_Zero_Sigma->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+			mcTreeIn_Zero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
+			mcTreeIn_Zero_Sigma->SetBranchStatus("gb_wts",1);
+			mcTreeIn_Zero_Sigma->SetBranchStatus("wt_tau",1);
+			if(run == 1)
+				mcTreeIn_Zero_Sigma->SetBranchStatus("gb_wts_new",1);
+
+			mcTreeIn_nonZero_Sigma->SetBranchStatus("*",0);
+			mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+			mcTreeIn_nonZero_Sigma->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+			mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
+			mcTreeIn_nonZero_Sigma->SetBranchStatus("gb_wts",1);
+			mcTreeIn_nonZero_Sigma->SetBranchStatus("wt_tau",1);
+			if(run == 1)
+				mcTreeIn_nonZero_Sigma->SetBranchStatus("gb_wts_new",1);
+			TFile *tempFile = new TFile("tempFile_sig.root","RECREATE");
+
+			TTree* mcTreeIn_Zero_Sigma_cut    = (TTree*)mcTreeIn_Zero_Sigma->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));                                                                                        //Not TRUTH MATCHING HERE!
+			TTree* mcTreeIn_nonZero_Sigma_cut = (TTree*)mcTreeIn_nonZero_Sigma->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));                                                                                        //Not TRUTH MATCHING HERE!
+
+			TList *list_sig = new TList;
+			list_sig->Add(mcTreeIn_Zero_Sigma_cut);
+			list_sig->Add(mcTreeIn_nonZero_Sigma_cut);
+
+			TTree *combTree_sig = TTree::MergeTrees(list_sig);
+			combTree_sig->SetName("combTree_sig");
+
+			RooRealVar *gbWtVar = nullptr;
+
+			if(run == 1)
+			{
+				gbWtVar  = new RooRealVar("gb_wts_new","gb Weight Var",-100.,100.);
+			}
+			else if(run == 2)
+			{
+				gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
+			}
+
+			RooRealVar *tauWtVar = new RooRealVar("wt_tau","tau Weight Var",-100.,100.);
+
+			ds_sig[i] = new RooDataSet("ds_sig","ds_sig",combTree_sig,RooArgSet(*myVar,*gbWtVar,*tauWtVar));
+			ds_sig[i]->Print();
+
+			RooFormulaVar *totWt = new RooFormulaVar("totWt","@0*@1",RooArgList(*gbWtVar,*tauWtVar));
+			RooRealVar *totWt_var = (RooRealVar*)ds_sig[i]->addColumn(*totWt);
+
+			ds_sig_wt[i] = new RooDataSet("ds_sig_wt","ds_sig_wt",RooArgSet(*myVar,*totWt_var),Import(*(ds_sig[i])),WeightVar(*totWt_var));
+			ds_sig_wt[i]->Print();
+
+			SIG_KEYS[i] = new RooKeysPdf(Form("SIG%d",run),Form("SIG%d",run),*myVar,*(ds_sig_wt[i]),RooKeysPdf::MirrorBoth,1);
 		}
-		else if(run == 2)
-		{
-			gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
-		}
-
-		RooRealVar *tauWtVar = new RooRealVar("wt_tau","tau Weight Var",-100.,100.);
-
-		ds_sig[i] = new RooDataSet("ds_sig","ds_sig",combTree_sig,RooArgSet(*myVar,*gbWtVar,*tauWtVar));
-		ds_sig[i]->Print();
-
-		RooFormulaVar *totWt = new RooFormulaVar("totWt","@0*@1",RooArgList(*gbWtVar,*tauWtVar));
-		RooRealVar *totWt_var = (RooRealVar*)ds_sig[i]->addColumn(*totWt);
-
-		ds_sig_wt[i] = new RooDataSet("ds_sig_wt","ds_sig_wt",RooArgSet(*myVar,*totWt_var),Import(*(ds_sig[i])),WeightVar(*totWt_var));
-		ds_sig_wt[i]->Print();
-
-		SIG_KEYS[i] = new RooKeysPdf(Form("SIG%d",run),Form("SIG%d",run),*myVar,*(ds_sig_wt[i]),RooKeysPdf::MirrorBoth,1);
-
 		RooPlot *framesigma = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
 		framesigma->SetTitle("#Lambda_{b} #rightarrow J/#psi #Sigma");
 		framesigma->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
@@ -632,7 +657,11 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		framesigma->Draw();
 
 		w.import(*(SIG_KEYS[i]));
-		w1.import(*(SIG_KEYS[i]));
+
+		if(!inputFlag)
+		{
+			w1->import(*(SIG_KEYS[i]));
+		}
 		cout<<"Done importing Jpsi Sigma shape"<<endl;
 
 		sigmaInt[i] = SIG_KEYS[i]->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
@@ -642,16 +671,25 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	}
 	//********************************************************************
 
+	//****Get J/psi Lst(1405) efficiencies and shape from MC*******
+
 	RooDataSet* ds_1405[2];
 	RooKeysPdf* KEYS_1405[2];
-
-	//****Get J/psi Lst(1405) efficiencies and shape from MC*******
 	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
 	cout<<"Get Lb -> J/psi Lst(1405) efficiency and shape"<<endl;
 	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
-	const char* Lst1405Path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/Lst1405";
+
+	const char* Lst1405Path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/"
+	                          "mcFiles/JpsiLambda/Lst1405";
 	const char* rwSuffix    = "";
 	const char* rwType      = "";
+
+	if(inputFlag)
+	{
+		KEYS_1405[0] = (RooKeysPdf*)w1->pdf("LST1405_Run1");
+		KEYS_1405[1] = (RooKeysPdf*)w1->pdf("LST1405_Run2");
+	}
+
 	if(Lst1405_rwtype==0)
 	{
 		nGen_1405[0] = 3902198;
@@ -817,78 +855,80 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 		//*******************************************************************
 
-		//****************Shape*********************************************
-		cout<<"***************************************"<<endl;
-		cout<<"Get J/psi Lambda(1405) shape from MC"<<endl;
-		cout<<"***************************************"<<endl;
-
-		mcTreeIn_Zero_1405->SetBranchStatus("*",0);
-		mcTreeIn_Zero_1405->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		mcTreeIn_Zero_1405->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
-		mcTreeIn_Zero_1405->SetBranchStatus("Lb_BKGCAT",1);
-		mcTreeIn_Zero_1405->SetBranchStatus("gb_wts",1);
-		mcTreeIn_Zero_1405->SetBranchStatus("wt_tau",1);
-
-		mcTreeIn_nonZero_1405->SetBranchStatus("*",0);
-		mcTreeIn_nonZero_1405->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		mcTreeIn_nonZero_1405->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
-		mcTreeIn_nonZero_1405->SetBranchStatus("Lb_BKGCAT",1);
-		mcTreeIn_nonZero_1405->SetBranchStatus("gb_wts",1);
-		mcTreeIn_nonZero_1405->SetBranchStatus("wt_tau",1);
-
-		if(run == 1)
+		if(!inputFlag)
 		{
-			mcTreeIn_Zero_1405->SetBranchStatus("gb_wts_new",1);
-			mcTreeIn_nonZero_1405->SetBranchStatus("gb_wts_new",1);
-		}
+			//****************Shape*********************************************
+			cout<<"***************************************"<<endl;
+			cout<<"Get J/psi Lambda(1405) shape from MC"<<endl;
+			cout<<"***************************************"<<endl;
 
-		TFile *tempFile_1405 = new TFile("tempFile_1405.root","RECREATE");
+			mcTreeIn_Zero_1405->SetBranchStatus("*",0);
+			mcTreeIn_Zero_1405->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+			mcTreeIn_Zero_1405->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+			mcTreeIn_Zero_1405->SetBranchStatus("Lb_BKGCAT",1);
+			mcTreeIn_Zero_1405->SetBranchStatus("gb_wts",1);
+			mcTreeIn_Zero_1405->SetBranchStatus("wt_tau",1);
 
-		TTree* mcTreeIn_Zero_1405_cut    = (TTree*)mcTreeIn_Zero_1405->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TRUTH MATCHING HERE!
-		TTree* mcTreeIn_nonZero_1405_cut = (TTree*)mcTreeIn_nonZero_1405->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//NOTE NO TRUTH MATCHING HERE!
+			mcTreeIn_nonZero_1405->SetBranchStatus("*",0);
+			mcTreeIn_nonZero_1405->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+			mcTreeIn_nonZero_1405->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+			mcTreeIn_nonZero_1405->SetBranchStatus("Lb_BKGCAT",1);
+			mcTreeIn_nonZero_1405->SetBranchStatus("gb_wts",1);
+			mcTreeIn_nonZero_1405->SetBranchStatus("wt_tau",1);
 
-		TList *list_1405 = new TList;
-		list_1405->Add(mcTreeIn_Zero_1405_cut);
-		list_1405->Add(mcTreeIn_nonZero_1405_cut);
-
-		TTree *combTree_1405 = TTree::MergeTrees(list_1405);
-		combTree_1405->SetName("combTree_1405");
-
-		if(Lst1405_rwtype!=0)
-		{
 			if(run == 1)
 			{
-				ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
-				                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
-				                            Form("%sweight*wt_tau",rwType));
+				mcTreeIn_Zero_1405->SetBranchStatus("gb_wts_new",1);
+				mcTreeIn_nonZero_1405->SetBranchStatus("gb_wts_new",1);
 			}
-			else if(run == 2)
-			{
-				ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
-				                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
-				                            Form("%sweight*wt_tau",rwType));
-			}
-		}
-		else
-		{
-			if(run == 1)
-			{
-				ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
-				                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
-				                            "wt_tau");
-			}
-			else if(run == 2)
-			{
-				ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
-				                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
-				                            "wt_tau");
-			}
-		}
-		ds_1405[i]->Print();
 
-		KEYS_1405[i] = new RooKeysPdf(Form("LST1405_Run%d",run),Form("LST1405_Run%d",run),
-		                              *(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1405[i]),RooKeysPdf::MirrorBoth,1);
+			TFile *tempFile_1405 = new TFile("tempFile_1405.root","RECREATE");
 
+			TTree* mcTreeIn_Zero_1405_cut    = (TTree*)mcTreeIn_Zero_1405->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TRUTH MATCHING HERE!
+			TTree* mcTreeIn_nonZero_1405_cut = (TTree*)mcTreeIn_nonZero_1405->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//NOTE NO TRUTH MATCHING HERE!
+
+			TList *list_1405 = new TList;
+			list_1405->Add(mcTreeIn_Zero_1405_cut);
+			list_1405->Add(mcTreeIn_nonZero_1405_cut);
+
+			TTree *combTree_1405 = TTree::MergeTrees(list_1405);
+			combTree_1405->SetName("combTree_1405");
+
+			if(Lst1405_rwtype!=0)
+			{
+				if(run == 1)
+				{
+					ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
+					                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
+					                            Form("%sweight*wt_tau",rwType));
+				}
+				else if(run == 2)
+				{
+					ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
+					                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
+					                            Form("%sweight*wt_tau",rwType));
+				}
+			}
+			else
+			{
+				if(run == 1)
+				{
+					ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
+					                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
+					                            "wt_tau");
+				}
+				else if(run == 2)
+				{
+					ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
+					                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
+					                            "wt_tau");
+				}
+			}
+			ds_1405[i]->Print();
+
+			KEYS_1405[i] = new RooKeysPdf(Form("LST1405_Run%d",run),Form("LST1405_Run%d",run),
+			                              *(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1405[i]),RooKeysPdf::MirrorBoth,1);
+		}
 		RooPlot *frame1405 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
 		frame1405->SetTitle("#Lambda_{b} #rightarrow J/#psi #Lambda(1405)");
 		frame1405->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
@@ -901,17 +941,25 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		frame1405->Draw();
 
 		w.import(*(KEYS_1405[i]));
-		w1.import(*(KEYS_1405[i]));
-
+		if(!inputFlag)
+		{
+			w1->import(*(KEYS_1405[i]));
+		}
 		cout<<"Done importing Jpsi Lst(1405) shape"<<endl;
 	}
 	//*******************************************************************
 
+	//****Get J/psi Lst(1520) efficiencies and shape from MC*******
 	RooDataSet* ds_1520[2];
 	RooKeysPdf* KEYS_1520[2];
 
-	//****Get J/psi Lst(1520) efficiencies and shape from MC*******
 	const char* Lst1520Path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/Lst1520";
+
+	if(inputFlag)
+	{
+		KEYS_1520[0] = (RooKeysPdf*)w1->pdf("LST1520_Run1");
+		KEYS_1520[1] = (RooKeysPdf*)w1->pdf("LST1520_Run2");
+	}
 
 	for(Int_t run = 1; run<=2; run++)
 	{
@@ -1020,60 +1068,71 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 		//*******************************************************************
 
-		//****************Shape*********************************************
-		cout<<"***************************************"<<endl;
-		cout<<"Get J/psi Lambda(1520) shape from MC"<<endl;
-		cout<<"***************************************"<<endl;
-
-		mcTreeIn_Zero_1520->SetBranchStatus("*",0);
-		mcTreeIn_Zero_1520->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		mcTreeIn_Zero_1520->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
-		mcTreeIn_Zero_1520->SetBranchStatus("Lb_BKGCAT",1);
-		mcTreeIn_Zero_1520->SetBranchStatus("gb_wts",1);
-		mcTreeIn_Zero_1520->SetBranchStatus("wt_tau",1);
-
-		mcTreeIn_nonZero_1520->SetBranchStatus("*",0);
-		mcTreeIn_nonZero_1520->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		mcTreeIn_nonZero_1520->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
-		mcTreeIn_nonZero_1520->SetBranchStatus("Lb_BKGCAT",1);
-		mcTreeIn_nonZero_1520->SetBranchStatus("gb_wts",1);
-		mcTreeIn_nonZero_1520->SetBranchStatus("wt_tau",1);
-
-		if(run == 1)
+		if(!inputFlag)
 		{
-			mcTreeIn_Zero_1520->SetBranchStatus("gb_wts_new",1);
-			mcTreeIn_nonZero_1520->SetBranchStatus("gb_wts_new",1);
+			//****************Shape*********************************************
+			cout<<"***************************************"<<endl;
+			cout<<"Get J/psi Lambda(1520) shape from MC"<<endl;
+			cout<<"***************************************"<<endl;
+
+			mcTreeIn_Zero_1520->SetBranchStatus("*",0);
+			mcTreeIn_Zero_1520->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+			mcTreeIn_Zero_1520->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+			mcTreeIn_Zero_1520->SetBranchStatus("Lb_BKGCAT",1);
+			mcTreeIn_Zero_1520->SetBranchStatus("gb_wts",1);
+			mcTreeIn_Zero_1520->SetBranchStatus("wt_tau",1);
+
+			mcTreeIn_nonZero_1520->SetBranchStatus("*",0);
+			mcTreeIn_nonZero_1520->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+			mcTreeIn_nonZero_1520->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+			mcTreeIn_nonZero_1520->SetBranchStatus("Lb_BKGCAT",1);
+			mcTreeIn_nonZero_1520->SetBranchStatus("gb_wts",1);
+			mcTreeIn_nonZero_1520->SetBranchStatus("wt_tau",1);
+
+			if(run == 1)
+			{
+				mcTreeIn_Zero_1520->SetBranchStatus("gb_wts_new",1);
+				mcTreeIn_nonZero_1520->SetBranchStatus("gb_wts_new",1);
+			}
+
+			TFile *tempFile_1520 = new TFile("tempFile_1520.root","RECREATE");
+
+			TTree* mcTreeIn_Zero_1520_cut    = (TTree*)mcTreeIn_Zero_1520->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TRUTH MATCHING HERE!
+			TTree* mcTreeIn_nonZero_1520_cut = (TTree*)mcTreeIn_nonZero_1520->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//NOTE NO TRUTH MATCHING HERE!
+
+			TList *list_1520 = new TList;
+			list_1520->Add(mcTreeIn_Zero_1520_cut);
+			list_1520->Add(mcTreeIn_nonZero_1520_cut);
+
+			TTree *combTree_1520 = TTree::MergeTrees(list_1520);
+			combTree_1520->SetName("combTree_1520");
+
+			ds_1520[i] = new RooDataSet("ds_1520","ds_1520",combTree_1520,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"wt_tau");
+			ds_1520[i]->Print();
+
+			KEYS_1520[i] = new RooKeysPdf(Form("LST1520_Run%d",run),Form("LST1520_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1520[i]),RooKeysPdf::MirrorBoth,1);
 		}
-
-		TFile *tempFile_1520 = new TFile("tempFile_1520.root","RECREATE");
-
-		TTree* mcTreeIn_Zero_1520_cut    = (TTree*)mcTreeIn_Zero_1520->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TRUTH MATCHING HERE!
-		TTree* mcTreeIn_nonZero_1520_cut = (TTree*)mcTreeIn_nonZero_1520->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//NOTE NO TRUTH MATCHING HERE!
-
-		TList *list_1520 = new TList;
-		list_1520->Add(mcTreeIn_Zero_1520_cut);
-		list_1520->Add(mcTreeIn_nonZero_1520_cut);
-
-		TTree *combTree_1520 = TTree::MergeTrees(list_1520);
-		combTree_1520->SetName("combTree_1520");
-
-		ds_1520[i] = new RooDataSet("ds_1520","ds_1520",combTree_1520,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"wt_tau");
-		ds_1520[i]->Print();
-
-		KEYS_1520[i] = new RooKeysPdf(Form("LST1520_Run%d",run),Form("LST1520_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1520[i]),RooKeysPdf::MirrorBoth,1);
-
 		w.import(*(KEYS_1520[i]));
-		w1.import(*(KEYS_1520[i]));
+		if(!inputFlag)
+		{
+			w1->import(*(KEYS_1520[i]));
+		}
 
 		cout<<"Done importing Jpsi Lst(1520) shape"<<endl;
 	}
 	//*******************************************************************
 
+	//****Get J/psi Lst(1600) efficiencies and shape from MC*******
 	RooDataSet* ds_1600[2];
 	RooKeysPdf* KEYS_1600[2];
 
-	//****Get J/psi Lst(1600) efficiencies and shape from MC*******
 	const char* Lst1600Path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/Lst1600";
+
+	if(inputFlag)
+	{
+		KEYS_1600[0] = (RooKeysPdf*)w1->pdf("LST1600_Run1");
+		KEYS_1600[1] = (RooKeysPdf*)w1->pdf("LST1600_Run2");
+	}
 
 	for(Int_t run = 1; run<=2; run++)
 	{
@@ -1182,51 +1241,55 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 		//*******************************************************************
 
-		//****************Shape*********************************************
-		cout<<"***************************************"<<endl;
-		cout<<"Get J/psi Lambda(1600) shape from MC"<<endl;
-		cout<<"***************************************"<<endl;
-
-		mcTreeIn_Zero_1600->SetBranchStatus("*",0);
-		mcTreeIn_Zero_1600->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		mcTreeIn_Zero_1600->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
-		mcTreeIn_Zero_1600->SetBranchStatus("Lb_BKGCAT",1);
-		mcTreeIn_Zero_1600->SetBranchStatus("gb_wts",1);
-		mcTreeIn_Zero_1600->SetBranchStatus("wt_tau",1);
-
-		mcTreeIn_nonZero_1600->SetBranchStatus("*",0);
-		mcTreeIn_nonZero_1600->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		mcTreeIn_nonZero_1600->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
-		mcTreeIn_nonZero_1600->SetBranchStatus("Lb_BKGCAT",1);
-		mcTreeIn_nonZero_1600->SetBranchStatus("gb_wts",1);
-		mcTreeIn_nonZero_1600->SetBranchStatus("wt_tau",1);
-
-		if(run == 1)
+		if(!inputFlag)
 		{
-			mcTreeIn_Zero_1600->SetBranchStatus("gb_wts_new",1);
-			mcTreeIn_nonZero_1600->SetBranchStatus("gb_wts_new",1);
+			//****************Shape*********************************************
+			cout<<"***************************************"<<endl;
+			cout<<"Get J/psi Lambda(1600) shape from MC"<<endl;
+			cout<<"***************************************"<<endl;
+
+			mcTreeIn_Zero_1600->SetBranchStatus("*",0);
+			mcTreeIn_Zero_1600->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+			mcTreeIn_Zero_1600->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+			mcTreeIn_Zero_1600->SetBranchStatus("Lb_BKGCAT",1);
+			mcTreeIn_Zero_1600->SetBranchStatus("gb_wts",1);
+			mcTreeIn_Zero_1600->SetBranchStatus("wt_tau",1);
+
+			mcTreeIn_nonZero_1600->SetBranchStatus("*",0);
+			mcTreeIn_nonZero_1600->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+			mcTreeIn_nonZero_1600->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+			mcTreeIn_nonZero_1600->SetBranchStatus("Lb_BKGCAT",1);
+			mcTreeIn_nonZero_1600->SetBranchStatus("gb_wts",1);
+			mcTreeIn_nonZero_1600->SetBranchStatus("wt_tau",1);
+
+			if(run == 1)
+			{
+				mcTreeIn_Zero_1600->SetBranchStatus("gb_wts_new",1);
+				mcTreeIn_nonZero_1600->SetBranchStatus("gb_wts_new",1);
+			}
+
+			TFile *tempFile_1600 = new TFile("tempFile_1600.root","RECREATE");
+
+			TTree* mcTreeIn_Zero_1600_cut    = (TTree*)mcTreeIn_Zero_1600->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TRUTH MATCHING HERE!
+			TTree* mcTreeIn_nonZero_1600_cut = (TTree*)mcTreeIn_nonZero_1600->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//NOTE NO TRUTH MATCHING HERE!
+
+			TList *list_1600 = new TList;
+			list_1600->Add(mcTreeIn_Zero_1600_cut);
+			list_1600->Add(mcTreeIn_nonZero_1600_cut);
+
+			TTree *combTree_1600 = TTree::MergeTrees(list_1600);
+			combTree_1600->SetName("combTree_1600");
+
+			ds_1600[i] = new RooDataSet("ds_1600","ds_1600",combTree_1600,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"wt_tau");
+			ds_1600[i]->Print();
+
+			KEYS_1600[i] = new RooKeysPdf(Form("LST1600_Run%d",run),Form("LST1600_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1600[i]),RooKeysPdf::MirrorBoth,1);
 		}
-
-		TFile *tempFile_1600 = new TFile("tempFile_1600.root","RECREATE");
-
-		TTree* mcTreeIn_Zero_1600_cut    = (TTree*)mcTreeIn_Zero_1600->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TRUTH MATCHING HERE!
-		TTree* mcTreeIn_nonZero_1600_cut = (TTree*)mcTreeIn_nonZero_1600->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//NOTE NO TRUTH MATCHING HERE!
-
-		TList *list_1600 = new TList;
-		list_1600->Add(mcTreeIn_Zero_1600_cut);
-		list_1600->Add(mcTreeIn_nonZero_1600_cut);
-
-		TTree *combTree_1600 = TTree::MergeTrees(list_1600);
-		combTree_1600->SetName("combTree_1600");
-
-		ds_1600[i] = new RooDataSet("ds_1600","ds_1600",combTree_1600,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"wt_tau");
-		ds_1600[i]->Print();
-
-		KEYS_1600[i] = new RooKeysPdf(Form("LST1600_Run%d",run),Form("LST1600_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1600[i]),RooKeysPdf::MirrorBoth,1);
-
 		w.import(*(KEYS_1600[i]));
-		w1.import(*(KEYS_1600[i]));
-
+		if(!inputFlag)
+		{
+			w1->import(*(KEYS_1600[i]));
+		}
 		cout<<"Done importing Jpsi Lst(1600) shape"<<endl;
 	}
 	//*******************************************************************
@@ -1415,6 +1478,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	// }
 	//*******************************************************************
 
+	//******************Get shape from Xib background********************
 	RooDataSet* ds_xi[2];
 	RooDataSet* ds_xi_wt[2];
 	RooKeysPdf* XIB_KEYS[2];
@@ -1426,72 +1490,79 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	xibHigh[0] = 200;
 	xibHigh[1] = 400;
 
-	//******************Get shape from Xib background********************
 	// RooRealVar xibmass("Lb_DTF_M_JpsiLConstr","xibmass",5200.,5740.);
 	const char* xibPath = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi";
 	RooAbsReal* xibInt[2];
 
+	if(inputFlag)
+	{
+		XIB_KEYS[0] = (RooKeysPdf*)w1->pdf("XIB1");
+		XIB_KEYS[1] = (RooKeysPdf*)w1->pdf("XIB2");
+	}
+
 	for(Int_t run = 1; run<=2; run++)
 	{
-		Int_t i = run-1;
-		TFile *filein_xi_nonZero = Open(Form("%s/run%d/jpsixi_cutoutks_LL_nonZeroTracks_noPID.root",xibPath,run));
-		TTree *treein_xi_nonZero = (TTree*)filein_xi_nonZero->Get("MyTuple");
-
-		TFile *filein_xi_Zero = Open(Form("%s/run%d/jpsixi_cutoutks_LL_ZeroTracks_noPID.root",xibPath,run));
-		TTree *treein_xi_Zero = (TTree*)filein_xi_Zero->Get("MyTuple");
-
-		treein_xi_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsixi_LL_FinalBDT%d_iso%d_%s_noPID.root",
-		                                            xibPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-		treein_xi_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsixi_zeroTracksLL_FinalBDT%d_noPID.root",
-		                                         xibPath,run,bdtConf_Zero[i]));
-		treein_xi_Zero->SetBranchStatus("*",0);
-		treein_xi_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		treein_xi_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
-		treein_xi_Zero->SetBranchStatus("Lb_BKGCAT",1);
-		treein_xi_Zero->SetBranchStatus("gb_wts",1);
-		if(run == 1)
+		if(!inputFlag)
 		{
-			treein_xi_Zero->SetBranchStatus("gb_wts_new",1);
+			Int_t i = run-1;
+			TFile *filein_xi_nonZero = Open(Form("%s/run%d/jpsixi_cutoutks_LL_nonZeroTracks_noPID.root",xibPath,run));
+			TTree *treein_xi_nonZero = (TTree*)filein_xi_nonZero->Get("MyTuple");
+
+			TFile *filein_xi_Zero = Open(Form("%s/run%d/jpsixi_cutoutks_LL_ZeroTracks_noPID.root",xibPath,run));
+			TTree *treein_xi_Zero = (TTree*)filein_xi_Zero->Get("MyTuple");
+
+			treein_xi_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsixi_LL_FinalBDT%d_iso%d_%s_noPID.root",
+			                                            xibPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+			treein_xi_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsixi_zeroTracksLL_FinalBDT%d_noPID.root",
+			                                         xibPath,run,bdtConf_Zero[i]));
+			treein_xi_Zero->SetBranchStatus("*",0);
+			treein_xi_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+			treein_xi_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+			treein_xi_Zero->SetBranchStatus("Lb_BKGCAT",1);
+			treein_xi_Zero->SetBranchStatus("gb_wts",1);
+			if(run == 1)
+			{
+				treein_xi_Zero->SetBranchStatus("gb_wts_new",1);
+			}
+
+			treein_xi_nonZero->SetBranchStatus("*",0);
+			treein_xi_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+			treein_xi_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+			treein_xi_nonZero->SetBranchStatus("Lb_BKGCAT",1);
+			treein_xi_nonZero->SetBranchStatus("gb_wts",1);
+			if(run == 1)
+			{
+				treein_xi_Zero->SetBranchStatus("gb_wts_new",1);
+			}
+
+			TFile *tempFile = new TFile("tempFile.root","RECREATE");
+
+			TTree* treein_xi_Zero_cut    = (TTree*)treein_xi_Zero->CopyTree(Form("Lb_BKGCAT==40 && BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));
+			TTree* treein_xi_nonZero_cut = (TTree*)treein_xi_nonZero->CopyTree(Form("Lb_BKGCAT==40 && BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));
+
+			TList *list = new TList;
+			list->Add(treein_xi_Zero_cut);
+			list->Add(treein_xi_nonZero_cut);
+
+			TTree *combTree = TTree::MergeTrees(list);
+			combTree->SetName("combTree");
+
+			RooRealVar *gbWtVar = nullptr;
+
+			if(run == 1)
+			{
+				gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
+			}
+			else if(run == 2)
+			{
+				gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
+			}
+			ds_xi[i] = new RooDataSet("ds_xi","ds_xi",combTree,RooArgSet(*myVar,*gbWtVar));
+			ds_xi[i]->Print();
+
+			ds_xi_wt[i] = new RooDataSet("ds_xi_wt","ds_xi_wt",RooArgSet(*myVar,*gbWtVar),Import(*(ds_xi[i])),WeightVar(*gbWtVar));
+			ds_xi_wt[i]->Print();
 		}
-
-		treein_xi_nonZero->SetBranchStatus("*",0);
-		treein_xi_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		treein_xi_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
-		treein_xi_nonZero->SetBranchStatus("Lb_BKGCAT",1);
-		treein_xi_nonZero->SetBranchStatus("gb_wts",1);
-		if(run == 1)
-		{
-			treein_xi_Zero->SetBranchStatus("gb_wts_new",1);
-		}
-
-		TFile *tempFile = new TFile("tempFile.root","RECREATE");
-
-		TTree* treein_xi_Zero_cut    = (TTree*)treein_xi_Zero->CopyTree(Form("Lb_BKGCAT==40 && BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));
-		TTree* treein_xi_nonZero_cut = (TTree*)treein_xi_nonZero->CopyTree(Form("Lb_BKGCAT==40 && BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));
-
-		TList *list = new TList;
-		list->Add(treein_xi_Zero_cut);
-		list->Add(treein_xi_nonZero_cut);
-
-		TTree *combTree = TTree::MergeTrees(list);
-		combTree->SetName("combTree");
-
-		RooRealVar *gbWtVar = nullptr;
-
-		if(run == 1)
-		{
-			gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
-		}
-		else if(run == 2)
-		{
-			gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
-		}
-		ds_xi[i] = new RooDataSet("ds_xi","ds_xi",combTree,RooArgSet(*myVar,*gbWtVar));
-		ds_xi[i]->Print();
-
-		ds_xi_wt[i] = new RooDataSet("ds_xi_wt","ds_xi_wt",RooArgSet(*myVar,*gbWtVar),Import(*(ds_xi[i])),WeightVar(*gbWtVar));
-		ds_xi_wt[i]->Print();
-
 		XIB_KEYS[i] = new RooKeysPdf(Form("XIB%d",run),Form("XIB%d",run),*myVar,*(ds_xi_wt[i]),RooKeysPdf::NoMirror);
 		// XIB[i] = new RooHistPdf(Form("XIB%d",run),Form("XIB%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_xib_smooth,0);
 
@@ -1509,8 +1580,10 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 		// w.import(*(XIB[i]));
 		w.import(*(XIB_KEYS[i]));
-		w1.import(*(XIB_KEYS[i]));
-
+		if(!inputFlag)
+		{
+			w1->import(*(XIB_KEYS[i]));
+		}
 		cout<<"Done importing Xib shape"<<endl;
 
 		xibInt[i] = XIB_KEYS[i]->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
@@ -1866,31 +1939,38 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		}
 		else
 		{
-			treein_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist_nonzero%d(%d,%d,%d)",run,nbins,myLow,myHigh),
-			                     Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			if(inputFlag)
+			{
+				ds[0] = (RooDataHist*)w1->data("ds1");
+				ds[1] = (RooDataHist*)w1->data("ds2");
+			}
+			else
+			{
+				treein_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist_nonzero%d(%d,%d,%d)",run,nbins,myLow,myHigh),
+				                     Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
 
-			treein_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist_zero%d(%d,%d,%d)",run,nbins,myLow,myHigh),
-			                  Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+				treein_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist_zero%d(%d,%d,%d)",run,nbins,myLow,myHigh),
+				                  Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 
-			TH1D *myhist_nonzero = (TH1D*)gDirectory->Get(Form("myhist_nonzero%d",run));
-			TH1D *myhist_zero = (TH1D*)gDirectory->Get(Form("myhist_zero%d",run));
+				TH1D *myhist_nonzero = (TH1D*)gDirectory->Get(Form("myhist_nonzero%d",run));
+				TH1D *myhist_zero = (TH1D*)gDirectory->Get(Form("myhist_zero%d",run));
 
-			myhist[i] = new TH1D(Form("myhist%d",run),"",nbins,myLow,myHigh);
+				myhist[i] = new TH1D(Form("myhist%d",run),"",nbins,myLow,myHigh);
 
-			myhist[i]->Sumw2();
-			myhist[i]->Add(myhist_zero,myhist_nonzero);
+				myhist[i]->Sumw2();
+				myhist[i]->Add(myhist_zero,myhist_nonzero);
 
-			nentries[i] = myhist[i]->Integral();
-			cout<<"Run "<<run<<" nentries = "<<nentries[i]<<endl;
+				nentries[i] = myhist[i]->Integral();
+				cout<<"Run "<<run<<" nentries = "<<nentries[i]<<endl;
 
-			ds[i] = new RooDataHist(Form("ds%d",run),Form("ds%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),myhist[i]);
+				ds[i] = new RooDataHist(Form("ds%d",run),Form("ds%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),myhist[i]);
 
+				w1->import(*(ds[i]));
+			}
 			cout<<"Done making RooDataHist"<<endl;
 			(ds[i])->Print();
 
 			w.import(*(ds[i]));
-			w1.import(*(ds[i]));
-
 		}
 
 		cout<<"Done importing Run "<<run<<" data"<<endl;
@@ -2331,10 +2411,17 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	RooAbsData *combData;
 	if(isBinned)
 	{
-		// Construct combined dataset in (x,sample)
-		combData = new RooDataHist("combData","combined data",*(w.var("Lb_DTF_M_JpsiLConstr")),
-		                           Index(sample),Import("run1",*myhist[0]),
-		                           Import("run2",*myhist[1]));
+		if(inputFlag)
+		{
+			combData = (RooDataHist*)w1->data("combData");
+		}
+		else
+		{
+			// Construct combined dataset in (x,sample)
+			combData = new RooDataHist("combData","combined data",*(w.var("Lb_DTF_M_JpsiLConstr")),
+			                           Index(sample),Import("run1",*myhist[0]),
+			                           Import("run2",*myhist[1]));
+		}
 	}
 	else
 	{
@@ -2352,8 +2439,10 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	simPdf.addPdf(*model_const2,"run2");
 	w.import(*combData);
 
-	w1.import(*combData);
-
+	if(!inputFlag)
+	{
+		w1->import(*combData);
+	}
 	w.import(simPdf);
 	// w.import(sample);
 	w.defineSet("obs","Lb_DTF_M_JpsiLConstr,sample");
@@ -2362,7 +2451,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	w.Print();
 	cout<<"*****Done Printing w after all imports***********"<<endl;
 	cout<<"**********Printing w1 after all imports***********"<<endl;
-	w1.Print();
+	w1->Print();
 	cout<<"*****Done Printing w1 after all imports***********"<<endl;
 	//***********************MAKE NLL************************************
 	// RooAbsReal* nll = w.pdf("model_const")->createNLL(ds);
@@ -2853,8 +2942,11 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	// }
 
 	w.writeToFile(fileName,true);
-	w1.writeToFile("Inputs_4700_6200_0.00.root",true);
 
+	if(!inputFlag)
+	{
+		w1->writeToFile("Inputs_4700_6200_0.00.root",true);
+	}
 	cout << "workspace written to file " << fileName << endl;
 
 	// gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,2,true,20,100,2000,100,false,0,%d,%d)",fileName,myLow,myHigh));
