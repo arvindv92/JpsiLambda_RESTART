@@ -265,8 +265,11 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 	// ************************Master Workspace**************************
 	RooWorkspace w("w");
+	// ************************Workspace for input data**************************
+	RooWorkspace w1("w1");
 	//*********MASTER VARIABLE*******************************************
 	w.factory(Form("Lb_DTF_M_JpsiLConstr[%d,%d]",myLow,myHigh));
+	w1.factory(Form("Lb_DTF_M_JpsiLConstr[%d,%d]",myLow,myHigh));
 
 	RooRealVar *myVar = w.var("Lb_DTF_M_JpsiLConstr");
 
@@ -274,6 +277,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	myVar->setRange("sideband_window",5800,myHigh);
 
 	w.var("Lb_DTF_M_JpsiLConstr")->setBins((Int_t)(myHigh-myLow)/binwidth);
+	w1.var("Lb_DTF_M_JpsiLConstr")->setBins((Int_t)(myHigh-myLow)/binwidth);
 	//*******************************************************************
 
 	//*********CONTROL VERBOSITY*****************************************
@@ -628,7 +632,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		framesigma->Draw();
 
 		w.import(*(SIG_KEYS[i]));
-
+		w1.import(*(SIG_KEYS[i]));
 		cout<<"Done importing Jpsi Sigma shape"<<endl;
 
 		sigmaInt[i] = SIG_KEYS[i]->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
@@ -897,6 +901,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		frame1405->Draw();
 
 		w.import(*(KEYS_1405[i]));
+		w1.import(*(KEYS_1405[i]));
 
 		cout<<"Done importing Jpsi Lst(1405) shape"<<endl;
 	}
@@ -1058,6 +1063,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		KEYS_1520[i] = new RooKeysPdf(Form("LST1520_Run%d",run),Form("LST1520_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1520[i]),RooKeysPdf::MirrorBoth,1);
 
 		w.import(*(KEYS_1520[i]));
+		w1.import(*(KEYS_1520[i]));
 
 		cout<<"Done importing Jpsi Lst(1520) shape"<<endl;
 	}
@@ -1219,6 +1225,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		KEYS_1600[i] = new RooKeysPdf(Form("LST1600_Run%d",run),Form("LST1600_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1600[i]),RooKeysPdf::MirrorBoth,1);
 
 		w.import(*(KEYS_1600[i]));
+		w1.import(*(KEYS_1600[i]));
 
 		cout<<"Done importing Jpsi Lst(1600) shape"<<endl;
 	}
@@ -1502,6 +1509,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 		// w.import(*(XIB[i]));
 		w.import(*(XIB_KEYS[i]));
+		w1.import(*(XIB_KEYS[i]));
 
 		cout<<"Done importing Xib shape"<<endl;
 
@@ -1881,6 +1889,8 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 			(ds[i])->Print();
 
 			w.import(*(ds[i]));
+			w1.import(*(ds[i]));
+
 		}
 
 		cout<<"Done importing Run "<<run<<" data"<<endl;
@@ -2341,11 +2351,19 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	simPdf.addPdf(*model_const1,"run1");
 	simPdf.addPdf(*model_const2,"run2");
 	w.import(*combData);
+
+	w1.import(*combData);
+
 	w.import(simPdf);
 	// w.import(sample);
 	w.defineSet("obs","Lb_DTF_M_JpsiLConstr,sample");
 	cout<<"Done importing combData and simPdf"<<endl;
+	cout<<"**********Printing w after all imports***********"<<endl;
 	w.Print();
+	cout<<"*****Done Printing w after all imports***********"<<endl;
+	cout<<"**********Printing w1 after all imports***********"<<endl;
+	w1.Print();
+	cout<<"*****Done Printing w1 after all imports***********"<<endl;
 	//***********************MAKE NLL************************************
 	// RooAbsReal* nll = w.pdf("model_const")->createNLL(ds);
 	//
@@ -2835,6 +2853,8 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	// }
 
 	w.writeToFile(fileName,true);
+	w1.writeToFile("Inputs_4700_6200_0.00.root",true);
+
 	cout << "workspace written to file " << fileName << endl;
 
 	// gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,2,true,20,100,2000,100,false,0,%d,%d)",fileName,myLow,myHigh));
