@@ -1502,9 +1502,9 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 	for(Int_t run = 1; run<=2; run++)
 	{
+		Int_t i = run-1;
 		if(!inputFlag)
 		{
-			Int_t i = run-1;
 			TFile *filein_xi_nonZero = Open(Form("%s/run%d/jpsixi_cutoutks_LL_nonZeroTracks_noPID.root",xibPath,run));
 			TTree *treein_xi_nonZero = (TTree*)filein_xi_nonZero->Get("MyTuple");
 
