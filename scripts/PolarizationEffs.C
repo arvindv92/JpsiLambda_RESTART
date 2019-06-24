@@ -390,11 +390,11 @@ void PolarizationEffs(Int_t run = 1)
 
 	TH1D *ratio = (TH1D*)eff_JpsiLambda->Clone();
 	ratio->SetNameTitle("ratio","ratio");
-	ratio->Divide(eff_JpsiSigma);
+	ratio->Divide(eff_JpsiLambda,eff_JpsiSigma,(1.0/eff_JpsiLambda->Integral()),(1.0/eff_JpsiSigma->Integral()));
 
 	TH1D *ratio_wt = (TH1D*)eff_JpsiLambda_wt->Clone();
 	ratio_wt->SetNameTitle("ratio_wt","ratio_wt");
-	ratio_wt->Divide(eff_JpsiSigma_wt);
+	ratio_wt->Divide(eff_JpsiLambda_wt,eff_JpsiSigma_wt,(1.0/eff_JpsiLambda_wt->Integral()),(1.0/eff_JpsiSigma_wt->Integral()));
 
 	Lb_genHist_JpsiLambda->Draw();
 	new TCanvas();
