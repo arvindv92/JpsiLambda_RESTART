@@ -373,16 +373,28 @@ void PolarizationEffs(Int_t run = 1)
 	Lb_recHist_wt_JpsiSigma->Sumw2();
 
 	TH1D *eff_JpsiLambda = (TH1D*)Lb_recHist_JpsiLambda->Clone();
+	eff_JpsiLambda->SetNameTitle("eff_JpsiLambda","eff_JpsiLambda");
 	eff_JpsiLambda->Divide(Lb_genHist_JpsiLambda);
 
 	TH1D *eff_JpsiLambda_wt = (TH1D*)Lb_recHist_wt_JpsiLambda->Clone();
+	eff_JpsiLambda_wt->SetNameTitle("eff_JpsiLambda_wt","eff_JpsiLambda_wt");
 	eff_JpsiLambda_wt->Divide(Lb_genHist_wt_JpsiLambda);
 
 	TH1D *eff_JpsiSigma = (TH1D*)Lb_recHist_JpsiSigma->Clone();
+	eff_JpsiSigma->SetNameTitle("eff_JpsiSigma","eff_JpsiSigma");
 	eff_JpsiSigma->Divide(Lb_genHist_JpsiSigma);
 
 	TH1D *eff_JpsiSigma_wt = (TH1D*)Lb_recHist_wt_JpsiSigma->Clone();
+	eff_JpsiSigma_wt->SetNameTitle("eff_JpsiSigma_wt","eff_JpsiSigma_wt");
 	eff_JpsiSigma_wt->Divide(Lb_genHist_wt_JpsiSigma);
+
+	TH1D *ratio = (TH1D*)eff_JpsiLambda->Clone();
+	ratio->SetNameTitle("ratio","ratio");
+	ratio->Divide(eff_JpsiSigma);
+
+	TH1D *ratio_wt = (TH1D*)eff_JpsiLambda_wt->Clone();
+	ratio_wt->SetNameTitle("ratio_wt","ratio_wt");
+	ratio_wt->Divide(eff_JpsiSigma_wt);
 
 	Lb_genHist_JpsiLambda->Draw();
 	new TCanvas();
@@ -411,4 +423,7 @@ void PolarizationEffs(Int_t run = 1)
 	eff_JpsiSigma_wt->Draw();
 	new TCanvas();
 
+	ratio->Draw();
+	new TCanvas();
+	ratio_wt->Draw();
 }
