@@ -2,6 +2,7 @@
 #include "TTree.h"
 #include "TLorentzVector.h"
 #include "TVector3.h"
+#include "TH1D.h"
 #include <iostream>
 
 using namespace std;
