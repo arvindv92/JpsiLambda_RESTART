@@ -54,7 +54,7 @@ void PolarizationEffs(Int_t run = 1)
 	Double_t L_PE_gen_JpsiLambda = 0.0;
 
 	Double_t gbWt_gen_JpsiLambda = 0.0;
-	Double_t tauWt_gen_JpsiLambda = 0.0;
+	Float_t tauWt_gen_JpsiLambda = 0.0;
 
 	Int_t nEntries_gen_JpsiLambda = 0;
 
@@ -69,7 +69,7 @@ void PolarizationEffs(Int_t run = 1)
 	Double_t L_PE_rec_JpsiLambda = 0.0;
 
 	Double_t gbWt_rec_JpsiLambda = 0.0;
-	Double_t tauWt_rec_JpsiLambda = 0.0;
+	Float_t tauWt_rec_JpsiLambda = 0.0;
 
 	Int_t nEntries_rec_JpsiLambda = 0;
 
@@ -84,7 +84,7 @@ void PolarizationEffs(Int_t run = 1)
 	Double_t L_PE_gen_JpsiSigma = 0.0;
 
 	Double_t gbWt_gen_JpsiSigma = 0.0;
-	Double_t tauWt_gen_JpsiSigma = 0.0;
+	Float_t tauWt_gen_JpsiSigma = 0.0;
 
 	Int_t nEntries_gen_JpsiSigma = 0;
 
@@ -99,7 +99,7 @@ void PolarizationEffs(Int_t run = 1)
 	Double_t L_PE_rec_JpsiSigma = 0.0;
 
 	Double_t gbWt_rec_JpsiSigma = 0.0;
-	Double_t tauWt_rec_JpsiSigma = 0.0;
+	Float_t tauWt_rec_JpsiSigma = 0.0;
 
 	Int_t nEntries_rec_JpsiSigma = 0;
 
@@ -153,7 +153,7 @@ void PolarizationEffs(Int_t run = 1)
 	treeIn_nonZero_JpsiSigma = (TTree*)fileIn_nonZero_JpsiSigma->Get("MyTuple");
 	treeIn_nonZero_JpsiSigma->AddFriend("MyTuple",Form("../rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_LL_FinalBDT2_iso%d_v0_noPID.root",run,isoConf));
 
-	fileIn_Zero_JpsiSigma = Open(Form("../rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_cutoutks_LL_nonZeroTracks_noPID.root",run));
+	fileIn_Zero_JpsiSigma = Open(Form("../rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_cutoutks_LL_ZeroTracks_noPID.root",run));
 	treeIn_Zero_JpsiSigma = (TTree*)fileIn_Zero_JpsiSigma->Get("MyTuple");
 	treeIn_Zero_JpsiSigma->AddFriend("MyTuple",Form("../rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_zeroTracksLL_FinalBDT2_noPID.root",run));
 
