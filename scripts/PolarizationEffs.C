@@ -3,6 +3,7 @@
 #include "TLorentzVector.h"
 #include "TVector3.h"
 #include "TH1D.h"
+#include "TCanvas.h"
 #include <iostream>
 
 using namespace std;
@@ -106,14 +107,27 @@ void PolarizationEffs(Int_t run = 1)
 	Double_t BDT_JpsiLambda = 0.0;
 	Double_t BDT_JpsiSigma = 0.0;
 
-	TLorentzVector Lb_gen, Lb_rec, L_gen, L_rec;
+	TLorentzVector Lb_gen_JpsiLambda, Lb_rec_JpsiLambda, L_gen_JpsiLambda, L_rec_JpsiLambda;
+	TLorentzVector Lb_gen_JpsiSigma, Lb_rec_JpsiSigma, L_gen_JpsiSigma, L_rec_JpsiSigma;
+
 	TVector3 n;//perpendicular to production plane of Lb
 	TVector3 beam;
 	beam.SetXYZ(0.0,0.0,1.0);
 
-	Double_t theta = 0.0;
+	Double_t theta_JpsiLambda_gen = 0.0, theta_JpsiLambda_rec = 0.0;
+	Double_t theta_JpsiSigma_gen = 0.0, theta_JpsiSigma_rec = 0.0;
 
-	TH1D *myHist = new TH1D("myHist","myHist",100,-1,1);
+	TH1D *Lb_genHist_JpsiLambda = new TH1D("Lb_genHist_JpsiLambda","Lb_genHist_JpsiLambda",100,-1,1);
+	TH1D *Lb_genHist_wt_JpsiLambda = new TH1D("Lb_genHist_wt_JpsiLambda","Lb_genHist_wt_JpsiLambda",100,-1,1);
+
+	TH1D *Lb_genHist_JpsiSigma = new TH1D("Lb_genHist_JpsiSigma","Lb_genHist_JpsiSigma",100,-1,1);
+	TH1D *Lb_genHist_wt_JpsiSigma = new TH1D("Lb_genHist_wt_JpsiSigma","Lb_genHist_wt_JpsiSigma",100,-1,1);
+
+	TH1D *Lb_recHist_JpsiLambda = new TH1D("Lb_recHist_JpsiLambda","Lb_recHist_JpsiLambda",100,-1,1);
+	TH1D *Lb_recHist_wt_JpsiLambda = new TH1D("Lb_recHist_wt_JpsiLambda","Lb_recHist_wt_JpsiLambda",100,-1,1);
+
+	TH1D *Lb_recHist_JpsiSigma = new TH1D("Lb_recHist_JpsiSigma","Lb_recHist_JpsiSigma",100,-1,1);
+	TH1D *Lb_recHist_wt_JpsiSigma = new TH1D("Lb_recHist_wt_JpsiSigma","Lb_recHist_wt_JpsiSigma",100,-1,1);
 
 	fileIn_gen_JpsiLambda = Open(Form("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda.root",run));
 	treeIn_gen_JpsiLambda = (TTree*)fileIn_gen_JpsiLambda->Get("MCTuple/MCDecayTree");
@@ -264,7 +278,7 @@ void PolarizationEffs(Int_t run = 1)
 	{
 		combTree_Sigma->SetBranchAddress("gb_wts",&gbWt_rec_JpsiSigma);
 	}
-
+	cout<<"*****JpsiLambda generated MC*****"<<endl;
 	for(Int_t i = 0; i<nEntries_gen_JpsiLambda; i++)
 	{
 		if(i%100000 == 0)
@@ -273,15 +287,128 @@ void PolarizationEffs(Int_t run = 1)
 		}
 		treeIn_gen_JpsiLambda->GetEntry(i);
 
-		Lb_gen.SetPxPyPzE(Lb_PX_gen_JpsiLambda,Lb_PY_gen_JpsiLambda,Lb_PZ_gen_JpsiLambda,Lb_PE_gen_JpsiLambda);
-		L_gen.SetPxPyPzE(L_PX_gen_JpsiLambda,L_PY_gen_JpsiLambda,L_PZ_gen_JpsiLambda,L_PE_gen_JpsiLambda);
+		Lb_gen_JpsiLambda.SetPxPyPzE(Lb_PX_gen_JpsiLambda,Lb_PY_gen_JpsiLambda,Lb_PZ_gen_JpsiLambda,Lb_PE_gen_JpsiLambda);
+		L_gen_JpsiLambda.SetPxPyPzE(L_PX_gen_JpsiLambda,L_PY_gen_JpsiLambda,L_PZ_gen_JpsiLambda,L_PE_gen_JpsiLambda);
 
 		//Boost Lambda momentum to Lb rest frame
-		L_gen.Boost(-1*Lb_PX_gen_JpsiLambda/Lb_PE_gen_JpsiLambda,-1*Lb_PY_gen_JpsiLambda/Lb_PE_gen_JpsiLambda,-1*Lb_PZ_gen_JpsiLambda/Lb_PE_gen_JpsiLambda);
+		L_gen_JpsiLambda.Boost(-1*Lb_PX_gen_JpsiLambda/Lb_PE_gen_JpsiLambda,-1*Lb_PY_gen_JpsiLambda/Lb_PE_gen_JpsiLambda,-1*Lb_PZ_gen_JpsiLambda/Lb_PE_gen_JpsiLambda);
 
-		n = beam.Cross(Lb_gen.Vect());
-		theta  = L_gen.Angle(n);
-		myHist->Fill(cos(theta));
+		n = beam.Cross(Lb_gen_JpsiLambda.Vect());
+		theta_JpsiLambda_gen  = (L_gen_JpsiLambda.Vect()).Angle(n);
+
+		Lb_genHist_JpsiLambda->Fill(cos(theta_JpsiLambda_gen));
+		Lb_genHist_wt_JpsiLambda->Fill(cos(theta_JpsiLambda_gen),tauWt_gen_JpsiLambda*gbWt_gen_JpsiLambda);
 	}
-	myHist->Draw();
+	cout<<"*****JpsiLambda reconstructed MC*****"<<endl;
+	for(Int_t i = 0; i<nEntries_gen_JpsiSigma; i++)
+	{
+		if(i%100000 == 0)
+		{
+			cout<<i<<endl;
+		}
+		treeIn_gen_JpsiSigma->GetEntry(i);
+
+		Lb_gen_JpsiSigma.SetPxPyPzE(Lb_PX_gen_JpsiSigma,Lb_PY_gen_JpsiSigma,Lb_PZ_gen_JpsiSigma,Lb_PE_gen_JpsiSigma);
+		L_gen_JpsiSigma.SetPxPyPzE(L_PX_gen_JpsiSigma,L_PY_gen_JpsiSigma,L_PZ_gen_JpsiSigma,L_PE_gen_JpsiSigma);
+
+		//Boost Lambda momentum to Lb rest frame
+		L_gen_JpsiSigma.Boost(-1*Lb_PX_gen_JpsiSigma/Lb_PE_gen_JpsiSigma,-1*Lb_PY_gen_JpsiSigma/Lb_PE_gen_JpsiSigma,-1*Lb_PZ_gen_JpsiSigma/Lb_PE_gen_JpsiSigma);
+
+		n = beam.Cross(Lb_gen_JpsiSigma.Vect());
+		theta_JpsiSigma_gen  = (L_gen_JpsiSigma.Vect()).Angle(n);
+
+		Lb_genHist_JpsiSigma->Fill(cos(theta_JpsiSigma_gen));
+		Lb_genHist_wt_JpsiSigma->Fill(cos(theta_JpsiSigma_gen),tauWt_gen_JpsiSigma*gbWt_gen_JpsiSigma);
+	}
+	cout<<"*****JpsiSigma generated MC*****"<<endl;
+	for(Int_t i = 0; i<nEntries_rec_JpsiLambda; i++)
+	{
+		if(i%1000 == 0)
+		{
+			cout<<i<<endl;
+		}
+		combTree_Lambda->GetEntry(i);
+
+		Lb_rec_JpsiLambda.SetPxPyPzE(Lb_PX_rec_JpsiLambda,Lb_PY_rec_JpsiLambda,Lb_PZ_rec_JpsiLambda,Lb_PE_rec_JpsiLambda);
+		L_rec_JpsiLambda.SetPxPyPzE(L_PX_rec_JpsiLambda,L_PY_rec_JpsiLambda,L_PZ_rec_JpsiLambda,L_PE_rec_JpsiLambda);
+
+		//Boost Lambda momentum to Lb rest frame
+		L_rec_JpsiLambda.Boost(-1*Lb_PX_rec_JpsiLambda/Lb_PE_rec_JpsiLambda,-1*Lb_PY_rec_JpsiLambda/Lb_PE_rec_JpsiLambda,-1*Lb_PZ_rec_JpsiLambda/Lb_PE_rec_JpsiLambda);
+
+		n = beam.Cross(Lb_rec_JpsiLambda.Vect());
+		theta_JpsiLambda_rec  = (L_rec_JpsiLambda.Vect()).Angle(n);
+
+		Lb_recHist_JpsiLambda->Fill(cos(theta_JpsiLambda_rec));
+		Lb_recHist_wt_JpsiLambda->Fill(cos(theta_JpsiLambda_rec),tauWt_rec_JpsiLambda*gbWt_rec_JpsiLambda);
+	}
+
+	cout<<"*****JpsiSigma reconstructed MC*****"<<endl;
+	for(Int_t i = 0; i<nEntries_rec_JpsiSigma; i++)
+	{
+		if(i%1000 == 0)
+		{
+			cout<<i<<endl;
+		}
+		combTree_Sigma->GetEntry(i);
+
+		Lb_rec_JpsiSigma.SetPxPyPzE(Lb_PX_rec_JpsiSigma,Lb_PY_rec_JpsiSigma,Lb_PZ_rec_JpsiSigma,Lb_PE_rec_JpsiSigma);
+		L_rec_JpsiSigma.SetPxPyPzE(L_PX_rec_JpsiSigma,L_PY_rec_JpsiSigma,L_PZ_rec_JpsiSigma,L_PE_rec_JpsiSigma);
+
+		//Boost Lambda momentum to Lb rest frame
+		L_rec_JpsiSigma.Boost(-1*Lb_PX_rec_JpsiSigma/Lb_PE_rec_JpsiSigma,-1*Lb_PY_rec_JpsiSigma/Lb_PE_rec_JpsiSigma,-1*Lb_PZ_rec_JpsiSigma/Lb_PE_rec_JpsiSigma);
+
+		n = beam.Cross(Lb_rec_JpsiSigma.Vect());
+		theta_JpsiSigma_rec  = (L_rec_JpsiSigma.Vect()).Angle(n);
+
+		Lb_recHist_JpsiSigma->Fill(cos(theta_JpsiSigma_rec));
+		Lb_recHist_wt_JpsiSigma->Fill(cos(theta_JpsiSigma_rec),tauWt_rec_JpsiSigma*gbWt_rec_JpsiSigma);
+	}
+	Lb_genHist_JpsiLambda->Sumw2();
+	Lb_genHist_wt_JpsiLambda->Sumw2();
+	Lb_genHist_JpsiSigma->Sumw2();
+	Lb_genHist_wt_JpsiSigma->Sumw2();
+	Lb_recHist_JpsiLambda->Sumw2();
+	Lb_recHist_wt_JpsiLambda->Sumw2();
+	Lb_recHist_JpsiSigma->Sumw2();
+	Lb_recHist_wt_JpsiSigma->Sumw2();
+
+	TH1D *eff_JpsiLambda = (TH1D*)Lb_recHist_JpsiLambda->Clone();
+	eff_JpsiLambda->Divide(Lb_genHist_JpsiLambda);
+
+	TH1D *eff_JpsiLambda_wt = (TH1D*)Lb_recHist_wt_JpsiLambda->Clone();
+	eff_JpsiLambda_wt->Divide(Lb_genHist_wt_JpsiLambda);
+
+	TH1D *eff_JpsiSigma = (TH1D*)Lb_recHist_JpsiSigma->Clone();
+	eff_JpsiSigma->Divide(Lb_genHist_JpsiSigma);
+
+	TH1D *eff_JpsiSigma_wt = (TH1D*)Lb_recHist_wt_JpsiSigma->Clone();
+	eff_JpsiSigma_wt->Divide(Lb_genHist_wt_JpsiSigma);
+
+	Lb_genHist_JpsiLambda->Draw();
+	new TCanvas();
+	Lb_genHist_wt_JpsiLambda->Draw();
+	new TCanvas();
+	Lb_genHist_JpsiSigma->Draw();
+	new TCanvas();
+	Lb_genHist_wt_JpsiSigma->Draw();
+	new TCanvas();
+	Lb_recHist_JpsiLambda->Draw();
+	new TCanvas();
+	Lb_recHist_wt_JpsiLambda->Draw();
+	new TCanvas();
+	Lb_recHist_JpsiSigma->Draw();
+	new TCanvas();
+	Lb_recHist_wt_JpsiSigma->Draw();
+	new TCanvas();
+
+	eff_JpsiLambda->Draw();
+	new TCanvas();
+	eff_JpsiLambda_wt->Draw();
+	new TCanvas();
+
+	eff_JpsiSigma->Draw();
+	new TCanvas();
+	eff_JpsiSigma_wt->Draw();
+	new TCanvas();
+
 }
