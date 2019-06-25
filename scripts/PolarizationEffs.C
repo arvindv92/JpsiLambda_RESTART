@@ -5,6 +5,7 @@
 #include "TH1D.h"
 #include "TCanvas.h"
 #include "TMath.h"
+#include "TLine.h"
 #include <iostream>
 
 using namespace std;
@@ -166,6 +167,9 @@ void PolarizationEffs(Int_t run = 1)
 
 	Int_t nEntries_rec_JpsiSigma = 0;
 
+	TString title_y    = "#frac{#epsilon_{#Lambda_b #rightarrow J/#psi #Lambda}}{#epsilon_{#Lambda_b #rightarrow J/#psi #Sigma}}";
+	TString title_y_wt = "Weighted #frac{#epsilon_{#Lambda_b #rightarrow J/#psi #Lambda}}{#epsilon_{#Lambda_b #rightarrow J/#psi #Sigma}}";
+
 	TLorentzVector Lb_gen_JpsiLambda, Lb_rec_JpsiLambda, L_gen_JpsiLambda, L_rec_JpsiLambda;
 	TLorentzVector Jpsi_gen_JpsiLambda, Jpsi_rec_JpsiLambda, p_gen_JpsiLambda, p_rec_JpsiLambda;
 	TLorentzVector mu_gen_JpsiLambda, mu_rec_JpsiLambda;
@@ -223,29 +227,35 @@ void PolarizationEffs(Int_t run = 1)
 	TH1D *theta2_rec_JpsiSigma = new TH1D("theta2_rec_JpsiSigma","theta2_rec_JpsiSigma",50,-1,1);
 	TH1D *theta2_rec_wt_JpsiSigma = new TH1D("theta2_rec_wt_JpsiSigma","theta2_rec_wt_JpsiSigma",50,-1,1);
 
-	TH1D *phi1_gen_JpsiLambda = new TH1D("phi1_gen_JpsiLambda","phi1_gen_JpsiLambda",50,-1,1);
-	TH1D *phi1_gen_wt_JpsiLambda = new TH1D("phi1_gen_wt_JpsiLambda","phi1_gen_wt_JpsiLambda",50,-1,1);
+	TH1D *phi1_gen_JpsiLambda = new TH1D("phi1_gen_JpsiLambda","phi1_gen_JpsiLambda",50,0,1);
+	TH1D *phi1_gen_wt_JpsiLambda = new TH1D("phi1_gen_wt_JpsiLambda","phi1_gen_wt_JpsiLambda",50,0,1);
 
-	TH1D *phi1_gen_JpsiSigma = new TH1D("phi1_gen_JpsiSigma","phi1_gen_JpsiSigma",50,-1,1);
-	TH1D *phi1_gen_wt_JpsiSigma = new TH1D("phi1_gen_wt_JpsiSigma","phi1_gen_wt_JpsiSigma",50,-1,1);
+	TH1D *phi1_gen_JpsiSigma = new TH1D("phi1_gen_JpsiSigma","phi1_gen_JpsiSigma",50,0,1);
+	TH1D *phi1_gen_wt_JpsiSigma = new TH1D("phi1_gen_wt_JpsiSigma","phi1_gen_wt_JpsiSigma",50,0,1);
 
-	TH1D *phi1_rec_JpsiLambda = new TH1D("phi1_rec_JpsiLambda","phi1_rec_JpsiLambda",50,-1,1);
-	TH1D *phi1_rec_wt_JpsiLambda = new TH1D("phi1_rec_wt_JpsiLambda","phi1_rec_wt_JpsiLambda",50,-1,1);
+	TH1D *phi1_rec_JpsiLambda = new TH1D("phi1_rec_JpsiLambda","phi1_rec_JpsiLambda",50,0,1);
+	TH1D *phi1_rec_wt_JpsiLambda = new TH1D("phi1_rec_wt_JpsiLambda","phi1_rec_wt_JpsiLambda",50,0,1);
 
-	TH1D *phi1_rec_JpsiSigma = new TH1D("phi1_rec_JpsiSigma","phi1_rec_JpsiSigma",50,-1,1);
-	TH1D *phi1_rec_wt_JpsiSigma = new TH1D("phi1_rec_wt_JpsiSigma","phi1_rec_wt_JpsiSigma",50,-1,1);
+	TH1D *phi1_rec_JpsiSigma = new TH1D("phi1_rec_JpsiSigma","phi1_rec_JpsiSigma",50,0,1);
+	TH1D *phi1_rec_wt_JpsiSigma = new TH1D("phi1_rec_wt_JpsiSigma","phi1_rec_wt_JpsiSigma",50,0,1);
 
-	TH1D *phi2_gen_JpsiLambda = new TH1D("phi2_gen_JpsiLambda","phi2_gen_JpsiLambda",50,-1,1);
-	TH1D *phi2_gen_wt_JpsiLambda = new TH1D("phi2_gen_wt_JpsiLambda","phi2_gen_wt_JpsiLambda",50,-1,1);
+	TH1D *phi2_gen_JpsiLambda = new TH1D("phi2_gen_JpsiLambda","phi2_gen_JpsiLambda",50,0,1);
+	TH1D *phi2_gen_wt_JpsiLambda = new TH1D("phi2_gen_wt_JpsiLambda","phi2_gen_wt_JpsiLambda",50,0,1);
 
-	TH1D *phi2_gen_JpsiSigma = new TH1D("phi2_gen_JpsiSigma","phi2_gen_JpsiSigma",50,-1,1);
-	TH1D *phi2_gen_wt_JpsiSigma = new TH1D("phi2_gen_wt_JpsiSigma","phi2_gen_wt_JpsiSigma",50,-1,1);
+	TH1D *phi2_gen_JpsiSigma = new TH1D("phi2_gen_JpsiSigma","phi2_gen_JpsiSigma",50,0,1);
+	TH1D *phi2_gen_wt_JpsiSigma = new TH1D("phi2_gen_wt_JpsiSigma","phi2_gen_wt_JpsiSigma",50,0,1);
 
-	TH1D *phi2_rec_JpsiLambda = new TH1D("phi2_rec_JpsiLambda","phi2_rec_JpsiLambda",50,-1,1);
-	TH1D *phi2_rec_wt_JpsiLambda = new TH1D("phi2_rec_wt_JpsiLambda","phi2_rec_wt_JpsiLambda",50,-1,1);
+	TH1D *phi2_rec_JpsiLambda = new TH1D("phi2_rec_JpsiLambda","phi2_rec_JpsiLambda",50,0,1);
+	TH1D *phi2_rec_wt_JpsiLambda = new TH1D("phi2_rec_wt_JpsiLambda","phi2_rec_wt_JpsiLambda",50,0,1);
 
-	TH1D *phi2_rec_JpsiSigma = new TH1D("phi2_rec_JpsiSigma","phi2_rec_JpsiSigma",50,-1,1);
-	TH1D *phi2_rec_wt_JpsiSigma = new TH1D("phi2_rec_wt_JpsiSigma","phi2_rec_wt_JpsiSigma",50,-1,1);
+	TH1D *phi2_rec_JpsiSigma = new TH1D("phi2_rec_JpsiSigma","phi2_rec_JpsiSigma",50,0,1);
+	TH1D *phi2_rec_wt_JpsiSigma = new TH1D("phi2_rec_wt_JpsiSigma","phi2_rec_wt_JpsiSigma",50,0,1);
+
+	TLine *line1 = new TLine(-1,1,1,1);
+	TLine *line2 = new TLine(0,1,1,1);
+
+	line1->SetLineColor(kRed);
+	line2->SetLineColor(kRed);
 
 	fileIn_gen_JpsiLambda = Open(Form("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda.root",run));
 	treeIn_gen_JpsiLambda = (TTree*)fileIn_gen_JpsiLambda->Get("MCTuple/MCDecayTree");
@@ -756,10 +766,14 @@ void PolarizationEffs(Int_t run = 1)
 
 	TH1D *ratio_theta = (TH1D*)eff_theta_JpsiLambda->Clone();
 	ratio_theta->SetNameTitle("ratio_theta","ratio_theta");
+	ratio_theta->GetYaxis()->SetTitle(title_y);
+	ratio_theta->GetXaxis()->SetTitle("cos(#theta)");
 	ratio_theta->Divide(eff_theta_JpsiLambda,eff_theta_JpsiSigma,(1.0/eff_theta_JpsiLambda->Integral()),(1.0/eff_theta_JpsiSigma->Integral()));
 
 	TH1D *ratio_theta_wt = (TH1D*)eff_theta_JpsiLambda_wt->Clone();
 	ratio_theta_wt->SetNameTitle("ratio_theta_wt","ratio_theta_wt");
+	ratio_theta_wt->GetYaxis()->SetTitle(title_y_wt);
+	ratio_theta_wt->GetXaxis()->SetTitle("cos(#theta)");
 	ratio_theta_wt->Divide(eff_theta_JpsiLambda_wt,eff_theta_JpsiSigma_wt,(1.0/eff_theta_JpsiLambda_wt->Integral()),(1.0/eff_theta_JpsiSigma_wt->Integral()));
 
 	TH1D *eff_theta1_JpsiLambda = (TH1D*)theta1_rec_JpsiLambda->Clone();
@@ -780,10 +794,14 @@ void PolarizationEffs(Int_t run = 1)
 
 	TH1D *ratio_theta1 = (TH1D*)eff_theta1_JpsiLambda->Clone();
 	ratio_theta1->SetNameTitle("ratio_theta1","ratio_theta1");
+	ratio_theta1->GetYaxis()->SetTitle(title_y);
+	ratio_theta1->GetXaxis()->SetTitle("cos(#theta_{1})");
 	ratio_theta1->Divide(eff_theta1_JpsiLambda,eff_theta1_JpsiSigma,(1.0/eff_theta1_JpsiLambda->Integral()),(1.0/eff_theta1_JpsiSigma->Integral()));
 
 	TH1D *ratio_theta1_wt = (TH1D*)eff_theta1_JpsiLambda_wt->Clone();
 	ratio_theta1_wt->SetNameTitle("ratio_theta1_wt","ratio_theta1_wt");
+	ratio_theta1_wt->GetYaxis()->SetTitle(title_y_wt);
+	ratio_theta1_wt->GetXaxis()->SetTitle("cos(#theta_{1})");
 	ratio_theta1_wt->Divide(eff_theta1_JpsiLambda_wt,eff_theta1_JpsiSigma_wt,(1.0/eff_theta1_JpsiLambda_wt->Integral()),(1.0/eff_theta1_JpsiSigma_wt->Integral()));
 
 	TH1D *eff_theta2_JpsiLambda = (TH1D*)theta2_rec_JpsiLambda->Clone();
@@ -804,10 +822,14 @@ void PolarizationEffs(Int_t run = 1)
 
 	TH1D *ratio_theta2 = (TH1D*)eff_theta2_JpsiLambda->Clone();
 	ratio_theta2->SetNameTitle("ratio_theta2","ratio_theta2");
+	ratio_theta2->GetYaxis()->SetTitle(title_y);
+	ratio_theta2->GetXaxis()->SetTitle("cos(#theta_{2})");
 	ratio_theta2->Divide(eff_theta2_JpsiLambda,eff_theta2_JpsiSigma,(1.0/eff_theta2_JpsiLambda->Integral()),(1.0/eff_theta2_JpsiSigma->Integral()));
 
 	TH1D *ratio_theta2_wt = (TH1D*)eff_theta2_JpsiLambda_wt->Clone();
 	ratio_theta2_wt->SetNameTitle("ratio_theta2_wt","ratio_theta2_wt");
+	ratio_theta2_wt->GetYaxis()->SetTitle(title_y_wt);
+	ratio_theta2_wt->GetXaxis()->SetTitle("cos(#theta_{2})");
 	ratio_theta2_wt->Divide(eff_theta2_JpsiLambda_wt,eff_theta2_JpsiSigma_wt,(1.0/eff_theta2_JpsiLambda_wt->Integral()),(1.0/eff_theta2_JpsiSigma_wt->Integral()));
 
 	TH1D *eff_phi1_JpsiLambda = (TH1D*)phi1_rec_JpsiLambda->Clone();
@@ -828,10 +850,14 @@ void PolarizationEffs(Int_t run = 1)
 
 	TH1D *ratio_phi1 = (TH1D*)eff_phi1_JpsiLambda->Clone();
 	ratio_phi1->SetNameTitle("ratio_phi1","ratio_phi1");
+	ratio_phi1->GetYaxis()->SetTitle(title_y);
+	ratio_phi1->GetXaxis()->SetTitle("cos(#phi_{1})");
 	ratio_phi1->Divide(eff_phi1_JpsiLambda,eff_phi1_JpsiSigma,(1.0/eff_phi1_JpsiLambda->Integral()),(1.0/eff_phi1_JpsiSigma->Integral()));
 
 	TH1D *ratio_phi1_wt = (TH1D*)eff_phi1_JpsiLambda_wt->Clone();
 	ratio_phi1_wt->SetNameTitle("ratio_phi1_wt","ratio_phi1_wt");
+	ratio_phi1_wt->GetYaxis()->SetTitle(title_y_wt);
+	ratio_phi1_wt->GetXaxis()->SetTitle("cos(#phi_{1})");
 	ratio_phi1_wt->Divide(eff_phi1_JpsiLambda_wt,eff_phi1_JpsiSigma_wt,(1.0/eff_phi1_JpsiLambda_wt->Integral()),(1.0/eff_phi1_JpsiSigma_wt->Integral()));
 
 	TH1D *eff_phi2_JpsiLambda = (TH1D*)phi2_rec_JpsiLambda->Clone();
@@ -852,10 +878,14 @@ void PolarizationEffs(Int_t run = 1)
 
 	TH1D *ratio_phi2 = (TH1D*)eff_phi2_JpsiLambda->Clone();
 	ratio_phi2->SetNameTitle("ratio_phi2","ratio_phi2");
+	ratio_phi2->GetYaxis()->SetTitle(title_y);
+	ratio_phi2->GetXaxis()->SetTitle("cos(#phi_{2})");
 	ratio_phi2->Divide(eff_phi2_JpsiLambda,eff_phi2_JpsiSigma,(1.0/eff_phi2_JpsiLambda->Integral()),(1.0/eff_phi2_JpsiSigma->Integral()));
 
 	TH1D *ratio_phi2_wt = (TH1D*)eff_phi2_JpsiLambda_wt->Clone();
 	ratio_phi2_wt->SetNameTitle("ratio_phi2_wt","ratio_phi2_wt");
+	ratio_phi2_wt->GetYaxis()->SetTitle(title_y_wt);
+	ratio_phi2_wt->GetXaxis()->SetTitle("cos(#phi_{2})");
 	ratio_phi2_wt->Divide(eff_phi2_JpsiLambda_wt,eff_phi2_JpsiSigma_wt,(1.0/eff_phi2_JpsiLambda_wt->Integral()),(1.0/eff_phi2_JpsiSigma_wt->Integral()));
 
 
@@ -886,27 +916,53 @@ void PolarizationEffs(Int_t run = 1)
 	// eff_JpsiSigma_wt->Draw();
 	// new TCanvas();
 
+	TCanvas *c1 = new TCanvas();
 	ratio_theta->Draw();
-	new TCanvas();
+	c1->Update();
+	line1->Draw();
+
+	TCanvas *c2 = new TCanvas();
 	ratio_theta_wt->Draw();
-	new TCanvas();
+	c2->Update();
+	line1->Draw();
 
+	TCanvas *c3 = new TCanvas();
 	ratio_theta1->Draw();
-	new TCanvas();
+	c3->Update();
+	line1->Draw();
+
+	TCanvas *c4 = new TCanvas();
 	ratio_theta1_wt->Draw();
-	new TCanvas();
+	c4->Update();
+	line1->Draw();
 
+	TCanvas *c5 = new TCanvas();
 	ratio_theta2->Draw();
-	new TCanvas();
+	c5->Update();
+	line1->Draw();
+
+	TCanvas *c6 = new TCanvas();
 	ratio_theta2_wt->Draw();
-	new TCanvas();
+	c6->Update();
+	line1->Draw();
 
+	TCanvas *c7 = new TCanvas();
 	ratio_phi1->Draw();
-	new TCanvas();
-	ratio_phi1_wt->Draw();
-	new TCanvas();
+	c7->Update();
+	line2->Draw();
 
+	TCanvas *c8 = new TCanvas();
+	ratio_phi1_wt->Draw();
+	c8->Update();
+	line2->Draw();
+
+	TCanvas *c9 = new TCanvas();
 	ratio_phi2->Draw();
-	new TCanvas();
+	c9->Update();
+	line2->Draw();
+
+	TCanvas *c10 = new TCanvas();
 	ratio_phi2_wt->Draw();
+	c10->Update();
+	line2->Draw();
 }
