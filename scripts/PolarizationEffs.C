@@ -6,6 +6,7 @@
 #include "TCanvas.h"
 #include "TMath.h"
 #include "TLine.h"
+#include "TF1.h"
 #include <iostream>
 
 using namespace std;
@@ -167,6 +168,8 @@ void PolarizationEffs(Int_t run = 1)
 
 	Int_t nEntries_rec_JpsiSigma = 0;
 
+	Double_t chi2 = 0.0;
+
 	TString title_y    = "#frac{#epsilon_{#Lambda_b #rightarrow J/#psi #Lambda}}{#epsilon_{#Lambda_b #rightarrow J/#psi #Sigma}}";
 	TString title_y_wt = "Weighted #frac{#epsilon_{#Lambda_b #rightarrow J/#psi #Lambda}}{#epsilon_{#Lambda_b #rightarrow J/#psi #Sigma}}";
 
@@ -253,6 +256,9 @@ void PolarizationEffs(Int_t run = 1)
 
 	TLine *line1 = new TLine(-1,1,1,1);
 	TLine *line2 = new TLine(0,1,1,1);
+
+	TF1 *unif = new TF1("unif","1",-1,1);
+	TF1 *unif1 = new TF1("unif1","1",0,1);
 
 	line1->SetLineColor(kRed);
 	line2->SetLineColor(kRed);
@@ -769,12 +775,16 @@ void PolarizationEffs(Int_t run = 1)
 	ratio_theta->GetYaxis()->SetTitle(title_y);
 	ratio_theta->GetXaxis()->SetTitle("cos(#theta)");
 	ratio_theta->Divide(eff_theta_JpsiLambda,eff_theta_JpsiSigma,(1.0/eff_theta_JpsiLambda->Integral()),(1.0/eff_theta_JpsiSigma->Integral()));
+	chi2 = ratio_theta->Chisquare(unif);
+	cout<<"ratio_theta chi2/ndf = "<<chi2/50<<endl;
 
 	TH1D *ratio_theta_wt = (TH1D*)eff_theta_JpsiLambda_wt->Clone();
 	ratio_theta_wt->SetNameTitle("ratio_theta_wt","ratio_theta_wt");
 	ratio_theta_wt->GetYaxis()->SetTitle(title_y_wt);
 	ratio_theta_wt->GetXaxis()->SetTitle("cos(#theta)");
 	ratio_theta_wt->Divide(eff_theta_JpsiLambda_wt,eff_theta_JpsiSigma_wt,(1.0/eff_theta_JpsiLambda_wt->Integral()),(1.0/eff_theta_JpsiSigma_wt->Integral()));
+	chi2 = ratio_theta_wt->Chisquare(unif);
+	cout<<"ratio_theta_wt chi2/ndf = "<<chi2/50<<endl;
 
 	TH1D *eff_theta1_JpsiLambda = (TH1D*)theta1_rec_JpsiLambda->Clone();
 	eff_theta1_JpsiLambda->SetNameTitle("eff_theta1_JpsiLambda","eff_theta1_JpsiLambda");
@@ -797,12 +807,16 @@ void PolarizationEffs(Int_t run = 1)
 	ratio_theta1->GetYaxis()->SetTitle(title_y);
 	ratio_theta1->GetXaxis()->SetTitle("cos(#theta_{1})");
 	ratio_theta1->Divide(eff_theta1_JpsiLambda,eff_theta1_JpsiSigma,(1.0/eff_theta1_JpsiLambda->Integral()),(1.0/eff_theta1_JpsiSigma->Integral()));
+	chi2 = ratio_theta1->Chisquare(unif);
+	cout<<"ratio_theta1 chi2/ndf = "<<chi2/50<<endl;
 
 	TH1D *ratio_theta1_wt = (TH1D*)eff_theta1_JpsiLambda_wt->Clone();
 	ratio_theta1_wt->SetNameTitle("ratio_theta1_wt","ratio_theta1_wt");
 	ratio_theta1_wt->GetYaxis()->SetTitle(title_y_wt);
 	ratio_theta1_wt->GetXaxis()->SetTitle("cos(#theta_{1})");
 	ratio_theta1_wt->Divide(eff_theta1_JpsiLambda_wt,eff_theta1_JpsiSigma_wt,(1.0/eff_theta1_JpsiLambda_wt->Integral()),(1.0/eff_theta1_JpsiSigma_wt->Integral()));
+	chi2 = ratio_theta1_wt->Chisquare(unif);
+	cout<<"ratio_theta1_wt chi2/ndf = "<<chi2/50<<endl;
 
 	TH1D *eff_theta2_JpsiLambda = (TH1D*)theta2_rec_JpsiLambda->Clone();
 	eff_theta2_JpsiLambda->SetNameTitle("eff_theta2_JpsiLambda","eff_theta2_JpsiLambda");
@@ -825,12 +839,16 @@ void PolarizationEffs(Int_t run = 1)
 	ratio_theta2->GetYaxis()->SetTitle(title_y);
 	ratio_theta2->GetXaxis()->SetTitle("cos(#theta_{2})");
 	ratio_theta2->Divide(eff_theta2_JpsiLambda,eff_theta2_JpsiSigma,(1.0/eff_theta2_JpsiLambda->Integral()),(1.0/eff_theta2_JpsiSigma->Integral()));
+	chi2 = ratio_theta2->Chisquare(unif);
+	cout<<"ratio_theta2 chi2/ndf = "<<chi2/50<<endl;
 
 	TH1D *ratio_theta2_wt = (TH1D*)eff_theta2_JpsiLambda_wt->Clone();
 	ratio_theta2_wt->SetNameTitle("ratio_theta2_wt","ratio_theta2_wt");
 	ratio_theta2_wt->GetYaxis()->SetTitle(title_y_wt);
 	ratio_theta2_wt->GetXaxis()->SetTitle("cos(#theta_{2})");
 	ratio_theta2_wt->Divide(eff_theta2_JpsiLambda_wt,eff_theta2_JpsiSigma_wt,(1.0/eff_theta2_JpsiLambda_wt->Integral()),(1.0/eff_theta2_JpsiSigma_wt->Integral()));
+	chi2 = ratio_theta2_wt->Chisquare(unif);
+	cout<<"ratio_theta2_wt chi2/ndf = "<<chi2/50<<endl;
 
 	TH1D *eff_phi1_JpsiLambda = (TH1D*)phi1_rec_JpsiLambda->Clone();
 	eff_phi1_JpsiLambda->SetNameTitle("eff_phi1_JpsiLambda","eff_phi1_JpsiLambda");
@@ -853,12 +871,16 @@ void PolarizationEffs(Int_t run = 1)
 	ratio_phi1->GetYaxis()->SetTitle(title_y);
 	ratio_phi1->GetXaxis()->SetTitle("cos(#phi_{1})");
 	ratio_phi1->Divide(eff_phi1_JpsiLambda,eff_phi1_JpsiSigma,(1.0/eff_phi1_JpsiLambda->Integral()),(1.0/eff_phi1_JpsiSigma->Integral()));
+	chi2 = ratio_phi1->Chisquare(unif);
+	cout<<"ratio_phi1 chi2/ndf = "<<chi2/50<<endl;
 
 	TH1D *ratio_phi1_wt = (TH1D*)eff_phi1_JpsiLambda_wt->Clone();
 	ratio_phi1_wt->SetNameTitle("ratio_phi1_wt","ratio_phi1_wt");
 	ratio_phi1_wt->GetYaxis()->SetTitle(title_y_wt);
 	ratio_phi1_wt->GetXaxis()->SetTitle("cos(#phi_{1})");
 	ratio_phi1_wt->Divide(eff_phi1_JpsiLambda_wt,eff_phi1_JpsiSigma_wt,(1.0/eff_phi1_JpsiLambda_wt->Integral()),(1.0/eff_phi1_JpsiSigma_wt->Integral()));
+	chi2 = ratio_phi1_wt->Chisquare(unif);
+	cout<<"ratio_phi1_wt chi2/ndf = "<<chi2/50<<endl;
 
 	TH1D *eff_phi2_JpsiLambda = (TH1D*)phi2_rec_JpsiLambda->Clone();
 	eff_phi2_JpsiLambda->SetNameTitle("eff_phi2_JpsiLambda","eff_phi2_JpsiLambda");
@@ -881,13 +903,16 @@ void PolarizationEffs(Int_t run = 1)
 	ratio_phi2->GetYaxis()->SetTitle(title_y);
 	ratio_phi2->GetXaxis()->SetTitle("cos(#phi_{2})");
 	ratio_phi2->Divide(eff_phi2_JpsiLambda,eff_phi2_JpsiSigma,(1.0/eff_phi2_JpsiLambda->Integral()),(1.0/eff_phi2_JpsiSigma->Integral()));
+	chi2 = ratio_phi2->Chisquare(unif);
+	cout<<"ratio_phi2 chi2/ndf = "<<chi2/50<<endl;
 
 	TH1D *ratio_phi2_wt = (TH1D*)eff_phi2_JpsiLambda_wt->Clone();
 	ratio_phi2_wt->SetNameTitle("ratio_phi2_wt","ratio_phi2_wt");
 	ratio_phi2_wt->GetYaxis()->SetTitle(title_y_wt);
 	ratio_phi2_wt->GetXaxis()->SetTitle("cos(#phi_{2})");
 	ratio_phi2_wt->Divide(eff_phi2_JpsiLambda_wt,eff_phi2_JpsiSigma_wt,(1.0/eff_phi2_JpsiLambda_wt->Integral()),(1.0/eff_phi2_JpsiSigma_wt->Integral()));
-
+	chi2 = ratio_phi2_wt->Chisquare(unif);
+	cout<<"ratio_phi2_wt chi2/ndf = "<<chi2/50<<endl;
 
 	// theta_gen_JpsiLambda->Draw();
 	// new TCanvas();
