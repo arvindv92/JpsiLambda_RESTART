@@ -511,7 +511,7 @@ void PolarizationEffs(Int_t run = 1)
 		z1_prime *= ((p_gen_JpsiLambda.Vect()).Dot(z1));
 
 		z2_prime = z2;
-		z2_prime *= ((p_gen_JpsiLambda.Vect()).Dot(z1));
+		z2_prime *= ((mu_gen_JpsiLambda.Vect()).Dot(z2));
 
 		phi1   = PiOver2() - (p_gen_JpsiLambda.Vect() - z1_prime).Angle(y1);
 		phi2   = PiOver2() - (mu_gen_JpsiLambda.Vect() - z2_prime).Angle(y2);
@@ -570,7 +570,7 @@ void PolarizationEffs(Int_t run = 1)
 		z1_prime *= ((p_gen_JpsiSigma.Vect()).Dot(z1));
 
 		z2_prime = z2;
-		z2_prime *= ((p_gen_JpsiSigma.Vect()).Dot(z1));
+		z2_prime *= ((mu_gen_JpsiSigma.Vect()).Dot(z2));
 
 		phi1   = PiOver2() - (p_gen_JpsiSigma.Vect() - z1_prime).Angle(y1);
 		phi2   = PiOver2() - (mu_gen_JpsiSigma.Vect() - z2_prime).Angle(y2);
@@ -629,7 +629,7 @@ void PolarizationEffs(Int_t run = 1)
 		z1_prime *= ((p_rec_JpsiLambda.Vect()).Dot(z1));
 
 		z2_prime = z2;
-		z2_prime *= ((p_rec_JpsiLambda.Vect()).Dot(z1));
+		z2_prime *= ((mu_rec_JpsiLambda.Vect()).Dot(z2));
 
 		phi1   = PiOver2() - (p_rec_JpsiLambda.Vect() - z1_prime).Angle(y1);
 		phi2   = PiOver2() - (mu_rec_JpsiLambda.Vect() - z2_prime).Angle(y2);
@@ -689,7 +689,7 @@ void PolarizationEffs(Int_t run = 1)
 		z1_prime *= ((p_rec_JpsiSigma.Vect()).Dot(z1));
 
 		z2_prime = z2;
-		z2_prime *= ((p_rec_JpsiSigma.Vect()).Dot(z1));
+		z2_prime *= ((mu_rec_JpsiSigma.Vect()).Dot(z2));
 
 		phi1   = PiOver2() - (p_rec_JpsiSigma.Vect() - z1_prime).Angle(y1);
 		phi2   = PiOver2() - (mu_rec_JpsiSigma.Vect() - z2_prime).Angle(y2);
