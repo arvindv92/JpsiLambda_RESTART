@@ -266,7 +266,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	RooWorkspace w("w");
 	// ************************Workspace for input data**************************
 	Bool_t inputFlag = false;
-      
+
 	if(!(gSystem->AccessPathName(Form("Inputs_%d_%d_%.2f.root",myLow,myHigh,bdtCut))))
 	{
 		inputFlag = true;
@@ -1553,7 +1553,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 			ds_xi_wt[i] = new RooDataSet("ds_xi_wt","ds_xi_wt",RooArgSet(*myVar,*gbWtVar),Import(*(ds_xi[i])),WeightVar(*gbWtVar));
 			ds_xi_wt[i]->Print();
-		
+
 			XIB_KEYS[i] = new RooKeysPdf(Form("XIB%d",run),Form("XIB%d",run),*myVar,*(ds_xi_wt[i]),RooKeysPdf::NoMirror);
 		}
 		// XIB[i] = new RooHistPdf(Form("XIB%d",run),Form("XIB%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_xib_smooth,0);
@@ -1641,12 +1641,33 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	w.factory("expr::XibMean_Run1('mean_Run1+shift_Xib',mean_Run1,shift_Xib)");
 	w.factory("expr::XibMean_Run2('mean_Run2+shift_Xib',mean_Run2,shift_Xib)");
 
-	w.factory("Gaussian::Xib_Run1(Lb_DTF_M_JpsiLConstr,XibMean_Run1,"
-	          "XibSigma_Run1[10.,1.,20.])");
+	// w.factory("Gaussian::Xib_Run1(Lb_DTF_M_JpsiLConstr,XibMean_Run1,"
+	//           "sigma_Run1)");
+	//
+	// w.factory("Gaussian::Xib_Run2(Lb_DTF_M_JpsiLConstr,XibMean_Run2,"
+	//           "sigma_Run2)");
+	if(sigType == 0)
+	{
+		w.factory("RooHypatia2::Xib_Run1(Lb_DTF_M_JpsiLConstr,lambda_Run1,0,0,"
+		          "sigma_Run1, XibMean_Run1, a1_Run1,"
+		          "2 ,a2_Run1, 2)");
 
-	w.factory("Gaussian::Xib_Run2(Lb_DTF_M_JpsiLConstr,XibMean_Run2,"
-	          "XibSigma_Run2[10.,1.,20.])");
+		w.factory("RooHypatia2::Xib_Run2(Lb_DTF_M_JpsiLConstr,lambda_Run2,0,0,"
+		          "sigma_Run2, XibMean_Run2, a1_Run2,"
+		          "2 ,a2_Run2, 2)");
+	}
+	else if(sigType == 1)
+	{
+		w.factory("RooCBShape::Xib1_Run1(Lb_DTF_M_JpsiLConstr,XibMean_Run1,"
+		          "sigma_Run1, alpha1_Run1, 10.0)" );
+		w.factory("RooCBShape::Xib2_Run1(Lb_DTF_M_JpsiLConstr,XibMean_Run1,sigma_Run1,alpha2_Run1, 10.0)");
+		w.factory("SUM::Xib_Run1(0.5*Xib1_Run1 , 0.5*Xib2_Run1)");
 
+		w.factory("RooCBShape::Xib1_Run2(Lb_DTF_M_JpsiLConstr,XibMean_Run2,"
+		          "sigma_Run2, alpha1_Run2, 10.0)" );
+		w.factory("RooCBShape::Xib2_Run2(Lb_DTF_M_JpsiLConstr,XibMean_Run2,sigma_Run2,alpha2_Run2, 10.0)");
+		w.factory("SUM::Xib_Run2(0.5*Xib1_Run2 , 0.5*Xib2_Run2)");
+	}
 	w.factory("nXib_JpsiLambda_Run1[5.0,0.0,50]");
 	w.factory("nXib_JpsiLambda_Run2[10.0,0.0,100]");
 
@@ -2056,7 +2077,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	w.factory(Form("nBkg_Run1[1,%d]",nentries[0]));
 	w.factory(Form("nBkg_Run2[1,%d]",nentries[1]));
 	//****************Xib Bkg Yield**************************************
-	
+
 	//What should the limits on nXib be?
 
 	w.factory(Form("nXib1[%f,%f,%f]",xibCentral[0],xibLow[0],xibHigh[0]));
@@ -2122,14 +2143,12 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,"
 	            "nBkg_Run1,nMiscLst_Run1,miscLstMean_Run1,"
 	            "miscLstSigma_Run1,eff_ratio1,nXib1,eff_ratio_1405_1,"
-	            "eff_ratio_1520_1,eff_ratio_1600_1,nXib_JpsiLambda_Run1,"
-	            "XibSigma_Run1");
+	            "eff_ratio_1520_1,eff_ratio_1600_1,nXib_JpsiLambda_Run1");
 
 	w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,"
 	            "nBkg_Run2,nMiscLst_Run2,miscLstMean_Run2,"
 	            "miscLstSigma_Run2,eff_ratio2,nXib2,eff_ratio_1405_2,"
-	            "eff_ratio_1520_2,eff_ratio_1600_2,nXib_JpsiLambda_Run2,"
-	            "XibSigma_Run2");
+	            "eff_ratio_1520_2,eff_ratio_1600_2,nXib_JpsiLambda_Run2");
 
 	w.extendSet("nuisParams","shift_Xib");
 	if(sigType == 0)//Hypatia
