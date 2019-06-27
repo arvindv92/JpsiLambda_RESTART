@@ -1471,6 +1471,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	//      cout<<"Done importing chiC1 Lambda shape"<<endl;
 	// }
 	//*******************************************************************
+
 	//******************Get shape from Xib background********************
 	RooDataSet* ds_xi[2];
 	RooDataSet* ds_xi_wt[2];
@@ -1596,6 +1597,92 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 	}
 	//*******************************************************************
+
+	//******************Get shape from B0->Jpsi Ks background********************
+	RooDataSet* ds_jpsiks[2];
+	RooKeysPdf* JPSIKS_KEYS[2];
+
+	// RooRealVar xibmass("Lb_DTF_M_JpsiLConstr","xibmass",5200.,5740.);
+	const char* jpsiksPath = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiKs";
+
+	// if(inputFlag)
+	// {
+	//      JPSIKS_KEYS[0] = (RooKeysPdf*)w1->pdf("JPSIKS1");
+	//      JPSIKS_KEYS[1] = (RooKeysPdf*)w1->pdf("JPSIKS2");
+	// }
+	for(Int_t run = 1; run<=1; run++)//ONLY HAVE RUN 1 MC FOR NOW.
+	{
+		Int_t i = run-1;
+		// if(!inputFlag)
+		// {
+		TFile *filein_jpsiks_nonZero = Open(Form("%s/run%d/jpsiks_cutoutks_LL_nonZeroTracks_noPID.root",jpsiksPath,run));
+		TTree *treein_jpsiks_nonZero = (TTree*)filein_jpsiks_nonZero->Get("MyTuple");
+
+		TFile *filein_jpsiks_Zero = Open(Form("%s/run%d/jpsiks_cutoutks_LL_ZeroTracks_noPID.root",jpsiksPath,run));
+		TTree *treein_jpsiks_Zero = (TTree*)filein_jpsiks_Zero->Get("MyTuple");
+
+		treein_jpsiks_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsiks_LL_FinalBDT%d_iso%d_%s_noPID.root",
+		                                                jpsiksPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+		treein_jpsiks_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsiks_zeroTracksLL_FinalBDT%d_noPID.root",
+		                                             jpsiksPath,run,bdtConf_Zero[i]));
+		treein_jpsiks_Zero->SetBranchStatus("*",0);
+		treein_jpsiks_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		treein_jpsiks_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+		treein_jpsiks_Zero->SetBranchStatus("Lb_BKGCAT",1);
+
+
+		treein_jpsiks_nonZero->SetBranchStatus("*",0);
+		treein_jpsiks_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		treein_jpsiks_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+		treein_jpsiks_nonZero->SetBranchStatus("Lb_BKGCAT",1);
+
+		TFile *tempFile = new TFile("tempFile.root","RECREATE");
+
+		TTree* treein_jpsiks_Zero_cut    = (TTree*)treein_jpsiks_Zero->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));
+		TTree* treein_jpsiks_nonZero_cut = (TTree*)treein_jpsiks_nonZero->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));
+
+		TList *list = new TList;
+		list->Add(treein_jpsiks_Zero_cut);
+		list->Add(treein_jpsiks_nonZero_cut);
+
+		TTree *combTree = TTree::MergeTrees(list);
+		combTree->SetName("combTree");
+
+		ds_jpsiks[i] = new RooDataSet("ds_jpsiks","ds_jpsiks",combTree,RooArgSet(*myVar));
+		ds_jpsiks[i]->Print();
+
+		// }
+	}
+	//ONLY HAVE RUN 1 MC FOR NOW
+	JPSIKS_KEYS[0] = new RooKeysPdf("JPSIKS1","JPSIKS1",*myVar,*(ds_jpsiks[0]),RooKeysPdf::NoMirror);
+	JPSIKS_KEYS[1] = new RooKeysPdf("JPSIKS2","JPSIKS2",*myVar,*(ds_jpsiks[0]),RooKeysPdf::NoMirror);
+
+	RooPlot *framejpsiks = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+	framejpsiks->SetTitle("#B^{0} #rightarrow J/#psi K_S^0");
+	framejpsiks->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
+	framejpsiks->GetYaxis()->SetTitle("Candidates/(4 MeV)");
+	// ds_jpsiks[i]->plotOn(framejpsiks,Name("xibdata_nowt"),LineColor(kGreen));
+	// ds_jpsiks_wt[i]->plotOn(framejpsiks,Name("xibdata"),LineColor(kBlack));
+	// (*(JPSIKS[i])).plotOn(framejpsiks,Name("xibfitsmooth"),LineColor(kRed),LineStyle(kDashed));
+	(*(JPSIKS_KEYS[0])).plotOn(framejpsiks,Name("jpsiksfitsmooth"),LineColor(kRed),LineStyle(kDashed));
+
+	TCanvas *cjpsiks = new TCanvas("JpsiKs1","JpsiKs1");
+	framejpsiks->Draw();
+
+	// w.import(*(JPSIKS[i]));
+	w.import(*(JPSIKS_KEYS[0]));
+	w.import(*(JPSIKS_KEYS[1]));
+	// if(!inputFlag)
+	// {
+	//      w1->import(*(JPSIKS_KEYS[i]));
+	// }
+	cout<<"Done importing Xib shape"<<endl;
+
+	w.factory("nJpsiKs_Run1[100.,0.,1000.]");
+	w.factory("nJpsiKs_Run2[200.,0.,2000.]");
+
+	//*******************************************************************
+
 
 	//*********Double Crystal Ball signal shape for Lambda_b0************
 	if(sigType == 1)
@@ -2113,13 +2200,15 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	// w.factory("expr::nchic1_Run2('R_chic1*nLb_Run2*eff_ratio_chic1_2',R_chic1,nLb_Run2,eff_ratio_chic1_2)");
 	//*******************************************************************
 	w.factory("SUM:model1(nSigma1*SIG1 , nLb_Run1*Lb_Run1 , nXib1*XIB1 , n1405_Run1*LST1405_Run1 ,"
-	          " n1520_Run1*LST1520_Run1 , n1600_Run1*LST1600_Run1 , nMiscLst_Run1*lstLump_Run1 , nBkg_Run1*Bkg_Run1, nXib_JpsiLambda_Run1*Xib_Run1)");
+	          " n1520_Run1*LST1520_Run1 , n1600_Run1*LST1600_Run1 , nMiscLst_Run1*lstLump_Run1 , "
+	          "nBkg_Run1*Bkg_Run1, nXib_JpsiLambda_Run1*Xib_Run1, nJpsiKs_Run1*JPSIKS1)");
 	w.factory("SUM:model2(nSigma2*SIG2 , nLb_Run2*Lb_Run2 , nXib2*XIB2 , n1405_Run2*LST1405_Run2 ,"
-	          " n1520_Run2*LST1520_Run2 , n1600_Run2*LST1600_Run2 , nMiscLst_Run2*lstLump_Run2 , nBkg_Run2*Bkg_Run2, nXib_JpsiLambda_Run2*Xib_Run2)");
+	          " n1520_Run2*LST1520_Run2 , n1600_Run2*LST1600_Run2 , nMiscLst_Run2*lstLump_Run2 , "
+	          "nBkg_Run2*Bkg_Run2, nXib_JpsiLambda_Run2*Xib_Run2, nJpsiKs_Run2*JPSIKS2)");
 
 	if(!lst1405flag)
 	{
-		w.var("R_1405")->setVal(-20);
+		w.var("R_1405")->setVal(0);
 		w.var("R_1405")->setConstant();
 	}
 	if(!lst1520flag)
@@ -2157,6 +2246,8 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	            "nBkg_Run2,nMiscLst_Run2,miscLstMean_Run2,"
 	            "miscLstSigma_Run2,eff_ratio2,nXib2,eff_ratio_1405_2,"
 	            "eff_ratio_1520_2,eff_ratio_1600_2");
+
+	w.extendSet("nuisParams","nJpsiKs_Run1,nJpsiKs_Run2");
 
 	if(sigType == 0)//Hypatia
 	{
@@ -2631,6 +2722,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("lstLump_Run1"))),LineColor(kRed+2),LineStyle(kDashed),Name("misclst_Run1"));
 	if(xib0flag)
 		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Xib_Run1"))),LineColor(kRed-2),LineStyle(1),Name("Xib_JpsiLambda_Run1"));
+	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("JPSIKS1"))),LineColor(kBlue-2),LineStyle(1),Name("JpsiKs_Run1"));
 
 	frame_run1->GetYaxis()->SetRangeUser(0.0001,50);
 	// Double_t chiSquare1 = frame_run1->chiSquare("fit_run1","data_Run1");
@@ -2683,6 +2775,8 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	legend_run1->AddEntry("bkg_Run1","Comb. Bkg.","l");
 	legend_run1->AddEntry("sig_Run1","#Lambda_{b} #rightarrow J/#psi #Sigma","l");
 	legend_run1->AddEntry("xib_Run1","#Xi_{b} #rightarrow J/#psi #Xi","l");
+	legend_run1->AddEntry("JpsiKs_Run1","B^{0} #rightarrow J/#psi K_{S}^{0}","l");
+
 	if(xib0flag)
 	{
 		legend_run1->AddEntry("Xib_JpsiLambda_Run1","#Xi_{b} #rightarrow J/#psi #Lambda","l");
@@ -2774,6 +2868,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	{
 		simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Xib_Run2"))),LineColor(kRed-2),LineStyle(1),Name("Xib_JpsiLambda_Run2"));
 	}
+	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("JPSIKS2"))),LineColor(kBlue-2),LineStyle(1),Name("JpsiKs_Run2"));
 	frame_run2->GetYaxis()->SetRangeUser(0.001,140);
 
 	// Double_t chiSquare1 = frame_run2->chiSquare("fit_run2","data_run2");
@@ -2820,6 +2915,8 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	legend_run2->AddEntry("bkg_Run2","Comb. Bkg.","l");
 	legend_run2->AddEntry("sig_Run2","#Lambda_{b} #rightarrow J/#psi #Sigma","l");
 	legend_run2->AddEntry("xib_Run2","#Xi_{b} #rightarrow J/#psi #Xi","l");
+	legend_run2->AddEntry("JpsiKs_Run2","B^{0} #rightarrow J/#psi K_{S}^{0}","l");
+
 	if(xib0flag)
 	{
 		legend_run2->AddEntry("Xib_JpsiLambda_Run2","#Xi_{b} #rightarrow J/#psi #Lambda","l");
@@ -3000,7 +3097,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 	if(!inputFlag)
 	{
-		w1->writeToFile(Form("Inputs_%d_%d_%.2f.root"),true);
+		w1->writeToFile(Form("Inputs_%d_%d_%.2f.root",myLow,myHigh,bdtCut),true);
 	}
 	cout << "workspace written to file " << fileName << endl;
 
