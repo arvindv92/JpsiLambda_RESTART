@@ -3150,25 +3150,25 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	frame_zoom_run2->GetYaxis()->SetRangeUser(0.0001,80);
 
 	///////////
-	TPad *pad1_zoom = new TPad("pad1_zoom","pad1_zoom",0.0,0.2,1.0,1.0);
-	TPad *pad2_zoom = new TPad("pad2_zoom","pad2_zoom",0.0,0.0,1.0,0.2);
+	TPad *pad3_zoom = new TPad("pad3_zoom","pad3_zoom",0.0,0.2,1.0,1.0);
+	TPad *pad4_zoom = new TPad("pad4_zoom","pad4_zoom",0.0,0.0,1.0,0.2);
 
-	pad1_zoom->SetGridx();
-	pad1_zoom->SetGridy();
-	pad2_zoom->SetGridx();
-	pad2_zoom->SetGridy();
+	pad3_zoom->SetGridx();
+	pad3_zoom->SetGridy();
+	pad4_zoom->SetGridx();
+	pad4_zoom->SetGridy();
 
-	pad1_zoom->SetBottomMargin(0.0);
-	pad2_zoom->SetTopMargin(0);
-	pad2_zoom->SetBottomMargin(0.4);
-	pad2_zoom->SetBorderMode(0);
-	pad1_zoom->SetBorderMode(0);
+	pad3_zoom->SetBottomMargin(0.0);
+	pad4_zoom->SetTopMargin(0);
+	pad4_zoom->SetBottomMargin(0.4);
+	pad4_zoom->SetBorderMode(0);
+	pad3_zoom->SetBorderMode(0);
 	c1_run2->SetBorderMode(0);
-	pad2_zoom->Draw();
-	pad1_zoom->Draw();
-	pad1_zoom->cd();
+	pad4_zoom->Draw();
+	pad3_zoom->Draw();
+	pad3_zoom->cd();
 	//	gPad->SetTopMargin(0.06);
-	pad1_zoom->Update();
+	pad3_zoom->Update();
 
 	frame_zoom_run2->Draw();
 
@@ -3234,11 +3234,11 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	frame_zoom_run2x2->GetXaxis()->SetTitleOffset(0.75);
 	frame_zoom_run2x2->GetYaxis()->SetNdivisions(505);
 	frame_zoom_run2x2->GetYaxis()->SetRangeUser(-4.0,4.0);
-	pad2_zoom->cd();
+	pad4_zoom->cd();
 	frame_zoom_run2x2->Draw();
 
 	c1_run2->cd();
-	// pad1_zoom->cd();
+	// pad3_zoom->cd();
 
 	//************************************************************
 
