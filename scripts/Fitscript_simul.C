@@ -2879,7 +2879,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		simPdf.plotOn(frame_zoom_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Xib_Run1"))),LineColor(kRed-2),LineStyle(1),Name("Xib_JpsiLambda_Run1"));
 	simPdf.plotOn(frame_zoom_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("JPSIKS1"))),LineColor(kBlue-2),LineStyle(1),Name("JpsiKs_Run1"));
 
-	frame_zoom_run1->GetYaxis()->SetRangeUser(0.0001,30);
+	frame_zoom_run1->GetYaxis()->SetRangeUser(0.0001,25);
 
 	///////////
 	TPad *pad1_zoom = new TPad("pad1_zoom","pad1_zoom",0.0,0.2,1.0,1.0);
@@ -3147,7 +3147,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Xib_Run2"))),LineColor(kRed-2),LineStyle(1),Name("Xib_JpsiLambda_Run2"));
 	simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("JPSIKS1"))),LineColor(kBlue-2),LineStyle(1),Name("JpsiKs_Run2"));
 
-	frame_zoom_run2->GetYaxis()->SetRangeUser(0.0001,80);
+	frame_zoom_run2->GetYaxis()->SetRangeUser(0.0001,70);
 
 	///////////
 	TPad *pad3_zoom = new TPad("pad3_zoom","pad3_zoom",0.0,0.2,1.0,1.0);
