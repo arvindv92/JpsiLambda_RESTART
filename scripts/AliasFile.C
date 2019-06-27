@@ -84,7 +84,7 @@ void AliasFile(Int_t run = 1, Int_t mcType = 1)
 
 	treeIn = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
 
-	if(!(mcType == 3 || mcType == 10))
+	if(!(mcType == 3 || mcType == 10 || mcType == 11))
 	{
 		treeIn->SetAlias("Lb_PT","Lambda_b0_TRUEPT");
 		treeIn->SetAlias("Lb_P","sqrt(Lambda_b0_TRUEPT**2+Lambda_b0_TRUEP_Z**2)");
@@ -95,6 +95,12 @@ void AliasFile(Int_t run = 1, Int_t mcType = 1)
 		treeIn->SetAlias("Lb_PT","Xi_bminus_TRUEPT");
 		treeIn->SetAlias("Lb_P","sqrt(Xi_bminus_TRUEPT**2+Xi_bminus_TRUEP_Z**2)");
 		treeIn->SetAlias("Lb_ETA","-log(tan(0.5*atan(Xi_bminus_TRUEPT/Xi_bminus_TRUEP_Z)))");
+	}
+	else if(mcType == 11)
+	{
+		treeIn->SetAlias("Lb_PT","Xi_b0_TRUEPT");
+		treeIn->SetAlias("Lb_P","sqrt(Xi_b0_TRUEPT**2+Xi_b0_TRUEP_Z**2)");
+		treeIn->SetAlias("Lb_ETA","-log(tan(0.5*atan(Xi_b0_TRUEPT/Xi_b0_TRUEP_Z)))");
 	}
 
 	treeIn->SetAlias("Jpsi_PT","J_psi_1S_TRUEPT");
