@@ -263,6 +263,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	Int_t xibflag      = 1;
 	Int_t sigmaflag    = 1;
 	Int_t xib0flag     = 1;
+	Int_t jpsiksflag   = 1;
 	// ************************Master Workspace**************************
 	RooWorkspace w("w");
 	// ************************Workspace for input data**************************
@@ -1605,77 +1606,76 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	// RooRealVar xibmass("Lb_DTF_M_JpsiLConstr","xibmass",5200.,5740.);
 	const char* jpsiksPath = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiKs";
 
-	// if(inputFlag)
-	// {
-	//      JPSIKS_KEYS[0] = (RooKeysPdf*)w1->pdf("JPSIKS1");
-	//      JPSIKS_KEYS[1] = (RooKeysPdf*)w1->pdf("JPSIKS2");
-	// }
-	for(Int_t run = 1; run<=1; run++)//ONLY HAVE RUN 1 MC FOR NOW.
+	if(inputFlag)
+	{
+	     JPSIKS_KEYS[0] = (RooKeysPdf*)w1->pdf("JPSIKS1");
+	     JPSIKS_KEYS[1] = (RooKeysPdf*)w1->pdf("JPSIKS2");
+	}
+	for(Int_t run = 1; run<=2; run++)
 	{
 		Int_t i = run-1;
-		// if(!inputFlag)
-		// {
-		TFile *filein_jpsiks_nonZero = Open(Form("%s/run%d/jpsiks_cutoutks_LL_nonZeroTracks_noPID.root",jpsiksPath,run));
-		TTree *treein_jpsiks_nonZero = (TTree*)filein_jpsiks_nonZero->Get("MyTuple");
+		if(!inputFlag)
+		{
+		  TFile *filein_jpsiks_nonZero = Open(Form("%s/run%d/jpsiks_cutoutks_LL_nonZeroTracks_noPID.root",jpsiksPath,run));
+		  TTree *treein_jpsiks_nonZero = (TTree*)filein_jpsiks_nonZero->Get("MyTuple");
 
-		TFile *filein_jpsiks_Zero = Open(Form("%s/run%d/jpsiks_cutoutks_LL_ZeroTracks_noPID.root",jpsiksPath,run));
-		TTree *treein_jpsiks_Zero = (TTree*)filein_jpsiks_Zero->Get("MyTuple");
+		  TFile *filein_jpsiks_Zero = Open(Form("%s/run%d/jpsiks_cutoutks_LL_ZeroTracks_noPID.root",jpsiksPath,run));
+		  TTree *treein_jpsiks_Zero = (TTree*)filein_jpsiks_Zero->Get("MyTuple");
 
-		treein_jpsiks_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsiks_LL_FinalBDT%d_iso%d_%s_noPID.root",
-		                                                jpsiksPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-		treein_jpsiks_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsiks_zeroTracksLL_FinalBDT%d_noPID.root",
-		                                             jpsiksPath,run,bdtConf_Zero[i]));
-		treein_jpsiks_Zero->SetBranchStatus("*",0);
-		treein_jpsiks_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		treein_jpsiks_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
-		treein_jpsiks_Zero->SetBranchStatus("Lb_BKGCAT",1);
+		  treein_jpsiks_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsiks_LL_FinalBDT%d_iso%d_%s_noPID.root",
+								  jpsiksPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+		  treein_jpsiks_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsiks_zeroTracksLL_FinalBDT%d_noPID.root",
+							       jpsiksPath,run,bdtConf_Zero[i]));
+		  treein_jpsiks_Zero->SetBranchStatus("*",0);
+		  treein_jpsiks_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		  treein_jpsiks_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+		  treein_jpsiks_Zero->SetBranchStatus("Lb_BKGCAT",1);
 
 
-		treein_jpsiks_nonZero->SetBranchStatus("*",0);
-		treein_jpsiks_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		treein_jpsiks_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
-		treein_jpsiks_nonZero->SetBranchStatus("Lb_BKGCAT",1);
+		  treein_jpsiks_nonZero->SetBranchStatus("*",0);
+		  treein_jpsiks_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+		  treein_jpsiks_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+		  treein_jpsiks_nonZero->SetBranchStatus("Lb_BKGCAT",1);
 
-		TFile *tempFile = new TFile("tempFile.root","RECREATE");
+		  TFile *tempFile = new TFile("tempFile.root","RECREATE");
 
-		TTree* treein_jpsiks_Zero_cut    = (TTree*)treein_jpsiks_Zero->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));
-		TTree* treein_jpsiks_nonZero_cut = (TTree*)treein_jpsiks_nonZero->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));
+		  TTree* treein_jpsiks_Zero_cut    = (TTree*)treein_jpsiks_Zero->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));
+		  TTree* treein_jpsiks_nonZero_cut = (TTree*)treein_jpsiks_nonZero->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));
 
-		TList *list = new TList;
-		list->Add(treein_jpsiks_Zero_cut);
-		list->Add(treein_jpsiks_nonZero_cut);
+		  TList *list = new TList;
+		  list->Add(treein_jpsiks_Zero_cut);
+		  list->Add(treein_jpsiks_nonZero_cut);
 
-		TTree *combTree = TTree::MergeTrees(list);
-		combTree->SetName("combTree");
+		  TTree *combTree = TTree::MergeTrees(list);
+		  combTree->SetName("combTree");
 
-		ds_jpsiks[i] = new RooDataSet("ds_jpsiks","ds_jpsiks",combTree,RooArgSet(*myVar));
-		ds_jpsiks[i]->Print();
+		  ds_jpsiks[i] = new RooDataSet("ds_jpsiks","ds_jpsiks",combTree,RooArgSet(*myVar));
+		  ds_jpsiks[i]->Print();
 
-		// }
+		  JPSIKS_KEYS[i] = new RooKeysPdf(Form("JPSIKS%d",run),Form("JPSIKS%d",run),*myVar,*(ds_jpsiks[i]),RooKeysPdf::NoMirror);
+		  if(jpsiksflag)
+		    {
+		      RooPlot *framejpsiks = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+		      framejpsiks->SetTitle("#B^{0} #rightarrow J/#psi K_S^0");
+		      framejpsiks->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
+		      framejpsiks->GetYaxis()->SetTitle("Candidates/(4 MeV)");
+		      // ds_jpsiks[i]->plotOn(framejpsiks,Name("xibdata_nowt"),LineColor(kGreen));
+		      // ds_jpsiks_wt[i]->plotOn(framejpsiks,Name("xibdata"),LineColor(kBlack));
+		      // (*(JPSIKS[i])).plotOn(framejpsiks,Name("xibfitsmooth"),LineColor(kRed),LineStyle(kDashed));
+		      (*(JPSIKS_KEYS[i])).plotOn(framejpsiks,Name("jpsiksfitsmooth"),LineColor(kRed),LineStyle(kDashed));
+
+		      TCanvas *cjpsiks = new TCanvas(Form("JpsiKs%d",run),Form("JpsiKs%d",run));
+		      framejpsiks->Draw();
+		    }
+		  // w.import(*(JPSIKS[i]));
+		  w.import(*(JPSIKS_KEYS[i]));
+		  if(!inputFlag)
+		    {
+		      w1->import(*(JPSIKS_KEYS[i]));
+		    }
+		}
 	}
-	//ONLY HAVE RUN 1 MC FOR NOW
-	JPSIKS_KEYS[0] = new RooKeysPdf("JPSIKS1","JPSIKS1",*myVar,*(ds_jpsiks[0]),RooKeysPdf::NoMirror);
-	JPSIKS_KEYS[1] = new RooKeysPdf("JPSIKS2","JPSIKS2",*myVar,*(ds_jpsiks[0]),RooKeysPdf::NoMirror);
-
-	RooPlot *framejpsiks = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
-	framejpsiks->SetTitle("#B^{0} #rightarrow J/#psi K_S^0");
-	framejpsiks->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
-	framejpsiks->GetYaxis()->SetTitle("Candidates/(4 MeV)");
-	// ds_jpsiks[i]->plotOn(framejpsiks,Name("xibdata_nowt"),LineColor(kGreen));
-	// ds_jpsiks_wt[i]->plotOn(framejpsiks,Name("xibdata"),LineColor(kBlack));
-	// (*(JPSIKS[i])).plotOn(framejpsiks,Name("xibfitsmooth"),LineColor(kRed),LineStyle(kDashed));
-	(*(JPSIKS_KEYS[0])).plotOn(framejpsiks,Name("jpsiksfitsmooth"),LineColor(kRed),LineStyle(kDashed));
-
-	TCanvas *cjpsiks = new TCanvas("JpsiKs1","JpsiKs1");
-	framejpsiks->Draw();
-
-	// w.import(*(JPSIKS[i]));
-	w.import(*(JPSIKS_KEYS[0]));
-	w.import(*(JPSIKS_KEYS[1]));
-	// if(!inputFlag)
-	// {
-	//      w1->import(*(JPSIKS_KEYS[i]));
-	// }
+	
 	cout<<"Done importing Xib shape"<<endl;
 
 	w.factory("nJpsiKs_Run1[100.,0.,1000.]");
@@ -2229,6 +2229,13 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		w.var("nXib_JpsiLambda_Run2")->setConstant();
 		w.var("shift_Xib")->setConstant();
 	}
+	if(!jpsiksflag)
+	  {
+	    w.var("nJpsiKs_Run1")->setVal(0.0);
+	    w.var("nJpsiKs_Run1")->setConstant();
+	    w.var("nJpsiKs_Run2")->setVal(0.0);
+	    w.var("nJpsiKs_Run2")->setConstant();
+	  }
 	// if(!chic1flag)
 	// {
 	//      w.var("R_chic1")->setVal(0);
@@ -3097,7 +3104,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 	if(!inputFlag)
 	{
-		w1->writeToFile(Form("Inputs_%d_%d_%.2f.root",myLow,myHigh,bdtCut),true);
+	  w1->writeToFile(Form("Inputs_%d_%d_%.2f.root",myLow,myHigh,bdtCut),true);
 	}
 	cout << "workspace written to file " << fileName << endl;
 
