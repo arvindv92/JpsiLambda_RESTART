@@ -1636,16 +1636,13 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 	//*********Gaussian signal shape for Xib0 -> J/psi Lambda************************
 	w.factory("shift_Xib[172.5,171.0,174.0]"); //PDG difference for Xib0 and Lb masses
-	//	w.factory("shift_Xib[172.5,171.0,174.0]"); //PDG difference for Xib0 and Lb masses
+	w.factory("Gaussian::shift_Xib_constraint(gshift_Xib[172.5,171.0,174.0],shift_Xib,0.4)");
+	
+	w.var("gshift_Xib")->setConstant();
 
 	w.factory("expr::XibMean_Run1('mean_Run1+shift_Xib',mean_Run1,shift_Xib)");
 	w.factory("expr::XibMean_Run2('mean_Run2+shift_Xib',mean_Run2,shift_Xib)");
 
-	// w.factory("Gaussian::Xib_Run1(Lb_DTF_M_JpsiLConstr,XibMean_Run1,"
-	//           "sigma_Run1)");
-	//
-	// w.factory("Gaussian::Xib_Run2(Lb_DTF_M_JpsiLConstr,XibMean_Run2,"
-	//           "sigma_Run2)");
 	if(sigType == 0)
 	{
 		w.factory("RooHypatia2::Xib_Run1(Lb_DTF_M_JpsiLConstr,lambda_Run1,0,0,"
@@ -2117,6 +2114,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	          " n1520_Run1*LST1520_Run1 , n1600_Run1*LST1600_Run1 , nMiscLst_Run1*lstLump_Run1 , nBkg_Run1*Bkg_Run1, nXib_JpsiLambda_Run1*Xib_Run1)");
 	w.factory("SUM:model2(nSigma2*SIG2 , nLb_Run2*Lb_Run2 , nXib2*XIB2 , n1405_Run2*LST1405_Run2 ,"
 	          " n1520_Run2*LST1520_Run2 , n1600_Run2*LST1600_Run2 , nMiscLst_Run2*lstLump_Run2 , nBkg_Run2*Bkg_Run2, nXib_JpsiLambda_Run2*Xib_Run2)");
+
 	if(!lst1405flag)
 	{
 		w.var("R_1405")->setVal(-20);
@@ -2193,7 +2191,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	w.defineSet("globObs","geff_ratio1,gnXib1,geff_ratio2,"
 	            "gnXib2,geff_ratio_1405_1,geff_ratio_1405_2,"
 	            "geff_ratio_1520_1,geff_ratio_1520_2,"
-	            "geff_ratio_1600_1,geff_ratio_1600_2");   //define set of global observables
+	            "geff_ratio_1600_1,geff_ratio_1600_2,gshift_Xib");   //define set of global observables
 
 	//*******************************************************************
 
@@ -2353,10 +2351,11 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 	w.factory("PROD::model_const1(model1,eff_ratio_constraint1,nXib_constraint1,"
 	          "eff_ratio_1405_constraint1,eff_ratio_1520_constraint1,"
-	          "eff_ratio_1600_constraint1)");                                //Multiply model by constraint terms
+	          "eff_ratio_1600_constraint1, shift_Xib_constraint)");                                //Multiply model by constraint terms
 	w.factory("PROD::model_const2(model2,eff_ratio_constraint2,nXib_constraint2,"
 	          "eff_ratio_1405_constraint2,eff_ratio_1520_constraint2,"
-	          "eff_ratio_1600_constraint2)");                                //Multiply model by constraint terms
+	          "eff_ratio_1600_constraint2, shift_Xib_constraint)");                                //Multiply model by constraint terms
+	
 	/*
 	   if(bkgType == 0)
 	   {
@@ -2410,7 +2409,6 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	 */
 	RooAbsPdf* model_const1 = w.pdf("model_const1"); // get the model
 	RooAbsPdf* model_const2 = w.pdf("model_const2"); // get the model
-
 
 	//***********************MAKE COMBINED DATASET************************************
 	RooCategory sample("sample","sample");
@@ -2529,7 +2527,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 	constrainParams.add( *(w.var("nXib1")) );
 	constrainParams.add( *(w.var("nXib2")) );
-
+	constrainParams.add( *(w.var("shift_Xib")) );
 	// if(bkgType == 0)
 	// {
 	//      constrainParams.add( *(w.var("slope_Run1")) );
@@ -2955,7 +2953,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 	if(!inputFlag)
 	{
-		w1->writeToFile("Inputs_4700_6200_0.00.root",true);
+	  w1->writeToFile(Form("Inputs_%d_%d_%.2f.root"),true);
 	}
 	cout << "workspace written to file " << fileName << endl;
 
