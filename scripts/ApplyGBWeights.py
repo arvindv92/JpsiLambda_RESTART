@@ -50,8 +50,9 @@ elif mcOpt == 9:
     part = 'chic1'
 elif mcOpt == 10:
     filePath = '../rootFiles/mcFiles/JpsiXi/run{}/'
+    part = 'jpsixi'
 elif mcOpt == 11:
-    filePath = '../rootFiles/mcFiles/Xib0/run{}/'
+    filePath = '../rootFiles/mcFiles/JpsiLambda/Xib0/run{}/'
     part = 'xib0'
 if isGen:
     fileName = part + '.root'
