@@ -3132,7 +3132,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Lb2_Run2"))),LineStyle(kDotted),LineColor(kMagenta));
 	}
 	simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Bkg_Run2"))),LineColor(kRed),Name("bkg_Run2"));
-	simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("XIB1"))),LineColor(kGreen),Name("xib_Run2"));
+	simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("XIB2"))),LineColor(kGreen),Name("xib_Run2"));
 	if(lst1405flag)
 		simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("LST1405_Run2"))),LineColor(kGreen+2),LineStyle(kDashed),Name("lst1405_Run2"));
 	if(lst1520flag)
@@ -3141,11 +3141,11 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("LST1600_Run2"))),LineColor(kBlue+2),LineStyle(kDashed),Name("lst1600_Run2"));
 	// if(chic1flag)
 	//      simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("chic1_Run2"))),LineColor(kMagenta+2),LineStyle(kDashed),Name("chic1_Run2"));
-	simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("SIG1"))),LineColor(kBlack),Name("sig_Run2"));
+	simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("SIG2"))),LineColor(kBlack),Name("sig_Run2"));
 	simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("lstLump_Run2"))),LineColor(kRed+2),LineStyle(kDashed),Name("misclst_Run2"));
 	if(xib0flag)
 		simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Xib_Run2"))),LineColor(kRed-2),LineStyle(1),Name("Xib_JpsiLambda_Run2"));
-	simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("JPSIKS1"))),LineColor(kBlue-2),LineStyle(1),Name("JpsiKs_Run2"));
+	simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("JPSIKS2"))),LineColor(kBlue-2),LineStyle(1),Name("JpsiKs_Run2"));
 
 	frame_zoom_run2->GetYaxis()->SetRangeUser(0.0001,70);
 
