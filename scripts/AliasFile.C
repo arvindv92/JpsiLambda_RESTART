@@ -8,6 +8,7 @@ void AliasFile(Int_t run = 1, Int_t mcType = 1)
 //mcType = 7 for JpsiLst(1520) MC
 //mcType = 8 for JpsiLst(1600) MC
 //mcType = 9 for chiC1 Lambda MC
+//mcType = 11 for Xib0 -> JpsiLambda
 {
 	TFile *fileIn = nullptr;
 	TTree *treeIn = nullptr;
@@ -67,6 +68,12 @@ void AliasFile(Int_t run = 1, Int_t mcType = 1)
 	{
 		folder = "JpsiXi";
 		part = "jpsixi";
+		break;
+	}
+	case 11:
+	{
+		folder = "Xib0";
+		part = "xib0";
 		break;
 	}
 	}
