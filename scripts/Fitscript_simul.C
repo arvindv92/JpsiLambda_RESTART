@@ -6,7 +6,7 @@ using namespace RooStats;
 
 #define Open TFile::Open
 
-void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgType, Int_t sigType, Float_t bdtCut, const char* fileName)
+void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgType, Int_t sigType, Float_t bdtCut, const char* fileName, const char* suffix = "")
 //myLow and myHigh define the fit range
 //rwType 0 is no RW, 1 is MV RW, 2 is BONN RW
 //bkgType = 0 for Exponential. 1 for 2nd order Chebychev. 2 for 3rd order Chebychev
@@ -3360,26 +3360,26 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	{
 		if(isBinned)
 		{
-			c_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_HypatiaSig_ExpBkg_%d_%d_%dMeVBins.pdf",myLow,myHigh,binwidth));
-			c_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_HypatiaSig_ExpBkg_%d_%d_%dMeVBins.pdf",myLow,myHigh,binwidth));
+			c_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_%s.pdf",myLow,myHigh,binwidth,suffix));
+			c_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-			c_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_HypatiaSig_ExpBkg_%d_%d_unbinned.pdf",myLow,myHigh));
-			c_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_HypatiaSig_ExpBkg_%d_%d_unbinned.pdf",myLow,myHigh));
+			c_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_HypatiaSig_ExpBkg_%d_%d_unbinned_%s.pdf",myLow,myHigh,suffix));
+			c_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_HypatiaSig_ExpBkg_%d_%d_unbinned_%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 	if(sigType == 1 && bkgType == 0)
 	{
 		if(isBinned)
 		{
-			c_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_CBSig_ExpBkg_%d_%d_%dMeVBins.pdf",myLow,myHigh,binwidth));
-			c_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_CBSig_ExpBkg_%d_%d_%dMeVBins.pdf",myLow,myHigh,binwidth));
+			c_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_CBSig_ExpBkg_%d_%d_%dMeVBins_%s.pdf",myLow,myHigh,binwidth,suffix));
+			c_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_CBSig_ExpBkg_%d_%d_%dMeVBins_%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-			c_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_CBSig_ExpBkg_%d_%d_unbinned.pdf",myLow,myHigh));
-			c_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_CBSig_ExpBkg_%d_%d_unbinned.pdf",myLow,myHigh));
+			c_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_CBSig_ExpBkg_%d_%d_unbinned_%s.pdf",myLow,myHigh,suffix));
+			c_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_CBSig_ExpBkg_%d_%d_unbinned_%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 
@@ -3387,26 +3387,26 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	{
 		if(isBinned)
 		{
-			c1_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom.pdf",myLow,myHigh,binwidth));
-			c1_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom.pdf",myLow,myHigh,binwidth));
+			c1_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom_%s.pdf",myLow,myHigh,binwidth,suffix));
+			c1_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom_%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-			c1_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom.pdf",myLow,myHigh));
-			c1_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom.pdf",myLow,myHigh));
+			c1_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom_%s.pdf",myLow,myHigh,suffix));
+			c1_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom_%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 	if(sigType == 1 && bkgType == 0)
 	{
 		if(isBinned)
 		{
-			c1_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom.pdf",myLow,myHigh,binwidth));
-			c1_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom.pdf",myLow,myHigh,binwidth));
+			c1_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom_%s.pdf",myLow,myHigh,binwidth,suffix));
+			c1_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom_%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-			c1_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_CBSig_ExpBkg_%d_%d_unbinned_zoom.pdf",myLow,myHigh));
-			c1_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_CBSig_ExpBkg_%d_%d_unbinned_zoom.pdf",myLow,myHigh));
+			c1_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_CBSig_ExpBkg_%d_%d_unbinned_zoom_%s.pdf",myLow,myHigh,suffix));
+			c1_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_CBSig_ExpBkg_%d_%d_unbinned_zoom_%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 
