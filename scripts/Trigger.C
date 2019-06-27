@@ -87,6 +87,11 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 		part = "jpsiks";
 		break;
 	}
+	case 11:
+	{
+		folder = "Xib0";
+		part = "xib0";
+	}
 	}
 	//Set up logging
 	if(isData && logFlag)

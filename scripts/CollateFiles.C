@@ -87,6 +87,17 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
 		part = "chic1";
 		break;
 	}
+	case 10:
+	{
+		folder = "JpsiKs";
+		part = "jpsiks";
+		break;
+	}
+	case 11:
+	{
+		folder = "Xib0";
+		part = "xib0";
+	}
 	}
 
 	if(isData && logFlag)
@@ -174,7 +185,7 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
 				gSystem->Exec(Form("hadd -f %s/JpsiXi/run2/jpsixi.root JpsiXi/Pythia8/2015*/*/*.root JpsiXi/Pythia8/2016*/*/*.root",path));
 			}
 		}
-		else if(mcType == 6||mcType==7||mcType==8||mcType==9) //Lambda* and chiC1 MC
+		else if(mcType == 6||mcType==7||mcType==8||mcType==9||mcType==11) //Lambda* and chiC1 MC
 		{
 			if(run == 1)
 			{

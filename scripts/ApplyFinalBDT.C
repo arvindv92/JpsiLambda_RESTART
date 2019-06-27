@@ -96,6 +96,11 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 		part = "jpsiks";
 		break;
 	}
+	case 11:
+	{
+		folder = "Xib0";
+		part = "xib0";
+	}
 	}
 	//Set up logging
 	if(isData && isoFlag && logFlag)
@@ -157,11 +162,11 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	Double_t jpsiPT        = 0., jpsiP        = 0.;
 	Double_t lFdChi2_orivX = 0., lDira_orivX  = 0., lFd_orivX    = 0.;
 
-	Double_t lDira_ownPV = 0., lDm            = 0., lMinIpChi2  = 0., lPT = 0.;
-	Double_t lP          = 0., lCosTheta   = 0.;
-	Double_t pMinIpChi2     = 0., pGhostProbNN  = 0.;
-	Double_t pPT         = 0., pProbNNp       = 0.;
-	Double_t piMinIpChi2    = 0., piGhostProbNN = 0.;
+	Double_t lDira_ownPV = 0., lDm           = 0., lMinIpChi2 = 0., lPT = 0.;
+	Double_t lP          = 0., lCosTheta     = 0.;
+	Double_t pMinIpChi2  = 0., pGhostProbNN  = 0.;
+	Double_t pPT         = 0., pProbNNp      = 0.;
+	Double_t piMinIpChi2 = 0., piGhostProbNN = 0.;
 
 	Double_t piPT   = 0., piProbNNpi = 0.;
 	Double_t myBDTK = 0., BDT        = 0.;

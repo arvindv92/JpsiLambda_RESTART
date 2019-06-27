@@ -9,8 +9,8 @@ from sklearn.model_selection import train_test_split
 # mcOpt = 1 for JpsiLambda
 # mcOpt = 2 for JpsiSigma
 # mcOpt = 3 for JpsiXi (reco'd JpsiLambda)
-# mcOpt = 4 for JpsiXi (reco'd JpsiXi)
-
+# mcOpt = 10 for JpsiXi (reco'd JpsiXi)
+# mcOpt = 11 for Xib0->J/psi Lambda
 run = int(sys.argv[1])
 mcOpt = int(sys.argv[2])
 isGen = int(sys.argv[3])  # set to 1 to run over generator, 0 to run over rec.
@@ -50,7 +50,9 @@ elif mcOpt == 9:
     part = 'chic1'
 elif mcOpt == 10:
     filePath = '../rootFiles/mcFiles/JpsiXi/run{}/'
-    part = 'jpsixi'
+elif mcOpt == 11:
+    filePath = '../rootFiles/mcFiles/Xib0/run{}/'
+    part = 'xib0'
 if isGen:
     fileName = part + '.root'
     treeName = 'MCTuple/MCDecayTree'

@@ -105,6 +105,11 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 		part = "jpsiks";
 		break;
 	}
+	case 11:
+	{
+		folder = "Xib0";
+		part = "xib0";
+	}
 	}
 
 	if(!isData && logFlag)
