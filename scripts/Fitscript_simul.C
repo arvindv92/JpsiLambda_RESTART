@@ -255,13 +255,14 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 	// ***************************Flags**********************************
 	// Flags controlling shapes
-	Int_t lst1405flag    = 1;
-	Int_t lst1520flag    = 1;
-	Int_t lst1600flag    = 1;
-	Int_t lst1810flag    = 0;
-	// Int_t chic1flag      = 0;
-	Int_t xibflag        = 1;
-	Int_t sigmaflag      = 1;
+	Int_t lst1405flag  = 1;
+	Int_t lst1520flag  = 1;
+	Int_t lst1600flag  = 1;
+	Int_t lst1810flag  = 0;
+	// Int_t chic1flag = 0;
+	Int_t xibflag      = 1;
+	Int_t sigmaflag    = 1;
+	Int_t xib0flag     = 1;
 	// ************************Master Workspace**************************
 	RooWorkspace w("w");
 	// ************************Workspace for input data**************************
@@ -1635,9 +1636,10 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	//*******************************************************************
 
 	//*********Gaussian signal shape for Xib0 -> J/psi Lambda************************
-	w.factory("shift_Xib[172.5,171.0,174.0]"); //PDG difference for Xib0 and Lb masses
+
+	w.factory("shift_Xib[172.5,171.0,174.0]");         //PDG difference for Xib0 and Lb masses
 	w.factory("Gaussian::shift_Xib_constraint(gshift_Xib[172.5,171.0,174.0],shift_Xib,0.4)");
-	
+
 	w.var("gshift_Xib")->setConstant();
 
 	w.factory("expr::XibMean_Run1('mean_Run1+shift_Xib',mean_Run1,shift_Xib)");
@@ -2130,6 +2132,14 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		w.var("R_1600")->setVal(0);
 		w.var("R_1600")->setConstant();
 	}
+	if(!xib0flag)
+	{
+		w.var("nXib_JpsiLambda_Run1")->setVal(0);
+		w.var("nXib_JpsiLambda_Run1")->setConstant();
+		w.var("nXib_JpsiLambda_Run2")->setVal(0);
+		w.var("nXib_JpsiLambda_Run2")->setConstant();
+		w.var("shift_Xib")->setConstant();
+	}
 	// if(!chic1flag)
 	// {
 	//      w.var("R_chic1")->setVal(0);
@@ -2141,14 +2151,13 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	w.defineSet("nuisParams","nLb_Run1,mean_Run1,sigma_Run1,"
 	            "nBkg_Run1,nMiscLst_Run1,miscLstMean_Run1,"
 	            "miscLstSigma_Run1,eff_ratio1,nXib1,eff_ratio_1405_1,"
-	            "eff_ratio_1520_1,eff_ratio_1600_1,nXib_JpsiLambda_Run1");
+	            "eff_ratio_1520_1,eff_ratio_1600_1");
 
 	w.extendSet("nuisParams","nLb_Run2,mean_Run2,sigma_Run2,"
 	            "nBkg_Run2,nMiscLst_Run2,miscLstMean_Run2,"
 	            "miscLstSigma_Run2,eff_ratio2,nXib2,eff_ratio_1405_2,"
-	            "eff_ratio_1520_2,eff_ratio_1600_2,nXib_JpsiLambda_Run2");
+	            "eff_ratio_1520_2,eff_ratio_1600_2");
 
-	w.extendSet("nuisParams","shift_Xib");
 	if(sigType == 0)//Hypatia
 	{
 		w.extendSet("nuisParams","lambda_Run1");
@@ -2166,6 +2175,8 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		w.extendSet("nuisParams","R_1520");
 	if(lst1600flag)
 		w.extendSet("nuisParams","R_1600");
+	if(xib0flag)
+		w.extendSet("nuisParams","nXib_JpsiLambda_Run1,nXib_JpsiLambda_Run2,shift_Xib");
 
 	if(bkgType == 0)
 	{
@@ -2188,11 +2199,25 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		w.extendSet("nuisParams","slope_Run1,slope_Run2,c0_Run1,c0_Run2");
 	}
 
-	w.defineSet("globObs","geff_ratio1,gnXib1,geff_ratio2,"
-	            "gnXib2,geff_ratio_1405_1,geff_ratio_1405_2,"
-	            "geff_ratio_1520_1,geff_ratio_1520_2,"
-	            "geff_ratio_1600_1,geff_ratio_1600_2,gshift_Xib");   //define set of global observables
+	w.defineSet("globObs","geff_ratio1,geff_ratio2,"
+	            "gnXib1,gnXib2");   //define set of global observables
 
+	if(lst1405flag)
+	{
+		w.extendSet("globObs","geff_ratio_1405_1,geff_ratio_1405_2");
+	}
+	if(lst1520flag)
+	{
+		w.extendSet("globObs","geff_ratio_1520_1,geff_ratio_1520_2");
+	}
+	if(lst1600flag)
+	{
+		w.extendSet("globObs","geff_ratio_1600_1,geff_ratio_1600_2");
+	}
+	if(xib0flag)
+	{
+		w.extendSet("globObs","gshift_Xib");
+	}
 	//*******************************************************************
 
 	//First fit background shapes to data above peak, just to help set initial values.
@@ -2349,13 +2374,24 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	   }
 	 */
 
-	w.factory("PROD::model_const1(model1,eff_ratio_constraint1,nXib_constraint1,"
-	          "eff_ratio_1405_constraint1,eff_ratio_1520_constraint1,"
-	          "eff_ratio_1600_constraint1, shift_Xib_constraint)");                                //Multiply model by constraint terms
-	w.factory("PROD::model_const2(model2,eff_ratio_constraint2,nXib_constraint2,"
-	          "eff_ratio_1405_constraint2,eff_ratio_1520_constraint2,"
-	          "eff_ratio_1600_constraint2, shift_Xib_constraint)");                                //Multiply model by constraint terms
-	
+	if(xib0flag)
+	{
+		w.factory("PROD::model_const1(model1,eff_ratio_constraint1,nXib_constraint1,"
+		          "eff_ratio_1405_constraint1,eff_ratio_1520_constraint1,"
+		          "eff_ratio_1600_constraint1, shift_Xib_constraint)");                        //Multiply model by constraint terms
+		w.factory("PROD::model_const2(model2,eff_ratio_constraint2,nXib_constraint2,"
+		          "eff_ratio_1405_constraint2,eff_ratio_1520_constraint2,"
+		          "eff_ratio_1600_constraint2, shift_Xib_constraint)");                        //Multiply model by constraint terms
+	}
+	else
+	{
+		w.factory("PROD::model_const1(model1,eff_ratio_constraint1,nXib_constraint1,"
+		          "eff_ratio_1405_constraint1,eff_ratio_1520_constraint1,"
+		          "eff_ratio_1600_constraint1)");                        //Multiply model by constraint terms
+		w.factory("PROD::model_const2(model2,eff_ratio_constraint2,nXib_constraint2,"
+		          "eff_ratio_1405_constraint2,eff_ratio_1520_constraint2,"
+		          "eff_ratio_1600_constraint2)");                        //Multiply model by constraint terms
+	}
 	/*
 	   if(bkgType == 0)
 	   {
@@ -2527,7 +2563,10 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 	constrainParams.add( *(w.var("nXib1")) );
 	constrainParams.add( *(w.var("nXib2")) );
-	constrainParams.add( *(w.var("shift_Xib")) );
+	if(xib0flag)
+	{
+		constrainParams.add( *(w.var("shift_Xib")) );
+	}
 	// if(bkgType == 0)
 	// {
 	//      constrainParams.add( *(w.var("slope_Run1")) );
@@ -2590,7 +2629,8 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	//      simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("chic1_Run1"))),LineColor(kMagenta+2),LineStyle(kDashed),Name("chic1_Run1"));
 	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("SIG1"))),LineColor(kBlack),Name("sig_Run1"));
 	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("lstLump_Run1"))),LineColor(kRed+2),LineStyle(kDashed),Name("misclst_Run1"));
-	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Xib_Run1"))),LineColor(kRed-2),LineStyle(1),Name("Xib_JpsiLambda_Run1"));
+	if(xib0flag)
+		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Xib_Run1"))),LineColor(kRed-2),LineStyle(1),Name("Xib_JpsiLambda_Run1"));
 
 	frame_run1->GetYaxis()->SetRangeUser(0.0001,50);
 	// Double_t chiSquare1 = frame_run1->chiSquare("fit_run1","data_Run1");
@@ -2643,7 +2683,10 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	legend_run1->AddEntry("bkg_Run1","Comb. Bkg.","l");
 	legend_run1->AddEntry("sig_Run1","#Lambda_{b} #rightarrow J/#psi #Sigma","l");
 	legend_run1->AddEntry("xib_Run1","#Xi_{b} #rightarrow J/#psi #Xi","l");
-	legend_run1->AddEntry("Xib_JpsiLambda_Run1","#Xi_{b} #rightarrow J/#psi #Lambda","l");
+	if(xib0flag)
+	{
+		legend_run1->AddEntry("Xib_JpsiLambda_Run1","#Xi_{b} #rightarrow J/#psi #Lambda","l");
+	}
 	if(lst1405flag)
 	{
 		legend_run1->AddEntry("lst1405_Run1","#Lambda_{b} #rightarrow J/#psi #Lambda(1405)","l");
@@ -2727,8 +2770,10 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	// simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("chic1_Run2"))),LineColor(kMagenta+2),LineStyle(kDashed),Name("chic1_Run2"));
 	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("SIG2"))),LineColor(kBlack),Name("sig_Run2"));
 	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("lstLump_Run2"))),LineColor(kRed+2),LineStyle(kDashed),Name("misclst_Run2"));
-	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Xib_Run2"))),LineColor(kRed-2),LineStyle(1),Name("Xib_JpsiLambda_Run2"));
-
+	if(xib0flag)
+	{
+		simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Xib_Run2"))),LineColor(kRed-2),LineStyle(1),Name("Xib_JpsiLambda_Run2"));
+	}
 	frame_run2->GetYaxis()->SetRangeUser(0.001,140);
 
 	// Double_t chiSquare1 = frame_run2->chiSquare("fit_run2","data_run2");
@@ -2775,8 +2820,10 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	legend_run2->AddEntry("bkg_Run2","Comb. Bkg.","l");
 	legend_run2->AddEntry("sig_Run2","#Lambda_{b} #rightarrow J/#psi #Sigma","l");
 	legend_run2->AddEntry("xib_Run2","#Xi_{b} #rightarrow J/#psi #Xi","l");
-	legend_run2->AddEntry("Xib_JpsiLambda_Run2","#Xi_{b} #rightarrow J/#psi #Lambda","l");
-
+	if(xib0flag)
+	{
+		legend_run2->AddEntry("Xib_JpsiLambda_Run2","#Xi_{b} #rightarrow J/#psi #Lambda","l");
+	}
 	if(lst1405flag)
 	{
 		legend_run2->AddEntry("lst1405_Run2","#Lambda_{b} #rightarrow J/#psi #Lambda(1405)","l");
@@ -2953,7 +3000,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 	if(!inputFlag)
 	{
-	  w1->writeToFile(Form("Inputs_%d_%d_%.2f.root"),true);
+		w1->writeToFile(Form("Inputs_%d_%d_%.2f.root"),true);
 	}
 	cout << "workspace written to file " << fileName << endl;
 
