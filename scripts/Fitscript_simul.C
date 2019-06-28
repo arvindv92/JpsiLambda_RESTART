@@ -2177,20 +2177,21 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	//**************** Sigma/Lb Efficiency Ratio*************************
 	if(mcRW)
 	{
-		w.factory(Form("eff_ratio1[%f,0.,5.]",eff_ratio[0])); //eff(Lb -> Jpsi Lambda)/eff(Lb -> Jpsi Sigma)
-		w.factory(Form("eff_ratio2[%f,0.,5.]",eff_ratio[1]));
-
-		w.factory(Form("Gaussian::eff_ratio_constraint1(geff_ratio1[%f,0,5],eff_ratio1,%f)",eff_ratio[0],eff_ratio_SystErr[0]));
-		w.factory(Form("Gaussian::eff_ratio_constraint2(geff_ratio2[%f,0,5],eff_ratio2,%f)",eff_ratio[1],eff_ratio_SystErr[1]));
-	}
-	else
-	{
 		w.factory(Form("eff_ratio1[%f,0.,5.]",eff_ratio_wt[0])); //eff(Lb -> Jpsi Lambda)/eff(Lb -> Jpsi Sigma)
 		w.factory(Form("eff_ratio2[%f,0.,5.]",eff_ratio_wt[1]));
 
 		w.factory(Form("Gaussian::eff_ratio_constraint1(geff_ratio1[%f,0,5],eff_ratio1,%f)",eff_ratio_wt[0],eff_ratio_wt_SystErr[0]));
 		w.factory(Form("Gaussian::eff_ratio_constraint2(geff_ratio2[%f,0,5],eff_ratio2,%f)",eff_ratio_wt[1],eff_ratio_wt_SystErr[1]));
 	}
+	else
+	{
+		w.factory(Form("eff_ratio1[%f,0.,5.]",eff_ratio[0])); //eff(Lb -> Jpsi Lambda)/eff(Lb -> Jpsi Sigma)
+		w.factory(Form("eff_ratio2[%f,0.,5.]",eff_ratio[1]));
+
+		w.factory(Form("Gaussian::eff_ratio_constraint1(geff_ratio1[%f,0,5],eff_ratio1,%f)",eff_ratio[0],eff_ratio_SystErr[0]));
+		w.factory(Form("Gaussian::eff_ratio_constraint2(geff_ratio2[%f,0,5],eff_ratio2,%f)",eff_ratio[1],eff_ratio_SystErr[1]));
+	}
+
 	w.var("geff_ratio1")->setConstant();
 	w.var("geff_ratio2")->setConstant();
 	//*******************************************************************
