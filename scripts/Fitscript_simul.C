@@ -957,7 +957,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		frame1405->SetTitle("#Lambda_{b} #rightarrow J/#psi #Lambda(1405)");
 		frame1405->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
 		frame1405->GetYaxis()->SetTitle("Candidates/(4 MeV)");
-		//		ds_1405[i]->plotOn(frame1405,Name("1405data"),LineColor(kBlack));
+		ds_1405[i]->plotOn(frame1405,Name("1405data"),LineColor(kBlack));
 		(*(KEYS_1405[i])).plotOn(frame1405,Name("1405fitsmooth"),LineColor(kBlue));
 
 		TCanvas *c1405 = new TCanvas(Form("Jpsi1405%d",run),Form("Jpsi1405%d",run));
@@ -1143,7 +1143,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		frame1520->SetTitle("#Lambda_{b} #rightarrow J/#psi #Lambda(1520)");
 		frame1520->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
 		frame1520->GetYaxis()->SetTitle("Candidates/(4 MeV)");
-		//		ds_1520[i]->plotOn(frame1520,Name("1520data"),LineColor(kBlack));
+		ds_1520[i]->plotOn(frame1520,Name("1520data"),LineColor(kBlack));
 		(*(KEYS_1520[i])).plotOn(frame1520,Name("1520fitsmooth"),LineColor(kBlue));
 
 		TCanvas *c1520 = new TCanvas(Form("Jpsi1520%d",run),Form("Jpsi1520%d",run));
@@ -1330,7 +1330,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		frame1600->SetTitle("#Lambda_{b} #rightarrow J/#psi #Lambda(1600)");
 		frame1600->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
 		frame1600->GetYaxis()->SetTitle("Candidates/(4 MeV)");
-		//		ds_1600[i]->plotOn(frame1600,Name("1600data"),LineColor(kBlack));
+		ds_1600[i]->plotOn(frame1600,Name("1600data"),LineColor(kBlack));
 		(*(KEYS_1600[i])).plotOn(frame1600,Name("1600fitsmooth"),LineColor(kBlue));
 
 		TCanvas *c1600 = new TCanvas(Form("Jpsi1600%d",run),Form("Jpsi1600%d",run));
