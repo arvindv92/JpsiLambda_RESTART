@@ -6,7 +6,9 @@ using namespace RooStats;
 
 #define Open TFile::Open
 
-void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgType, Int_t sigType, Float_t bdtCut, const char* fileName, const char* suffix)
+void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
+                     Int_t bkgType, Int_t sigType, Float_t bdtCut, const char* fileName,
+                     const char* suffix, Bool_t mcRW)
 //myLow and myHigh define the fit range
 //rwType 0 is no RW, 1 is MV RW, 2 is BONN RW
 //bkgType = 0 for Exponential. 1 for 2nd order Chebychev. 2 for 3rd order Chebychev
@@ -640,16 +642,25 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 			ds_sig_wt[i] = new RooDataSet("ds_sig_wt","ds_sig_wt",RooArgSet(*myVar,*totWt_var),Import(*(ds_sig[i])),WeightVar(*totWt_var));
 			ds_sig_wt[i]->Print();
 
-			SIG_KEYS[i] = new RooKeysPdf(Form("SIG%d",run),Form("SIG%d",run),*myVar,*(ds_sig_wt[i]),RooKeysPdf::MirrorBoth,1);
+			if(mcRW)
+			{
+				SIG_KEYS[i] = new RooKeysPdf(Form("SIG%d",run),Form("SIG%d",run),*myVar,*(ds_sig_wt[i]),RooKeysPdf::MirrorBoth,1);
+			}
+			else
+			{
+				SIG_KEYS[i] = new RooKeysPdf(Form("SIG%d",run),Form("SIG%d",run),*myVar,*(ds_sig[i]),RooKeysPdf::MirrorBoth,1);
+			}
 		}
 		RooPlot *framesigma = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
 		framesigma->SetTitle("#Lambda_{b} #rightarrow J/#psi #Sigma");
 		framesigma->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
 		framesigma->GetYaxis()->SetTitle("Candidates/(4 MeV)");
-		framesigma->SetTitle("J/#psi #Sigma");
-		//		ds_sig[i]->plotOn(framesigma,Name("sigmadata_nowt"),LineColor(kGreen));
-		//		ds_sig_wt[i]->plotOn(framesigma,Name("sigmadata"),LineColor(kBlack));
-		(*(SIG_KEYS[i])).plotOn(framesigma,Name("sigmafitsmooth"),LineColor(kRed),LineStyle(kDashed));
+
+		if(mcRW)
+			ds_sig_wt[i]->plotOn(framesigma,Name("sigmadata"),LineColor(kBlack));
+		else
+			ds_sig[i]->plotOn(framesigma,Name("sigmadata_nowt"),LineColor(kBlack));
+		(*(SIG_KEYS[i])).plotOn(framesigma,Name("sigmafitsmooth"),LineColor(kBlue));
 
 		TCanvas *csigma = new TCanvas(Form("JpsiSigma%d",run),Form("JpsiSigma%d",run));
 		framesigma->Draw();
@@ -910,15 +921,31 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 			{
 				if(run == 1)
 				{
-					ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
-					                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
-					                            "wt_tau");
+					if(mcRW)
+					{
+						ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
+						                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
+						                            "wt_tau");
+					}
+					else
+					{
+						ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
+						                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0);
+					}
 				}
 				else if(run == 2)
 				{
-					ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
-					                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
-					                            "wt_tau");
+					if(mcRW)
+					{
+						ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
+						                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
+						                            "wt_tau");
+					}
+					else
+					{
+						ds_1405[i] = new RooDataSet("ds_1405","ds_1405",combTree_1405,
+						                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0);
+					}
 				}
 			}
 			ds_1405[i]->Print();
@@ -930,9 +957,8 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		frame1405->SetTitle("#Lambda_{b} #rightarrow J/#psi #Lambda(1405)");
 		frame1405->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
 		frame1405->GetYaxis()->SetTitle("Candidates/(4 MeV)");
-		frame1405->SetTitle("J/#psi #Sigma");
 		//		ds_1405[i]->plotOn(frame1405,Name("1405data"),LineColor(kBlack));
-		(*(KEYS_1405[i])).plotOn(frame1405,Name("1405fitsmooth"),LineColor(kRed),LineStyle(kDashed));
+		(*(KEYS_1405[i])).plotOn(frame1405,Name("1405fitsmooth"),LineColor(kBlue));
 
 		TCanvas *c1405 = new TCanvas(Form("Jpsi1405%d",run),Form("Jpsi1405%d",run));
 		frame1405->Draw();
@@ -1103,11 +1129,26 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 			TTree *combTree_1520 = TTree::MergeTrees(list_1520);
 			combTree_1520->SetName("combTree_1520");
 
-			ds_1520[i] = new RooDataSet("ds_1520","ds_1520",combTree_1520,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"wt_tau");
+			if(mcRW)
+				ds_1520[i] = new RooDataSet("ds_1520","ds_1520",combTree_1520,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"wt_tau");
+			else
+				ds_1520[i] = new RooDataSet("ds_1520","ds_1520",combTree_1520,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0);
+
 			ds_1520[i]->Print();
 
 			KEYS_1520[i] = new RooKeysPdf(Form("LST1520_Run%d",run),Form("LST1520_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1520[i]),RooKeysPdf::MirrorBoth,1);
 		}
+
+		RooPlot *frame1520 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+		frame1520->SetTitle("#Lambda_{b} #rightarrow J/#psi #Lambda(1520)");
+		frame1520->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
+		frame1520->GetYaxis()->SetTitle("Candidates/(4 MeV)");
+		//		ds_1520[i]->plotOn(frame1520,Name("1520data"),LineColor(kBlack));
+		(*(KEYS_1520[i])).plotOn(frame1520,Name("1520fitsmooth"),LineColor(kBlue));
+
+		TCanvas *c1520 = new TCanvas(Form("Jpsi1520%d",run),Form("Jpsi1520%d",run));
+		frame1520->Draw();
+
 		w.import(*(KEYS_1520[i]));
 		if(!inputFlag)
 		{
@@ -1275,11 +1316,26 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 			TTree *combTree_1600 = TTree::MergeTrees(list_1600);
 			combTree_1600->SetName("combTree_1600");
 
-			ds_1600[i] = new RooDataSet("ds_1600","ds_1600",combTree_1600,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"wt_tau");
+			if(mcRW)
+				ds_1600[i] = new RooDataSet("ds_1600","ds_1600",combTree_1600,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"wt_tau");
+			else
+				ds_1600[i] = new RooDataSet("ds_1600","ds_1600",combTree_1600,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0);
+
 			ds_1600[i]->Print();
 
 			KEYS_1600[i] = new RooKeysPdf(Form("LST1600_Run%d",run),Form("LST1600_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1600[i]),RooKeysPdf::MirrorBoth,1);
 		}
+
+		RooPlot *frame1600 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
+		frame1600->SetTitle("#Lambda_{b} #rightarrow J/#psi #Lambda(1600)");
+		frame1600->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
+		frame1600->GetYaxis()->SetTitle("Candidates/(4 MeV)");
+		//		ds_1600[i]->plotOn(frame1600,Name("1600data"),LineColor(kBlack));
+		(*(KEYS_1600[i])).plotOn(frame1600,Name("1600fitsmooth"),LineColor(kBlue));
+
+		TCanvas *c1600 = new TCanvas(Form("Jpsi1600%d",run),Form("Jpsi1600%d",run));
+		frame1600->Draw();
+
 		w.import(*(KEYS_1600[i]));
 		if(!inputFlag)
 		{
@@ -1557,7 +1613,11 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 			ds_xi_wt[i] = new RooDataSet("ds_xi_wt","ds_xi_wt",RooArgSet(*myVar,*gbWtVar),Import(*(ds_xi[i])),WeightVar(*gbWtVar));
 			ds_xi_wt[i]->Print();
 
-			XIB_KEYS[i] = new RooKeysPdf(Form("XIB%d",run),Form("XIB%d",run),*myVar,*(ds_xi_wt[i]),RooKeysPdf::NoMirror);
+			if(mcRW)
+				XIB_KEYS[i] = new RooKeysPdf(Form("XIB%d",run),Form("XIB%d",run),*myVar,*(ds_xi_wt[i]),RooKeysPdf::NoMirror);
+			else
+				XIB_KEYS[i] = new RooKeysPdf(Form("XIB%d",run),Form("XIB%d",run),*myVar,*(ds_xi[i]),RooKeysPdf::NoMirror);
+
 		}
 		// XIB[i] = new RooHistPdf(Form("XIB%d",run),Form("XIB%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_xib_smooth,0);
 
@@ -1565,10 +1625,13 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		framexib->SetTitle("#Xi_{b} #rightarrow J/#psi #Xi");
 		framexib->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
 		framexib->GetYaxis()->SetTitle("Candidates/(4 MeV)");
-		// ds_xi[i]->plotOn(framexib,Name("xibdata_nowt"),LineColor(kGreen));
-		// ds_xi_wt[i]->plotOn(framexib,Name("xibdata"),LineColor(kBlack));
-		// (*(XIB[i])).plotOn(framexib,Name("xibfitsmooth"),LineColor(kRed),LineStyle(kDashed));
-		(*(XIB_KEYS[i])).plotOn(framexib,Name("xibfitsmooth"),LineColor(kRed),LineStyle(kDashed));
+
+		if(mcRW)
+			ds_xi_wt[i]->plotOn(framexib,Name("xibdata"),LineColor(kBlack));
+		else
+			ds_xi[i]->plotOn(framexib,Name("xibdata_nowt"),LineColor(kBlack));
+
+		(*(XIB_KEYS[i])).plotOn(framexib,Name("xibfitsmooth"),LineColor(kBlue));
 
 		TCanvas *cxib = new TCanvas(Form("JpsiXi%d",run),Form("JpsiXi%d",run));
 		framexib->Draw();
@@ -1584,9 +1647,16 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		xibInt[i] = XIB_KEYS[i]->createIntegral(*myVar,NormSet(*myVar),Range("signal_window"));
 		window_JpsiXi[i] = xibInt[i]->getValV();
 
-		xibCentral[i] = XibNorm_wt[i];
-		xibErr[i]     = sqrt(pow(XibNorm_wt_StatErr[i],2)+pow(XibNorm_wt_SystErr[i],2));
-
+		if(mcRW)
+		{
+			xibCentral[i] = XibNorm_wt[i];
+			xibErr[i]     = sqrt(pow(XibNorm_wt_StatErr[i],2)+pow(XibNorm_wt_SystErr[i],2));
+		}
+		else
+		{
+			xibCentral[i] = XibNorm[i];
+			xibErr[i]     = sqrt(pow(XibNorm_StatErr[i],2)+pow(XibNorm_SystErr[i],2));
+		}
 		cout<<"************************************************"<<endl;
 		cout<<"The UNWEIGHTED Xib normalization inside signal region for Run "<<run
 		    <<" is "<<XibNorm[i]<<" +/- "<<XibNorm_StatErr[i]
@@ -2105,44 +2175,87 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	//	w.factory("R_chic1[0.1,0.0,0.5]"); //R_chic1 = N_corr(Lb -> chic1 Lambda / N_corr(Lb -> Jpsi Lambda)
 
 	//**************** Sigma/Lb Efficiency Ratio*************************
-	w.factory(Form("eff_ratio1[%f,0.,5.]",eff_ratio_wt[0])); //eff(Lb -> Jpsi Lambda)/eff(Lb -> Jpsi Sigma)
-	w.factory(Form("eff_ratio2[%f,0.,5.]",eff_ratio_wt[1]));
+	if(mcRW)
+	{
+		w.factory(Form("eff_ratio1[%f,0.,5.]",eff_ratio[0])); //eff(Lb -> Jpsi Lambda)/eff(Lb -> Jpsi Sigma)
+		w.factory(Form("eff_ratio2[%f,0.,5.]",eff_ratio[1]));
 
-	w.factory(Form("Gaussian::eff_ratio_constraint1(geff_ratio1[%f,0,5],eff_ratio1,%f)",eff_ratio_wt[0],eff_ratio_wt_SystErr[0]));
-	w.factory(Form("Gaussian::eff_ratio_constraint2(geff_ratio2[%f,0,5],eff_ratio2,%f)",eff_ratio_wt[1],eff_ratio_wt_SystErr[1]));
+		w.factory(Form("Gaussian::eff_ratio_constraint1(geff_ratio1[%f,0,5],eff_ratio1,%f)",eff_ratio[0],eff_ratio_SystErr[0]));
+		w.factory(Form("Gaussian::eff_ratio_constraint2(geff_ratio2[%f,0,5],eff_ratio2,%f)",eff_ratio[1],eff_ratio_SystErr[1]));
+	}
+	else
+	{
+		w.factory(Form("eff_ratio1[%f,0.,5.]",eff_ratio_wt[0])); //eff(Lb -> Jpsi Lambda)/eff(Lb -> Jpsi Sigma)
+		w.factory(Form("eff_ratio2[%f,0.,5.]",eff_ratio_wt[1]));
 
+		w.factory(Form("Gaussian::eff_ratio_constraint1(geff_ratio1[%f,0,5],eff_ratio1,%f)",eff_ratio_wt[0],eff_ratio_wt_SystErr[0]));
+		w.factory(Form("Gaussian::eff_ratio_constraint2(geff_ratio2[%f,0,5],eff_ratio2,%f)",eff_ratio_wt[1],eff_ratio_wt_SystErr[1]));
+	}
 	w.var("geff_ratio1")->setConstant();
 	w.var("geff_ratio2")->setConstant();
 	//*******************************************************************
 
 	//**************** 1405/Lb Efficiency Ratio**************************
-	w.factory(Form("eff_ratio_1405_1[%f,0.,5.]",eff_ratio_wt_1405[0])); //eff(Lb -> Jpsi Lambda(1405))/eff(Lb -> Jpsi Lambda)
-	w.factory(Form("eff_ratio_1405_2[%f,0.,5.]",eff_ratio_wt_1405[1]));
+	if(mcRW)
+	{
+		w.factory(Form("eff_ratio_1405_1[%f,0.,5.]",eff_ratio_wt_1405[0])); //eff(Lb -> Jpsi Lambda(1405))/eff(Lb -> Jpsi Lambda)
+		w.factory(Form("eff_ratio_1405_2[%f,0.,5.]",eff_ratio_wt_1405[1]));
 
-	w.factory(Form("Gaussian::eff_ratio_1405_constraint1(geff_ratio_1405_1[%f,0,5],eff_ratio_1405_1,%f)",eff_ratio_wt_1405[0],eff_ratio_Err_1405_wt[0]));
-	w.factory(Form("Gaussian::eff_ratio_1405_constraint2(geff_ratio_1405_2[%f,0,5],eff_ratio_1405_2,%f)",eff_ratio_wt_1405[1],eff_ratio_Err_1405_wt[1]));
+		w.factory(Form("Gaussian::eff_ratio_1405_constraint1(geff_ratio_1405_1[%f,0,5],eff_ratio_1405_1,%f)",eff_ratio_wt_1405[0],eff_ratio_Err_1405_wt[0]));
+		w.factory(Form("Gaussian::eff_ratio_1405_constraint2(geff_ratio_1405_2[%f,0,5],eff_ratio_1405_2,%f)",eff_ratio_wt_1405[1],eff_ratio_Err_1405_wt[1]));
+	}
+	else
+	{
+		w.factory(Form("eff_ratio_1405_1[%f,0.,5.]",eff_ratio_1405[0])); //eff(Lb -> Jpsi Lambda(1405))/eff(Lb -> Jpsi Lambda)
+		w.factory(Form("eff_ratio_1405_2[%f,0.,5.]",eff_ratio_1405[1]));
+
+		w.factory(Form("Gaussian::eff_ratio_1405_constraint1(geff_ratio_1405_1[%f,0,5],eff_ratio_1405_1,%f)",eff_ratio_1405[0],eff_ratio_Err_1405[0]));
+		w.factory(Form("Gaussian::eff_ratio_1405_constraint2(geff_ratio_1405_2[%f,0,5],eff_ratio_1405_2,%f)",eff_ratio_1405[1],eff_ratio_Err_1405[1]));
+	}
 
 	w.var("geff_ratio_1405_1")->setConstant();
 	w.var("geff_ratio_1405_2")->setConstant();
 	//*******************************************************************
 
 	//**************** 1520/Lb Efficiency Ratio**************************
-	w.factory(Form("eff_ratio_1520_1[%f,0.,5.]",eff_ratio_wt_1520[0])); //eff(Lb -> Jpsi Lambda(1520))/eff(Lb -> Jpsi Lambda)
-	w.factory(Form("eff_ratio_1520_2[%f,0.,5.]",eff_ratio_wt_1520[1]));
+	if(mcRW)
+	{
+		w.factory(Form("eff_ratio_1520_1[%f,0.,5.]",eff_ratio_wt_1520[0])); //eff(Lb -> Jpsi Lambda(1520))/eff(Lb -> Jpsi Lambda)
+		w.factory(Form("eff_ratio_1520_2[%f,0.,5.]",eff_ratio_wt_1520[1]));
 
-	w.factory(Form("Gaussian::eff_ratio_1520_constraint1(geff_ratio_1520_1[%f,0,5],eff_ratio_1520_1,%f)",eff_ratio_wt_1520[0],eff_ratio_Err_1520_wt[0]));
-	w.factory(Form("Gaussian::eff_ratio_1520_constraint2(geff_ratio_1520_2[%f,0,5],eff_ratio_1520_2,%f)",eff_ratio_wt_1520[1],eff_ratio_Err_1520_wt[1]));
+		w.factory(Form("Gaussian::eff_ratio_1520_constraint1(geff_ratio_1520_1[%f,0,5],eff_ratio_1520_1,%f)",eff_ratio_wt_1520[0],eff_ratio_Err_1520_wt[0]));
+		w.factory(Form("Gaussian::eff_ratio_1520_constraint2(geff_ratio_1520_2[%f,0,5],eff_ratio_1520_2,%f)",eff_ratio_wt_1520[1],eff_ratio_Err_1520_wt[1]));
+	}
+	else
+	{
+		w.factory(Form("eff_ratio_1520_1[%f,0.,5.]",eff_ratio_1520[0])); //eff(Lb -> Jpsi Lambda(1520))/eff(Lb -> Jpsi Lambda)
+		w.factory(Form("eff_ratio_1520_2[%f,0.,5.]",eff_ratio_1520[1]));
+
+		w.factory(Form("Gaussian::eff_ratio_1520_constraint1(geff_ratio_1520_1[%f,0,5],eff_ratio_1520_1,%f)",eff_ratio_1520[0],eff_ratio_Err_1520[0]));
+		w.factory(Form("Gaussian::eff_ratio_1520_constraint2(geff_ratio_1520_2[%f,0,5],eff_ratio_1520_2,%f)",eff_ratio_1520[1],eff_ratio_Err_1520[1]));
+	}
 
 	w.var("geff_ratio_1520_1")->setConstant();
 	w.var("geff_ratio_1520_2")->setConstant();
 	//*******************************************************************
 
 	//**************** 1600/Lb Efficiency Ratio**************************
-	w.factory(Form("eff_ratio_1600_1[%f,0.,5.]",eff_ratio_wt_1600[0])); //eff(Lb -> Jpsi Lambda(1600))/eff(Lb -> Jpsi Lambda)
-	w.factory(Form("eff_ratio_1600_2[%f,0.,5.]",eff_ratio_wt_1600[1]));
+	if(mcRW)
+	{
+		w.factory(Form("eff_ratio_1600_1[%f,0.,5.]",eff_ratio_wt_1600[0])); //eff(Lb -> Jpsi Lambda(1600))/eff(Lb -> Jpsi Lambda)
+		w.factory(Form("eff_ratio_1600_2[%f,0.,5.]",eff_ratio_wt_1600[1]));
 
-	w.factory(Form("Gaussian::eff_ratio_1600_constraint1(geff_ratio_1600_1[%f,0,5],eff_ratio_1600_1,%f)",eff_ratio_wt_1600[0],eff_ratio_Err_1600_wt[0]));
-	w.factory(Form("Gaussian::eff_ratio_1600_constraint2(geff_ratio_1600_2[%f,0,5],eff_ratio_1600_2,%f)",eff_ratio_wt_1600[1],eff_ratio_Err_1600_wt[1]));
+		w.factory(Form("Gaussian::eff_ratio_1600_constraint1(geff_ratio_1600_1[%f,0,5],eff_ratio_1600_1,%f)",eff_ratio_wt_1600[0],eff_ratio_Err_1600_wt[0]));
+		w.factory(Form("Gaussian::eff_ratio_1600_constraint2(geff_ratio_1600_2[%f,0,5],eff_ratio_1600_2,%f)",eff_ratio_wt_1600[1],eff_ratio_Err_1600_wt[1]));
+	}
+	else
+	{
+		w.factory(Form("eff_ratio_1600_1[%f,0.,5.]",eff_ratio_1600[0])); //eff(Lb -> Jpsi Lambda(1600))/eff(Lb -> Jpsi Lambda)
+		w.factory(Form("eff_ratio_1600_2[%f,0.,5.]",eff_ratio_1600[1]));
+
+		w.factory(Form("Gaussian::eff_ratio_1600_constraint1(geff_ratio_1600_1[%f,0,5],eff_ratio_1600_1,%f)",eff_ratio_1600[0],eff_ratio_Err_1600[0]));
+		w.factory(Form("Gaussian::eff_ratio_1600_constraint2(geff_ratio_1600_2[%f,0,5],eff_ratio_1600_2,%f)",eff_ratio_1600[1],eff_ratio_Err_1600[1]));
+	}
 
 	w.var("geff_ratio_1600_1")->setConstant();
 	w.var("geff_ratio_1600_2")->setConstant();
@@ -3477,7 +3590,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 	if(!inputFlag)
 	{
-	  w1->writeToFile(Form("Inputs_%d_%d_%.2f_%dMeV.root",myLow,myHigh,bdtCut,binwidth),true);
+		w1->writeToFile(Form("Inputs_%d_%d_%.2f_%dMeV.root",myLow,myHigh,bdtCut,binwidth),true);
 	}
 	cout << "workspace written to file " << fileName << endl;
 
