@@ -6,7 +6,7 @@ using namespace RooStats;
 
 #define Open TFile::Open
 
-void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgType, Int_t sigType, Float_t bdtCut, const char* fileName, const char* suffix = "")
+void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgType, Int_t sigType, Float_t bdtCut, const char* fileName, const char* suffix)
 //myLow and myHigh define the fit range
 //rwType 0 is no RW, 1 is MV RW, 2 is BONN RW
 //bkgType = 0 for Exponential. 1 for 2nd order Chebychev. 2 for 3rd order Chebychev
@@ -269,7 +269,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	// ************************Workspace for input data**************************
 	Bool_t inputFlag = false;
 
-	if(!(gSystem->AccessPathName(Form("Inputs_%d_%d_%.2f.root",myLow,myHigh,bdtCut))))
+	if(!(gSystem->AccessPathName(Form("Inputs_%d_%d_%.2f_%dMeV.root",myLow,myHigh,bdtCut,binwidth))))
 	{
 		inputFlag = true;
 	}
@@ -284,7 +284,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	else
 	{
 		cout<<"Input file exists! Hurray!"<<endl;
-		TFile *inputFile = Open(Form("Inputs_%d_%d_%.2f.root",myLow,myHigh,bdtCut));
+		TFile *inputFile = Open(Form("Inputs_%d_%d_%.2f_%dMeV.root",myLow,myHigh,bdtCut,binwidth));
 		w1 = (RooWorkspace*)inputFile->Get("w1");
 		cout<<"Printing contents of w1 from input file"<<endl;
 		w1->Print("v");
@@ -1657,13 +1657,13 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 		if(jpsiksflag)
 		{
 			RooPlot *framejpsiks = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
-			framejpsiks->SetTitle("#B^{0} #rightarrow J/#psi K_S^0");
+			//			framejpsiks->SetTitle("#B^{0} #rightarrow J/#psi K_S^0");
 			framejpsiks->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
 			framejpsiks->GetYaxis()->SetTitle("Candidates/(4 MeV)");
-			// ds_jpsiks[i]->plotOn(framejpsiks,Name("xibdata_nowt"),LineColor(kGreen));
+			ds_jpsiks[i]->plotOn(framejpsiks,Name("jpsiksdata"),LineColor(kBlack));
 			// ds_jpsiks_wt[i]->plotOn(framejpsiks,Name("xibdata"),LineColor(kBlack));
 			// (*(JPSIKS[i])).plotOn(framejpsiks,Name("xibfitsmooth"),LineColor(kRed),LineStyle(kDashed));
-			(*(JPSIKS_KEYS[i])).plotOn(framejpsiks,Name("jpsiksfitsmooth"),LineColor(kRed),LineStyle(kDashed));
+			(*(JPSIKS_KEYS[i])).plotOn(framejpsiks,Name("jpsiksfit"),LineColor(kBlue));
 
 			TCanvas *cjpsiks = new TCanvas(Form("JpsiKs%d",run),Form("JpsiKs%d",run));
 			framejpsiks->Draw();
@@ -3360,26 +3360,26 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	{
 		if(isBinned)
 		{
-			c_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_%s.pdf",myLow,myHigh,binwidth,suffix));
-			c_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_%s.pdf",myLow,myHigh,binwidth,suffix));
+			c_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_%s.pdf",myLow,myHigh,binwidth,suffix));
+			c_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-			c_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_HypatiaSig_ExpBkg_%d_%d_unbinned_%s.pdf",myLow,myHigh,suffix));
-			c_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_HypatiaSig_ExpBkg_%d_%d_unbinned_%s.pdf",myLow,myHigh,suffix));
+			c_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned_%s.pdf",myLow,myHigh,suffix));
+			c_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned_%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 	if(sigType == 1 && bkgType == 0)
 	{
 		if(isBinned)
 		{
-			c_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_CBSig_ExpBkg_%d_%d_%dMeVBins_%s.pdf",myLow,myHigh,binwidth,suffix));
-			c_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_CBSig_ExpBkg_%d_%d_%dMeVBins_%s.pdf",myLow,myHigh,binwidth,suffix));
+			c_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins_%s.pdf",myLow,myHigh,binwidth,suffix));
+			c_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins_%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-			c_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_CBSig_ExpBkg_%d_%d_unbinned_%s.pdf",myLow,myHigh,suffix));
-			c_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_CBSig_ExpBkg_%d_%d_unbinned_%s.pdf",myLow,myHigh,suffix));
+			c_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_ExpBkg_%d_%d_unbinned_%s.pdf",myLow,myHigh,suffix));
+			c_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_ExpBkg_%d_%d_unbinned_%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 
@@ -3387,26 +3387,80 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 	{
 		if(isBinned)
 		{
-			c1_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom_%s.pdf",myLow,myHigh,binwidth,suffix));
-			c1_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom_%s.pdf",myLow,myHigh,binwidth,suffix));
+			c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom_%s.pdf",myLow,myHigh,binwidth,suffix));
+			c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom_%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-			c1_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom_%s.pdf",myLow,myHigh,suffix));
-			c1_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom_%s.pdf",myLow,myHigh,suffix));
+			c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom_%s.pdf",myLow,myHigh,suffix));
+			c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom_%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 	if(sigType == 1 && bkgType == 0)
 	{
 		if(isBinned)
 		{
-			c1_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom_%s.pdf",myLow,myHigh,binwidth,suffix));
-			c1_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom_%s.pdf",myLow,myHigh,binwidth,suffix));
+			c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom_%s.pdf",myLow,myHigh,binwidth,suffix));
+			c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom_%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-			c1_run1->SaveAs(Form("../plots/data/JpsiLambda/run1/Fit_CBSig_ExpBkg_%d_%d_unbinned_zoom_%s.pdf",myLow,myHigh,suffix));
-			c1_run2->SaveAs(Form("../plots/data/JpsiLambda/run2/Fit_CBSig_ExpBkg_%d_%d_unbinned_zoom_%s.pdf",myLow,myHigh,suffix));
+			c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_ExpBkg_%d_%d_unbinned_zoom_%s.pdf",myLow,myHigh,suffix));
+			c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_ExpBkg_%d_%d_unbinned_zoom_%s.pdf",myLow,myHigh,suffix));
+		}
+	}
+
+	if(sigType == 0 && bkgType == 2)
+	{
+		if(isBinned)
+		{
+			c_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_%s.pdf",myLow,myHigh,binwidth,suffix));
+			c_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_%s.pdf",myLow,myHigh,binwidth,suffix));
+		}
+		else
+		{
+			c_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_%s.pdf",myLow,myHigh,suffix));
+			c_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_%s.pdf",myLow,myHigh,suffix));
+		}
+	}
+	if(sigType == 1 && bkgType == 2)
+	{
+		if(isBinned)
+		{
+			c_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_%s.pdf",myLow,myHigh,binwidth,suffix));
+			c_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_%s.pdf",myLow,myHigh,binwidth,suffix));
+		}
+		else
+		{
+			c_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned_%s.pdf",myLow,myHigh,suffix));
+			c_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned_%s.pdf",myLow,myHigh,suffix));
+		}
+	}
+
+	if(sigType == 0 && bkgType == 2)
+	{
+		if(isBinned)
+		{
+			c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom_%s.pdf",myLow,myHigh,binwidth,suffix));
+			c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom_%s.pdf",myLow,myHigh,binwidth,suffix));
+		}
+		else
+		{
+			c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom_%s.pdf",myLow,myHigh,suffix));
+			c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom_%s.pdf",myLow,myHigh,suffix));
+		}
+	}
+	if(sigType == 1 && bkgType == 2)
+	{
+		if(isBinned)
+		{
+			c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom_%s.pdf",myLow,myHigh,binwidth,suffix));
+			c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom_%s.pdf",myLow,myHigh,binwidth,suffix));
+		}
+		else
+		{
+			c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom_%s.pdf",myLow,myHigh,suffix));
+			c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom_%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 
@@ -3423,7 +3477,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype, Int_t bkgT
 
 	if(!inputFlag)
 	{
-		w1->writeToFile(Form("Inputs_%d_%d_%.2f.root",myLow,myHigh,bdtCut),true);
+	  w1->writeToFile(Form("Inputs_%d_%d_%.2f_%dMeV.root",myLow,myHigh,bdtCut,binwidth),true);
 	}
 	cout << "workspace written to file " << fileName << endl;
 
