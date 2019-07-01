@@ -1772,7 +1772,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		w.import(*(JPSIKS_KEYS[i]));
 		if(!inputFlag)
 		{
-			w1->import(*(ds_jpsiks[i]))
+			w1->import(*(ds_jpsiks[i]));
 			w1->import(*(JPSIKS_KEYS[i]));
 		}
 	}
