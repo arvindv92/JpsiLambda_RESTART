@@ -6,6 +6,14 @@ from ROOT import TFile, gDirectory
 def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
             finalBDTConf_Zero=1, bdtCut_nonZero=-1.0, bdtCut_Zero=-1.0,
             shift_trEff=0.0):
+    # (tau Xib-/tau Xib0)
+    tauXibmin_tauXib0 = 1.083
+    err_tauXibmin_tauXib0 = 0.036
+
+    scale_factor = 1.0 + (1.0 / tauXibmin_tauXib0)
+    err_scale_factor = scale_factor * (err_tauXibmin_tauXib0 / tauXibmin_tauXib0)
+
+    relErr_scale_factor = (err_scale_factor / scale_factor)
 
     # Get generated yield of Xib -> J/psi Xi MC ###############
     genLog = open("../logs/mc/JpsiXi/run" + str(run) + "/gen_log.txt")
@@ -130,11 +138,11 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
 
     # Unweighted Norm
     if xibEff_JpsiLambda > 0:
-        xibNorm = 2 * xibYield * xibEff_JpsiLambda / xibEff  # NB: Accounting for Xib0 right here
-        xibNormErr_stat = 2 * xibYieldErr * xibEff_JpsiLambda / xibEff
+        xibNorm = scale_factor * xibYield * xibEff_JpsiLambda / xibEff  # NB: Accounting for Xib0 right here
+        xibNormErr_stat = scale_factor * xibYieldErr * xibEff_JpsiLambda / xibEff
         xibNormErr_syst = xibNorm * math.sqrt(pow(trackingErr, 2) + pow(xibYield_relSyst, 2)
                                               + pow(relErr_xibEff_JpsiLambda, 2) + pow(relErr_xibEff, 2)
-                                              + pow(xiVtxUnc, 2))
+                                              + pow(xiVtxUnc, 2) + pow(relErr_scale_factor, 2))
         xibNormErr = math.sqrt(pow(xibNormErr_stat, 2) + pow(xibNormErr_syst, 2))
     else:
         xibNorm = 0.0
@@ -144,11 +152,11 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
 
     # Weighted Norm
     if xibEff_JpsiLambda_wt > 0:
-        xibNorm_wt = 2 * xibYield * xibEff_JpsiLambda_wt / xibEff_wt
-        xibNormErr_wt_stat = 2 * xibYieldErr * xibEff_JpsiLambda_wt / xibEff_wt
+        xibNorm_wt = scale_factor * xibYield * xibEff_JpsiLambda_wt / xibEff_wt
+        xibNormErr_wt_stat = scale_factor * xibYieldErr * xibEff_JpsiLambda_wt / xibEff_wt
         xibNormErr_wt_syst = xibNorm_wt * math.sqrt(pow(trackingErr, 2) + pow(xibYield_relSyst, 2)
                                                     + pow(relErr_xibEff_JpsiLambda_wt, 2) + pow(relErr_xibEff_wt, 2)
-                                                    + pow(xiVtxUnc, 2))
+                                                    + pow(xiVtxUnc, 2) + pow(relErr_scale_factor, 2))
         xibNormErr_wt = math.sqrt(pow(xibNormErr_wt_stat, 2) + pow(xibNormErr_wt_syst, 2))
     else:
         xibNorm_wt = 0.0
@@ -159,13 +167,13 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
     print 'UNWEIGTED Norm = ' + str(xibNorm) + '+/-' + str(xibNormErr_stat) + '+/-' + str(xibNormErr_syst)
     print 'WEIGHTED Norm = ' + str(xibNorm_wt) + '+/-' + str(xibNormErr_wt_stat) + '+/-' + str(xibNormErr_wt_syst)
     print 'BREAKUP OF SYSTEMATICS:'
-    print 'Overall Syst = ' + str((xibNormErr_wt_syst / xibNorm_wt) * 100) + '%'
-    print '*Tracking    = ' + str(trackingErr * 100) + '%'
-    print '*Xi Vtx      = ' + str(xiVtxUnc * 100) + '%'
-    print '*Xib Yield   = ' + str(xibYield_relSyst * 100) + '%'
-    print '*Xib->JpsiL eff = ' + str(relErr_xibEff_JpsiLambda_wt * 100) + '%'
+    print 'Overall Syst     = ' + str((xibNormErr_wt_syst / xibNorm_wt) * 100) + '%'
+    print '*Tracking        = ' + str(trackingErr * 100) + '%'
+    print '*Xi Vtx          = ' + str(xiVtxUnc * 100) + '%'
+    print '*Xib Yield       = ' + str(xibYield_relSyst * 100) + '%'
+    print '*Xib->JpsiL eff  = ' + str(relErr_xibEff_JpsiLambda_wt * 100) + '%'
     print '*Xib->JpsiXi eff = ' + str(relErr_xibEff_wt * 100) + '%'
-
+    print '*tauXib-/tauXib0 = ' + str(relErr_scale_factor * 100) + '%'
     # Write results out to log file
     xibNormLog = open("../logs/mc/JpsiXi/run" + str(run) + "/xibNorm_log.txt",
                       "w")
