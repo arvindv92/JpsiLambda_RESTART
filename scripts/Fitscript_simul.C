@@ -2163,15 +2163,15 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	//	w.factory("SUM:Bkg_Run1(nExpo1_Run1*Expo1_Run1,nExpo2_Run1*Expo2_Run1)");
 	//	w.factory("SUM:Bkg_Run2(nExpo1_Run2*Expo1_Run2,nExpo2_Run2*Expo2_Run2)");
 
-	w.factory("R[0,0,10000]"); // R*10^5 is the parameter of interest  This is shared b/w Run1 and Run2
+	w.factory("R[0,0,5000]"); // R*10^5 is the parameter of interest  This is shared b/w Run1 and Run2
 
 	// NB: R is allowed to fluctuate negative in the fit. I don't completely understand why.
 	// R*10^5 =  [N(Jpsi Sigma)/N(Jpsi Lambda)] * [eff(Jpsi Lambda)/eff(Jpsi Sigma)]
 	// w.var("R")->setError(0.1);
 
 	w.factory("R_1405[0.1,0.0,1.0]"); //R_1405 = N_corr(Lb -> Jpsi Lambda(1405)) / N_corr(Lb -> Jpsi Lambda)
-	w.factory("R_1520[0.2,0.0,1.0]"); //R_1520 = N_corr(Lb -> Jpsi Lambda(1520)) / N_corr(Lb -> Jpsi Lambda)
-	w.factory("R_1600[0.2,0.0,1.0]"); //R_1600 = N_corr(Lb -> Jpsi Lambda(1600)) / N_corr(Lb -> Jpsi Lambda)
+	w.factory("R_1520[0.01,0.0,1.0]"); //R_1520 = N_corr(Lb -> Jpsi Lambda(1520)) / N_corr(Lb -> Jpsi Lambda)
+	w.factory("R_1600[0.1,0.0,1.0]"); //R_1600 = N_corr(Lb -> Jpsi Lambda(1600)) / N_corr(Lb -> Jpsi Lambda)
 	//	w.factory("R_chic1[0.1,0.0,0.5]"); //R_chic1 = N_corr(Lb -> chic1 Lambda / N_corr(Lb -> Jpsi Lambda)
 
 	//**************** Sigma/Lb Efficiency Ratio*************************
