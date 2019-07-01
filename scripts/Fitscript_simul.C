@@ -1886,18 +1886,18 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	else if(bkgType == 2)
 	{
 		cout<<"*****UING 3rd ORDER CHEBYCHEV BKG SHAPE*****"<<endl;
-		// w.factory("Chebychev::Bkg_Run1(Lb_DTF_M_JpsiLConstr, {c0_Run1[0.0,-2.0,2.0], c1_Run1[0.1,-1.0,1.0], c2_Run1[0.0,-1.0,1.0]})");
-		// w.factory("Chebychev::Bkg_Run2(Lb_DTF_M_JpsiLConstr, {c0_Run2[0.0,-2.0,2.0], c1_Run2[0.1,-1.0,1.0], c2_Run2[0.0,-1.0,1.0]})");
+		w.factory("Chebychev::Bkg_Run1(Lb_DTF_M_JpsiLConstr, {c0_Run1[0.0,-2.0,2.0], c1_Run1[0.1,-1.0,1.0], c2_Run1[0.0,-1.0,1.0]})");
+		w.factory("Chebychev::Bkg_Run2(Lb_DTF_M_JpsiLConstr, {c0_Run2[0.0,-2.0,2.0], c1_Run2[0.1,-1.0,1.0], c2_Run2[0.0,-1.0,1.0]})");
 
-		w.factory("Chebychev::Bkg_Run1(Lb_DTF_M_JpsiLConstr, {c0_Run1[-1.55], c1_Run1[0.73], c2_Run1[-0.217]})");
-		w.factory("Chebychev::Bkg_Run2(Lb_DTF_M_JpsiLConstr, {c0_Run2[-1.53], c1_Run2[0.72], c2_Run2[-0.205]})");
+		// w.factory("Chebychev::Bkg_Run1(Lb_DTF_M_JpsiLConstr, {c0_Run1[-1.55], c1_Run1[0.73], c2_Run1[-0.217]})");
+		// w.factory("Chebychev::Bkg_Run2(Lb_DTF_M_JpsiLConstr, {c0_Run2[-1.53], c1_Run2[0.72], c2_Run2[-0.205]})");
 
-		// w.var("c0_Run1")->setError(0.05);
-		// w.var("c0_Run2")->setError(0.05);
-		// w.var("c1_Run1")->setError(0.05);
-		// w.var("c1_Run2")->setError(0.05);
-		// w.var("c2_Run1")->setError(0.05);
-		// w.var("c2_Run2")->setError(0.05);
+		w.var("c0_Run1")->setError(0.05);
+		w.var("c0_Run2")->setError(0.05);
+		w.var("c1_Run1")->setError(0.05);
+		w.var("c1_Run2")->setError(0.05);
+		w.var("c2_Run1")->setError(0.05);
+		w.var("c2_Run2")->setError(0.05);
 	}
 	else if(bkgType == 3)
 	{
