@@ -1751,7 +1751,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 			TTree *combTree = TTree::MergeTrees(list);
 			combTree->SetName("combTree");
 
-			ds_jpsiks[i] = new RooDataSet(Form("ds_jpsiks_Run%d"),Form("ds_jpsiks_Run%d"),combTree,RooArgSet(*myVar));
+			ds_jpsiks[i] = new RooDataSet(Form("ds_jpsiks_Run%d",run),Form("ds_jpsiks_Run%d",run),combTree,RooArgSet(*myVar));
 			ds_jpsiks[i]->Print();
 
 			JPSIKS_KEYS[i] = new RooKeysPdf(Form("JPSIKS_RUN%d",run),Form("JPSIKS_RUN%d",run),*myVar,*(ds_jpsiks[i]),RooKeysPdf::NoMirror);
