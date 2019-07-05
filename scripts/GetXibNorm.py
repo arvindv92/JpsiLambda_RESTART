@@ -7,7 +7,7 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
             finalBDTConf_Zero=1, bdtCut_nonZero=-1.0, bdtCut_Zero=-1.0,
             shift_trEff=0.0):
     # (tau Xib-/tau Xib0)
-    tauXibmin_tauXib0 = 1.083
+    tauXibmin_tauXib0 = 1.087 # despite the name of the variable, this is (tau(Xib-)*B(Xi- -> Lambda pi-))/(tau(Xib0)*B(Xi0 -> Lambda pi0)
     err_tauXibmin_tauXib0 = 0.036
 
     scale_factor = 1.0 + (1.0 / tauXibmin_tauXib0)
