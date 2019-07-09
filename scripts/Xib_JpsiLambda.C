@@ -9,23 +9,29 @@ using namespace std;
 #define Open TFile::Open
 void Xib_JpsiLambda()
 {
-	Float_t BF_Ratio_Run1 = 0.0;
+	Float_t BF_Ratio_Comb     = 0.0;
+	Float_t Err_BF_Ratio_Comb = 0.0;
+
+	Float_t BF_Ratio_Comb_wt     = 0.0;
+	Float_t Err_BF_Ratio_Comb_wt = 0.0;
+
+	Float_t BF_Ratio_Run1     = 0.0;
 	Float_t Err_BF_Ratio_Run1 = 0.0;
 
-	Float_t BF_Ratio_Run2 = 0.0;
+	Float_t BF_Ratio_Run2     = 0.0;
 	Float_t Err_BF_Ratio_Run2 = 0.0;
 
-	Float_t BF_Ratio_Run1_wt = 0.0;
+	Float_t BF_Ratio_Run1_wt     = 0.0;
 	Float_t Err_BF_Ratio_Run1_wt = 0.0;
 
-	Float_t BF_Ratio_Run2_wt = 0.0;
+	Float_t BF_Ratio_Run2_wt     = 0.0;
 	Float_t Err_BF_Ratio_Run2_wt = 0.0;
 
 	Float_t N_Xib0_JpsiLambda_Run1 = 6.75;
 	Float_t N_Xib0_JpsiLambda_Run2 = 14.36;
 
-	Float_t Err_N_Xib0_JpsiLambda_Run1 = 2.96;
-	Float_t Err_N_Xib0_JpsiLambda_Run2 = 4.58;
+	Float_t Err_N_Xib0_JpsiLambda_Run1 = 2.96;//44% error
+	Float_t Err_N_Xib0_JpsiLambda_Run2 = 4.58;//32% error
 
 	Float_t Eff_Xib0_JpsiLambda_Run1 = 0.0;
 	Float_t Eff_Xib0_JpsiLambda_Run2 = 0.0;
@@ -57,17 +63,39 @@ void Xib_JpsiLambda()
 	Float_t Err_RecEff_Xib0_JpsiLambda_Run1_wt = 0.0;
 	Float_t Err_RecEff_Xib0_JpsiLambda_Run2_wt = 0.0;
 
-	Float_t Eff_Xibm_JpsiLambda_Run1 = 0.0131/100;
-	Float_t Eff_Xibm_JpsiLambda_Run2 = 0.0150/100;
+	Float_t RecEff_Xibm_JpsiLambda_Run1 = 0.0131/100;
+	Float_t RecEff_Xibm_JpsiLambda_Run2 = 0.0150/100;
 
-	Float_t Err_Eff_Xibm_JpsiLambda_Run1 = 0.0006/100;
-	Float_t Err_Eff_Xibm_JpsiLambda_Run2 = 0.0007/100;
+	Float_t Err_RecEff_Xibm_JpsiLambda_Run1 = 0.0006/100;
+	Float_t Err_RecEff_Xibm_JpsiLambda_Run2 = 0.0007/100;
 
-	Float_t Eff_Xibm_JpsiLambda_Run1_wt = 0.0190/100;
-	Float_t Eff_Xibm_JpsiLambda_Run2_wt = 0.0170/100;
+	Float_t RecEff_Xibm_JpsiLambda_Run1_wt = 0.0190/100;
+	Float_t RecEff_Xibm_JpsiLambda_Run2_wt = 0.0170/100;
 
-	Float_t Err_Eff_Xibm_JpsiLambda_Run1_wt = 0.0009/100;
-	Float_t Err_Eff_Xibm_JpsiLambda_Run2_wt = 0.0007/100;
+	Float_t Err_RecEff_Xibm_JpsiLambda_Run1_wt = 0.0009/100;
+	Float_t Err_RecEff_Xibm_JpsiLambda_Run2_wt = 0.0007/100;
+
+	Float_t GenEff_Xibm_JpsiLambda_Run1 = 0.17267;
+	Float_t GenEff_Xibm_JpsiLambda_Run2 = 0.18019;
+
+	Float_t Err_GenEff_Xibm_JpsiLambda_Run1 = 0.00056;
+	Float_t Err_GenEff_Xibm_JpsiLambda_Run2 = 0.00043;
+
+	Float_t Eff_Xibm_JpsiLambda_Run1 = GenEff_Xibm_JpsiLambda_Run1 * RecEff_Xibm_JpsiLambda_Run1;
+	Float_t Eff_Xibm_JpsiLambda_Run2 = GenEff_Xibm_JpsiLambda_Run2 * RecEff_Xibm_JpsiLambda_Run2;
+
+	Float_t Err_Eff_Xibm_JpsiLambda_Run1 = Eff_Xibm_JpsiLambda_Run1*sqrt(pow(Err_GenEff_Xibm_JpsiLambda_Run1/GenEff_Xibm_JpsiLambda_Run1,2)
+	                                                                     + pow(Err_RecEff_Xibm_JpsiLambda_Run1/RecEff_Xibm_JpsiLambda_Run1,2));
+	Float_t Err_Eff_Xibm_JpsiLambda_Run2 = Eff_Xibm_JpsiLambda_Run2*sqrt(pow(Err_GenEff_Xibm_JpsiLambda_Run2/GenEff_Xibm_JpsiLambda_Run2,2)
+	                                                                     + pow(Err_RecEff_Xibm_JpsiLambda_Run2/RecEff_Xibm_JpsiLambda_Run2,2));
+
+	Float_t Eff_Xibm_JpsiLambda_Run1_wt = GenEff_Xibm_JpsiLambda_Run1 * RecEff_Xibm_JpsiLambda_Run1_wt;
+	Float_t Eff_Xibm_JpsiLambda_Run2_wt = GenEff_Xibm_JpsiLambda_Run2 * RecEff_Xibm_JpsiLambda_Run2_wt;
+
+	Float_t Err_Eff_Xibm_JpsiLambda_Run1_wt = Eff_Xibm_JpsiLambda_Run1_wt*sqrt(pow(Err_GenEff_Xibm_JpsiLambda_Run1/GenEff_Xibm_JpsiLambda_Run1,2)
+	                                                                           + pow(Err_RecEff_Xibm_JpsiLambda_Run1_wt/RecEff_Xibm_JpsiLambda_Run1_wt,2));
+	Float_t Err_Eff_Xibm_JpsiLambda_Run2_wt = Eff_Xibm_JpsiLambda_Run2_wt*sqrt(pow(Err_GenEff_Xibm_JpsiLambda_Run2/GenEff_Xibm_JpsiLambda_Run2,2)
+	                                                                           + pow(Err_RecEff_Xibm_JpsiLambda_Run2_wt/RecEff_Xibm_JpsiLambda_Run2_wt,2));
 
 	Float_t B_Xi0_LambdaPi0 = 99.524/100;
 	Float_t Err_B_Xi0_LambdaPi0 = 0.012/100;
@@ -109,10 +137,10 @@ void Xib_JpsiLambda()
 	TH1F *wt_Run1_nonZero = (TH1F*)gDirectory->Get("wt_Run1_nonZero");
 	TH1F *wt_Run1_Zero = (TH1F*)gDirectory->Get("wt_Run1_Zero");
 
-	fstream genFile_Run1;
-	genFile_Run1.open("../logs/mc/JpsiLambda/Xib0/run1/gen_log.txt");
+	fstream genFile_Xib0_Run1;
+	genFile_Xib0_Run1.open("../logs/mc/JpsiLambda/Xib0/run1/gen_log.txt");
 
-	genFile_Run1>>nGen_Run1; //Get number of generated events
+	genFile_Xib0_Run1>>nGen_Run1; //Get number of generated events
 
 	TFile *genWtsFile_Run1 = nullptr;
 	genWtsFile_Run1 = Open("../rootFiles/mcFiles/JpsiLambda/Xib0/run1/RW/gbWeights_gen_new.root");
