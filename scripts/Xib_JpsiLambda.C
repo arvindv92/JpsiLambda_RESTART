@@ -244,4 +244,15 @@ void Xib_JpsiLambda()
 	cout<<"UNWEIGHTED RATIO = "<<BF_Ratio_Run2<<" +/-	"<<Err_BF_Ratio_Run2<<endl;
 	cout<<"WEIGHTED RATIO = "  <<BF_Ratio_Run2_wt<<" +/-	"<<Err_BF_Ratio_Run2_wt<<endl;
 
+	//Combined Result
+	Err_BF_Ratio_Comb    = (Err_BF_Ratio_Run1*Err_BF_Ratio_Run2)/sqrt(pow(Err_BF_Ratio_Run1,2)+pow(Err_BF_Ratio_Run2,2));
+	Err_BF_Ratio_Comb_wt = (Err_BF_Ratio_Run1_wt*Err_BF_Ratio_Run2_wt)/sqrt(pow(Err_BF_Ratio_Run1_wt,2)+pow(Err_BF_Ratio_Run2_wt,2));
+
+	BF_Ratio_Comb = ((BF_Ratio_Run1/pow(Err_BF_Ratio_Run1,2)) + (BF_Ratio_Run2/pow(Err_BF_Ratio_Run2,2))) * pow(Err_BF_Ratio_Comb,2);
+	BF_Ratio_Comb_wt = ((BF_Ratio_Run1_wt/pow(Err_BF_Ratio_Run1_wt,2)) + (BF_Ratio_Run2_wt/pow(Err_BF_Ratio_Run2_wt,2))) * pow(Err_BF_Ratio_Comb_wt,2);
+
+	cout<<"******Combined Result************"<<endl;
+	cout<<"UNWEIGHTED RATIO = "<<BF_Ratio_Comb<<" +/-	"<<Err_BF_Ratio_Comb<<endl;
+	cout<<"WEIGHTED RATIO = "  <<BF_Ratio_Comb_wt<<" +/-	"<<Err_BF_Ratio_Comb_wt<<endl;
+
 }
