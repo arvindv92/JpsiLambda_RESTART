@@ -89,6 +89,9 @@ void Xib_JpsiLambda()
 	Float_t Err_Eff_Xibm_JpsiXim_Run2 = Eff_Xibm_JpsiXim_Run2*sqrt(pow(Err_GenEff_Xibm_JpsiXim_Run2/GenEff_Xibm_JpsiXim_Run2,2)
 	                                                               + pow(Err_RecEff_Xibm_JpsiXim_Run2/RecEff_Xibm_JpsiXim_Run2,2));
 
+	cout<<"Run 1 Unweighted Xib- -> Jpsi Xi- Eff = "<<Eff_Xibm_JpsiXim_Run1*100<<"% +/- "<<Err_Eff_Xibm_JpsiXim_Run1*100<<endl;
+	cout<<"Run 2 Unweighted Xib- -> Jpsi Xi- Eff = "<<Eff_Xibm_JpsiXim_Run2*100<<"% +/- "<<Err_Eff_Xibm_JpsiXim_Run2*100<<endl;
+
 	Float_t Eff_Xibm_JpsiXim_Run1_wt = GenEff_Xibm_JpsiXim_Run1 * RecEff_Xibm_JpsiXim_Run1_wt;
 	Float_t Eff_Xibm_JpsiXim_Run2_wt = GenEff_Xibm_JpsiXim_Run2 * RecEff_Xibm_JpsiXim_Run2_wt;
 
@@ -96,6 +99,9 @@ void Xib_JpsiLambda()
 	                                                                     + pow(Err_RecEff_Xibm_JpsiXim_Run1_wt/RecEff_Xibm_JpsiXim_Run1_wt,2));
 	Float_t Err_Eff_Xibm_JpsiXim_Run2_wt = Eff_Xibm_JpsiXim_Run2_wt*sqrt(pow(Err_GenEff_Xibm_JpsiXim_Run2/GenEff_Xibm_JpsiXim_Run2,2)
 	                                                                     + pow(Err_RecEff_Xibm_JpsiXim_Run2_wt/RecEff_Xibm_JpsiXim_Run2_wt,2));
+
+	cout<<"Run 1 Weighted Xib- -> Jpsi Xi- Eff = "<<Eff_Xibm_JpsiXim_Run1_wt*100<<"% +/- "<<Err_Eff_Xibm_JpsiXim_Run1_wt*100<<endl;
+	cout<<"Run 2 Weighted Xib- -> Jpsi Xi- Eff = "<<Eff_Xibm_JpsiXim_Run2_wt*100<<"% +/- "<<Err_Eff_Xibm_JpsiXim_Run2_wt*100<<endl;
 
 	Float_t B_Xi0_LambdaPi0 = 99.524/100;
 	Float_t Err_B_Xi0_LambdaPi0 = 0.012/100;
