@@ -106,6 +106,9 @@ void Xib_JpsiLambda()
 	treeIn_nonZero_Run1->Draw("gb_wts_new>>wt_Run1_nonZero","BDT2 > 0.475","goff");
 	treeIn_Zero_Run1->Draw("gb_wts_new>>wt_Run1_Zero","BDT2 > 0.365","goff");
 
+	TH1F *wt_Run1_nonZero = (TH1F*)gDirectory->Get("wt_Run1_nonZero");
+	TH1F *wt_Run1_Zero = (TH1F*)gDirectory->Get("wt_Run1_Zero");
+
 	fstream genFile_Run1;
 	genFile_Run1.open("../logs/mc/JpsiLambda/Xib0/run1/gen_log.txt");
 
@@ -130,8 +133,7 @@ void Xib_JpsiLambda()
 	cout<<"Run 1 Generator Effs = "<<GenEff_Xib0_JpsiLambda_Run1*100
 	    <<" % +/- "<<Err_GenEff_Xib0_JpsiLambda_Run1*100<<" %"<<endl;
 
-	TH1F *wt_Run1_nonZero = (TH1F*)gDirectory->Get("wt_Run1_nonZero");
-	TH1F *wt_Run1_Zero = (TH1F*)gDirectory->Get("wt_Run1_Zero");
+
 
 	Float_t num_Run1_wt = (wt_Run1_nonZero->GetMean()*wt_Run1_nonZero->GetEntries()) +
 	                      (wt_Run1_Zero->GetMean()*wt_Run1_Zero->GetEntries());
@@ -180,11 +182,12 @@ void Xib_JpsiLambda()
 	                                               + pow(Err_N_Xib0_JpsiXi0_Run1/N_Xib0_JpsiXi0_Run1,2)
 	                                               + pow(Err_Eff_Xibm_JpsiLambda_Run1_wt/Eff_Xibm_JpsiLambda_Run1_wt,2));
 
-	//Temporarily assume Run2 effs for Xib0->J/psi Lambda is same as Run1 eff, until I get Run 2 MC
+	//*****Temporarily assume Run2 effs for Xib0->J/psi Lambda is same as Run1 eff, until I get Run 2 MC******
 	Eff_Xib0_JpsiLambda_Run2        = Eff_Xib0_JpsiLambda_Run1;
 	Eff_Xib0_JpsiLambda_Run2_wt     = Eff_Xib0_JpsiLambda_Run1_wt;
 	Err_Eff_Xib0_JpsiLambda_Run2    = Err_Eff_Xib0_JpsiLambda_Run1;
 	Err_Eff_Xib0_JpsiLambda_Run2_wt = Err_Eff_Xib0_JpsiLambda_Run1_wt;
+	//*************************
 
 	BF_Ratio_Run2 = (N_Xib0_JpsiLambda_Run2/Eff_Xib0_JpsiLambda_Run2) * B_Xi0_LambdaPi0 / (N_Xib0_JpsiXi0_Run2/Eff_Xibm_JpsiLambda_Run2);
 	BF_Ratio_Run2_wt = (N_Xib0_JpsiLambda_Run2/Eff_Xib0_JpsiLambda_Run2_wt) * B_Xi0_LambdaPi0 / (N_Xib0_JpsiXi0_Run2/Eff_Xibm_JpsiLambda_Run2_wt);
@@ -201,10 +204,18 @@ void Xib_JpsiLambda()
 	                                               + pow(Err_N_Xib0_JpsiXi0_Run2/N_Xib0_JpsiXi0_Run2,2)
 	                                               + pow(Err_Eff_Xibm_JpsiLambda_Run2_wt/Eff_Xibm_JpsiLambda_Run2_wt,2));
 
-	cout<<"RUN 1 UNWEIGHTED RATIO = "<<BF_Ratio_Run1<<" +/-	" <<Err_BF_Ratio_Run1<<endl;
-	cout<<"RUN 1 WEIGHTED RATIO = "  <<BF_Ratio_Run1_wt<<" +/-	"<<Err_BF_Ratio_Run1_wt<<endl;
+	cout<<"******RUN 1 RESULT***********"<<endl;
+	cout<<"Ncorr Xib0-> J/psi Lambda = "<<(N_Xib0_JpsiLambda_Run1/Eff_Xib0_JpsiLambda_Run1)<<endl;
+	cout<<"Ncorr Xib0-> J/psi Xi = "<<(N_Xib0_JpsiXi0_Run1/Eff_Xibm_JpsiLambda_Run1)<<endl;
 
-	cout<<"RUN 12 UNWEIGHTED RATIO = "<<BF_Ratio_Run2<<" +/-	"<<Err_BF_Ratio_Run2<<endl;
-	cout<<"RUN 12 WEIGHTED RATIO = "  <<BF_Ratio_Run2_wt<<" +/-	"<<Err_BF_Ratio_Run2_wt<<endl;
+	cout<<"UNWEIGHTED RATIO = "<<BF_Ratio_Run1<<" +/-	"<<Err_BF_Ratio_Run1<<endl;
+	cout<<"WEIGHTED RATIO = "  <<BF_Ratio_Run1_wt<<" +/-	"<<Err_BF_Ratio_Run1_wt<<endl;
+
+	cout<<"******RUN 2 RESULT***********"<<endl;
+	cout<<"Ncorr Xib0-> J/psi Lambda = "<<(N_Xib0_JpsiLambda_Run2/Eff_Xib0_JpsiLambda_Run2)<<endl;
+	cout<<"Ncorr Xib0-> J/psi Xi = "<<(N_Xib0_JpsiXi0_Run2/Eff_Xibm_JpsiLambda_Run2)<<endl;
+
+	cout<<"UNWEIGHTED RATIO = "<<BF_Ratio_Run2<<" +/-	"<<Err_BF_Ratio_Run2<<endl;
+	cout<<"WEIGHTED RATIO = "  <<BF_Ratio_Run2_wt<<" +/-	"<<Err_BF_Ratio_Run2_wt<<endl;
 
 }
