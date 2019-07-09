@@ -10,28 +10,43 @@ using namespace std;
 void Xib_JpsiLambda()
 {
 	Float_t BF_Ratio_Comb     = 0.0;
+	Float_t StatErr_BF_Ratio_Comb = 0.0;
+	Float_t SystErr_BF_Ratio_Comb = 0.0;
 	Float_t Err_BF_Ratio_Comb = 0.0;
 
 	Float_t BF_Ratio_Comb_wt     = 0.0;
+	Float_t StatErr_BF_Ratio_Comb_wt = 0.0;
+	Float_t SystErr_BF_Ratio_Comb_wt = 0.0;
 	Float_t Err_BF_Ratio_Comb_wt = 0.0;
 
 	Float_t BF_Ratio_Run1     = 0.0;
+	Float_t StatErr_BF_Ratio_Run1 = 0.0;
+	Float_t SystErr_BF_Ratio_Run1 = 0.0;
 	Float_t Err_BF_Ratio_Run1 = 0.0;
 
 	Float_t BF_Ratio_Run2     = 0.0;
+	Float_t StatErr_BF_Ratio_Run2 = 0.0;
+	Float_t SystErr_BF_Ratio_Run2 = 0.0;
 	Float_t Err_BF_Ratio_Run2 = 0.0;
 
 	Float_t BF_Ratio_Run1_wt     = 0.0;
+	Float_t StatErr_BF_Ratio_Run1_wt = 0.0;
+	Float_t SystErr_BF_Ratio_Run1_wt = 0.0;
 	Float_t Err_BF_Ratio_Run1_wt = 0.0;
 
 	Float_t BF_Ratio_Run2_wt     = 0.0;
+	Float_t StatErr_BF_Ratio_Run2_wt = 0.0;
+	Float_t SystErr_BF_Ratio_Run2_wt = 0.0;
 	Float_t Err_BF_Ratio_Run2_wt = 0.0;
 
 	Float_t N_Xib0_JpsiLambda_Run1 = 6.75;
 	Float_t N_Xib0_JpsiLambda_Run2 = 14.36;
 
-	Float_t Err_N_Xib0_JpsiLambda_Run1 = 2.96;//44% error
-	Float_t Err_N_Xib0_JpsiLambda_Run2 = 4.58;//32% error
+	Float_t StatErr_N_Xib0_JpsiLambda_Run1 = 2.96;//44% error
+	Float_t StatErr_N_Xib0_JpsiLambda_Run2 = 4.58;//32% error
+
+	Float_t SystErr_N_Xib0_JpsiLambda_Run1 = 0.03;
+	Float_t SystErr_N_Xib0_JpsiLambda_Run2 = 0.26;
 
 	Float_t Eff_Xib0_JpsiLambda_Run1 = 0.0;
 	Float_t Eff_Xib0_JpsiLambda_Run2 = 0.0;
@@ -120,10 +135,18 @@ void Xib_JpsiLambda()
 	Float_t Err_Scale_Factor = 0.036;
 
 	Float_t N_Xib0_JpsiXi0_Run1 = N_Xibm_JpsiXim_Run1/Scale_Factor;
-	Float_t Err_N_Xib0_JpsiXi0_Run1 = N_Xib0_JpsiXi0_Run1*sqrt(pow(Err_N_Xibm_JpsiXim_Run1/N_Xibm_JpsiXim_Run1,2) + pow(Err_Scale_Factor/Scale_Factor,2));
+	Float_t StatErr_N_Xib0_JpsiXi0_Run1 = N_Xib0_JpsiXi0_Run1*sqrt(pow(StatErr_N_Xibm_JpsiXim_Run1/N_Xibm_JpsiXim_Run1,2));
+	Float_t SystErr_N_Xib0_JpsiXi0_Run1 = N_Xib0_JpsiXi0_Run1*sqrt(pow(SystErr_N_Xibm_JpsiXim_Run1/N_Xibm_JpsiXim_Run1,2)
+	                                                               + pow(Err_Scale_Factor/Scale_Factor,2));
+
+	Float_t Err_N_Xib0_JpsiXi0_Run1 = sqrt(pow(StatErr_N_Xib0_JpsiXi0_Run1,2) + pow(SystErr_N_Xib0_JpsiXi0_Run1,2));
 
 	Float_t N_Xib0_JpsiXi0_Run2 = N_Xibm_JpsiXim_Run2/Scale_Factor;
-	Float_t Err_N_Xib0_JpsiXi0_Run2 = N_Xib0_JpsiXi0_Run2*sqrt(pow(Err_N_Xibm_JpsiXim_Run2/N_Xibm_JpsiXim_Run2,2) + pow(Err_Scale_Factor/Scale_Factor,2));
+	Float_t StatErr_N_Xib0_JpsiXi0_Run2 = N_Xib0_JpsiXi0_Run2*sqrt(pow(StatErr_N_Xibm_JpsiXim_Run2/N_Xibm_JpsiXim_Run2,2));
+	Float_t SystErr_N_Xib0_JpsiXi0_Run2 = N_Xib0_JpsiXi0_Run2*sqrt(pow(SystErr_N_Xibm_JpsiXim_Run2/N_Xibm_JpsiXim_Run2,2)
+	                                                               + pow(Err_Scale_Factor/Scale_Factor,2));
+
+	Float_t Err_N_Xib0_JpsiXi0_Run2 = sqrt(pow(StatErr_N_Xib0_JpsiXi0_Run2,2) + pow(SystErr_N_Xib0_JpsiXi0_Run2,2));
 
 	Int_t nGen_Run1 = 0, nGen_Run2 = 0;
 	Int_t nGen_Run1_wt = 0, nGen_Run2_wt = 0;
@@ -202,17 +225,27 @@ void Xib_JpsiLambda()
 	BF_Ratio_Run1 = (N_Xib0_JpsiLambda_Run1/Eff_Xib0_JpsiLambda_Run1) * B_Xi0_LambdaPi0 / (N_Xib0_JpsiXi0_Run1/Eff_Xibm_JpsiXim_Run1);
 	BF_Ratio_Run1_wt = (N_Xib0_JpsiLambda_Run1/Eff_Xib0_JpsiLambda_Run1_wt) * B_Xi0_LambdaPi0 / (N_Xib0_JpsiXi0_Run1/Eff_Xibm_JpsiXim_Run1_wt);
 
-	Err_BF_Ratio_Run1 = BF_Ratio_Run1 * sqrt(pow(Err_N_Xib0_JpsiLambda_Run1/N_Xib0_JpsiLambda_Run1,2)
-	                                         + pow(Err_Eff_Xib0_JpsiLambda_Run1/Eff_Xib0_JpsiLambda_Run1,2)
-	                                         + pow(Err_B_Xi0_LambdaPi0/B_Xi0_LambdaPi0,2)
-	                                         + pow(Err_N_Xib0_JpsiXi0_Run1/N_Xib0_JpsiXi0_Run1,2)
-	                                         + pow(Err_Eff_Xibm_JpsiXim_Run1/Eff_Xibm_JpsiXim_Run1,2));
+	SystErr_BF_Ratio_Run1 = BF_Ratio_Run1 * sqrt(pow(SystErr_N_Xib0_JpsiLambda_Run1/N_Xib0_JpsiLambda_Run1,2)
+	                                             + pow(Err_Eff_Xib0_JpsiLambda_Run1/Eff_Xib0_JpsiLambda_Run1,2)
+	                                             + pow(Err_B_Xi0_LambdaPi0/B_Xi0_LambdaPi0,2)
+	                                             + pow(SystErr_N_Xib0_JpsiXi0_Run1/N_Xib0_JpsiXi0_Run1,2)
+	                                             + pow(Err_Eff_Xibm_JpsiXim_Run1/Eff_Xibm_JpsiXim_Run1,2));
 
-	Err_BF_Ratio_Run1_wt = BF_Ratio_Run1_wt * sqrt(pow(Err_N_Xib0_JpsiLambda_Run1/N_Xib0_JpsiLambda_Run1,2)
-	                                               + pow(Err_Eff_Xib0_JpsiLambda_Run1_wt/Eff_Xib0_JpsiLambda_Run1_wt,2)
-	                                               + pow(Err_B_Xi0_LambdaPi0/B_Xi0_LambdaPi0,2)
-	                                               + pow(Err_N_Xib0_JpsiXi0_Run1/N_Xib0_JpsiXi0_Run1,2)
-	                                               + pow(Err_Eff_Xibm_JpsiXim_Run1_wt/Eff_Xibm_JpsiXim_Run1_wt,2));
+	StatErr_BF_Ratio_Run1 = BF_Ratio_Run1 * sqrt(pow(StatErr_N_Xib0_JpsiLambda_Run1/N_Xib0_JpsiLambda_Run1,2)
+	                                             + pow(StatErr_N_Xib0_JpsiXi0_Run1/N_Xib0_JpsiXi0_Run1,2));
+
+	Err_BF_Ratio_Run1 = sqrt(pow(StatErr_BF_Ratio_Run1,2) + pow(SystErr_BF_Ratio_Run1,2));
+
+	SystErr_BF_Ratio_Run1_wt = BF_Ratio_Run1_wt * sqrt(pow(SystErr_N_Xib0_JpsiLambda_Run1/N_Xib0_JpsiLambda_Run1,2)
+	                                                   + pow(Err_Eff_Xib0_JpsiLambda_Run1_wt/Eff_Xib0_JpsiLambda_Run1_wt,2)
+	                                                   + pow(Err_B_Xi0_LambdaPi0/B_Xi0_LambdaPi0,2)
+	                                                   + pow(SystErr_N_Xib0_JpsiXi0_Run1/N_Xib0_JpsiXi0_Run1,2)
+	                                                   + pow(Err_Eff_Xibm_JpsiXim_Run1_wt/Eff_Xibm_JpsiXim_Run1_wt,2));
+
+	StatErr_BF_Ratio_Run1_wt = BF_Ratio_Run1_wt * sqrt(pow(StatErr_N_Xib0_JpsiLambda_Run1/N_Xib0_JpsiLambda_Run1,2)
+	                                                   + pow(StatErr_N_Xib0_JpsiXi0_Run1/N_Xib0_JpsiXi0_Run1,2));
+
+	Err_BF_Ratio_Run1_wt = sqrt(pow(StatErr_BF_Ratio_Run1_wt,2) + pow(SystErr_BF_Ratio_Run1_wt,2));
 
 	//*****Temporarily assume Run2 effs for Xib0->J/psi Lambda is same as Run1 eff, until I get Run 2 MC******
 	Eff_Xib0_JpsiLambda_Run2        = Eff_Xib0_JpsiLambda_Run1;
@@ -224,41 +257,57 @@ void Xib_JpsiLambda()
 	BF_Ratio_Run2 = (N_Xib0_JpsiLambda_Run2/Eff_Xib0_JpsiLambda_Run2) * B_Xi0_LambdaPi0 / (N_Xib0_JpsiXi0_Run2/Eff_Xibm_JpsiXim_Run2);
 	BF_Ratio_Run2_wt = (N_Xib0_JpsiLambda_Run2/Eff_Xib0_JpsiLambda_Run2_wt) * B_Xi0_LambdaPi0 / (N_Xib0_JpsiXi0_Run2/Eff_Xibm_JpsiXim_Run2_wt);
 
-	Err_BF_Ratio_Run2 = BF_Ratio_Run2 * sqrt(pow(Err_N_Xib0_JpsiLambda_Run2/N_Xib0_JpsiLambda_Run2,2)
-	                                         + pow(Err_Eff_Xib0_JpsiLambda_Run2/Eff_Xib0_JpsiLambda_Run2,2)
-	                                         + pow(Err_B_Xi0_LambdaPi0/B_Xi0_LambdaPi0,2)
-	                                         + pow(Err_N_Xib0_JpsiXi0_Run2/N_Xib0_JpsiXi0_Run2,2)
-	                                         + pow(Err_Eff_Xibm_JpsiXim_Run2/Eff_Xibm_JpsiXim_Run2,2));
+	SystErr_BF_Ratio_Run2 = BF_Ratio_Run2 * sqrt(pow(SystErr_N_Xib0_JpsiLambda_Run2/N_Xib0_JpsiLambda_Run2,2)
+	                                             + pow(Err_Eff_Xib0_JpsiLambda_Run2/Eff_Xib0_JpsiLambda_Run2,2)
+	                                             + pow(Err_B_Xi0_LambdaPi0/B_Xi0_LambdaPi0,2)
+	                                             + pow(SystErr_N_Xib0_JpsiXi0_Run2/N_Xib0_JpsiXi0_Run2,2)
+	                                             + pow(Err_Eff_Xibm_JpsiXim_Run2/Eff_Xibm_JpsiXim_Run2,2));
 
-	Err_BF_Ratio_Run2_wt = BF_Ratio_Run2_wt * sqrt(pow(Err_N_Xib0_JpsiLambda_Run2/N_Xib0_JpsiLambda_Run2,2)
-	                                               + pow(Err_Eff_Xib0_JpsiLambda_Run2_wt/Eff_Xib0_JpsiLambda_Run2_wt,2)
-	                                               + pow(Err_B_Xi0_LambdaPi0/B_Xi0_LambdaPi0,2)
-	                                               + pow(Err_N_Xib0_JpsiXi0_Run2/N_Xib0_JpsiXi0_Run2,2)
-	                                               + pow(Err_Eff_Xibm_JpsiXim_Run2_wt/Eff_Xibm_JpsiXim_Run2_wt,2));
+	StatErr_BF_Ratio_Run2 = BF_Ratio_Run2 * sqrt(pow(StatErr_N_Xib0_JpsiLambda_Run2/N_Xib0_JpsiLambda_Run2,2)
+	                                             + pow(StatErr_N_Xib0_JpsiXi0_Run2/N_Xib0_JpsiXi0_Run2,2));
+
+	Err_BF_Ratio_Run2 = sqrt(pow(StatErr_BF_Ratio_Run2,2) + pow(SystErr_BF_Ratio_Run2,2));
+
+	SystErr_BF_Ratio_Run2_wt = BF_Ratio_Run2_wt * sqrt(pow(SystErr_N_Xib0_JpsiLambda_Run2/N_Xib0_JpsiLambda_Run2,2)
+	                                                   + pow(Err_Eff_Xib0_JpsiLambda_Run2_wt/Eff_Xib0_JpsiLambda_Run2_wt,2)
+	                                                   + pow(Err_B_Xi0_LambdaPi0/B_Xi0_LambdaPi0,2)
+	                                                   + pow(SystErr_N_Xib0_JpsiXi0_Run2/N_Xib0_JpsiXi0_Run2,2)
+	                                                   + pow(Err_Eff_Xibm_JpsiXim_Run2_wt/Eff_Xibm_JpsiXim_Run2_wt,2));
+
+	StatErr_BF_Ratio_Run2_wt = BF_Ratio_Run2_wt * sqrt(pow(StatErr_N_Xib0_JpsiLambda_Run2/N_Xib0_JpsiLambda_Run2,2)
+	                                                   + pow(StatErr_N_Xib0_JpsiXi0_Run2/N_Xib0_JpsiXi0_Run2,2));
+
+	Err_BF_Ratio_Run2_wt = sqrt(pow(StatErr_BF_Ratio_Run2_wt,2) + pow(SystErr_BF_Ratio_Run2_wt,2));
 
 	cout<<"******RUN 1 RESULT***********"<<endl;
-	cout<<"Ncorr Xib0-> J/psi Lambda = "<<(N_Xib0_JpsiLambda_Run1/Eff_Xib0_JpsiLambda_Run1)<<endl;
-	cout<<"Ncorr Xib0-> J/psi Xi = "<<(N_Xib0_JpsiXi0_Run1/Eff_Xibm_JpsiXim_Run1)<<endl;
+	// cout<<"Ncorr Xib0-> J/psi Lambda = "<<(N_Xib0_JpsiLambda_Run1/Eff_Xib0_JpsiLambda_Run1)<<endl;
+	// cout<<"Ncorr Xib0-> J/psi Xi = "<<(N_Xib0_JpsiXi0_Run1/Eff_Xibm_JpsiXim_Run1)<<endl;
 
-	cout<<"UNWEIGHTED RATIO = "<<BF_Ratio_Run1<<" +/-	"<<Err_BF_Ratio_Run1<<endl;
-	cout<<"WEIGHTED RATIO = "  <<BF_Ratio_Run1_wt<<" +/-	"<<Err_BF_Ratio_Run1_wt<<endl;
+	cout<<"UNWEIGHTED RATIO = "<<BF_Ratio_Run1<<" +/-	"<<StatErr_BF_Ratio_Run1<<" +/-	"<<SystErr_BF_Ratio_Run1<<endl;
+	cout<<"WEIGHTED RATIO = "  <<BF_Ratio_Run1_wt<<" +/-	"<<StatErr_BF_Ratio_Run1_wt<<" +/-	"<<SystErr_BF_Ratio_Run1_wt<<endl;
 
 	cout<<"******RUN 2 RESULT***********"<<endl;
-	cout<<"Ncorr Xib0-> J/psi Lambda = "<<(N_Xib0_JpsiLambda_Run2/Eff_Xib0_JpsiLambda_Run2)<<endl;
-	cout<<"Ncorr Xib0-> J/psi Xi = "<<(N_Xib0_JpsiXi0_Run2/Eff_Xibm_JpsiXim_Run2)<<endl;
+	// cout<<"Ncorr Xib0-> J/psi Lambda = "<<(N_Xib0_JpsiLambda_Run2/Eff_Xib0_JpsiLambda_Run2)<<endl;
+	// cout<<"Ncorr Xib0-> J/psi Xi = "<<(N_Xib0_JpsiXi0_Run2/Eff_Xibm_JpsiXim_Run2)<<endl;
 
-	cout<<"UNWEIGHTED RATIO = "<<BF_Ratio_Run2<<" +/-	"<<Err_BF_Ratio_Run2<<endl;
-	cout<<"WEIGHTED RATIO = "  <<BF_Ratio_Run2_wt<<" +/-	"<<Err_BF_Ratio_Run2_wt<<endl;
+	cout<<"UNWEIGHTED RATIO = "<<BF_Ratio_Run2<<" +/-	"<<StatErr_BF_Ratio_Run2<<" +/-	"<<SystErr_BF_Ratio_Run2<<endl;
+	cout<<"WEIGHTED RATIO = "  <<BF_Ratio_Run2_wt<<" +/-	"<<StatErr_BF_Ratio_Run2_wt<<" +/-	"<<SystErr_BF_Ratio_Run2_wt<<endl;
 
 	//Combined Result
 	Err_BF_Ratio_Comb    = (Err_BF_Ratio_Run1*Err_BF_Ratio_Run2)/sqrt(pow(Err_BF_Ratio_Run1,2)+pow(Err_BF_Ratio_Run2,2));
 	Err_BF_Ratio_Comb_wt = (Err_BF_Ratio_Run1_wt*Err_BF_Ratio_Run2_wt)/sqrt(pow(Err_BF_Ratio_Run1_wt,2)+pow(Err_BF_Ratio_Run2_wt,2));
 
+	StatErr_BF_Ratio_Comb    = (StatErr_BF_Ratio_Run1*StatErr_BF_Ratio_Run2)/sqrt(pow(StatErr_BF_Ratio_Run1,2)+pow(StatErr_BF_Ratio_Run2,2));
+	StatErr_BF_Ratio_Comb_wt = (StatErr_BF_Ratio_Run1_wt*StatErr_BF_Ratio_Run2_wt)/sqrt(pow(StatErr_BF_Ratio_Run1_wt,2)+pow(StatErr_BF_Ratio_Run2_wt,2));
+
+	SystErr_BF_Ratio_Comb    = sqrt( pow(Err_BF_Ratio_Comb,2) - pow(StatErr_BF_Ratio_Comb,2));
+	SystErr_BF_Ratio_Comb_wt = sqrt( pow(Err_BF_Ratio_Comb_wt,2) - pow(StatErr_BF_Ratio_Comb_wt,2));
+
 	BF_Ratio_Comb = ((BF_Ratio_Run1/pow(Err_BF_Ratio_Run1,2)) + (BF_Ratio_Run2/pow(Err_BF_Ratio_Run2,2))) * pow(Err_BF_Ratio_Comb,2);
 	BF_Ratio_Comb_wt = ((BF_Ratio_Run1_wt/pow(Err_BF_Ratio_Run1_wt,2)) + (BF_Ratio_Run2_wt/pow(Err_BF_Ratio_Run2_wt,2))) * pow(Err_BF_Ratio_Comb_wt,2);
 
 	cout<<"******Combined Result************"<<endl;
-	cout<<"UNWEIGHTED RATIO = "<<BF_Ratio_Comb<<" +/-	"<<Err_BF_Ratio_Comb<<endl;
-	cout<<"WEIGHTED RATIO = "  <<BF_Ratio_Comb_wt<<" +/-	"<<Err_BF_Ratio_Comb_wt<<endl;
+	cout<<"UNWEIGHTED RATIO = "<<BF_Ratio_Comb<<" +/-	"<<StatErr_BF_Ratio_Comb<<" +/-	"<<SystErr_BF_Ratio_Comb<<endl;
+	cout<<"WEIGHTED RATIO = "  <<BF_Ratio_Comb_wt<<" +/-	"<<StatErr_BF_Ratio_Comb_wt<<" +/-	"<<SystErr_BF_Ratio_Comb_wt<<endl;
 
 }
