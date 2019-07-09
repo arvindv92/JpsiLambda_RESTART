@@ -63,46 +63,46 @@ void Xib_JpsiLambda()
 	Float_t Err_RecEff_Xib0_JpsiLambda_Run1_wt = 0.0;
 	Float_t Err_RecEff_Xib0_JpsiLambda_Run2_wt = 0.0;
 
-	Float_t RecEff_Xibm_JpsiLambda_Run1 = 0.0131/100;
-	Float_t RecEff_Xibm_JpsiLambda_Run2 = 0.0150/100;
+	Float_t RecEff_Xibm_JpsiXim_Run1 = 0.0631/100;
+	Float_t RecEff_Xibm_JpsiXim_Run2 = 0.0650/100;
 
-	Float_t Err_RecEff_Xibm_JpsiLambda_Run1 = 0.0006/100;
-	Float_t Err_RecEff_Xibm_JpsiLambda_Run2 = 0.0007/100;
+	Float_t Err_RecEff_Xibm_JpsiXim_Run1 = 0.0014/100;
+	Float_t Err_RecEff_Xibm_JpsiXim_Run2 = 0.0014/100;
 
-	Float_t RecEff_Xibm_JpsiLambda_Run1_wt = 0.0190/100;
-	Float_t RecEff_Xibm_JpsiLambda_Run2_wt = 0.0170/100;
+	Float_t RecEff_Xibm_JpsiXim_Run1_wt = 0.0683/100;
+	Float_t RecEff_Xibm_JpsiXim_Run2_wt = 0.0681/100;
 
-	Float_t Err_RecEff_Xibm_JpsiLambda_Run1_wt = 0.0009/100;
-	Float_t Err_RecEff_Xibm_JpsiLambda_Run2_wt = 0.0007/100;
+	Float_t Err_RecEff_Xibm_JpsiXim_Run1_wt = 0.0017/100;
+	Float_t Err_RecEff_Xibm_JpsiXim_Run2_wt = 0.0015/100;
 
-	Float_t GenEff_Xibm_JpsiLambda_Run1 = 0.17267;
-	Float_t GenEff_Xibm_JpsiLambda_Run2 = 0.18019;
+	Float_t GenEff_Xibm_JpsiXim_Run1 = 0.17267;
+	Float_t GenEff_Xibm_JpsiXim_Run2 = 0.18019;
 
-	Float_t Err_GenEff_Xibm_JpsiLambda_Run1 = 0.00056;
-	Float_t Err_GenEff_Xibm_JpsiLambda_Run2 = 0.00043;
+	Float_t Err_GenEff_Xibm_JpsiXim_Run1 = 0.00056;
+	Float_t Err_GenEff_Xibm_JpsiXim_Run2 = 0.00043;
 
-	Float_t Eff_Xibm_JpsiLambda_Run1 = GenEff_Xibm_JpsiLambda_Run1 * RecEff_Xibm_JpsiLambda_Run1;
-	Float_t Eff_Xibm_JpsiLambda_Run2 = GenEff_Xibm_JpsiLambda_Run2 * RecEff_Xibm_JpsiLambda_Run2;
+	Float_t Eff_Xibm_JpsiXim_Run1 = GenEff_Xibm_JpsiXim_Run1 * RecEff_Xibm_JpsiXim_Run1;
+	Float_t Eff_Xibm_JpsiXim_Run2 = GenEff_Xibm_JpsiXim_Run2 * RecEff_Xibm_JpsiXim_Run2;
 
-	Float_t Err_Eff_Xibm_JpsiLambda_Run1 = Eff_Xibm_JpsiLambda_Run1*sqrt(pow(Err_GenEff_Xibm_JpsiLambda_Run1/GenEff_Xibm_JpsiLambda_Run1,2)
-	                                                                     + pow(Err_RecEff_Xibm_JpsiLambda_Run1/RecEff_Xibm_JpsiLambda_Run1,2));
-	Float_t Err_Eff_Xibm_JpsiLambda_Run2 = Eff_Xibm_JpsiLambda_Run2*sqrt(pow(Err_GenEff_Xibm_JpsiLambda_Run2/GenEff_Xibm_JpsiLambda_Run2,2)
-	                                                                     + pow(Err_RecEff_Xibm_JpsiLambda_Run2/RecEff_Xibm_JpsiLambda_Run2,2));
+	Float_t Err_Eff_Xibm_JpsiXim_Run1 = Eff_Xibm_JpsiXim_Run1*sqrt(pow(Err_GenEff_Xibm_JpsiXim_Run1/GenEff_Xibm_JpsiXim_Run1,2)
+	                                                               + pow(Err_RecEff_Xibm_JpsiXim_Run1/RecEff_Xibm_JpsiXim_Run1,2));
+	Float_t Err_Eff_Xibm_JpsiXim_Run2 = Eff_Xibm_JpsiXim_Run2*sqrt(pow(Err_GenEff_Xibm_JpsiXim_Run2/GenEff_Xibm_JpsiXim_Run2,2)
+	                                                               + pow(Err_RecEff_Xibm_JpsiXim_Run2/RecEff_Xibm_JpsiXim_Run2,2));
 
-	Float_t Eff_Xibm_JpsiLambda_Run1_wt = GenEff_Xibm_JpsiLambda_Run1 * RecEff_Xibm_JpsiLambda_Run1_wt;
-	Float_t Eff_Xibm_JpsiLambda_Run2_wt = GenEff_Xibm_JpsiLambda_Run2 * RecEff_Xibm_JpsiLambda_Run2_wt;
+	Float_t Eff_Xibm_JpsiXim_Run1_wt = GenEff_Xibm_JpsiXim_Run1 * RecEff_Xibm_JpsiXim_Run1_wt;
+	Float_t Eff_Xibm_JpsiXim_Run2_wt = GenEff_Xibm_JpsiXim_Run2 * RecEff_Xibm_JpsiXim_Run2_wt;
 
-	Float_t Err_Eff_Xibm_JpsiLambda_Run1_wt = Eff_Xibm_JpsiLambda_Run1_wt*sqrt(pow(Err_GenEff_Xibm_JpsiLambda_Run1/GenEff_Xibm_JpsiLambda_Run1,2)
-	                                                                           + pow(Err_RecEff_Xibm_JpsiLambda_Run1_wt/RecEff_Xibm_JpsiLambda_Run1_wt,2));
-	Float_t Err_Eff_Xibm_JpsiLambda_Run2_wt = Eff_Xibm_JpsiLambda_Run2_wt*sqrt(pow(Err_GenEff_Xibm_JpsiLambda_Run2/GenEff_Xibm_JpsiLambda_Run2,2)
-	                                                                           + pow(Err_RecEff_Xibm_JpsiLambda_Run2_wt/RecEff_Xibm_JpsiLambda_Run2_wt,2));
+	Float_t Err_Eff_Xibm_JpsiXim_Run1_wt = Eff_Xibm_JpsiXim_Run1_wt*sqrt(pow(Err_GenEff_Xibm_JpsiXim_Run1/GenEff_Xibm_JpsiXim_Run1,2)
+	                                                                     + pow(Err_RecEff_Xibm_JpsiXim_Run1_wt/RecEff_Xibm_JpsiXim_Run1_wt,2));
+	Float_t Err_Eff_Xibm_JpsiXim_Run2_wt = Eff_Xibm_JpsiXim_Run2_wt*sqrt(pow(Err_GenEff_Xibm_JpsiXim_Run2/GenEff_Xibm_JpsiXim_Run2,2)
+	                                                                     + pow(Err_RecEff_Xibm_JpsiXim_Run2_wt/RecEff_Xibm_JpsiXim_Run2_wt,2));
 
 	Float_t B_Xi0_LambdaPi0 = 99.524/100;
 	Float_t Err_B_Xi0_LambdaPi0 = 0.012/100;
 
-	Float_t N_Xibm_JpsiXim_Run1 = 36.361;
-	Float_t StatErr_N_Xibm_JpsiXim_Run1 = 7.757;
-	Float_t SystErr_N_Xibm_JpsiXim_Run1 = 3.273;
+	Float_t N_Xibm_JpsiXim_Run1 = 36.361;//Yield of fully reco'd Xib- -> J/psi Xi-, comes from fit to data
+	Float_t StatErr_N_Xibm_JpsiXim_Run1 = 7.757;//Fit error
+	Float_t SystErr_N_Xibm_JpsiXim_Run1 = 3.273;//Syst error coming from model choice
 	Float_t Err_N_Xibm_JpsiXim_Run1 = sqrt(pow(StatErr_N_Xibm_JpsiXim_Run1,2) + pow(SystErr_N_Xibm_JpsiXim_Run1,2));
 
 	Float_t N_Xibm_JpsiXim_Run2 = 173.281;
@@ -110,14 +110,14 @@ void Xib_JpsiLambda()
 	Float_t SystErr_N_Xibm_JpsiXim_Run2 = 10.397;
 	Float_t Err_N_Xibm_JpsiXim_Run2 = sqrt(pow(StatErr_N_Xibm_JpsiXim_Run2,2) + pow(SystErr_N_Xibm_JpsiXim_Run2,2));
 
-	Float_t scale_factor = 1.087;
-	Float_t err_scale_factor = 0.036;
+	Float_t Scale_Factor = 1.087;
+	Float_t Err_Scale_Factor = 0.036;
 
-	Float_t N_Xib0_JpsiXi0_Run1 = N_Xibm_JpsiXim_Run1/scale_factor;
-	Float_t Err_N_Xib0_JpsiXi0_Run1 = N_Xib0_JpsiXi0_Run1*sqrt(pow(Err_N_Xibm_JpsiXim_Run1/N_Xibm_JpsiXim_Run1,2) + pow(err_scale_factor/scale_factor,2));
+	Float_t N_Xib0_JpsiXi0_Run1 = N_Xibm_JpsiXim_Run1/Scale_Factor;
+	Float_t Err_N_Xib0_JpsiXi0_Run1 = N_Xib0_JpsiXi0_Run1*sqrt(pow(Err_N_Xibm_JpsiXim_Run1/N_Xibm_JpsiXim_Run1,2) + pow(Err_Scale_Factor/Scale_Factor,2));
 
-	Float_t N_Xib0_JpsiXi0_Run2 = N_Xibm_JpsiXim_Run2/scale_factor;
-	Float_t Err_N_Xib0_JpsiXi0_Run2 = N_Xib0_JpsiXi0_Run2*sqrt(pow(Err_N_Xibm_JpsiXim_Run2/N_Xibm_JpsiXim_Run2,2) + pow(err_scale_factor/scale_factor,2));
+	Float_t N_Xib0_JpsiXi0_Run2 = N_Xibm_JpsiXim_Run2/Scale_Factor;
+	Float_t Err_N_Xib0_JpsiXi0_Run2 = N_Xib0_JpsiXi0_Run2*sqrt(pow(Err_N_Xibm_JpsiXim_Run2/N_Xibm_JpsiXim_Run2,2) + pow(Err_Scale_Factor/Scale_Factor,2));
 
 	Int_t nGen_Run1 = 0, nGen_Run2 = 0;
 	Int_t nGen_Run1_wt = 0, nGen_Run2_wt = 0;
@@ -161,8 +161,6 @@ void Xib_JpsiLambda()
 	cout<<"Run 1 Generator Effs = "<<GenEff_Xib0_JpsiLambda_Run1*100
 	    <<" % +/- "<<Err_GenEff_Xib0_JpsiLambda_Run1*100<<" %"<<endl;
 
-
-
 	Float_t num_Run1_wt = (wt_Run1_nonZero->GetMean()*wt_Run1_nonZero->GetEntries()) +
 	                      (wt_Run1_Zero->GetMean()*wt_Run1_Zero->GetEntries());
 
@@ -195,20 +193,20 @@ void Xib_JpsiLambda()
 	    <<" % +/- "<<Err_Eff_Xib0_JpsiLambda_Run1_wt*100<<" %"<<endl;
 	cout<<"************************************************"<<endl;
 
-	BF_Ratio_Run1 = (N_Xib0_JpsiLambda_Run1/Eff_Xib0_JpsiLambda_Run1) * B_Xi0_LambdaPi0 / (N_Xib0_JpsiXi0_Run1/Eff_Xibm_JpsiLambda_Run1);
-	BF_Ratio_Run1_wt = (N_Xib0_JpsiLambda_Run1/Eff_Xib0_JpsiLambda_Run1_wt) * B_Xi0_LambdaPi0 / (N_Xib0_JpsiXi0_Run1/Eff_Xibm_JpsiLambda_Run1_wt);
+	BF_Ratio_Run1 = (N_Xib0_JpsiLambda_Run1/Eff_Xib0_JpsiLambda_Run1) * B_Xi0_LambdaPi0 / (N_Xib0_JpsiXi0_Run1/Eff_Xibm_JpsiXim_Run1);
+	BF_Ratio_Run1_wt = (N_Xib0_JpsiLambda_Run1/Eff_Xib0_JpsiLambda_Run1_wt) * B_Xi0_LambdaPi0 / (N_Xib0_JpsiXi0_Run1/Eff_Xibm_JpsiXim_Run1_wt);
 
 	Err_BF_Ratio_Run1 = BF_Ratio_Run1 * sqrt(pow(Err_N_Xib0_JpsiLambda_Run1/N_Xib0_JpsiLambda_Run1,2)
 	                                         + pow(Err_Eff_Xib0_JpsiLambda_Run1/Eff_Xib0_JpsiLambda_Run1,2)
 	                                         + pow(Err_B_Xi0_LambdaPi0/B_Xi0_LambdaPi0,2)
 	                                         + pow(Err_N_Xib0_JpsiXi0_Run1/N_Xib0_JpsiXi0_Run1,2)
-	                                         + pow(Err_Eff_Xibm_JpsiLambda_Run1/Eff_Xibm_JpsiLambda_Run1,2));
+	                                         + pow(Err_Eff_Xibm_JpsiXim_Run1/Eff_Xibm_JpsiXim_Run1,2));
 
 	Err_BF_Ratio_Run1_wt = BF_Ratio_Run1_wt * sqrt(pow(Err_N_Xib0_JpsiLambda_Run1/N_Xib0_JpsiLambda_Run1,2)
 	                                               + pow(Err_Eff_Xib0_JpsiLambda_Run1_wt/Eff_Xib0_JpsiLambda_Run1_wt,2)
 	                                               + pow(Err_B_Xi0_LambdaPi0/B_Xi0_LambdaPi0,2)
 	                                               + pow(Err_N_Xib0_JpsiXi0_Run1/N_Xib0_JpsiXi0_Run1,2)
-	                                               + pow(Err_Eff_Xibm_JpsiLambda_Run1_wt/Eff_Xibm_JpsiLambda_Run1_wt,2));
+	                                               + pow(Err_Eff_Xibm_JpsiXim_Run1_wt/Eff_Xibm_JpsiXim_Run1_wt,2));
 
 	//*****Temporarily assume Run2 effs for Xib0->J/psi Lambda is same as Run1 eff, until I get Run 2 MC******
 	Eff_Xib0_JpsiLambda_Run2        = Eff_Xib0_JpsiLambda_Run1;
@@ -217,31 +215,31 @@ void Xib_JpsiLambda()
 	Err_Eff_Xib0_JpsiLambda_Run2_wt = Err_Eff_Xib0_JpsiLambda_Run1_wt;
 	//*************************
 
-	BF_Ratio_Run2 = (N_Xib0_JpsiLambda_Run2/Eff_Xib0_JpsiLambda_Run2) * B_Xi0_LambdaPi0 / (N_Xib0_JpsiXi0_Run2/Eff_Xibm_JpsiLambda_Run2);
-	BF_Ratio_Run2_wt = (N_Xib0_JpsiLambda_Run2/Eff_Xib0_JpsiLambda_Run2_wt) * B_Xi0_LambdaPi0 / (N_Xib0_JpsiXi0_Run2/Eff_Xibm_JpsiLambda_Run2_wt);
+	BF_Ratio_Run2 = (N_Xib0_JpsiLambda_Run2/Eff_Xib0_JpsiLambda_Run2) * B_Xi0_LambdaPi0 / (N_Xib0_JpsiXi0_Run2/Eff_Xibm_JpsiXim_Run2);
+	BF_Ratio_Run2_wt = (N_Xib0_JpsiLambda_Run2/Eff_Xib0_JpsiLambda_Run2_wt) * B_Xi0_LambdaPi0 / (N_Xib0_JpsiXi0_Run2/Eff_Xibm_JpsiXim_Run2_wt);
 
 	Err_BF_Ratio_Run2 = BF_Ratio_Run2 * sqrt(pow(Err_N_Xib0_JpsiLambda_Run2/N_Xib0_JpsiLambda_Run2,2)
 	                                         + pow(Err_Eff_Xib0_JpsiLambda_Run2/Eff_Xib0_JpsiLambda_Run2,2)
 	                                         + pow(Err_B_Xi0_LambdaPi0/B_Xi0_LambdaPi0,2)
 	                                         + pow(Err_N_Xib0_JpsiXi0_Run2/N_Xib0_JpsiXi0_Run2,2)
-	                                         + pow(Err_Eff_Xibm_JpsiLambda_Run2/Eff_Xibm_JpsiLambda_Run2,2));
+	                                         + pow(Err_Eff_Xibm_JpsiXim_Run2/Eff_Xibm_JpsiXim_Run2,2));
 
 	Err_BF_Ratio_Run2_wt = BF_Ratio_Run2_wt * sqrt(pow(Err_N_Xib0_JpsiLambda_Run2/N_Xib0_JpsiLambda_Run2,2)
 	                                               + pow(Err_Eff_Xib0_JpsiLambda_Run2_wt/Eff_Xib0_JpsiLambda_Run2_wt,2)
 	                                               + pow(Err_B_Xi0_LambdaPi0/B_Xi0_LambdaPi0,2)
 	                                               + pow(Err_N_Xib0_JpsiXi0_Run2/N_Xib0_JpsiXi0_Run2,2)
-	                                               + pow(Err_Eff_Xibm_JpsiLambda_Run2_wt/Eff_Xibm_JpsiLambda_Run2_wt,2));
+	                                               + pow(Err_Eff_Xibm_JpsiXim_Run2_wt/Eff_Xibm_JpsiXim_Run2_wt,2));
 
 	cout<<"******RUN 1 RESULT***********"<<endl;
 	cout<<"Ncorr Xib0-> J/psi Lambda = "<<(N_Xib0_JpsiLambda_Run1/Eff_Xib0_JpsiLambda_Run1)<<endl;
-	cout<<"Ncorr Xib0-> J/psi Xi = "<<(N_Xib0_JpsiXi0_Run1/Eff_Xibm_JpsiLambda_Run1)<<endl;
+	cout<<"Ncorr Xib0-> J/psi Xi = "<<(N_Xib0_JpsiXi0_Run1/Eff_Xibm_JpsiXim_Run1)<<endl;
 
 	cout<<"UNWEIGHTED RATIO = "<<BF_Ratio_Run1<<" +/-	"<<Err_BF_Ratio_Run1<<endl;
 	cout<<"WEIGHTED RATIO = "  <<BF_Ratio_Run1_wt<<" +/-	"<<Err_BF_Ratio_Run1_wt<<endl;
 
 	cout<<"******RUN 2 RESULT***********"<<endl;
 	cout<<"Ncorr Xib0-> J/psi Lambda = "<<(N_Xib0_JpsiLambda_Run2/Eff_Xib0_JpsiLambda_Run2)<<endl;
-	cout<<"Ncorr Xib0-> J/psi Xi = "<<(N_Xib0_JpsiXi0_Run2/Eff_Xibm_JpsiLambda_Run2)<<endl;
+	cout<<"Ncorr Xib0-> J/psi Xi = "<<(N_Xib0_JpsiXi0_Run2/Eff_Xibm_JpsiXim_Run2)<<endl;
 
 	cout<<"UNWEIGHTED RATIO = "<<BF_Ratio_Run2<<" +/-	"<<Err_BF_Ratio_Run2<<endl;
 	cout<<"WEIGHTED RATIO = "  <<BF_Ratio_Run2_wt<<" +/-	"<<Err_BF_Ratio_Run2_wt<<endl;
