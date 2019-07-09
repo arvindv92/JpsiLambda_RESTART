@@ -283,14 +283,14 @@ void Xib_JpsiLambda()
 	// cout<<"Ncorr Xib0-> J/psi Lambda = "<<(N_Xib0_JpsiLambda_Run1/Eff_Xib0_JpsiLambda_Run1)<<endl;
 	// cout<<"Ncorr Xib0-> J/psi Xi = "<<(N_Xib0_JpsiXi0_Run1/Eff_Xibm_JpsiXim_Run1)<<endl;
 
-	cout<<"UNWEIGHTED RATIO = "<<BF_Ratio_Run1<<" +/-	"<<StatErr_BF_Ratio_Run1<<" +/-	"<<SystErr_BF_Ratio_Run1<<endl;
+	cout<<"UNWEIGHTED RATIO = "<<BF_Ratio_Run1<<" +/- "<<StatErr_BF_Ratio_Run1<<" +/-	"<<SystErr_BF_Ratio_Run1<<endl;
 	cout<<"WEIGHTED RATIO = "  <<BF_Ratio_Run1_wt<<" +/- "<<StatErr_BF_Ratio_Run1_wt<<" +/- "<<SystErr_BF_Ratio_Run1_wt<<endl;
 
 	cout<<"******RUN 2 RESULT***********"<<endl;
 	// cout<<"Ncorr Xib0-> J/psi Lambda = "<<(N_Xib0_JpsiLambda_Run2/Eff_Xib0_JpsiLambda_Run2)<<endl;
 	// cout<<"Ncorr Xib0-> J/psi Xi = "<<(N_Xib0_JpsiXi0_Run2/Eff_Xibm_JpsiXim_Run2)<<endl;
 
-	cout<<"UNWEIGHTED RATIO = "<<BF_Ratio_Run2<<" +/-	"<<StatErr_BF_Ratio_Run2<<" +/-	"<<SystErr_BF_Ratio_Run2<<endl;
+	cout<<"UNWEIGHTED RATIO = "<<BF_Ratio_Run2<<" +/- "<<StatErr_BF_Ratio_Run2<<" +/-	"<<SystErr_BF_Ratio_Run2<<endl;
 	cout<<"WEIGHTED RATIO = "  <<BF_Ratio_Run2_wt<<" +/- "<<StatErr_BF_Ratio_Run2_wt<<" +/-	"<<SystErr_BF_Ratio_Run2_wt<<endl;
 
 	//Combined Result
@@ -307,7 +307,7 @@ void Xib_JpsiLambda()
 	BF_Ratio_Comb_wt = ((BF_Ratio_Run1_wt/pow(Err_BF_Ratio_Run1_wt,2)) + (BF_Ratio_Run2_wt/pow(Err_BF_Ratio_Run2_wt,2))) * pow(Err_BF_Ratio_Comb_wt,2);
 
 	cout<<"******Combined Result************"<<endl;
-	cout<<"UNWEIGHTED RATIO = "<<BF_Ratio_Comb<<" +/-	"<<StatErr_BF_Ratio_Comb<<" +/-	"<<SystErr_BF_Ratio_Comb<<endl;
+	cout<<"UNWEIGHTED RATIO = "<<BF_Ratio_Comb<<" +/- "<<StatErr_BF_Ratio_Comb<<" +/-	"<<SystErr_BF_Ratio_Comb<<endl;
 	cout<<"WEIGHTED RATIO = "  <<BF_Ratio_Comb_wt<<" +/- "<<StatErr_BF_Ratio_Comb_wt<<" +/-	"<<SystErr_BF_Ratio_Comb_wt<<endl;
 
 }
