@@ -138,12 +138,12 @@ void Xib_JpsiLambda()
 
 	Float_t N_Xibm_JpsiXim_Run1 = 36.361;//Yield of fully reco'd Xib- -> J/psi Xi-, comes from fit to data
 	Float_t StatErr_N_Xibm_JpsiXim_Run1 = 7.757;//Fit error
-	Float_t SystErr_N_Xibm_JpsiXim_Run1 = 3.273;//Syst error coming from model choice
+	Float_t SystErr_N_Xibm_JpsiXim_Run1 = N_Xibm_JpsiXim_Run1*0.09;//Syst error coming from model choice
 	Float_t Err_N_Xibm_JpsiXim_Run1 = sqrt(pow(StatErr_N_Xibm_JpsiXim_Run1,2) + pow(SystErr_N_Xibm_JpsiXim_Run1,2));
 
 	Float_t N_Xibm_JpsiXim_Run2 = 173.281;
 	Float_t StatErr_N_Xibm_JpsiXim_Run2 = 16.421;
-	Float_t SystErr_N_Xibm_JpsiXim_Run2 = 10.397;
+	Float_t SystErr_N_Xibm_JpsiXim_Run2 = N_Xibm_JpsiXim_Run2*0.06;
 	Float_t Err_N_Xibm_JpsiXim_Run2 = sqrt(pow(StatErr_N_Xibm_JpsiXim_Run2,2) + pow(SystErr_N_Xibm_JpsiXim_Run2,2));
 
 	Float_t Scale_Factor = 1.087;
@@ -338,9 +338,9 @@ void Xib_JpsiLambda()
 
 	cout<<"*******Systematics Breakup Run 1**********"<<endl;
 	cout<<"TOTAL                :"<<(SystErr_BF_Ratio_Run1/BF_Ratio_Run1)*100<<endl;
-	cout<<"N_Xib0_JpsiLambda 		:"<<(SystErr_N_Xib0_JpsiLambda_Run1/N_Xib0_JpsiLambda_Run1)*100<<endl;
-	cout<<"N_Xibm_JpsiXim 		  :"<<(SystErr_N_Xibm_JpsiXim_Run1/N_Xibm_JpsiXim_Run1)*100<<endl;
-	cout<<"Scale_Factor 		    :"<<(Err_Scale_Factor/Scale_Factor)*100<<endl;
+	cout<<"N_Xib0_JpsiLambda    :"<<(SystErr_N_Xib0_JpsiLambda_Run1/N_Xib0_JpsiLambda_Run1)*100<<endl;
+	cout<<"N_Xibm_JpsiXim 	    :"<<(SystErr_N_Xibm_JpsiXim_Run1/N_Xibm_JpsiXim_Run1)*100<<endl;
+	cout<<"Scale_Factor 	    :"<<(Err_Scale_Factor/Scale_Factor)*100<<endl;
 	cout<<"Eff_Xib0_JpsiLambda  :"<<(Err_Eff_Xib0_JpsiLambda_Run1/Eff_Xib0_JpsiLambda_Run1)*100<<endl;
 	cout<<"Eff_Xibm_JpsiXim     :"<<(Err_Eff_Xibm_JpsiXim_Run1/Eff_Xibm_JpsiXim_Run1)*100<<endl;
 	cout<<"B_Xi0_LambdaPi0      :"<<(Err_B_Xi0_LambdaPi0/B_Xi0_LambdaPi0)*100<<endl;
@@ -349,9 +349,9 @@ void Xib_JpsiLambda()
 
 	cout<<"*******Systematics Breakup Run 2**********"<<endl;
 	cout<<"TOTAL                :"<<(SystErr_BF_Ratio_Run2/BF_Ratio_Run2)*100<<endl;
-	cout<<"N_Xib0_JpsiLambda 		:"<<(SystErr_N_Xib0_JpsiLambda_Run2/N_Xib0_JpsiLambda_Run2)*100<<endl;
-	cout<<"N_Xibm_JpsiXim 		  :"<<(SystErr_N_Xibm_JpsiXim_Run2/N_Xibm_JpsiXim_Run2)*100<<endl;
-	cout<<"Scale_Factor 		    :"<<(Err_Scale_Factor/Scale_Factor)*100<<endl;
+	cout<<"N_Xib0_JpsiLambda    :"<<(SystErr_N_Xib0_JpsiLambda_Run2/N_Xib0_JpsiLambda_Run2)*100<<endl;
+	cout<<"N_Xibm_JpsiXim 	    :"<<(SystErr_N_Xibm_JpsiXim_Run2/N_Xibm_JpsiXim_Run2)*100<<endl;
+	cout<<"Scale_Factor 	    :"<<(Err_Scale_Factor/Scale_Factor)*100<<endl;
 	cout<<"Eff_Xib0_JpsiLambda  :"<<(Err_Eff_Xib0_JpsiLambda_Run2/Eff_Xib0_JpsiLambda_Run2)*100<<endl;
 	cout<<"Eff_Xibm_JpsiXim     :"<<(Err_Eff_Xibm_JpsiXim_Run2/Eff_Xibm_JpsiXim_Run2)*100<<endl;
 	cout<<"B_Xi0_LambdaPi0      :"<<(Err_B_Xi0_LambdaPi0/B_Xi0_LambdaPi0)*100<<endl;
@@ -360,9 +360,9 @@ void Xib_JpsiLambda()
 
 	cout<<"*******Systematics Breakup Run 1 Weighted **********"<<endl;
 	cout<<"TOTAL                :"<<(SystErr_BF_Ratio_Run1_wt/BF_Ratio_Run1_wt)*100<<endl;
-	cout<<"N_Xib0_JpsiLambda 		:"<<(SystErr_N_Xib0_JpsiLambda_Run1/N_Xib0_JpsiLambda_Run1)*100<<endl;
-	cout<<"N_Xibm_JpsiXim 		  :"<<(SystErr_N_Xibm_JpsiXim_Run1/N_Xibm_JpsiXim_Run1)*100<<endl;
-	cout<<"Scale_Factor 		    :"<<(Err_Scale_Factor/Scale_Factor)*100<<endl;
+	cout<<"N_Xib0_JpsiLambda    :"<<(SystErr_N_Xib0_JpsiLambda_Run1/N_Xib0_JpsiLambda_Run1)*100<<endl;
+	cout<<"N_Xibm_JpsiXim 	    :"<<(SystErr_N_Xibm_JpsiXim_Run1/N_Xibm_JpsiXim_Run1)*100<<endl;
+	cout<<"Scale_Factor 	    :"<<(Err_Scale_Factor/Scale_Factor)*100<<endl;
 	cout<<"Eff_Xib0_JpsiLambda  :"<<(Err_Eff_Xib0_JpsiLambda_Run1_wt/Eff_Xib0_JpsiLambda_Run1_wt)*100<<endl;
 	cout<<"Eff_Xibm_JpsiXim     :"<<(Err_Eff_Xibm_JpsiXim_Run1_wt/Eff_Xibm_JpsiXim_Run1_wt)*100<<endl;
 	cout<<"B_Xi0_LambdaPi0      :"<<(Err_B_Xi0_LambdaPi0/B_Xi0_LambdaPi0)*100<<endl;
@@ -371,9 +371,9 @@ void Xib_JpsiLambda()
 
 	cout<<"*******Systematics Breakup Run 2 Weighted **********"<<endl;
 	cout<<"TOTAL                :"<<(SystErr_BF_Ratio_Run2_wt/BF_Ratio_Run2_wt)*100<<endl;
-	cout<<"N_Xib0_JpsiLambda 		:"<<(SystErr_N_Xib0_JpsiLambda_Run2/N_Xib0_JpsiLambda_Run2)*100<<endl;
-	cout<<"N_Xibm_JpsiXim 		  :"<<(SystErr_N_Xibm_JpsiXim_Run2/N_Xibm_JpsiXim_Run2)*100<<endl;
-	cout<<"Scale_Factor 		    :"<<(Err_Scale_Factor/Scale_Factor)*100<<endl;
+	cout<<"N_Xib0_JpsiLambda    :"<<(SystErr_N_Xib0_JpsiLambda_Run2/N_Xib0_JpsiLambda_Run2)*100<<endl;
+	cout<<"N_Xibm_JpsiXim 	    :"<<(SystErr_N_Xibm_JpsiXim_Run2/N_Xibm_JpsiXim_Run2)*100<<endl;
+	cout<<"Scale_Factor 	    :"<<(Err_Scale_Factor/Scale_Factor)*100<<endl;
 	cout<<"Eff_Xib0_JpsiLambda  :"<<(Err_Eff_Xib0_JpsiLambda_Run2_wt/Eff_Xib0_JpsiLambda_Run2_wt)*100<<endl;
 	cout<<"Eff_Xibm_JpsiXim     :"<<(Err_Eff_Xibm_JpsiXim_Run2_wt/Eff_Xibm_JpsiXim_Run2_wt)*100<<endl;
 	cout<<"B_Xi0_LambdaPi0      :"<<(Err_B_Xi0_LambdaPi0/B_Xi0_LambdaPi0)*100<<endl;

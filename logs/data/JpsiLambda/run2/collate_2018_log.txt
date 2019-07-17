@@ -1,9 +1,0 @@
-******************************************
-==> Starting CollateFiles: 
-Fri Mar  1 17:25:37 EST 2019
-WD = /data1/avenkate/JpsiLambda_RESTART
-******************************************
-Adding Run 2 Data ROOT files for 2018 to TChain. Sit tight
-DONE ATTACHING ROOT FILES
-DONE COLLATING
-WD = /data1/avenkate/JpsiLambda_RESTART

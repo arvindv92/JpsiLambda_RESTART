@@ -80,7 +80,7 @@ struct HypoTestInvOptions {
 	bool generateBinned = false;     // generate binned data sets
 	bool noSystematics = false;      // force all systematics to be off (i.e. set all nuisance parameters as constat
 	                                 // to their nominal values)
-	double nToysRatio = 2;           // ratio Ntoys S+b/ntoysB
+	double nToysRatio = 1;           // ratio Ntoys S+b/ntoysB
 	double maxPOI = -1;              // max value used of POI (in case of auto scan)
 	bool useProof = false;           // use Proof Lite when using toys (for freq or hybrid)
 	int nworkers = 0;                // number of worker for ProofLite (default use all available cores)
@@ -145,7 +145,8 @@ AnalyzeResult( HypoTestInverterResult * r,
                int npoints,
                const char * fileNameBase = 0,
                Int_t myLow = 4700,
-               Int_t myHigh = 6000 );
+               Int_t myHigh = 6000,
+	       Int_t sigType = 0);
 
 void SetParameter(const char * name, const char * value);
 void SetParameter(const char * name, bool value);
@@ -297,7 +298,8 @@ StandardHypoTestInvDemo(const char * infile = 0,
                         bool useNumberCounting = false,
                         const char * nuisPriorName = 0,
                         Int_t myLow = 4700,
-                        Int_t myHigh = 6000){
+                        Int_t myHigh = 6000,
+			Int_t sigType = 0){
 /*
 
    Other Parameter to pass in tutorial
@@ -435,7 +437,7 @@ StandardHypoTestInvDemo(const char * infile = 0,
 		}
 	}
 
-	double myUL = calc.AnalyzeResult( r, calculatorType, testStatType, useCLs, npoints, infile, myLow, myHigh);
+	double myUL = calc.AnalyzeResult( r, calculatorType, testStatType, useCLs, npoints, infile, myLow, myHigh, sigType);
 
 	// gSystem->RedirectOutput(0);
 	return myUL;
@@ -451,7 +453,8 @@ RooStats::HypoTestInvTool::AnalyzeResult( HypoTestInverterResult * r,
                                           int npoints,
                                           const char * fileNameBase,
                                           Int_t myLow,
-                                          Int_t myHigh){
+                                          Int_t myHigh,
+					  Int_t sigType){
 
 	// analyze result produced by the inverter, optionally save it in a file
 
@@ -554,9 +557,11 @@ RooStats::HypoTestInvTool::AnalyzeResult( HypoTestInverterResult * r,
 	c1->SetLogy(false);
 
 	plot->Draw("CLb 2CL"); // plot all and Clb
-
-	// c1->SaveAs(Form("../plots/data/JpsiLambda/UpperLimit/Asymptotic/CLs_HypatiaSig_ExpoBkg_%d_%d.pdf",myLow,myHigh));
-
+	
+	// if(sigType == 0)
+	//   c1->SaveAs(Form("../plots/ANA/CLs_Hypatia_Expo_%d_%d.pdf",myLow,myHigh));
+	// else if(sigType == 1)
+	//   c1->SaveAs(Form("../plots/ANA/CLs_CB_Expo_%d_%d.pdf",myLow,myHigh));
 	// if (useCLs)
 	//    plot->Draw("CLb 2CL");  // plot all and Clb
 	// else
@@ -972,8 +977,8 @@ RooStats::HypoTestInvTool::RunInverter(RooWorkspace * w,
 
 	// can speed up using proof-lite
 	if (mUseProof) {
-		ProofConfig pc(*w, mNWorkers, "", kFALSE);
-		toymcs->SetProofConfig(&pc); // enable proof
+	  ProofConfig pc(*w, mNWorkers, "", false);
+	  toymcs->SetProofConfig(&pc); // enable proof
 	}
 
 

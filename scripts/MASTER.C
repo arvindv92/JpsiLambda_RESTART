@@ -145,7 +145,7 @@ void MASTER(Int_t run = 1, Int_t config = 1, Int_t block = 1, Bool_t isData = tr
 		break;
 	}
 	}
-	for(mcType = 1; mcType <=10; mcType++)
+	for(mcType = 11; mcType <=11; mcType++)
 	{
 		if(mcType != 4 && mcType != 5)
 		{

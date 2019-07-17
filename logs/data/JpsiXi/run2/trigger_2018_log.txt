@@ -1,5 +1,0 @@
-******************************************
-==> Starting JpsiXi Trigger: 
-WD = /data1/avenkate/JpsiLambda_RESTART
-Fri Mar  1 18:03:54 EST 2019
-******************************************

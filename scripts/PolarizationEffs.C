@@ -487,15 +487,16 @@ void PolarizationEffs(Int_t run = 1)
 		p_gen_JpsiLambda.SetPxPyPzE(p_PX_gen_JpsiLambda,p_PY_gen_JpsiLambda,p_PZ_gen_JpsiLambda,p_PE_gen_JpsiLambda);
 		mu_gen_JpsiLambda.SetPxPyPzE(mu_PX_gen_JpsiLambda,mu_PY_gen_JpsiLambda,mu_PZ_gen_JpsiLambda,mu_PE_gen_JpsiLambda);
 
-		//Boost Lambda momentum to Lb rest frame
-		L_gen_JpsiLambda.Boost(-1*Lb_PX_gen_JpsiLambda/Lb_PE_gen_JpsiLambda,-1*Lb_PY_gen_JpsiLambda/Lb_PE_gen_JpsiLambda,-1*Lb_PZ_gen_JpsiLambda/Lb_PE_gen_JpsiLambda);
-		//Boost J/psi momentum to Lb rest frame
-		Jpsi_gen_JpsiLambda.Boost(-1*Lb_PX_gen_JpsiLambda/Lb_PE_gen_JpsiLambda,-1*Lb_PY_gen_JpsiLambda/Lb_PE_gen_JpsiLambda,-1*Lb_PZ_gen_JpsiLambda/Lb_PE_gen_JpsiLambda);
-
 		//Boost muon momentum to J/psi rest frame
 		mu_gen_JpsiLambda.Boost(-1*Jpsi_PX_gen_JpsiLambda/Jpsi_PE_gen_JpsiLambda,-1*Jpsi_PY_gen_JpsiLambda/Jpsi_PE_gen_JpsiLambda,-1*Jpsi_PZ_gen_JpsiLambda/Jpsi_PE_gen_JpsiLambda);
 		//Boost proton momentum to Lambda rest frame
 		p_gen_JpsiLambda.Boost(-1*L_PX_gen_JpsiLambda/L_PE_gen_JpsiLambda,-1*L_PY_gen_JpsiLambda/L_PE_gen_JpsiLambda,-1*L_PZ_gen_JpsiLambda/L_PE_gen_JpsiLambda);
+
+
+		//Boost Lambda momentum to Lb rest frame
+		L_gen_JpsiLambda.Boost(-1*Lb_PX_gen_JpsiLambda/Lb_PE_gen_JpsiLambda,-1*Lb_PY_gen_JpsiLambda/Lb_PE_gen_JpsiLambda,-1*Lb_PZ_gen_JpsiLambda/Lb_PE_gen_JpsiLambda);
+		//Boost J/psi momentum to Lb rest frame
+		Jpsi_gen_JpsiLambda.Boost(-1*Lb_PX_gen_JpsiLambda/Lb_PE_gen_JpsiLambda,-1*Lb_PY_gen_JpsiLambda/Lb_PE_gen_JpsiLambda,-1*Lb_PZ_gen_JpsiLambda/Lb_PE_gen_JpsiLambda);
 
 		n = (beam.Cross(Lb_gen_JpsiLambda.Vect())).Unit();
 		z1 = (L_gen_JpsiLambda.Vect()).Unit();
@@ -546,15 +547,15 @@ void PolarizationEffs(Int_t run = 1)
 		p_gen_JpsiSigma.SetPxPyPzE(p_PX_gen_JpsiSigma,p_PY_gen_JpsiSigma,p_PZ_gen_JpsiSigma,p_PE_gen_JpsiSigma);
 		mu_gen_JpsiSigma.SetPxPyPzE(mu_PX_gen_JpsiSigma,mu_PY_gen_JpsiSigma,mu_PZ_gen_JpsiSigma,mu_PE_gen_JpsiSigma);
 
-		//Boost Lambda momentum to Lb rest frame
-		L_gen_JpsiSigma.Boost(-1*Lb_PX_gen_JpsiSigma/Lb_PE_gen_JpsiSigma,-1*Lb_PY_gen_JpsiSigma/Lb_PE_gen_JpsiSigma,-1*Lb_PZ_gen_JpsiSigma/Lb_PE_gen_JpsiSigma);
-		//Boost J/psi momentum to Lb rest frame
-		Jpsi_gen_JpsiSigma.Boost(-1*Lb_PX_gen_JpsiSigma/Lb_PE_gen_JpsiSigma,-1*Lb_PY_gen_JpsiSigma/Lb_PE_gen_JpsiSigma,-1*Lb_PZ_gen_JpsiSigma/Lb_PE_gen_JpsiSigma);
-
 		//Boost muon momentum to J/psi rest frame
 		mu_gen_JpsiSigma.Boost(-1*Jpsi_PX_gen_JpsiSigma/Jpsi_PE_gen_JpsiSigma,-1*Jpsi_PY_gen_JpsiSigma/Jpsi_PE_gen_JpsiSigma,-1*Jpsi_PZ_gen_JpsiSigma/Jpsi_PE_gen_JpsiSigma);
 		//Boost proton momentum to Lambda rest frame
 		p_gen_JpsiSigma.Boost(-1*L_PX_gen_JpsiSigma/L_PE_gen_JpsiSigma,-1*L_PY_gen_JpsiSigma/L_PE_gen_JpsiSigma,-1*L_PZ_gen_JpsiSigma/L_PE_gen_JpsiSigma);
+
+		//Boost Lambda momentum to Lb rest frame
+		L_gen_JpsiSigma.Boost(-1*Lb_PX_gen_JpsiSigma/Lb_PE_gen_JpsiSigma,-1*Lb_PY_gen_JpsiSigma/Lb_PE_gen_JpsiSigma,-1*Lb_PZ_gen_JpsiSigma/Lb_PE_gen_JpsiSigma);
+		//Boost J/psi momentum to Lb rest frame
+		Jpsi_gen_JpsiSigma.Boost(-1*Lb_PX_gen_JpsiSigma/Lb_PE_gen_JpsiSigma,-1*Lb_PY_gen_JpsiSigma/Lb_PE_gen_JpsiSigma,-1*Lb_PZ_gen_JpsiSigma/Lb_PE_gen_JpsiSigma);
 
 		n = (beam.Cross(Lb_gen_JpsiSigma.Vect())).Unit();
 		z1 = (L_gen_JpsiSigma.Vect()).Unit();
@@ -605,15 +606,15 @@ void PolarizationEffs(Int_t run = 1)
 		p_rec_JpsiLambda.SetPxPyPzE(p_PX_rec_JpsiLambda,p_PY_rec_JpsiLambda,p_PZ_rec_JpsiLambda,p_PE_rec_JpsiLambda);
 		mu_rec_JpsiLambda.SetPxPyPzE(mu_PX_rec_JpsiLambda,mu_PY_rec_JpsiLambda,mu_PZ_rec_JpsiLambda,mu_PE_rec_JpsiLambda);
 
-		//Boost Lambda momentum to Lb rest frame
-		L_rec_JpsiLambda.Boost(-1*Lb_PX_rec_JpsiLambda/Lb_PE_rec_JpsiLambda,-1*Lb_PY_rec_JpsiLambda/Lb_PE_rec_JpsiLambda,-1*Lb_PZ_rec_JpsiLambda/Lb_PE_rec_JpsiLambda);
-		//Boost J/psi momentum to Lb rest frame
-		Jpsi_rec_JpsiLambda.Boost(-1*Lb_PX_rec_JpsiLambda/Lb_PE_rec_JpsiLambda,-1*Lb_PY_rec_JpsiLambda/Lb_PE_rec_JpsiLambda,-1*Lb_PZ_rec_JpsiLambda/Lb_PE_rec_JpsiLambda);
-
 		//Boost muon momentum to J/psi rest frame
 		mu_rec_JpsiLambda.Boost(-1*Jpsi_PX_rec_JpsiLambda/Jpsi_PE_rec_JpsiLambda,-1*Jpsi_PY_rec_JpsiLambda/Jpsi_PE_rec_JpsiLambda,-1*Jpsi_PZ_rec_JpsiLambda/Jpsi_PE_rec_JpsiLambda);
 		//Boost proton momentum to Lambda rest frame
 		p_rec_JpsiLambda.Boost(-1*L_PX_rec_JpsiLambda/L_PE_rec_JpsiLambda,-1*L_PY_rec_JpsiLambda/L_PE_rec_JpsiLambda,-1*L_PZ_rec_JpsiLambda/L_PE_rec_JpsiLambda);
+
+		//Boost Lambda momentum to Lb rest frame
+		L_rec_JpsiLambda.Boost(-1*Lb_PX_rec_JpsiLambda/Lb_PE_rec_JpsiLambda,-1*Lb_PY_rec_JpsiLambda/Lb_PE_rec_JpsiLambda,-1*Lb_PZ_rec_JpsiLambda/Lb_PE_rec_JpsiLambda);
+		//Boost J/psi momentum to Lb rest frame
+		Jpsi_rec_JpsiLambda.Boost(-1*Lb_PX_rec_JpsiLambda/Lb_PE_rec_JpsiLambda,-1*Lb_PY_rec_JpsiLambda/Lb_PE_rec_JpsiLambda,-1*Lb_PZ_rec_JpsiLambda/Lb_PE_rec_JpsiLambda);
 
 		n = (beam.Cross(Lb_rec_JpsiLambda.Vect())).Unit();
 		z1 = (L_rec_JpsiLambda.Vect()).Unit();
@@ -665,15 +666,15 @@ void PolarizationEffs(Int_t run = 1)
 		p_rec_JpsiSigma.SetPxPyPzE(p_PX_rec_JpsiSigma,p_PY_rec_JpsiSigma,p_PZ_rec_JpsiSigma,p_PE_rec_JpsiSigma);
 		mu_rec_JpsiSigma.SetPxPyPzE(mu_PX_rec_JpsiSigma,mu_PY_rec_JpsiSigma,mu_PZ_rec_JpsiSigma,mu_PE_rec_JpsiSigma);
 
-		//Boost Lambda momentum to Lb rest frame
-		L_rec_JpsiSigma.Boost(-1*Lb_PX_rec_JpsiSigma/Lb_PE_rec_JpsiSigma,-1*Lb_PY_rec_JpsiSigma/Lb_PE_rec_JpsiSigma,-1*Lb_PZ_rec_JpsiSigma/Lb_PE_rec_JpsiSigma);
-		//Boost J/psi momentum to Lb rest frame
-		Jpsi_rec_JpsiSigma.Boost(-1*Lb_PX_rec_JpsiSigma/Lb_PE_rec_JpsiSigma,-1*Lb_PY_rec_JpsiSigma/Lb_PE_rec_JpsiSigma,-1*Lb_PZ_rec_JpsiSigma/Lb_PE_rec_JpsiSigma);
-
 		//Boost muon momentum to J/psi rest frame
 		mu_rec_JpsiSigma.Boost(-1*Jpsi_PX_rec_JpsiSigma/Jpsi_PE_rec_JpsiSigma,-1*Jpsi_PY_rec_JpsiSigma/Jpsi_PE_rec_JpsiSigma,-1*Jpsi_PZ_rec_JpsiSigma/Jpsi_PE_rec_JpsiSigma);
 		//Boost proton momentum to Lambda rest frame
 		p_rec_JpsiSigma.Boost(-1*L_PX_rec_JpsiSigma/L_PE_rec_JpsiSigma,-1*L_PY_rec_JpsiSigma/L_PE_rec_JpsiSigma,-1*L_PZ_rec_JpsiSigma/L_PE_rec_JpsiSigma);
+
+		//Boost Lambda momentum to Lb rest frame
+		L_rec_JpsiSigma.Boost(-1*Lb_PX_rec_JpsiSigma/Lb_PE_rec_JpsiSigma,-1*Lb_PY_rec_JpsiSigma/Lb_PE_rec_JpsiSigma,-1*Lb_PZ_rec_JpsiSigma/Lb_PE_rec_JpsiSigma);
+		//Boost J/psi momentum to Lb rest frame
+		Jpsi_rec_JpsiSigma.Boost(-1*Lb_PX_rec_JpsiSigma/Lb_PE_rec_JpsiSigma,-1*Lb_PY_rec_JpsiSigma/Lb_PE_rec_JpsiSigma,-1*Lb_PZ_rec_JpsiSigma/Lb_PE_rec_JpsiSigma);
 
 		n = (beam.Cross(Lb_rec_JpsiSigma.Vect())).Unit();
 		z1 = (L_rec_JpsiSigma.Vect()).Unit();

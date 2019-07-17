@@ -1,35 +1,34 @@
-******************************************
 ==> Starting JpsiXi CollateFiles: 
-Tue Apr 23 19:05:18 EDT 2019
+Mon Jan 28 09:41:14 EST 2019
 WD = /data1/avenkate/JpsiLambda_RESTART
-******************************************
 Collating MC for WD = /data1/avenkate/JpsiXi/mc/LooseLL/Pythia8
 JpsiXi Run 1
 hadd Target file: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiXi/run1/jpsixi.root
 hadd compression setting for all ouput: 1
-hadd Source file 1: 2011_MagDown/1402_0/jpsixi.root
-hadd Source file 2: 2011_MagDown/1402_1/jpsixi.root
-hadd Source file 3: 2011_MagDown/1402_2/jpsixi.root
-hadd Source file 4: 2011_MagDown/1402_3/jpsixi.root
-hadd Source file 5: 2011_MagDown/1402_4/jpsixi.root
-hadd Source file 6: 2011_MagDown/1402_5/jpsixi.root
-hadd Source file 7: 2011_MagUp/1403_0/jpsixi.root
-hadd Source file 8: 2011_MagUp/1403_1/jpsixi.root
-hadd Source file 9: 2011_MagUp/1403_2/jpsixi.root
-hadd Source file 10: 2011_MagUp/1403_3/jpsixi.root
-hadd Source file 11: 2011_MagUp/1403_4/jpsixi.root
-hadd Source file 12: 2011_MagUp/1403_5/jpsixi.root
-hadd Source file 13: 2012_MagDown/1404_0/jpsixi.root
-hadd Source file 14: 2012_MagDown/1404_1/jpsixi.root
-hadd Source file 15: 2012_MagDown/1404_2/jpsixi.root
-hadd Source file 16: 2012_MagDown/1404_3/jpsixi.root
-hadd Source file 17: 2012_MagDown/1404_4/jpsixi.root
-hadd Source file 18: 2012_MagDown/1404_5/jpsixi.root
-hadd Source file 19: 2012_MagUp/1405_0/jpsixi.root
-hadd Source file 20: 2012_MagUp/1405_1/jpsixi.root
-hadd Source file 21: 2012_MagUp/1405_2/jpsixi.root
-hadd Source file 22: 2012_MagUp/1405_3/jpsixi.root
-hadd Source file 23: 2012_MagUp/1405_4/jpsixi.root
+hadd Source file 1: 2011_MagDown/1237_0/jpsixi.root
+hadd Source file 2: 2011_MagDown/1237_1/jpsixi.root
+hadd Source file 3: 2011_MagDown/1237_2/jpsixi.root
+hadd Source file 4: 2011_MagDown/1237_3/jpsixi.root
+hadd Source file 5: 2011_MagDown/1237_4/jpsixi.root
+hadd Source file 6: 2011_MagDown/1237_5/jpsixi.root
+hadd Source file 7: 2011_MagDown/1237_6/jpsixi.root
+hadd Source file 8: 2011_MagUp/1238_0/jpsixi.root
+hadd Source file 9: 2011_MagUp/1238_1/jpsixi.root
+hadd Source file 10: 2011_MagUp/1238_2/jpsixi.root
+hadd Source file 11: 2011_MagUp/1238_3/jpsixi.root
+hadd Source file 12: 2011_MagUp/1238_4/jpsixi.root
+hadd Source file 13: 2011_MagUp/1238_5/jpsixi.root
+hadd Source file 14: 2012_MagDown/1241_0/jpsixi.root
+hadd Source file 15: 2012_MagDown/1241_1/jpsixi.root
+hadd Source file 16: 2012_MagDown/1241_2/jpsixi.root
+hadd Source file 17: 2012_MagDown/1241_3/jpsixi.root
+hadd Source file 18: 2012_MagDown/1241_4/jpsixi.root
+hadd Source file 19: 2012_MagDown/1241_5/jpsixi.root
+hadd Source file 20: 2012_MagUp/1242_0/jpsixi.root
+hadd Source file 21: 2012_MagUp/1242_1/jpsixi.root
+hadd Source file 22: 2012_MagUp/1242_2/jpsixi.root
+hadd Source file 23: 2012_MagUp/1242_3/jpsixi.root
+hadd Source file 24: 2012_MagUp/1242_4/jpsixi.root
 hadd Sources and Target have different compression levels
 hadd merging will be slower
 hadd Target path: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiXi/run1/jpsixi.root:/
