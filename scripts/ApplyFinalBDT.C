@@ -321,13 +321,9 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	reader->AddVariable("log_lbminipchi2     := log10(Lb_MINIPCHI2)", &log_lbMinIpChi2);
 	reader->AddVariable("logacos_lbdira      := log10(acos(Lb_DIRA_OWNPV))", &logAcos_lbDira_ownPV);
 	reader->AddVariable("log_lbfd_ownpv      := log10(Lb_FD_OWNPV)", &log_lbFd_ownPV);
-	//	reader->AddVariable("log_ltau        := log10(L_TAU)", &log_lTau);
-	//reader->AddVariable("Lb_DTF_CTAUS_L", &l_dtfCtauS);
 
 	reader->AddVariable("log_jpsiminipchi2   := log10(Jpsi_MINIPCHI2)", &log_jpsiMinIpChi2);
 	reader->AddVariable("log_jpsimass        := log10(Jpsi_M)", &log_jpsiMass);
-	//	reader->AddVariable("Jpsi_CosTheta", &jpsi_cosTheta);
-	//	reader->AddVariable("Jpsi_PT", &jpsi_pt);
 
 	reader->AddVariable("log_lfdchi2         := log10(L_FDCHI2_ORIVX)", &log_lFdChi2_orivX);
 	reader->AddVariable("logacos_ldira_orivx := log10(acos(L_DIRA_ORIVX))", &logAcos_lDira_orivX);
@@ -335,21 +331,15 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	reader->AddVariable("logacos_ldira_ownpv := log10(acos(L_DIRA_OWNPV))", &logAcos_lDira_ownPV);
 	reader->AddVariable("L_dm", &l_dm);
 	reader->AddVariable("log_lminipchi2      := log10(L_MINIPCHI2)", &log_lMinIpChi2);
-	//	reader->AddVariable("L_PT", &l_pt);
-	//	reader->AddVariable("L_ENDVERTEX_CHI2", &l_endVertex_Chi2);
-	//	reader->AddVariable("L_CosTheta", &l_cosTheta);
 
-	//	reader->AddVariable("p_PIDp", &p_PIDp);
 	reader->AddVariable("log_pminipchi2      := log10(p_MINIPCHI2)", &log_pMinIpChi2);
 	reader->AddVariable("p_ProbNNghost", &p_ghostProbNN);
 	reader->AddVariable("log_p_PT            := log10(p_PT)", &log_p_pt);
 	reader->AddVariable("p_ProbNNp", &p_ProbNNp);
 
 	reader->AddVariable("pi_ProbNNghost", &pi_ghostProbNN);
-	//	reader->AddVariable("pi_PIDK", &pi_PIDK);
 	reader->AddVariable("log_piminipchi2     := log10(pi_MINIPCHI2)", &log_piMinIpChi2);
 	reader->AddVariable("log_pi_PT           := log10(pi_PT)", &log_pi_pt);
-	// reader->AddVariable("pi_ProbNNpi", &pi_ProbNNpi);
 
 	if(isoFlag && !zeroFlag)
 	{
@@ -409,7 +399,14 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	treeIn->SetBranchAddress("p_ProbNNghost", &pGhostProbNN);
 	treeIn->SetBranchAddress("p_PT", &pPT);
 
-	treeIn->SetBranchAddress("p_ProbNNp", &pProbNNp);
+	if(isData)
+	{
+		treeIn->SetBranchAddress("p_ProbNNp", &pProbNNp);
+	}
+	else
+	{
+		treeIn->SetBranchAddress("p_ProbNNp_corr", &pProbNNp);
+	}
 
 	treeIn->SetBranchAddress("pi_ProbNNghost", &piGhostProbNN);
 	//	treeIn->SetBranchAddress("pi_PIDK", &piPIDK);
