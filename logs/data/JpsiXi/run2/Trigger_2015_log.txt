@@ -1,0 +1,40 @@
+******************************************
+==> Starting JpsiXi Trigger: 
+WD = /data1/avenkate/JpsiLambda_RESTART
+Fri Jan 25 11:01:13 EST 2019
+******************************************
+Processing 285.16 +/- 11.1212luminosity
+******************************************
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+Output file = rootFiles/dataFiles/JpsiXi/run2/jpsixi_triggered_2015.root
+******************************************
+Incoming entries = 2245792
+I am making the following trigger cuts. Sit tight
+(Xib_Hlt1DiMuonHighMassDecision_TOS==1||Xib_Hlt1TrackMuonDecision_TOS==1||Xib_Hlt1TrackAllL0Decision_TOS==1)&&(Xib_Hlt2DiMuonDetachedJPsiDecision_TOS==1)
+0
+100000
+200000
+300000
+400000
+500000
+600000
+700000
+800000
+900000
+1000000
+1100000
+1200000
+1300000
+1400000
+1500000
+1600000
+1700000
+1800000
+1900000
+2000000
+2100000
+2200000
+Outgoing entries = 1858698
+==> Trigger is done! Huzzah!: Real time 0:47:36, CP time 2683.590
