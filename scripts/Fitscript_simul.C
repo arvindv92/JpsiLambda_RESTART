@@ -3807,7 +3807,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	//      fileName = Form("../rootFiles/dataFiles/JpsiLambda/ModelConfigs/Hypatia_ExpBkg_%d_%d_unbinned.root",myLow,myHigh);
 	// }
 
-	w.writeToFile(Form("../rootFiles/dataFiles/JpsiLambda/ModelConfigs/%s.root",fileName),true);
+	w.writeToFile(Form("../rootFiles/dataFiles/JpsiLambda/ModelConfigs/%s",fileName),true);
 
 	if(!inputFlag)
 	{
