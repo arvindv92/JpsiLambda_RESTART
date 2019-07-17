@@ -20,13 +20,15 @@ using namespace std;
 void MASTER(Int_t run = 1, Int_t config = 1, Int_t block = 1, Bool_t isData = true)
 //MCType = 1 for JpsiLambda MC
 //MCType = 2 for JpsiSigma MC
-//MCType = 3 for JpsiXi MC
+//MCType = 3 for JpsiXi MC (reco'd JpsiLambda)
 //MCType = 4 for Bu_JpsiX MC
 //MCType = 5 for Bd_JpsiX MC
 //MCType = 6 for Lambda*(1405)MC
 //MCType = 7 for Lambda*(1520)MC
 //MCType = 8 for Lambda*(1600)MC
 //MCType = 9 for chiC1 MC
+//MCType = 10 for JpsiKs MC
+//MCType = 11 for Xib0 MC
 {
 	TStopwatch sw;
 	sw.Start();
@@ -145,9 +147,9 @@ void MASTER(Int_t run = 1, Int_t config = 1, Int_t block = 1, Bool_t isData = tr
 		break;
 	}
 	}
-	for(mcType = 11; mcType <=11; mcType++)
+	for(mcType = 1; mcType <=11; mcType++)
 	{
-		if(mcType != 4 && mcType != 5)
+		if(mcType != 4 && mcType != 5 && mcType != 9)
 		{
 			cout<<"$$$$$$$$$$$ Processing MC Type "<<mcType<< " $$$$$$$$$$$$$$"<<endl;
 			cout<<"$$$$$$$$$$$ Processing Run "<<run<<" $$$$$$$$$$$"<<endl;
