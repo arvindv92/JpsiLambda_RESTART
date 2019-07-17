@@ -4,7 +4,7 @@
 ******************************************
 ******************************************
 Starting ApplyFinalBDT 
-Tue May 21 14:52:37 EDT 2019
+Wed Jul 17 15:43:44 EDT 2019
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
 ******************************************
@@ -23,4 +23,4 @@ Incoming Entries = 76142                         : Booking "BDT method" of type 
 --- ... Processing event: 0
 --- ... Processing event: 50000
 --- End of event loop: --- Created root file: rootFiles/mcFiles/JpsiLambda/Lst1600/run1/lst1600_LL_FinalBDT2_iso2_v0_noPID.root containing the MVA output histograms
-==> ApplyFinalBDT is done! Go optimize and fit!: Real time 0:00:19, CP time 19.000
+==> ApplyFinalBDT is done! Go optimize and fit!: Real time 0:00:20, CP time 19.260
