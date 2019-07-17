@@ -69,11 +69,11 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 	const char *rootFolder = "";
 	std::vector <Double_t> cuts;
 
-	Float_t bdtArray_nonZero[199];
-	Float_t fomArray_nonZero[199];
+	Float_t bdtArray_nonZero[99];
+	Float_t fomArray_nonZero[99];
 
-	Float_t bdtArray_Zero[199];
-	Float_t fomArray_Zero[199];
+	Float_t bdtArray_Zero[99];
+	Float_t fomArray_Zero[99];
 
 	rootFolder = Form("rootFiles/dataFiles/JpsiLambda/run%d",run);
 
@@ -210,7 +210,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 		nEntries = myTree->GetEntries();
 		cout<<"nEntries= "<<nEntries<<endl;
 
-		myTree->Draw(Form("BDT%d>>hsig0(200,-1.0,1.0)",bdtConf),"","goff");
+		myTree->Draw(Form("BDT%d>>hsig0(100,0.0,1.0)",bdtConf),"","goff");
 
 		hsig = (TH1D*)gDirectory->Get("hsig0");  //play around with this
 
@@ -228,7 +228,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 				sumwt_den += gbwt*tauwt;
 			}
 		}
-		for(Int_t i = 1; i < 200; i++)
+		for(Int_t i = 1; i < 100; i++)
 		{
 			sumwt_num = 0.;
 			BDT = hsig->GetBinCenter(i);
@@ -312,7 +312,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 	myLatex->SetTextSize(0.065);
 
 	TCanvas *c1 = new TCanvas();
-	TGraph *gr_nonZero = new TGraph(199,bdtArray_nonZero,fomArray_nonZero);
+	TGraph *gr_nonZero = new TGraph(99,bdtArray_nonZero,fomArray_nonZero);
 	gr_nonZero->SetTitle("");
 	gr_nonZero->SetLineWidth(2);
 	gr_nonZero->SetMarkerSize(0.7);
@@ -324,7 +324,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 	myLatex->DrawLatex(0.18,0.85,Form("LHCb Run %d",run));
 
 	TCanvas *c2 = new TCanvas();
-	TGraph *gr_Zero = new TGraph(199,bdtArray_Zero,fomArray_Zero);
+	TGraph *gr_Zero = new TGraph(99,bdtArray_Zero,fomArray_Zero);
 	gr_Zero->SetTitle("");
 	gr_Zero->SetLineWidth(2);
 	gr_Zero->SetMarkerSize(0.7);
