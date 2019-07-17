@@ -6,3 +6,4 @@
 rootFiles/
 dataset/*
 *.pyc
+*.DS_Store
