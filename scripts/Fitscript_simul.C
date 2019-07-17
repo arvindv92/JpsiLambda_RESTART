@@ -288,7 +288,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	else
 	{
 		cout<<"Input file exists! Hurray!"<<endl;
-		TFile *inputFile = Open(Form("Inputs_%d_%d_%.2f_%dMeV.root",myLow,myHigh,bdtCut,binwidth));
+		TFile *inputFile = Open(Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%.2f_%dMeV.root",myLow,myHigh,bdtCut,binwidth));
 		w1 = (RooWorkspace*)inputFile->Get("w1");
 		cout<<"Printing contents of w1 from input file"<<endl;
 		w1->Print("v");
