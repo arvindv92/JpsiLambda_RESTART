@@ -15,9 +15,16 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 {
 	Int_t binwidth = 4;
 
-	gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/Hypatia_Expo_%d_%d_%dMeVBins.txt",
-	                             myLow,myHigh,binwidth),"w");
-
+	if(mcRW)
+	{
+		gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/Hypatia_Expo_%d_%d_%dMeVBins.txt",
+		                             myLow,myHigh,binwidth),"w");
+	}
+	else
+	{
+		gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/Hypatia_Expo_%d_%d_%dMeVBins_noRW.txt",
+		                             myLow,myHigh,binwidth),"w");
+	}
 	// gSystem->RedirectOutput("tempLog.txt","a");
 	gROOT->ProcessLine(".x lhcbStyle.C");
 	Bool_t calcUL   = true;
@@ -272,11 +279,21 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 
 	// ************************Workspace for input data**************************
 	Bool_t inputFlag = false;
+	const char* inputFileName = "";
+	if(mcRW)
+	{
+		inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV.root",myLow,myHigh,binwidth);
+	}
+	else
+	{
+		inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_noRW.root",myLow,myHigh,binwidth);
+	}
 
-	if(!(gSystem->AccessPathName(Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV.root",myLow,myHigh,binwidth))))
+	if(!(gSystem->AccessPathName(inputFileName)))
 	{
 		inputFlag = true;
 	}
+
 	cout<<"inputFlag = "<<inputFlag<<endl;
 
 	RooWorkspace *w1 = new RooWorkspace("w1","w1");
@@ -288,7 +305,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	else
 	{
 		cout<<"Input file exists! Hurray!"<<endl;
-		TFile *inputFile = Open(Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV.root",myLow,myHigh,binwidth));
+		TFile *inputFile = Open(inputFileName);
 		w1 = (RooWorkspace*)inputFile->Get("w1");
 		cout<<"Printing contents of w1 from input file"<<endl;
 		w1->Print("v");
@@ -3811,7 +3828,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 
 	if(!inputFlag)
 	{
-		w1->writeToFile(Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV.root",myLow,myHigh,binwidth),true);
+		w1->writeToFile(inputFileName,true);
 	}
 	cout << "workspace written to file " << fileName << endl;
 
