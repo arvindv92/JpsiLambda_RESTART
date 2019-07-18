@@ -46,11 +46,11 @@ void Xib_JpsiLambda()
 	Float_t Err_BF_Ratio_Run2_wt = 0.0;
 
 	//Fit yield for Xib0 -> J/psi Lambda
-	Float_t N_Xib0_JpsiLambda_Run1 = 6.75;
-	Float_t N_Xib0_JpsiLambda_Run2 = 14.36;
+	Float_t N_Xib0_JpsiLambda_Run1 = 6.78;
+	Float_t N_Xib0_JpsiLambda_Run2 = 14.76;
 
-	Float_t StatErr_N_Xib0_JpsiLambda_Run1 = 2.96;//44% error
-	Float_t StatErr_N_Xib0_JpsiLambda_Run2 = 4.58;//32% error
+	Float_t StatErr_N_Xib0_JpsiLambda_Run1 = 2.97;//44% error
+	Float_t StatErr_N_Xib0_JpsiLambda_Run2 = 4.59;//32% error
 
 	Float_t SystErr_N_Xib0_JpsiLambda_Run1 = 0.03;
 	Float_t SystErr_N_Xib0_JpsiLambda_Run2 = 0.26;
@@ -91,8 +91,8 @@ void Xib_JpsiLambda()
 	Float_t Err_RecEff_Xib0_JpsiLambda_Run2_wt = 0.0;
 
 	//Reconstruction MC Eff for Xib- -> J/psi Xi-
-	Float_t RecEff_Xibm_JpsiXim_Run1 = 0.0631/100;
-	Float_t RecEff_Xibm_JpsiXim_Run2 = 0.0650/100;
+	Float_t RecEff_Xibm_JpsiXim_Run1 = 0.0648/100;
+	Float_t RecEff_Xibm_JpsiXim_Run2 = 0.0670/100;
 
 	Float_t Err_RecEff_Xibm_JpsiXim_Run1 = 0.0014/100;
 	Float_t Err_RecEff_Xibm_JpsiXim_Run2 = 0.0014/100;
@@ -167,7 +167,7 @@ void Xib_JpsiLambda()
 	Int_t nGen_Run1_wt = 0, nGen_Run2_wt = 0;
 
 	Float_t trackingUnc = 0.05; //5%
-	Float_t xiVtxUnc                = 0.014;//1.4%
+	Float_t xiVtxUnc    = 0.014;//1.4%
 
 	//Get efficiencies
 	TFile *fileIn_nonZero_Run1 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/Xib0/run1/xib0_cutoutks_LL_nonZeroTracks_noPID.root","READ");
