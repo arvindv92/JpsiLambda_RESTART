@@ -12,9 +12,12 @@ from sklearn.metrics import roc_auc_score
 
 run = int(sys.argv[1])
 
-columns = ['Lb_P', 'Lb_PT', 'Lb_ETA', 'Jpsi_P', 'Jpsi_PT', 'Jpsi_ETA', 'L_P',
-           'L_PT', 'L_ETA', 'p_P', 'p_PT', 'p_ETA', 'pi_P', 'pi_PT', 'pi_ETA',
-           'SW']
+columns = ['Lb_P', 'Lb_PT', 'Jpsi_P', 'Jpsi_PT', 'L_P',
+           'L_PT', 'p_P', 'p_PT', 'pi_P', 'pi_PT', 'SW']
+
+# columns = ['Lb_P', 'Lb_PT', 'Lb_ETA', 'Jpsi_P', 'Jpsi_PT', 'Jpsi_ETA', 'L_P',
+#            'L_PT', 'L_ETA', 'p_P', 'p_PT', 'p_ETA', 'pi_P', 'pi_PT', 'pi_ETA',
+#            'SW']
 
 # columns = ['Lb_P', 'Lb_PT', 'Jpsi_P', 'Jpsi_PT', 'L_P',
 #            'L_PT', 'p_P', 'p_PT', 'p_ETA', 'pi_P', 'pi_PT',
@@ -72,7 +75,7 @@ def draw_distributions(myoriginal, mytarget, new_original_weights, targetwts):
         # print('KS over ', column, ' = ', myks)
     plt.draw()
     plt.figure(figsize=[15, 7])
-    for id, column in enumerate(columns[6:12], 1):
+    for id, column in enumerate(columns[6:9], 1):
         xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
                                 [0.01, 99.99])
         plt.subplot(2, 3, id)
@@ -87,22 +90,22 @@ def draw_distributions(myoriginal, mytarget, new_original_weights, targetwts):
         sum_ks = sum_ks + myks
         # print('KS over ', column, ' = ', myks)
     plt.draw()
-    plt.figure(figsize=[15, 7])
-    for id, column in enumerate(columns[12:14], 1):
-        xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
-                                [0.01, 99.99])
-        plt.subplot(2, 3, id)
-        plt.hist(myoriginal[column], weights=new_original_weights, range=xlim,
-                 **hist_settings)
-        plt.hist(mytarget[column], weights=targetwts, range=xlim,
-                 **hist_settings)
-        plt.title(column)
-        myks = ks_2samp_weighted(myoriginal[column], mytarget[column],
-                                 weights1=new_original_weights,
-                                 weights2=targetwts)
-        sum_ks = sum_ks + myks
-        # print('KS over ', column, ' = ', myks)
-    plt.draw()
+    # plt.figure(figsize=[15, 7])
+    # for id, column in enumerate(columns[12:14], 1):
+    #     xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
+    #                             [0.01, 99.99])
+    #     plt.subplot(2, 3, id)
+    #     plt.hist(myoriginal[column], weights=new_original_weights, range=xlim,
+    #              **hist_settings)
+    #     plt.hist(mytarget[column], weights=targetwts, range=xlim,
+    #              **hist_settings)
+    #     plt.title(column)
+    #     myks = ks_2samp_weighted(myoriginal[column], mytarget[column],
+    #                              weights1=new_original_weights,
+    #                              weights2=targetwts)
+    #     sum_ks = sum_ks + myks
+    #     # print('KS over ', column, ' = ', myks)
+    # plt.draw()
     avg_ks = sum_ks / ctr
     print('average of KS distances = ', avg_ks)
     return avg_ks
@@ -161,12 +164,12 @@ print 'After GB reweighting on all'
 avgks_rw = draw_distributions(original.iloc[:, :-1], target.iloc[:, :-1],
                               gb_weights, target_weights)
 
-root_numpy.array2root(gb_weights_noTM,
-                      mcPath + 'jpsilambda_weighted_temp.root',
-                      treename='MyTuple', mode='recreate')
+# root_numpy.array2root(gb_weights_noTM,
+#                       mcPath + 'jpsilambda_weighted_temp.root',
+#                       treename='MyTuple', mode='recreate')
 
 # *******Exporting RW formula for re-use********
-with open(mcPath + 'gb_wts_temp.pkl', 'w') as f:
+with open(mcPath + 'gb_wts.pkl', 'w') as f:
     pickle.dump(reweighter, f)
 # **********************************************
 
