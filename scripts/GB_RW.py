@@ -7,8 +7,8 @@ from hep_ml import reweight
 from matplotlib import pyplot as plt
 from sklearn.model_selection import train_test_split
 from hep_ml.metrics_utils import ks_2samp_weighted
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.metrics import roc_auc_score
+# from sklearn.ensemble import GradientBoostingClassifier
+# from sklearn.metrics import roc_auc_score
 
 run = int(sys.argv[1])
 
