@@ -18,40 +18,40 @@ using namespace std;
 //SOMETHING IS GOING WRONG. LOT OF THE WEIGHTS ARE ZERO.
 void reweight_Lst1405(Int_t run = 1)
 {
-	TFile *filein = nullptr, *mcfile_MV = nullptr, *mcfile_BONN = nullptr;
-	TFile *genFile_MV = nullptr, *genFile_BONN = nullptr;
-	TTree *treein = nullptr, *treein_gen = nullptr;
-	TTree *treeout_MV = nullptr, *treeout_BONN = nullptr;
+	TFile *filein        = nullptr, *mcfile_MV       = nullptr, *mcfile_BONN = nullptr;
+	TFile *genFile_MV    = nullptr, *genFile_BONN    = nullptr;
+	TTree *treein        = nullptr, *treein_gen      = nullptr;
+	TTree *treeout_MV    = nullptr, *treeout_BONN    = nullptr;
 	TTree *genTreeout_MV = nullptr, *genTreeout_BONN = nullptr;
 
-	Double_t Lst_PE, Lst_PX, Lst_PY, Lst_PZ;
-	Double_t Jpsi_PE, Jpsi_PX, Jpsi_PY, Jpsi_PZ;
-	Double_t Lambda_PE, Lambda_PX, Lambda_PY,Lambda_PZ;
-	Double_t mass_gen, MVweight, BONNweight;
-	Double_t MVweight_gen, BONNweight_gen;
+	Double_t Lst_PE       = 0.0, Lst_PX         = 0.0, Lst_PY     = 0.0, Lst_PZ   = 0.0;
+	Double_t Jpsi_PE      = 0.0, Jpsi_PX        = 0.0, Jpsi_PY    = 0.0, Jpsi_PZ  = 0.0;
+	Double_t Lambda_PE    = 0.0, Lambda_PX      = 0.0, Lambda_PY  = 0.0,Lambda_PZ = 0.0;
+	Double_t mass_gen     = 0.0, MVweight       = 0.0, BONNweight = 0.0;
+	Double_t MVweight_gen = 0.0, BONNweight_gen = 0.0;
 
-	Int_t nentries, nentries_gen, massbin_MV, massbin_BONN;
-	Int_t low_MV, high_MV, low_BONN, high_BONN;//limits for Lst mass in which the models work
-	Int_t nbins_MV, nbins_BONN, bkgcat;
+	Int_t nentries = 0, nentries_gen = 0, massbin_MV = 0, massbin_BONN = 0;
+	Int_t low_MV   = 0, high_MV      = 0, low_BONN   = 0, high_BONN    = 0;//limits for Lst mass in which the models work
+	Int_t nbins_MV = 0, nbins_BONN   = 0, bkgcat     = 0;
 
-	ULong64_t evtno_rec, evtno_gen;
-	UInt_t runno_rec, runno_gen;
+	ULong64_t evtno_rec = 0, evtno_gen = 0;
+	UInt_t runno_rec    = 0, runno_gen = 0;
 
 	vector<ULong64_t> evtno;
 	vector<UInt_t> runno;
 	vector<Double_t>lstmass_gen;
 
-	low_MV = 1300;//these values are rough estimates. Look at paper and get precise limits
-	high_MV = 2523;
-	low_BONN = 1328;
+	low_MV    = 1300;//these values are rough estimates. Look at paper and get precise limits
+	high_MV   = 2523;
+	low_BONN  = 1328;
 	high_BONN = 2519;
 
 	Int_t binwidth = 1;
 
-	nbins_MV = (Int_t)(high_MV - low_MV)/binwidth;
+	nbins_MV   = (Int_t)(high_MV - low_MV)/binwidth;
 	nbins_BONN = (Int_t)(high_BONN - low_BONN)/binwidth;
 
-	TH1D *theory_MVmodel = new TH1D("theory_MVmodel","",nbins_MV,low_MV,high_MV);
+	TH1D *theory_MVmodel   = new TH1D("theory_MVmodel","",nbins_MV,low_MV,high_MV);
 	TH1D *theory_BONNmodel = new TH1D("theory_BONNmodel","",nbins_BONN,low_BONN,high_BONN);
 
 	// gSystem->Exec("cp ./Lst1405_total.root ./Lst1405_total_MVrw.root");
@@ -60,8 +60,9 @@ void reweight_Lst1405(Int_t run = 1)
 	// mcfile = TFile::Open("./Lst1405_total_MVrw.root","UPDATE");
 	// treein = (TTree*)mcfile->Get("MCDecayTreeTuple/MCDecayTree");
 
-	filein = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405.root",run),"READ");
-	treein = (TTree*)filein->Get("Lb2JpsiLTree/MyTuple");
+	filein = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405_pidgen.root",run),"READ");
+
+	treein     = (TTree*)filein->Get("Lb2JpsiLTree/MyTuple");
 	treein_gen = (TTree*)filein->Get("MCTuple/MCDecayTree");
 
 	cout<<"Copying Trees"<<endl;
@@ -205,6 +206,7 @@ void reweight_Lst1405(Int_t run = 1)
 		//****************************************
 
 
+		//The purpose of the loop below is to fill the generated Lst mass corresponding to a reconstructed event
 		for(Int_t j=0; j<len; j++)
 		{
 			if((runno_gen == runno[j]) && (evtno_gen == evtno[j]))
@@ -254,7 +256,7 @@ void reweight_Lst1405(Int_t run = 1)
 
 	cout<<"Done looping over generated tree."<<endl;
 
-	cout<<"ctr_notfound = "<<ctr_notfound<<endl;
+	// cout<<"ctr_notfound = "<<ctr_notfound<<endl;
 	cout<<"Length of evtno vector = "<<evtno.size()<<" and length of lstmass vector = "<<lstmass_gen.size()<<endl;
 	//How many entries of lstmass_gen are zero at this stage?
 	Int_t zeroct = 0;
