@@ -136,8 +136,6 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 
 	Int_t entries_init   = 0, entries_final_LL = 0, entries_final_DD = 0;
 	Int_t entries_gen    = 0, Lb_BKGCAT        = 0, p_TRACK_Type     = 0;
-	Int_t p_MOTHER_ID    = 0, pi_MOTHER_ID     = 0, L_MOTHER_ID      = 0;
-	Int_t L_GD_MOTHER_ID = 0, Jpsi_MOTHER_ID   = 0;
 
 	Float_t eff_excl_LL    = 0.0, eff_excl_LL_err = 0.0;
 	Float_t eff_incl_LL    = 0.0, eff_incl_LL_err = 0.0;
@@ -147,11 +145,12 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 
 	Double_t Lb_TAU  = 0.0, Lb_ETA  = 0.0, Lb_PT  = 0.0;
 	Double_t pi_PIDp = 0.0, pi_PIDK = 0.0, p_PIDp = 0.0;
-	Double_t p_PIDK  = 0.0, L_TAU   = 0.0;
+	Double_t p_PIDK  = 0.0, L_TAU   = 0.0, L_M = 0.0;
 	Bool_t genFlag   = false;
 
 	TCut dtfCut = "", lifetimeCut = "", pidCut = "";
 	TCut accCut = "", tmCut       = "";
+	TCut LMassCut = "";
 
 	TFile *fileIn = nullptr, *fileOut_LL = nullptr, *fileOut_DD = nullptr;
 	TTree *treeIn = nullptr, *treeOut_LL = nullptr, *treeOut_DD = nullptr;
@@ -176,11 +175,6 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 		// treeOut_DD = (TTree*)treeIn->CloneTree(0);
 
 		treeIn->SetBranchAddress("Lb_BKGCAT",&Lb_BKGCAT);
-		treeIn->SetBranchAddress("p_MC_MOTHER_ID",&p_MOTHER_ID);
-		treeIn->SetBranchAddress("pi_MC_MOTHER_ID",&pi_MOTHER_ID);
-		treeIn->SetBranchAddress("L_MC_MOTHER_ID",&L_MOTHER_ID);
-		treeIn->SetBranchAddress("L_MC_GD_MOTHER_ID",&L_GD_MOTHER_ID);
-		treeIn->SetBranchAddress("Jpsi_MC_MOTHER_ID",&Jpsi_MOTHER_ID);
 
 	} // end MC block
 	else //Data
@@ -225,6 +219,7 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 	treeIn->SetBranchAddress("Lb_TAU",&Lb_TAU);
 	treeIn->SetBranchAddress("Lb_PT",&Lb_PT);
 	treeIn->SetBranchAddress("L_TAU",&L_TAU);
+	treeIn->SetBranchAddress("L_M",&L_M);
 	treeIn->SetBranchAddress("Lb_ConsLb_chi2",&Lb_ConsLb_chi2);
 	treeIn->SetBranchAddress("Lb_ConsLb_nDOF",&Lb_ConsLb_nDOF);
 	treeIn->SetBranchAddress("Lb_ETA",&Lb_ETA);
@@ -238,16 +233,16 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 	lifetimeCut = "(Lb_TAU > 0)&&(L_TAU > 0)";
 	dtfCut = "(Lb_ConsLb_chi2/Lb_ConsLb_nDOF > 0 && Lb_ConsLb_chi2/Lb_ConsLb_nDOF < 50)";
 	accCut = "(Lb_ETA > 2 && Lb_ETA < 6 && Lb_PT < 20000)";
-
-	if(run == 1)
-	{
-		//This also ensures that pi_PIDK != -1000 && p_PIDK != -1000
-		pidCut = "(pi_PIDp != 0 && pi_PIDp != -1000 && pi_PIDK != 0 && p_PIDp !=0 && p_PIDp!= -1000 && p_PIDK !=0)";
-	}
-	else if(run == 2)
-	{
-		pidCut = "(pi_PIDp != -1000 && p_PIDp!= -1000)";
-	}
+	LMassCut = "(L_M > 1104 && L_M < 1129)";
+	// if(run == 1)
+	// {
+	//      //This also ensures that pi_PIDK != -1000 && p_PIDK != -1000
+	//      pidCut = "(pi_PIDp != 0 && pi_PIDp != -1000 && pi_PIDK != 0 && p_PIDp !=0 && p_PIDp!= -1000 && p_PIDK !=0)";
+	// }
+	// else if(run == 2)
+	// {
+	//      pidCut = "(pi_PIDp != -1000 && p_PIDp!= -1000)";
+	// }
 	// if(!isData)
 	// {
 	//      if(mcType == 1)
@@ -271,6 +266,7 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 	dtfCut.Print();
 	// pidCut.Print();
 	accCut.Print();
+	LMassCut.Print();
 	//if(!isData) tmCut.Print();
 
 	for(Int_t i = 0; i < entries_init; i++)
@@ -280,26 +276,29 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 			cout<<i<<endl;
 		}
 		treeIn->GetEntry(i);
-		if(Lb_TAU > 0 && L_TAU > 0) //require lifetimes to be positive, universal
+		if(L_M > 1104 && L_M < 1129)
 		{
-			if(Lb_ETA > 2 && Lb_ETA < 6 && Lb_PT < 20000) //acceptance cut, universal, pt < 20000 cut needs to be added here.
+			if(Lb_TAU > 0 && L_TAU > 0) //require lifetimes to be positive, universal
 			{
 				if((Lb_ConsLb_chi2/Lb_ConsLb_nDOF) > 0 && (Lb_ConsLb_chi2/Lb_ConsLb_nDOF) < 50)// DTF chi2 cut, universal
 				{
-					// if((run == 1 && pi_PIDp != 0 && pi_PIDp != -1000 && pi_PIDK != 0 && p_PIDp !=0 && p_PIDp!= -1000 && p_PIDK !=0)|| (run == 2 && p_PIDp != -1000 && pi_PIDp != -1000))
-					// {
-					// if( (isData == 1) || (isData == 0 && abs(p_MOTHER_ID) == 3122 && abs(pi_MOTHER_ID) == 3122 && ((mcType == 1 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 5122) || (mcType == 2 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 3212 && abs(L_GD_MOTHER_ID) == 5122) || (mcType == 3 && abs(Jpsi_MOTHER_ID) == 5132 && abs(L_MOTHER_ID) == 3312 && abs(L_GD_MOTHER_ID) == 5122))))
-					// {
-					// if(p_TRACK_Type == 3)
-					// {
-					treeOut_LL->Fill();
-					// }
-					// else
-					// {
-					//      treeOut_DD->Fill();
-					// }
-					// }
-					// }
+					if(Lb_ETA > 2 && Lb_ETA < 6 && Lb_PT < 20000)         //acceptance cut, universal, pt < 20000 cut needs to be added here.
+					{
+						// if((run == 1 && pi_PIDp != 0 && pi_PIDp != -1000 && pi_PIDK != 0 && p_PIDp !=0 && p_PIDp!= -1000 && p_PIDK !=0)|| (run == 2 && p_PIDp != -1000 && pi_PIDp != -1000))
+						// {
+						// if( (isData == 1) || (isData == 0 && abs(p_MOTHER_ID) == 3122 && abs(pi_MOTHER_ID) == 3122 && ((mcType == 1 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 5122) || (mcType == 2 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 3212 && abs(L_GD_MOTHER_ID) == 5122) || (mcType == 3 && abs(Jpsi_MOTHER_ID) == 5132 && abs(L_MOTHER_ID) == 3312 && abs(L_GD_MOTHER_ID) == 5122))))
+						// {
+						// if(p_TRACK_Type == 3)
+						// {
+						treeOut_LL->Fill();
+						// }
+						// else
+						// {
+						//      treeOut_DD->Fill();
+						// }
+						// }
+						// }
+					}
 				}
 			}
 		}
