@@ -18,10 +18,10 @@ using namespace std;
 //SOMETHING IS GOING WRONG. LOT OF THE WEIGHTS ARE ZERO.
 void reweight_Lst1405(Int_t run = 1)
 {
-	TFile *filein        = nullptr, *mcfile_MV       = nullptr, *mcfile_BONN = nullptr;
+	TFile *fileIn        = nullptr, *fileIn_gen = nullptr;// *mcfile_MV       = nullptr, *mcfile_BONN = nullptr;
 	TFile *genFile_MV    = nullptr, *genFile_BONN    = nullptr;
-	TTree *treein        = nullptr, *treein_gen      = nullptr;
-	TTree *treeout_MV    = nullptr, *treeout_BONN    = nullptr;
+	TTree *treeIn        = nullptr, *treeIn_gen      = nullptr;
+//TTree *treeout_MV    = nullptr, *treeout_BONN    = nullptr;
 	TTree *genTreeout_MV = nullptr, *genTreeout_BONN = nullptr;
 
 	Double_t Lst_PE       = 0.0, Lst_PX         = 0.0, Lst_PY     = 0.0, Lst_PZ   = 0.0;
@@ -58,33 +58,31 @@ void reweight_Lst1405(Int_t run = 1)
 	// gSystem->Exec("cp ./Lst1405_total.root ./Lst1405_total_BONNrw.root");
 
 	// mcfile = TFile::Open("./Lst1405_total_MVrw.root","UPDATE");
-	// treein = (TTree*)mcfile->Get("MCDecayTreeTuple/MCDecayTree");
+	// treeIn = (TTree*)mcfile->Get("MCDecayTreeTuple/MCDecayTree");
 
-	filein = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405.root",run),"READ");
+	fileIn = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405_pidgen.root",run),"UPDATE");
+	treeIn     = (TTree*)fileIn->Get("MyTuple");
 
-	treein     = (TTree*)filein->Get("Lb2JpsiLTree/MyTuple");
-	treein_gen = (TTree*)filein->Get("MCTuple/MCDecayTree");
+	fileIn_gen = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405.root",run),"READ");
+	treeIn_gen = (TTree*)fileIn_gen->Get("MCTuple/MCDecayTree");
 
 	cout<<"Copying Trees"<<endl;
-	mcfile_MV = new TFile(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405_MV.root",run),"RECREATE");
-	// treeout_MV = (TTree*)treein->CloneTree(0);
-	treeout_MV = (TTree*)treein->CopyTree("");
-	// treeout_MV = new TTree("MyTuple","");
-	mcfile_BONN = new TFile(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405_BONN.root",run),"RECREATE");
-	treeout_BONN = (TTree*)treein->CopyTree("");
-	// treeout_BONN = new TTree("MyTuple","");
-	// treeout_BONN = (TTree*)treein->CloneTree(0);
 
-	genFile_MV = new TFile(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405_gen_MV.root",run),"RECREATE");
+	// mcfile_MV = new TFile(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405_MV.root",run),"RECREATE");
+	// treeout_MV = (TTree*)treeIn->CopyTree("");
+	// mcfile_BONN = new TFile(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405_BONN.root",run),"RECREATE");
+	// treeout_BONN = (TTree*)treeIn->CopyTree("");
+
+	genFile_MV = new TFile(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/RW/lst1405_gen_MV.root",run),"RECREATE");
 	genTreeout_MV = new TTree("MCDecayTree","");
 
-	genFile_BONN = new TFile(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405_gen_BONN.root",run),"RECREATE");
+	genFile_BONN = new TFile(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/RW/lst1405_gen_BONN.root",run),"RECREATE");
 	genTreeout_BONN = new TTree("MCDecayTree","");
 
 	cout<<"Done copying Trees"<<endl;
 
-	treein_gen->Draw(Form("sqrt(pow(Lambda_1405_0_TRUEP_E,2) - pow(Lambda_1405_0_TRUEP_X,2) - pow(Lambda_1405_0_TRUEP_Y,2) - pow(Lambda_1405_0_TRUEP_Z,2) )>>hmv(%d,%d,%d)",nbins_MV,low_MV,high_MV),"","goff");
-	treein_gen->Draw(Form("sqrt(pow(Lambda_1405_0_TRUEP_E,2) - pow(Lambda_1405_0_TRUEP_X,2) - pow(Lambda_1405_0_TRUEP_Y,2) - pow(Lambda_1405_0_TRUEP_Z,2) )>>hbonn(%d,%d,%d)",nbins_BONN,low_BONN,high_BONN),"","goff");
+	treeIn_gen->Draw(Form("sqrt(pow(Lambda_1405_0_TRUEP_E,2) - pow(Lambda_1405_0_TRUEP_X,2) - pow(Lambda_1405_0_TRUEP_Y,2) - pow(Lambda_1405_0_TRUEP_Z,2) )>>hmv(%d,%d,%d)",nbins_MV,low_MV,high_MV),"","goff");
+	treeIn_gen->Draw(Form("sqrt(pow(Lambda_1405_0_TRUEP_E,2) - pow(Lambda_1405_0_TRUEP_X,2) - pow(Lambda_1405_0_TRUEP_Y,2) - pow(Lambda_1405_0_TRUEP_Z,2) )>>hbonn(%d,%d,%d)",nbins_BONN,low_BONN,high_BONN),"","goff");
 
 	TH1D *hmv = (TH1D*)gDirectory->Get("hmv");
 	hmv->Scale(1.0/hmv->Integral());
@@ -107,10 +105,10 @@ void reweight_Lst1405(Int_t run = 1)
 	theory_MVmodel->SetLineColor(kMagenta+2);
 	hmv->SetLineColor(kRed);
 	hbonn->SetLineColor(kRed);
-
-	theory_BONNmodel->Draw("HIST");
-	theory_MVmodel->Draw("sameHIST");
-	hmv->Draw("same");
+	//
+	// theory_BONNmodel->Draw("HIST");
+	// theory_MVmodel->Draw("sameHIST");
+	// hmv->Draw("same");
 
 	TH1D *wts_MV = (TH1D*)theory_MVmodel->Clone("wts_MV");
 	TH1D *wts_BONN = (TH1D*)theory_BONNmodel->Clone("wts_BONN");
@@ -118,39 +116,41 @@ void reweight_Lst1405(Int_t run = 1)
 	wts_MV->Divide(hmv);
 	wts_BONN->Divide(hbonn);
 
-	new TCanvas();
-	wts_MV->Draw();
+	// new TCanvas();
+	// wts_MV->Draw();
+	//
+	// new TCanvas();
+	// wts_BONN->Draw();
 
-	new TCanvas();
-	wts_BONN->Draw();
+	nentries = treeIn->GetEntries();
+	nentries_gen = treeIn_gen->GetEntries();
 
-	nentries = treein->GetEntries();
-	nentries_gen = treein_gen->GetEntries();
+	treeIn_gen->SetBranchAddress("Lambda_1405_0_TRUEP_E",&Lst_PE);
+	treeIn_gen->SetBranchAddress("Lambda_1405_0_TRUEP_X",&Lst_PX);
+	treeIn_gen->SetBranchAddress("Lambda_1405_0_TRUEP_Y",&Lst_PY);
+	treeIn_gen->SetBranchAddress("Lambda_1405_0_TRUEP_Z",&Lst_PZ);
 
-	treein_gen->SetBranchAddress("Lambda_1405_0_TRUEP_E",&Lst_PE);
-	treein_gen->SetBranchAddress("Lambda_1405_0_TRUEP_X",&Lst_PX);
-	treein_gen->SetBranchAddress("Lambda_1405_0_TRUEP_Y",&Lst_PY);
-	treein_gen->SetBranchAddress("Lambda_1405_0_TRUEP_Z",&Lst_PZ);
+	treeIn_gen->SetBranchAddress("J_psi_1S_TRUEP_E",&Jpsi_PE);
+	treeIn_gen->SetBranchAddress("J_psi_1S_TRUEP_X",&Jpsi_PX);
+	treeIn_gen->SetBranchAddress("J_psi_1S_TRUEP_Y",&Jpsi_PY);
+	treeIn_gen->SetBranchAddress("J_psi_1S_TRUEP_Z",&Jpsi_PZ);
 
-	treein_gen->SetBranchAddress("J_psi_1S_TRUEP_E",&Jpsi_PE);
-	treein_gen->SetBranchAddress("J_psi_1S_TRUEP_X",&Jpsi_PX);
-	treein_gen->SetBranchAddress("J_psi_1S_TRUEP_Y",&Jpsi_PY);
-	treein_gen->SetBranchAddress("J_psi_1S_TRUEP_Z",&Jpsi_PZ);
+	treeIn_gen->SetBranchAddress("Lambda0_TRUEP_E",&Lambda_PE);
+	treeIn_gen->SetBranchAddress("Lambda0_TRUEP_X",&Lambda_PX);
+	treeIn_gen->SetBranchAddress("Lambda0_TRUEP_Y",&Lambda_PY);
+	treeIn_gen->SetBranchAddress("Lambda0_TRUEP_Z",&Lambda_PZ);
 
-	treein_gen->SetBranchAddress("Lambda0_TRUEP_E",&Lambda_PE);
-	treein_gen->SetBranchAddress("Lambda0_TRUEP_X",&Lambda_PX);
-	treein_gen->SetBranchAddress("Lambda0_TRUEP_Y",&Lambda_PY);
-	treein_gen->SetBranchAddress("Lambda0_TRUEP_Z",&Lambda_PZ);
+	treeIn_gen->SetBranchAddress("eventNumber",&evtno_gen);
+	treeIn_gen->SetBranchAddress("runNumber",&runno_gen);
 
-	treein_gen->SetBranchAddress("eventNumber",&evtno_gen);
-	treein_gen->SetBranchAddress("runNumber",&runno_gen);
+	treeIn->SetBranchAddress("eventNumber",&evtno_rec);
+	treeIn->SetBranchAddress("runNumber",&runno_rec);
+	treeIn->SetBranchAddress("Lb_BKGCAT",&bkgcat);
 
-	treein->SetBranchAddress("eventNumber",&evtno_rec);
-	treein->SetBranchAddress("runNumber",&runno_rec);
-	treein->SetBranchAddress("Lb_BKGCAT",&bkgcat);
-
-	TBranch *MVwtbranch = treeout_MV->Branch("MVweight",&MVweight,"MVweight/D");
-	TBranch *BONNwtbranch = treeout_BONN->Branch("BONNweight",&BONNweight,"BONNweight/D");
+	TBranch *MVwtbranch = treeIn->Branch("MVweight",&MVweight,"MVweight/D");
+	TBranch *BONNwtbranch = treeIn->Branch("BONNweight",&BONNweight,"BONNweight/D");
+	//TBranch *MVwtbranch = treeout_MV->Branch("MVweight",&MVweight,"MVweight/D");
+	// TBranch *BONNwtbranch = treeout_BONN->Branch("BONNweight",&BONNweight,"BONNweight/D");
 	// TBranch *JpsiLMass_MV = treeout_MV->Branch("JpsiLmass",&JpsiLmass,"JpsiLmass/D");
 	// TBranch *JpsiLMass_BONN = treeout_BONN->Branch("JpsiLmass",&JpsiLmass,"JpsiLmass/D");
 
@@ -164,7 +164,7 @@ void reweight_Lst1405(Int_t run = 1)
 	{
 		if(i%10000 == 0)
 			cout<<i<<endl;
-		treein->GetEntry(i);
+		treeIn->GetEntry(i);
 		if(bkgcat==50)
 		{
 			evtno.push_back(evtno_rec);
@@ -191,7 +191,7 @@ void reweight_Lst1405(Int_t run = 1)
 	{
 		if(i%100000 == 0)
 			cout<<i<<endl;
-		treein_gen->GetEntry(i);
+		treeIn_gen->GetEntry(i);
 
 		//*****Reweight the generator MC also*****
 		mass_gen       = sqrt(Lst_PE*Lst_PE - Lst_PX*Lst_PX - Lst_PY*Lst_PY - Lst_PZ*Lst_PZ);
@@ -277,7 +277,7 @@ void reweight_Lst1405(Int_t run = 1)
 	{
 		//Hopefully the entries in the vector should be in the same order as the
 		// bkgcat=50 events in the reco tree.
-		treein->GetEntry(i);
+		treeIn->GetEntry(i);
 		if(i%10000 == 0)
 			cout<<i<<endl;
 		if(bkgcat!=50)
@@ -312,27 +312,27 @@ void reweight_Lst1405(Int_t run = 1)
 	//      if(i%10000 == 0)
 	//              cout<<i<<endl;
 	//
-	//      treein->GetEntry(i);
+	//      treeIn->GetEntry(i);
 	//
 	//      cout<<"bkgcat = "<<bkgcat<<endl;
 	//      if(bkgcat==50)
 	//      {
-	//              // treein_gen->Draw("sqrt(pow(Lambda_1405_0_TRUEP_E,2) - pow(Lambda_1405_0_TRUEP_X,2) - pow(Lambda_1405_0_TRUEP_Y,2) - pow(Lambda_1405_0_TRUEP_Z,2) )>>h1",Form("eventNumber==%llu",evtno_rec),"goff");
+	//              // treeIn_gen->Draw("sqrt(pow(Lambda_1405_0_TRUEP_E,2) - pow(Lambda_1405_0_TRUEP_X,2) - pow(Lambda_1405_0_TRUEP_Y,2) - pow(Lambda_1405_0_TRUEP_Z,2) )>>h1",Form("eventNumber==%llu",evtno_rec),"goff");
 	//              // TH1F *h1 = (TH1F*)gDirectory->Get("h1");
 	//
 	//              cout<<"poop1"<<endl;
-	//              treein_gen->Draw(">>elist",Form("eventNumber == %llu && runNumber == %u",evtno_rec,runno_rec),"entrylist");
+	//              treeIn_gen->Draw(">>elist",Form("eventNumber == %llu && runNumber == %u",evtno_rec,runno_rec),"entrylist");
 	//              cout<<"poop2"<<endl;
 	//              TEntryList *elist = (TEntryList*)gDirectory->Get("elist");
 	//              cout<<"poop3"<<endl;
-	//              treein_gen->SetEntryList(elist);
+	//              treeIn_gen->SetEntryList(elist);
 	//
 	//              cout<<"list N = "<<elist->GetN()<<endl;
 	//
-	//              Int_t entryNum = treein_gen->GetEntryNumber(0);
+	//              Int_t entryNum = treeIn_gen->GetEntryNumber(0);
 	//              cout<<"entryNum = "<<entryNum<<endl;
 	//
-	//              treein_gen->GetEntry(entryNum);
+	//              treeIn_gen->GetEntry(entryNum);
 	//
 	//              cout<<"evtno_rec = "<<evtno_rec<<" evtno_gen = "<<evtno_gen<<endl;
 	//              cout<<"runno_rec = "<<runno_rec<<" runno_gen = "<<runno_gen<<endl;
@@ -358,17 +358,22 @@ void reweight_Lst1405(Int_t run = 1)
 	//      // JpsiLMass_MV->Fill();
 	// }
 	cout<<"ctr = "<<ctr<<endl;
-	mcfile_MV->cd();
-	treeout_MV->Write("",TObject::kOverwrite);
-	mcfile_MV->Close();
-	cout<<"MV DONE"<<endl;
 
-	mcfile_BONN->cd();
-	treeout_BONN->Write("",TObject::kOverwrite);
-	mcfile_BONN->Close();
-	cout<<"BONN DONE"<<endl;
+	fileIn->cd();
+	treeIn->Write("",TObject::kOverwrite);
+	fileIn->Close();
 
-	cout<<"Writing out rweighted generator"<<endl;
+	// mcfile_MV->cd();
+	// treeout_MV->Write("",TObject::kOverwrite);
+	// mcfile_MV->Close();
+	// cout<<"MV DONE"<<endl;
+	//
+	// mcfile_BONN->cd();
+	// treeout_BONN->Write("",TObject::kOverwrite);
+	// mcfile_BONN->Close();
+	// cout<<"BONN DONE"<<endl;
+
+	cout<<"Writing out reweighted generator"<<endl;
 	genFile_MV->cd();
 	genTreeout_MV->Write();
 	genFile_MV->Close();
