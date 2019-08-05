@@ -1,0 +1,71 @@
+Error in <TFile::TFile>: file rootFiles/mcFiles/JpsiLambda/Xib0/run2/xib0_cutoutks_LL_ZeroTracks_noPID.root does not exist
+
+ *** Break *** segmentation violation
+
+
+
+===========================================================
+There was a crash.
+This is the entire stack trace of all threads:
+===========================================================
+[0mRoot > 
+[0m[0mroot [2] 
+[0m() from /lib64/libc.so.6
+#1  0x00000032c883e619 in do_system () from /lib64/libc.so.6
+#2  0x00007f522938b568 in TUnixSystem::StackTrace() () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCore.so
+#3  0x00007f522938da6c in TUnixSystem::DispatchSignals(ESignals) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCore.so
+#4  <signal handler called>
+#5  0x00007f52165dd109 in ApplyFinalBDT(int, bool, int, int, char const*, int, int, int, bool, bool, bool) () from /data1/avenkate/JpsiLambda_RESTART/scripts/ApplyFinalBDT_C.so
+#6  0x00007f521d678bb7 in MASTER(int, int, int, bool) () from /data1/avenkate/JpsiLambda_RESTART/scripts/MASTER_C.so
+#7  0x00007f521e37d091 in ?? ()
+#8  0x0000000000000002 in ?? ()
+#9  0x00007f521d677f80 in ?? () from /data1/avenkate/JpsiLambda_RESTART/scripts/MASTER_C.so
+#10 0x0000000102196278 in ?? ()
+#11 0x0000000001f22700 in ?? ()
+#12 0x00007f52255f3c30 in ?? () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#13 0x00007fff81041000 in ?? ()
+#14 0x000000000280b580 in ?? ()
+#15 0x00007f522557d6b4 in cling::Interpreter::RunFunction(clang::FunctionDecl const*, cling::Value*) [clone .part.312] () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#16 0x00007f5225581afd in cling::Interpreter::EvaluateInternal(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, cling::CompilationOptions, cling::Value*, cling::Transaction**, unsigned long) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#17 0x00007f5225581cc1 in cling::Interpreter::process(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, cling::Value*, cling::Transaction**, bool) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#18 0x00007f522561641f in cling::MetaProcessor::process(llvm::StringRef, cling::Interpreter::CompilationResult&, cling::Value*, bool) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#19 0x00007f522550273a in HandleInterpreterException(cling::MetaProcessor*, char const*, cling::Interpreter::CompilationResult&, cling::Value*) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#20 0x00007f52255131ab in TCling::ProcessLine(char const*, TInterpreter::EErrorCode*) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#21 0x00007f5229258402 in TApplication::ProcessLine(char const*, bool, int*) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCore.so
+#22 0x00007f522971d8ee in TRint::ProcessLineNr(char const*, char const*, int*) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libRint.so
+#23 0x00007f522971dc3f in TRint::HandleTermInput() () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libRint.so
+#24 0x00007f522938cfbd in TUnixSystem::CheckDescriptors() () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCore.so
+#25 0x00007f522938e2fb in TUnixSystem::DispatchOneEvent(bool) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCore.so
+#26 0x00007f52292bf774 in TSystem::InnerLoop() () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCore.so
+#27 0x00007f52292be4df in TSystem::Run() () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCore.so
+#28 0x00007f5229254c7f in TApplication::Run(bool) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCore.so
+#29 0x00007f522971f162 in TRint::Run(bool) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libRint.so
+#30 0x0000000000400cdc in main ()
+===========================================================
+
+
+The lines below might hint at the cause of the crash.
+You may get help by asking at the ROOT forum http://root.cern.ch/forum.
+Only if you are really convinced it is a bug in ROOT then please submit a
+report at http://root.cern.ch/bugs. Please post the ENTIRE stack trace
+from above as an attachment in addition to anything else
+that might help us fixing this issue.
+===========================================================
+#5  0x00007f52165dd109 in ApplyFinalBDT(int, bool, int, int, char const*, int, int, int, bool, bool, bool) () from /data1/avenkate/JpsiLambda_RESTART/scripts/ApplyFinalBDT_C.so
+#6  0x00007f521d678bb7 in MASTER(int, int, int, bool) () from /data1/avenkate/JpsiLambda_RESTART/scripts/MASTER_C.so
+#7  0x00007f521e37d091 in ?? ()
+#8  0x0000000000000002 in ?? ()
+#9  0x00007f521d677f80 in ?? () from /data1/avenkate/JpsiLambda_RESTART/scripts/MASTER_C.so
+#10 0x0000000102196278 in ?? ()
+#11 0x0000000001f22700 in ?? ()
+#12 0x00007f52255f3c30 in ?? () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#13 0x00007fff81041000 in ?? ()
+#14 0x000000000280b580 in ?? ()
+#15 0x00007f522557d6b4 in cling::Interpreter::RunFunction(clang::FunctionDecl const*, cling::Value*) [clone .part.312] () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#16 0x00007f5225581afd in cling::Interpreter::EvaluateInternal(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, cling::CompilationOptions, cling::Value*, cling::Transaction**, unsigned long) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#17 0x00007f5225581cc1 in cling::Interpreter::process(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, cling::Value*, cling::Transaction**, bool) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#18 0x00007f522561641f in cling::MetaProcessor::process(llvm::StringRef, cling::Interpreter::CompilationResult&, cling::Value*, bool) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+#19 0x00007f522550273a in HandleInterpreterException(cling::MetaProcessor*, char const*, cling::Interpreter::CompilationResult&, cling::Value*) () from /cvmfs/lhcb.cern.ch/lib/lcg/releases/ROOT/6.12.06-0f687/x86_64-slc6-gcc62-opt/lib/libCling.so
+===========================================================
+
+
