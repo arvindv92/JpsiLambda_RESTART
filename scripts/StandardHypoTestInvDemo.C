@@ -145,7 +145,7 @@ AnalyzeResult( HypoTestInverterResult * r,
                int npoints,
                const char * fileNameBase = 0,
                Int_t myLow = 4700,
-               Int_t myHigh = 6000,
+               Int_t myHigh = 6200,
 	       Int_t sigType = 0);
 
 void SetParameter(const char * name, const char * value);
@@ -298,7 +298,7 @@ StandardHypoTestInvDemo(const char * infile = 0,
                         bool useNumberCounting = false,
                         const char * nuisPriorName = 0,
                         Int_t myLow = 4700,
-                        Int_t myHigh = 6000,
+                        Int_t myHigh = 6200,
 			Int_t sigType = 0){
 /*
 
@@ -549,19 +549,19 @@ RooStats::HypoTestInvTool::AnalyzeResult( HypoTestInverterResult * r,
 
 	const char * resultName = r->GetName();
 	TString plotTitle = TString::Format("%s CL Scan for workspace %s",typeName.c_str(),resultName);
-	HypoTestInverterPlot *plot = new HypoTestInverterPlot("HTI_Result_Plot",plotTitle,r);
+	HypoTestInverterPlot *plot = new HypoTestInverterPlot("HTI_Result_Plot","",r);
 
 	// plot in a new canvas with style
 	TString c1Name = TString::Format("%s_Scan",typeName.c_str());
 	TCanvas * c1 = new TCanvas(c1Name);
 	c1->SetLogy(false);
 
-	plot->Draw("CLb 2CL"); // plot all and Clb
+	plot->Draw(""); // plot all and Clb
 	
-	// if(sigType == 0)
-	//   c1->SaveAs(Form("../plots/ANA/CLs_Hypatia_Expo_%d_%d.pdf",myLow,myHigh));
-	// else if(sigType == 1)
-	//   c1->SaveAs(Form("../plots/ANA/CLs_CB_Expo_%d_%d.pdf",myLow,myHigh));
+	if(sigType == 0)
+	  c1->SaveAs(Form("../plots/ANA/CLs_Hypatia_Expo_%d_%d_noRW.pdf",myLow,myHigh));
+	else if(sigType == 1)
+	  c1->SaveAs(Form("../plots/ANA/CLs_CB_Expo_%d_%d.pdf",myLow,myHigh));
 	// if (useCLs)
 	//    plot->Draw("CLb 2CL");  // plot all and Clb
 	// else
