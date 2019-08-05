@@ -1,10 +1,10 @@
 import sys
-import numpy
+# import numpy
 import root_numpy
 import pandas
 import cPickle as pickle
-from hep_ml import reweight
-from sklearn.model_selection import train_test_split
+# from hep_ml import reweight
+# from sklearn.model_selection import train_test_split
 
 # mcOpt = 1 for JpsiLambda
 # mcOpt = 2 for JpsiSigma
@@ -20,9 +20,8 @@ if isGen:
     print 'Generator\n'
 else:
     print 'Reconstructed\n'
-columns = ['Lb_P', 'Lb_PT', 'Lb_ETA', 'Jpsi_P', 'Jpsi_PT', 'Jpsi_ETA',
-           'L_P', 'L_PT', 'L_ETA', 'p_P', 'p_PT', 'p_ETA', 'pi_P', 'pi_PT',
-           'pi_ETA']
+columns = ['Lb_P', 'Lb_PT', 'Jpsi_P', 'Jpsi_PT',
+           'L_P', 'L_PT', 'p_P', 'p_PT', 'pi_P', 'pi_PT']
 
 
 # mcPath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run{}/'.format(run)
@@ -76,11 +75,11 @@ with open(mcPath + 'gb_wts.pkl') as f:
 
     # Predict weights
     gb_weights = reweighter.predict_weights(original)
-    gb_weights.dtype = [('gb_wts_new', 'float64')]
+    gb_weights.dtype = [('GB_WT', 'float64')]
     if isGen:
         # Write out weights to separate ROOT file
         root_numpy.array2root(gb_weights,
-                              filePath + 'RW/gbWeights_gen_new.root',
+                              filePath + 'RW/gbWeights_gen.root',
                               treename='MyTuple', mode='recreate')
     else:
         root_numpy.array2root(gb_weights,

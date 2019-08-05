@@ -268,7 +268,7 @@ void PolarizationEffs(Int_t run = 1)
 	treeIn_gen_JpsiLambda->AddFriend("MyTuple",Form("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/RW/tauWeights_gen.root",run));
 	if(run == 1)
 	{
-		treeIn_gen_JpsiLambda->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/RW/gbWeights_gen_new.root");
+		treeIn_gen_JpsiLambda->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/RW/gbWeights_gen.root");
 	}
 	else if(run == 2)
 	{
@@ -281,7 +281,7 @@ void PolarizationEffs(Int_t run = 1)
 	treeIn_gen_JpsiSigma->AddFriend("MyTuple",Form("../rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/RW/tauWeights_gen.root",run));
 	if(run == 1)
 	{
-		treeIn_gen_JpsiSigma->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiSigma/run1/RW/gbWeights_gen_new.root");
+		treeIn_gen_JpsiSigma->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiSigma/run1/RW/gbWeights_gen.root");
 	}
 	else if(run == 2)
 	{
@@ -333,11 +333,11 @@ void PolarizationEffs(Int_t run = 1)
 	treeIn_gen_JpsiLambda->SetBranchAddress("wt_tau",&tauWt_gen_JpsiLambda);
 	if(run == 1)
 	{
-		treeIn_gen_JpsiLambda->SetBranchAddress("gb_wts_new",&gbWt_gen_JpsiLambda);
+		treeIn_gen_JpsiLambda->SetBranchAddress("GB_WT",&gbWt_gen_JpsiLambda);
 	}
 	else if(run == 2)
 	{
-		treeIn_gen_JpsiLambda->SetBranchAddress("gb_wts",&gbWt_gen_JpsiLambda);
+		treeIn_gen_JpsiLambda->SetBranchAddress("GB_WT",&gbWt_gen_JpsiLambda);
 	}
 
 	treeIn_gen_JpsiSigma->SetBranchAddress("Lambda_b0_TRUEP_E",&Lb_PE_gen_JpsiSigma);
@@ -368,11 +368,11 @@ void PolarizationEffs(Int_t run = 1)
 	treeIn_gen_JpsiSigma->SetBranchAddress("wt_tau",&tauWt_gen_JpsiSigma);
 	if(run == 1)
 	{
-		treeIn_gen_JpsiSigma->SetBranchAddress("gb_wts_new",&gbWt_gen_JpsiSigma);
+		treeIn_gen_JpsiSigma->SetBranchAddress("GB_WT",&gbWt_gen_JpsiSigma);
 	}
 	else if(run == 2)
 	{
-		treeIn_gen_JpsiSigma->SetBranchAddress("gb_wts",&gbWt_gen_JpsiSigma);
+		treeIn_gen_JpsiSigma->SetBranchAddress("GB_WT",&gbWt_gen_JpsiSigma);
 	}
 
 	TFile *tempFile1 = new TFile("tempFile1.root","RECREATE");
@@ -431,11 +431,11 @@ void PolarizationEffs(Int_t run = 1)
 	treeIn_rec_JpsiLambda->SetBranchAddress("wt_tau",&tauWt_rec_JpsiLambda);
 	if(run == 1)
 	{
-		treeIn_rec_JpsiLambda->SetBranchAddress("gb_wts_new",&gbWt_rec_JpsiLambda);
+		treeIn_rec_JpsiLambda->SetBranchAddress("GB_WT",&gbWt_rec_JpsiLambda);
 	}
 	else if(run == 2)
 	{
-		treeIn_rec_JpsiLambda->SetBranchAddress("gb_wts",&gbWt_rec_JpsiLambda);
+		treeIn_rec_JpsiLambda->SetBranchAddress("GB_WT",&gbWt_rec_JpsiLambda);
 	}
 
 	treeIn_rec_JpsiSigma->SetBranchAddress("Lb_TRUEP_E",&Lb_PE_rec_JpsiSigma);
@@ -466,11 +466,11 @@ void PolarizationEffs(Int_t run = 1)
 	treeIn_rec_JpsiSigma->SetBranchAddress("wt_tau",&tauWt_rec_JpsiSigma);
 	if(run == 1)
 	{
-		treeIn_rec_JpsiSigma->SetBranchAddress("gb_wts_new",&gbWt_rec_JpsiSigma);
+		treeIn_rec_JpsiSigma->SetBranchAddress("GB_WT",&gbWt_rec_JpsiSigma);
 	}
 	else if(run == 2)
 	{
-		treeIn_rec_JpsiSigma->SetBranchAddress("gb_wts",&gbWt_rec_JpsiSigma);
+		treeIn_rec_JpsiSigma->SetBranchAddress("GB_WT",&gbWt_rec_JpsiSigma);
 	}
 	cout<<"*****JpsiLambda generated MC*****"<<endl;
 	for(Int_t i = 0; i<nEntries_gen_JpsiLambda; i++)

@@ -420,7 +420,7 @@ void MakePlots()
 	//      TTree *combTree2 = TTree::MergeTrees(list2);
 	//      combTree2->SetName("combTree2");
 	//
-	//      RooRealVar *gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
+	//      RooRealVar *gbWtVar  = new RooRealVar("GB_WT","gb Weight Var",-100.,100.);
 	//
 	//      RooRealVar *Lb_Mass = new RooRealVar("Lb_DTF_M_JpsiLConstr","",5200,5800);
 	//
@@ -445,10 +445,10 @@ void MakePlots()
 	//      frame2->GetXaxis()->SetTitle(m_jpsiL);
 	//      frame2->GetYaxis()->SetTitle(bin_4);
 	//
-	//      // tree1->Draw("Lb_DTF_M_JpsiLConstr>>xi1(150,5200,5800)","gb_wts*(BDT2 > 0.475)","goff");
-	//      // tree2->Draw("Lb_DTF_M_JpsiLConstr>>xi2(150,5200,5800)","gb_wts*(BDT2 > 0.365)","goff");
-	//      // tree3->Draw("Lb_DTF_M_JpsiLConstr>>xi3(150,5200,5800)","gb_wts*(BDT2 > 0.555)","goff");
-	//      // tree4->Draw("Lb_DTF_M_JpsiLConstr>>xi4(150,5200,5800)","gb_wts*(BDT2 > 0.495)","goff");
+	//      // tree1->Draw("Lb_DTF_M_JpsiLConstr>>xi1(150,5200,5800)","GB_WT*(BDT2 > 0.475)","goff");
+	//      // tree2->Draw("Lb_DTF_M_JpsiLConstr>>xi2(150,5200,5800)","GB_WT*(BDT2 > 0.365)","goff");
+	//      // tree3->Draw("Lb_DTF_M_JpsiLConstr>>xi3(150,5200,5800)","GB_WT*(BDT2 > 0.555)","goff");
+	//      // tree4->Draw("Lb_DTF_M_JpsiLConstr>>xi4(150,5200,5800)","GB_WT*(BDT2 > 0.495)","goff");
 	//      //
 	//      // TH1F *xi1 = (TH1F*)gDirectory->Get("xi1");
 	//      // TH1F *xi2 = (TH1F*)gDirectory->Get("xi2");
@@ -868,17 +868,17 @@ void MakePlots()
 
 		mcTreeIn2_zero->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run2/jpsilambda_zeroTracksLL_FinalBDT2_noPID.root");
 
-		mcTreeIn1->Draw("Jpsi_M>>mcjpsi1(110,3040,3150)","gb_wts*wt_tau*(BDT2 > 0.475)","goff");
-		mcTreeIn2->Draw("Jpsi_M>>mcjpsi2(110,3040,3150)","gb_wts*wt_tau*(BDT2 > 0.555)","goff");
+		mcTreeIn1->Draw("Jpsi_M>>mcjpsi1(110,3040,3150)","GB_WT*wt_tau*(BDT2 > 0.475)","goff");
+		mcTreeIn2->Draw("Jpsi_M>>mcjpsi2(110,3040,3150)","GB_WT*wt_tau*(BDT2 > 0.555)","goff");
 
-		mcTreeIn1_zero->Draw("Jpsi_M>>mcjpsi3(110,3040,3150)","gb_wts*wt_tau*(BDT2 > 0.365)","goff");
-		mcTreeIn2_zero->Draw("Jpsi_M>>mcjpsi4(110,3040,3150)","gb_wts*wt_tau*(BDT2 > 0.495)","goff");
+		mcTreeIn1_zero->Draw("Jpsi_M>>mcjpsi3(110,3040,3150)","GB_WT*wt_tau*(BDT2 > 0.365)","goff");
+		mcTreeIn2_zero->Draw("Jpsi_M>>mcjpsi4(110,3040,3150)","GB_WT*wt_tau*(BDT2 > 0.495)","goff");
 
-		mcTreeIn1->Draw("L_M>>mclambda1(50,1105,1130)","gb_wts*wt_tau*(BDT2 > 0.475)","goff");
-		mcTreeIn2->Draw("L_M>>mclambda2(50,1105,1130)","gb_wts*wt_tau*(BDT2 > 0.555)","goff");
+		mcTreeIn1->Draw("L_M>>mclambda1(50,1105,1130)","GB_WT*wt_tau*(BDT2 > 0.475)","goff");
+		mcTreeIn2->Draw("L_M>>mclambda2(50,1105,1130)","GB_WT*wt_tau*(BDT2 > 0.555)","goff");
 
-		mcTreeIn1_zero->Draw("L_M>>mclambda3(50,1105,1130)","gb_wts*wt_tau*(BDT2 > 0.365)","goff");
-		mcTreeIn2_zero->Draw("L_M>>mclambda4(50,1105,1130)","gb_wts*wt_tau*(BDT2 > 0.495)","goff");
+		mcTreeIn1_zero->Draw("L_M>>mclambda3(50,1105,1130)","GB_WT*wt_tau*(BDT2 > 0.365)","goff");
+		mcTreeIn2_zero->Draw("L_M>>mclambda4(50,1105,1130)","GB_WT*wt_tau*(BDT2 > 0.495)","goff");
 
 		TH1F *mcjpsi1 = (TH1F*)gDirectory->Get("mcjpsi1");
 		TH1F *mcjpsi2 = (TH1F*)gDirectory->Get("mcjpsi2");

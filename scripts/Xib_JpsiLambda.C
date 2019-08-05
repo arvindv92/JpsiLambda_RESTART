@@ -178,8 +178,8 @@ void Xib_JpsiLambda()
 	TTree *treeIn_Zero_Run1 = (TTree*)fileIn_Zero_Run1->Get("MyTuple");
 	treeIn_Zero_Run1->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/Xib0/run1/xib0_zeroTracksLL_FinalBDT2_noPID.root");
 
-	treeIn_nonZero_Run1->Draw("gb_wts_new>>wt_Run1_nonZero","BDT2 > 0.475","goff");
-	treeIn_Zero_Run1->Draw("gb_wts_new>>wt_Run1_Zero","BDT2 > 0.365","goff");
+	treeIn_nonZero_Run1->Draw("GB_WT>>wt_Run1_nonZero","BDT2 > 0.475","goff");
+	treeIn_Zero_Run1->Draw("GB_WT>>wt_Run1_Zero","BDT2 > 0.365","goff");
 
 	TH1F *wt_Run1_nonZero = (TH1F*)gDirectory->Get("wt_Run1_nonZero");
 	TH1F *wt_Run1_Zero = (TH1F*)gDirectory->Get("wt_Run1_Zero");
@@ -190,11 +190,11 @@ void Xib_JpsiLambda()
 	genFile_Xib0_Run1>>nGen_Run1; //Get number of generated events
 
 	TFile *genWtsFile_Run1 = nullptr;
-	genWtsFile_Run1 = Open("../rootFiles/mcFiles/JpsiLambda/Xib0/run1/RW/gbWeights_gen_new.root");
+	genWtsFile_Run1 = Open("../rootFiles/mcFiles/JpsiLambda/Xib0/run1/RW/gbWeights_gen.root");
 
 	TTree *genWtsTree_Run1 = (TTree*)genWtsFile_Run1->Get("MyTuple");
 
-	genWtsTree_Run1->Draw("gb_wts_new>>genWt_Run1","","goff");
+	genWtsTree_Run1->Draw("GB_WT>>genWt_Run1","","goff");
 
 	TH1F *genWt_Run1 = (TH1F*)gDirectory->Get("genWt_Run1");
 	nGen_Run1_wt = genWt_Run1->GetEntries()*genWt_Run1->GetMean();

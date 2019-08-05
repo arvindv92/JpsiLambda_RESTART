@@ -57,13 +57,13 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger", Bool_t isData 
 		prefix = "../rootFiles/mcFiles/JpsiLambda";
 		if(wtMC && (run == 1))
 		{
-			wtexp  = "(gb_wts_new*wt_tau)";
-			bdtwtexp = "*(gb_wts_new*wt_tau)";
+			wtexp  = "(GB_WT*wt_tau)";
+			bdtwtexp = "*(GB_WT*wt_tau)";
 		}
 		else if(wtMC && (run == 2))
 		{
-			wtexp  = "(gb_wts*wt_tau)";
-			bdtwtexp = "*(gb_wts*wt_tau)";
+			wtexp  = "(GB_WT*wt_tau)";
+			bdtwtexp = "*(GB_WT*wt_tau)";
 		}
 	}
 	//*************Fit to simulation to get params****************************

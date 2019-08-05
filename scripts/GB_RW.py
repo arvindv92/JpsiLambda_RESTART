@@ -153,9 +153,9 @@ reweighter.fit(original.iloc[:, :-1], target.iloc[:, :-1],
 # gb_weights_test = reweighter.predict_weights(original_test.iloc[:, :-1])
 gb_weights = reweighter.predict_weights(original.iloc[:, :-1])
 
-gb_weights_noTM = reweighter.predict_weights(original_noTM.iloc[:, :-1])
-
-gb_weights_noTM.dtype = [('gb_wts', 'float64')]
+# gb_weights_noTM = reweighter.predict_weights(original_noTM.iloc[:, :-1])
+#
+# gb_weights_noTM.dtype = [('gb_wts', 'float64')]
 # validate reweighting rule on the test part comparing 1d projections
 # print 'After GB reweighting on test sample'
 # draw_distributions(original_test.iloc[:, :-1], target_test.iloc[:, :-1],

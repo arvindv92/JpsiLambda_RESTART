@@ -544,7 +544,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType, Float
 		TFile *genWtsFile_Lambda = nullptr;
 		if(run == 1)
 		{
-			genWtsFile_Lambda = Open(Form("%s/run%d/RW/gbWeights_gen_new.root",
+			genWtsFile_Lambda = Open(Form("%s/run%d/RW/gbWeights_gen.root",
 			                              lambdaMCPath,run));
 		}
 		else if(run == 2)
@@ -558,11 +558,11 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType, Float
 		                                            lambdaMCPath,run));
 		if(run == 1)
 		{
-			genWtsTree_Lambda->Draw("gb_wts_new*wt_tau>>genWt_Lambda","","goff");
+			genWtsTree_Lambda->Draw("GB_WT*wt_tau>>genWt_Lambda","","goff");
 		}
 		else if(run == 2)
 		{
-			genWtsTree_Lambda->Draw("gb_wts*wt_tau>>genWt_Lambda","","goff");
+			genWtsTree_Lambda->Draw("GB_WT*wt_tau>>genWt_Lambda","","goff");
 		}
 
 		TH1F *genWt_Lambda = (TH1F*)gDirectory->Get("genWt_Lambda");
@@ -579,13 +579,13 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType, Float
 
 		if(run == 1)
 		{
-			mcTreeIn_nonZero_Lambda->Draw("gb_wts_new*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_Lambda->Draw("gb_wts_new*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+			mcTreeIn_nonZero_Lambda->Draw("GB_WT*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Lambda->Draw("GB_WT*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 		}
 		else if(run == 2)
 		{
-			mcTreeIn_nonZero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+			mcTreeIn_nonZero_Lambda->Draw("GB_WT*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Lambda->Draw("GB_WT*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 		}
 
 		TH1F *wt_lambda_nonZero = (TH1F*)gDirectory->Get("wt_lambda_nonZero");
@@ -665,7 +665,7 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType, Float
 
 		if(run == 1)
 		{
-			genWtsFile_Sigma = Open(Form("%s/run%d/RW/gbWeights_gen_new.root",
+			genWtsFile_Sigma = Open(Form("%s/run%d/RW/gbWeights_gen.root",
 			                             sigmaPath,run));
 		}
 		else if(run == 2)
@@ -680,11 +680,11 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType, Float
 
 		if(run == 1)
 		{
-			genWtsTree_Sigma->Draw("gb_wts_new*wt_tau>>genWt_Sigma","","goff");
+			genWtsTree_Sigma->Draw("GB_WT*wt_tau>>genWt_Sigma","","goff");
 		}
 		else if(run == 2)
 		{
-			genWtsTree_Sigma->Draw("gb_wts*wt_tau>>genWt_Sigma","","goff");
+			genWtsTree_Sigma->Draw("GB_WT*wt_tau>>genWt_Sigma","","goff");
 		}
 		TH1F *genWt_Sigma = (TH1F*)gDirectory->Get("genWt_Sigma");
 
@@ -701,13 +701,13 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType, Float
 
 		if(run == 1)
 		{
-			mcTreeIn_nonZero_Sigma->Draw("gb_wts_new*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_Sigma->Draw("gb_wts_new*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+			mcTreeIn_nonZero_Sigma->Draw("GB_WT*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Sigma->Draw("GB_WT*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 		}
 		else if(run == 2)
 		{
-			mcTreeIn_nonZero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+			mcTreeIn_nonZero_Sigma->Draw("GB_WT*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Sigma->Draw("GB_WT*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 		}
 		TH1F *wt_Sigma_nonZero = (TH1F*)gDirectory->Get("wt_Sigma_nonZero");
 		TH1F *wt_Sigma_Zero = (TH1F*)gDirectory->Get("wt_Sigma_Zero");
@@ -766,19 +766,19 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType, Float
 		mcTreeIn_Zero_Sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 		mcTreeIn_Zero_Sigma->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
 		mcTreeIn_Zero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
-		mcTreeIn_Zero_Sigma->SetBranchStatus("gb_wts",1);
+		mcTreeIn_Zero_Sigma->SetBranchStatus("GB_WT",1);
 		mcTreeIn_Zero_Sigma->SetBranchStatus("wt_tau",1);
 		if(run == 1)
-			mcTreeIn_Zero_Sigma->SetBranchStatus("gb_wts_new",1);
+			mcTreeIn_Zero_Sigma->SetBranchStatus("GB_WT",1);
 
 		mcTreeIn_nonZero_Sigma->SetBranchStatus("*",0);
 		mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 		mcTreeIn_nonZero_Sigma->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
 		mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
-		mcTreeIn_nonZero_Sigma->SetBranchStatus("gb_wts",1);
+		mcTreeIn_nonZero_Sigma->SetBranchStatus("GB_WT",1);
 		mcTreeIn_nonZero_Sigma->SetBranchStatus("wt_tau",1);
 		if(run == 1)
-			mcTreeIn_nonZero_Sigma->SetBranchStatus("gb_wts_new",1);
+			mcTreeIn_nonZero_Sigma->SetBranchStatus("GB_WT",1);
 		TFile *tempFile = new TFile("tempFile_sig.root","RECREATE");
 
 		TTree* mcTreeIn_Zero_Sigma_cut    = (TTree*)mcTreeIn_Zero_Sigma->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//Not TRUTH MATCHING HERE!
@@ -795,11 +795,11 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType, Float
 
 		if(run == 1)
 		{
-			gbWtVar  = new RooRealVar("gb_wts_new","gb Weight Var",-100.,100.);
+			gbWtVar  = new RooRealVar("GB_WT","gb Weight Var",-100.,100.);
 		}
 		else if(run == 2)
 		{
-			gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
+			gbWtVar  = new RooRealVar("GB_WT","gb Weight Var",-100.,100.);
 		}
 
 		RooRealVar *tauWtVar = new RooRealVar("wt_tau","tau Weight Var",-100.,100.);
@@ -864,20 +864,20 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType, Float
 		treein_xi_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 		treein_xi_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
 		treein_xi_Zero->SetBranchStatus("Lb_BKGCAT",1);
-		treein_xi_Zero->SetBranchStatus("gb_wts",1);
+		treein_xi_Zero->SetBranchStatus("GB_WT",1);
 		if(run == 1)
 		{
-			treein_xi_Zero->SetBranchStatus("gb_wts_new",1);
+			treein_xi_Zero->SetBranchStatus("GB_WT",1);
 		}
 
 		treein_xi_nonZero->SetBranchStatus("*",0);
 		treein_xi_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 		treein_xi_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
 		treein_xi_nonZero->SetBranchStatus("Lb_BKGCAT",1);
-		treein_xi_nonZero->SetBranchStatus("gb_wts",1);
+		treein_xi_nonZero->SetBranchStatus("GB_WT",1);
 		if(run == 1)
 		{
-			treein_xi_Zero->SetBranchStatus("gb_wts_new",1);
+			treein_xi_Zero->SetBranchStatus("GB_WT",1);
 		}
 
 		TFile *tempFile = new TFile("tempFile.root","RECREATE");
@@ -896,11 +896,11 @@ void getUL(Int_t logFlag, const char *option, Int_t config, Int_t fitType, Float
 
 		if(run == 1)
 		{
-			gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
+			gbWtVar  = new RooRealVar("GB_WT","gb Weight Var",-100.,100.);
 		}
 		else if(run == 2)
 		{
-			gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
+			gbWtVar  = new RooRealVar("GB_WT","gb Weight Var",-100.,100.);
 		}
 		ds_xi[i] = new RooDataSet("ds_xi","ds_xi",combTree,RooArgSet(*myVar,*gbWtVar));
 		ds_xi[i]->Print();

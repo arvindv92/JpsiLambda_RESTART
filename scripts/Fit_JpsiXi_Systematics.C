@@ -57,7 +57,7 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 
   treeIn->SetBranchStatus("*",0);
   treeIn->SetBranchStatus("Xib_DTF_M_JpsiXiLConstr",1);
-  treeIn->SetBranchStatus("gb_wts",1);
+  treeIn->SetBranchStatus("GB_WT",1);
 
   Int_t nentries = treeIn->GetEntries();
   cout<<"nentries = "<<nentries<<endl;
@@ -154,7 +154,7 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
   // RooRealVar c0("c0","c0",0.,-1.,1.);
   // RooChebychev bkg("bkg","Chebychev bkg",Xib_DTF_M_JpsiXiLConstr,RooArgSet(c0));
 
-  RooRealVar gbWt("gb_wts","gb_wts",-100.0,100.0);
+  RooRealVar gbWt("GB_WT","GB_WT",-100.0,100.0);
   RooDataSet *ds = nullptr, *ds_wt = nullptr;
 
   if(isData)

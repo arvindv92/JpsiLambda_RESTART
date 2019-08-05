@@ -200,7 +200,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 			if(run == 2)
 				siginit = 1169; //1195;
 		}
-		mcTree->SetBranchAddress("gb_wts",&gbwt);
+		mcTree->SetBranchAddress("GB_WT",&gbwt);
 		mcTree->SetBranchAddress("wt_tau",&tauwt);
 		mcTree->SetBranchAddress("Lb_BKGCAT",&bkgcat);
 		mcTree->SetBranchAddress(Form("BDT%d",bdtConf),&mcBDT);

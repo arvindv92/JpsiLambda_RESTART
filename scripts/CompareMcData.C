@@ -204,11 +204,11 @@ TCanvas* routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_
 	const char *gbWt = "";
 	if(run == 1)
 	{
-		gbWt = "gb_wts_new";
+		gbWt = "GB_WT";
 	}
 	else if(run == 2)
 	{
-		gbWt = "gb_wts";
+		gbWt = "GB_WT";
 	}
 	switch(mcType)
 	{

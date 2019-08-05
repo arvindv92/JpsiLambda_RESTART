@@ -388,27 +388,20 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		genFile_Lambda>>nGen_Lambda[i]; //Get number of generated events
 
 		TFile *genWtsFile_Lambda = nullptr;
-		if(run == 1)
-		{
-			genWtsFile_Lambda = Open(Form("%s/run%d/RW/gbWeights_gen_new.root",
-			                              lambdaMCPath,run));
-		}
-		else if(run == 2)
-		{
-			genWtsFile_Lambda = Open(Form("%s/run%d/RW/gbWeights_gen.root",
-			                              lambdaMCPath,run));
-		}
+		genWtsFile_Lambda = Open(Form("%s/run%d/RW/gbWeights_gen.root",
+		                              lambdaMCPath,run));
+
 		TTree *genWtsTree_Lambda = (TTree*)genWtsFile_Lambda->Get("MyTuple");
 
 		genWtsTree_Lambda->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
 		                                            lambdaMCPath,run));
 		if(run == 1)
 		{
-			genWtsTree_Lambda->Draw("gb_wts_new*wt_tau>>genWt_Lambda","","goff");
+			genWtsTree_Lambda->Draw("GB_WT_new*wt_tau>>genWt_Lambda","","goff");
 		}
 		else if(run == 2)
 		{
-			genWtsTree_Lambda->Draw("gb_wts*wt_tau>>genWt_Lambda","","goff");
+			genWtsTree_Lambda->Draw("GB_WT*wt_tau>>genWt_Lambda","","goff");
 		}
 
 		TH1F *genWt_Lambda = (TH1F*)gDirectory->Get("genWt_Lambda");
@@ -425,13 +418,13 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 
 		if(run == 1)
 		{
-			mcTreeIn_nonZero_Lambda->Draw("gb_wts_new*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_Lambda->Draw("gb_wts_new*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+			mcTreeIn_nonZero_Lambda->Draw("GB_WT_new*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Lambda->Draw("GB_WT_new*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 		}
 		else if(run == 2)
 		{
-			mcTreeIn_nonZero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_Lambda->Draw("gb_wts*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+			mcTreeIn_nonZero_Lambda->Draw("GB_WT*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Lambda->Draw("GB_WT*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 		}
 
 		TH1F *wt_lambda_nonZero = (TH1F*)gDirectory->Get("wt_lambda_nonZero");
@@ -519,16 +512,9 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 
 		TFile *genWtsFile_Sigma = nullptr;
 
-		if(run == 1)
-		{
-			genWtsFile_Sigma = Open(Form("%s/run%d/RW/gbWeights_gen_new.root",
-			                             sigmaPath,run));
-		}
-		else if(run == 2)
-		{
-			genWtsFile_Sigma = Open(Form("%s/run%d/RW/gbWeights_gen.root",
-			                             sigmaPath,run));
-		}
+		genWtsFile_Sigma = Open(Form("%s/run%d/RW/gbWeights_gen.root",
+		                             sigmaPath,run));
+
 		TTree *genWtsTree_Sigma = (TTree*)genWtsFile_Sigma->Get("MyTuple");
 
 		genWtsTree_Sigma->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
@@ -536,11 +522,11 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 
 		if(run == 1)
 		{
-			genWtsTree_Sigma->Draw("gb_wts_new*wt_tau>>genWt_Sigma","","goff");
+			genWtsTree_Sigma->Draw("GB_WT_new*wt_tau>>genWt_Sigma","","goff");
 		}
 		else if(run == 2)
 		{
-			genWtsTree_Sigma->Draw("gb_wts*wt_tau>>genWt_Sigma","","goff");
+			genWtsTree_Sigma->Draw("GB_WT*wt_tau>>genWt_Sigma","","goff");
 		}
 		TH1F *genWt_Sigma = (TH1F*)gDirectory->Get("genWt_Sigma");
 
@@ -557,13 +543,13 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 
 		if(run == 1)
 		{
-			mcTreeIn_nonZero_Sigma->Draw("gb_wts_new*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_Sigma->Draw("gb_wts_new*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+			mcTreeIn_nonZero_Sigma->Draw("GB_WT_new*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Sigma->Draw("GB_WT_new*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 		}
 		else if(run == 2)
 		{
-			mcTreeIn_nonZero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_Sigma->Draw("gb_wts*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+			mcTreeIn_nonZero_Sigma->Draw("GB_WT*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+			mcTreeIn_Zero_Sigma->Draw("GB_WT*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 		}
 		TH1F *wt_Sigma_nonZero = (TH1F*)gDirectory->Get("wt_Sigma_nonZero");
 		TH1F *wt_Sigma_Zero = (TH1F*)gDirectory->Get("wt_Sigma_Zero");
@@ -623,19 +609,19 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 			mcTreeIn_Zero_Sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 			mcTreeIn_Zero_Sigma->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
 			mcTreeIn_Zero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
-			mcTreeIn_Zero_Sigma->SetBranchStatus("gb_wts",1);
+			mcTreeIn_Zero_Sigma->SetBranchStatus("GB_WT",1);
 			mcTreeIn_Zero_Sigma->SetBranchStatus("wt_tau",1);
 			if(run == 1)
-				mcTreeIn_Zero_Sigma->SetBranchStatus("gb_wts_new",1);
+				mcTreeIn_Zero_Sigma->SetBranchStatus("GB_WT_new",1);
 
 			mcTreeIn_nonZero_Sigma->SetBranchStatus("*",0);
 			mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 			mcTreeIn_nonZero_Sigma->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
 			mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
-			mcTreeIn_nonZero_Sigma->SetBranchStatus("gb_wts",1);
+			mcTreeIn_nonZero_Sigma->SetBranchStatus("GB_WT",1);
 			mcTreeIn_nonZero_Sigma->SetBranchStatus("wt_tau",1);
 			if(run == 1)
-				mcTreeIn_nonZero_Sigma->SetBranchStatus("gb_wts_new",1);
+				mcTreeIn_nonZero_Sigma->SetBranchStatus("GB_WT_new",1);
 			TFile *tempFile = new TFile("tempFile_sig.root","RECREATE");
 
 			TTree* mcTreeIn_Zero_Sigma_cut    = (TTree*)mcTreeIn_Zero_Sigma->CopyTree(Form("(BDT%d > %f)",bdtConf_Zero[i],bdtCut_Zero[i])); //Not TRUTH MATCHING HERE!
@@ -652,11 +638,11 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 
 			if(run == 1)
 			{
-				gbWtVar  = new RooRealVar("gb_wts_new","gb Weight Var",-100.,100.);
+				gbWtVar  = new RooRealVar("GB_WT_new","gb Weight Var",-100.,100.);
 			}
 			else if(run == 2)
 			{
-				gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
+				gbWtVar  = new RooRealVar("GB_WT","gb Weight Var",-100.,100.);
 			}
 
 			RooRealVar *tauWtVar = new RooRealVar("wt_tau","tau Weight Var",-100.,100.);
@@ -774,16 +760,9 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 
 		TFile *genWtsFile_1405 = nullptr;
 		TTree *genWtsTree_1405 = nullptr;
-		if(run == 1)
-		{
-			genWtsFile_1405 = Open(Form("%s/run%d/RW/gbWeights_gen_new.root",
-			                            Lst1405Path,run));
-		}
-		else if(run == 2)
-		{
-			genWtsFile_1405 = Open(Form("%s/run%d/RW/gbWeights_gen.root",
-			                            Lst1405Path,run));
-		}
+		genWtsFile_1405 = Open(Form("%s/run%d/RW/gbWeights_gen.root",
+		                            Lst1405Path,run));
+
 		genWtsTree_1405 = (TTree*)genWtsFile_1405->Get("MyTuple");
 
 		genWtsTree_1405->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
@@ -912,20 +891,20 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 			mcTreeIn_Zero_1405->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 			mcTreeIn_Zero_1405->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
 			mcTreeIn_Zero_1405->SetBranchStatus("Lb_BKGCAT",1);
-			mcTreeIn_Zero_1405->SetBranchStatus("gb_wts",1);
+			mcTreeIn_Zero_1405->SetBranchStatus("GB_WT",1);
 			mcTreeIn_Zero_1405->SetBranchStatus("wt_tau",1);
 
 			mcTreeIn_nonZero_1405->SetBranchStatus("*",0);
 			mcTreeIn_nonZero_1405->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 			mcTreeIn_nonZero_1405->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
 			mcTreeIn_nonZero_1405->SetBranchStatus("Lb_BKGCAT",1);
-			mcTreeIn_nonZero_1405->SetBranchStatus("gb_wts",1);
+			mcTreeIn_nonZero_1405->SetBranchStatus("GB_WT",1);
 			mcTreeIn_nonZero_1405->SetBranchStatus("wt_tau",1);
 
 			if(run == 1)
 			{
-				mcTreeIn_Zero_1405->SetBranchStatus("gb_wts_new",1);
-				mcTreeIn_nonZero_1405->SetBranchStatus("gb_wts_new",1);
+				mcTreeIn_Zero_1405->SetBranchStatus("GB_WT_new",1);
+				mcTreeIn_nonZero_1405->SetBranchStatus("GB_WT_new",1);
 			}
 
 			TFile *tempFile_1405 = new TFile("tempFile_1405.root","RECREATE");
@@ -1149,20 +1128,20 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 			mcTreeIn_Zero_1520->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 			mcTreeIn_Zero_1520->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
 			mcTreeIn_Zero_1520->SetBranchStatus("Lb_BKGCAT",1);
-			mcTreeIn_Zero_1520->SetBranchStatus("gb_wts",1);
+			mcTreeIn_Zero_1520->SetBranchStatus("GB_WT",1);
 			mcTreeIn_Zero_1520->SetBranchStatus("wt_tau",1);
 
 			mcTreeIn_nonZero_1520->SetBranchStatus("*",0);
 			mcTreeIn_nonZero_1520->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 			mcTreeIn_nonZero_1520->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
 			mcTreeIn_nonZero_1520->SetBranchStatus("Lb_BKGCAT",1);
-			mcTreeIn_nonZero_1520->SetBranchStatus("gb_wts",1);
+			mcTreeIn_nonZero_1520->SetBranchStatus("GB_WT",1);
 			mcTreeIn_nonZero_1520->SetBranchStatus("wt_tau",1);
 
 			if(run == 1)
 			{
-				mcTreeIn_Zero_1520->SetBranchStatus("gb_wts_new",1);
-				mcTreeIn_nonZero_1520->SetBranchStatus("gb_wts_new",1);
+				mcTreeIn_Zero_1520->SetBranchStatus("GB_WT_new",1);
+				mcTreeIn_nonZero_1520->SetBranchStatus("GB_WT_new",1);
 			}
 
 			TFile *tempFile_1520 = new TFile("tempFile_1520.root","RECREATE");
@@ -1345,20 +1324,20 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 			mcTreeIn_Zero_1600->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 			mcTreeIn_Zero_1600->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
 			mcTreeIn_Zero_1600->SetBranchStatus("Lb_BKGCAT",1);
-			mcTreeIn_Zero_1600->SetBranchStatus("gb_wts",1);
+			mcTreeIn_Zero_1600->SetBranchStatus("GB_WT",1);
 			mcTreeIn_Zero_1600->SetBranchStatus("wt_tau",1);
 
 			mcTreeIn_nonZero_1600->SetBranchStatus("*",0);
 			mcTreeIn_nonZero_1600->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 			mcTreeIn_nonZero_1600->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
 			mcTreeIn_nonZero_1600->SetBranchStatus("Lb_BKGCAT",1);
-			mcTreeIn_nonZero_1600->SetBranchStatus("gb_wts",1);
+			mcTreeIn_nonZero_1600->SetBranchStatus("GB_WT",1);
 			mcTreeIn_nonZero_1600->SetBranchStatus("wt_tau",1);
 
 			if(run == 1)
 			{
-				mcTreeIn_Zero_1600->SetBranchStatus("gb_wts_new",1);
-				mcTreeIn_nonZero_1600->SetBranchStatus("gb_wts_new",1);
+				mcTreeIn_Zero_1600->SetBranchStatus("GB_WT_new",1);
+				mcTreeIn_nonZero_1600->SetBranchStatus("GB_WT_new",1);
 			}
 
 			TFile *tempFile_1600 = new TFile("tempFile_1600.root","RECREATE");
@@ -1441,7 +1420,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	//      genWtsTree_chic1->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
 	//                                                 chiC1Path,run));
 	//
-	//      genWtsTree_chic1->Draw("gb_wts*wt_tau>>genWt_chic1","","goff");
+	//      genWtsTree_chic1->Draw("GB_WT*wt_tau>>genWt_chic1","","goff");
 	//
 	//      TH1F *genWt_chic1 = (TH1F*)gDirectory->Get("genWt_chic1");
 	//      nGen_chic1_wt[i] = genWt_chic1->GetEntries()*genWt_chic1->GetMean();
@@ -1461,8 +1440,8 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	//      Int_t num_chic1 = mcTreeIn_nonZero_chic1->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
 	//                        mcTreeIn_Zero_chic1->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));                                               //NOTE NO TM HERE
 	//
-	//      mcTreeIn_nonZero_chic1->Draw("gb_wts*wt_tau>>wt_chic1_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
-	//      mcTreeIn_Zero_chic1->Draw("gb_wts*wt_tau>>wt_chic1_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+	//      mcTreeIn_nonZero_chic1->Draw("GB_WT*wt_tau>>wt_chic1_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
+	//      mcTreeIn_Zero_chic1->Draw("GB_WT*wt_tau>>wt_chic1_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
 	//
 	//      TH1F *wt_chic1_nonZero = (TH1F*)gDirectory->Get("wt_chic1_nonZero");
 	//      TH1F *wt_chic1_Zero    = (TH1F*)gDirectory->Get("wt_chic1_Zero");
@@ -1528,14 +1507,14 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	//      mcTreeIn_Zero_chic1->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 	//      mcTreeIn_Zero_chic1->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
 	//      mcTreeIn_Zero_chic1->SetBranchStatus("Lb_BKGCAT",1);
-	//      mcTreeIn_Zero_chic1->SetBranchStatus("gb_wts",1);
+	//      mcTreeIn_Zero_chic1->SetBranchStatus("GB_WT",1);
 	//      mcTreeIn_Zero_chic1->SetBranchStatus("wt_tau",1);
 	//
 	//      mcTreeIn_nonZero_chic1->SetBranchStatus("*",0);
 	//      mcTreeIn_nonZero_chic1->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 	//      mcTreeIn_nonZero_chic1->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
 	//      mcTreeIn_nonZero_chic1->SetBranchStatus("Lb_BKGCAT",1);
-	//      mcTreeIn_nonZero_chic1->SetBranchStatus("gb_wts",1);
+	//      mcTreeIn_nonZero_chic1->SetBranchStatus("GB_WT",1);
 	//      mcTreeIn_nonZero_chic1->SetBranchStatus("wt_tau",1);
 	//
 	//      TFile *tempFile_chic1 = new TFile("tempFile_chic1.root","RECREATE");
@@ -1550,7 +1529,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	//      TTree *combTree_chic1 = TTree::MergeTrees(list_chic1);
 	//      combTree_chic1->SetName("combTree_chic1");
 	//
-	//      ds_chic1[i] = new RooDataSet("ds_chic1","ds_chic1",combTree_chic1,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"gb_wts*wt_tau");
+	//      ds_chic1[i] = new RooDataSet("ds_chic1","ds_chic1",combTree_chic1,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"GB_WT*wt_tau");
 	//      ds_chic1[i]->Print();
 	//
 	//      KEYS_chic1[i] = new RooKeysPdf(Form("chic1_Run%d",run),Form("chic1_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_chic1[i]),RooKeysPdf::MirrorBoth,1);
@@ -1636,20 +1615,20 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 			treein_xi_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 			treein_xi_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
 			treein_xi_Zero->SetBranchStatus("Lb_BKGCAT",1);
-			treein_xi_Zero->SetBranchStatus("gb_wts",1);
+			treein_xi_Zero->SetBranchStatus("GB_WT",1);
 			if(run == 1)
 			{
-				treein_xi_Zero->SetBranchStatus("gb_wts_new",1);
+				treein_xi_Zero->SetBranchStatus("GB_WT_new",1);
 			}
 
 			treein_xi_nonZero->SetBranchStatus("*",0);
 			treein_xi_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 			treein_xi_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
 			treein_xi_nonZero->SetBranchStatus("Lb_BKGCAT",1);
-			treein_xi_nonZero->SetBranchStatus("gb_wts",1);
+			treein_xi_nonZero->SetBranchStatus("GB_WT",1);
 			if(run == 1)
 			{
-				treein_xi_Zero->SetBranchStatus("gb_wts_new",1);
+				treein_xi_Zero->SetBranchStatus("GB_WT_new",1);
 			}
 
 			TFile *tempFile = new TFile("tempFile.root","RECREATE");
@@ -1668,11 +1647,11 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 
 			if(run == 1)
 			{
-				gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
+				gbWtVar  = new RooRealVar("GB_WT","gb Weight Var",-100.,100.);
 			}
 			else if(run == 2)
 			{
-				gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
+				gbWtVar  = new RooRealVar("GB_WT","gb Weight Var",-100.,100.);
 			}
 			ds_xi[i] = new RooDataSet(Form("ds_xi_Run%d",run),Form("ds_xi_Run%d",run),combTree,RooArgSet(*myVar,*gbWtVar));
 			ds_xi[i]->Print();
@@ -2009,19 +1988,19 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		mcTreeIn_Zero_Lambda->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 		mcTreeIn_Zero_Lambda->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
 		mcTreeIn_Zero_Lambda->SetBranchStatus("Lb_BKGCAT",1);
-		mcTreeIn_Zero_Lambda->SetBranchStatus("gb_wts",1);
+		mcTreeIn_Zero_Lambda->SetBranchStatus("GB_WT",1);
 		mcTreeIn_Zero_Lambda->SetBranchStatus("wt_tau",1);
 		if(run == 1)
-			mcTreeIn_Zero_Lambda->SetBranchStatus("gb_wts_new",1);
+			mcTreeIn_Zero_Lambda->SetBranchStatus("GB_WT_new",1);
 
 		mcTreeIn_nonZero_Lambda->SetBranchStatus("*",0);
 		mcTreeIn_nonZero_Lambda->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 		mcTreeIn_nonZero_Lambda->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
 		mcTreeIn_nonZero_Lambda->SetBranchStatus("Lb_BKGCAT",1);
-		mcTreeIn_nonZero_Lambda->SetBranchStatus("gb_wts",1);
+		mcTreeIn_nonZero_Lambda->SetBranchStatus("GB_WT",1);
 		mcTreeIn_nonZero_Lambda->SetBranchStatus("wt_tau",1);
 		if(run == 1)
-			mcTreeIn_nonZero_Lambda->SetBranchStatus("gb_wts_new",1);
+			mcTreeIn_nonZero_Lambda->SetBranchStatus("GB_WT_new",1);
 
 		TFile *tempFile = new TFile("tempFile_sim.root","RECREATE");
 
@@ -2039,11 +2018,11 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 
 		if(run == 1)
 		{
-			gbWtVar  = new RooRealVar("gb_wts_new","gb Weight Var",-100.,100.);
+			gbWtVar  = new RooRealVar("GB_WT_new","gb Weight Var",-100.,100.);
 		}
 		else if(run == 2)
 		{
-			gbWtVar  = new RooRealVar("gb_wts","gb Weight Var",-100.,100.);
+			gbWtVar  = new RooRealVar("GB_WT","gb Weight Var",-100.,100.);
 		}
 
 		RooRealVar *tauWtVar = new RooRealVar("wt_tau","tau Weight Var",-100.,100.);
@@ -2059,13 +2038,13 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 
 		// if(run == 1)
 		//   {
-		//      mcTreeIn_nonZero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*gb_wts_new*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-		//      mcTreeIn_Zero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*gb_wts_new*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+		//      mcTreeIn_nonZero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*GB_WT_new*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+		//      mcTreeIn_Zero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*GB_WT_new*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 		//   }
 		// else if(run == 2)
 		//   {
-		//      mcTreeIn_nonZero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*gb_wts*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-		//      mcTreeIn_Zero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*gb_wts*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+		//      mcTreeIn_nonZero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*GB_WT*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+		//      mcTreeIn_Zero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*GB_WT*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 		//   }
 
 		// mcHist[i] = new TH1D(Form("mcHist%d",run),"",nbins*2,myLow,myHigh);
@@ -3054,7 +3033,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	// w.var("eff_ratio2")->setConstant(kFALSE);
 
 	RooFitResult *res = simPdf.fitTo(*combData,Minos(*w.set("poi")),Extended(), Save(), Hesse(false), Strategy(1), PrintLevel(1), Constrain(constrainParams) );
-	
+
 	res->Print();
 	//*******************************************************************
 
@@ -3716,26 +3695,26 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	{
 		if(isBinned)
 		{
-		  if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
-		  if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-		  if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
-		  if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 	if(sigType == 1 && bkgType == 0)
 	{
 		if(isBinned)
 		{
-		  if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
-		  if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-		  if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
-		  if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 
@@ -3743,26 +3722,26 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	{
 		if(isBinned)
 		{
-		  if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-		  if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-		  if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-		  if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 	if(sigType == 1 && bkgType == 0)
 	{
 		if(isBinned)
 		{
-		  if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-		  if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-		  if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-		  if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 
@@ -3770,26 +3749,26 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	{
 		if(isBinned)
 		{
-		  if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
-		  if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-		  if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
-		  if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 	if(sigType == 1 && bkgType == 2)
 	{
 		if(isBinned)
 		{
-		  if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
-		  if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-		  if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
-		  if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 
@@ -3797,26 +3776,26 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	{
 		if(isBinned)
 		{
-		  if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-		  if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-		  if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-		  if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 	if(sigType == 1 && bkgType == 2)
 	{
 		if(isBinned)
 		{
-		  if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-		  if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-		  if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-		  if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 

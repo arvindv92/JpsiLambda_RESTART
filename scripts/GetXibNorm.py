@@ -57,8 +57,8 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
                         "gbWeights_gen.root".format(run))
     tree_Xi_gen = file_Xi_gen.MyTuple
 
-    tree_Xi_rec.Draw("gb_wts*(wt_tracking+{}*wtErr_tracking)>>hxi_rec".format(shift_trEff), "", "goff")
-    tree_Xi_gen.Draw("gb_wts>>hxi_gen", "", "goff")
+    tree_Xi_rec.Draw("GB_WT*(wt_tracking+{}*wtErr_tracking)>>hxi_rec".format(shift_trEff), "", "goff")
+    tree_Xi_gen.Draw("GB_WT>>hxi_gen", "", "goff")
 
     hxi_rec = gDirectory.Get("hxi_rec")
     hxi_gen = gDirectory.Get("hxi_gen")
@@ -97,10 +97,10 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
     + ZeroTracksTree.GetEntries("BDT" + str(finalBDTConf_Zero)
                                 + ">" + str(bdtCut_Zero))  # counting no. of entries passing BDT cut.
 
-    nonZeroTracksTree.Draw("gb_wts>>h0", "BDT"
+    nonZeroTracksTree.Draw("GB_WT>>h0", "BDT"
                            + str(finalBDTConf_nonZero) + ">"
                            + str(bdtCut_nonZero), "goff")
-    ZeroTracksTree.Draw("gb_wts>>h1", "BDT"
+    ZeroTracksTree.Draw("GB_WT>>h1", "BDT"
                         + str(finalBDTConf_Zero) + ">"
                         + str(bdtCut_Zero), "goff")
 
@@ -112,7 +112,7 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
     genWtsFile = TFile(path + "RW/gbWeights_gen.root")  # Weighted generator MC
     genWtsTree = genWtsFile.MyTuple
 
-    genWtsTree.Draw("gb_wts>>hgen", "", "goff")
+    genWtsTree.Draw("GB_WT>>hgen", "", "goff")
     hgen = gDirectory.Get("hgen")
     den_wt = hgen.GetEntries() * hgen.GetMean()  # sum of wts. for generated events
 
