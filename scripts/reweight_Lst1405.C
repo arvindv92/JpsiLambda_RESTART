@@ -60,7 +60,7 @@ void reweight_Lst1405(Int_t run = 1)
 	// mcfile = TFile::Open("./Lst1405_total_MVrw.root","UPDATE");
 	// treein = (TTree*)mcfile->Get("MCDecayTreeTuple/MCDecayTree");
 
-	filein = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405_pidgen.root",run),"READ");
+	filein = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405.root",run),"READ");
 
 	treein     = (TTree*)filein->Get("Lb2JpsiLTree/MyTuple");
 	treein_gen = (TTree*)filein->Get("MCTuple/MCDecayTree");
