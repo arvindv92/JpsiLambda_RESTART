@@ -10,7 +10,8 @@
  #include "TrainIsolation.h"
 
 void TrainIsolation(Int_t run, Int_t trackType,
-                    const char* isoVersion, Int_t isoConf, Bool_t logFlag)
+                    const char* isoVersion, Int_t isoConf, Bool_t logFlag,
+                    Bool_t simFlag)
 /*
    >run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC.
    Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
@@ -19,6 +20,9 @@ void TrainIsolation(Int_t run, Int_t trackType,
 
    >isoVersion = "v0","v1". Different versions correspond
    to different training variables.
+
+   >simFlag = false to train on simulation for Lb->J/psiLambda,
+   true to train on sWeighted data.
 
    v0: IPCHI2, VCHI2DOF, log_MINIPCHI2
    v1: IPCHI2, VCHI2DOF, log_MINIPCHI2, log_PT
@@ -32,9 +36,14 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	const char *type = "";
 	type        = (trackType == 3) ? ("LL") : ("DD");
 
-	if(logFlag) //set up logging
+	if(logFlag && !simFlag) //set up logging
 	{
 		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainIsolation_%s_%s_iso%d_noPID.txt",
+		                             run,type,isoVersion,isoConf),"w");
+	}
+	else if(logFlag && simFlag)
+	{
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainIsolation_MC_%s_%s_iso%d_noPID.txt",
 		                             run,type,isoVersion,isoConf),"w");
 	}
 	cout<<"*****************************"<<endl;
@@ -53,16 +62,34 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	TMVA::Factory *factory       = nullptr;
 	TMVA::Tools::Instance(); // This loads the library
 
-	outFileName = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
-	                   "TMVAtraining/iso/TMVA300-isok_data_%s_iso%d_noPID.root",
-	                   run,isoVersion,isoConf);
+	if(!simFlag)//train on data
+	{
+		outFileName = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
+		                   "TMVAtraining/iso/TMVA300-isok_data_%s_iso%d_noPID.root",
+		                   run,isoVersion,isoConf);
+
+		factory     = new TMVA::Factory(Form("isok_dataRun%d_%s_iso%d_noPID",
+		                                     run,isoVersion,isoConf), outputFile,
+		                                "!V:!Silent:Color:!DrawProgressBar:"
+		                                "AnalysisType=Classification" );
+		fname_sig = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
+		                 "jpsilambda_%s_withsw_nonZeroTracks_noPID.root",run,type);
+	}
+	else //train on simulation
+	{
+		outFileName = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
+		                   "TMVAtraining/iso/TMVA300-isok_MC_%s_iso%d_noPID.root",
+		                   run,isoVersion,isoConf);
+
+		factory     = new TMVA::Factory(Form("isok_MCRun%d_%s_iso%d_noPID",
+		                                     run,isoVersion,isoConf), outputFile,
+		                                "!V:!Silent:Color:!DrawProgressBar:"
+		                                "AnalysisType=Classification" );
+		fname_sig = Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/"
+		                 "jpsilambda_cutoutks_%s_nonZeroTracks_noPID.root",run,type);//NB: Using MC for control channel because it has more statistics.
+	}
+
 	outputFile  = TFile::Open(outFileName, "RECREATE");
-
-	factory     = new TMVA::Factory(Form("isok_dataRun%d_%s_iso%d_noPID",
-	                                     run,isoVersion,isoConf), outputFile,
-	                                "!V:!Silent:Color:!DrawProgressBar:"
-	                                "AnalysisType=Classification" );
-
 	dataLoader  = new TMVA::DataLoader("dataset");
 
 	dataLoader->AddVariable("IPCHI2",'F');
@@ -78,8 +105,6 @@ void TrainIsolation(Int_t run, Int_t trackType,
 		myCut = myCut && "PT > 0 ";
 	}
 
-	fname_sig = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
-	                 "jpsilambda_%s_forIsoTraining_noPID.root",run,type);
 	input_sig = TFile::Open(fname_sig);
 	if (!input_sig)
 	{
@@ -108,15 +133,44 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	sigTree = (TTree*)input_sig->Get("MyTuple");
 	bkgTree = (TTree*)input_bkg->Get("MyTuple");
 
+	TFile *tempFile = nullptr;
+	TTree *sigTree_TM = nullptr;
+	if(simFlag)
+	{
+		tempFile = new TFile("tempFile.root","RECREATE");
+		sigTree_TM = (TTree*)sigTree->CopyTree("Lb_BKGCAT==0||Lb_BKGCAT==50");
+	}
 	// global event weights per tree (see below for setting event-wise weights)
-	dataLoader->AddSignalTree(sigTree,1.0);
+	if(!simFlag)
+	{
+		dataLoader->AddSignalTree(sigTree,1.0);
+	}
+	else
+	{
+		dataLoader->AddSignalTree(sigTree_TM,1.0);
+	}
 	dataLoader->AddBackgroundTree(bkgTree,1.0);
 
-	dataLoader->SetSignalWeightExpression("SW");
+	if(!simFlag)
+	{
+		dataLoader->SetSignalWeightExpression("SW");
+	}
+	else
+	{
+		dataLoader->SetSignalWeightExpression("GB_WT");
+	}
 	dataLoader->SetBackgroundWeightExpression("SW");
+	Int_t nEntries_S = 0, nEntries_B = 0;
 
-	Int_t nEntries_S = sigTree->GetEntries(myCut);
-	Int_t nEntries_B = bkgTree->GetEntries(myCut);
+	if(!simFlag)
+	{
+		nEntries_S = sigTree->GetEntries(myCut);
+	}
+	else
+	{
+		nEntries_S = sigTree_TM->GetEntries(myCut);
+	}
+	nEntries_B = bkgTree->GetEntries(myCut);
 
 	Int_t nTrain_S = (Int_t)nEntries_S*0.8;// 80/20 split
 	Int_t nTest_S  = nEntries_S - nTrain_S;
