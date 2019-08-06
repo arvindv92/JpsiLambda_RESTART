@@ -11,7 +11,7 @@
 #include "ApplyIsolation.h"
 void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
                     Int_t flag, const char* isoVersion, Int_t isoConf,
-                    Bool_t logFlag)
+                    Bool_t logFlag, Bool_t simFlag)
 /* >run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC.
    Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
 
@@ -213,8 +213,17 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	}
 
 	dir        = "dataset/weights/";
-	prefix     = Form("isok_dataRun%d_%s_iso%d_noPID",
-	                  run,isoVersion,isoConf);
+
+	if(!simFlag)//use isoBDT trained on data
+	{
+		prefix     = Form("isok_dataRun%d_%s_iso%d_noPID",
+		                  run,isoVersion,isoConf);
+	}
+	else//use isoBDT trained on MC
+	{
+		prefix     = Form("isok_MCRun%d_%s_iso%d_noPID",
+		                  run,isoVersion,isoConf);
+	}
 	methodName = "BDT method";
 
 	weightFile = dir + prefix + TString("_") +
