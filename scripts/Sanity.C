@@ -101,6 +101,7 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 	{
 		folder = "Xib0";
 		part = "xib0";
+		break;
 	}
 	}
 
@@ -134,26 +135,23 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 	cout<<"******************************************"<<endl;
 
-	Int_t entries_init   = 0, entries_final_LL = 0, entries_final_DD = 0;
-	Int_t entries_gen    = 0, Lb_BKGCAT        = 0, p_TRACK_Type     = 0;
+	Int_t entries_init = 0, entries_final_LL = 0;
+	Int_t entries_gen  = 0, Lb_BKGCAT        = 0;
 
 	Float_t eff_excl_LL    = 0.0, eff_excl_LL_err = 0.0;
 	Float_t eff_incl_LL    = 0.0, eff_incl_LL_err = 0.0;
-	Float_t eff_excl_DD    = 0.0, eff_excl_DD_err = 0.0;
-	Float_t eff_incl_DD    = 0.0, eff_incl_DD_err = 0.0;
 	Float_t Lb_ConsLb_chi2 = 0.0, Lb_ConsLb_nDOF  = 0.0;
 
 	Double_t Lb_TAU  = 0.0, Lb_ETA  = 0.0, Lb_PT  = 0.0;
-	Double_t pi_PIDp = 0.0, pi_PIDK = 0.0, p_PIDp = 0.0;
-	Double_t p_PIDK  = 0.0, L_TAU   = 0.0, L_M = 0.0;
+	Double_t L_TAU   = 0.0, L_M = 0.0;
 	Bool_t genFlag   = false;
 
-	TCut dtfCut = "", lifetimeCut = "", pidCut = "";
-	TCut accCut = "", tmCut       = "";
+	TCut dtfCut   = "", lifetimeCut = "", pidCut = "";
+	TCut accCut   = "", tmCut       = "";
 	TCut LMassCut = "";
 
-	TFile *fileIn = nullptr, *fileOut_LL = nullptr, *fileOut_DD = nullptr;
-	TTree *treeIn = nullptr, *treeOut_LL = nullptr, *treeOut_DD = nullptr;
+	TFile *fileIn = nullptr, *fileOut_LL = nullptr;
+	TTree *treeIn = nullptr, *treeOut_LL = nullptr;
 
 	fstream genFile;//contains no of generated candidates in MC.
 
@@ -171,15 +169,10 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 		fileOut_LL = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_sanity_LL.root",folder,run,part),"RECREATE");
 		treeOut_LL = (TTree*)treeIn->CloneTree(0);
 
-		// fileOut_DD = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_sanity_DD.root",folder,run,part),"RECREATE");
-		// treeOut_DD = (TTree*)treeIn->CloneTree(0);
-
 		treeIn->SetBranchAddress("Lb_BKGCAT",&Lb_BKGCAT);
-
 	} // end MC block
 	else //Data
 	{
-
 		if(run == 1)
 		{
 			fileIn = TFile::Open(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered.root",run));
@@ -187,9 +180,6 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 
 			fileOut_LL = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_LL.root",run),"RECREATE");
 			treeOut_LL = (TTree*)treeIn->CloneTree(0);
-
-			// fileOut_DD = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_DD.root",run),"RECREATE");
-			// treeOut_DD = (TTree*)treeIn->CloneTree(0);
 		}
 		else if(run == 2)
 		{
@@ -198,19 +188,13 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 
 			fileOut_LL = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_LL_%d.root",run,year),"RECREATE");
 			treeOut_LL = (TTree*)treeIn->CloneTree(0);
-
-			// fileOut_DD = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_DD_%d.root",run,year),"RECREATE");
-			// treeOut_DD = (TTree*)treeIn->CloneTree(0);
 		}
-
-
 	}//end Data block
 	 //end setup of input, output
 
 	cout<<"******************************************"<<endl;
 	cout<<"Input file = "<<fileIn->GetName()<<endl;
 	cout<<"LL Output file = "<<fileOut_LL->GetName()<<endl;
-	// cout<<"DD Output file = "<<fileOut_DD->GetName()<<endl;
 	cout<<"******************************************"<<endl;
 
 	entries_init = treeIn->GetEntries();
@@ -223,12 +207,6 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 	treeIn->SetBranchAddress("Lb_ConsLb_chi2",&Lb_ConsLb_chi2);
 	treeIn->SetBranchAddress("Lb_ConsLb_nDOF",&Lb_ConsLb_nDOF);
 	treeIn->SetBranchAddress("Lb_ETA",&Lb_ETA);
-	treeIn->SetBranchAddress("p_TRACK_Type",&p_TRACK_Type);
-
-	treeIn->SetBranchAddress("pi_PIDp",&pi_PIDp);
-	treeIn->SetBranchAddress("pi_PIDK",&pi_PIDK);
-	treeIn->SetBranchAddress("p_PIDp",&p_PIDp);
-	treeIn->SetBranchAddress("p_PIDK",&p_PIDK);
 
 	lifetimeCut = "(Lb_TAU > 0)&&(L_TAU > 0)";
 	dtfCut = "(Lb_ConsLb_chi2/Lb_ConsLb_nDOF > 0 && Lb_ConsLb_chi2/Lb_ConsLb_nDOF < 50)";
@@ -264,10 +242,8 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 
 	lifetimeCut.Print();
 	dtfCut.Print();
-	// pidCut.Print();
 	accCut.Print();
 	LMassCut.Print();
-	//if(!isData) tmCut.Print();
 
 	for(Int_t i = 0; i < entries_init; i++)
 	{
@@ -276,7 +252,7 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 			cout<<i<<endl;
 		}
 		treeIn->GetEntry(i);
-		if(L_M > 1104 && L_M < 1129)
+		if(L_M > 1104 && L_M < 1129)//new cut added
 		{
 			if(Lb_TAU > 0 && L_TAU > 0) //require lifetimes to be positive, universal
 			{
@@ -292,10 +268,6 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 						// {
 						treeOut_LL->Fill();
 						// }
-						// else
-						// {
-						//      treeOut_DD->Fill();
-						// }
 						// }
 						// }
 					}
@@ -305,25 +277,20 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 	}
 
 	entries_final_LL = treeOut_LL->GetEntries();
-	// entries_final_DD = treeOut_DD->GetEntries();
 	cout<<"Outgoing LL entries = "<<entries_final_LL<<endl;
-	// cout<<"Outgoing DD entries = "<<entries_final_DD<<endl;
 
 	if(isData==0)//Efficiency calculation for MC.
 	{
+		entries_init     = treeIn->GetEntries("(Lb_BKGCAT==0||Lb_BKGCAT==50)");
+		entries_final_LL = treeOut_LL->GetEntries("(Lb_BKGCAT==0||Lb_BKGCAT==50)");
 		if(entries_init != 0)//Exclusive efficiency calculation
 		{
 			eff_excl_LL = (Float_t)entries_final_LL*100/entries_init;
 			eff_excl_LL_err = sqrt(eff_excl_LL*(100.0-eff_excl_LL)/entries_init);
 
-			// eff_excl_DD = (Float_t)entries_final_DD*100/entries_init;
-			// eff_excl_DD_err = sqrt(eff_excl_DD*(100.0-eff_excl_DD)/entries_init);
-
 			cout<<"******************************************"<<endl;
 			cout<<"LL Sanity cuts made with exclusive efficiency = "<<
 			        eff_excl_LL<<"% +/- " <<eff_excl_LL_err<<" %"<<endl;
-			// cout<<"DD Sanity cuts made with exclusive efficiency = "<<
-			//         eff_excl_DD<<"% +/- " <<eff_excl_DD_err<<" %"<<endl;
 			cout<<"******************************************"<<endl;
 		}
 
@@ -333,17 +300,12 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 			cout<<"Original generated number = "<<entries_gen<<endl;
 			if(entries_gen != 0)
 			{
-				eff_incl_LL = (Float_t)entries_final_LL*100/entries_gen;
+				eff_incl_LL     = (Float_t)entries_final_LL*100/entries_gen;
 				eff_incl_LL_err = sqrt(eff_incl_LL*(100.0-eff_incl_LL)/entries_gen);
-
-				// eff_incl_DD = (Float_t)entries_final_DD*100/entries_gen;
-				// eff_incl_DD_err = sqrt(eff_incl_DD*(100.0-eff_incl_DD)/entries_gen);
 
 				cout<<"******************************************"<<endl;
 				cout<<"LL Sanity cuts made with inclusive efficiency = "<<
 				        eff_incl_LL<<"% +/- " <<eff_incl_LL_err<<" %"<<endl;
-				// cout<<"DD Sanity cuts made with inclusive efficiency = "<<
-				//         eff_incl_DD<<"% +/- " <<eff_incl_DD_err<<" %"<<endl;
 				cout<<"******************************************"<<endl;
 			}
 		}
@@ -351,9 +313,6 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 
 	fileOut_LL->Write();
 	fileOut_LL->Close();
-
-	// fileOut_DD->Write();
-	// fileOut_DD->Close();
 
 	sw.Stop();
 	cout << "==> Sanity is done! Mazel Tov!: "; sw.Print();
