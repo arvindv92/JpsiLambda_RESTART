@@ -1,10 +1,8 @@
 /********************************
    Author : Aravindhan V.
    The purpose of this script is to sWeight data in 5200-6000 GeV, and write out weights.
-   When running with isoFlag = true, zeroTracks and nonZeroTracks data are sWeighted separately.
-   What about running with isoFlag = false? sWeight them separately anyway?
-   INPUT: data from CutOutKs.
-   OUTPUT: weights for 5200-6000 GeV, isolation training file.
+   INPUT: data from Sanity.
+   OUTPUT: weights for 5200-6000 GeV.
  *********************************/
 
 #include "DoSWeight_Sanity.h"
@@ -93,24 +91,24 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 	treeIn->SetBranchAddress("Lb_DTF_M_JpsiLConstr",&Lb_Mass);
 	cout<<"Incoming Entries = "<<entries_init<<endl;
 
-	// fileOut = new TFile(outFileName,"RECREATE");
-	// treeOut = treeIn->CloneTree(0);
-	//
+	fileOut = new TFile(outFileName,"RECREATE");
+	treeOut = treeIn->CloneTree(0);
+
 	cout<<"******************************************"<<endl;
 	cout<<"Input file = "<<fileIn->GetName()<<endl;
-	// cout<<"sWeighted Output file = "<<fileOut->GetName()<<endl;
-	// cout<<"******************************************"<<endl;
-	//
-	// cout<<"Making mass cut on "<<entries_init<<" entries"<<endl;
-	// for (Int_t i = 0; i < entries_init; i++)
-	// {
-	//      if(i%100000 == 0) cout<<i<<endl;
-	//      treeIn->GetEntry(i);
-	//      if(Lb_Mass > lowRange && Lb_Mass < highRange)
-	//      {
-	//              treeOut->Fill();
-	//      }
-	// }
+	cout<<"sWeighted Output file = "<<fileOut->GetName()<<endl;
+	cout<<"******************************************"<<endl;
+
+	cout<<"Making mass cut on "<<entries_init<<" entries"<<endl;
+	for (Int_t i = 0; i < entries_init; i++)
+	{
+		if(i%100000 == 0) cout<<i<<endl;
+		treeIn->GetEntry(i);
+		if(Lb_Mass > lowRange && Lb_Mass < highRange)
+		{
+			treeOut->Fill();
+		}
+	}
 
 	// Create a new workspace to manage the project.
 	RooWorkspace* wSpace = new RooWorkspace("myWS");
@@ -133,9 +131,9 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 	wSpace->writeToFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/"
 	                         "wSpace_sPlot_Sanity.root",run));
 
-	// fileOut->cd();
-	// treeOut->Write("",TObject::kOverwrite);
-	// fileOut->Close();
+	fileOut->cd();
+	treeOut->Write("",TObject::kOverwrite);
+	fileOut->Close();
 
 	delete wSpace;
 
@@ -186,12 +184,21 @@ void AddModel(RooWorkspace *ws, Int_t lowRange, Int_t highRange,
 	RooExponential bkg("bkg","Exponential Bkg",Lb_Mass,tau);
 
 	// COMBINED MODEL	cout << "Making full model" << endl;
-	Int_t init_sigval = 0;
-	if(run == 1) init_sigval = 7000;
-	else if(run == 2) init_sigval = 27000;
+	Int_t init_sigval = 0, ul_sigval = 0;
+	if(run == 1)
+	{
+		init_sigval = 7000;
+		ul_sigval   = 14000;
+	}
+	else if(run == 2)
+	{
+		init_sigval = 27000;
+		ul_sigval   = 38000;
+	}
 
-	RooRealVar sigYield("sigYield","fitted yield for sig",init_sigval,0, 35000);
+	RooRealVar sigYield("sigYield","fitted yield for sig",init_sigval,0, ul_sigval);
 	RooRealVar bkgYield("bkgYield","fitted yield for bkg",nEntries-init_sigval,0, nEntries);
+
 
 	RooAddPdf model("model","signal+background models",
 	                RooArgList(sig, bkg),
@@ -251,13 +258,15 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	//	RooFitResult *r = model->fitTo(*data, Extended(), Strategy(2), Save(true));
 	// Modifying this to try something along the lines of what steve does
 	RooArgSet *myVars;
-	model->fitTo(*rdh,Hesse(kTRUE),Strategy(2));
+	model->fitTo(*rdh,Hesse(kTRUE),Strategy(2));//Fit to binned dataset
+
 	myVars = model->getParameters(*rdh);
 	myVars->Print("v");
 	myVars->setAttribAll("Constant",kTRUE);
 	sigYield->setConstant(kFALSE);
 	bkgYield->setConstant(kFALSE);
-	RooFitResult *r = model->fitTo(*rdh,Extended(),Hesse(kTRUE), Save(true));
+
+	RooFitResult *r = model->fitTo(*rdh,Extended(),Hesse(kTRUE), Save(true));//Fit to binned dataset again with all params except yields fixed to fitted value
 
 	cout<<"Starting MakePlots()"<<endl;
 
@@ -363,11 +372,13 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	//
 	// RooMsgService::instance().setSilentMode(true);
 
+	//****************************************************************************
 	// Now we use the SPlot class to add SWeights to our data set
 	// based on our model and our yield variables
 	RooStats::SPlot* sData = new RooStats::SPlot("sData","An SPlot", *data, model,
 	                                             RooArgList(*sigYield,*bkgYield) );
 
+	//****************************************************************************
 	data->Print("v");
 	// Check that our weights have the desired properties
 
@@ -450,24 +461,18 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	cout<<"************************************************"<<endl;
 
 	//Add SW & BW branches to output tree
-	// sigW  = treeOut->Branch("SW",&SIGW,"SIGW/F");
-	// bkgW  = treeOut->Branch("BW",&BKGW,"BKGW/F");
+	sigW  = treeOut->Branch("SW",&SIGW,"SIGW/F");
+	bkgW  = treeOut->Branch("BW",&BKGW,"BKGW/F");
 
-	//Add SW & BW branches to isolation training tree
-	// if(!zeroFlag)
-	// {
-	//      sigW_training = treeOut_training->Branch("SW",&SIGW,"SIGW/F");
-	//      bkgW_training = treeOut_training->Branch("BW",&BKGW,"BKGW/F");
-	// }
-	// for(Int_t i = 0; i < dsentries; i++)
-	// {
-	//      bMASS = (data->get(i))->getRealValue("Lb_DTF_M_JpsiLConstr");
-	//      SIGW  = (data->get(i))->getRealValue("sigYield_sw");
-	//      BKGW  = (data->get(i))->getRealValue("bkgYield_sw");
-	//
-	//      sigW->Fill();
-	//      bkgW->Fill();
-	// }
+	for(Int_t i = 0; i < dsentries; i++)
+	{
+		bMASS = (data->get(i))->getRealValue("Lb_DTF_M_JpsiLConstr");
+		SIGW  = (data->get(i))->getRealValue("sigYield_sw");
+		BKGW  = (data->get(i))->getRealValue("bkgYield_sw");
+
+		sigW->Fill();
+		bkgW->Fill();
+	}
 
 	cout<<"Finishing DoSPlot()"<<endl;
 
