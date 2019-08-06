@@ -13,7 +13,7 @@ from hep_ml.metrics_utils import ks_2samp_weighted
 run = int(sys.argv[1])
 
 columns = ['Lb_P', 'Lb_PT', 'Jpsi_P', 'Jpsi_PT', 'L_P',
-           'L_PT', 'p_P', 'p_PT', 'pi_P', 'pi_PT', 'SW']
+           'L_PT', 'p_P', 'p_PT', 'pi_P', 'pi_PT', 'p_ProbNNghost', 'pi_ProbNNghost', 'SW']
 
 # columns = ['Lb_P', 'Lb_PT', 'Lb_ETA', 'Jpsi_P', 'Jpsi_PT', 'Jpsi_ETA', 'L_P',
 #            'L_PT', 'L_ETA', 'p_P', 'p_PT', 'p_ETA', 'pi_P', 'pi_PT', 'pi_ETA',
@@ -75,7 +75,7 @@ def draw_distributions(myoriginal, mytarget, new_original_weights, targetwts):
         # print('KS over ', column, ' = ', myks)
     plt.draw()
     plt.figure(figsize=[15, 7])
-    for id, column in enumerate(columns[6:9], 1):
+    for id, column in enumerate(columns[6:11], 1):
         xlim = numpy.percentile(numpy.hstack([mytarget[column]]),
                                 [0.01, 99.99])
         plt.subplot(2, 3, id)
