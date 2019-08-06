@@ -6,7 +6,8 @@
 
 void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
                    const char* isoVersion, Int_t isoConf, Int_t bdtConf,
-                   Int_t flag, Bool_t isoFlag, Bool_t zeroFlag, Bool_t logFlag)
+                   Int_t flag, Bool_t isoFlag, Bool_t zeroFlag, Bool_t logFlag,
+                   Bool_t simFlag)
 /*
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = 1 for data, 0 for MC
@@ -141,41 +142,38 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	const char *rootFolder = "";
 
 	Float_t log_dtfChi2       = 0., log_lbMinIpChi2 = 0., logAcos_lbDira_ownPV = 0.;
-	Float_t log_lbFd_ownPV    = 0., log_lTau        = 0.;
-	Float_t log_jpsiMinIpChi2 = 0., log_jpsiMass    = 0., jpsi_cosTheta        = 0.;
-	Float_t jpsi_pt           = 0.;
+	Float_t log_lbFd_ownPV    = 0.;
+	Float_t log_jpsiMinIpChi2 = 0., log_jpsiMass    = 0.;
 
 	Float_t log_lFdChi2_orivX   = 0., logAcos_lDira_orivX = 0., log_lFd_orivX  = 0.;
-	Float_t logAcos_lDira_ownPV = 0., l_dm                = 0., log_lMinIpChi2 = 0., l_pt = 0.;
-	Float_t l_cosTheta          = 0.;
+	Float_t logAcos_lDira_ownPV = 0., l_dm                = 0., log_lMinIpChi2 = 0.;
+	Float_t l_EndVtx_Chi2 = 0.;
 	Float_t log_pMinIpChi2      = 0., p_ghostProbNN    = 0.;
 
 	Float_t log_p_pt  = 0., p_ProbNNp       = 0.;
 	Float_t log_piMinIpChi2 = 0., pi_ghostProbNN = 0.;
-	Float_t log_pi_pt = 0., pi_ProbNNpi     = 0.;
+	Float_t log_pi_pt = 0.;
 	Float_t BDTK      = 0.;
 	Float_t chi2array[200] {0.};
 
-	Double_t lbMinIpChi2   = 0., lbDira_ownPV = 0., lbFd_ownPV   = 0.;
-	Double_t lTau          = 0., lbPT         = 0., lbP          = 0.;
-	Double_t jpsiMinIpChi2 = 0., jpsiMass     = 0., jpsiCosTheta = 0.;
-	Double_t jpsiPT        = 0., jpsiP        = 0.;
-	Double_t lFdChi2_orivX = 0., lDira_orivX  = 0., lFd_orivX    = 0.;
+	Double_t lbMinIpChi2   = 0., lbDira_ownPV = 0., lbFd_ownPV = 0.;
+	Double_t lEndVtxChi2    = 0.;
+	Double_t jpsiMinIpChi2 = 0., jpsiMass     = 0.;
+	Double_t lFdChi2_orivX = 0., lDira_orivX  = 0., lFd_orivX  = 0.;
 
-	Double_t lDira_ownPV = 0., lDm           = 0., lMinIpChi2 = 0., lPT = 0.;
-	Double_t lP          = 0., lCosTheta     = 0.;
+	Double_t lDira_ownPV = 0., lDm           = 0., lMinIpChi2 = 0.;
 	Double_t pMinIpChi2  = 0., pGhostProbNN  = 0.;
 	Double_t pPT         = 0., pProbNNp      = 0.;
 	Double_t piMinIpChi2 = 0., piGhostProbNN = 0.;
 
-	Double_t piPT   = 0., piProbNNpi = 0.;
+	Double_t piPT   = 0.;
 	Double_t myBDTK = 0., BDT        = 0.;
 
 	TMVA::Tools::Instance();// This loads the library
 	TMVA::Reader *reader = nullptr;
 
 	//set up input, output
-	if(!isData) // MC
+	if(!isData) // Apply on MC
 	{
 		rootFolder = Form("rootFiles/mcFiles/JpsiLambda/%s/run%d",folder,run);
 		if(isoFlag)
@@ -211,7 +209,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 			                         rootFolder,part,type,bdtConf),"RECREATE");
 		}
 	}//end MC block
-	else // Data
+	else // Apply on Data
 	{
 		rootFolder = Form("rootFiles/dataFiles/JpsiLambda/run%d",run);
 		if(flag == 1)
@@ -331,6 +329,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	reader->AddVariable("logacos_ldira_ownpv := log10(acos(L_DIRA_OWNPV))", &logAcos_lDira_ownPV);
 	reader->AddVariable("L_dm", &l_dm);
 	reader->AddVariable("log_lminipchi2      := log10(L_MINIPCHI2)", &log_lMinIpChi2);
+	reader->AddVariable("L_ENDVERTEX_CHI2",&l_EndVtx_Chi2);
 
 	reader->AddVariable("log_pminipchi2      := log10(p_MINIPCHI2)", &log_pMinIpChi2);
 	reader->AddVariable("p_ProbNNghost", &p_ghostProbNN);
@@ -349,15 +348,31 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	//***********Load weights file**********************************
 	TString dir    = "dataset/weights/";
 	TString prefix;
-	if(isoFlag && !zeroFlag)
+	if(!simFlag)//train on data
 	{
-		prefix = Form("dataRun%d_iso%d_%s_BDT%d_noPID",
-		              run,isoConf,isoVersion,bdtConf);
+		if(isoFlag && !zeroFlag)
+		{
+			prefix = Form("dataRun%d_iso%d_%s_BDT%d_noPID",
+			              run,isoConf,isoVersion,bdtConf);
+		}
+		else if(!isoFlag || (isoFlag && zeroFlag))
+		{
+			prefix = Form("dataRun%d_noIso_BDT%d_noPID",
+			              run,bdtConf);
+		}
 	}
-	else if(!isoFlag || (isoFlag && zeroFlag))
+	else //train on MC
 	{
-		prefix = Form("dataRun%d_noIso_BDT%d_noPID",
-		              run,bdtConf);
+		if(isoFlag && !zeroFlag)
+		{
+			prefix = Form("MCRun%d_iso%d_%s_BDT%d_noPID",
+			              run,isoConf,isoVersion,bdtConf);
+		}
+		else if(!isoFlag || (isoFlag && zeroFlag))
+		{
+			prefix = Form("MCRun%d_noIso_BDT%d_noPID",
+			              run,bdtConf);
+		}
 	}
 	TString methodName = TString("BDT method");
 	TString weightfile = dir + prefix + TString("_") +
@@ -372,16 +387,16 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	treeIn->SetBranchAddress("Lb_MINIPCHI2", &lbMinIpChi2);
 	treeIn->SetBranchAddress("Lb_DIRA_OWNPV", &lbDira_ownPV );
 	treeIn->SetBranchAddress("Lb_FD_OWNPV", &lbFd_ownPV);
-	treeIn->SetBranchAddress("L_TAU", &lTau);
+	// treeIn->SetBranchAddress("L_TAU", &lTau);
 	//treeIn->SetBranchAddress("Lb_DTF_CTAUS_L", &l_dtfCtauS);
-	treeIn->SetBranchAddress("Lb_P", &lbP);
-	treeIn->SetBranchAddress("Lb_PT", &lbPT);
+	// treeIn->SetBranchAddress("Lb_P", &lbP);
+	// treeIn->SetBranchAddress("Lb_PT", &lbPT);
 
 	treeIn->SetBranchAddress("Jpsi_MINIPCHI2", &jpsiMinIpChi2);
 	treeIn->SetBranchAddress("Jpsi_M", &jpsiMass);
-	treeIn->SetBranchAddress("Jpsi_CosTheta", &jpsiCosTheta);
-	treeIn->SetBranchAddress("Jpsi_PT", &jpsiPT);
-	treeIn->SetBranchAddress("Jpsi_P", &jpsiP);
+	// treeIn->SetBranchAddress("Jpsi_CosTheta", &jpsiCosTheta);
+	// treeIn->SetBranchAddress("Jpsi_PT", &jpsiPT);
+	// treeIn->SetBranchAddress("Jpsi_P", &jpsiP);
 
 	treeIn->SetBranchAddress("L_FDCHI2_ORIVX", &lFdChi2_orivX);
 	treeIn->SetBranchAddress("L_DIRA_ORIVX", &lDira_orivX);
@@ -389,12 +404,9 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	treeIn->SetBranchAddress("L_DIRA_OWNPV", &lDira_ownPV);
 	treeIn->SetBranchAddress("L_dm", &lDm);
 	treeIn->SetBranchAddress("L_MINIPCHI2", &lMinIpChi2);
-	treeIn->SetBranchAddress("L_PT", &lPT);
-	treeIn->SetBranchAddress("L_P", &lP);
-	//	treeIn->SetBranchAddress("L_ENDVERTEX_CHI2", &lEndVertexChi2);
-	treeIn->SetBranchAddress("L_CosTheta", &lCosTheta);
+	treeIn->SetBranchAddress("L_ENDVERTEX_CHI2", &l_EndVtx_Chi2);
+	// treeIn->SetBranchAddress("L_CosTheta", &lCosTheta);
 
-	//	treeIn->SetBranchAddress("p_PIDp", &pPIDp);
 	treeIn->SetBranchAddress("p_MINIPCHI2", &pMinIpChi2);
 	treeIn->SetBranchAddress("p_ProbNNghost", &pGhostProbNN);
 	treeIn->SetBranchAddress("p_PT", &pPT);
@@ -409,10 +421,8 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	}
 
 	treeIn->SetBranchAddress("pi_ProbNNghost", &piGhostProbNN);
-	//	treeIn->SetBranchAddress("pi_PIDK", &piPIDK);
 	treeIn->SetBranchAddress("pi_MINIPCHI2", &piMinIpChi2);
 	treeIn->SetBranchAddress("pi_PT", &piPT);
-	//treeIn->SetBranchAddress("pi_ProbNNpi", &piProbNNpi);
 
 	if(isoFlag && !zeroFlag)
 	{
@@ -448,21 +458,17 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 		logAcos_lDira_ownPV  = log10(acos(lDira_ownPV));
 		l_dm                 = lDm;
 		log_lMinIpChi2       = log10(lMinIpChi2);
-		//	l_pt             = lPT;
-		//		l_endVertex_Chi2     = lEndVertexChi2;
+		l_EndVtx_Chi2        = lEndVtxChi2;
 		//	l_cosTheta       = lCosTheta;
 
-		//		pPIDp                = p_PIDp;
 		log_pMinIpChi2       = log10(pMinIpChi2);
 		p_ghostProbNN        = pGhostProbNN;
 		log_p_pt             = log10(pPT);
 		p_ProbNNp            = pProbNNp;
 
 		pi_ghostProbNN       = piGhostProbNN;
-		//	pi_PIDK          = piPIDK;
 		log_piMinIpChi2      = log10(piMinIpChi2);
 		log_pi_pt            = log10(piPT);
-		// pi_ProbNNpi          = piProbNNpi;
 
 		if(isoFlag && !zeroFlag) BDTK = myBDTK;
 
