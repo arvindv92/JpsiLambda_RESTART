@@ -27,6 +27,7 @@
 using namespace std;
 void TrainFinalBDT(Int_t run = 1, Int_t trackType = 3,
                    const char* isoVersion = "v1", Int_t isoConf = 1,
-                   Bool_t isoFlag = true, Int_t bdtConf = 1, Bool_t logFlag = false);
+                   Bool_t isoFlag = true, Int_t bdtConf = 1, Bool_t logFlag = false,
+                   Bool_t simFlag = false);
 
 #endif
