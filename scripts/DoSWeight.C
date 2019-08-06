@@ -291,11 +291,13 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	// Modifying this to try something along the lines of what steve does
 	RooArgSet *myVars;
 	model->fitTo(*rdh,Hesse(kTRUE),Strategy(2));//Fit to binned dataset
+
 	myVars = model->getParameters(*rdh);
 	myVars->Print("v");
 	myVars->setAttribAll("Constant",kTRUE);//set all params except the yields to be constant
 	sigYield->setConstant(kFALSE);
 	bkgYield->setConstant(kFALSE);
+
 	RooFitResult *r = model->fitTo(*rdh,Extended(),Hesse(kTRUE), Save(true));//Fit to binned dataset again with all params except yields fixed to fitted value
 
 	cout<<"Starting MakePlots()"<<endl;
