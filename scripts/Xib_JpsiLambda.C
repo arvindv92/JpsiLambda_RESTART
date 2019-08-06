@@ -170,13 +170,13 @@ void Xib_JpsiLambda()
 	Float_t xiVtxUnc    = 0.014;//1.4%
 
 	//Get efficiencies
-	TFile *fileIn_nonZero_Run1 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/Xib0/run1/xib0_cutoutks_LL_nonZeroTracks_noPID.root","READ");
+	TFile *fileIn_nonZero_Run1 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/Xib0/run1/xib0_cutoutks_LL_nonZeroTracks.root","READ");
 	TTree *treeIn_nonZero_Run1 = (TTree*)fileIn_nonZero_Run1->Get("MyTuple");
-	treeIn_nonZero_Run1->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/Xib0/run1/xib0_LL_FinalBDT2_iso2_v0_noPID.root");
+	treeIn_nonZero_Run1->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/Xib0/run1/xib0_LL_FinalBDT2_iso2_v0.root");
 
-	TFile *fileIn_Zero_Run1 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/Xib0/run1/xib0_cutoutks_LL_ZeroTracks_noPID.root","READ");
+	TFile *fileIn_Zero_Run1 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/Xib0/run1/xib0_cutoutks_LL_ZeroTracks.root","READ");
 	TTree *treeIn_Zero_Run1 = (TTree*)fileIn_Zero_Run1->Get("MyTuple");
-	treeIn_Zero_Run1->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/Xib0/run1/xib0_zeroTracksLL_FinalBDT2_noPID.root");
+	treeIn_Zero_Run1->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/Xib0/run1/xib0_zeroTracksLL_FinalBDT2.root");
 
 	treeIn_nonZero_Run1->Draw("GB_WT>>wt_Run1_nonZero","BDT2 > 0.475","goff");
 	treeIn_Zero_Run1->Draw("GB_WT>>wt_Run1_Zero","BDT2 > 0.365","goff");

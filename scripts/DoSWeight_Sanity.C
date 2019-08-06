@@ -44,7 +44,7 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 
 	if(logFlag)//Redirect output to log file
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/sPlot_Sanity_%s_noPID_log.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/sPlot_Sanity_%s_log.txt",
 		                             run, type),"w");
 	}
 	cout<<"********************************"<<endl;
@@ -69,8 +69,8 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 	Double_t Lb_Mass         = 0.0;
 
 	rootFolder    = Form("rootFiles/dataFiles/JpsiLambda/run%d", run);
-	inFileName    = Form("%s/jpsilambda_sanity_%s_noPID.root", rootFolder, type);
-	outFileName   = Form("%s/sWeightSanity/jpsilambda_%s_sanity_withsw_noPID.root",
+	inFileName    = Form("%s/jpsilambda_sanity_%s.root", rootFolder, type);
+	outFileName   = Form("%s/sWeightSanity/jpsilambda_%s_sanity_withsw.root",
 	                     rootFolder, type);
 
 	fileIn = TFile::Open(inFileName,"READ");
@@ -131,7 +131,7 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 
 	//save workspace in ROOT file so you don't have to make and load input data each time, dummy
 	wSpace->writeToFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/"
-	                         "wSpace_sPlot_Sanity_noPID.root",run));
+	                         "wSpace_sPlot_Sanity.root",run));
 
 	// fileOut->cd();
 	// treeOut->Write("",TObject::kOverwrite);
@@ -334,7 +334,7 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	// fitCanvas->cd();
 	//
 	// fitCanvas->Update();
-	fitCanvas->SaveAs(Form("plots/fit_sPlot_sanity_run%d_noPID.pdf",run));
+	fitCanvas->SaveAs(Form("plots/fit_sPlot_sanity_run%d.pdf",run));
 
 	// cout<<"Pull Mean Y = "<<hpull->GetMean(2)<<endl;
 	// cout<<"Pull RMS  Y = "<<hpull->GetRMS(2)<<endl;
@@ -406,7 +406,7 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	// data->plotOn(frame_sigsw);
 	// frame_sigsw->Draw();
 	// sWeightCanvas->Update();
-	// sWeightCanvas->SaveAs(Form("plots/fit_sanity_run%d%s_sWeights_noPID.pdf",run,type));
+	// sWeightCanvas->SaveAs(Form("plots/fit_sanity_run%d%s_sWeights.pdf",run,type));
 
 	// TCanvas *sWeightVsMass = new TCanvas();
 	// RooPlot* frame_sigsw_x = Lb_Mass->frame();
@@ -440,7 +440,7 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	// frame2_2->Draw();
 	//
 	// sWeightMass->Update();
-	// sWeightMass->SaveAs(Form("plots/fit_run%d%s_sWeightedMass_noPID.pdf",run,type));
+	// sWeightMass->SaveAs(Form("plots/fit_run%d%s_sWeightedMass.pdf",run,type));
 
 	Int_t dsentries = data->numEntries();
 	cout<<"No. of entries in dataset = "<<dsentries<<endl;

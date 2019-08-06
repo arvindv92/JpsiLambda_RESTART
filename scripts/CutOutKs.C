@@ -103,16 +103,16 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 	if(isData && logFlag && run == 1)
 	{
 		//		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/CutOutKs_%d.txt",run,year),"w");
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/CutOutKs_noPID.txt",run),"w");
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/CutOutKs.txt",run),"w");
 	}
 	else if(isData && logFlag && run == 2)
 	{
 		//		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/CutOutKs_%d.txt",run,year),"w");
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/CutOutKs_%d_noPID.txt",run,year),"w");
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/CutOutKs_%d.txt",run,year),"w");
 	}
 	else if(!isData && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/CutOutKs_noPID.txt",folder,run),"w");
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/CutOutKs.txt",folder,run),"w");
 	}
 	cout<<"******************************************"<<endl;
 	cout<<"******************************************"<<endl;
@@ -152,8 +152,8 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 	{
 		logFolder        = Form("logs/mc/JpsiLambda/%s/run%d",folder,run);
 		rootFolder       = Form("rootFiles/mcFiles/JpsiLambda/%s/run%d",folder,run);
-		fileName_nonZero = Form("%s_cutoutks_%s_nonZeroTracks_noPID.root",part,type);
-		fileName_Zero    = Form("%s_cutoutks_%s_ZeroTracks_noPID.root",part,type);
+		fileName_nonZero = Form("%s_cutoutks_%s_nonZeroTracks.root",part,type);
+		fileName_Zero    = Form("%s_cutoutks_%s_ZeroTracks.root",part,type);
 
 		if(!gSystem->AccessPathName((Form("%s/gen_log.txt",logFolder))))
 		{
@@ -162,7 +162,7 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 		}
 		else cout<<"*****GenFile not accessible!!*****"<<endl;
 
-		fileIn  = TFile::Open(Form("%s/%s_sanity_%s_noPID.root",rootFolder,part,type),"READ");
+		fileIn  = TFile::Open(Form("%s/%s_sanity_%s.root",rootFolder,part,type),"READ");
 		treeIn  = (TTree*)fileIn->Get("MyTuple");
 
 		fileOut_nonZero = new TFile(Form("%s/%s",rootFolder,fileName_nonZero),"RECREATE");
@@ -176,19 +176,19 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 
 		if(run == 1)
 		{
-			fileIn  = TFile::Open(Form("%s/jpsilambda_sanity_%s_noPID.root",rootFolder,type),"READ");
+			fileIn  = TFile::Open(Form("%s/jpsilambda_sanity_%s.root",rootFolder,type),"READ");
 			treeIn  = (TTree*)fileIn->Get("MyTuple");
 
-			fileName_nonZero = Form("jpsilambda_cutoutks_%s_nonZeroTracks_noPID.root",type);
-			fileName_Zero    = Form("jpsilambda_cutoutks_%s_ZeroTracks_noPID.root",type);
+			fileName_nonZero = Form("jpsilambda_cutoutks_%s_nonZeroTracks.root",type);
+			fileName_Zero    = Form("jpsilambda_cutoutks_%s_ZeroTracks.root",type);
 		}
 		else if(run == 2)
 		{
-			fileIn  = TFile::Open(Form("%s/jpsilambda_sanity_%s_%d_noPID.root",rootFolder,type,year),"READ");
+			fileIn  = TFile::Open(Form("%s/jpsilambda_sanity_%s_%d.root",rootFolder,type,year),"READ");
 			treeIn  = (TTree*)fileIn->Get("MyTuple");
 
-			fileName_nonZero = Form("jpsilambda_cutoutks_%s_%d_nonZeroTracks_noPID.root",type,year);
-			fileName_Zero    = Form("jpsilambda_cutoutks_%s_%d_ZeroTracks_noPID.root",type,year);
+			fileName_nonZero = Form("jpsilambda_cutoutks_%s_%d_nonZeroTracks.root",type,year);
+			fileName_Zero    = Form("jpsilambda_cutoutks_%s_%d_ZeroTracks.root",type,year);
 		}
 
 		fileOut_nonZero = new TFile(Form("%s/%s",rootFolder,fileName_nonZero),"RECREATE");

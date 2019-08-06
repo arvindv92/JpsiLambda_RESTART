@@ -108,19 +108,19 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 	if(isData && logFlag && run == 1)
 	{
 		//gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/sanity_%d_log.txt",run,year));
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/Sanity_noPID.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/Sanity.txt",
 		                             run),"w");
 	}
 	else if(isData && logFlag && run == 2)
 	{
 		//gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/sanity_%d_log.txt",run,year));
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/Sanity_%d_noPID.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/Sanity_%d.txt",
 		                             run,year),"w");
 	}
 	else if(!isData && logFlag)
 	{
 		//gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/%s/run%d/sanity_log.txt",folder,run));
-		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/Sanity_noPID.txt",
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/Sanity.txt",
 		                             folder,run),"w");
 	}
 	cout<<"******************************************"<<endl;
@@ -168,10 +168,10 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 		fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_triggered.root",folder,run,part));
 		treeIn = (TTree*)fileIn->Get("MyTuple");
 
-		fileOut_LL = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_sanity_LL_noPID.root",folder,run,part),"RECREATE");
+		fileOut_LL = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_sanity_LL.root",folder,run,part),"RECREATE");
 		treeOut_LL = (TTree*)treeIn->CloneTree(0);
 
-		// fileOut_DD = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_sanity_DD_noPID.root",folder,run,part),"RECREATE");
+		// fileOut_DD = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_sanity_DD.root",folder,run,part),"RECREATE");
 		// treeOut_DD = (TTree*)treeIn->CloneTree(0);
 
 		treeIn->SetBranchAddress("Lb_BKGCAT",&Lb_BKGCAT);
@@ -185,10 +185,10 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 			fileIn = TFile::Open(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered.root",run));
 			treeIn = (TTree*)fileIn->Get("MyTuple");
 
-			fileOut_LL = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_LL_noPID.root",run),"RECREATE");
+			fileOut_LL = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_LL.root",run),"RECREATE");
 			treeOut_LL = (TTree*)treeIn->CloneTree(0);
 
-			// fileOut_DD = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_DD_noPID.root",run),"RECREATE");
+			// fileOut_DD = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_DD.root",run),"RECREATE");
 			// treeOut_DD = (TTree*)treeIn->CloneTree(0);
 		}
 		else if(run == 2)
@@ -196,10 +196,10 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 			fileIn = TFile::Open(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_%d.root",run,year));
 			treeIn = (TTree*)fileIn->Get("MyTuple");
 
-			fileOut_LL = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_LL_%d_noPID.root",run,year),"RECREATE");
+			fileOut_LL = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_LL_%d.root",run,year),"RECREATE");
 			treeOut_LL = (TTree*)treeIn->CloneTree(0);
 
-			// fileOut_DD = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_DD_%d_noPID.root",run,year),"RECREATE");
+			// fileOut_DD = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_sanity_DD_%d.root",run,year),"RECREATE");
 			// treeOut_DD = (TTree*)treeIn->CloneTree(0);
 		}
 

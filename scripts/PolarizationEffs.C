@@ -289,21 +289,21 @@ void PolarizationEffs(Int_t run = 1)
 	}
 	nEntries_gen_JpsiSigma = treeIn_gen_JpsiSigma->GetEntries();
 
-	fileIn_nonZero_JpsiLambda = Open(Form("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_cutoutks_LL_nonZeroTracks_noPID.root",run));
+	fileIn_nonZero_JpsiLambda = Open(Form("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_cutoutks_LL_nonZeroTracks.root",run));
 	treeIn_nonZero_JpsiLambda = (TTree*)fileIn_nonZero_JpsiLambda->Get("MyTuple");
-	treeIn_nonZero_JpsiLambda->AddFriend("MyTuple",Form("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_LL_FinalBDT2_iso%d_v0_noPID.root",run,isoConf));
+	treeIn_nonZero_JpsiLambda->AddFriend("MyTuple",Form("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_LL_FinalBDT2_iso%d_v0.root",run,isoConf));
 
-	fileIn_Zero_JpsiLambda = Open(Form("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_cutoutks_LL_ZeroTracks_noPID.root",run));
+	fileIn_Zero_JpsiLambda = Open(Form("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_cutoutks_LL_ZeroTracks.root",run));
 	treeIn_Zero_JpsiLambda = (TTree*)fileIn_Zero_JpsiLambda->Get("MyTuple");
-	treeIn_Zero_JpsiLambda->AddFriend("MyTuple",Form("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_zeroTracksLL_FinalBDT2_noPID.root",run));
+	treeIn_Zero_JpsiLambda->AddFriend("MyTuple",Form("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_zeroTracksLL_FinalBDT2.root",run));
 
-	fileIn_nonZero_JpsiSigma = Open(Form("../rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_cutoutks_LL_nonZeroTracks_noPID.root",run));
+	fileIn_nonZero_JpsiSigma = Open(Form("../rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_cutoutks_LL_nonZeroTracks.root",run));
 	treeIn_nonZero_JpsiSigma = (TTree*)fileIn_nonZero_JpsiSigma->Get("MyTuple");
-	treeIn_nonZero_JpsiSigma->AddFriend("MyTuple",Form("../rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_LL_FinalBDT2_iso%d_v0_noPID.root",run,isoConf));
+	treeIn_nonZero_JpsiSigma->AddFriend("MyTuple",Form("../rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_LL_FinalBDT2_iso%d_v0.root",run,isoConf));
 
-	fileIn_Zero_JpsiSigma = Open(Form("../rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_cutoutks_LL_ZeroTracks_noPID.root",run));
+	fileIn_Zero_JpsiSigma = Open(Form("../rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_cutoutks_LL_ZeroTracks.root",run));
 	treeIn_Zero_JpsiSigma = (TTree*)fileIn_Zero_JpsiSigma->Get("MyTuple");
-	treeIn_Zero_JpsiSigma->AddFriend("MyTuple",Form("../rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_zeroTracksLL_FinalBDT2_noPID.root",run));
+	treeIn_Zero_JpsiSigma->AddFriend("MyTuple",Form("../rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_zeroTracksLL_FinalBDT2.root",run));
 
 	treeIn_gen_JpsiLambda->SetBranchAddress("Lambda_b0_TRUEP_E",&Lb_PE_gen_JpsiLambda);
 	treeIn_gen_JpsiLambda->SetBranchAddress("Lambda_b0_TRUEP_X",&Lb_PX_gen_JpsiLambda);

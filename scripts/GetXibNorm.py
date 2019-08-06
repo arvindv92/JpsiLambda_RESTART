@@ -79,18 +79,18 @@ def GetNorm(run=1, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
     # NB Not using TM anymore.
     path = "../rootFiles/mcFiles/JpsiLambda/JpsiXi/run" + str(run) + "/"
     nonZeroTracksFile = TFile(path
-                              + "jpsixi_cutoutks_LL_nonZeroTracks_noPID.root")
+                              + "jpsixi_cutoutks_LL_nonZeroTracks.root")
     ZeroTracksFile = TFile(path
-                           + "jpsixi_cutoutks_LL_ZeroTracks_noPID.root")
+                           + "jpsixi_cutoutks_LL_ZeroTracks.root")
     nonZeroTracksTree = nonZeroTracksFile.MyTuple
     ZeroTracksTree = ZeroTracksFile.MyTuple
 
     nonZeroTracksTree.AddFriend("MyTuple", path + "jpsixi_LL_FinalBDT"
                                 + str(finalBDTConf_nonZero) + "_iso"
                                 + str(isoConf) + "_" + isoVersion
-                                + "_noPID.root")
+                                + ".root")
     ZeroTracksTree.AddFriend("MyTuple", path + "jpsixi_zeroTracksLL_FinalBDT"
-                             + str(finalBDTConf_Zero) + "_noPID.root")
+                             + str(finalBDTConf_Zero) + ".root")
 
     num = nonZeroTracksTree.GetEntries("BDT" + str(finalBDTConf_nonZero) + ">"
                                        + str(bdtCut_nonZero))

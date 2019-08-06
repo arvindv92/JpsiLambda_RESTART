@@ -368,18 +368,18 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	for(Int_t run = 1; run<=2; run++)
 	{
 		Int_t i = run-1;
-		TFile *mcFileIn_nonZero_Lambda = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_nonZeroTracks_noPID.root",
+		TFile *mcFileIn_nonZero_Lambda = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_nonZeroTracks.root",
 		                                           lambdaMCPath,run));
 		TTree *mcTreeIn_nonZero_Lambda = (TTree*)mcFileIn_nonZero_Lambda->Get("MyTuple");
 
-		TFile *mcFileIn_Zero_Lambda    = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_ZeroTracks_noPID.root",
+		TFile *mcFileIn_Zero_Lambda    = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_ZeroTracks.root",
 		                                           lambdaMCPath,run));
 		TTree *mcTreeIn_Zero_Lambda    = (TTree*)mcFileIn_Zero_Lambda->Get("MyTuple");
 
-		mcTreeIn_nonZero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s_noPID.root",
+		mcTreeIn_nonZero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s.root",
 		                                                  lambdaMCPath,run,bdtConf_nonZero[i],
 		                                                  isoConf[i],isoVersion[i]));
-		mcTreeIn_Zero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d_noPID.root",
+		mcTreeIn_Zero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d.root",
 		                                               lambdaMCPath,run,bdtConf_Zero[i]));
 
 		fstream genFile_Lambda;
@@ -491,17 +491,17 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	for(Int_t run = 1; run<=2; run++)
 	{
 		Int_t i = run-1;
-		TFile *mcFileIn_nonZero_Sigma = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_nonZeroTracks_noPID.root",
+		TFile *mcFileIn_nonZero_Sigma = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_nonZeroTracks.root",
 		                                          sigmaPath,run));
 		TTree *mcTreeIn_nonZero_Sigma = (TTree*)mcFileIn_nonZero_Sigma->Get("MyTuple");
 
-		TFile *mcFileIn_Zero_Sigma    = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_ZeroTracks_noPID.root",
+		TFile *mcFileIn_Zero_Sigma    = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_ZeroTracks.root",
 		                                          sigmaPath,run));
 		TTree *mcTreeIn_Zero_Sigma    = (TTree*)mcFileIn_Zero_Sigma->Get("MyTuple");
 
-		mcTreeIn_nonZero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_LL_FinalBDT%d_iso%d_%s_noPID.root",
+		mcTreeIn_nonZero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_LL_FinalBDT%d_iso%d_%s.root",
 		                                                 sigmaPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-		mcTreeIn_Zero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_zeroTracksLL_FinalBDT%d_noPID.root",
+		mcTreeIn_Zero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_zeroTracksLL_FinalBDT%d.root",
 		                                              sigmaPath,run,bdtConf_Zero[i]));
 
 		//***************Efficiency***************************************
@@ -745,17 +745,17 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	for(Int_t run = 1; run<=2; run++)
 	{
 		Int_t i = run-1;
-		TFile *mcFileIn_nonZero_1405 = Open(Form("%s/run%d/lst1405_cutoutks_LL_nonZeroTracks_noPID.root",
+		TFile *mcFileIn_nonZero_1405 = Open(Form("%s/run%d/lst1405_cutoutks_LL_nonZeroTracks.root",
 		                                         Lst1405Path,run));
 		TTree *mcTreeIn_nonZero_1405 = (TTree*)mcFileIn_nonZero_1405->Get("MyTuple");
 
-		TFile *mcFileIn_Zero_1405    = Open(Form("%s/run%d/lst1405_cutoutks_LL_ZeroTracks_noPID.root",
+		TFile *mcFileIn_Zero_1405    = Open(Form("%s/run%d/lst1405_cutoutks_LL_ZeroTracks.root",
 		                                         Lst1405Path,run));
 		TTree *mcTreeIn_Zero_1405    = (TTree*)mcFileIn_Zero_1405->Get("MyTuple");
 
-		mcTreeIn_nonZero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_LL_FinalBDT%d_iso%d_%s_noPID.root",
+		mcTreeIn_nonZero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_LL_FinalBDT%d_iso%d_%s.root",
 		                                                Lst1405Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-		mcTreeIn_Zero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_zeroTracksLL_FinalBDT%d_noPID.root",
+		mcTreeIn_Zero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_zeroTracksLL_FinalBDT%d.root",
 		                                             Lst1405Path,run,bdtConf_Zero[i]));
 
 		TFile *genWtsFile_1405 = nullptr;
@@ -1012,17 +1012,17 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	for(Int_t run = 1; run<=2; run++)
 	{
 		Int_t i = run-1;
-		TFile *mcFileIn_nonZero_1520 = Open(Form("%s/run%d/lst1520_cutoutks_LL_nonZeroTracks_noPID.root",
+		TFile *mcFileIn_nonZero_1520 = Open(Form("%s/run%d/lst1520_cutoutks_LL_nonZeroTracks.root",
 		                                         Lst1520Path,run));
 		TTree *mcTreeIn_nonZero_1520 = (TTree*)mcFileIn_nonZero_1520->Get("MyTuple");
 
-		TFile *mcFileIn_Zero_1520    = Open(Form("%s/run%d/lst1520_cutoutks_LL_ZeroTracks_noPID.root",
+		TFile *mcFileIn_Zero_1520    = Open(Form("%s/run%d/lst1520_cutoutks_LL_ZeroTracks.root",
 		                                         Lst1520Path,run));
 		TTree *mcTreeIn_Zero_1520    = (TTree*)mcFileIn_Zero_1520->Get("MyTuple");
 
-		mcTreeIn_nonZero_1520->AddFriend("MyTuple",Form("%s/run%d/lst1520_LL_FinalBDT%d_iso%d_%s_noPID.root",
+		mcTreeIn_nonZero_1520->AddFriend("MyTuple",Form("%s/run%d/lst1520_LL_FinalBDT%d_iso%d_%s.root",
 		                                                Lst1520Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-		mcTreeIn_Zero_1520->AddFriend("MyTuple",Form("%s/run%d/lst1520_zeroTracksLL_FinalBDT%d_noPID.root",
+		mcTreeIn_Zero_1520->AddFriend("MyTuple",Form("%s/run%d/lst1520_zeroTracksLL_FinalBDT%d.root",
 		                                             Lst1520Path,run,bdtConf_Zero[i]));
 		fstream genFile_1520;
 		genFile_1520.open((Form("../logs/mc/JpsiLambda/Lst1520/run%d/gen_log.txt",run)));
@@ -1208,17 +1208,17 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	for(Int_t run = 1; run<=2; run++)
 	{
 		Int_t i = run-1;
-		TFile *mcFileIn_nonZero_1600 = Open(Form("%s/run%d/lst1600_cutoutks_LL_nonZeroTracks_noPID.root",
+		TFile *mcFileIn_nonZero_1600 = Open(Form("%s/run%d/lst1600_cutoutks_LL_nonZeroTracks.root",
 		                                         Lst1600Path,run));
 		TTree *mcTreeIn_nonZero_1600 = (TTree*)mcFileIn_nonZero_1600->Get("MyTuple");
 
-		TFile *mcFileIn_Zero_1600    = Open(Form("%s/run%d/lst1600_cutoutks_LL_ZeroTracks_noPID.root",
+		TFile *mcFileIn_Zero_1600    = Open(Form("%s/run%d/lst1600_cutoutks_LL_ZeroTracks.root",
 		                                         Lst1600Path,run));
 		TTree *mcTreeIn_Zero_1600    = (TTree*)mcFileIn_Zero_1600->Get("MyTuple");
 
-		mcTreeIn_nonZero_1600->AddFriend("MyTuple",Form("%s/run%d/lst1600_LL_FinalBDT%d_iso%d_%s_noPID.root",
+		mcTreeIn_nonZero_1600->AddFriend("MyTuple",Form("%s/run%d/lst1600_LL_FinalBDT%d_iso%d_%s.root",
 		                                                Lst1600Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-		mcTreeIn_Zero_1600->AddFriend("MyTuple",Form("%s/run%d/lst1600_zeroTracksLL_FinalBDT%d_noPID.root",
+		mcTreeIn_Zero_1600->AddFriend("MyTuple",Form("%s/run%d/lst1600_zeroTracksLL_FinalBDT%d.root",
 		                                             Lst1600Path,run,bdtConf_Zero[i]));
 		fstream genFile_1600;
 		genFile_1600.open((Form("../logs/mc/JpsiLambda/Lst1600/run%d/gen_log.txt",run)));
@@ -1396,17 +1396,17 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	// for(Int_t run = 1; run<=2; run++)
 	// {
 	//      Int_t i = run-1;
-	//      TFile *mcFileIn_nonZero_chic1 = Open(Form("%s/run%d/chic1_cutoutks_LL_nonZeroTracks_noPID.root",
+	//      TFile *mcFileIn_nonZero_chic1 = Open(Form("%s/run%d/chic1_cutoutks_LL_nonZeroTracks.root",
 	//                                                chiC1Path,run));
 	//      TTree *mcTreeIn_nonZero_chic1 = (TTree*)mcFileIn_nonZero_chic1->Get("MyTuple");
 	//
-	//      TFile *mcFileIn_Zero_chic1    = Open(Form("%s/run%d/chic1_cutoutks_LL_ZeroTracks_noPID.root",
+	//      TFile *mcFileIn_Zero_chic1    = Open(Form("%s/run%d/chic1_cutoutks_LL_ZeroTracks.root",
 	//                                                chiC1Path,run));
 	//      TTree *mcTreeIn_Zero_chic1    = (TTree*)mcFileIn_Zero_chic1->Get("MyTuple");
 	//
-	//      mcTreeIn_nonZero_chic1->AddFriend("MyTuple",Form("%s/run%d/chic1_LL_FinalBDT%d_iso%d_%s_noPID.root",
+	//      mcTreeIn_nonZero_chic1->AddFriend("MyTuple",Form("%s/run%d/chic1_LL_FinalBDT%d_iso%d_%s.root",
 	//                                                       chiC1Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-	//      mcTreeIn_Zero_chic1->AddFriend("MyTuple",Form("%s/run%d/chic1_zeroTracksLL_FinalBDT%d_noPID.root",
+	//      mcTreeIn_Zero_chic1->AddFriend("MyTuple",Form("%s/run%d/chic1_zeroTracksLL_FinalBDT%d.root",
 	//                                                    chiC1Path,run,bdtConf_Zero[i]));
 	//      fstream genFile_chic1;
 	//      genFile_chic1.open((Form("../logs/mc/JpsiLambda/chiC1/run%d/gen_log.txt",run)));
@@ -1601,15 +1601,15 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		Int_t i = run-1;
 		if(!inputFlag)
 		{
-			TFile *filein_xi_nonZero = Open(Form("%s/run%d/jpsixi_cutoutks_LL_nonZeroTracks_noPID.root",xibPath,run));
+			TFile *filein_xi_nonZero = Open(Form("%s/run%d/jpsixi_cutoutks_LL_nonZeroTracks.root",xibPath,run));
 			TTree *treein_xi_nonZero = (TTree*)filein_xi_nonZero->Get("MyTuple");
 
-			TFile *filein_xi_Zero = Open(Form("%s/run%d/jpsixi_cutoutks_LL_ZeroTracks_noPID.root",xibPath,run));
+			TFile *filein_xi_Zero = Open(Form("%s/run%d/jpsixi_cutoutks_LL_ZeroTracks.root",xibPath,run));
 			TTree *treein_xi_Zero = (TTree*)filein_xi_Zero->Get("MyTuple");
 
-			treein_xi_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsixi_LL_FinalBDT%d_iso%d_%s_noPID.root",
+			treein_xi_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsixi_LL_FinalBDT%d_iso%d_%s.root",
 			                                            xibPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-			treein_xi_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsixi_zeroTracksLL_FinalBDT%d_noPID.root",
+			treein_xi_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsixi_zeroTracksLL_FinalBDT%d.root",
 			                                         xibPath,run,bdtConf_Zero[i]));
 			treein_xi_Zero->SetBranchStatus("*",0);
 			treein_xi_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
@@ -1724,15 +1724,15 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		Int_t i = run-1;
 		if(!inputFlag)
 		{
-			TFile *filein_jpsiks_nonZero = Open(Form("%s/run%d/jpsiks_cutoutks_LL_nonZeroTracks_noPID.root",jpsiksPath,run));
+			TFile *filein_jpsiks_nonZero = Open(Form("%s/run%d/jpsiks_cutoutks_LL_nonZeroTracks.root",jpsiksPath,run));
 			TTree *treein_jpsiks_nonZero = (TTree*)filein_jpsiks_nonZero->Get("MyTuple");
 
-			TFile *filein_jpsiks_Zero = Open(Form("%s/run%d/jpsiks_cutoutks_LL_ZeroTracks_noPID.root",jpsiksPath,run));
+			TFile *filein_jpsiks_Zero = Open(Form("%s/run%d/jpsiks_cutoutks_LL_ZeroTracks.root",jpsiksPath,run));
 			TTree *treein_jpsiks_Zero = (TTree*)filein_jpsiks_Zero->Get("MyTuple");
 
-			treein_jpsiks_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsiks_LL_FinalBDT%d_iso%d_%s_noPID.root",
+			treein_jpsiks_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsiks_LL_FinalBDT%d_iso%d_%s.root",
 			                                                jpsiksPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-			treein_jpsiks_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsiks_zeroTracksLL_FinalBDT%d_noPID.root",
+			treein_jpsiks_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsiks_zeroTracksLL_FinalBDT%d.root",
 			                                             jpsiksPath,run,bdtConf_Zero[i]));
 			treein_jpsiks_Zero->SetBranchStatus("*",0);
 			treein_jpsiks_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
@@ -1970,18 +1970,18 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	{
 		Int_t i = run-1;
 
-		TFile *mcFileIn_nonZero_Lambda = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_nonZeroTracks_noPID.root",
+		TFile *mcFileIn_nonZero_Lambda = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_nonZeroTracks.root",
 		                                           lambdaMCPath,run));
 		TTree *mcTreeIn_nonZero_Lambda = (TTree*)mcFileIn_nonZero_Lambda->Get("MyTuple");
 
-		TFile *mcFileIn_Zero_Lambda    = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_ZeroTracks_noPID.root",
+		TFile *mcFileIn_Zero_Lambda    = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_ZeroTracks.root",
 		                                           lambdaMCPath,run));
 		TTree *mcTreeIn_Zero_Lambda    = (TTree*)mcFileIn_Zero_Lambda->Get("MyTuple");
 
-		mcTreeIn_nonZero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s_noPID.root",
+		mcTreeIn_nonZero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s.root",
 		                                                  lambdaMCPath,run,bdtConf_nonZero[i],
 		                                                  isoConf[i],isoVersion[i]));
-		mcTreeIn_Zero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d_noPID.root",
+		mcTreeIn_Zero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d.root",
 		                                               lambdaMCPath,run,bdtConf_Zero[i]));
 
 		mcTreeIn_Zero_Lambda->SetBranchStatus("*",0);
@@ -2190,18 +2190,18 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		cout<<"Importing Run "<<run<<" data"<<endl;
 		Int_t i = run-1;
 
-		TFile *filein_nonZero = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_nonZeroTracks_noPID.root",
+		TFile *filein_nonZero = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_nonZeroTracks.root",
 		                                  dataPath,run),"READ");
 		TTree *treein_nonZero = (TTree*)filein_nonZero->Get("MyTuple");
 
-		TFile *filein_Zero = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_ZeroTracks_noPID.root",
+		TFile *filein_Zero = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_ZeroTracks.root",
 		                               dataPath,run),"READ");
 		TTree *treein_Zero = (TTree*)filein_Zero->Get("MyTuple");
 
-		treein_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s_noPID.root",
+		treein_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s.root",
 		                                         dataPath,run,bdtConf_nonZero[i],
 		                                         isoConf[i],isoVersion[i]));
-		treein_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d_noPID.root",
+		treein_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d.root",
 		                                      dataPath,run,bdtConf_Zero[i]));
 
 		if(!isBinned)

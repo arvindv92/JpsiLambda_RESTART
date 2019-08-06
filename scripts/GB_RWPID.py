@@ -26,7 +26,7 @@ original = root_numpy.root2array(mcPath + 'jpsilambda_withsw_stage3.root',
                                  selection='(Lb_BKGCAT==0||Lb_BKGCAT==50)')
 original_noTM = root_numpy.root2array(mcPath + 'jpsilambda_withsw_stage3.root',
                                       'Lb2JpsiLTree/MyTuple', branches=columns)
-target = root_numpy.root2array(dataPath + 'jpsilambda_LL_sanity_withsw_noPID.root',
+target = root_numpy.root2array(dataPath + 'jpsilambda_LL_sanity_withsw.root',
                                'MyTuple', branches=columns)
 
 original = pandas.DataFrame(original, dtype=float)

@@ -48,7 +48,7 @@ Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 
 	if(logFlag)//Redirect output to log file
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/sPlot_%s%s_noPID.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/sPlot_%s%s.txt",
 		                             run, type, suffix),"w");
 	}
 	cout<<"********************************"<<endl;
@@ -73,9 +73,9 @@ Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 	Double_t Lb_Mass         = 0.0;
 
 	rootFolder    = Form("rootFiles/dataFiles/JpsiLambda/run%d", run);
-	inFileName    = Form("%s/jpsilambda_cutoutks_%s%s_noPID.root", rootFolder, type, suffix);
-	outFileName   = Form("%s/jpsilambda_%s_withsw%s_noPID.root", rootFolder, type, suffix);
-	// trainFileName = Form("%s/jpsilambda_%s_forIsoTraining_noPID.root", rootFolder, type);
+	inFileName    = Form("%s/jpsilambda_cutoutks_%s%s.root", rootFolder, type, suffix);
+	outFileName   = Form("%s/jpsilambda_%s_withsw%s.root", rootFolder, type, suffix);
+	// trainFileName = Form("%s/jpsilambda_%s_forIsoTraining.root", rootFolder, type);
 
 	fileIn = TFile::Open(inFileName,"READ");
 	if (!fileIn)
@@ -150,7 +150,7 @@ Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 
 	//save workspace in ROOT file so you don't have to make and load input data each time, dummy
 	wSpace->writeToFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/"
-	                         "wSpace_sPlot%s_noPID.root",run,suffix));
+	                         "wSpace_sPlot%s.root",run,suffix));
 
 	fileOut->cd();
 	treeOut->Write("",TObject::kOverwrite);
@@ -374,7 +374,7 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 	// fitCanvas->cd();
 	//
 	// fitCanvas->Update();
-	fitCanvas->SaveAs(Form("plots/fit_sPlot_run%d%s_noPID.pdf",run,suffix));
+	fitCanvas->SaveAs(Form("plots/fit_sPlot_run%d%s.pdf",run,suffix));
 
 	// cout<<"Pull Mean Y = "<<hpull->GetMean(2)<<endl;
 	// cout<<"Pull RMS  Y = "<<hpull->GetRMS(2)<<endl;

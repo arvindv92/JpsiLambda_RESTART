@@ -38,12 +38,12 @@ void TrainIsolation(Int_t run, Int_t trackType,
 
 	if(logFlag && !simFlag) //set up logging
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainIsolation_%s_%s_iso%d_noPID.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainIsolation_%s_%s_iso%d.txt",
 		                             run,type,isoVersion,isoConf),"w");
 	}
 	else if(logFlag && simFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainIsolation_MC_%s_%s_iso%d_noPID.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainIsolation_MC_%s_%s_iso%d.txt",
 		                             run,type,isoVersion,isoConf),"w");
 	}
 	cout<<"*****************************"<<endl;
@@ -65,28 +65,28 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	if(!simFlag)//train on data
 	{
 		outFileName = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
-		                   "TMVAtraining/iso/TMVA300-isok_data_%s_iso%d_noPID.root",
+		                   "TMVAtraining/iso/TMVA300-isok_data_%s_iso%d.root",
 		                   run,isoVersion,isoConf);
 
-		factory     = new TMVA::Factory(Form("isok_dataRun%d_%s_iso%d_noPID",
+		factory     = new TMVA::Factory(Form("isok_dataRun%d_%s_iso%d",
 		                                     run,isoVersion,isoConf), outputFile,
 		                                "!V:!Silent:Color:!DrawProgressBar:"
 		                                "AnalysisType=Classification" );
 		fname_sig = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
-		                 "jpsilambda_%s_withsw_nonZeroTracks_noPID.root",run,type);
+		                 "jpsilambda_%s_withsw_nonZeroTracks.root",run,type);
 	}
 	else //train on simulation
 	{
 		outFileName = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
-		                   "TMVAtraining/iso/TMVA300-isok_MC_%s_iso%d_noPID.root",
+		                   "TMVAtraining/iso/TMVA300-isok_MC_%s_iso%d.root",
 		                   run,isoVersion,isoConf);
 
-		factory     = new TMVA::Factory(Form("isok_MCRun%d_%s_iso%d_noPID",
+		factory     = new TMVA::Factory(Form("isok_MCRun%d_%s_iso%d",
 		                                     run,isoVersion,isoConf), outputFile,
 		                                "!V:!Silent:Color:!DrawProgressBar:"
 		                                "AnalysisType=Classification" );
 		fname_sig = Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/"
-		                 "jpsilambda_cutoutks_%s_nonZeroTracks_noPID.root",run,type);//NB: Using MC for control channel because it has more statistics.
+		                 "jpsilambda_cutoutks_%s_nonZeroTracks.root",run,type);//NB: Using MC for control channel because it has more statistics.
 	}
 
 	outputFile  = TFile::Open(outFileName, "RECREATE");

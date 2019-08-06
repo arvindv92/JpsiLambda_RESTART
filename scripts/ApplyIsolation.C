@@ -114,12 +114,12 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 
 	if(!isData && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/ApplyIsolation_%s_%s_conf%d_noPID.txt",
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/ApplyIsolation_%s_%s_conf%d.txt",
 		                             folder,run,type,isoVersion,isoConf),"w");
 	}
 	if(isData && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/ApplyIsolation_%s_%s_conf%d_noPID.txt",
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/ApplyIsolation_%s_%s_conf%d.txt",
 		                             run,type,isoVersion,isoConf),"a");
 	}
 	cout<<"******************************************"<<endl;
@@ -151,9 +151,9 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	{
 		rootFolder = Form("rootFiles/mcFiles/JpsiLambda/%s/run%d",folder,run);
 
-		fileIn  = TFile::Open(Form("%s/%s_cutoutks_%s_nonZeroTracks_noPID.root",
+		fileIn  = TFile::Open(Form("%s/%s_cutoutks_%s_nonZeroTracks.root",
 		                           rootFolder,part,type));
-		fileOut = new TFile(Form("%s/%s_%s_iso%d_%s_noPID.root",
+		fileOut = new TFile(Form("%s/%s_%s_iso%d_%s.root",
 		                         rootFolder,part,type,isoConf,isoVersion),"RECREATE");
 	}//end MC block
 	else // Data
@@ -162,16 +162,16 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 
 		if(flag == 1)
 		{
-			fileIn  = TFile::Open(Form("%s/jpsilambda_cutoutks_%s_nonZeroTracks_noPID.root",
+			fileIn  = TFile::Open(Form("%s/jpsilambda_cutoutks_%s_nonZeroTracks.root",
 			                           rootFolder,type));
-			fileOut = new TFile(Form("%s/jpsilambda_%s_iso%d_%s_noPID.root",
+			fileOut = new TFile(Form("%s/jpsilambda_%s_iso%d_%s.root",
 			                         rootFolder,type,isoConf,isoVersion),"RECREATE");
 		}
 		else if(flag == 2)
 		{
-			fileIn  = TFile::Open(Form("%s/jpsilambda_%s_withsw_nonZeroTracks_noPID.root",
+			fileIn  = TFile::Open(Form("%s/jpsilambda_%s_withsw_nonZeroTracks.root",
 			                           rootFolder,type));
-			fileOut = new TFile(Form("%s/jpsilambda_%ssig_iso%d_%s_noPID.root",
+			fileOut = new TFile(Form("%s/jpsilambda_%ssig_iso%d_%s.root",
 			                         rootFolder,type,isoConf,isoVersion),"RECREATE");
 		}
 	}
@@ -216,12 +216,12 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 
 	if(!simFlag)//use isoBDT trained on data
 	{
-		prefix     = Form("isok_dataRun%d_%s_iso%d_noPID",
+		prefix     = Form("isok_dataRun%d_%s_iso%d",
 		                  run,isoVersion,isoConf);
 	}
 	else//use isoBDT trained on MC
 	{
-		prefix     = Form("isok_MCRun%d_%s_iso%d_noPID",
+		prefix     = Form("isok_MCRun%d_%s_iso%d",
 		                  run,isoVersion,isoConf);
 	}
 	methodName = "BDT method";

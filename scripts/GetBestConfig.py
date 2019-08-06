@@ -10,7 +10,7 @@ args = parser.parse_args()
 run = args.RUN
 
 isoFlag = True
-files = glob.glob("../logs/data/JpsiLambda/run{}/OptimizeFinalBDT*_Punzi_Sigma_noPID.txt".format(run))
+files = glob.glob("../logs/data/JpsiLambda/run{}/OptimizeFinalBDT*_Punzi_Sigma.txt".format(run))
 ctr = 0
 myFOM_nonZero = 0.0
 myFOM_Zero = 0.0

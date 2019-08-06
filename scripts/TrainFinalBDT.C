@@ -28,12 +28,12 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	{
 		if(isoFlag && logFlag)
 		{
-			gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT%d_%s_iso%d_%s_noPID.txt",
+			gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT%d_%s_iso%d_%s.txt",
 			                             run,bdtConf,type,isoConf,isoVersion),"w");
 		}
 		else if(!isoFlag && logFlag)
 		{
-			gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT%d_%s_noIso_noPID.txt",
+			gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT%d_%s_noIso.txt",
 			                             run,bdtConf,type),"w");
 		}
 	}
@@ -41,12 +41,12 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	{
 		if(isoFlag && logFlag)
 		{
-			gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT%d_MC_%s_iso%d_%s_noPID.txt",
+			gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT%d_MC_%s_iso%d_%s.txt",
 			                             run,bdtConf,type,isoConf,isoVersion),"w");
 		}
 		else if(!isoFlag && logFlag)
 		{
-			gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT%d_MC_%s_noIso_noPID.txt",
+			gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainFinalBDT%d_MC_%s_noIso.txt",
 			                             run,bdtConf,type),"w");
 		}
 	}
@@ -81,10 +81,10 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		if(isoFlag)
 		{
 			outfileName = Form("%s/TMVAtraining/iso/"
-			                   "data_iso%d_%s_BDT%d_noPID.root",
+			                   "data_iso%d_%s_BDT%d.root",
 			                   rootFolder,isoConf,isoVersion,bdtConf);
 			outputFile  = TFile::Open(outfileName, "RECREATE");
-			factory     = new TMVA::Factory(Form("dataRun%d_iso%d_%s_BDT%d_noPID",
+			factory     = new TMVA::Factory(Form("dataRun%d_iso%d_%s_BDT%d",
 			                                     run,isoConf,isoVersion,bdtConf),outputFile,
 			                                "!V:!Silent:Color:!DrawProgressBar:"
 			                                "AnalysisType=Classification");
@@ -92,10 +92,10 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		else
 		{
 			outfileName = Form("%s/TMVAtraining/noIso/"
-			                   "data_noIso_BDT%d_noPID.root",
+			                   "data_noIso_BDT%d.root",
 			                   rootFolder,bdtConf);
 			outputFile  = TFile::Open( outfileName, "RECREATE");
-			factory = new TMVA::Factory( Form("dataRun%d_noIso_BDT%d_noPID",
+			factory = new TMVA::Factory( Form("dataRun%d_noIso_BDT%d",
 			                                  run,bdtConf), outputFile,
 			                             "!V:!Silent:Color:!DrawProgressBar:"
 			                             "AnalysisType=Classification" );
@@ -106,10 +106,10 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		if(isoFlag)
 		{
 			outfileName = Form("%s/TMVAtraining/iso/"
-			                   "MC_iso%d_%s_BDT%d_noPID.root",
+			                   "MC_iso%d_%s_BDT%d.root",
 			                   rootFolder,isoConf,isoVersion,bdtConf);
 			outputFile  = TFile::Open(outfileName, "RECREATE");
-			factory     = new TMVA::Factory(Form("MCRun%d_iso%d_%s_BDT%d_noPID",
+			factory     = new TMVA::Factory(Form("MCRun%d_iso%d_%s_BDT%d",
 			                                     run,isoConf,isoVersion,bdtConf),outputFile,
 			                                "!V:!Silent:Color:!DrawProgressBar:"
 			                                "AnalysisType=Classification");
@@ -117,10 +117,10 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		else
 		{
 			outfileName = Form("%s/TMVAtraining/noIso/"
-			                   "MC_noIso_BDT%d_noPID.root",
+			                   "MC_noIso_BDT%d.root",
 			                   rootFolder,bdtConf);
 			outputFile  = TFile::Open( outfileName, "RECREATE");
-			factory = new TMVA::Factory( Form("MCRun%d_noIso_BDT%d_noPID",
+			factory = new TMVA::Factory( Form("MCRun%d_noIso_BDT%d",
 			                                  run,bdtConf), outputFile,
 			                             "!V:!Silent:Color:!DrawProgressBar:"
 			                             "AnalysisType=Classification" );
@@ -173,20 +173,20 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	{
 		if(isoFlag)
 		{
-			input      = TFile::Open(Form("%s/jpsilambda_%s_withsw_nonZeroTracks_noPID.root",
+			input      = TFile::Open(Form("%s/jpsilambda_%s_withsw_nonZeroTracks.root",
 			                              rootFolder,type),"READ");
 			treeIn     = (TTree*)input->Get("MyTuple");
-			input_iso  = TFile::Open(Form("%s/jpsilambda_%ssig_iso%d_%s_noPID.root",
+			input_iso  = TFile::Open(Form("%s/jpsilambda_%ssig_iso%d_%s.root",
 			                              rootFolder,type,isoConf,isoVersion));//This is the isolation applied to sWeighted data
 			treeIn_iso = (TTree*)input_iso->Get("MyTuple");
 		}
 		else
 		{
-			gSystem->Exec(Form("hadd -f %s/jpsilambda_%s_withsw_noPID.root "
-			                   "%s/jpsilambda_%s_withsw_nonZeroTracks_noPID.root"
-			                   " %s/jpsilambda_%s_withsw_ZeroTracks_noPID.root",
+			gSystem->Exec(Form("hadd -f %s/jpsilambda_%s_withsw.root "
+			                   "%s/jpsilambda_%s_withsw_nonZeroTracks.root"
+			                   " %s/jpsilambda_%s_withsw_ZeroTracks.root",
 			                   rootFolder,type,rootFolder,type,rootFolder,type));
-			input  = TFile::Open(Form("%s/jpsilambda_%s_withsw_noPID.root",
+			input  = TFile::Open(Form("%s/jpsilambda_%s_withsw.root",
 			                          rootFolder,type));
 			treeIn = (TTree*)input->Get("MyTuple");
 		}
@@ -203,27 +203,27 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	{
 		if(isoFlag)
 		{
-			input_sig      = TFile::Open(Form("%s/jpsilambda_cutoutks_%s_nonZeroTracks_noPID.root",
+			input_sig      = TFile::Open(Form("%s/jpsilambda_cutoutks_%s_nonZeroTracks.root",
 			                                  MCrootFolder,type),"READ");
 			treeIn_sig     = (TTree*)input_sig->Get("MyTuple");
-			input_iso_sig  = TFile::Open(Form("%s/jpsilambda_%s_iso%d_%s_noPID.root",
+			input_iso_sig  = TFile::Open(Form("%s/jpsilambda_%s_iso%d_%s.root",
 			                                  MCrootFolder,type,isoConf,isoVersion));//This is the isolation applied to sWeighted data
 			treeIn_iso_sig = (TTree*)input_iso_sig->Get("MyTuple");
 
-			input_bkg      = TFile::Open(Form("%s/jpsilambda_%s_withsw_nonZeroTracks_noPID.root",
+			input_bkg      = TFile::Open(Form("%s/jpsilambda_%s_withsw_nonZeroTracks.root",
 			                                  rootFolder,type),"READ");
 			treeIn_bkg     = (TTree*)input_bkg->Get("MyTuple");
-			input_iso_bkg  = TFile::Open(Form("%s/jpsilambda_%ssig_iso%d_%s_noPID.root",
+			input_iso_bkg  = TFile::Open(Form("%s/jpsilambda_%ssig_iso%d_%s.root",
 			                                  rootFolder,type,isoConf,isoVersion));//This is the isolation applied to sWeighted data
 			treeIn_iso_bkg = (TTree*)input_iso_bkg->Get("MyTuple");
 		}
 		else
 		{
-			input_sig      = TFile::Open(Form("%s/jpsilambda_cutoutks_%s_noPID.root",
+			input_sig      = TFile::Open(Form("%s/jpsilambda_cutoutks_%s.root",
 			                                  MCrootFolder,type),"READ");
 			treeIn_sig     = (TTree*)input_sig->Get("MyTuple");
 
-			input_bkg      = TFile::Open(Form("%s/jpsilambda_%s_withsw_noPID.root",
+			input_bkg      = TFile::Open(Form("%s/jpsilambda_%s_withsw.root",
 			                                  rootFolder,type),"READ");
 			treeIn_bkg     = (TTree*)input_bkg->Get("MyTuple");
 		}
