@@ -336,6 +336,19 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 		}
 	}
 
+	if(!isData)
+	{
+		treeOut_nonZero->SetAlias("PT","Added_H_PT");
+		treeOut_nonZero->SetAlias("MINIPCHI2","psi_1S_H_MINIPCHI2");
+		treeOut_nonZero->SetAlias("VCHI2DOF","psi_1S_H_VERTEXCHI2_NEW");
+		treeOut_nonZero->SetAlias("IPCHI2","psi_1S_H_IPCHI2_NEW");
+		treeOut_nonZero->SetAlias("IP","psi_1S_H_IP_NEW");
+		treeOut_nonZero->SetAlias("FD","psi_1S_H_FD_NEW");
+		treeOut_nonZero->SetAlias("FDCHI2","psi_1S_H_FDCHI2_NEW");
+		treeOut_nonZero->SetAlias("TRACKORIVX_Z","psi_1S_H_VERTEXCHI2_NEW");
+		treeOut_nonZero->SetAlias("GHOSTPROB","Added_H_GHOST");
+		treeOut_nonZero->SetAlias("TRACKCHI2DOF","Added_H_TRACKCHI2");
+	}
 	fileOut_nonZero->Write();
 	fileOut_nonZero->Close();
 
