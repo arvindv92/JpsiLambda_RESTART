@@ -1,6 +1,11 @@
 ******************************************
+******************************************
+******************************************
+******************************************
+******************************************
+******************************************
 ==> Starting CutOutKs: 
-Sat Apr 20 11:31:07 EDT 2019
+Tue May 21 13:57:01 EDT 2019
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
 ******************************************
@@ -8,26 +13,26 @@ WD = /data1/avenkate/JpsiLambda_RESTART
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
 ******************************************
-Processing Run 1 YEAR 2018 LL MC type 3
+Processing Run 1 LL MC type 3
 ******************************************
 ******************************************
-Input file = rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_sanity_LL.root
-nonZeroTracks Output file = rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_cutoutks_LL_nonZeroTracks.root
-ZeroTracks Output file = rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_cutoutks_LL_ZeroTracks.root
+Input file = rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_sanity_LL_noPID.root
+nonZeroTracks Output file = rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_cutoutks_LL_nonZeroTracks_noPID.root
+ZeroTracks Output file = rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_cutoutks_LL_ZeroTracks_noPID.root
 ******************************************
-Incoming entries = 21673
+Incoming entries = 31839
 Making LL file
 I am making the following cutoutks cuts only on events within 480-520 MeV in Lb_DTF_L_WMpipi_JpsiConstr. Events outside this window aren't cut on. Sit tight
 L_dm < 7.5
 p_PIDp > 10
 0
-Outgoing Entries with nonZeroTracks = 17828
-Outgoing Entries with ZeroTracks = 927
+Outgoing Entries with nonZeroTracks = 26466
+Outgoing Entries with ZeroTracks = 1096
 ******************************************
-LL CutOutKs cuts made with exclusive efficiency = 86.5362% +/- 0.231858 %
+LL CutOutKs cuts made with exclusive efficiency = 86.5668% +/- 0.191111 %
 ******************************************
 Original generated number = 3410720
 ******************************************
-LL CutOutKs cuts made with inclusive efficiency = 0.549884% +/- 0.00400419 %
+LL CutOutKs cuts made with inclusive efficiency = 0.808099% +/- 0.00484783 %
 ******************************************
-==> CutOutKs is done! Death to Ks0!: Real time 0:00:11, CP time 11.320
+==> CutOutKs is done! Death to Ks0!: Real time 0:00:20, CP time 19.760

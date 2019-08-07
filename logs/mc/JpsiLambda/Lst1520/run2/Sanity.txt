@@ -1,29 +1,29 @@
 ******************************************
+******************************************
+******************************************
+******************************************
+******************************************
+******************************************
 ==> Starting Sanity: 
-Sat Apr 20 14:09:51 EDT 2019
+Fri May  3 14:40:06 EDT 2019
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
 ******************************************
 Input file = rootFiles/mcFiles/JpsiLambda/Lst1520/run2/lst1520_triggered.root
-LL Output file = rootFiles/mcFiles/JpsiLambda/Lst1520/run2/lst1520_sanity_LL.root
-DD Output file = rootFiles/mcFiles/JpsiLambda/Lst1520/run2/lst1520_sanity_DD.root
+LL Output file = rootFiles/mcFiles/JpsiLambda/Lst1520/run2/lst1520_sanity_LL_noPID.root
 ******************************************
 Incoming entries = 92021
 I am making the following sanity cuts, and then separating in LL and DD files. Sit tight
 OBJ: TCut	CUT	(Lb_TAU > 0)&&(L_TAU > 0)
 OBJ: TCut	CUT	(Lb_ConsLb_chi2/Lb_ConsLb_nDOF > 0 && Lb_ConsLb_chi2/Lb_ConsLb_nDOF < 50)
-OBJ: TCut	CUT	(pi_PIDp != -1000 && p_PIDp!= -1000)
 OBJ: TCut	CUT	(Lb_ETA > 2 && Lb_ETA < 6 && Lb_PT < 20000)
 0
-Outgoing LL entries = 69350
-Outgoing DD entries = 0
+Outgoing LL entries = 70982
 ******************************************
-LL Sanity cuts made with exclusive efficiency = 75.3632% +/- 0.142046 %
-DD Sanity cuts made with exclusive efficiency = 0% +/- 0 %
+LL Sanity cuts made with exclusive efficiency = 77.1367% +/- 0.138438 %
 ******************************************
 Original generated number = 3342561
 ******************************************
-LL Sanity cuts made with inclusive efficiency = 2.07476% +/- 0.00779635 %
-DD Sanity cuts made with inclusive efficiency = 0% +/- 0 %
+LL Sanity cuts made with inclusive efficiency = 2.12358% +/- 0.00788558 %
 ******************************************
-==> Sanity is done! Mazel Tov!: Real time 0:00:45, CP time 44.560
+==> Sanity is done! Mazel Tov!: Real time 0:00:46, CP time 46.100

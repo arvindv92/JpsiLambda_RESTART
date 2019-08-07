@@ -1,18 +1,16 @@
 ******************************************
 ==> Starting Sanity: 
-Fri Mar  1 20:44:01 EST 2019
+Fri Apr 26 11:13:18 EDT 2019
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
 ******************************************
 Input file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_triggered_2018.root
-LL Output file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_sanity_LL_2018.root
-DD Output file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_sanity_DD_2018.root
+LL Output file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_sanity_LL_2018_noPID.root
 ******************************************
 Incoming entries = 6514928
 I am making the following sanity cuts, and then separating in LL and DD files. Sit tight
 OBJ: TCut	CUT	(Lb_TAU > 0)&&(L_TAU > 0)
 OBJ: TCut	CUT	(Lb_ConsLb_chi2/Lb_ConsLb_nDOF > 0 && Lb_ConsLb_chi2/Lb_ConsLb_nDOF < 50)
-OBJ: TCut	CUT	(pi_PIDp != -1000 && p_PIDp!= -1000)
 OBJ: TCut	CUT	(Lb_ETA > 2 && Lb_ETA < 6 && Lb_PT < 20000)
 0
 100000
@@ -80,6 +78,5 @@ OBJ: TCut	CUT	(Lb_ETA > 2 && Lb_ETA < 6 && Lb_PT < 20000)
 6300000
 6400000
 6500000
-Outgoing LL entries = 3018872
-Outgoing DD entries = 0
-==> Sanity is done! Mazel Tov!: Real time 0:58:37, CP time 3208.420
+Outgoing LL entries = 3176171
+==> Sanity is done! Mazel Tov!: Real time 1:00:33, CP time 2752.430

@@ -1,22 +1,26 @@
 ******************************************
+******************************************
+******************************************
+******************************************
+******************************************
 Starting ApplyFinalBDT 
-Sun Apr 21 21:43:17 EDT 2019
+Tue May 21 14:55:51 EDT 2019
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
 ******************************************
 Processing Run 1 LL MC type 7
 ******************************************
 ******************************************
-Input file = rootFiles/mcFiles/JpsiLambda/Lst1520/run1/lst1520_cutoutks_LL_nonZeroTracks.root
-Output file = rootFiles/mcFiles/JpsiLambda/Lst1520/run1/lst1520_LL_FinalBDT2_iso1_v1.root
+Input file = rootFiles/mcFiles/JpsiLambda/Lst1520/run1/lst1520_cutoutks_LL_nonZeroTracks_noPID.root
+Output file = rootFiles/mcFiles/JpsiLambda/Lst1520/run1/lst1520_LL_FinalBDT2_iso1_v1_noPID.root
 ******************************************
-Incoming Entries = 55279                         : Booking "BDT method" of type "BDT" from dataset/weights/TMVAClassification-JpsiLambdaLL_dataRun1_iso1_v1_BDTconf2.weights.xml.
+Incoming Entries = 69266                         : Booking "BDT method" of type "BDT" from dataset/weights/dataRun1_iso1_v1_BDT2_noPID_BDTconf2.weights.xml.
 <HEADER> DataSetInfo              : [Default] : Added class "Signal"
 <HEADER> DataSetInfo              : [Default] : Added class "Background"
                          : Booked classifier "BDTconf2" of type: "BDT"
---- TMVAClassificationApp    : Using input file: rootFiles/mcFiles/JpsiLambda/Lst1520/run1/lst1520_cutoutks_LL_nonZeroTracks.root
---- Processing: 55279 events
+--- TMVAClassificationApp    : Using input file: rootFiles/mcFiles/JpsiLambda/Lst1520/run1/lst1520_cutoutks_LL_nonZeroTracks_noPID.root
+--- Processing: 69266 events
 --- ... Processing event: 0
 --- ... Processing event: 50000
---- End of event loop: --- Created root file: rootFiles/mcFiles/JpsiLambda/Lst1520/run1/lst1520_LL_FinalBDT2_iso1_v1.root containing the MVA output histograms
-==> ApplyFinalBDT is done! Go optimize and fit!: Real time 0:00:17, CP time 16.050
+--- End of event loop: --- Created root file: rootFiles/mcFiles/JpsiLambda/Lst1520/run1/lst1520_LL_FinalBDT2_iso1_v1_noPID.root containing the MVA output histograms
+==> ApplyFinalBDT is done! Go optimize and fit!: Real time 0:00:18, CP time 17.930

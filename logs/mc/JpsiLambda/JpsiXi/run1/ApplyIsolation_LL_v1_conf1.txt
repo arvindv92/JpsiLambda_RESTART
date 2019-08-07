@@ -1,21 +1,21 @@
 ******************************************
 ==> Start of ApplyIsolation
-Sat Apr 20 11:31:53 EDT 2019
+Tue May 21 14:44:38 EDT 2019
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
 ******************************************
 Processing Run 1 LL MC type 3
 ******************************************
 ******************************************
-Input file  = rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_cutoutks_LL_nonZeroTracks.root
-Output file = rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_LL_iso1_v1.root
+Input file  = rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_cutoutks_LL_nonZeroTracks_noPID.root
+Output file = rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_LL_iso1_v1_noPID.root
 ******************************************
-Incoming entries = 17828
-                         : Booking "BDT method" of type "BDT" from dataset/weights/TMVAClassification300-isokLL_dataRun1_v1_isoConf1_300.weights.xml.
+Incoming entries = 26466
+                         : Booking "BDT method" of type "BDT" from dataset/weights/isok_dataRun1_v1_iso1_noPID_isoConf1_300.weights.xml.
 <HEADER> DataSetInfo              : [Default] : Added class "Signal"
 <HEADER> DataSetInfo              : [Default] : Added class "Background"
                          : Booked classifier "isoConf1_300" of type: "BDT"
---- Processing: 17828 events
+--- Processing: 26466 events
 --- ... Processing event: 0
---- Created root file: rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_LL_iso1_v1.root containing the MVA output histograms
-==> End of ApplyIsolation! Isolated forever!: Real time 0:00:07, CP time 7.150
+--- Created root file: rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_LL_iso1_v1_noPID.root containing the MVA output histograms
+==> End of ApplyIsolation! Isolated forever!: Real time 0:00:10, CP time 10.650

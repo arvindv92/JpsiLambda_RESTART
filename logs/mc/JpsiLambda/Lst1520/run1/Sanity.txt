@@ -1,30 +1,30 @@
 ******************************************
+******************************************
+******************************************
+******************************************
+******************************************
+******************************************
 ==> Starting Sanity: 
-Sun Apr 21 21:39:18 EDT 2019
+Tue May 21 14:02:42 EDT 2019
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
 ******************************************
 Input file = rootFiles/mcFiles/JpsiLambda/Lst1520/run1/lst1520_triggered.root
-LL Output file = rootFiles/mcFiles/JpsiLambda/Lst1520/run1/lst1520_sanity_LL.root
-DD Output file = rootFiles/mcFiles/JpsiLambda/Lst1520/run1/lst1520_sanity_DD.root
+LL Output file = rootFiles/mcFiles/JpsiLambda/Lst1520/run1/lst1520_sanity_LL_noPID.root
 ******************************************
 Incoming entries = 117045
 I am making the following sanity cuts, and then separating in LL and DD files. Sit tight
 OBJ: TCut	CUT	(Lb_TAU > 0)&&(L_TAU > 0)
 OBJ: TCut	CUT	(Lb_ConsLb_chi2/Lb_ConsLb_nDOF > 0 && Lb_ConsLb_chi2/Lb_ConsLb_nDOF < 50)
-OBJ: TCut	CUT	(pi_PIDp != 0 && pi_PIDp != -1000 && pi_PIDK != 0 && p_PIDp !=0 && p_PIDp!= -1000 && p_PIDK !=0)
 OBJ: TCut	CUT	(Lb_ETA > 2 && Lb_ETA < 6 && Lb_PT < 20000)
 0
 100000
-Outgoing LL entries = 64292
-Outgoing DD entries = 0
+Outgoing LL entries = 80915
 ******************************************
-LL Sanity cuts made with exclusive efficiency = 54.9293% +/- 0.145436 %
-DD Sanity cuts made with exclusive efficiency = 0% +/- 0 %
+LL Sanity cuts made with exclusive efficiency = 69.1315% +/- 0.135027 %
 ******************************************
 Original generated number = 3795856
 ******************************************
-LL Sanity cuts made with inclusive efficiency = 1.69374% +/- 0.00662307 %
-DD Sanity cuts made with inclusive efficiency = 0% +/- 0 %
+LL Sanity cuts made with inclusive efficiency = 2.13167% +/- 0.00741354 %
 ******************************************
-==> Sanity is done! Mazel Tov!: Real time 0:00:50, CP time 45.420
+==> Sanity is done! Mazel Tov!: Real time 0:01:00, CP time 59.170
