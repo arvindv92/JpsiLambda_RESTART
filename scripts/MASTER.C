@@ -18,7 +18,7 @@
 
 using namespace std;
 
-void MASTER(Int_t run = 1, Int_t config = 1, Int_t block = 1, Bool_t isData = true)
+void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1, Bool_t isData = true)
 //MCType = 1 for JpsiLambda MC
 //MCType = 2 for JpsiSigma MC
 //MCType = 3 for JpsiXi MC (reco'd JpsiLambda)
@@ -68,7 +68,6 @@ void MASTER(Int_t run = 1, Int_t config = 1, Int_t block = 1, Bool_t isData = tr
 	Int_t trackType     = 3;// 3 for LL, 5 for DD.
 	Int_t isoConf       = 1;// config for isolation BDT. Currently 1 or 2 supported
 	Int_t finalBDTconf  = 1;// config for final BDT. Currently 1 or 2 supported
-	Int_t year          = 2018;
 
 	Bool_t testing  = false;// when true, analysis will only run over a subset of data
 	Bool_t loose    = true;// when true, analysis will run over data/MC from "loose" stripping line. Only LL
