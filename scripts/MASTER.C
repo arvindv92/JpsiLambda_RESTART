@@ -230,6 +230,15 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 						cout<<"####Fit failed for ZeroTracks sWeighting. Exiting####"<<endl;
 						exit(1);
 					}
+					cout<<"*****Calculating GB weights files for data/MC correction"<<endl;
+					gSystem->Exec(Form("python GB_RW.py %d",run));
+				}
+				else //MC
+				{
+					cout<<"****Applying GB weights on reco MC"<<endl;
+					gSystem->Exec(Form("python ApplyGBWeights.py %d %d 0",run,mcType));
+					cout<<"****Applying GB weights on generated MC"<<endl;
+					gSystem->Exec(Form("python ApplyGBWeights.py %d %d 1",run,mcType));
 				}
 			}
 			else if(block == 2)
