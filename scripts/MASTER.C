@@ -6,6 +6,7 @@
 #include "Sanity.h"
 #include "CutOutKs.h"
 #include "DoSWeight.h"
+#include "DoSWeight_Sanity.h"
 #include "TrainIsolation.h"
 #include "ApplyIsolation.h"
 #include "TrainFinalBDT.h"
@@ -40,6 +41,7 @@ void MASTER(Int_t run = 1, Int_t config = 1, Int_t block = 1, Bool_t isData = tr
 	gROOT->ProcessLine(".L Sanity.C+");
 	gROOT->ProcessLine(".L CutOutKs.C+");
 	gROOT->ProcessLine(".L DoSWeight.C+");
+	gROOT->ProcessLine(".L DoSWeight_Sanity.C+");
 	gROOT->ProcessLine(".L TrainIsolation.C+");
 	gROOT->ProcessLine(".L ApplyIsolation.C+");
 	gROOT->ProcessLine(".L TrainFinalBDT.C+");
@@ -52,6 +54,7 @@ void MASTER(Int_t run = 1, Int_t config = 1, Int_t block = 1, Bool_t isData = tr
 	gSystem->Load("Sanity_C.so");
 	gSystem->Load("CutOutKs_C.so");
 	gSystem->Load("DoSWeight_C.so");
+	gSystem->Load("DoSWeight_Sanity_C.so");
 	gSystem->Load("TrainIsolation_C.so");
 	gSystem->Load("ApplyIsolation_C.so");
 	gSystem->Load("TrainFinalBDT_C.so");
@@ -61,32 +64,34 @@ void MASTER(Int_t run = 1, Int_t config = 1, Int_t block = 1, Bool_t isData = tr
 
 	cout<<"poop"<<endl;
 
-	Int_t mcType               = 0;// 0 when running over data. 1, 2, 3 corresponding to J/psi Lambda MC reco'd as J/psi Lambda, J/psi Sigma and J/psi Xi respectively
-	Int_t trackType            = 3;// 3 for LL, 5 for DD.
-	Int_t isoConf              = 1;// config for isolation BDT. Currently 1 or 2 supported
-	Int_t finalBDTconf         = 1;// config for final BDT. Currently 1 or 2 supported
-	// Int_t runArray[2]          = {1,2};
-	// Int_t isoConfArray[2]      = {1,2};
-	// Int_t finalBDTconfArray[2] = {1,2};
-	// Int_t mcTypeArray[1]       = {6};
-	Int_t year                 = 2018;
+	Int_t mcType        = 0;// 0 when running over data. 1, 2, 3 corresponding to J/psi Lambda MC reco'd as J/psi Lambda, J/psi Sigma and J/psi Xi respectively
+	Int_t trackType     = 3;// 3 for LL, 5 for DD.
+	Int_t isoConf       = 1;// config for isolation BDT. Currently 1 or 2 supported
+	Int_t finalBDTconf  = 1;// config for final BDT. Currently 1 or 2 supported
+	Int_t year          = 2018;
 
-	Bool_t testing            = false;// when true, analysis will only run over a subset of data
-	Bool_t loose              = true;// when true, analysis will run over data/MC from "loose" stripping line. Only LL
-	// Bool_t isData             = true;// Data or MC?
-	Bool_t isoFlag            = true;// when true, isolation will be used in final BDT.
-	Bool_t logFlag            = true;// set to false only while testing.
+	Bool_t testing  = false;// when true, analysis will only run over a subset of data
+	Bool_t loose    = true;// when true, analysis will run over data/MC from "loose" stripping line. Only LL
+	Bool_t isoFlag  = true;// when true, isolation will be used in final BDT.
+	Bool_t logFlag  = true;// set to false only while testing.
 
-	Float_t bdtCut             = 0.0;
-	Float_t bdtCut_ZeroTracks  = 0.0;
+	Float_t bdtCut            = 0.0;
+	Float_t bdtCut_ZeroTracks = 0.0;
 
-	Double_t myChi2_nonZero    = 0.0, myChi2_Zero = 0.0;
-	const char* isoVersion     = ""; // which version of isolation BDT? changes input variables used in isolation. v0,1 supported.
+	Double_t myChi2_nonZero = 0.0, myChi2_Zero = 0.0;
+	Double_t myChi2_Sanity  = 0.0;
 
-	TString FOM                = "Punzi";//Sig for S/sqrt(S+B), Punzi for Punzi FOM with a = 3
-	// TString isoVersionArray[2] = {"v0","v1"};
+	const char* isoVersion = ""; // which version of isolation BDT? changes input variables used in isolation. v0,1 supported.
+
+	TString FOM = "Punzi";//Sig for S/sqrt(S+B), Punzi for Punzi FOM with a = 3
 
 	std::vector <Double_t> bdtCuts;
+	Int_t len = 11;
+
+	if(isData)
+	{
+		len = 1;
+	}
 
 	switch(config)
 	{
@@ -147,17 +152,18 @@ void MASTER(Int_t run = 1, Int_t config = 1, Int_t block = 1, Bool_t isData = tr
 		break;
 	}
 	}
-	for(mcType = 1; mcType <=10; mcType++)
+	for(mcType = 1; mcType <=len; mcType++)
 	{
+		if(isData) mcType = 0;
 		if(mcType != 4 && mcType != 5 && mcType != 9)
 		{
 			cout<<"$$$$$$$$$$$ Processing MC Type "<<mcType<< " $$$$$$$$$$$$$$"<<endl;
 			cout<<"$$$$$$$$$$$ Processing Run "<<run<<" $$$$$$$$$$$"<<endl;
-			if(block == 1)
+			if(block == 0)
 			{
 				//Trigger Cut
-				cout<<"***Trigger***"<<endl;
-				Trigger(run, year, isData, mcType, testing, loose, logFlag);
+				// cout<<"***Trigger***"<<endl;
+				// Trigger(run, year, isData, mcType, testing, loose, logFlag);
 
 				//Sanity Cuts
 				cout<<"***Sanity***"<<endl;
@@ -166,25 +172,60 @@ void MASTER(Int_t run = 1, Int_t config = 1, Int_t block = 1, Bool_t isData = tr
 				//Cut Out Ks0
 				cout<<"***CutOutKs***"<<endl;
 				CutOutKs(run, year, isData, mcType, trackType, logFlag);
-
+			}
+			else if(block == 1)
+			{
 				// sWeight data
 				if(isData)
 				{
-					//sWeight nonZeroTracks data
+					if(run == 2)
+					{
+						cout<<"*****Hadding Run 2 sanity files"<<endl;
+						gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/"
+						            "JpsiLambda/run2/");
+						gSystem->Exec("hadd -f jpsilambda_sanity_LL.root jpsilambda_sanity_LL_2015.root jpsilambda_sanity_LL_2016.root "
+						              "jpsilambda_sanity_LL_2017.root jpsilambda_sanity_LL_2018.root");
+						gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts/");
+					}
+
+					//sWeight data after sanity
+					cout<<"***sWeight Sanity run"<<run<<endl;
+					myChi2_Sanity = DoSWeight_Sanity(run, trackType, logFlag);
+
+					if(run == 2)
+					{
+						cout<<"*****Hadding Run 2 cutoutks files"<<endl;
+						gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/"
+						            "JpsiLambda/run2/");
+						gSystem->Exec("hadd -f jpsilambda_cutoutks_LL_nonZeroTracks.root jpsilambda_cutoutks_LL_2015_nonZeroTracks.root jpsilambda_cutoutks_LL_2016_nonZeroTracks.root "
+						              "jpsilambda_cutoutks_LL_2017_nonZeroTracks.root jpsilambda_cutoutks_LL_2018_nonZeroTracks.root");
+						cout<<"*****Done hadding nonZeroTracks files"<<endl;
+						gSystem->Exec("hadd -f jpsilambda_cutoutks_LL_ZeroTracks.root jpsilambda_cutoutks_LL_2015_ZeroTracks.root jpsilambda_cutoutks_LL_2016_ZeroTracks.root "
+						              "jpsilambda_cutoutks_LL_2017_ZeroTracks.root jpsilambda_cutoutks_LL_2018_ZeroTracks.root");
+						cout<<"*****Done hadding ZeroTracks files"<<endl;
+						gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts/");
+					}
+
+					//sWeight nonZeroTracks data after cutoutks
 					cout<<"****DoSWeight run "<<run<<" nonZeroTracks"<<endl;
 
 					myChi2_nonZero = DoSWeight(run, trackType, logFlag, false);
 
+					//sWeight ZeroTracks data after cutoutks
+					cout<<"****DoSWeight run "<<run<<" ZeroTracks"<<endl;
+
+					myChi2_Zero = DoSWeight(run, trackType, logFlag, true);
+
+					if(myChi2_Sanity > 2.0)
+					{
+						cout<<"####Fit failed for Sanity sWeighting. Exiting####"<<endl;
+						exit(1);
+					}
 					if(myChi2_nonZero > 2.0)
 					{
 						cout<<"####Fit failed for nonZeroTracks sWeighting. Exiting####"<<endl;
 						exit(1);
 					}
-					//sWeight ZeroTracks data
-					cout<<"****DoSWeight run "<<run<<" ZeroTracks"<<endl;
-
-					myChi2_Zero = DoSWeight(run, trackType, logFlag, true);
-
 					if(myChi2_Zero > 2.0)
 					{
 						cout<<"####Fit failed for ZeroTracks sWeighting. Exiting####"<<endl;
@@ -271,6 +312,7 @@ void MASTER(Int_t run = 1, Int_t config = 1, Int_t block = 1, Bool_t isData = tr
 				}
 			}
 		}
+		if(isData) mcType = 1;
 	} //end loop on mcTypes
 
 	// Optimize final BDT cut based on some FoM
