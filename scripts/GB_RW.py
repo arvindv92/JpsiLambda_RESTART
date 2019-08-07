@@ -29,14 +29,20 @@ dataPath = '../rootFiles/dataFiles/JpsiLambda/run{}/sWeightSanity/'.format(run)
 
 original = root_numpy.root2array(mcPath + 'jpsilambda_withsw.root',
                                  'Lb2JpsiLTree/MyTuple', branches=columns,
-                                 selection='(Lb_BKGCAT==0||Lb_BKGCAT==50)')
-original_noTM = root_numpy.root2array(mcPath + 'jpsilambda_withsw.root',
-                                      'Lb2JpsiLTree/MyTuple', branches=columns)
+                                 selection='((Lb_Hlt1DiMuonHighMassDecision_TOS==1||Lb_Hlt1TrackMuonDecision_TOS==1||Lb_Hlt1TrackAllL0Decision_TOS==1)'
+                                 '&&(Lb_Hlt2DiMuonDetachedJPsiDecision_TOS==1))'
+                                 '&&(L_M > 1104 && L_M < 1129)'
+                                 '&&(Lb_TAU > 0 && L_TAU > 0)'
+                                 '&&((Lb_ConsLb_chi2/Lb_ConsLb_nDOF) > 0 && (Lb_ConsLb_chi2/Lb_ConsLb_nDOF) < 50)'
+                                 '&&(Lb_ETA > 2 && Lb_ETA < 6 && Lb_PT < 20000)'
+                                 '&&(Lb_BKGCAT==0||Lb_BKGCAT==50)')
+# original_noTM = root_numpy.root2array(mcPath + 'jpsilambda_withsw.root',
+#                                       'Lb2JpsiLTree/MyTuple', branches=columns)
 target = root_numpy.root2array(dataPath + 'jpsilambda_LL_sanity_withsw.root',
                                'MyTuple', branches=columns)
 
 original = pandas.DataFrame(original, dtype=float)
-original_noTM = pandas.DataFrame(original_noTM, dtype=float)
+# original_noTM = pandas.DataFrame(original_noTM, dtype=float)
 target = pandas.DataFrame(target, dtype=float)
 
 original_weights = numpy.array(original['SW'])
