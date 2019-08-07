@@ -97,6 +97,7 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 	{
 		folder = "Xib0";
 		part = "xib0";
+		break;
 	}
 	}
 	//Set up logging
@@ -238,18 +239,10 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 	{
 		treeIn->SetBranchAddress("p_PIDp_corr",&p_PIDp);
 	}
-	// if(trackType == 3)
-	// {
+
 	L_dmCut = "L_dm < 7.5";        //These cuts are not optimized. RC might pain.
 	pidCut  = "p_PIDp > 10";
 	cout<<"Making LL file"<<endl;
-	// }
-	// else if(trackType == 5)
-	// {
-	//      L_dmCut = "L_dm < 10";
-	//      pidCut  = "p_PIDp > 15";
-	//      cout<<"Making DD file"<<endl;
-	// }
 
 	cout<<"I am making the following cutoutks cuts only on events within "
 	    <<"480-520 MeV in Lb_DTF_L_WMpipi_JpsiConstr. "
@@ -269,8 +262,6 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 		}
 		else
 		{
-			// if(trackType == 3)
-			// {
 			if (WMpipi > 480 && WMpipi < 520)
 			{
 				if (p_PIDp > 10)
@@ -282,21 +273,6 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 					}
 				}
 			}
-			// }
-			// if(trackType == 5)
-			// {
-			//      if (WMpipi > 480 && WMpipi < 520)
-			//      {
-			//              if (p_PIDp > 15)
-			//              {
-			//                      if(L_dm < 10)
-			//                      {
-			//                              if(nTracks > 0) treeOut_nonZero->Fill();
-			//                              if(nTracks == 0) treeOut_Zero->Fill();
-			//                      }
-			//              }
-			//      }
-			// }
 		}
 	}
 	entries_final_nonZero = treeOut_nonZero->GetEntries();
@@ -308,6 +284,11 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 
 	if(!isData)//Calculate inclusive and exclusive efficiencies for MC
 	{
+		entries_init = treeIn->GetEntries("(Lb_BKGCAT==0||Lb_BKGCAT==50)");
+		entries_final_nonZero = treeOut_nonZero->GetEntries("(Lb_BKGCAT==0||Lb_BKGCAT==50)");
+		entries_final_Zero    = treeOut_Zero->GetEntries("(Lb_BKGCAT==0||Lb_BKGCAT==50)");
+		entries_final         = entries_final_nonZero + entries_final_Zero;
+
 		if(entries_init != 0)
 		{
 			eff_excl     = (Float_t)entries_final*100/entries_init;
