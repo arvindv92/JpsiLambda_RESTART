@@ -11,15 +11,15 @@ using namespace RooFit;
 using namespace RooStats;
 using namespace std;
 
-void AddModel(RooWorkspace *ws = nullptr, Int_t lowRange = 5200,
-              Int_t highRange = 6000, Int_t nEntries = 0, Int_t run = 1);
+void AddModel_Sanity(RooWorkspace *ws = nullptr, Int_t lowRange = 5200,
+                     Int_t highRange = 6000, Int_t nEntries = 0, Int_t run = 1);
 
-void AddData(RooWorkspace *ws = nullptr, Int_t run = 1,
-             TTree *treeIn = nullptr);
+void AddData_Sanity(RooWorkspace *ws = nullptr, Int_t run = 1,
+                    TTree *treeIn = nullptr);
 
-Double_t DosPlot(RooWorkspace *ws = nullptr, Int_t run = 1,
-                 const char *type = "LL", TTree *treeOut = nullptr,
-                 TH1D *hMass = nullptr);
+Double_t DosPlot_Sanity(RooWorkspace *ws = nullptr, Int_t run = 1,
+                        const char *type = "LL", TTree *treeOut = nullptr,
+                        TH1D *hMass = nullptr);
 
 Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 /*
@@ -115,14 +115,14 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 
 	// add the signal and background models to the workspace.
 	// Inside this function you will find a discription the model.
-	AddModel(wSpace, lowRange, highRange, entries_massWindow, run);
+	AddModel_Sanity(wSpace, lowRange, highRange, entries_massWindow, run);
 
 	// add data to the workspace
-	AddData(wSpace, run, treeIn);
+	AddData_Sanity(wSpace, run, treeIn);
 
 	// do sPlot.
 	//This wil make a new dataset with sWeights added for every event.
-	Double_t myChi2 = DosPlot(wSpace, run, type, treeOut, hMass);
+	Double_t myChi2 = DosPlot_Sanity(wSpace, run, type, treeOut, hMass);
 
 	// inspect the workspace if you wish
 	wSpace->Print();
@@ -145,8 +145,8 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 
 	return myChi2;
 }
-void AddModel(RooWorkspace *ws, Int_t lowRange, Int_t highRange,
-              Int_t nEntries, Int_t run)
+void AddModel_Sanity(RooWorkspace *ws, Int_t lowRange, Int_t highRange,
+                     Int_t nEntries, Int_t run)
 {
 	cout<<"Starting AddModel()"<<endl;
 
@@ -211,7 +211,7 @@ void AddModel(RooWorkspace *ws, Int_t lowRange, Int_t highRange,
 
 	cout<<"AddModel() complete"<<endl;
 }
-void AddData(RooWorkspace *ws, Int_t run, TTree *treeIn)
+void AddData_Sanity(RooWorkspace *ws, Int_t run, TTree *treeIn)
 {
 	cout<<"Starting AddData()"<<endl;
 
@@ -230,8 +230,8 @@ void AddData(RooWorkspace *ws, Int_t run, TTree *treeIn)
 	ws->Print();
 	cout<<"Finishing AddData()"<<endl;
 }
-Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
-                 TH1D *hMass)
+Double_t DosPlot_Sanity(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
+                        TH1D *hMass)
 {
 	Float_t SIGW = 0., BKGW = 0., bMASS = 0.;
 	TBranch *sigW = nullptr;
