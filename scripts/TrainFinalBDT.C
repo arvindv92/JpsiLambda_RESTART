@@ -388,7 +388,7 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 
 	// Apply additional cuts on the signal and background samples (can be different)
 	baseCut = "Lb_ConsLb_chi2 > 0 && Lb_MINIPCHI2 > 0 && Lb_FD_OWNPV > 0 &&"
-	          "L_TAU > 0 && Jpsi_MINIPCHI2 > 0 && Jpsi_M > 0 &&"
+	          "Jpsi_MINIPCHI2 > 0 && Jpsi_M > 0 &&"
 	          "L_FDCHI2_ORIVX > 0 && L_FD_ORIVX > 0 && L_MINIPCHI2 > 0 &&"
 	          "p_MINIPCHI2 > 0 && p_PT > 0 && pi_MINIPCHI2 > 0 &&"
 	          "pi_PT > 0";
