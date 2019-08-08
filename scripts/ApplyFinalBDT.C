@@ -156,6 +156,8 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	Float_t BDTK      = 0.;
 	Float_t chi2array[200] {0.};
 
+	Float_t evtNo = 0., runNo = 0., ntracks = 0.;
+
 	Double_t lbMinIpChi2   = 0., lbDira_ownPV = 0., lbFd_ownPV = 0.;
 	Double_t lEndVtxChi2    = 0.;
 	Double_t jpsiMinIpChi2 = 0., jpsiMass     = 0.;
@@ -168,6 +170,9 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 
 	Double_t piPT   = 0.;
 	Double_t myBDTK = 0., BDT        = 0.;
+	ULong64_t evtNum = 0;
+	UInt_t runNum = 0;
+	Double_t nTracks = 0;
 
 	TMVA::Tools::Instance();// This loads the library
 	TMVA::Reader *reader = nullptr;
@@ -315,6 +320,10 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	// - the variable names MUST corresponds in name and type
 	//to those given in the weight file(s) used
 
+	reader->AddSpectator("eventNumber := eventNumber % 4096", &evtNo);
+	reader->AddSpectator("runNumber", &runNo);
+	reader->AddSpectator("ntracks", &ntracks);
+
 	reader->AddVariable("log_dtfchi2         := log10(Lb_ConsLb_chi2)", &log_dtfChi2);
 	reader->AddVariable("log_lbminipchi2     := log10(Lb_MINIPCHI2)", &log_lbMinIpChi2);
 	reader->AddVariable("logacos_lbdira      := log10(acos(Lb_DIRA_OWNPV))", &logAcos_lbDira_ownPV);
@@ -352,12 +361,12 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	{
 		if(isoFlag && !zeroFlag)
 		{
-			prefix = Form("dataRun%d_iso%d_%s_BDT%d",
+			prefix = Form("CVdataRun%d_iso%d_%s_BDT%d",
 			              run,isoConf,isoVersion,bdtConf);
 		}
 		else if(!isoFlag || (isoFlag && zeroFlag))
 		{
-			prefix = Form("dataRun%d_noIso_BDT%d",
+			prefix = Form("CVdataRun%d_noIso_BDT%d",
 			              run,bdtConf);
 		}
 	}
@@ -365,12 +374,12 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	{
 		if(isoFlag && !zeroFlag)
 		{
-			prefix = Form("MCRun%d_iso%d_%s_BDT%d",
+			prefix = Form("CVMCRun%d_iso%d_%s_BDT%d",
 			              run,isoConf,isoVersion,bdtConf);
 		}
 		else if(!isoFlag || (isoFlag && zeroFlag))
 		{
-			prefix = Form("MCRun%d_noIso_BDT%d",
+			prefix = Form("CVMCRun%d_noIso_BDT%d",
 			              run,bdtConf);
 		}
 	}
@@ -424,6 +433,10 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	treeIn->SetBranchAddress("pi_MINIPCHI2", &piMinIpChi2);
 	treeIn->SetBranchAddress("pi_PT", &piPT);
 
+	treeIn->SetBranchAddress("eventNumber",&evtNum);
+	treeIn->SetBranchAddress("runNumber",&runNum);
+	treeIn->SetBranchAddress("ntracks",&nTracks);
+
 	if(isoFlag && !zeroFlag)
 	{
 		treeIn_iso->SetBranchAddress(Form("BDTkMin_%s",isoVersion), &myBDTK);
@@ -469,6 +482,10 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 		pi_ghostProbNN       = piGhostProbNN;
 		log_piMinIpChi2      = log10(piMinIpChi2);
 		log_pi_pt            = log10(piPT);
+
+		evtNo = evtNum;
+		runNo = runNum;
+		ntracks = nTracks;
 
 		if(isoFlag && !zeroFlag) BDTK = myBDTK;
 

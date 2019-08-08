@@ -70,73 +70,77 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	const char *MCrootFolder = Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d",run);
 
 	TMVA::DataLoader *dataLoader = nullptr;
-	TMVA::Factory *factory       = nullptr;
+	// TMVA::Factory *factory       = nullptr;
 	TMVA::Tools::Instance();// This loads the library
 
 	gROOT->ProcessLine("(TMVA::gConfig().GetVariablePlotting())."
 	                   "fMaxNumOfAllowedVariablesForScatterPlots = 10;");
 
-	if(!simFlag)
-	{
-		if(isoFlag)
-		{
-			outfileName = Form("%s/TMVAtraining/iso/"
-			                   "data_iso%d_%s_BDT%d.root",
-			                   rootFolder,isoConf,isoVersion,bdtConf);
-			outputFile  = TFile::Open(outfileName, "RECREATE");
-			factory     = new TMVA::Factory(Form("dataRun%d_iso%d_%s_BDT%d",
-			                                     run,isoConf,isoVersion,bdtConf),outputFile,
-			                                "!V:!Silent:Color:!DrawProgressBar:"
-			                                "AnalysisType=Classification");
-		}
-		else
-		{
-			outfileName = Form("%s/TMVAtraining/noIso/"
-			                   "data_noIso_BDT%d.root",
-			                   rootFolder,bdtConf);
-			outputFile  = TFile::Open( outfileName, "RECREATE");
-			factory = new TMVA::Factory( Form("dataRun%d_noIso_BDT%d",
-			                                  run,bdtConf), outputFile,
-			                             "!V:!Silent:Color:!DrawProgressBar:"
-			                             "AnalysisType=Classification" );
-		}
-	}
-	else
-	{
-		if(isoFlag)
-		{
-			outfileName = Form("%s/TMVAtraining/iso/"
-			                   "MC_iso%d_%s_BDT%d.root",
-			                   rootFolder,isoConf,isoVersion,bdtConf);
-			outputFile  = TFile::Open(outfileName, "RECREATE");
-			factory     = new TMVA::Factory(Form("MCRun%d_iso%d_%s_BDT%d",
-			                                     run,isoConf,isoVersion,bdtConf),outputFile,
-			                                "!V:!Silent:Color:!DrawProgressBar:"
-			                                "AnalysisType=Classification");
-		}
-		else
-		{
-			outfileName = Form("%s/TMVAtraining/noIso/"
-			                   "MC_noIso_BDT%d.root",
-			                   rootFolder,bdtConf);
-			outputFile  = TFile::Open( outfileName, "RECREATE");
-			factory = new TMVA::Factory( Form("MCRun%d_noIso_BDT%d",
-			                                  run,bdtConf), outputFile,
-			                             "!V:!Silent:Color:!DrawProgressBar:"
-			                             "AnalysisType=Classification" );
-		}
-	}
+	// if(!simFlag)
+	// {
+	//      if(isoFlag)
+	//      {
+	//              outfileName = Form("%s/TMVAtraining/iso/"
+	//                                 "data_iso%d_%s_BDT%d.root",
+	//                                 rootFolder,isoConf,isoVersion,bdtConf);
+	//              outputFile  = TFile::Open(outfileName, "RECREATE");
+	//              factory     = new TMVA::Factory(Form("dataRun%d_iso%d_%s_BDT%d",
+	//                                                   run,isoConf,isoVersion,bdtConf),outputFile,
+	//                                              "!V:!Silent:Color:!DrawProgressBar:"
+	//                                              "AnalysisType=Classification");
+	//      }
+	//      else
+	//      {
+	//              outfileName = Form("%s/TMVAtraining/noIso/"
+	//                                 "data_noIso_BDT%d.root",
+	//                                 rootFolder,bdtConf);
+	//              outputFile  = TFile::Open( outfileName, "RECREATE");
+	//              factory = new TMVA::Factory( Form("dataRun%d_noIso_BDT%d",
+	//                                                run,bdtConf), outputFile,
+	//                                           "!V:!Silent:Color:!DrawProgressBar:"
+	//                                           "AnalysisType=Classification" );
+	//      }
+	// }
+	// else
+	// {
+	//      if(isoFlag)
+	//      {
+	//              outfileName = Form("%s/TMVAtraining/iso/"
+	//                                 "MC_iso%d_%s_BDT%d.root",
+	//                                 rootFolder,isoConf,isoVersion,bdtConf);
+	//              outputFile  = TFile::Open(outfileName, "RECREATE");
+	//              factory     = new TMVA::Factory(Form("MCRun%d_iso%d_%s_BDT%d",
+	//                                                   run,isoConf,isoVersion,bdtConf),outputFile,
+	//                                              "!V:!Silent:Color:!DrawProgressBar:"
+	//                                              "AnalysisType=Classification");
+	//      }
+	//      else
+	//      {
+	//              outfileName = Form("%s/TMVAtraining/noIso/"
+	//                                 "MC_noIso_BDT%d.root",
+	//                                 rootFolder,bdtConf);
+	//              outputFile  = TFile::Open( outfileName, "RECREATE");
+	//              factory = new TMVA::Factory( Form("MCRun%d_noIso_BDT%d",
+	//                                                run,bdtConf), outputFile,
+	//                                           "!V:!Silent:Color:!DrawProgressBar:"
+	//                                           "AnalysisType=Classification" );
+	//      }
+	// }
 	dataLoader = new TMVA::DataLoader("dataset");
 
-	dataLoader->AddVariable("log_dtfchi2         := log10(Lb_ConsLb_chi2)",'F');
-	dataLoader->AddVariable("log_lbminipchi2     := log10(Lb_MINIPCHI2)",'F');
-	dataLoader->AddVariable("logacos_lbdira      := log10(acos(Lb_DIRA_OWNPV))",'F');
-	dataLoader->AddVariable("log_lbfd_ownpv      := log10(Lb_FD_OWNPV)",'F');
+	dataLoader->AddSpectator("eventNumber := eventNumber % 4096", 'I');
+	dataLoader->AddSpectator("runNumber", 'I');
+	dataLoader->AddSpectator("ntracks", 'I');
+
+	dataLoader->AddVariable("log_dtfchi2     := log10(Lb_ConsLb_chi2)",'F');
+	dataLoader->AddVariable("log_lbminipchi2 := log10(Lb_MINIPCHI2)",'F');
+	dataLoader->AddVariable("logacos_lbdira  := log10(acos(Lb_DIRA_OWNPV))",'F');
+	dataLoader->AddVariable("log_lbfd_ownpv  := log10(Lb_FD_OWNPV)",'F');
 	//	dataLoader->AddVariable("log_ltau        := log10(L_TAU)",'F');
 	//dataLoader->AddVariable("Lb_DTF_CTAUS_L",'F');
 
-	dataLoader->AddVariable("log_jpsiminipchi2   := log10(Jpsi_MINIPCHI2)",'F');
-	dataLoader->AddVariable("log_jpsimass        := log10(Jpsi_M)",'F');
+	dataLoader->AddVariable("log_jpsiminipchi2 := log10(Jpsi_MINIPCHI2)",'F');
+	dataLoader->AddVariable("log_jpsimass      := log10(Jpsi_M)",'F');
 	//	dataLoader->AddVariable("Jpsi_CosTheta",'F');
 	//	dataLoader->AddVariable("Jpsi_PT",'F');
 
@@ -145,22 +149,20 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	dataLoader->AddVariable("log_lfd_orivx       := log10(L_FD_ORIVX)",'F');
 	dataLoader->AddVariable("logacos_ldira_ownpv := log10(acos(L_DIRA_OWNPV))",'F');
 	dataLoader->AddVariable("L_dm",'F');
-	dataLoader->AddVariable("log_lminipchi2      := log10(L_MINIPCHI2)",'F');
-	//	dataLoader->AddVariable("L_PT",'F');
+	dataLoader->AddVariable("log_lminipchi2 := log10(L_MINIPCHI2)",'F');
 	dataLoader->AddVariable("L_ENDVERTEX_CHI2",'F');
+	//	dataLoader->AddVariable("L_PT",'F');
+
 	//	dataLoader->AddVariable("L_CosTheta",'F');
 
-	//	dataLoader->AddVariable("p_PIDp",'F');
 	dataLoader->AddVariable("log_pminipchi2      := log10(p_MINIPCHI2)",'F');
 	dataLoader->AddVariable("p_ProbNNghost",'F');
 	dataLoader->AddVariable("log_p_PT            := log10(p_PT)",'F');
 	dataLoader->AddVariable("p_ProbNNp",'F');
 
 	dataLoader->AddVariable("pi_ProbNNghost",'F');
-	//	dataLoader->AddVariable("pi_PIDK",'F');
 	dataLoader->AddVariable("log_piminipchi2     := log10(pi_MINIPCHI2)",'F');
 	dataLoader->AddVariable("log_pi_PT           := log10(pi_PT)",'F');
-	// dataLoader->AddVariable("pi_ProbNNpi",'F');
 
 	if(isoFlag) dataLoader->AddVariable(Form("BDTkMin_%s",isoVersion),'F');
 
@@ -271,6 +273,10 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 
 		treeIn->SetBranchStatus("SW",1);
 		treeIn->SetBranchStatus("BW",1);
+
+		treeIn->SetBranchStatus("eventNumber",1);
+		treeIn->SetBranchStatus("runNumber",1);
+		treeIn->SetBranchStatus("ntracks",1);
 	}
 	else// train on MC
 	{
@@ -315,6 +321,10 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		treeIn_bkg->SetBranchStatus("pi_PT",1);
 		// treeIn_bkg->SetBranchStatus("pi_ProbNNpi",1);
 
+		treeIn_bkg->SetBranchStatus("eventNumber",1);
+		treeIn_bkg->SetBranchStatus("runNumber",1);
+		treeIn_bkg->SetBranchStatus("ntracks",1);
+
 		treeIn_sig->SetBranchStatus("*",0);
 		treeIn_sig->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 		treeIn_sig->SetBranchStatus("Lb_ConsLb_chi2",1);
@@ -353,6 +363,10 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 
 		treeIn_sig->SetBranchStatus("GB_WT",1);
 		treeIn_sig->SetBranchStatus("Lb_BKGCAT",1);
+
+		treeIn_sig->SetBranchStatus("eventNumber",1);
+		treeIn_sig->SetBranchStatus("runNumber",1);
+		treeIn_sig->SetBranchStatus("ntracks",1);
 	}
 	signalCut = "";
 	bkgCut    = "";
@@ -407,41 +421,112 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	Int_t nTrain_B = (Int_t)nEntries_B*0.8;// 80/20 split
 	Int_t nTest_B  = nEntries_B - nTrain_B;
 
+	// dataLoader->PrepareTrainingAndTestTree( myCutS, myCutB,
+	//                                         Form("nTrain_Signal=%d:nTest_Signal=%d:"
+	//                                              "nTrain_Background=%d:nTest_Background=%d"
+	//                                              "SplitMode=Random:NormMode=NumEvents:!V",
+	//                                              nTrain_S,nTest_S,nTrain_B,nTest_B));
+
 	dataLoader->PrepareTrainingAndTestTree( myCutS, myCutB,
-	                                        Form("nTrain_Signal=%d:nTest_Signal=%d:"
-	                                             "nTrain_Background=%d:nTest_Background=%d"
-	                                             "SplitMode=Random:NormMode=NumEvents:!V",
-	                                             nTrain_S,nTest_S,nTrain_B,nTest_B));
+	                                        "nTest_Signal=1"
+	                                        ":nTest_Background=1"
+	                                        ":SplitMode=Random"
+	                                        ":NormMode=NumEvents"
+	                                        ":!V");
+
+	TString splitExpr = " ( 19*int([eventNumber]) + 29*int([runNumber]) + 37*int([ntracks]) )% int([NumFolds]) ";
+
+	TString cvOptions = Form("!V"
+	                         ":!Silent"
+	                         ":AnalysisType=Classification"
+	                         ":SplitType=Deterministic"
+	                         ":NumFolds=5"
+	                         ":SplitExpr=%s",
+	                         splitExpr.Data());
+	TMVA::CrossValidation *cv = nullptr;
+
+	if(!simFlag)
+	{
+		if(isoFlag)
+		{
+			outfileName = Form("%s/TMVAtraining/iso/"
+			                   "CVdata_iso%d_%s_BDT%d.root",
+			                   rootFolder,isoConf,isoVersion,bdtConf);
+			outputFile  = TFile::Open(outfileName, "RECREATE");
+			cv          = new TMVA::CrossValidation{Form("CVdataRun%d_iso%d_%s_BDT%d",
+				                                     run,isoConf,isoVersion,bdtConf),dataLoader, outputFile, cvOptions};
+		}
+		else
+		{
+			outfileName = Form("%s/TMVAtraining/noIso/"
+			                   "CVdata_noIso_BDT%d.root",
+			                   rootFolder,bdtConf);
+			outputFile  = TFile::Open( outfileName, "RECREATE");
+			cv          = new TMVA::CrossValidation{Form("CVdataRun%d_noIso_BDT%d",
+				                                     run,bdtConf),dataLoader, outputFile, cvOptions};
+		}
+	}
+	else
+	{
+		if(isoFlag)
+		{
+			outfileName = Form("%s/TMVAtraining/iso/"
+			                   "CVMC_iso%d_%s_BDT%d.root",
+			                   rootFolder,isoConf,isoVersion,bdtConf);
+			outputFile  = TFile::Open(outfileName, "RECREATE");
+			cv     = new TMVA::CrossValidation{Form("CVMCRun%d_iso%d_%s_BDT%d",
+				                                run,isoConf,isoVersion,bdtConf),dataLoader, outputFile, cvOptions};
+		}
+		else
+		{
+			outfileName = Form("%s/TMVAtraining/noIso/"
+			                   "CVMC_noIso_BDT%d.root",
+			                   rootFolder,bdtConf);
+			outputFile  = TFile::Open( outfileName, "RECREATE");
+			cv = new TMVA::CrossValidation{ Form("CVMCRun%d_noIso_BDT%d",
+				                             run,bdtConf), dataLoader, outputFile, cvOptions};
+		}
+	}
 
 	if(bdtConf == 1)
 	{
-		factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf1",
-		                    "!H:!V:NTrees=500:MinNodeSize=1.0%:MaxDepth=4:"
-		                    "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
-		                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
-		                    "nCuts=100" );
+		cv->BookMethod(TMVA::Types::kBDT, "BDTconf1",
+		               "!H:!V:NTrees=500:MinNodeSize=1.0%:MaxDepth=4:"
+		               "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
+		               "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
+		               "nCuts=100" );
+		// factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf1",
+		//                "!H:!V:NTrees=500:MinNodeSize=1.0%:MaxDepth=4:"
+		//                "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
+		//                "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
+		//                "nCuts=100" );
 
-		factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf1_REAL",
-		                    "!H:!V:NTrees=500:MinNodeSize=1.0%:MaxDepth=4:"
-		                    "BoostType=RealAdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
-		                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
-		                    "nCuts=100" );
+		// factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf1_REAL",
+		//                     "!H:!V:NTrees=500:MinNodeSize=1.0%:MaxDepth=4:"
+		//                     "BoostType=RealAdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
+		//                     "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
+		//                     "nCuts=100" );
 	}
 	else if(bdtConf == 2)
 
 	{
-		factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf2",
-		                    "!H:!V:NTrees=500:MinNodeSize=0.5%:MaxDepth=4:"
-		                    "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
-		                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
-		                    "nCuts=100" );
+		cv->BookMethod(TMVA::Types::kBDT, "BDTconf2",
+		               "!H:!V:NTrees=500:MinNodeSize=0.5%:MaxDepth=4:"
+		               "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
+		               "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
+		               "nCuts=100" );
+		// factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf2",
+		//                "!H:!V:NTrees=500:MinNodeSize=0.5%:MaxDepth=4:"
+		//                "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
+		//                "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
+		//                "nCuts=100" );
 
 
-		factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf2_REAL",
-		                    "!H:!V:NTrees=500:MinNodeSize=0.5%:MaxDepth=4:"
-		                    "BoostType=RealAdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
-		                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
-		                    "nCuts=100" );
+		// factory->BookMethod(dataLoader,TMVA::Types::kBDT, "BDTconf2_REAL",
+		//                     "!H:!V:NTrees=500:MinNodeSize=0.5%:MaxDepth=4:"
+		//                     "BoostType=RealAdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
+		//                     "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
+		//                     "nCuts=100" );
 	}
 
 	/*factory->BookMethod( TMVA::Types::kBDT, "BDTconf6",
@@ -471,12 +556,12 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 
 	// ---- Now you can tell the factory to train, test, and evaluate the MVAs
 
-	factory->TrainAllMethods();
-
-	factory->TestAllMethods();
-
-	factory->EvaluateAllMethods();
-
+	// cv->TrainAllMethods();
+	//
+	// cv->TestAllMethods();
+	//
+	// cv->EvaluateAllMethods();
+	cv->Evaluate();
 	// --------------------------------------------------------------
 
 	// Save the output
@@ -485,7 +570,7 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	cout << "==> Wrote root file: " << outputFile->GetName() << endl;
 	cout << "==> TMVAClassification is done!" << endl;
 
-	delete factory;
+	delete cv;
 
 	// if(!isoFlag)
 	// {
