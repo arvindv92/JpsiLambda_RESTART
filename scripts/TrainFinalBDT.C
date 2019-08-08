@@ -434,7 +434,8 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	                                        ":NormMode=NumEvents"
 	                                        ":!V");
 
-	TString splitExpr = " ( 19*int([eventNumber]) + 29*int([runNumber]) + 37*int([ntracks]) )% int([NumFolds]) ";
+	// TString splitExpr = " ( 19*int([eventNumber]) + 29*int([runNumber]) + 37*int([ntracks]) )% int([NumFolds]) ";
+	TString splitExpr = "int(fabs([eventNumber]))%int([NumFolds])";
 
 	TString cvOptions = Form("!V"
 	                         ":!Silent"
