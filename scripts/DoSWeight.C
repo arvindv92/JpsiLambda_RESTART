@@ -38,6 +38,7 @@ Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 	TStopwatch sw;
 	sw.Start();
 
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 	gROOT->ProcessLine(".x lhcbStyle.C");
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
@@ -218,16 +219,16 @@ void AddModel(RooWorkspace *ws, Int_t lowRange, Int_t highRange, Int_t nEntries,
 	if(run == 1)
 	{
 		init_sigval = 7000;
-		ul_sigval   = 12000;
+		ul_sigval   = 10000;
 	}
 	else if(run == 2)
 	{
 		init_sigval = 27000;
-		ul_sigval   = 35000;
+		ul_sigval   = 29000;
 	}
 
 	RooRealVar sigYield("sigYield","fitted yield for sig",init_sigval,0, ul_sigval);
-	RooRealVar bkgYield("bkgYield","fitted yield for bkg",nEntries-init_sigval,0, nEntries);
+	RooRealVar bkgYield("bkgYield","fitted yield for bkg",0, nEntries);
 
 	RooAddPdf model("model","signal+background models",
 	                RooArgList(sig, bkg), RooArgList(sigYield, bkgYield));
