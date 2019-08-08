@@ -36,30 +36,30 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 
 	gSystem->Exec("date");
 
-	gROOT->ProcessLine(".L CollateFiles.C+");
-	gROOT->ProcessLine(".L Trigger.C+");
-	gROOT->ProcessLine(".L Sanity.C+");
-	gROOT->ProcessLine(".L CutOutKs.C+");
-	gROOT->ProcessLine(".L DoSWeight.C+");
-	gROOT->ProcessLine(".L DoSWeight_Sanity.C+");
-	gROOT->ProcessLine(".L TrainIsolation.C+");
-	gROOT->ProcessLine(".L ApplyIsolation.C+");
-	gROOT->ProcessLine(".L TrainFinalBDT.C+");
-	gROOT->ProcessLine(".L ApplyFinalBDT.C+");
-	gROOT->ProcessLine(".L OptimizeFinalBDT.C+");
+	gROOT->ProcessLine(".L CollateFiles.C");
+	gROOT->ProcessLine(".L Trigger.C");
+	gROOT->ProcessLine(".L Sanity.C");
+	gROOT->ProcessLine(".L CutOutKs.C");
+	gROOT->ProcessLine(".L DoSWeight.C");
+	gROOT->ProcessLine(".L DoSWeight_Sanity.C");
+	gROOT->ProcessLine(".L TrainIsolation.C");
+	gROOT->ProcessLine(".L ApplyIsolation.C");
+	gROOT->ProcessLine(".L TrainFinalBDT.C");
+	gROOT->ProcessLine(".L ApplyFinalBDT.C");
+	gROOT->ProcessLine(".L OptimizeFinalBDT.C");
 	//  gROOT->ProcessLine(".L CutFinalBDT.C+");
 
-	gSystem->Load("CollateFiles_C.so");
-	gSystem->Load("Trigger_C.so");
-	gSystem->Load("Sanity_C.so");
-	gSystem->Load("CutOutKs_C.so");
-	gSystem->Load("DoSWeight_C.so");
-	gSystem->Load("DoSWeight_Sanity_C.so");
-	gSystem->Load("TrainIsolation_C.so");
-	gSystem->Load("ApplyIsolation_C.so");
-	gSystem->Load("TrainFinalBDT_C.so");
-	gSystem->Load("ApplyFinalBDT_C.so");
-	gSystem->Load("OptimizeFinalBDT_C.so");
+	// gSystem->Load("CollateFiles_C.so");
+	// gSystem->Load("Trigger_C.so");
+	// gSystem->Load("Sanity_C.so");
+	// gSystem->Load("CutOutKs_C.so");
+	// gSystem->Load("DoSWeight_C.so");
+	// gSystem->Load("DoSWeight_Sanity_C.so");
+	// gSystem->Load("TrainIsolation_C.so");
+	// gSystem->Load("ApplyIsolation_C.so");
+	// gSystem->Load("TrainFinalBDT_C.so");
+	// gSystem->Load("ApplyFinalBDT_C.so");
+	// gSystem->Load("OptimizeFinalBDT_C.so");
 	//  gSystem->Load("CutFinalBDT_C.so");
 
 	cout<<"poop"<<endl;
