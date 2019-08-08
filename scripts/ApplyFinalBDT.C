@@ -245,9 +245,11 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 			}
 			else
 			{
+				gSystem->Exec(Form("hadd -f %s/jpsilambda_cutoutks_LL.root "
+				                   "%s/jpsilambda_cutoutks_LL_nonZeroTracks.root %s/jpsilambda_cutoutks_LL_ZeroTracks.root ",
+				                   rootFolder,rootFolder,rootFolder));
 				fileIn  = TFile::Open(Form("%s/jpsilambda_cutoutks_%s.root",
 				                           rootFolder,type));
-				//has to be hadded file doesnt exist
 				treeIn  = (TTree*)fileIn->Get("MyTuple");
 				fileOut = new TFile(Form("%s/jpsilambda_%s_FinalBDT%d_noIso.root",
 				                         rootFolder,type,bdtConf),
@@ -413,7 +415,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	treeIn->SetBranchAddress("L_DIRA_OWNPV", &lDira_ownPV);
 	treeIn->SetBranchAddress("L_dm", &lDm);
 	treeIn->SetBranchAddress("L_MINIPCHI2", &lMinIpChi2);
-	treeIn->SetBranchAddress("L_ENDVERTEX_CHI2", &l_EndVtx_Chi2);
+	treeIn->SetBranchAddress("L_ENDVERTEX_CHI2", &lEndVtxChi2);
 	// treeIn->SetBranchAddress("L_CosTheta", &lCosTheta);
 
 	treeIn->SetBranchAddress("p_MINIPCHI2", &pMinIpChi2);
@@ -483,7 +485,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 		log_piMinIpChi2      = log10(piMinIpChi2);
 		log_pi_pt            = log10(piPT);
 
-		evtNo = evtNum;
+		evtNo = evtNum % 4096;
 		runNo = runNum;
 		ntracks = nTracks;
 
