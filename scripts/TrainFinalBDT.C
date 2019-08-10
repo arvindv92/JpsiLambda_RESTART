@@ -184,10 +184,10 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		}
 		else
 		{
-			gSystem->Exec(Form("hadd -f %s/jpsilambda_%s_withsw.root "
-			                   "%s/jpsilambda_%s_withsw_nonZeroTracks.root"
-			                   " %s/jpsilambda_%s_withsw_ZeroTracks.root",
-			                   rootFolder,type,rootFolder,type,rootFolder,type));
+			// gSystem->Exec(Form("hadd -f %s/jpsilambda_%s_withsw.root "
+			//                    "%s/jpsilambda_%s_withsw_nonZeroTracks.root"
+			//                    " %s/jpsilambda_%s_withsw_ZeroTracks.root",
+			//                    rootFolder,type,rootFolder,type,rootFolder,type));
 			input  = TFile::Open(Form("%s/jpsilambda_%s_withsw.root",
 			                          rootFolder,type));
 			treeIn = (TTree*)input->Get("MyTuple");
