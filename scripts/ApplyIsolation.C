@@ -216,12 +216,12 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 
 	if(!simFlag)//use isoBDT trained on data
 	{
-		prefix     = Form("isok_dataRun%d_%s_iso%d",
+		prefix     = Form("CVisok_dataRun%d_%s_iso%d",
 		                  run,isoVersion,isoConf);
 	}
 	else//use isoBDT trained on MC
 	{
-		prefix     = Form("isok_MCRun%d_%s_iso%d",
+		prefix     = Form("CVisok_MCRun%d_%s_iso%d",
 		                  run,isoVersion,isoConf);
 	}
 	methodName = "BDT method";
@@ -230,12 +230,23 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	             Form("isoConf%d_300",isoConf) + TString(".weights.xml");
 	reader->BookMVA(methodName, weightFile);
 
+	treeIn->SetBranchStatus("*",0);
+	treeIn->SetBranchStatus("Added_n_Particles",1);
+	treeIn->SetBranchStatus("psi_1S_H_IPCHI2_NEW",1);
+	treeIn->SetBranchStatus("psi_1S_H_VERTEXCHI2_NEW",1);
+	treeIn->SetBranchStatus("psi_1S_H_MINIPCHI2",1);
+
+	if(strncmp(isoVersion,"v1",2) == 0)
+	{
+		treeIn->SetBranchStatus("Added_H_PT", 1);
+	}
+
 	treeIn->SetBranchAddress("Added_n_Particles", &nTracks);
 	treeIn->SetBranchAddress("psi_1S_H_IPCHI2_NEW", IPCHI2);
 	treeIn->SetBranchAddress("psi_1S_H_VERTEXCHI2_NEW", VCHI2DOF);
 	treeIn->SetBranchAddress("psi_1S_H_MINIPCHI2", MINIPCHI2);
 
-	if(strncmp(isoVersion,"v1",2) == 0 || strncmp(isoVersion,"v3",2) == 0)
+	if(strncmp(isoVersion,"v1",2) == 0)
 	{
 		treeIn->SetBranchAddress("Added_H_PT", PT);
 	}
