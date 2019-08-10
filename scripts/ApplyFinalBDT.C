@@ -171,8 +171,8 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	Double_t piPT   = 0.;
 	Double_t myBDTK = 0., BDT        = 0.;
 	ULong64_t evtNum = 0;
-	UInt_t runNum = 0;
-	Double_t nTracks = 0;
+	// UInt_t runNum = 0;
+	// Double_t nTracks = 0;
 
 	TMVA::Tools::Instance();// This loads the library
 	TMVA::Reader *reader = nullptr;
@@ -191,6 +191,8 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 				fileIn_iso  = TFile::Open(Form("%s/%s_%s_iso%d_%s.root",
 				                               rootFolder,part,type,isoConf,isoVersion));
 				treeIn_iso  = (TTree*)fileIn_iso->Get("MyTuple");
+
+				treeIn->AddFriend(treeIn_iso);
 				fileOut     = new TFile(Form("%s/%s_%s_FinalBDT%d_iso%d_%s.root",
 				                             rootFolder,part,type,bdtConf,isoConf,isoVersion),
 				                        "RECREATE");
@@ -229,6 +231,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 					fileIn_iso  = TFile::Open(Form("%s/jpsilambda_%s_iso%d_%s.root",
 					                               rootFolder,type,isoConf,isoVersion));
 					treeIn_iso  = (TTree*)fileIn_iso->Get("MyTuple");
+					treeIn->AddFriend(treeIn_iso);
 					fileOut     = new TFile(Form("%s/jpsilambda_%s_FinalBDT%d_iso%d_%s.root",
 					                             rootFolder,type,bdtConf,isoConf,isoVersion),
 					                        "RECREATE");
@@ -268,6 +271,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 					fileIn_iso = TFile::Open(Form("%s/jpsilambda_%ssig_iso%d_%s.root",
 					                              rootFolder,type,isoConf,isoVersion));
 					treeIn_iso = (TTree*)fileIn_iso->Get("MyTuple");
+					treeIn->AddFriend(treeIn_iso);
 					fileOut    = new TFile(Form("%s/jpsilambda_%ssig_FinalBDT%d_iso%d_%s.root",
 					                            rootFolder,type,bdtConf,isoConf,isoVersion),
 					                       "RECREATE");
@@ -394,6 +398,40 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	cout << "--- TMVAClassificationApp    : Using input file: "
 	     << fileIn->GetName() << endl;
 
+	treeIn->SetBranchStatus("*",0);
+	treeIn->SetBranchStatus("Lb_ConsLb_chi2",1);
+	treeIn->SetBranchStatus("Lb_MINIPCHI2",1);
+	treeIn->SetBranchStatus("Lb_DIRA_OWNPV",1);
+	treeIn->SetBranchStatus("Lb_FD_OWNPV",1);
+	treeIn->SetBranchStatus("Jpsi_MINIPCHI2",1);
+	treeIn->SetBranchStatus("Jpsi_M",1);
+	treeIn->SetBranchStatus("L_FDCHI2_ORIVX",1);
+	treeIn->SetBranchStatus("L_DIRA_ORIVX",1);
+	treeIn->SetBranchStatus("L_FD_ORIVX",1);
+	treeIn->SetBranchStatus("L_DIRA_OWNPV",1);
+	treeIn->SetBranchStatus("L_dm",1);
+	treeIn->SetBranchStatus("L_MINIPCHI2",1);
+	treeIn->SetBranchStatus("L_ENDVERTEX_CHI2",1);
+	treeIn->SetBranchStatus("p_MINIPCHI2",1);
+	treeIn->SetBranchStatus("p_ProbNNghost",1);
+	treeIn->SetBranchStatus("p_PT",1);
+	if(isData)
+	{
+		treeIn->SetBranchStatus("p_ProbNNp",1);
+	}
+	else
+	{
+		treeIn->SetBranchStatus("p_ProbNNp_corr",1);
+	}
+	treeIn->SetBranchStatus("pi_ProbNNghost",1);
+	treeIn->SetBranchStatus("pi_MINIPCHI2",1);
+	treeIn->SetBranchStatus("pi_PT",1);
+	treeIn->SetBranchStatus("eventNumber",1);
+	if(isoFlag && !zeroFlag)
+	{
+		treeIn->SetBranchStatus(Form("BDTkMin_%s",isoVersion), 1);
+	}
+
 	treeIn->SetBranchAddress("Lb_ConsLb_chi2", chi2array);
 	treeIn->SetBranchAddress("Lb_MINIPCHI2", &lbMinIpChi2);
 	treeIn->SetBranchAddress("Lb_DIRA_OWNPV", &lbDira_ownPV );
@@ -436,12 +474,12 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	treeIn->SetBranchAddress("pi_PT", &piPT);
 
 	treeIn->SetBranchAddress("eventNumber",&evtNum);
-	treeIn->SetBranchAddress("runNumber",&runNum);
-	treeIn->SetBranchAddress("ntracks",&nTracks);
+	// treeIn->SetBranchAddress("runNumber",&runNum);
+	// treeIn->SetBranchAddress("ntracks",&nTracks);
 
 	if(isoFlag && !zeroFlag)
 	{
-		treeIn_iso->SetBranchAddress(Form("BDTkMin_%s",isoVersion), &myBDTK);
+		treeIn->SetBranchAddress(Form("BDTkMin_%s",isoVersion), &myBDTK);
 	}
 
 	treeOut->Branch( Form("BDT%d",bdtConf), &BDT, Form("BDT%d/D",bdtConf));
@@ -454,7 +492,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 		if (ievt%50000 == 0) cout << "--- ... Processing event: " << ievt << endl;
 
 		treeIn->GetEntry(ievt);
-		if(isoFlag && !zeroFlag) treeIn_iso->GetEntry(ievt);
+		// if(isoFlag && !zeroFlag) treeIn_iso->GetEntry(ievt);
 
 		log_dtfChi2          = log10(chi2array[0]);
 		log_lbMinIpChi2      = log10(lbMinIpChi2);
@@ -486,8 +524,8 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 		log_pi_pt            = log10(piPT);
 
 		evtNo = evtNum % 4096;
-		runNo = runNum;
-		ntracks = nTracks;
+		// runNo = runNum;
+		// ntracks = nTracks;
 
 		if(isoFlag && !zeroFlag) BDTK = myBDTK;
 
