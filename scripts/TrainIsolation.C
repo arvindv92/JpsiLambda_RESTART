@@ -56,7 +56,7 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	TTree *sigTree   = nullptr, *bkgTree   = nullptr;
 
 	TString outFileName = "", fname_sig    = "", fname_bkg = "";
-	TCut myCut          = "";
+	TCut myCutS          = "", myCutB = "";
 
 	TMVA::DataLoader *dataLoader = nullptr;
 	TMVA::Factory *factory       = nullptr;
@@ -64,45 +64,47 @@ void TrainIsolation(Int_t run, Int_t trackType,
 
 	if(!simFlag)//train on data
 	{
-		outFileName = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
-		                   "TMVAtraining/iso/TMVA300-isok_data_%s_iso%d.root",
-		                   run,isoVersion,isoConf);
-
-		factory     = new TMVA::Factory(Form("isok_dataRun%d_%s_iso%d",
-		                                     run,isoVersion,isoConf), outputFile,
-		                                "!V:!Silent:Color:!DrawProgressBar:"
-		                                "AnalysisType=Classification" );
+		// outFileName = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
+		//                    "TMVAtraining/iso/TMVA300-isok_data_%s_iso%d.root",
+		//                    run,isoVersion,isoConf);
+		// outputFile  = TFile::Open(outFileName, "RECREATE");
+		// factory     = new TMVA::Factory(Form("isok_dataRun%d_%s_iso%d",
+		//                                      run,isoVersion,isoConf), outputFile,
+		//                                 "!V:!Silent:Color:!DrawProgressBar:"
+		//                                 "AnalysisType=Classification" );
 		fname_sig = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
 		                 "jpsilambda_%s_withsw_nonZeroTracks.root",run,type);
 	}
 	else //train on simulation
 	{
-		outFileName = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
-		                   "TMVAtraining/iso/TMVA300-isok_MC_%s_iso%d.root",
-		                   run,isoVersion,isoConf);
-
-		factory     = new TMVA::Factory(Form("isok_MCRun%d_%s_iso%d",
-		                                     run,isoVersion,isoConf), outputFile,
-		                                "!V:!Silent:Color:!DrawProgressBar:"
-		                                "AnalysisType=Classification" );
+		// outFileName = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
+		//                    "TMVAtraining/iso/TMVA300-isok_MC_%s_iso%d.root",
+		//                    run,isoVersion,isoConf);
+		// outputFile  = TFile::Open(outFileName, "RECREATE");
+		// factory     = new TMVA::Factory(Form("isok_MCRun%d_%s_iso%d",
+		//                                      run,isoVersion,isoConf), outputFile,
+		//                                 "!V:!Silent:Color:!DrawProgressBar:"
+		//                                 "AnalysisType=Classification" );
 		fname_sig = Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/"
 		                 "jpsilambda_cutoutks_%s_nonZeroTracks.root",run,type);//NB: Using MC for control channel because it has more statistics.
 	}
 
-	outputFile  = TFile::Open(outFileName, "RECREATE");
 	dataLoader  = new TMVA::DataLoader("dataset");
 
+	dataLoader->AddSpectator("eventNumber := eventNumber % 4096", 'I');
 	dataLoader->AddVariable("IPCHI2",'F');
 	dataLoader->AddVariable("VCHI2DOF",'F');
 	dataLoader->AddVariable("log_MINIPCHI2 := log10(MINIPCHI2)",'F');
 
-	myCut = "MINIPCHI2 > 0 && VCHI2DOF > 0";
+	myCutS = "MINIPCHI2 > 0 && VCHI2DOF > 0";
+	myCutB = "MINIPCHI2 > 0 && VCHI2DOF > 0";
 
 	if(strncmp(isoVersion,"v1",2)==0)
 	{
 		dataLoader->AddVariable("log_PT := log10(PT)",'F');
 
-		myCut = myCut && "PT > 0 ";
+		myCutS = myCutS && "PT > 0 ";
+		myCutB = myCutB && "PT > 0 ";
 	}
 
 	input_sig = TFile::Open(fname_sig);
@@ -133,44 +135,52 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	sigTree = (TTree*)input_sig->Get("MyTuple");
 	bkgTree = (TTree*)input_bkg->Get("MyTuple");
 
-	TFile *tempFile = nullptr;
-	TTree *sigTree_TM = nullptr;
-	if(simFlag)
+	sigTree->SetBranchStatus("*",0);
+	sigTree->SetBranchStatus("MINIPCHI2",1);
+	sigTree->SetBranchStatus("IPCHI2",1);
+	sigTree->SetBranchStatus("VCHI2DOF",1);
+
+	bkgTree->SetBranchStatus("*",0);
+	bkgTree->SetBranchStatus("MINIPCHI2",1);
+	bkgTree->SetBranchStatus("IPCHI2",1);
+	bkgTree->SetBranchStatus("VCHI2DOF",1);
+
+	if(strncmp(isoVersion,"v1",2)==0)
 	{
-		tempFile = new TFile("tempFile.root","RECREATE");
-		sigTree_TM = (TTree*)sigTree->CopyTree("Lb_BKGCAT==0||Lb_BKGCAT==50");
+		sigTree->SetBranchStatus("PT",1);
+		bkgTree->SetBranchStatus("PT",1);
 	}
-	// global event weights per tree (see below for setting event-wise weights)
-	if(!simFlag)
+	if(!simFlag)//train on data for signal
 	{
-		dataLoader->AddSignalTree(sigTree,1.0);
+		sigTree->SetBranchStatus("SW",1);
 	}
-	else
+	else//train on MC for signal
 	{
-		dataLoader->AddSignalTree(sigTree_TM,1.0);
+		sigTree->SetBranchStatus("Lb_BKGCAT",1);
 	}
-	dataLoader->AddBackgroundTree(bkgTree,1.0);
+	bkgTree->SetBranchStatus("SW",1);
 
 	if(!simFlag)
 	{
+		dataLoader->AddSignalTree(sigTree,1.0);
 		dataLoader->SetSignalWeightExpression("SW");
 	}
 	else
 	{
+		dataLoader->AddSignalTree(sigTree,1.0);
 		dataLoader->SetSignalWeightExpression("GB_WT");
 	}
+	dataLoader->AddBackgroundTree(bkgTree,1.0);
+
 	dataLoader->SetBackgroundWeightExpression("SW");
 	Int_t nEntries_S = 0, nEntries_B = 0;
 
-	if(!simFlag)
+	if(simFlag)
 	{
-		nEntries_S = sigTree->GetEntries(myCut);
+		myCutS = myCutS && "(Lb_BKGCAT==0||Lb_BKGCAT=50)";
 	}
-	else
-	{
-		nEntries_S = sigTree_TM->GetEntries(myCut);
-	}
-	nEntries_B = bkgTree->GetEntries(myCut);
+	nEntries_S = sigTree->GetEntries(myCutS);
+	nEntries_B = bkgTree->GetEntries(myCutB);
 
 	Int_t nTrain_S = (Int_t)nEntries_S*0.8;// 80/20 split
 	Int_t nTest_S  = nEntries_S - nTrain_S;
@@ -178,27 +188,74 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	Int_t nTrain_B = (Int_t)nEntries_B*0.8;// 80/20 split
 	Int_t nTest_B  = nEntries_B - nTrain_B;
 
-	dataLoader->PrepareTrainingAndTestTree( myCut, myCut,
-	                                        Form("nTrain_Signal=%d:nTest_Signal=%d:"
-	                                             "nTrain_Background=%d:nTest_Background=%d"
-	                                             "SplitMode=Random:NormMode=NumEvents:!V",
-	                                             nTrain_S,nTest_S,nTrain_B,nTest_B));
+	// dataLoader->PrepareTrainingAndTestTree( myCutS, myCutB,
+	//                                         Form("nTrain_Signal=%d:nTest_Signal=%d:"
+	//                                              "nTrain_Background=%d:nTest_Background=%d"
+	//                                              "SplitMode=Random:NormMode=NumEvents:!V",
+	//                                              nTrain_S,nTest_S,nTrain_B,nTest_B));
+
+	dataLoader->PrepareTrainingAndTestTree( myCutS, myCutB,
+	                                        "nTest_Signal=1"
+	                                        ":nTest_Background=1"
+	                                        ":SplitMode=Random"
+	                                        ":NormMode=NumEvents"
+	                                        ":!V");
+	TString splitExpr = "int(fabs([eventNumber]))%int([NumFolds])";
+
+	TString cvOptions = Form("!V"
+	                         ":!Silent"
+	                         ":AnalysisType=Classification"
+	                         ":SplitType=Deterministic"
+	                         ":NumFolds=5"
+	                         ":SplitExpr=%s",
+	                         splitExpr.Data());
+	TMVA::CrossValidation *cv = nullptr;
+	if(!simFlag)//train on data
+	{
+		outFileName = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
+		                   "TMVAtraining/iso/CVTMVA300-isok_data_%s_iso%d.root",
+		                   run,isoVersion,isoConf);
+		outputFile  = TFile::Open(outFileName, "RECREATE");
+		cv     = new TMVA::CrossValidation(Form("CVisok_dataRun%d_%s_iso%d",
+		                                        run,isoVersion,isoConf),
+		                                   dataLoader,outputFile, cvOptions);
+	}
+	else //train on simulation
+	{
+		outFileName = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
+		                   "TMVAtraining/iso/CVTMVA300-isok_MC_%s_iso%d.root",
+		                   run,isoVersion,isoConf);
+		outputFile  = TFile::Open(outFileName, "RECREATE");
+		cv     = new TMVA::CrossValidation(Form("CVisok_MCRun%d_%s_iso%d",
+		                                        run,isoVersion,isoConf),
+		                                   dataLoader,outputFile, cvOptions);
+	}
 
 	if(isoConf == 1)
 	{
-		factory->BookMethod(dataLoader, TMVA::Types::kBDT, "isoConf1_300",
-		                    "!H:!V:NTrees=300:MinNodeSize=1.25%:MaxDepth=3:"
-		                    "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
-		                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
-		                    "nCuts=200" );
+		// factory->BookMethod(dataLoader, TMVA::Types::kBDT, "isoConf1_300",
+		//                     "!H:!V:NTrees=300:MinNodeSize=1.25%:MaxDepth=3:"
+		//                     "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
+		//                     "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
+		//                     "nCuts=200" );
+		cv->BookMethod(TMVA::Types::kBDT, "isoConf1_300",
+		               "!H:!V:NTrees=300:MinNodeSize=1.25%:MaxDepth=3:"
+		               "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
+		               "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
+		               "nCuts=200" );
 	}
 	else if(isoConf == 2)
 	{
-		factory->BookMethod(dataLoader, TMVA::Types::kBDT, "isoConf2_300",
-		                    "!H:!V:NTrees=300:MinNodeSize=0.75%:MaxDepth=3:"
-		                    "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
-		                    "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
-		                    "nCuts=200" );
+		// factory->BookMethod(dataLoader, TMVA::Types::kBDT, "isoConf2_300",
+		//                     "!H:!V:NTrees=300:MinNodeSize=0.75%:MaxDepth=3:"
+		//                     "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
+		//                     "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
+		//                     "nCuts=200" );
+		cv->BookMethod(TMVA::Types::kBDT, "isoConf2_300",
+		               "!H:!V:NTrees=300:MinNodeSize=0.75%:MaxDepth=3:"
+		               "BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
+		               "BaggedSampleFraction=0.5:SeparationType=GiniIndex:"
+		               "nCuts=200" );
 	}
 
 	/*	factory->BookMethod( TMVA::Types::kBDT, "BDTconf2",
@@ -224,12 +281,12 @@ void TrainIsolation(Int_t run, Int_t trackType,
 
 	// ---- train, test, and evaluate the MVAs
 
-	factory->TrainAllMethods();
-
-	factory->TestAllMethods();
-
-	factory->EvaluateAllMethods();
-
+	// factory->TrainAllMethods();
+	//
+	// factory->TestAllMethods();
+	//
+	// factory->EvaluateAllMethods();
+	cv->Evaluate();
 	// Save the output
 	outputFile->Close();
 
