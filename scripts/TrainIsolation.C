@@ -136,19 +136,19 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	bkgTree = (TTree*)input_bkg->Get("MyTuple");
 
 	sigTree->SetBranchStatus("*",0);
-	sigTree->SetBranchStatus("MINIPCHI2",1);
-	sigTree->SetBranchStatus("IPCHI2",1);
-	sigTree->SetBranchStatus("VCHI2DOF",1);
+	sigTree->SetBranchStatus("psi_1S_H_MINIPCHI2",1);
+	sigTree->SetBranchStatus("psi_1S_H_IPCHI2_NEW",1);
+	sigTree->SetBranchStatus("psi_1S_H_VERTEXCHI2_NEW",1);
 
 	bkgTree->SetBranchStatus("*",0);
-	bkgTree->SetBranchStatus("MINIPCHI2",1);
-	bkgTree->SetBranchStatus("IPCHI2",1);
-	bkgTree->SetBranchStatus("VCHI2DOF",1);
+	bkgTree->SetBranchStatus("psi_1S_H_MINIPCHI2",1);
+	bkgTree->SetBranchStatus("psi_1S_H_IPCHI2_NEW",1);
+	bkgTree->SetBranchStatus("psi_1S_H_VERTEXCHI2_NEW",1);
 
 	if(strncmp(isoVersion,"v1",2)==0)
 	{
-		sigTree->SetBranchStatus("PT",1);
-		bkgTree->SetBranchStatus("PT",1);
+		sigTree->SetBranchStatus("Added_H_PT",1);
+		bkgTree->SetBranchStatus("Added_H_PT",1);
 	}
 	if(!simFlag)//train on data for signal
 	{
