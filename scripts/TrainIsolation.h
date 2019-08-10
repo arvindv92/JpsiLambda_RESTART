@@ -22,6 +22,7 @@
 #include "TMVA/Tools.h"
 #include "TMVA/DataLoader.h"
 #include "TMVA/TMVAGui.h"
+#include "TMVA/CrossValidation.h"
 #endif
 
 using namespace std;
