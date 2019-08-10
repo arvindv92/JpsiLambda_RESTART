@@ -135,15 +135,19 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	sigTree = (TTree*)input_sig->Get("MyTuple");
 	bkgTree = (TTree*)input_bkg->Get("MyTuple");
 
+	cout<<"poop1"<<endl;
 	sigTree->SetBranchStatus("*",0);
 	sigTree->SetBranchStatus("psi_1S_H_MINIPCHI2",1);
 	sigTree->SetBranchStatus("psi_1S_H_IPCHI2_NEW",1);
 	sigTree->SetBranchStatus("psi_1S_H_VERTEXCHI2_NEW",1);
+	sigTree->SetBranchStatus("eventNumber",1);
 
+	cout<<"poop2"<<endl;
 	bkgTree->SetBranchStatus("*",0);
 	bkgTree->SetBranchStatus("psi_1S_H_MINIPCHI2",1);
 	bkgTree->SetBranchStatus("psi_1S_H_IPCHI2_NEW",1);
 	bkgTree->SetBranchStatus("psi_1S_H_VERTEXCHI2_NEW",1);
+	bkgTree->SetBranchStatus("eventNumber",1);
 
 	if(strncmp(isoVersion,"v1",2)==0)
 	{
