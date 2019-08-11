@@ -277,6 +277,7 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		treeIn->SetBranchStatus("eventNumber",1);
 		treeIn->SetBranchStatus("runNumber",1);
 		treeIn->SetBranchStatus("ntracks",1);
+		if(isoFlag) treeIn->SetBranchStatus(Form("BDTkMin_%s",isoVersion),1);
 	}
 	else// train on MC
 	{
@@ -367,6 +368,13 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		treeIn_sig->SetBranchStatus("eventNumber",1);
 		treeIn_sig->SetBranchStatus("runNumber",1);
 		treeIn_sig->SetBranchStatus("ntracks",1);
+
+		if(isoFlag)
+		{
+			treeIn_sig->SetBranchStatus(Form("BDTkMin_%s",isoVersion),1);
+			treeIn_bkg->SetBranchStatus(Form("BDTkMin_%s",isoVersion),1);
+		}
+
 	}
 	signalCut = "";
 	bkgCut    = "";
