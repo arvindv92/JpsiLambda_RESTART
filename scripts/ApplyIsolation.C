@@ -139,7 +139,9 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	Float_t MINIPCHI2[Max] = {0.};
 	Float_t ipChi2         = 0., vChi2Dof      = 0., log_minIpChi2 = 0.;
 	Float_t log_PT         = 0.;
+	Float_t evtNo = 0.;
 	Double_t BDTk[Max]     = {0.}, BDTkMin     = 1.1;
+	ULong64_t evtNum = 0;
 
 	const char *rootFolder  = "";
 
@@ -203,6 +205,7 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	// - the variable names MUST corresponds in name and
 	// type to those given in the weight file(s) used
 
+	reader->AddSpectator("eventNumber := eventNumber % 4096", &evtNo);
 	reader->AddVariable("IPCHI2", &ipChi2);
 	reader->AddVariable("VCHI2DOF", &vChi2Dof);
 	reader->AddVariable("log_minIpChi2 := log10(MINIPCHI2)", &log_minIpChi2);
@@ -235,6 +238,7 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	treeIn->SetBranchStatus("psi_1S_H_IPCHI2_NEW",1);
 	treeIn->SetBranchStatus("psi_1S_H_VERTEXCHI2_NEW",1);
 	treeIn->SetBranchStatus("psi_1S_H_MINIPCHI2",1);
+	treeIn->SetBranchStatus("eventNumber",1);
 
 	if(strncmp(isoVersion,"v1",2) == 0)
 	{
@@ -245,6 +249,7 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	treeIn->SetBranchAddress("psi_1S_H_IPCHI2_NEW", IPCHI2);
 	treeIn->SetBranchAddress("psi_1S_H_VERTEXCHI2_NEW", VCHI2DOF);
 	treeIn->SetBranchAddress("psi_1S_H_MINIPCHI2", MINIPCHI2);
+	treeIn->SetBranchAddress("eventNumber",&evtNum);
 
 	if(strncmp(isoVersion,"v1",2) == 0)
 	{
@@ -268,7 +273,7 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 
 			treeIn->GetEntry(ievt);
 			BDTkMin = 1.1;
-
+			evtNo = evtNum % 4096;
 			//Loop over all the added tracks in a given event
 			for(Int_t j = 0; j < nTracks; j++)
 			{
@@ -300,7 +305,7 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 
 			treeIn->GetEntry(ievt);
 			BDTkMin = 1.1;
-
+			evtNo = evtNum % 4096;
 			//Loop over all the added tracks in a given event
 			for(Int_t j = 0; j < nTracks; j++)
 			{
