@@ -144,9 +144,9 @@ void TrainIsolation(Int_t run, Int_t trackType,
 
 	cout<<"poop2"<<endl;
 	bkgTree->SetBranchStatus("*",0);
-	bkgTree->SetBranchStatus("psi_1S_H_MINIPCHI2",1);
-	bkgTree->SetBranchStatus("psi_1S_H_IPCHI2_NEW",1);
-	bkgTree->SetBranchStatus("psi_1S_H_VERTEXCHI2_NEW",1);
+	bkgTree->SetBranchStatus("MINIPCHI2",1);
+	bkgTree->SetBranchStatus("IPCHI2",1);
+	bkgTree->SetBranchStatus("VCHI2DOF",1);
 	bkgTree->SetBranchStatus("eventNumber",1);
 
 	if(strncmp(isoVersion,"v1",2)==0)
