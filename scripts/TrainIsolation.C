@@ -152,7 +152,7 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	if(strncmp(isoVersion,"v1",2)==0)
 	{
 		sigTree->SetBranchStatus("Added_H_PT",1);
-		bkgTree->SetBranchStatus("Added_H_PT",1);
+		bkgTree->SetBranchStatus("PT",1);
 	}
 	if(!simFlag)//train on data for signal
 	{
