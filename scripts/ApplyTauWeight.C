@@ -42,6 +42,24 @@ void ApplyTauWeight(Int_t run = 1, Int_t mcType = 0, Bool_t isGen = false)
 		part = "jpsisigma";
 		break;
 	}
+	case 3:
+	{
+		folder = "JpsiXi";
+		part = "jpsixi";
+		break;
+	}
+	case 4:
+	{
+		folder = "Bu_JpsiX";
+		part = "bu_jpsix";
+		break;
+	}
+	case 5:
+	{
+		folder = "Bd_JpsiX";
+		part = "bd_jpsix";
+		break;
+	}
 	case 6:
 	{
 		folder = "Lst1405";
@@ -64,6 +82,12 @@ void ApplyTauWeight(Int_t run = 1, Int_t mcType = 0, Bool_t isGen = false)
 	{
 		folder = "chiC1";
 		part = "chic1";
+		break;
+	}
+	case 10:
+	{
+		folder = "JpsiKs";
+		part = "jpsiks";
 		break;
 	}
 	}
