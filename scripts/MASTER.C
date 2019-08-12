@@ -161,10 +161,19 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 			cout<<"$$$$$$$$$$$ Processing Run "<<run<<" $$$$$$$$$$$"<<endl;
 			if(block == 0)
 			{
+				if(!isData) //MC
+				{
+					cout<<"****Applying GB weights on reco MC"<<endl;
+					gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
+					gSystem->Exec(Form("python ApplyGBWeights.py %d %d 0",run,mcType));
+					cout<<"****Applying GB weights on generated MC"<<endl;
+					gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
+					gSystem->Exec(Form("python ApplyGBWeights.py %d %d 1",run,mcType));
+				}
 				//Trigger Cut
-				// cout<<"***Trigger***"<<endl;
+				cout<<"***Trigger***"<<endl;
 				// Trigger(run, year, isData, mcType, testing, loose, logFlag);
-
+				gSystem->Exec(Form("root -l -b -q \'Trigger.C(%d,%d,%d,%d,%d,%d,%d)\'",run, year, isData, mcType, testing, loose, logFlag));
 				//Sanity Cuts
 				cout<<"***Sanity***"<<endl;
 				// Sanity(run, year, isData, mcType, logFlag);
@@ -235,15 +244,6 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 					cout<<"*****Calculating GB weights files for data/MC correction"<<endl;
 					gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
 					gSystem->Exec(Form("python GB_RW.py %d",run));
-				}
-				else //MC
-				{
-					cout<<"****Applying GB weights on reco MC"<<endl;
-					gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-					gSystem->Exec(Form("python ApplyGBWeights.py %d %d 0",run,mcType));
-					cout<<"****Applying GB weights on generated MC"<<endl;
-					gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-					gSystem->Exec(Form("python ApplyGBWeights.py %d %d 1",run,mcType));
 				}
 			}
 			else if(block == 2)
