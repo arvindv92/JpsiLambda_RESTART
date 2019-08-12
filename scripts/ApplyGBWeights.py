@@ -21,9 +21,12 @@ if isGen:
 else:
     print 'Reconstructed\n'
 
-columns = ['Lb_P', 'Lb_PT', 'Jpsi_P', 'Jpsi_PT', 'L_P',
-           'L_PT', 'p_P', 'p_PT', 'pi_P', 'pi_PT', 'p_ProbNNghost', 'pi_ProbNNghost']
-
+if not isGen:
+    columns = ['Lb_P', 'Lb_PT', 'Jpsi_P', 'Jpsi_PT', 'L_P',
+               'L_PT', 'p_P', 'p_PT', 'pi_P', 'pi_PT', 'p_ProbNNghost', 'pi_ProbNNghost']
+else:
+    columns = ['Lb_P', 'Lb_PT', 'Jpsi_P', 'Jpsi_PT', 'L_P',
+               'L_PT', 'p_P', 'p_PT', 'pi_P', 'pi_PT']
 # columns = ['Lb_P', 'Lb_PT', 'Jpsi_P', 'Jpsi_PT',
 #            'L_P', 'L_PT', 'p_P', 'p_PT', 'pi_P', 'pi_PT']
 
@@ -68,8 +71,12 @@ else:
         fileName = part + '_cut_LL.root'
 filePath = filePath.format(run)
 
+if not isGen:
+    wtsFileName = 'gb_wts.pkl'
+else:
+    wtsFileName = 'gb_wts_gen.pkl'
 # Get the reweighter
-with open(mcPath + 'gb_wts.pkl') as f:
+with open(mcPath + wtsFileName) as f:
     reweighter = pickle.load(f)
 
     # Get the input file
