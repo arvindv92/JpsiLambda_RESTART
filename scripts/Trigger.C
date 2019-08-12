@@ -157,7 +157,9 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 		TChain *h2 = new TChain("GetIntegratedLuminosity/LumiTuple");
 
 		//CollateFiles will cd to the massdump folder and then back to JpsiLambda_RESTART
-		CollateFiles(run, year, isData, mcType, &h1, &h2, testing, loose, logFlag);
+		// CollateFiles(run, year, isData, mcType, &h1, &h2, testing, loose, logFlag);
+		gSystem->Exec(".L CollateFiles.C");
+		gSystem->Exec(Form("CollateFiles(%d,%d,%d,%d,%p,%p,%d,%d,%d)",run, year, isData, mcType, (void *)&h1, (void *)&h2, testing, loose, logFlag));
 
 		fileOut = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_%d.root",
 		                         run,year),"RECREATE");
@@ -186,7 +188,9 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 
 		if(collateFlag)
 		{
-			CollateFiles(run, year, isData, mcType);
+			// CollateFiles(run, year, isData, mcType);
+			gSystem->Exec(".L CollateFiles.C");
+			gSystem->Exec(Form("CollateFiles(%d,%d,%d,%d)",run, year, isData, mcType));
 		}
 		fileIn     = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",
 		                              folder,run,part));
