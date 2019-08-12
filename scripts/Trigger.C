@@ -186,12 +186,12 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 	{
 		genFile.open(Form("logs/mc/JpsiLambda/%s/run%d/gen_log.txt",folder,run));
 
-		if(collateFlag)
-		{
-			// CollateFiles(run, year, isData, mcType);
-			gSystem->Exec(".L CollateFiles.C");
-			gSystem->Exec(Form("CollateFiles(%d,%d,%d,%d)",run, year, isData, mcType));
-		}
+		// if(collateFlag)
+		// {
+		//      // CollateFiles(run, year, isData, mcType);
+		//      gSystem->Exec(".L CollateFiles.C");
+		//      gSystem->Exec(Form("CollateFiles(%d,%d,%d,%d)",run, year, isData, mcType));
+		// }
 		fileIn     = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",
 		                              folder,run,part));
 		treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
