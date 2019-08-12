@@ -165,12 +165,16 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 				{
 					cout<<"****Collating MC PIDGEN files"<<endl;
 					gSystem->Exec(Form("root -l -b -q \'CollateFiles.C(%d,%d,%d,%d)\'",run, year, isData, mcType));
-					cout<<"****Applying GB weights on reco MC"<<endl;
-					gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-					gSystem->Exec(Form("python ApplyGBWeights.py %d %d 0",run,mcType));
-					cout<<"****Applying GB weights on generated MC"<<endl;
-					gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-					gSystem->Exec(Form("python ApplyGBWeights.py %d %d 1",run,mcType));
+
+					if(mcType!=10)
+					{
+						cout<<"****Applying GB weights on reco MC"<<endl;
+						gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
+						gSystem->Exec(Form("python ApplyGBWeights.py %d %d 0",run,mcType));
+						cout<<"****Applying GB weights on generated MC"<<endl;
+						gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
+						gSystem->Exec(Form("python ApplyGBWeights.py %d %d 1",run,mcType));
+					}
 				}
 				//Trigger Cut
 				cout<<"***Trigger***"<<endl;
