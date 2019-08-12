@@ -155,7 +155,7 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 	for(mcType = 1; mcType <=len; mcType++)
 	{
 		if(isData) mcType = 0;
-		if(mcType != 4 && mcType != 5 && mcType != 9)
+		if(mcType != 4 && mcType != 5 && mcType != 9 && mcType !=11)
 		{
 			cout<<"$$$$$$$$$$$ Processing MC Type "<<mcType<< " $$$$$$$$$$$$$$"<<endl;
 			cout<<"$$$$$$$$$$$ Processing Run "<<run<<" $$$$$$$$$$$"<<endl;
