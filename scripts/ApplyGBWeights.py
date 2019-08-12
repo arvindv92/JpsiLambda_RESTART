@@ -20,8 +20,12 @@ if isGen:
     print 'Generator\n'
 else:
     print 'Reconstructed\n'
-columns = ['Lb_P', 'Lb_PT', 'Jpsi_P', 'Jpsi_PT',
-           'L_P', 'L_PT', 'p_P', 'p_PT', 'pi_P', 'pi_PT']
+
+columns = ['Lb_P', 'Lb_PT', 'Jpsi_P', 'Jpsi_PT', 'L_P',
+           'L_PT', 'p_P', 'p_PT', 'pi_P', 'pi_PT', 'p_ProbNNghost', 'pi_ProbNNghost']
+
+# columns = ['Lb_P', 'Lb_PT', 'Jpsi_P', 'Jpsi_PT',
+#            'L_P', 'L_PT', 'p_P', 'p_PT', 'pi_P', 'pi_PT']
 
 
 # mcPath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run{}/'.format(run)
