@@ -83,7 +83,7 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 
 	const char* isoVersion = ""; // which version of isolation BDT? changes input variables used in isolation. v0,1 supported.
 
-	TString FOM = "Punzi";//Sig for S/sqrt(S+B), Punzi for Punzi FOM with a = 3
+	const char* FOM = "Punzi";//Sig for S/sqrt(S+B), Punzi for Punzi FOM with a = 3
 
 	std::vector <Double_t> bdtCuts;
 	Int_t len = 11;
@@ -339,18 +339,21 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 
 				}
 			}
+			else if(block == 5)
+			{
+				if(isData)
+				{
+					// Optimize final BDT cut based on some FoM
+					cout<<"***OptimizeFinalBDT run "<<run<<" isoVersion "<<
+					        isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
+					        finalBDTconf<<" FOM "<<FOM<<" ***"<<endl;
+					gSystem->Exec(Form("root -l -b -q \'OptimizeFinalBDT.C(%d,\"%s\",%d,%d,%d,%d,\"%s\",\"sigma\")\'",run, isoVersion, isoConf,finalBDTconf, isoFlag, logFlag, FOM));
+					// bdtCuts = OptimizeFinalBDT(run, isoVersion, isoConf,finalBDTconf, isoFlag, logFlag, FOM,"sigma");
+				}
+			}
 		}
 		if(isData) mcType = 1;
 	} //end loop on mcTypes
-
-	// Optimize final BDT cut based on some FoM
-	// cout<<"***OptimizeFinalBDT run "<<run<<" isoVersion "<<
-	//         isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
-	//         finalBDTconf<<" FOM "<<FOM<<" ***"<<endl;
-	//
-	// bdtCuts = OptimizeFinalBDT(run, isoVersion, isoConf,
-	//                            finalBDTconf, isoFlag, logFlag, FOM,
-	//                            "sigma");
 
 	// bdtCut = bdtCuts[0];
 	// bdtCut_ZeroTracks = bdtCuts[1];
