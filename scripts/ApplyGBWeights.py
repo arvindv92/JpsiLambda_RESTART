@@ -42,6 +42,12 @@ elif mcOpt == 2:
 elif mcOpt == 3:
     filePath = '../rootFiles/mcFiles/JpsiLambda/JpsiXi/run{}/'
     part = 'jpsixi'
+elif mcOpt == 4:
+    filePath = '../rootFiles/mcFiles/JpsiLambda/Bu_JpsiX/run{}/'
+    part = 'bu_jpsix'
+elif mcOpt == 5:
+    filePath = '../rootFiles/mcFiles/JpsiLambda/Bd_JpsiX/run{}/'
+    part = 'bd_jpsix'
 elif mcOpt == 6:
     filePath = '../rootFiles/mcFiles/JpsiLambda/Lst1405/run{}/'
     part = 'lst1405'
@@ -55,11 +61,15 @@ elif mcOpt == 9:
     filePath = '../rootFiles/mcFiles/JpsiLambda/chiC1/run{}/'
     part = 'chic1'
 elif mcOpt == 10:
-    filePath = '../rootFiles/mcFiles/JpsiXi/run{}/'
-    part = 'jpsixi'
+    filePath = '../rootFiles/mcFiles/JpsiLambda/JpsiKs/run{}/'
+    part = 'jpsiks'
 elif mcOpt == 11:
     filePath = '../rootFiles/mcFiles/JpsiLambda/Xib0/run{}/'
     part = 'xib0'
+elif mcOpt == 12:
+    filePath = '../rootFiles/mcFiles/JpsiXi/run{}/'
+    part = 'jpsixi'
+
 if isGen:
     fileName = part + '.root'
     treeName = 'MCTuple/MCDecayTree'
