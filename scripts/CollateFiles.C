@@ -152,50 +152,82 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
 		}
 		cout<<"WD = "<<gSystem->pwd()<<endl;
 		const char *path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda";
-		if(mcType == 1)//Jpsi Lambda MC
+		if(mcType!=2)
 		{
 			if(run == 1)
 			{
-				gSystem->Exec(Form("hadd -f %s/JpsiLambda/run1/jpsilambda.root JpsiLambda/Pythia8/2011*/*/*.root JpsiLambda/Pythia8/2012*/*/*.root",path));
+				// gSystem->Exec(Form("hadd -f %s/JpsiLambda/run1/jpsilambda.root JpsiLambda/2011*/*/*.root JpsiLambda/2012*/*/*.root",path));
+				gSystem->Exec(Form("hadd -f %s/%s/run1/%s_pidgen.root %s/2011*_pidgen.root %s/2012*_pidgen.root",path,folder,part,folder,folder));
 			}
 			else if(run == 2)
 			{
-				gSystem->Exec(Form("hadd -f %s/JpsiLambda/run2/jpsilambda.root JpsiLambda/Pythia8/2015*/*/*.root JpsiLambda/Pythia8/2016*/*/*.root",path));
+				// gSystem->Exec(Form("hadd -f %s/JpsiLambda/run2/jpsilambda.root JpsiLambda/2015*/*/*.root JpsiLambda/2016*/*/*.root",path));
+				gSystem->Exec(Form("hadd -f %s/%s/run2/%s_pidgen.root %s/2015*_pidgen.root %s/2016*_pidgen.root",path,folder,part,folder,folder));
 			}
 		}
-		else if(mcType == 2)//Jpsi Sigma MC
+		else
 		{
 			if(run == 1)
 			{
-				gSystem->Exec(Form("hadd -f %s/JpsiSigma/run1/jpsisigma.root JpsiSigma/Pythia8/2012*/*/*.root",path));
+				// gSystem->Exec(Form("hadd -f %s/JpsiLambda/run1/jpsilambda.root JpsiLambda/2011*/*/*.root JpsiLambda/2012*/*/*.root",path));
+				gSystem->Exec(Form("hadd -f %s/%s/run1/%s_pidgen.root %s/2012*_pidgen.root",path,folder,part,folder));
 			}
 			else if(run == 2)
 			{
-				gSystem->Exec(Form("hadd -f %s/JpsiSigma/run2/jpsisigma.root JpsiSigma/Pythia8/2015*/*/*.root JpsiSigma/Pythia8/2016*/*/*.root",path));
+				// gSystem->Exec(Form("hadd -f %s/JpsiLambda/run2/jpsilambda.root JpsiLambda/2015*/*/*.root JpsiLambda/2016*/*/*.root",path));
+				gSystem->Exec(Form("hadd -f %s/%s/run2/%s_pidgen.root %s/2015*_pidgen.root %s/2016*_pidgen.root",path,folder,part,folder,folder));
 			}
 		}
-		else if(mcType == 3)//Jpsi Xi MC
-		{
-			if(run == 1)
-			{
-				gSystem->Exec(Form("hadd -f %s/JpsiXi/run1/jpsixi.root JpsiXi/Pythia8/2011*/*/*.root JpsiXi/Pythia8/2012*/*/*.root",path));
-			}
-			else if(run == 2)
-			{
-				gSystem->Exec(Form("hadd -f %s/JpsiXi/run2/jpsixi.root JpsiXi/Pythia8/2015*/*/*.root JpsiXi/Pythia8/2016*/*/*.root",path));
-			}
-		}
-		else if(mcType == 6||mcType==7||mcType==8||mcType==9||mcType==11) //Lambda* and chiC1 MC
-		{
-			if(run == 1)
-			{
-				gSystem->Exec(Form("hadd -f %s/%s/run1/%s.root %s/2011*/*/*.root %s/2012*/*/*.root",path,folder,part,folder,folder));
-			}
-			else if(run == 2)
-			{
-				gSystem->Exec(Form("hadd -f %s/%s/run2/%s.root %s/2015*/*/*.root %s/2016*/*/*.root",path,folder,part,folder,folder));
-			}
-		}
+		// if(mcType == 1)//Jpsi Lambda MC
+		// {
+		//      if(run == 1)
+		//      {
+		//              // gSystem->Exec(Form("hadd -f %s/JpsiLambda/run1/jpsilambda.root JpsiLambda/2011*/*/*.root JpsiLambda/2012*/*/*.root",path));
+		//              gSystem->Exec(Form("hadd -f %s/JpsiLambda/run1/jpsilambda_pidgen.root JpsiLambda/2011*_pidgen.root JpsiLambda/2012*_pidgen.root",path));
+		//      }
+		//      else if(run == 2)
+		//      {
+		//              // gSystem->Exec(Form("hadd -f %s/JpsiLambda/run2/jpsilambda.root JpsiLambda/2015*/*/*.root JpsiLambda/2016*/*/*.root",path));
+		//              gSystem->Exec(Form("hadd -f %s/JpsiLambda/run2/jpsilambda_pidgen.root JpsiLambda/2015*_pidgen.root JpsiLambda/2016*_pidgen.root",path));
+		//      }
+		// }
+		// else if(mcType == 2)//Jpsi Sigma MC
+		// {
+		//      if(run == 1)
+		//      {
+		//              // gSystem->Exec(Form("hadd -f %s/JpsiSigma/run1/jpsisigma.root JpsiSigma/2012*/*/*.root",path));
+		//              gSystem->Exec(Form("hadd -f %s/JpsiSigma/run1/jpsisigma_pidgen.root JpsiSigma/2012*_pidgen.root",path));
+		//      }
+		//      else if(run == 2)
+		//      {
+		//              // gSystem->Exec(Form("hadd -f %s/JpsiSigma/run2/jpsisigma.root JpsiSigma/2015*/*/*.root JpsiSigma/2016*/*/*.root",path));
+		//              gSystem->Exec(Form("hadd -f %s/JpsiSigma/run2/jpsisigma_pidgen.root JpsiSigma/2015*_pidgen.root JpsiSigma/2016*_pidgen.root",path));
+		//      }
+		// }
+		// else if(mcType == 3)//Jpsi Xi MC
+		// {
+		//      if(run == 1)
+		//      {
+		//              // gSystem->Exec(Form("hadd -f %s/JpsiXi/run1/jpsixi.root JpsiXi/2011*/*/*.root JpsiXi/2012*/*/*.root",path));
+		//              gSystem->Exec(Form("hadd -f %s/JpsiXi/run1/jpsixi_pidgen.root JpsiXi/2011*_pidgen.root JpsiXi/2012*_pidgen.root",path));
+		//      }
+		//      else if(run == 2)
+		//      {
+		//              // gSystem->Exec(Form("hadd -f %s/JpsiXi/run2/jpsixi.root JpsiXi/2015*/*/*.root JpsiXi/2016*/*/*.root",path));
+		//              gSystem->Exec(Form("hadd -f %s/JpsiXi/run2/jpsixi_pidgen.root JpsiXi/2015*_pidgen.root JpsiXi/2016*_pidgen.root",path));
+		//      }
+		// }
+		// else if(mcType == 6||mcType==7||mcType==8||mcType==9||mcType==11) //Lambda* and chiC1 MC
+		// {
+		//      if(run == 1)
+		//      {
+		//              gSystem->Exec(Form("hadd -f %s/%s/run1/%s.root %s/2011*/*/*.root %s/2012*/*/*.root",path,folder,part,folder,folder));
+		//      }
+		//      else if(run == 2)
+		//      {
+		//              gSystem->Exec(Form("hadd -f %s/%s/run2/%s.root %s/2015*/*/*.root %s/2016*/*/*.root",path,folder,part,folder,folder));
+		//      }
+		// }
 	}//end MC loop
 	cout<<"DONE COLLATING"<<endl;
 
