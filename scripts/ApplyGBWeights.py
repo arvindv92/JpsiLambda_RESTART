@@ -75,7 +75,7 @@ if isGen:
     treeName = 'MCTuple/MCDecayTree'
 else:
     treeName = 'MyTuple'
-    if(mcOpt != 10):
+    if(mcOpt != 12):
         fileName = part + '_pidgen.root'
     else:
         fileName = part + '_cut_LL.root'
