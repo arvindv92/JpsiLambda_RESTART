@@ -187,18 +187,18 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 			cout<<"****************Optimizing for nonZeroTracks****************"<<endl;
 			mcTree = treeIn_mc;
 			if(run == 1)
-				siginit = 7385; //6569;
+				siginit = 6936; //7385; //6569;
 			if(run == 2)
-				siginit = 25081; //24741;
+				siginit = 24899; //25081; //24741;
 		}
 		else if(ctr == 1)
 		{
 			cout<<"****************Optimizing for ZeroTracks****************"<<endl;
 			mcTree = treeIn_zeroTracks_mc;
 			if(run == 1)
-				siginit = 439; //407;
+				siginit = 447; //439; //407;
 			if(run == 2)
-				siginit = 1169; //1195;
+				siginit = 1151; //1169; //1195;
 		}
 		mcTree->SetBranchAddress("GB_WT",&gbwt);
 		mcTree->SetBranchAddress("wt_tau",&tauwt);
@@ -254,7 +254,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 			eff_sig_wt_TM = sumwt_num/sumwt_den;
 
 			sig = siginit*eff_sig_wt_TM;
-			bkg = myTree->GetEntries(Form("Lb_DTF_M_JpsiLConstr > 5700 && BDT%d > %f",bdtConf,BDT))*width/300;//assumes flat background
+			bkg = myTree->GetEntries(Form("!(Lb_DTF_M_JpsiLConstr>5770 && Lb_DTF_M_JpsiLConstr<5810) && Lb_DTF_M_JpsiLConstr > 5700 && BDT%d > %f",bdtConf,BDT))*width/300;//assumes flat background
 
 			cout<<"SIG = "<<sig<<" BKG = "<<bkg;
 			eff_bkg = (Double_t) bkg/bkginit;
@@ -265,7 +265,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 			}
 			else if(TString(part) == "lambda" && TString(FOM) == "Sig")
 			{
-				N = myTree->GetEntries(Form("Lb_DTF_M_JpsiLConstr > 5606 && Lb_DTF_M_JpsiLConstr < 5634&& BDT%d > %f",bdtConf,BDT));
+				N = myTree->GetEntries(Form("Lb_DTF_M_JpsiLConstr > 5606 && Lb_DTF_M_JpsiLConstr < 5634 && BDT%d > %f",bdtConf,BDT));
 			}
 			if(TString(FOM) == "Sig")
 			{
