@@ -64,7 +64,7 @@ for fName in files:
     print ('finalBDTconf', bdtConf, 'isoConf', isoConf,
            'isoVersion', isoVersion, 'FOM_nonZero', myFOM_nonZero,
            'eff_nonZero', mySigEff_nonZero, 'eff_Zero', mySigEff_Zero)
-    if mySigEff_nonZero > maxSigEff_nonZero:
+    if myFOM_nonZero > maxFOM_nonZero:
         maxFOM_nonZero = myFOM_nonZero
         bdtConf_best_nonZero = bdtConf
         isoConf_best_nonZero = isoConf
@@ -73,7 +73,7 @@ for fName in files:
         bdtCut_best_nonZero = bdtCut_nonZero
         maxSigEff_nonZero = mySigEff_nonZero
         maxBkgEff_nonZero = myBkgEff_nonZero
-    if mySigEff_Zero > maxSigEff_Zero:
+    if myFOM_Zero > maxFOM_Zero:
         maxFOM_Zero = myFOM_Zero
         bdtConf_best_Zero = bdtConf
         # newFlag_best_Zero = newFlag
