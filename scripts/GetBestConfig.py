@@ -5,7 +5,7 @@ parser = argparse.ArgumentParser(description='Get Best Config')
 
 parser.add_argument('-run', '--RUN', type=int, nargs=1,
                     help='Which run do you want best config for?')
-parser.add_argument('-run', '--ISO', type=bool, nargs=1,
+parser.add_argument('-iso', '--ISO', type=bool, nargs=1,
                     help='IsoFlag?')
 
 args = parser.parse_args()
