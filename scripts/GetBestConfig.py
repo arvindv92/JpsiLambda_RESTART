@@ -100,14 +100,12 @@ for fName in files:
             bdtConf_best_nonZero = bdtConf
             isoConf_best_nonZero = isoConf
             isoVersion_best_nonZero = isoVersion
-            # newFlag_best_nonZero = newFlag
             bdtCut_best_nonZero = bdtCut_nonZero
             maxSigEff_nonZero = mySigEff_nonZero
             maxBkgEff_nonZero = myBkgEff_nonZero
         if myFOM_Zero > maxFOM_Zero:
             maxFOM_Zero = myFOM_Zero
             bdtConf_best_Zero = bdtConf
-            # newFlag_best_Zero = newFlag
             bdtCut_best_Zero = bdtCut_Zero
             maxSigEff_Zero = mySigEff_Zero
             maxBkgEff_Zero = myBkgEff_Zero
@@ -117,9 +115,6 @@ for fName in files:
         if myFOM_noIso > maxFOM_noIso:
             maxFOM_noIso = myFOM_noIso
             bdtConf_best_noIso = bdtConf
-            isoConf_best_noIso = isoConf
-            isoVersion_best_noIso = isoVersion
-            # newFlag_best_noIso = newFlag
             bdtCut_best_noIso = bdtCut_noIso
             maxSigEff_noIso = mySigEff_noIso
             maxBkgEff_noIso = myBkgEff_noIso
