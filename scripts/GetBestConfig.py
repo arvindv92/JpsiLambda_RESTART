@@ -5,11 +5,14 @@ parser = argparse.ArgumentParser(description='Get Best Config')
 
 parser.add_argument('-run', '--RUN', type=int, nargs=1,
                     help='Which run do you want best config for?')
+parser.add_argument('-run', '--ISO', type=bool, nargs=1,
+                    help='IsoFlag?')
 
 args = parser.parse_args()
 run = args.RUN
+isoFlag = args.ISO
 
-isoFlag = True
+# isoFlag = True
 files = glob.glob("../logs/data/JpsiLambda/run{}/OptimizeFinalBDT*_Punzi_Sigma.txt".format(run))
 ctr = 0
 myFOM_nonZero = 0.0
