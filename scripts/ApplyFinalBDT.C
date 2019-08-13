@@ -112,7 +112,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	else if(!isData && isoFlag && logFlag)
 	{
 		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/ApplyFinalBDT%d_%s_iso%d_%s.txt",
-		                             folder,run,bdtConf,type,isoConf,isoVersion),"w");
+		                             folder,run,bdtConf,type,isoConf,isoVersion),"a");
 	}
 	else if(isData && !isoFlag && logFlag)
 	{
