@@ -100,6 +100,12 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 	Int_t bkgcat = 0;
 	Int_t bkginit = 0;
 	Double_t sigTot = 0., bkgTot = 0., fomTot = 0.;
+
+	TH1D *hPass = new TH1D("hPass","pass",1,0,1);
+	TH1D *hAll = new TH1D("hAll","all",1,0,1);
+
+	TGraphAsymmErrors *gr = new TGraphAsymmErrors(1);
+
 	rootFolder = Form("rootFiles/dataFiles/JpsiLambda/run%d",run);
 
 	if(isoFlag)//Using isolation
@@ -328,13 +334,9 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 			eff_sig       = mcTree->GetEntries(Form("BDT%d > %f",bdtConf,BDT))*1.0/denom;
 			eff_sig_wt_TM = sumwt_num/sumwt_den;
 
-			TH1D *hPass = new TH1D("hPass","pass",1,0,1);
-			TH1D *hAll = new TH1D("hAll","all",1,0,1);
-
 			hPass->SetBinContent(1,sumwt_num);
 			hAll->SetBinContent(1,sumwt_den);
 
-			TGraphAsymmErrors *gr = new TGraphAsymmErrors(1);
 			gr->BayesDivide(hPass,hAll);
 
 			err_eff = gr->GetErrorY(0); //errors are actually asymmetric. approximating with sym. error for now.
