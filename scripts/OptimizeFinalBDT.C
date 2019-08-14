@@ -303,7 +303,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 			eff_sig_wt_TM = sumwt_num/sumwt_den;
 
 			sig = siginit*eff_sig_wt_TM;
-			bkg = myTree->GetEntries(Form("!(Lb_DTF_M_JpsiLConstr>5770 && Lb_DTF_M_JpsiLConstr<5810) && Lb_DTF_M_JpsiLConstr > 5700 && BDT%d > %f",bdtConf,BDT))*width/300;        //assumes flat background
+			bkg = myTree->GetEntries(Form("!(Lb_DTF_M_JpsiLConstr>5770 && Lb_DTF_M_JpsiLConstr<5810) && Lb_DTF_M_JpsiLConstr > 5700 && BDT%d > %f",bdtConf,BDT))*width/260;        //assumes flat background
 
 			cout<<"SIG = "<<sig<<" BKG = "<<bkg;
 			eff_bkg = (Double_t) bkg/bkginit;
