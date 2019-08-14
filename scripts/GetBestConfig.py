@@ -76,21 +76,21 @@ for fName in files:
                 if 'MAXIMUM FOM' in line:
                     if ctr == 0:
                         myFOM_nonZero = float(line.split()[3])
-                        bdtCut_nonZero = float(line.split()[7])
-                        mySigEff_nonZero = float(line.split()[14])  # this gives weighted signal efficiency
-                        myBkgEff_nonZero = float(line.split()[18])
+                        bdtCut_nonZero = float(line.split()[9])
+                        mySigEff_nonZero = float(line.split()[16])  # this gives weighted signal efficiency
+                        myBkgEff_nonZero = float(line.split()[20])
                     if ctr == 1:
                         myFOM_Zero = float(line.split()[3])
-                        bdtCut_Zero = float(line.split()[7])
-                        mySigEff_Zero = float(line.split()[14])  # this gives weighted signal efficiency
-                        myBkgEff_Zero = float(line.split()[18])
+                        bdtCut_Zero = float(line.split()[9])
+                        mySigEff_Zero = float(line.split()[16])  # this gives weighted signal efficiency
+                        myBkgEff_Zero = float(line.split()[20])
                     ctr = ctr + 1
             else:
                 if 'MAXIMUM FOM' in line:
                     myFOM_noIso = float(line.split()[3])
-                    bdtCut_noIso = float(line.split()[7])
-                    mySigEff_noIso = float(line.split()[14])  # this gives weighted signal efficiency
-                    myBkgEff_noIso = float(line.split()[18])
+                    bdtCut_noIso = float(line.split()[9])
+                    mySigEff_noIso = float(line.split()[16])  # this gives weighted signal efficiency
+                    myBkgEff_noIso = float(line.split()[20])
     if isoFlag:
         print ('finalBDTconf', bdtConf, 'isoConf', isoConf,
                'isoVersion', isoVersion, 'FOM_nonZero', myFOM_nonZero,
