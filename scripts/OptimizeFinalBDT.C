@@ -233,7 +233,6 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 		mcBDT = 0., sumwt_num = 0., sumwt_den = 0.;
 		bkgcat = 0;
 		bkginit = 0;
-		sigTot = 0., bkgTot = 0.;
 
 		if(!isoFlag)
 		{
@@ -342,8 +341,10 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 			err_eff = gr->GetErrorY(0); //errors are actually asymmetric. approximating with sym. error for now.
 
 			sig = siginit*eff_sig_wt_TM;
-			err_sig = sig*sqrt((double) (pow(err_siginit/siginit,2) + pow(err_eff/eff_sig_wt_TM,2)));
-
+			if(eff_sig_wt_TM > 0)
+				err_sig = sig*sqrt((double) (pow(err_siginit/siginit,2) + pow(err_eff/eff_sig_wt_TM,2)));
+			else
+				err_sig = 0.;
 			Int_t nBkg = myTree->GetEntries(Form("!(Lb_DTF_M_JpsiLConstr>5770 && Lb_DTF_M_JpsiLConstr<5810) && Lb_DTF_M_JpsiLConstr > 5700 && BDT%d > %f",bdtConf,BDT));
 			bkg = nBkg*width/260;        //assumes flat background
 			err_bkg = sqrt((double)nBkg)*width/260;
@@ -374,7 +375,13 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 			if(TString(FOM) == "Punzi")
 			{
 				myFOM = (Double_t)sig/(sqrt(bkg) + 1.5);        //a  = 3 chosen
-				err_FOM = myFOM * sqrt((double) (pow(err_sig/sig,2) + pow((err_bkg/(2*sqrt(bkg)*(1.5 + sqrt(bkg)))),2)));
+
+				if(sig > 0 && bkg > 0)
+					err_FOM = myFOM * sqrt( (double) ( pow(err_sig/sig,2) + pow( (err_bkg/(2*sqrt(bkg)*(1.5 + sqrt(bkg)))),2 ) )  );
+				else if(!(bkg > 0) && sig > 0)
+					err_FOM = myFOM * (err_sig/sig);
+				else
+					err_FOM = 0.;
 			}
 
 			if(ctr == 0 && isoFlag)
