@@ -100,6 +100,9 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 	Int_t bkgcat = 0;
 	Int_t bkginit = 0;
 	Double_t sigTot = 0., bkgTot = 0., fomTot = 0.;
+	Double_t err_sigTot_sq = 0., err_bkgTot_sq = 0.;
+	Double_t err_sigTot = 0., err_bkgTot = 0., err_fomTot = 0.;
+	Double_t sig_max = 0., err_sig_max = 0., bkg_max = 0., err_bkg_max = 0;
 
 	TH1D *hPass = new TH1D("hPass","pass",1,0,1);
 	TH1D *hAll = new TH1D("hAll","all",1,0,1);
@@ -408,6 +411,11 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 				eff_sig_wt_TM_max = eff_sig_wt_TM;
 				eff_bkg_max       = eff_bkg;
 				err_FOM_max       = err_FOM;
+
+				sig_max = sig;
+				bkg_max = bkg;
+				err_sig_max = err_sig;
+				err_bkg_max = err_bkg;
 			}
 			cout<<"For BDT = "<<BDT<<" FOM = "<<myFOM<<" +/- "<<err_FOM<<" sig_eff = "
 			    <<eff_sig_TM*100<<"% sig_eff_wt = "<<eff_sig_wt_TM*100<<"% bkg_eff = "<<eff_bkg*100<<"%"<<endl;
@@ -418,8 +426,11 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 
 		if(isoFlag)
 		{
-			sigTot += eff_sig_wt_TM_max*siginit;
-			bkgTot += eff_bkg_max*bkginit;
+			sigTot += sig_max;//eff_sig_wt_TM_max*siginit;
+			bkgTot += bkg_max;//eff_bkg_max*bkginit;
+
+			err_sigTot_sq += err_sig_max*err_sig_max;
+			err_bkgTot_sq += err_bkg_max*err_bkg_max;
 		}
 		ctr++;
 	}
@@ -434,7 +445,17 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 	if(isoFlag)
 	{
 		fomTot = sigTot/(sqrt((double)bkgTot)+1.5);
-		cout<<"$$$$FOM TOTAL = "<<fomTot<<endl;
+		err_sigTot = sqrt(err_sigTot_sq);
+		err_bkgTot = sqrt(err_bkgTot_sq);
+
+		if(sigTot > 0 && bkgTot > 0)
+			err_fomTot = fomTot * sqrt( (double) ( pow(err_sigTot/sigTot,2) + pow( (err_bkgTot/(2*sqrt(bkgTot)*(1.5 + sqrt(bkgTot)))),2 ) )  );
+		else if(!(bkgTot > 0) && sigTot > 0)
+			err_fomTot = fomTot * (err_sigTot/sigTot);
+		else
+			err_fomTot = 0.;
+
+		cout<<"$$$$FOM TOTAL = "<<fomTot<<" +/- "<<err_fomTot<<endl;
 
 		TCanvas *c1 = new TCanvas();
 		TGraphErrors *gr_nonZero = new TGraphErrors(99,bdtArray_nonZero,fomArray_nonZero,bdtErrArray,fomErrArray_nonZero);
