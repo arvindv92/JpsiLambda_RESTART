@@ -12,6 +12,8 @@
 #include "TGraph.h"
 #include "TCanvas.h"
 #include "TLatex.h"
+#include "TGraphAsymmErrors.h"
+#include "TGraphErrors.h"
 #include <iostream>
 #include <vector>
 using namespace std;
