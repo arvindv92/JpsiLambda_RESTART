@@ -71,13 +71,35 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 
 	Float_t bdtArray_nonZero[99];
 	Float_t fomArray_nonZero[99];
+	Float_t fomErrArray_nonZero[99];
 
 	Float_t bdtArray_Zero[99];
 	Float_t fomArray_Zero[99];
+	Float_t fomErrArray_Zero[99];
 
 	Float_t bdtArray_noIso[99];
 	Float_t fomArray_noIso[99];
+	Float_t fomErrArray_noIso[99];
 
+	Float_t bdtErrArray[99] = {0.};
+
+	Double_t BDT           = 0., BDT_max           = 0.;
+	Double_t myFOM         = 0., myFOM_max         = 0.;
+	Double_t eff_sig_wt    = 0., eff_sig_wt_max    = 0.;
+	Double_t eff_sig_wt_TM = 0., eff_sig_wt_TM_max = 0.;
+	Double_t eff_sig       = 0., eff_sig_max       = 0.;
+	Double_t eff_sig_TM    = 0., eff_sig_TM_max    = 0.;
+	Double_t eff_bkg       = 0., eff_bkg_max       = 0.;
+	Double_t sig           = 0., bkg               = 0., siginit = 0.;
+	Double_t err_sig = 0., err_bkg = 0., err_FOM = 0.;
+	Double_t err_siginit = 0., err_bkginit = 0., err_eff = 0.;
+	Double_t err_FOM_max = 0.;
+	Double_t gbwt = 0.;
+	Float_t tauwt = 0.;
+	Double_t mcBDT = 0., sumwt_num = 0., sumwt_den = 0.;
+	Int_t bkgcat = 0;
+	Int_t bkginit = 0;
+	Double_t sigTot = 0., bkgTot = 0., fomTot = 0.;
 	rootFolder = Form("rootFiles/dataFiles/JpsiLambda/run%d",run);
 
 	if(isoFlag)//Using isolation
@@ -190,20 +212,6 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 	TIterator *iter = (TIterator*)list->MakeIterator();
 	TTree *mcTree = nullptr;
 
-	Double_t BDT           = 0., BDT_max           = 0.;
-	Double_t myFOM         = 0., myFOM_max         = 0.;
-	Double_t eff_sig_wt    = 0., eff_sig_wt_max    = 0.;
-	Double_t eff_sig_wt_TM = 0., eff_sig_wt_TM_max = 0.;
-	Double_t eff_sig       = 0., eff_sig_max       = 0.;
-	Double_t eff_sig_TM    = 0., eff_sig_TM_max    = 0.;
-	Double_t eff_bkg       = 0., eff_bkg_max       = 0.;
-	Double_t sig           = 0., bkg               = 0., siginit = 0.;
-	Double_t gbwt = 0.;
-	Float_t tauwt = 0.;
-	Double_t mcBDT = 0., sumwt_num = 0., sumwt_den = 0.;
-	Int_t bkgcat = 0;
-	Int_t bkginit = 0;
-
 	while((myTree = (TTree*)iter->Next()))
 	{
 		BDT           = 0., BDT_max           = 0.;
@@ -219,15 +227,20 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 		mcBDT = 0., sumwt_num = 0., sumwt_den = 0.;
 		bkgcat = 0;
 		bkginit = 0;
+		sigTot = 0., bkgTot = 0.;
 
 		if(!isoFlag)
 		{
 			cout<<"****************Optimizing for noIso****************"<<endl;
 			mcTree = treeIn_mc;
 			if(run == 1)
-				siginit = 7383;
-			if(run == 2)
+			{
+				siginit = 7386;
+				err_siginit = 153;
+			}
+			else if(run == 2)
 				siginit = 26050;
+			err_siginit = 248;
 		}
 
 		if(ctr == 0 && isoFlag)
@@ -235,18 +248,30 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 			cout<<"****************Optimizing for nonZeroTracks****************"<<endl;
 			mcTree = treeIn_mc;
 			if(run == 1)
-				siginit = 6936;         //7385; //6569;
-			if(run == 2)
-				siginit = 24899;         //25081; //24741;
+			{
+				siginit = 6939;//7385; //6569;
+				err_siginit = 151;
+			}
+			else if(run == 2)
+			{
+				siginit = 24898; //25081; //24741;
+				err_siginit = 245;
+			}
 		}
 		else if(ctr == 1 && isoFlag)
 		{
 			cout<<"****************Optimizing for ZeroTracks****************"<<endl;
 			mcTree = treeIn_zeroTracks_mc;
 			if(run == 1)
-				siginit = 447;         //439; //407;
-			if(run == 2)
-				siginit = 1151;         //1169; //1195;
+			{
+				siginit = 447;//439; //407;
+				err_siginit = 26;
+			}
+			else if(run == 2)
+			{
+				siginit = 1151; //1169; //1195;
+				err_siginit = 39;
+			}
 		}
 		mcTree->SetBranchAddress("GB_WT",&gbwt);
 		mcTree->SetBranchAddress("wt_tau",&tauwt);
@@ -260,12 +285,13 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 
 		myTree->Draw(Form("BDT%d>>hsig0(100,0.0,1.0)",bdtConf),"","goff");
 
-		hsig = (TH1D*)gDirectory->Get("hsig0");         //play around with this
+		hsig = (TH1D*)gDirectory->Get("hsig0");
 
-		bkginit = myTree->GetEntries("Lb_DTF_M_JpsiLConstr > 5700")*width/300;        //scaling background to width of signal region
+		bkginit = myTree->GetEntries("!(Lb_DTF_M_JpsiLConstr>5770 && Lb_DTF_M_JpsiLConstr<5810) && Lb_DTF_M_JpsiLConstr > 5700")*width/260;        //scaling background to width of signal region
+		err_bkginit = sqrt((double)myTree->GetEntries("!(Lb_DTF_M_JpsiLConstr>5770 && Lb_DTF_M_JpsiLConstr<5810) && Lb_DTF_M_JpsiLConstr > 5700"))*width/260;
 
-		cout<<"siginit = "<<siginit<<endl;
-		cout<<"bkginit = "<<bkginit<<endl;
+		cout<<"siginit = "<<siginit<<" +/- "<<err_siginit<<endl;
+		cout<<"bkginit = "<<bkginit<<" +/- "<<err_bkginit<<endl;
 
 		Int_t denom = mcTree->GetEntries("(Lb_BKGCAT==0||Lb_BKGCAT==50)");
 		for(Int_t j = 0; j<nEntries_mc; j++)
@@ -302,8 +328,23 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 			eff_sig       = mcTree->GetEntries(Form("BDT%d > %f",bdtConf,BDT))*1.0/denom;
 			eff_sig_wt_TM = sumwt_num/sumwt_den;
 
+			TH1D *hPass = new TH1D("hPass","pass",1,0,1);
+			TH1D *hAll = new TH1D("hAll","all",1,0,1);
+
+			hPass->SetBinContent(1,sumwt_num);
+			hAll->SetBinContent(1,sumwt_den);
+
+			TGraphAsymmErrors *gr = new TGraphAsymmErrors(1);
+			gr->BayesDivide(hPass,hAll);
+
+			err_eff = gr->GetErrorY(0); //errors are actually asymmetric. approximating with sym. error for now.
+
 			sig = siginit*eff_sig_wt_TM;
-			bkg = myTree->GetEntries(Form("!(Lb_DTF_M_JpsiLConstr>5770 && Lb_DTF_M_JpsiLConstr<5810) && Lb_DTF_M_JpsiLConstr > 5700 && BDT%d > %f",bdtConf,BDT))*width/260;        //assumes flat background
+			err_sig = sig*sqrt((double) (pow(err_siginit/siginit,2) + pow(err_eff/eff_sig_wt_TM,2)));
+
+			Int_t nBkg = myTree->GetEntries(Form("!(Lb_DTF_M_JpsiLConstr>5770 && Lb_DTF_M_JpsiLConstr<5810) && Lb_DTF_M_JpsiLConstr > 5700 && BDT%d > %f",bdtConf,BDT));
+			bkg = nBkg*width/260;        //assumes flat background
+			err_bkg = sqrt((double)nBkg)*width/260;
 
 			cout<<"SIG = "<<sig<<" BKG = "<<bkg;
 			eff_bkg = (Double_t) bkg/bkginit;
@@ -331,11 +372,24 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 			if(TString(FOM) == "Punzi")
 			{
 				myFOM = (Double_t)sig/(sqrt(bkg) + 1.5);        //a  = 3 chosen
+				err_FOM = myFOM * sqrt((double) (pow(err_sig/sig,2) + pow((err_bkg/(2*sqrt(bkg)*(1.5 + sqrt(bkg)))),2)));
 			}
 
-			if(ctr == 0 && isoFlag) fomArray_nonZero[i-1] = myFOM;
-			else if(ctr == 1 && isoFlag) fomArray_Zero[i-1] = myFOM;
-			else if(!isoFlag) fomArray_noIso[i-1] = myFOM;
+			if(ctr == 0 && isoFlag)
+			{
+				fomArray_nonZero[i-1] = myFOM;
+				fomErrArray_nonZero[i-1] = err_FOM;
+			}
+			else if(ctr == 1 && isoFlag)
+			{
+				fomArray_Zero[i-1] = myFOM;
+				fomErrArray_Zero[i-1] = err_FOM;
+			}
+			else if(!isoFlag)
+			{
+				fomArray_noIso[i-1] = myFOM;
+				fomErrArray_noIso[i-1] = err_FOM;
+			}
 
 			if(myFOM > myFOM_max)
 			{
@@ -344,13 +398,20 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 				eff_sig_TM_max    = eff_sig_TM;
 				eff_sig_wt_TM_max = eff_sig_wt_TM;
 				eff_bkg_max       = eff_bkg;
+				err_FOM_max       = err_FOM;
 			}
-			cout<<"For BDT = "<<BDT<<" FOM = "<<myFOM<<" sig_eff = "
+			cout<<"For BDT = "<<BDT<<" FOM = "<<myFOM<<" +/- "<<err_FOM<<" sig_eff = "
 			    <<eff_sig_TM*100<<"% sig_eff_wt = "<<eff_sig_wt_TM*100<<"% bkg_eff = "<<eff_bkg*100<<"%"<<endl;
 		}
-		cout<<"MAXIMUM FOM = "<<myFOM_max<<" at BDT = "<<BDT_max<<" with sig_eff = "
+		cout<<"MAXIMUM FOM = "<<myFOM_max<<" +/- "<<err_FOM_max<<" at BDT = "<<BDT_max<<" with sig_eff = "
 		    <<eff_sig_TM_max*100<<"% sig_eff_wt = "<<eff_sig_wt_TM_max*100<<"% and bkg_eff = "<<eff_bkg_max*100<<"%"<<endl;
 		cuts.push_back(BDT_max);
+
+		if(isoFlag)
+		{
+			sigTot += eff_sig_wt_TM_max*siginit;
+			bkgTot += eff_bkg_max*bkginit;
+		}
 		ctr++;
 	}
 	TLatex *myLatex = new TLatex();
@@ -363,8 +424,11 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 
 	if(isoFlag)
 	{
+		fomTot = sigTot/(sqrt((double)bkgTot)+1.5);
+		cout<<"$$$$FOM TOTAL = "<<fomTot<<endl;
+
 		TCanvas *c1 = new TCanvas();
-		TGraph *gr_nonZero = new TGraph(99,bdtArray_nonZero,fomArray_nonZero);
+		TGraphErrors *gr_nonZero = new TGraphErrors(99,bdtArray_nonZero,fomArray_nonZero,bdtErrArray,fomErrArray_nonZero);
 		gr_nonZero->SetTitle("");
 		gr_nonZero->SetLineWidth(2);
 		gr_nonZero->SetMarkerSize(0.7);
@@ -372,18 +436,18 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 		gr_nonZero->GetXaxis()->SetTitle("nonZeroTracks BDT cut");
 		gr_nonZero->GetYaxis()->SetTitle("S/(#sqrt{B} + 1.5)");
 		// gr_nonZero->SetName("");
-		gr_nonZero->Draw("AC*");
+		gr_nonZero->Draw("ALP");
 		myLatex->DrawLatex(0.18,0.85,Form("LHCb Run %d",run));
 
 		TCanvas *c2 = new TCanvas();
-		TGraph *gr_Zero = new TGraph(99,bdtArray_Zero,fomArray_Zero);
+		TGraphErrors *gr_Zero = new TGraphErrors(99,bdtArray_Zero,fomArray_Zero,bdtErrArray,fomErrArray_Zero);
 		gr_Zero->SetTitle("");
 		gr_Zero->SetLineWidth(2);
 		gr_Zero->SetMarkerSize(0.7);
 		gr_Zero->SetMarkerStyle(20);
 		gr_Zero->GetXaxis()->SetTitle("ZeroTracks BDT cut");
 		gr_Zero->GetYaxis()->SetTitle("S/(#sqrt{B} + 1.5)");
-		gr_Zero->Draw("AC*");
+		gr_Zero->Draw("ALP");
 		myLatex->DrawLatex(0.18,0.85,Form("LHCb Run %d",run));
 
 		TFile *fileOut = new TFile(Form("/data1/avenkate/JpsiLambda_RESTART/"
@@ -400,7 +464,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 	else
 	{
 		TCanvas *c1 = new TCanvas();
-		TGraph *gr_noIso = new TGraph(99,bdtArray_noIso,fomArray_noIso);
+		TGraphErrors *gr_noIso = new TGraphErrors(99,bdtArray_noIso,fomArray_noIso,bdtErrArray,fomArray_noIso);
 		gr_noIso->SetTitle("");
 		gr_noIso->SetLineWidth(2);
 		gr_noIso->SetMarkerSize(0.7);
@@ -408,7 +472,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 		gr_noIso->GetXaxis()->SetTitle("noIso BDT cut");
 		gr_noIso->GetYaxis()->SetTitle("S/(#sqrt{B} + 1.5)");
 		// gr_noIso->SetName("");
-		gr_noIso->Draw("AC*");
+		gr_noIso->Draw("ALP");
 		myLatex->DrawLatex(0.18,0.85,Form("LHCb Run %d",run));
 
 		TFile *fileOut = new TFile(Form("/data1/avenkate/JpsiLambda_RESTART/"
