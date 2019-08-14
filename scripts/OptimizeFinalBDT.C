@@ -103,6 +103,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 	Double_t err_sigTot_sq = 0., err_bkgTot_sq = 0.;
 	Double_t err_sigTot = 0., err_bkgTot = 0., err_fomTot = 0.;
 	Double_t sig_max = 0., err_sig_max = 0., bkg_max = 0., err_bkg_max = 0;
+	Double_t tot_siginit = 0., tot_bkginit = 0.;
 
 	TH1D *hPass = new TH1D("hPass","pass",1,0,1);
 	TH1D *hAll = new TH1D("hAll","all",1,0,1);
@@ -429,6 +430,9 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 			sigTot += sig_max;//eff_sig_wt_TM_max*siginit;
 			bkgTot += bkg_max;//eff_bkg_max*bkginit;
 
+			tot_siginit += siginit;
+			tot_bkginit += bkginit;
+
 			err_sigTot_sq += err_sig_max*err_sig_max;
 			err_bkgTot_sq += err_bkg_max*err_bkg_max;
 		}
@@ -456,7 +460,8 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 			err_fomTot = 0.;
 
 		cout<<"$$$$FOM TOTAL = "<<fomTot<<" +/- "<<err_fomTot<<endl;
-
+		cout<<"$$$$SIG EFF TOTAL = "<<(sigTot/tot_siginit)*100<<endl;
+		cout<<"$$$$BKG EFF TOTAL = "<<(bkgTot/tot_bkginit)*100<<endl;
 		TCanvas *c1 = new TCanvas();
 		TGraphErrors *gr_nonZero = new TGraphErrors(99,bdtArray_nonZero,fomArray_nonZero,bdtErrArray,fomErrArray_nonZero);
 		gr_nonZero->SetTitle("");
