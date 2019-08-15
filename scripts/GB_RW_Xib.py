@@ -13,7 +13,7 @@ from hep_ml.metrics_utils import ks_2samp_weighted
 run = int(sys.argv[1])
 
 columns = ['Lb_P', 'Lb_PT', '(p_P-pi_P)/(p_P+pi_P)', 'SW']
-len = 4
+len = 3
 
 # columns = ['Lb_P', 'Lb_PT', 'Lb_ETA', 'Jpsi_P', 'Jpsi_PT', 'Jpsi_ETA', 'L_P',
 #            'L_PT', 'L_ETA', 'p_P', 'p_PT', 'p_ETA', 'pi_P', 'pi_PT', 'pi_ETA',
