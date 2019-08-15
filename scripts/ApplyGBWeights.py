@@ -9,7 +9,7 @@ import cPickle as pickle
 # mcOpt = 1 for JpsiLambda
 # mcOpt = 2 for JpsiSigma
 # mcOpt = 3 for JpsiXi (reco'd JpsiLambda)
-# mcOpt = 10 for JpsiXi (reco'd JpsiXi)
+# mcOpt = 12 for JpsiXi (reco'd JpsiXi)
 # mcOpt = 11 for Xib0->J/psi Lambda
 run = int(sys.argv[1])
 mcOpt = int(sys.argv[2])
@@ -75,16 +75,19 @@ if isGen:
     treeName = 'MCTuple/MCDecayTree'
 else:
     treeName = 'MyTuple'
-    if(mcOpt != 12):
+    if mcOpt != 12:
         fileName = part + '_pidgen.root'
     else:
         fileName = part + '_cut_LL.root'
 filePath = filePath.format(run)
 
-if not isGen:
-    wtsFileName = 'gb_wts.pkl'
+if mcOpt != 3:
+    if not isGen:
+        wtsFileName = 'gb_wts.pkl'
+    else:
+        wtsFileName = 'gb_wts_gen.pkl'
 else:
-    wtsFileName = 'gb_wts_gen.pkl'
+    wtsFileName = 'gb_wts_xib.pkl'
 # Get the reweighter
 with open(mcPath + wtsFileName) as f:
     reweighter = pickle.load(f)
