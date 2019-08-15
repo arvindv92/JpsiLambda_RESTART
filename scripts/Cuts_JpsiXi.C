@@ -155,7 +155,7 @@ void Cuts_JpsiXi(Int_t run, Int_t year, Bool_t isData, Bool_t logFlag)
 	entries_final_LL = treeOut_LL->GetEntries();
 	cout<<"Outgoing LL entries = "<<entries_final_LL<<endl;
 
-	if(isData==0)//Efficiency calculation for MC.
+	if(!isData)//Efficiency calculation for MC.
 	{
 		if(entries_init != 0)//Exclusive efficiency calculation
 		{
@@ -183,7 +183,12 @@ void Cuts_JpsiXi(Int_t run, Int_t year, Bool_t isData, Bool_t logFlag)
 			cout<<"******************************************"<<endl;
 		}
 	}
-
+	if(!isData)
+	{
+		treeOut_LL->SetAlias("Lb_PT","Xib_PT");
+		treeOut_LL->SetAlias("Lb_P","Xib_P");
+		treeOut_LL->SetAlias("Lb_ETA","Xib_ETA");
+	}
 	fileOut_LL->Write();
 	fileOut_LL->Close();
 
