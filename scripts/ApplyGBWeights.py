@@ -29,7 +29,7 @@ if mcOpt != 3 and mcOpt != 12:
         columns = ['Lb_P', 'Lb_PT', 'Jpsi_P', 'Jpsi_PT', 'L_P',
                    'L_PT', 'p_P', 'p_PT', 'pi_P', 'pi_PT']
 else:
-    columns = ['Lb_P', 'Lb_PT', '(p_P-pi_P)/(p_P+pi_P)', 'SW']
+    columns = ['Lb_P', 'Lb_PT', '(p_P-pi_P)/(p_P+pi_P)']
 # columns = ['Lb_P', 'Lb_PT', 'Jpsi_P', 'Jpsi_PT',
 #            'L_P', 'L_PT', 'p_P', 'p_PT', 'pi_P', 'pi_PT']
 
