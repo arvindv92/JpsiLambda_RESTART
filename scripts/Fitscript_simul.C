@@ -884,6 +884,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		if(!inputFlag)
 		{
 			//****************Shape*********************************************
+			TFile *tempFile = new TFile("tempFile_sig.root","RECREATE");
 			TList *list_sig = new TList;
 
 			if(isoFlag)
@@ -922,7 +923,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				list_sig->Add(mcTreeIn_Sigma_cut);
 			}
 
-			TFile *tempFile = new TFile("tempFile_sig.root","RECREATE");
 			TTree *combTree_sig = TTree::MergeTrees(list_sig);
 			combTree_sig->SetName("combTree_sig");
 
@@ -1201,7 +1201,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			cout<<"***************************************"<<endl;
 			cout<<"Get J/psi Lambda(1405) shape from MC"<<endl;
 			cout<<"***************************************"<<endl;
-
+			TFile *tempFile_1405 = new TFile("tempFile_1405.root","RECREATE");
 			TList *list_1405 = new TList;
 
 			if(isoFlag)
@@ -1239,8 +1239,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 				list_1405->Add(mcTreeIn_1405_cut);
 			}
-			TFile *tempFile_1405 = new TFile("tempFile_1405.root","RECREATE");
-
 			TTree *combTree_1405 = TTree::MergeTrees(list_1405);
 			combTree_1405->SetName("combTree_1405");
 
@@ -1444,6 +1442,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			cout<<"Get J/psi Lambda(1520) shape from MC"<<endl;
 			cout<<"***************************************"<<endl;
 
+			TFile *tempFile_1520 = new TFile("tempFile_1520.root","RECREATE");
 			TList *list_1520 = new TList;
 
 			if(isoFlag)
@@ -1481,7 +1480,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 				list_1520->Add(mcTreeIn_1520_cut);
 			}
-			TFile *tempFile_1520 = new TFile("tempFile_1520.root","RECREATE");
 			TTree *combTree_1520 = TTree::MergeTrees(list_1520);
 			combTree_1520->SetName("combTree_1520");
 
@@ -1671,6 +1669,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			cout<<"Get J/psi Lambda(1600) shape from MC"<<endl;
 			cout<<"***************************************"<<endl;
 
+			TFile *tempFile_1600 = new TFile("tempFile_1600.root","RECREATE");
 			TList *list_1600 = new TList;
 			if(isoFlag)
 			{
@@ -1707,7 +1706,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 				list_1600->Add(mcTreeIn_1600_cut);
 			}
-			TFile *tempFile_1600 = new TFile("tempFile_1600.root","RECREATE");
 			TTree *combTree_1600 = TTree::MergeTrees(list_1600);
 			combTree_1600->SetName("combTree_1600");
 
@@ -1960,6 +1958,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		Int_t i = run-1;
 		if(!inputFlag)
 		{
+			TFile *tempFile = new TFile("tempFile.root","RECREATE");
 			TList *list = new TList;
 
 			if(isoFlag)
@@ -2009,8 +2008,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 				list->Add(treein_xi_cut);
 			}
-			TFile *tempFile = new TFile("tempFile.root","RECREATE");
-
 			TTree *combTree = TTree::MergeTrees(list);
 			combTree->SetName("combTree");
 
@@ -2088,6 +2085,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		Int_t i = run-1;
 		if(!inputFlag)
 		{
+			TFile *tempFile = new TFile("tempFile.root","RECREATE");
 			TList *list = new TList;
 
 			if(isoFlag)
@@ -2134,7 +2132,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 				list->Add(treein_jpsiks_cut);
 			}
-			TFile *tempFile = new TFile("tempFile.root","RECREATE");
 			TTree *combTree = TTree::MergeTrees(list);
 			combTree->SetName("combTree");
 
@@ -2352,6 +2349,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	{
 		Int_t i = run-1;
 
+		TFile *tempFile = new TFile("tempFile_sim.root","RECREATE");
 		TList *list_sim = new TList;
 
 		if(isoFlag)
@@ -2410,8 +2408,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 			list_sim->Add(mcTreeIn_Lambda_cut);
 		}
-		TFile *tempFile = new TFile("tempFile_sim.root","RECREATE");
-
 		TTree *combTree_sim = TTree::MergeTrees(list_sim);
 		combTree_sim->SetName("combTree_sim");
 
