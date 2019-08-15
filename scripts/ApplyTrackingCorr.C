@@ -20,11 +20,11 @@ void ApplyTrackingCorr(Int_t run = 1)
 
 	if(run == 1)
 	{
-		wtFile = TFile::Open("ratio2012S20.root");
+		wtFile = TFile::Open("../rootFiles/dataFiles/TRACKINGROOTFILES/ratio2012S20.root");
 	}
 	if(run == 2)
 	{
-		wtFile = TFile::Open("Ratio_Long_P-ETA_2016_25ns.root");
+		wtFile = TFile::Open("../rootFiles/dataFiles/TRACKINGROOTFILES/Ratio_Long_P-ETA_2016_25ns.root");
 	}
 	trackEff = (TH2D*)wtFile->Get("Ratio");
 
