@@ -577,10 +577,20 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	for(Int_t run = 1; run<=2; run++)
 	{
 		Int_t i = run-1;
-		gSystem->Exec(Form("python -c \'from GetXibNorm import GetNorm;"
-		                   " GetNorm(%d, \"%s\", %d, %d, %d, %f, %f, 0)\'",
-		                   run, isoVersion[i], isoConf[i], bdtConf_nonZero[i],
-		                   bdtConf_Zero[i], bdtCut_nonZero[i], bdtCut_Zero[i]));
+		if(isoFlag)
+		{
+			gSystem->Exec(Form("python -c \'from GetXibNorm import GetNorm;"
+			                   " GetNorm(%d, %d, \"%s\", %d, %d, %d, %f, %f, 0)\'",
+			                   run, true, isoVersion[i], isoConf[i], bdtConf_nonZero[i],
+			                   bdtConf_Zero[i], bdtCut_nonZero[i], bdtCut_Zero[i]));
+		}
+		else
+		{
+			gSystem->Exec(Form("python -c \'from GetXibNorm import GetNorm;"
+			                   " GetNorm(%d, %d, \"%s\", %d, %d, %d, %f, %f, 0)\'",
+			                   run, false, isoVersion[i], isoConf[i], bdtConf[i],
+			                   0, bdtCut[i], 0.));
+		}
 
 		ifstream infile(Form("../logs/mc/JpsiXi/run%d/xibNorm_log.txt",run));
 
