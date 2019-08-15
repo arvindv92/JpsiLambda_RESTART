@@ -1929,6 +1929,9 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	//*******************************************************************
 
 	//******************Get shape from Xib background********************
+	cout<<"***************************************"<<endl;
+	cout<<"Get J/psi Xi shape from MC"<<endl;
+	cout<<"***************************************"<<endl;
 	RooDataSet* ds_xi[2];
 	RooDataSet* ds_xi_wt[2];
 	RooKeysPdf* XIB_KEYS[2];
@@ -2067,6 +2070,9 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	//*******************************************************************
 
 	//******************Get shape from B0->Jpsi Ks background********************
+	cout<<"***************************************"<<endl;
+	cout<<"Get J/psi Ks shape from MC"<<endl;
+	cout<<"***************************************"<<endl;
 	RooDataSet* ds_jpsiks[2];
 	RooKeysPdf* JPSIKS_KEYS[2];
 
