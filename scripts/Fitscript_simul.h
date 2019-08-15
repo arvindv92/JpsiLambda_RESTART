@@ -56,8 +56,9 @@
 #include "TIterator.h"
 #include "TLatex.h"
 
-void Fitscript_simul(Int_t myLow = 4700, Int_t myHigh = 6000, Int_t Lst1405_rwtype = 0,
-                     Int_t bkgType = 0, Int_t sigType = 0, Float_t bdtCut = 0.0,
+void Fitscript_simul(Int_t config_Run1 = 1, Int_t config_Run2 = 1, Bool_t isoFlag = true,
+                     Int_t myLow = 4700, Int_t myHigh = 6000, Int_t Lst1405_rwtype = 0,
+                     Int_t bkgType = 0, Int_t sigType = 0, Float_t loosen = 0.0,
                      const char* fileName = "tempModel.root", const char* suffix = "",
                      Bool_t mcRW = kTRUE);
 

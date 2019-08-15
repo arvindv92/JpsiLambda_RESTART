@@ -268,14 +268,14 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 					cout<<"***TrainFinalBDT ZeroTracks run "<<run<<"finalBDTconf "<<finalBDTconf<<" ***"<<endl;
 
 					//                                                isoFlag
-					//					TrainFinalBDT(run, trackType, isoVersion, isoConf, false, finalBDTconf, logFlag);
+					//					TrainFinalBDT(run, trackType, isoVersion, isoConf, false, finalBDTconf, logFlag, simFlag);
 					gSystem->Exec(Form("root -l -b -q \'TrainFinalBDT.C(%d,%d,\"%s\",%d,false,%d,%d,%d)\'",run, trackType, isoVersion, isoConf, finalBDTconf, logFlag, simFlag));
 				}
 
 				//Apply final BDT on zeroTracks data/MC
 				cout<<"***ApplyFinalBDT all ZeroTracks run "<<run<<" finalBDTconf "<<
 				        finalBDTconf<<" ***"<<endl;
-				//				ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 1, isoFlag, true, logFlag);
+				//				ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 1, isoFlag, true, logFlag, simFlag);
 				gSystem->Exec(Form("root -l -b -q \'ApplyFinalBDT.C(%d,%d,%d,%d,\"%s\",%d,%d,1,%d,true,%d,%d)\'",run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, isoFlag, logFlag, simFlag));
 				if(isData)
 				{
@@ -283,7 +283,7 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 					cout<<"***ApplyFinalBDT sWeight ZeroTracks run "<<run<<" isoVersion "<<
 					        isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
 					        finalBDTconf<<"***"<<endl;
-					//					ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 2, isoFlag, true, logFlag);
+					//					ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 2, isoFlag, true, logFlag, simFlag);
 					gSystem->Exec(Form("root -l -b -q \'ApplyFinalBDT.C(%d,%d,%d,%d,\"%s\",%d,%d,2,%d,true,%d, %d)\'",run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, isoFlag, logFlag, simFlag));
 				}
 				// ****************************************************************************************************************************
@@ -294,14 +294,14 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 				{
 					// Train Isolation BDT on nonZeroTracks data. 2 configs train separately,
 					cout<<"***TrainIsolation run "<<run<<" isoVersion "<<isoVersion<<" isoConf "<<isoConf<<"***"<<endl;
-					//					TrainIsolation(run, trackType, isoVersion, isoConf, logFlag);
+					//					TrainIsolation(run, trackType, isoVersion, isoConf, logFlag, simFlag);
 					gSystem->Exec(Form("root -l -b -q \'TrainIsolation.C(%d,%d,\"%s\",%d,%d,%d)\'",run, trackType, isoVersion, isoConf, logFlag, simFlag));
 				}
 
 				// Apply isolation BDT on nonZeroTracks data/MC
 				cout<<"***ApplyIsolation on nonZeroTracks  data/MC run "<<run<<" isoVersion "<<isoVersion<<
 				        " isoConf "<<isoConf<<"***"<<endl;
-				//				ApplyIsolation(run, isData, mcType, trackType, 1, isoVersion, isoConf, logFlag);
+				//				ApplyIsolation(run, isData, mcType, trackType, 1, isoVersion, isoConf, logFlag, simFlag);
 				gSystem->Exec(Form("root -l -q -b \'ApplyIsolation.C(%d,%d,%d,%d,1,\"%s\",%d,%d, %d)\'",run, isData, mcType, trackType, isoVersion, isoConf, logFlag, simFlag));
 
 				if(isData)
@@ -309,7 +309,7 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 					//Apply isolation BDT on nonZeroTracks Weighted data
 					cout<<"***ApplyIsolation sWeight data run "<<run<<" isoVersion "<<isoVersion<<
 					        " isoConf "<<isoConf<<"***"<<endl;
-					//					ApplyIsolation(run, isData, mcType, trackType, 2, isoVersion, isoConf, logFlag);
+					//					ApplyIsolation(run, isData, mcType, trackType, 2, isoVersion, isoConf, logFlag, simFlag);
 					gSystem->Exec(Form("root -l -q -b \'ApplyIsolation.C(%d,%d,%d,%d,2,\"%s\",%d,%d,%d)\'",run, isData, mcType, trackType, isoVersion, isoConf, logFlag, simFlag));
 				}
 			}
@@ -322,7 +322,7 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 					        " isoConf "<<isoConf<<" ***"<<endl;
 
 					//                                                isoFlag
-					//					TrainFinalBDT(run, trackType, isoVersion, isoConf, true, finalBDTconf, logFlag);
+					//					TrainFinalBDT(run, trackType, isoVersion, isoConf, true, finalBDTconf, logFlag, simFlag);
 					gSystem->Exec(Form("root -l -b -q \'TrainFinalBDT.C(%d,%d,\"%s\",%d,true,%d,%d,%d)\'",run, trackType, isoVersion, isoConf, finalBDTconf, logFlag, simFlag));
 				}
 
@@ -330,7 +330,7 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 				cout<<"***ApplyFinalBDT all nonZeroTracks run "<<run<<"isoVersion "<<
 				        isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
 				        finalBDTconf<<" ***"<<endl;
-				//				ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 1, isoFlag, false, logFlag);
+				//				ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 1, isoFlag, false, logFlag, simFlag);
 				gSystem->Exec(Form("root -l -b -q \'ApplyFinalBDT.C(%d,%d,%d,%d,\"%s\",%d,%d,1,%d,false,%d,%d)\'",run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, isoFlag, logFlag, simFlag));
 				if(isData)
 				{
@@ -338,7 +338,7 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 					cout<<"***ApplyFinalBDT sWeight nonZeroTracks run "<<run<<" isoVersion "<<
 					        isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
 					        finalBDTconf<<" ***"<<endl;
-					//					ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 2, isoFlag, false, logFlag);
+					//					ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 2, isoFlag, false, logFlag, simFlag);
 					gSystem->Exec(Form("root -l -b -q \'ApplyFinalBDT.C(%d,%d,%d,%d,\"%s\",%d,%d,2,%d,false,%d, %d)\'",run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, isoFlag, logFlag, simFlag));
 
 				}

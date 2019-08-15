@@ -6,8 +6,8 @@ using namespace RooStats;
 
 #define Open TFile::Open
 
-void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
-                     Int_t bkgType, Int_t sigType, Float_t bdtCut, const char* fileName,
+void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
+                     Int_t bkgType, Int_t sigType, Float_t loosen, const char* fileName,
                      const char* suffix, Bool_t mcRW)
 //myLow and myHigh define the fit range
 //rwType 0 is no RW, 1 is MV RW, 2 is BONN RW
@@ -16,18 +16,290 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	Int_t binwidth = 4;
 	Bool_t logFlag = false;
 
-	if(mcRW && logFlag)
+	if(isoFlag)
 	{
-		gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/Hypatia_Expo_%d_%d_%dMeVBins.txt",
-		                             myLow,myHigh,binwidth),"w");
+		if(mcRW && logFlag)
+		{
+			gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/Hypatia_Expo_%d_%d_%dMeVBins_config%d_config%d.txt",
+			                             myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
+		}
+		else if(!mcRW && logFlag)
+		{
+			gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/Hypatia_Expo_%d_%d_%dMeVBins_config%d_config%d_noRW.txt",
+			                             myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
+		}
 	}
-	else if(!mcRW && logFlag)
+	else
 	{
-		gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/Hypatia_Expo_%d_%d_%dMeVBins_noRW.txt",
-		                             myLow,myHigh,binwidth),"w");
+		if(mcRW && logFlag)
+		{
+			gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/Hypatia_Expo_%d_%d_%dMeVBins_config%d_config%d_noIso.txt",
+			                             myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
+		}
+		else if(!mcRW && logFlag)
+		{
+			gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/Hypatia_Expo_%d_%d_%dMeVBins_config%d_config%d_noRW_noIso.txt",
+			                             myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
+		}
 	}
-	// gSystem->RedirectOutput("tempLog.txt","a");
+	{cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;}
+	gSystem->Exec("date");
 	gROOT->ProcessLine(".x lhcbStyle.C");
+
+	Float_t bdtCut_nonZero[2] = {0.0,0.0};
+	Float_t bdtCut_Zero[2]    = {0.0,0.0};
+	Float_t bdtCut[2]         = {0.0,0.0};
+
+	Int_t bdtConf_nonZero[2] = {0,0};
+	Int_t bdtConf_Zero[2]    = {0,0};
+	Int_t bdtConf[2]         = {0,0};
+	Int_t isoConf[2]         = {0,0};
+
+	const char *isoVersion[2] = {"",""};
+
+	if(!isoFlag)
+	{
+		switch(config_Run1)
+		{
+		case 1:
+		{
+			bdtConf[0] = 1;
+			bdtCut[0] = 0.385;
+			break;
+		}
+		case 2:
+		{
+			bdtConf[0] = 2;
+			bdtCut[0] = 0.405;
+			break;
+		}
+		}
+		switch(config_Run2)
+		{
+		case 1:
+		{
+			bdtConf[1] = 1;
+			bdtCut[1] = 0.495;
+			break;
+		}
+		case 2:
+		{
+			bdtConf[1] = 2;
+			bdtCut[1]  = 0.525;
+			break;
+		}
+		}
+	}
+	else
+	{
+		switch(config_Run1)
+		{
+		case 1:
+		{
+			isoVersion[0]      = "v0";
+			isoConf[0]         = 1;
+
+			bdtConf_nonZero[0] = 1;
+			bdtConf_Zero[0]    = 1;
+
+			bdtCut_nonZero[0]  = 0.435;
+			bdtCut_Zero[0]     = 0.335;
+			break;
+		}
+		case 2:
+		{
+			isoVersion[0]      = "v0";
+			isoConf[0]         = 1;
+
+			bdtConf_nonZero[0] = 2;
+			bdtConf_Zero[0]    = 2;
+
+			bdtCut_nonZero[0]  = 0.455;
+			bdtCut_Zero[0]     = 0.295;
+			break;
+		}
+		case 3:
+		{
+			isoVersion[0]      = "v0";
+			isoConf[0]         = 2;
+
+			bdtConf_nonZero[0] = 1;
+			bdtConf_Zero[0]    = 1;
+
+			bdtCut_nonZero[0]  = 0.425;
+			bdtCut_Zero[0]     = 0.335;
+			break;
+		}
+		case 4:
+		{
+			isoVersion[0]      = "v0";
+			isoConf[0]         = 2;
+
+			bdtConf_nonZero[0] = 2;
+			bdtConf_Zero[0]    = 2;
+
+			bdtCut_nonZero[0]  = 0.425;
+			bdtCut_Zero[0]     = 0.295;
+			break;
+		}
+		case 5:
+		{
+			isoVersion[0]      = "v1";
+			isoConf[0]         = 1;
+
+			bdtConf_nonZero[0] = 1;
+			bdtConf_Zero[0]    = 1;
+
+			bdtCut_nonZero[0]  = 0.425;
+			bdtCut_Zero[0]     = 0.335;
+			break;
+		}
+		case 6:
+		{
+			isoVersion[0]      = "v1";
+			isoConf[0]         = 1;
+
+			bdtConf_nonZero[0] = 2;
+			bdtConf_Zero[0]    = 2;
+
+			bdtCut_nonZero[0]  = 0.445;
+			bdtCut_Zero[0]     = 0.295;
+			break;
+		}
+		case 7:
+		{
+			isoVersion[0]      = "v1";
+			isoConf[0]         = 2;
+
+			bdtConf_nonZero[0] = 1;
+			bdtConf_Zero[0]    = 1;
+
+			bdtCut_nonZero[0]  = 0.415;
+			bdtCut_Zero[0]     = 0.335;
+			break;
+		}
+		case 8:
+		{
+			isoVersion[0]      = "v1";
+			isoConf[0]         = 2;
+
+			bdtConf_nonZero[0] = 2;
+			bdtConf_Zero[0]    = 2;
+
+			bdtCut_nonZero[0]  = 0.415;
+			bdtCut_Zero[0]     = 0.295;
+			break;
+		}//end Run1 switch
+		}
+		switch(config_Run2)
+		{
+		case 1:
+		{
+			isoVersion[1]      = "v0";
+			isoConf[1]         = 1;
+
+			bdtConf_nonZero[1] = 1;
+			bdtConf_Zero[1]    = 1;
+
+			bdtCut_nonZero[1]  = 0.535;
+			bdtCut_Zero[1]     = 0.405;
+			break;
+		}
+		case 2:
+		{
+			isoVersion[1]      = "v0";
+			isoConf[1]         = 1;
+
+			bdtConf_nonZero[1] = 2;
+			bdtConf_Zero[1]    = 2;
+
+			bdtCut_nonZero[1]  = 0.545;
+			bdtCut_Zero[1]     = 0.435;
+			break;
+		}
+		case 3:
+		{
+			isoVersion[1]      = "v0";
+			isoConf[1]         = 2;
+
+			bdtConf_nonZero[1] = 1;
+			bdtConf_Zero[1]    = 1;
+
+			bdtCut_nonZero[1]  = 0.585;
+			bdtCut_Zero[1]     = 0.405;
+			break;
+		}
+		case 4:
+		{
+			isoVersion[1]      = "v0";
+			isoConf[1]         = 2;
+
+			bdtConf_nonZero[1] = 2;
+			bdtConf_Zero[1]    = 2;
+
+			bdtCut_nonZero[1]  = 0.605;
+			bdtCut_Zero[1]     = 0.435;
+			break;
+		}
+		case 5:
+		{
+			isoVersion[1]      = "v1";
+			isoConf[1]         = 1;
+
+			bdtConf_nonZero[1] = 1;
+			bdtConf_Zero[1]    = 1;
+
+			bdtCut_nonZero[1]  = 0.535;
+			bdtCut_Zero[1]     = 0.405;
+			break;
+		}
+		case 6:
+		{
+			isoVersion[1]      = "v1";
+			isoConf[1]         = 1;
+
+			bdtConf_nonZero[1] = 2;
+			bdtConf_Zero[1]    = 2;
+
+			bdtCut_nonZero[1]  = 0.525;
+			bdtCut_Zero[1]     = 0.435;
+			break;
+		}
+		case 7:
+		{
+			isoVersion[1]      = "v1";
+			isoConf[1]         = 2;
+
+			bdtConf_nonZero[1] = 1;
+			bdtConf_Zero[1]    = 1;
+
+			bdtCut_nonZero[1]  = 0.545;
+			bdtCut_Zero[1]     = 0.405;
+			break;
+		}
+		case 8:
+		{
+			isoVersion[1]      = "v1";
+			isoConf[1]         = 2;
+
+			bdtConf_nonZero[1] = 2;
+			bdtConf_Zero[1]    = 2;
+
+			bdtCut_nonZero[1]  = 0.515;
+			bdtCut_Zero[1]     = 0.435;
+			break;
+		}
+		}//end Run2 switch
+	}
 	Bool_t calcUL   = true;
 	Bool_t isBinned = true; //set to false if you want unbinned ML fit.
 	Bool_t saveFlag = false;
@@ -42,35 +314,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	Int_t sigWindow_low  = 5365;
 	Int_t sigWindow_high = 5600;
 
-	gSystem->Exec("date");
 	gSystem->Load("RooHypatia2_cpp.so"); //Load library for Hypatia shape
-
-	Float_t bdtCut_nonZero[2] = {0.0,0.0};
-	Float_t bdtCut_Zero[2]    = {0.0,0.0};
-
-	Int_t bdtConf_nonZero[2]  = {0,0};
-	Int_t bdtConf_Zero[2]     = {0,0};
-	Int_t isoConf[2]          = {0,0};
-
-	const char *isoVersion[2] = {"",""};
-
-	isoVersion[0] = "v0";
-	isoVersion[1] = "v0";
-
-	isoConf[0] = 2;
-	isoConf[1] = 1;
-
-	bdtConf_nonZero[0] = 2;
-	bdtConf_nonZero[1] = 2;
-
-	bdtConf_Zero[0] = 2;
-	bdtConf_Zero[1] = 2;
-
-	bdtCut_nonZero[0] = 0.475-bdtCut;
-	bdtCut_nonZero[1] = 0.555-bdtCut;
-
-	bdtCut_Zero[0] = 0.365;
-	bdtCut_Zero[1] = 0.495;
 
 	// Xib normalization & errs
 
@@ -368,21 +612,11 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	for(Int_t run = 1; run<=2; run++)
 	{
 		Int_t i = run-1;
-		TFile *mcFileIn_nonZero_Lambda = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_nonZeroTracks.root",
-		                                           lambdaMCPath,run));
-		TTree *mcTreeIn_nonZero_Lambda = (TTree*)mcFileIn_nonZero_Lambda->Get("MyTuple");
 
-		TFile *mcFileIn_Zero_Lambda    = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_ZeroTracks.root",
-		                                           lambdaMCPath,run));
-		TTree *mcTreeIn_Zero_Lambda    = (TTree*)mcFileIn_Zero_Lambda->Get("MyTuple");
+		//****Get Generator cuts efficiency ****
+		fstream genFile_Lambda; //contains no of gen. candidates
+		fstream genEffFile_Lambda; //contains combined gen. efficiency
 
-		mcTreeIn_nonZero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s.root",
-		                                                  lambdaMCPath,run,bdtConf_nonZero[i],
-		                                                  isoConf[i],isoVersion[i]));
-		mcTreeIn_Zero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d.root",
-		                                               lambdaMCPath,run,bdtConf_Zero[i]));
-
-		fstream genFile_Lambda;
 		genFile_Lambda.open((Form("../logs/mc/JpsiLambda/JpsiLambda/run%d/gen_log.txt",run)));
 
 		genFile_Lambda>>nGen_Lambda[i]; //Get number of generated events
@@ -395,19 +629,12 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 
 		genWtsTree_Lambda->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
 		                                            lambdaMCPath,run));
-		if(run == 1)
-		{
-			genWtsTree_Lambda->Draw("GB_WT_new*wt_tau>>genWt_Lambda","","goff");
-		}
-		else if(run == 2)
-		{
-			genWtsTree_Lambda->Draw("GB_WT*wt_tau>>genWt_Lambda","","goff");
-		}
+
+		genWtsTree_Lambda->Draw("GB_WT*wt_tau>>genWt_Lambda","","goff");
 
 		TH1F *genWt_Lambda = (TH1F*)gDirectory->Get("genWt_Lambda");
 		nGen_Lambda_wt[i] = genWt_Lambda->GetEntries()*genWt_Lambda->GetMean();
 
-		fstream genEffFile_Lambda;
 		genEffFile_Lambda.open(Form("../logs/mc/JpsiLambda/JpsiLambda/run%d/Generator_Effs_Combined.txt",run));
 
 		genEffFile_Lambda>>eff_Lambda_gen[i]; //Get generator efficiency
@@ -416,26 +643,53 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		// cout<<"Run "<<run<<" Lambda Generator Effs = "<<eff_Lambda_gen[i]*100
 		//     <<" % +/- "<<eff_Lambda_gen_err[i]*100<<" %"<<endl;
 
-		if(run == 1)
+		//**** Get reconstruction effs ****
+
+		Float_t num_Lambda = 0., num_Lambda_wt = 0.;
+
+		if(isoFlag)
 		{
-			mcTreeIn_nonZero_Lambda->Draw("GB_WT_new*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_Lambda->Draw("GB_WT_new*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
-		}
-		else if(run == 2)
-		{
+			TFile *mcFileIn_nonZero_Lambda = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_nonZeroTracks.root",
+			                                           lambdaMCPath,run));
+			TTree *mcTreeIn_nonZero_Lambda = (TTree*)mcFileIn_nonZero_Lambda->Get("MyTuple");
+
+			TFile *mcFileIn_Zero_Lambda = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_ZeroTracks.root",
+			                                        lambdaMCPath,run));
+			TTree *mcTreeIn_Zero_Lambda = (TTree*)mcFileIn_Zero_Lambda->Get("MyTuple");
+
+			mcTreeIn_nonZero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s.root",
+			                                                  lambdaMCPath,run,bdtConf_nonZero[i],
+			                                                  isoConf[i],isoVersion[i]));
+			mcTreeIn_Zero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d.root",
+			                                               lambdaMCPath,run,bdtConf_Zero[i]));
+
 			mcTreeIn_nonZero_Lambda->Draw("GB_WT*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
 			mcTreeIn_Zero_Lambda->Draw("GB_WT*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+
+			TH1F *wt_lambda_nonZero = (TH1F*)gDirectory->Get("wt_lambda_nonZero");
+			TH1F *wt_lambda_Zero = (TH1F*)gDirectory->Get("wt_lambda_Zero");
+
+			num_Lambda_wt = (wt_lambda_nonZero->GetMean()*wt_lambda_nonZero->GetEntries()) +
+			                (wt_lambda_Zero->GetMean()*wt_lambda_Zero->GetEntries());
+
+			num_Lambda = mcTreeIn_nonZero_Lambda->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]))
+			             + mcTreeIn_Zero_Lambda->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i])); //NOTE NO TM HERE
 		}
+		else
+		{
+			TFile *mcFileIn_Lambda = Open(Form("%s/run%d/jpsilambda_cutoutks_LL.root",
+			                                   lambdaMCPath,run));
+			TTree *mcTreeIn_Lambda = (TTree*)mcFileIn_Lambda->Get("MyTuple");
 
-		TH1F *wt_lambda_nonZero = (TH1F*)gDirectory->Get("wt_lambda_nonZero");
-		TH1F *wt_lambda_Zero = (TH1F*)gDirectory->Get("wt_lambda_Zero");
+			mcTreeIn_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_noIso.root",
+			                                          lambdaMCPath,run,bdtConf_nonZero[i]));
+			mcTreeIn_Lambda->Draw("GB_WT*wt_tau>>wt_lambda",Form("BDT%d > %f", bdtConf[i],bdtCut[i]),"goff");
 
-		Int_t num_Lambda_wt = (wt_lambda_nonZero->GetMean()*wt_lambda_nonZero->GetEntries()) +
-		                      (wt_lambda_Zero->GetMean()*wt_lambda_Zero->GetEntries());
+			TH1F *wt_lambda = (TH1F*)gDirectory->Get("wt_lambda");
 
-		Int_t num_Lambda = mcTreeIn_nonZero_Lambda->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]))
-		                   + mcTreeIn_Zero_Lambda->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i])); //NOTE NO TM HERE
-
+			num_Lambda_wt = (wt_lambda->GetMean()*wt_lambda->GetEntries());
+			num_Lambda    = mcTreeIn_Lambda->GetEntries(Form("BDT%d > %f", bdtConf[i],bdtCut[i])); //NOTE NO TM HERE
+		}
 		eff_Lambda_rec[i]     = num_Lambda*1.0/nGen_Lambda[i]; //Calc. reco eff.
 		eff_Lambda_rec_err[i] = sqrt(eff_Lambda_rec[i]*(1-eff_Lambda_rec[i])/nGen_Lambda[i]); //statistical error on recon. eff.
 
@@ -448,6 +702,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		// cout<<"Run "<<run<<" WEIGHTED Lambda Recons. Effs = "<<eff_Lambda_rec_wt[i]*100
 		//     <<" % +/- "<<eff_Lambda_rec_err_wt[i]*100<<" %"<<endl;
 
+		// **** Multiply gen. eff by reco eff. to get overall eff.
 		eff_JpsiLambda[i]     = eff_Lambda_rec[i]*eff_Lambda_gen[i]; // Calc. total eff.
 		eff_JpsiLambda_SystErr[i] = eff_JpsiLambda[i]*sqrt(pow((eff_Lambda_gen_err[i]/eff_Lambda_gen[i]),2) +
 		                                                   pow((eff_Lambda_rec_err[i]/eff_Lambda_rec[i]),2));  // and stat error on tot. eff.
@@ -491,21 +746,11 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	for(Int_t run = 1; run<=2; run++)
 	{
 		Int_t i = run-1;
-		TFile *mcFileIn_nonZero_Sigma = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_nonZeroTracks.root",
-		                                          sigmaPath,run));
-		TTree *mcTreeIn_nonZero_Sigma = (TTree*)mcFileIn_nonZero_Sigma->Get("MyTuple");
 
-		TFile *mcFileIn_Zero_Sigma    = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_ZeroTracks.root",
-		                                          sigmaPath,run));
-		TTree *mcTreeIn_Zero_Sigma    = (TTree*)mcFileIn_Zero_Sigma->Get("MyTuple");
+		//****Get Generator cuts efficiency ****
+		fstream genFile_Sigma; //contains no of gen. candidates
+		fstream genEffFile_Sigma; //contains combined gen. efficiency
 
-		mcTreeIn_nonZero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_LL_FinalBDT%d_iso%d_%s.root",
-		                                                 sigmaPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-		mcTreeIn_Zero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_zeroTracksLL_FinalBDT%d.root",
-		                                              sigmaPath,run,bdtConf_Zero[i]));
-
-		//***************Efficiency***************************************
-		fstream genFile_Sigma;
 		genFile_Sigma.open((Form("../logs/mc/JpsiLambda/JpsiSigma/run%d/gen_log.txt",run)));
 
 		genFile_Sigma>>nGen_Sigma[i]; // Get number of generated events
@@ -520,19 +765,13 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		genWtsTree_Sigma->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
 		                                           sigmaPath,run));
 
-		if(run == 1)
-		{
-			genWtsTree_Sigma->Draw("GB_WT_new*wt_tau>>genWt_Sigma","","goff");
-		}
-		else if(run == 2)
-		{
-			genWtsTree_Sigma->Draw("GB_WT*wt_tau>>genWt_Sigma","","goff");
-		}
+		genWtsTree_Sigma->Draw("GB_WT*wt_tau>>genWt_Sigma","","goff");
+
 		TH1F *genWt_Sigma = (TH1F*)gDirectory->Get("genWt_Sigma");
 
 		nGen_Sigma_wt[i] = genWt_Sigma->GetEntries()*genWt_Sigma->GetMean();
 
-		fstream genEffFile_Sigma;
+
 		genEffFile_Sigma.open(Form("../logs/mc/JpsiLambda/JpsiSigma/run%d/Generator_Effs_Combined.txt",run));
 
 		genEffFile_Sigma>>eff_Sigma_gen[i]; // Get generator efficiency
@@ -541,25 +780,52 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		// cout<<"Run "<<run<<" Sigma Generator Effs = "<<eff_Sigma_gen[i]*100
 		//     <<" % +/- "<<eff_Sigma_gen_err[i]*100<<" %"<<endl;
 
-		if(run == 1)
+		//**** Get reconstruction effs ****
+		Float_t num_Sigma = 0., num_Sigma_wt = 0.;
+
+		if(isoFlag)
 		{
-			mcTreeIn_nonZero_Sigma->Draw("GB_WT_new*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_Sigma->Draw("GB_WT_new*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
-		}
-		else if(run == 2)
-		{
+			TFile *mcFileIn_nonZero_Sigma = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_nonZeroTracks.root",
+			                                          sigmaPath,run));
+			TTree *mcTreeIn_nonZero_Sigma = (TTree*)mcFileIn_nonZero_Sigma->Get("MyTuple");
+
+			TFile *mcFileIn_Zero_Sigma    = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_ZeroTracks.root",
+			                                          sigmaPath,run));
+			TTree *mcTreeIn_Zero_Sigma    = (TTree*)mcFileIn_Zero_Sigma->Get("MyTuple");
+
+			mcTreeIn_nonZero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_LL_FinalBDT%d_iso%d_%s.root",
+			                                                 sigmaPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+			mcTreeIn_Zero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_zeroTracksLL_FinalBDT%d.root",
+			                                              sigmaPath,run,bdtConf_Zero[i]));
+
 			mcTreeIn_nonZero_Sigma->Draw("GB_WT*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
 			mcTreeIn_Zero_Sigma->Draw("GB_WT*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+
+			TH1F *wt_Sigma_nonZero = (TH1F*)gDirectory->Get("wt_Sigma_nonZero");
+			TH1F *wt_Sigma_Zero = (TH1F*)gDirectory->Get("wt_Sigma_Zero");
+
+			num_Sigma_wt = (wt_Sigma_nonZero->GetMean()*wt_Sigma_nonZero->GetEntries()) +
+			               (wt_Sigma_Zero->GetMean()*wt_Sigma_Zero->GetEntries());
+
+			num_Sigma = mcTreeIn_nonZero_Sigma->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
+			            mcTreeIn_Zero_Sigma->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
 		}
-		TH1F *wt_Sigma_nonZero = (TH1F*)gDirectory->Get("wt_Sigma_nonZero");
-		TH1F *wt_Sigma_Zero = (TH1F*)gDirectory->Get("wt_Sigma_Zero");
+		else
+		{
+			TFile *mcFileIn_Sigma = Open(Form("%s/run%d/jpsisigma_cutoutks_LL.root",
+			                                  sigmaPath,run));
+			TTree *mcTreeIn_Sigma = (TTree*)mcFileIn_Sigma->Get("MyTuple");
 
-		Int_t num_Sigma_wt = (wt_Sigma_nonZero->GetMean()*wt_Sigma_nonZero->GetEntries()) +
-		                     (wt_Sigma_Zero->GetMean()*wt_Sigma_Zero->GetEntries());
+			mcTreeIn_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_LL_FinalBDT%d_noIso.root",
+			                                         sigmaPath,run,bdtConf[i]));
 
-		Int_t num_Sigma = mcTreeIn_nonZero_Sigma->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
-		                  mcTreeIn_Zero_Sigma->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
+			mcTreeIn_Sigma->Draw("GB_WT*wt_tau>>wt_Sigma",Form("BDT%d > %f", bdtConf[i],bdtCut[i]),"goff");
 
+			TH1F *wt_Sigma = (TH1F*)gDirectory->Get("wt_Sigma");
+
+			num_Sigma_wt = (wt_Sigma->GetMean()*wt_Sigma->GetEntries());
+			num_Sigma    = mcTreeIn_Sigma->GetEntries(Form("BDT%d > %f", bdtConf[i],bdtCut[i]));
+		}
 		eff_Sigma_rec[i]     = num_Sigma*1.0/nGen_Sigma[i];  // Calc. reco. eff.
 		eff_Sigma_rec_err[i] = sqrt(eff_Sigma_rec[i]*(1-eff_Sigma_rec[i])/nGen_Sigma[i]);    //stat error on recon. eff.
 
@@ -572,6 +838,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		// cout<<"Run "<<run<<" WEIGHTED Sigma Recons. Effs = "<<eff_Sigma_rec_wt[i]*100
 		//     <<" % +/- "<<eff_Sigma_rec_err_wt[i]*100<<" %"<<endl;
 
+		// **** Multiply gen. eff by reco eff. to get overall eff.
 		eff_JpsiSigma[i] = eff_Sigma_gen[i] * eff_Sigma_rec[i];      // Calc overall eff.
 		eff_JpsiSigma_SystErr[i] = eff_JpsiSigma[i]*sqrt(pow((eff_Sigma_gen_err[i]/eff_Sigma_gen[i]),2) +
 		                                                 pow((eff_Sigma_rec_err[i]/eff_Sigma_rec[i]),2));  // and stat. error on above
@@ -604,46 +871,51 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		if(!inputFlag)
 		{
 			//****************Shape*********************************************
-
-			mcTreeIn_Zero_Sigma->SetBranchStatus("*",0);
-			mcTreeIn_Zero_Sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-			mcTreeIn_Zero_Sigma->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
-			mcTreeIn_Zero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
-			mcTreeIn_Zero_Sigma->SetBranchStatus("GB_WT",1);
-			mcTreeIn_Zero_Sigma->SetBranchStatus("wt_tau",1);
-			if(run == 1)
-				mcTreeIn_Zero_Sigma->SetBranchStatus("GB_WT_new",1);
-
-			mcTreeIn_nonZero_Sigma->SetBranchStatus("*",0);
-			mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-			mcTreeIn_nonZero_Sigma->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
-			mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
-			mcTreeIn_nonZero_Sigma->SetBranchStatus("GB_WT",1);
-			mcTreeIn_nonZero_Sigma->SetBranchStatus("wt_tau",1);
-			if(run == 1)
-				mcTreeIn_nonZero_Sigma->SetBranchStatus("GB_WT_new",1);
-			TFile *tempFile = new TFile("tempFile_sig.root","RECREATE");
-
-			TTree* mcTreeIn_Zero_Sigma_cut    = (TTree*)mcTreeIn_Zero_Sigma->CopyTree(Form("(BDT%d > %f)",bdtConf_Zero[i],bdtCut_Zero[i])); //Not TRUTH MATCHING HERE!
-			TTree* mcTreeIn_nonZero_Sigma_cut = (TTree*)mcTreeIn_nonZero_Sigma->CopyTree(Form("(BDT%d > %f)",bdtConf_nonZero[i],bdtCut_nonZero[i])); //Not TRUTH MATCHING HERE!
-
 			TList *list_sig = new TList;
-			list_sig->Add(mcTreeIn_Zero_Sigma_cut);
-			list_sig->Add(mcTreeIn_nonZero_Sigma_cut);
 
+			if(isoFlag)
+			{
+				mcTreeIn_Zero_Sigma->SetBranchStatus("*",0);
+				mcTreeIn_Zero_Sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+				mcTreeIn_Zero_Sigma->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+				mcTreeIn_Zero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
+				mcTreeIn_Zero_Sigma->SetBranchStatus("GB_WT",1);
+				mcTreeIn_Zero_Sigma->SetBranchStatus("wt_tau",1);
+
+				mcTreeIn_nonZero_Sigma->SetBranchStatus("*",0);
+				mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+				mcTreeIn_nonZero_Sigma->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+				mcTreeIn_nonZero_Sigma->SetBranchStatus("Lb_BKGCAT",1);
+				mcTreeIn_nonZero_Sigma->SetBranchStatus("GB_WT",1);
+				mcTreeIn_nonZero_Sigma->SetBranchStatus("wt_tau",1);
+
+				TTree* mcTreeIn_Zero_Sigma_cut    = (TTree*)mcTreeIn_Zero_Sigma->CopyTree(Form("(BDT%d > %f)",bdtConf_Zero[i],bdtCut_Zero[i]));//Not TRUTH MATCHING HERE!
+				TTree* mcTreeIn_nonZero_Sigma_cut = (TTree*)mcTreeIn_nonZero_Sigma->CopyTree(Form("(BDT%d > %f)",bdtConf_nonZero[i],bdtCut_nonZero[i])); //Not TRUTH MATCHING HERE!
+
+				list_sig->Add(mcTreeIn_Zero_Sigma_cut);
+				list_sig->Add(mcTreeIn_nonZero_Sigma_cut);
+			}
+			else
+			{
+				mcTreeIn_Sigma->SetBranchStatus("*",0);
+				mcTreeIn_Sigma->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+				mcTreeIn_Sigma->SetBranchStatus(Form("BDT%d",bdtConf[i]),1);
+				mcTreeIn_Sigma->SetBranchStatus("Lb_BKGCAT",1);
+				mcTreeIn_Sigma->SetBranchStatus("GB_WT",1);
+				mcTreeIn_Sigma->SetBranchStatus("wt_tau",1);
+
+				TTree* mcTreeIn_Sigma_cut = (TTree*)mcTreeIn_Sigma->CopyTree(Form("(BDT%d > %f)",bdtConf[i],bdtCut[i])); //Not TRUTH MATCHING HERE!
+
+				list_sig->Add(mcTreeIn_Sigma_cut);
+			}
+
+			TFile *tempFile = new TFile("tempFile_sig.root","RECREATE");
 			TTree *combTree_sig = TTree::MergeTrees(list_sig);
 			combTree_sig->SetName("combTree_sig");
 
 			RooRealVar *gbWtVar = nullptr;
 
-			if(run == 1)
-			{
-				gbWtVar  = new RooRealVar("GB_WT_new","gb Weight Var",-100.,100.);
-			}
-			else if(run == 2)
-			{
-				gbWtVar  = new RooRealVar("GB_WT","gb Weight Var",-100.,100.);
-			}
+			gbWtVar  = new RooRealVar("GB_WT","gb Weight Var",-100.,100.);
 
 			RooRealVar *tauWtVar = new RooRealVar("wt_tau","tau Weight Var",-100.,100.);
 
@@ -745,21 +1017,13 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	for(Int_t run = 1; run<=2; run++)
 	{
 		Int_t i = run-1;
-		TFile *mcFileIn_nonZero_1405 = Open(Form("%s/run%d/lst1405_cutoutks_LL_nonZeroTracks.root",
-		                                         Lst1405Path,run));
-		TTree *mcTreeIn_nonZero_1405 = (TTree*)mcFileIn_nonZero_1405->Get("MyTuple");
 
-		TFile *mcFileIn_Zero_1405    = Open(Form("%s/run%d/lst1405_cutoutks_LL_ZeroTracks.root",
-		                                         Lst1405Path,run));
-		TTree *mcTreeIn_Zero_1405    = (TTree*)mcFileIn_Zero_1405->Get("MyTuple");
-
-		mcTreeIn_nonZero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_LL_FinalBDT%d_iso%d_%s.root",
-		                                                Lst1405Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-		mcTreeIn_Zero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_zeroTracksLL_FinalBDT%d.root",
-		                                             Lst1405Path,run,bdtConf_Zero[i]));
+		//****Get Generator cuts efficiency ****
+		fstream genEffFile_1405; //contains combined gen. efficiency
 
 		TFile *genWtsFile_1405 = nullptr;
 		TTree *genWtsTree_1405 = nullptr;
+
 		genWtsFile_1405 = Open(Form("%s/run%d/RW/gbWeights_gen.root",
 		                            Lst1405Path,run));
 
@@ -768,19 +1032,11 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		genWtsTree_1405->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
 		                                          Lst1405Path,run));
 
-		if(run == 1)
-		{
-			genWtsTree_1405->Draw("wt_tau>>genWt_1405","","goff");
-		}
-		else if(run == 2)
-		{
-			genWtsTree_1405->Draw("wt_tau>>genWt_1405","","goff");
-		}
+		genWtsTree_1405->Draw("wt_tau>>genWt_1405","","goff");
 
 		TH1F *genWt_1405 = (TH1F*)gDirectory->Get("genWt_1405");
 		nGen_1405_wt[i]  = genWt_1405->GetEntries()*genWt_1405->GetMean();
 
-		fstream genEffFile_1405;
 		genEffFile_1405.open(Form("../logs/mc/JpsiLambda/Lst1405/run%d/Generator_Effs_Combined.txt",run));
 
 		genEffFile_1405>>eff_1405_gen[i]; // Get generator efficiency
@@ -789,48 +1045,90 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		// cout<<"Run "<<run<<" Lst1405 Generator Effs = "<<eff_1405_gen[i]*100
 		//     <<" % +/- "<<eff_1405_gen_err[i]*100<<" %"<<endl;
 
-		Int_t num_1405 = 0, num_1405_wt;
-		if(Lst1405_rwtype==0)
-		{
-			num_1405 = mcTreeIn_nonZero_1405->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
-			           mcTreeIn_Zero_1405->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));      //NOTE NO TM HERE
+		//**** Get reconstruction effs ****
+		Float_t num_1405 = 0, num_1405_wt;
 
-			if(run == 1)
+		if(isoFlag)
+		{
+			TFile *mcFileIn_nonZero_1405 = Open(Form("%s/run%d/lst1405_cutoutks_LL_nonZeroTracks.root",
+			                                         Lst1405Path,run));
+			TTree *mcTreeIn_nonZero_1405 = (TTree*)mcFileIn_nonZero_1405->Get("MyTuple");
+
+			TFile *mcFileIn_Zero_1405    = Open(Form("%s/run%d/lst1405_cutoutks_LL_ZeroTracks.root",
+			                                         Lst1405Path,run));
+			TTree *mcTreeIn_Zero_1405    = (TTree*)mcFileIn_Zero_1405->Get("MyTuple");
+
+			mcTreeIn_nonZero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_LL_FinalBDT%d_iso%d_%s.root",
+			                                                Lst1405Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+			mcTreeIn_Zero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_zeroTracksLL_FinalBDT%d.root",
+			                                             Lst1405Path,run,bdtConf_Zero[i]));
+
+			if(Lst1405_rwtype==0)
 			{
+				num_1405 = mcTreeIn_nonZero_1405->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
+				           mcTreeIn_Zero_1405->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i])); //NOTE NO TM HERE
+
 				mcTreeIn_nonZero_1405->Draw("wt_tau>>wt_1405_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
 				mcTreeIn_Zero_1405->Draw("wt_tau>>wt_1405_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+
+				TH1F *wt_1405_nonZero = (TH1F*)gDirectory->Get("wt_1405_nonZero");
+				TH1F *wt_1405_Zero    = (TH1F*)gDirectory->Get("wt_1405_Zero");
+
+				num_1405_wt = (wt_1405_nonZero->GetMean()*wt_1405_nonZero->GetEntries()) +
+				              (wt_1405_Zero->GetMean()*wt_1405_Zero->GetEntries());
 			}
-			else if(run == 2)
+			else //HAVE TO DEAL WITH THIS
 			{
-				mcTreeIn_nonZero_1405->Draw("wt_tau>>wt_1405_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-				mcTreeIn_Zero_1405->Draw("wt_tau>>wt_1405_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+				mcTreeIn_nonZero_1405->Draw(Form("%sweight>>hrw0",rwType),Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+				mcTreeIn_Zero_1405->Draw(Form("%sweight>>hrw1",rwType),Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+				TH1D* hrw0 = (TH1D*)gDirectory->Get("hrw0");
+				TH1D* hrw1 = (TH1D*)gDirectory->Get("hrw1");
+				num_1405   = (hrw0->GetMean()*hrw0->GetEntries()) +(hrw1->GetMean()*hrw1->GetEntries());
+
+				mcTreeIn_nonZero_1405->Draw(Form("%sweight*wt_tau>>wt_1405_nonZero",rwType),Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+				mcTreeIn_Zero_1405->Draw(Form("%sweight*wt_tau>>wt_1405_Zero",rwType),Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+
+				TH1F *wt_1405_nonZero = (TH1F*)gDirectory->Get("wt_1405_nonZero");
+				TH1F *wt_1405_Zero    = (TH1F*)gDirectory->Get("wt_1405_Zero");
+
+				num_1405_wt = (wt_1405_nonZero->GetMean()*wt_1405_nonZero->GetEntries()) +
+				              (wt_1405_Zero->GetMean()*wt_1405_Zero->GetEntries());
+
 			}
-			TH1F *wt_1405_nonZero = (TH1F*)gDirectory->Get("wt_1405_nonZero");
-			TH1F *wt_1405_Zero    = (TH1F*)gDirectory->Get("wt_1405_Zero");
-
-			num_1405_wt = (wt_1405_nonZero->GetMean()*wt_1405_nonZero->GetEntries()) +
-			              (wt_1405_Zero->GetMean()*wt_1405_Zero->GetEntries());
-
 		}
-		else //HAVE TO DEAL WITH THIS
+		else
 		{
-			mcTreeIn_nonZero_1405->Draw(Form("%sweight>>hrw0",rwType),Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_1405->Draw(Form("%sweight>>hrw1",rwType),Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
-			TH1D* hrw0 = (TH1D*)gDirectory->Get("hrw0");
-			TH1D* hrw1 = (TH1D*)gDirectory->Get("hrw1");
-			num_1405   = (hrw0->GetMean()*hrw0->GetEntries()) +(hrw1->GetMean()*hrw1->GetEntries());
+			TFile *mcFileIn_1405 = Open(Form("%s/run%d/lst1405_cutoutks_LL.root",
+			                                 Lst1405Path,run));
+			TTree *mcTreeIn_1405 = (TTree*)mcFileIn_1405->Get("MyTuple");
 
-			mcTreeIn_nonZero_1405->Draw(Form("%sweight*wt_tau>>wt_1405_nonZero",rwType),Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_1405->Draw(Form("%sweight*wt_tau>>wt_1405_Zero",rwType),Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+			mcTreeIn_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_LL_FinalBDT%d_noIso.root",
+			                                        Lst1405Path,run,bdtConf[i]));
+			if(Lst1405_rwtype==0)
+			{
+				num_1405 = mcTreeIn_1405->GetEntries(Form("BDT%d > %f", bdtConf[i],bdtCut[i])); //NOTE NO TM HERE
 
-			TH1F *wt_1405_nonZero = (TH1F*)gDirectory->Get("wt_1405_nonZero");
-			TH1F *wt_1405_Zero    = (TH1F*)gDirectory->Get("wt_1405_Zero");
+				mcTreeIn_1405->Draw("wt_tau>>wt_1405",Form("BDT%d > %f", bdtConf[i],bdtCut[i]),"goff");
 
-			num_1405_wt = (wt_1405_nonZero->GetMean()*wt_1405_nonZero->GetEntries()) +
-			              (wt_1405_Zero->GetMean()*wt_1405_Zero->GetEntries());
+				TH1F *wt_1405 = (TH1F*)gDirectory->Get("wt_1405");
 
+				num_1405_wt = (wt_1405->GetMean()*wt_1405->GetEntries());
+			}
+			else //HAVE TO DEAL WITH THIS
+			{
+				mcTreeIn_1405->Draw(Form("%sweight>>hrw0",rwType),Form("BDT%d > %f", bdtConf[i],bdtCut[i]),"goff");
+
+				TH1D* hrw0 = (TH1D*)gDirectory->Get("hrw0");
+
+				num_1405   = (hrw0->GetMean()*hrw0->GetEntries());
+
+				mcTreeIn_1405->Draw(Form("%sweight*wt_tau>>wt_1405",rwType),Form("BDT%d > %f", bdtConf[i],bdtCut[i]),"goff");
+
+				TH1F *wt_1405 = (TH1F*)gDirectory->Get("wt_1405");
+
+				num_1405_wt = (wt_1405->GetMean()*wt_1405->GetEntries());
+			}
 		}
-
 		eff_1405_rec[i]     = num_1405*1.0/nGen_1405[i]; // Calc. reco. eff.
 		eff_1405_rec_err[i] = sqrt(eff_1405_rec[i]*(1-eff_1405_rec[i])/nGen_1405[i]); //stat error on recon. eff.
 
@@ -843,6 +1141,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		// cout<<"Run "<<run<<" WEIGHTED /\(1405) Recons. Effs = "<<eff_1405_wt_rec[i]*100
 		//     <<" % +/- "<<eff_1405_wt_rec_err[i]*100<<" %"<<endl;
 
+		// **** Multiply gen. eff by reco eff. to get overall eff.
 		eff_1405[i]         = eff_1405_rec[i]*eff_1405_gen[i];
 		eff_1405_SystErr[i] = eff_1405[i]*sqrt(pow((eff_1405_gen_err[i]/eff_1405_gen[i]),2) +
 		                                       pow((eff_1405_rec_err[i]/eff_1405_rec[i]),2));
@@ -887,82 +1186,66 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 			cout<<"Get J/psi Lambda(1405) shape from MC"<<endl;
 			cout<<"***************************************"<<endl;
 
-			mcTreeIn_Zero_1405->SetBranchStatus("*",0);
-			mcTreeIn_Zero_1405->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-			mcTreeIn_Zero_1405->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
-			mcTreeIn_Zero_1405->SetBranchStatus("Lb_BKGCAT",1);
-			mcTreeIn_Zero_1405->SetBranchStatus("GB_WT",1);
-			mcTreeIn_Zero_1405->SetBranchStatus("wt_tau",1);
-
-			mcTreeIn_nonZero_1405->SetBranchStatus("*",0);
-			mcTreeIn_nonZero_1405->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-			mcTreeIn_nonZero_1405->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
-			mcTreeIn_nonZero_1405->SetBranchStatus("Lb_BKGCAT",1);
-			mcTreeIn_nonZero_1405->SetBranchStatus("GB_WT",1);
-			mcTreeIn_nonZero_1405->SetBranchStatus("wt_tau",1);
-
-			if(run == 1)
-			{
-				mcTreeIn_Zero_1405->SetBranchStatus("GB_WT_new",1);
-				mcTreeIn_nonZero_1405->SetBranchStatus("GB_WT_new",1);
-			}
-
-			TFile *tempFile_1405 = new TFile("tempFile_1405.root","RECREATE");
-
-			TTree* mcTreeIn_Zero_1405_cut    = (TTree*)mcTreeIn_Zero_1405->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TRUTH MATCHING HERE!
-			TTree* mcTreeIn_nonZero_1405_cut = (TTree*)mcTreeIn_nonZero_1405->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//NOTE NO TRUTH MATCHING HERE!
-
 			TList *list_1405 = new TList;
-			list_1405->Add(mcTreeIn_Zero_1405_cut);
-			list_1405->Add(mcTreeIn_nonZero_1405_cut);
+
+			if(isoFlag)
+			{
+				mcTreeIn_Zero_1405->SetBranchStatus("*",0);
+				mcTreeIn_Zero_1405->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+				mcTreeIn_Zero_1405->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+				mcTreeIn_Zero_1405->SetBranchStatus("Lb_BKGCAT",1);
+				mcTreeIn_Zero_1405->SetBranchStatus("GB_WT",1);
+				mcTreeIn_Zero_1405->SetBranchStatus("wt_tau",1);
+
+				mcTreeIn_nonZero_1405->SetBranchStatus("*",0);
+				mcTreeIn_nonZero_1405->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+				mcTreeIn_nonZero_1405->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+				mcTreeIn_nonZero_1405->SetBranchStatus("Lb_BKGCAT",1);
+				mcTreeIn_nonZero_1405->SetBranchStatus("GB_WT",1);
+				mcTreeIn_nonZero_1405->SetBranchStatus("wt_tau",1);
+
+				TTree* mcTreeIn_Zero_1405_cut    = (TTree*)mcTreeIn_Zero_1405->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TRUTH MATCHING HERE!
+				TTree* mcTreeIn_nonZero_1405_cut = (TTree*)mcTreeIn_nonZero_1405->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//NOTE NO TRUTH MATCHING HERE!
+
+				list_1405->Add(mcTreeIn_Zero_1405_cut);
+				list_1405->Add(mcTreeIn_nonZero_1405_cut);
+			}
+			else
+			{
+				mcTreeIn_1405->SetBranchStatus("*",0);
+				mcTreeIn_1405->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+				mcTreeIn_1405->SetBranchStatus(Form("BDT%d",bdtConf[i]),1);
+				mcTreeIn_1405->SetBranchStatus("Lb_BKGCAT",1);
+				mcTreeIn_1405->SetBranchStatus("GB_WT",1);
+				mcTreeIn_1405->SetBranchStatus("wt_tau",1);
+
+				TTree* mcTreeIn_1405_cut = (TTree*)mcTreeIn_1405->CopyTree(Form("BDT%d > %f",bdtConf[i],bdtCut[i]));//NOTE NO TRUTH MATCHING HERE!
+
+				list_1405->Add(mcTreeIn_1405_cut);
+			}
+			TFile *tempFile_1405 = new TFile("tempFile_1405.root","RECREATE");
 
 			TTree *combTree_1405 = TTree::MergeTrees(list_1405);
 			combTree_1405->SetName("combTree_1405");
 
 			if(Lst1405_rwtype!=0)
 			{
-				if(run == 1)
-				{
-					ds_1405[i] = new RooDataSet(Form("ds_1405_Run%d",run),Form("ds_1405_Run%d",run),combTree_1405,
-					                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
-					                            Form("%sweight*wt_tau",rwType));
-				}
-				else if(run == 2)
-				{
-					ds_1405[i] = new RooDataSet(Form("ds_1405_Run%d",run),Form("ds_1405_Run%d",run),combTree_1405,
-					                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
-					                            Form("%sweight*wt_tau",rwType));
-				}
+				ds_1405[i] = new RooDataSet(Form("ds_1405_Run%d",run),Form("ds_1405_Run%d",run),combTree_1405,
+				                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
+				                            Form("%sweight*wt_tau",rwType));
 			}
 			else
 			{
-				if(run == 1)
+				if(mcRW)
 				{
-					if(mcRW)
-					{
-						ds_1405[i] = new RooDataSet(Form("ds_1405_Run%d",run),Form("ds_1405_Run%d",run),combTree_1405,
-						                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
-						                            "wt_tau");
-					}
-					else
-					{
-						ds_1405[i] = new RooDataSet(Form("ds_1405_Run%d",run),Form("ds_1405_Run%d",run),combTree_1405,
-						                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0);
-					}
+					ds_1405[i] = new RooDataSet(Form("ds_1405_Run%d",run),Form("ds_1405_Run%d",run),combTree_1405,
+					                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
+					                            "wt_tau");
 				}
-				else if(run == 2)
+				else
 				{
-					if(mcRW)
-					{
-						ds_1405[i] = new RooDataSet(Form("ds_1405_Run%d",run),Form("ds_1405_Run%d",run),combTree_1405,
-						                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,
-						                            "wt_tau");
-					}
-					else
-					{
-						ds_1405[i] = new RooDataSet(Form("ds_1405_Run%d",run),Form("ds_1405_Run%d",run),combTree_1405,
-						                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0);
-					}
+					ds_1405[i] = new RooDataSet(Form("ds_1405_Run%d",run),Form("ds_1405_Run%d",run),combTree_1405,
+					                            RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0);
 				}
 			}
 			ds_1405[i]->Print();
@@ -1012,19 +1295,11 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	for(Int_t run = 1; run<=2; run++)
 	{
 		Int_t i = run-1;
-		TFile *mcFileIn_nonZero_1520 = Open(Form("%s/run%d/lst1520_cutoutks_LL_nonZeroTracks.root",
-		                                         Lst1520Path,run));
-		TTree *mcTreeIn_nonZero_1520 = (TTree*)mcFileIn_nonZero_1520->Get("MyTuple");
 
-		TFile *mcFileIn_Zero_1520    = Open(Form("%s/run%d/lst1520_cutoutks_LL_ZeroTracks.root",
-		                                         Lst1520Path,run));
-		TTree *mcTreeIn_Zero_1520    = (TTree*)mcFileIn_Zero_1520->Get("MyTuple");
+		//****Get Generator cuts efficiency ****
+		fstream genFile_1520; //contains no of gen. candidates
+		fstream genEffFile_1520; //contains combined gen. efficiency
 
-		mcTreeIn_nonZero_1520->AddFriend("MyTuple",Form("%s/run%d/lst1520_LL_FinalBDT%d_iso%d_%s.root",
-		                                                Lst1520Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-		mcTreeIn_Zero_1520->AddFriend("MyTuple",Form("%s/run%d/lst1520_zeroTracksLL_FinalBDT%d.root",
-		                                             Lst1520Path,run,bdtConf_Zero[i]));
-		fstream genFile_1520;
 		genFile_1520.open((Form("../logs/mc/JpsiLambda/Lst1520/run%d/gen_log.txt",run)));
 
 		genFile_1520>>nGen_1520[i]; // Get number of generated events
@@ -1041,7 +1316,6 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		TH1F *genWt_1520 = (TH1F*)gDirectory->Get("genWt_1520");
 		nGen_1520_wt[i] = genWt_1520->GetEntries()*genWt_1520->GetMean();
 
-		fstream genEffFile_1520;
 		genEffFile_1520.open(Form("../logs/mc/JpsiLambda/Lst1520/run%d/Generator_Effs_Combined.txt",run));
 
 		genEffFile_1520>>eff_1520_gen[i]; // Get generator efficiency
@@ -1050,25 +1324,52 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		// cout<<"Run "<<run<<" Lst1520 Generator Effs = "<<eff_1520_gen[i]*100
 		//     <<" % +/- "<<eff_1520_gen_err[i]*100<<" %"<<endl;
 
-		Int_t num_1520 = mcTreeIn_nonZero_1520->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
-		                 mcTreeIn_Zero_1520->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));    //NOTE NO TM HERE
+		//**** Get reconstruction effs ****
+		Float_t num_1520 = 0., num_1520_wt = 0.;
 
-		if(run == 1)
+		if(isoFlag)
 		{
+			TFile *mcFileIn_nonZero_1520 = Open(Form("%s/run%d/lst1520_cutoutks_LL_nonZeroTracks.root",
+			                                         Lst1520Path,run));
+			TTree *mcTreeIn_nonZero_1520 = (TTree*)mcFileIn_nonZero_1520->Get("MyTuple");
+
+			TFile *mcFileIn_Zero_1520    = Open(Form("%s/run%d/lst1520_cutoutks_LL_ZeroTracks.root",
+			                                         Lst1520Path,run));
+			TTree *mcTreeIn_Zero_1520    = (TTree*)mcFileIn_Zero_1520->Get("MyTuple");
+
+			mcTreeIn_nonZero_1520->AddFriend("MyTuple",Form("%s/run%d/lst1520_LL_FinalBDT%d_iso%d_%s.root",
+			                                                Lst1520Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+			mcTreeIn_Zero_1520->AddFriend("MyTuple",Form("%s/run%d/lst1520_zeroTracksLL_FinalBDT%d.root",
+			                                             Lst1520Path,run,bdtConf_Zero[i]));
+
+			num_1520 = mcTreeIn_nonZero_1520->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
+			           mcTreeIn_Zero_1520->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));  //NOTE NO TM HERE
+
 			mcTreeIn_nonZero_1520->Draw("wt_tau>>wt_1520_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
 			mcTreeIn_Zero_1520->Draw("wt_tau>>wt_1520_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+
+			TH1F *wt_1520_nonZero = (TH1F*)gDirectory->Get("wt_1520_nonZero");
+			TH1F *wt_1520_Zero    = (TH1F*)gDirectory->Get("wt_1520_Zero");
+
+			num_1520_wt = (wt_1520_nonZero->GetMean()*wt_1520_nonZero->GetEntries()) +
+			              (wt_1520_Zero->GetMean()*wt_1520_Zero->GetEntries());
 		}
-		else if(run == 2)
+		else
 		{
-			mcTreeIn_nonZero_1520->Draw("wt_tau>>wt_1520_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_1520->Draw("wt_tau>>wt_1520_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+			TFile *mcFileIn_1520 = Open(Form("%s/run%d/lst1520_cutoutks_LL.root",
+			                                 Lst1520Path,run));
+			TTree *mcTreeIn_1520 = (TTree*)mcFileIn_1520->Get("MyTuple");
 
+			mcTreeIn_1520->AddFriend("MyTuple",Form("%s/run%d/lst1520_LL_FinalBDT%d_noIso.root",
+			                                        Lst1520Path,run,bdtConf[i]));
+			num_1520 = mcTreeIn_1520->GetEntries(Form("BDT%d > %f", bdtConf[i],bdtCut[i])); //NOTE NO TM HERE
+
+			mcTreeIn_1520->Draw("wt_tau>>wt_1520",Form("BDT%d > %f", bdtConf[i],bdtCut[i]),"goff");
+
+			TH1F *wt_1520 = (TH1F*)gDirectory->Get("wt_1520");
+
+			num_1520_wt = (wt_1520->GetMean()*wt_1520->GetEntries());
 		}
-		TH1F *wt_1520_nonZero = (TH1F*)gDirectory->Get("wt_1520_nonZero");
-		TH1F *wt_1520_Zero    = (TH1F*)gDirectory->Get("wt_1520_Zero");
-
-		Int_t num_1520_wt = (wt_1520_nonZero->GetMean()*wt_1520_nonZero->GetEntries()) +
-		                    (wt_1520_Zero->GetMean()*wt_1520_Zero->GetEntries());
 
 		eff_1520_rec[i]     = num_1520*1.0/nGen_1520[i]; // Calc. reco. eff.
 		eff_1520_rec_err[i] = sqrt(eff_1520_rec[i]*(1-eff_1520_rec[i])/nGen_1520[i]); //syst error on recon. eff.
@@ -1082,6 +1383,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		// cout<<"Run "<<run<<" WEIGHTED /\(1520) Recons. Effs = "<<eff_1520_rec_wt[i]*100
 		//     <<" % +/- "<<eff_1520_wt_rec_err[i]*100<<" %"<<endl;
 
+		// **** Multiply gen. eff by reco eff. to get overall eff.
 		eff_1520[i]         = eff_1520_rec[i]*eff_1520_gen[i];
 		eff_1520_SystErr[i] = eff_1520[i]*sqrt(pow((eff_1520_gen_err[i]/eff_1520_gen[i]),2) +
 		                                       pow((eff_1520_rec_err[i]/eff_1520_rec[i]),2));
@@ -1105,8 +1407,7 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 
 		eff_ratio_wt_1520[i]         = eff_1520_wt[i]/eff_JpsiLambda_wt[i];
 		eff_ratio_wt_SystErr_1520[i] = eff_ratio_wt_1520[i]*sqrt(pow((eff_1520_wt_SystErr[i]/eff_1520_wt[i]),2)+
-		                                                         pow((eff_JpsiLambda_wt_SystErr[i]/eff_JpsiLambda_wt[i]),2)
-		                                                         );    // stat err on ratio
+		                                                         pow((eff_JpsiLambda_wt_SystErr[i]/eff_JpsiLambda_wt[i]),2));    // stat err on ratio
 		eff_ratio_wt_StatErr_1520[i] = 0.0;
 		eff_ratio_Err_1520_wt[i]     = sqrt(pow(eff_ratio_wt_StatErr_1520[i],2) + pow(eff_ratio_wt_SystErr_1520[i],2));//combine in quadrature
 
@@ -1124,35 +1425,44 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 			cout<<"Get J/psi Lambda(1520) shape from MC"<<endl;
 			cout<<"***************************************"<<endl;
 
-			mcTreeIn_Zero_1520->SetBranchStatus("*",0);
-			mcTreeIn_Zero_1520->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-			mcTreeIn_Zero_1520->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
-			mcTreeIn_Zero_1520->SetBranchStatus("Lb_BKGCAT",1);
-			mcTreeIn_Zero_1520->SetBranchStatus("GB_WT",1);
-			mcTreeIn_Zero_1520->SetBranchStatus("wt_tau",1);
-
-			mcTreeIn_nonZero_1520->SetBranchStatus("*",0);
-			mcTreeIn_nonZero_1520->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-			mcTreeIn_nonZero_1520->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
-			mcTreeIn_nonZero_1520->SetBranchStatus("Lb_BKGCAT",1);
-			mcTreeIn_nonZero_1520->SetBranchStatus("GB_WT",1);
-			mcTreeIn_nonZero_1520->SetBranchStatus("wt_tau",1);
-
-			if(run == 1)
-			{
-				mcTreeIn_Zero_1520->SetBranchStatus("GB_WT_new",1);
-				mcTreeIn_nonZero_1520->SetBranchStatus("GB_WT_new",1);
-			}
-
-			TFile *tempFile_1520 = new TFile("tempFile_1520.root","RECREATE");
-
-			TTree* mcTreeIn_Zero_1520_cut    = (TTree*)mcTreeIn_Zero_1520->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TRUTH MATCHING HERE!
-			TTree* mcTreeIn_nonZero_1520_cut = (TTree*)mcTreeIn_nonZero_1520->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//NOTE NO TRUTH MATCHING HERE!
-
 			TList *list_1520 = new TList;
-			list_1520->Add(mcTreeIn_Zero_1520_cut);
-			list_1520->Add(mcTreeIn_nonZero_1520_cut);
 
+			if(isoFlag)
+			{
+				mcTreeIn_Zero_1520->SetBranchStatus("*",0);
+				mcTreeIn_Zero_1520->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+				mcTreeIn_Zero_1520->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+				mcTreeIn_Zero_1520->SetBranchStatus("Lb_BKGCAT",1);
+				mcTreeIn_Zero_1520->SetBranchStatus("GB_WT",1);
+				mcTreeIn_Zero_1520->SetBranchStatus("wt_tau",1);
+
+				mcTreeIn_nonZero_1520->SetBranchStatus("*",0);
+				mcTreeIn_nonZero_1520->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+				mcTreeIn_nonZero_1520->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+				mcTreeIn_nonZero_1520->SetBranchStatus("Lb_BKGCAT",1);
+				mcTreeIn_nonZero_1520->SetBranchStatus("GB_WT",1);
+				mcTreeIn_nonZero_1520->SetBranchStatus("wt_tau",1);
+
+				TTree* mcTreeIn_Zero_1520_cut    = (TTree*)mcTreeIn_Zero_1520->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TRUTH MATCHING HERE!
+				TTree* mcTreeIn_nonZero_1520_cut = (TTree*)mcTreeIn_nonZero_1520->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//NOTE NO TRUTH MATCHING HERE!
+
+				list_1520->Add(mcTreeIn_Zero_1520_cut);
+				list_1520->Add(mcTreeIn_nonZero_1520_cut);
+			}
+			else
+			{
+				mcTreeIn_1520->SetBranchStatus("*",0);
+				mcTreeIn_1520->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+				mcTreeIn_1520->SetBranchStatus(Form("BDT%d",bdtConf[i]),1);
+				mcTreeIn_1520->SetBranchStatus("Lb_BKGCAT",1);
+				mcTreeIn_1520->SetBranchStatus("GB_WT",1);
+				mcTreeIn_1520->SetBranchStatus("wt_tau",1);
+
+				TTree* mcTreeIn_1520_cut = (TTree*)mcTreeIn_1520->CopyTree(Form("BDT%d > %f",bdtConf[i],bdtCut[i]));//NOTE NO TRUTH MATCHING HERE!
+
+				list_1520->Add(mcTreeIn_1520_cut);
+			}
+			TFile *tempFile_1520 = new TFile("tempFile_1520.root","RECREATE");
 			TTree *combTree_1520 = TTree::MergeTrees(list_1520);
 			combTree_1520->SetName("combTree_1520");
 
@@ -1208,19 +1518,11 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	for(Int_t run = 1; run<=2; run++)
 	{
 		Int_t i = run-1;
-		TFile *mcFileIn_nonZero_1600 = Open(Form("%s/run%d/lst1600_cutoutks_LL_nonZeroTracks.root",
-		                                         Lst1600Path,run));
-		TTree *mcTreeIn_nonZero_1600 = (TTree*)mcFileIn_nonZero_1600->Get("MyTuple");
 
-		TFile *mcFileIn_Zero_1600    = Open(Form("%s/run%d/lst1600_cutoutks_LL_ZeroTracks.root",
-		                                         Lst1600Path,run));
-		TTree *mcTreeIn_Zero_1600    = (TTree*)mcFileIn_Zero_1600->Get("MyTuple");
+		//****Get Generator cuts efficiency ****
+		fstream genFile_1600; //contains no of gen. candidates
+		fstream genEffFile_1600; //contains combined gen. efficiency
 
-		mcTreeIn_nonZero_1600->AddFriend("MyTuple",Form("%s/run%d/lst1600_LL_FinalBDT%d_iso%d_%s.root",
-		                                                Lst1600Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-		mcTreeIn_Zero_1600->AddFriend("MyTuple",Form("%s/run%d/lst1600_zeroTracksLL_FinalBDT%d.root",
-		                                             Lst1600Path,run,bdtConf_Zero[i]));
-		fstream genFile_1600;
 		genFile_1600.open((Form("../logs/mc/JpsiLambda/Lst1600/run%d/gen_log.txt",run)));
 
 		genFile_1600>>nGen_1600[i]; // Get number of generated events
@@ -1237,34 +1539,60 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		TH1F *genWt_1600 = (TH1F*)gDirectory->Get("genWt_1600");
 		nGen_1600_wt[i] = genWt_1600->GetEntries()*genWt_1600->GetMean();
 
-		fstream genEffFile_1600;
+
 		genEffFile_1600.open(Form("../logs/mc/JpsiLambda/Lst1600/run%d/Generator_Effs_Combined.txt",run));
 
 		genEffFile_1600>>eff_1600_gen[i]; // Get generator efficiency
 		genEffFile_1600>>eff_1600_gen_err[i]; // and error on above
 
-		cout<<"Run "<<run<<" Lst1600 Generator Effs = "<<eff_1600_gen[i]*100
-		    <<" % +/- "<<eff_1600_gen_err[i]*100<<" %"<<endl;
+		// cout<<"Run "<<run<<" Lst1600 Generator Effs = "<<eff_1600_gen[i]*100
+		//     <<" % +/- "<<eff_1600_gen_err[i]*100<<" %"<<endl;
 
-		Int_t num_1600 = mcTreeIn_nonZero_1600->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
-		                 mcTreeIn_Zero_1600->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));    //NOTE NO TM HERE
+		//**** Get reconstruction effs ****
+		Float_t num_1600 = 0., num_1600_wt = 0.;
 
-		if(run == 1)
+		if(isoFlag)
 		{
+			TFile *mcFileIn_nonZero_1600 = Open(Form("%s/run%d/lst1600_cutoutks_LL_nonZeroTracks.root",
+			                                         Lst1600Path,run));
+			TTree *mcTreeIn_nonZero_1600 = (TTree*)mcFileIn_nonZero_1600->Get("MyTuple");
+
+			TFile *mcFileIn_Zero_1600    = Open(Form("%s/run%d/lst1600_cutoutks_LL_ZeroTracks.root",
+			                                         Lst1600Path,run));
+			TTree *mcTreeIn_Zero_1600    = (TTree*)mcFileIn_Zero_1600->Get("MyTuple");
+
+			mcTreeIn_nonZero_1600->AddFriend("MyTuple",Form("%s/run%d/lst1600_LL_FinalBDT%d_iso%d_%s.root",
+			                                                Lst1600Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+			mcTreeIn_Zero_1600->AddFriend("MyTuple",Form("%s/run%d/lst1600_zeroTracksLL_FinalBDT%d.root",
+			                                             Lst1600Path,run,bdtConf_Zero[i]));
+			num_1600 = mcTreeIn_nonZero_1600->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
+			           mcTreeIn_Zero_1600->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));  //NOTE NO TM HERE
+
 			mcTreeIn_nonZero_1600->Draw("wt_tau>>wt_1600_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
 			mcTreeIn_Zero_1600->Draw("wt_tau>>wt_1600_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+
+			TH1F *wt_1600_nonZero = (TH1F*)gDirectory->Get("wt_1600_nonZero");
+			TH1F *wt_1600_Zero    = (TH1F*)gDirectory->Get("wt_1600_Zero");
+
+			num_1600_wt = (wt_1600_nonZero->GetMean()*wt_1600_nonZero->GetEntries()) +
+			              (wt_1600_Zero->GetMean()*wt_1600_Zero->GetEntries());
 		}
-		else if(run == 2)
+		else
 		{
-			mcTreeIn_nonZero_1600->Draw("wt_tau>>wt_1600_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-			mcTreeIn_Zero_1600->Draw("wt_tau>>wt_1600_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+			TFile *mcFileIn_1600 = Open(Form("%s/run%d/lst1600_cutoutks_LL.root",
+			                                 Lst1600Path,run));
+			TTree *mcTreeIn_1600 = (TTree*)mcFileIn_1600->Get("MyTuple");
 
+			mcTreeIn_1600->AddFriend("MyTuple",Form("%s/run%d/lst1600_LL_FinalBDT%d_noIso.root",
+			                                        Lst1600Path,run,bdtConf[i]));
+
+			num_1600 = mcTreeIn_1600->GetEntries(Form("BDT%d > %f", bdtConf[i],bdtCut[i])); //NOTE NO TM HERE
+
+			mcTreeIn_1600->Draw("wt_tau>>wt_1600",Form("BDT%d > %f", bdtConf[i],bdtCut[i]),"goff");
+
+			TH1F *wt_1600 = (TH1F*)gDirectory->Get("wt_1600");
+			num_1600_wt = (wt_1600->GetMean()*wt_1600->GetEntries());
 		}
-		TH1F *wt_1600_nonZero = (TH1F*)gDirectory->Get("wt_1600_nonZero");
-		TH1F *wt_1600_Zero    = (TH1F*)gDirectory->Get("wt_1600_Zero");
-
-		Int_t num_1600_wt = (wt_1600_nonZero->GetMean()*wt_1600_nonZero->GetEntries()) +
-		                    (wt_1600_Zero->GetMean()*wt_1600_Zero->GetEntries());
 
 		eff_1600_rec[i]     = num_1600*1.0/nGen_1600[i]; // Calc. reco. eff.
 		eff_1600_rec_err[i] = sqrt(eff_1600_rec[i]*(1-eff_1600_rec[i])/nGen_1600[i]); //syst error on recon. eff.
@@ -1272,12 +1600,13 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		eff_1600_rec_wt[i]     = num_1600_wt*1.0/nGen_1600_wt[i]; //Calc. weighted reco eff.
 		eff_1600_wt_rec_err[i] = sqrt(eff_1600_rec_wt[i]*(1-eff_1600_rec_wt[i])/nGen_1600_wt[i]); //syst error on weighted recon. eff.
 
-		cout<<"Run "<<run<<" UNWEIGHTED /\(1600) Recons. Effs = "<<eff_1600_rec[i]*100
-		    <<" % +/- "<<eff_1600_rec_err[i]*100<<" %"<<endl;
+		// cout<<"Run "<<run<<" UNWEIGHTED /\(1600) Recons. Effs = "<<eff_1600_rec[i]*100
+		//     <<" % +/- "<<eff_1600_rec_err[i]*100<<" %"<<endl;
+		//
+		// cout<<"Run "<<run<<" WEIGHTED /\(1600) Recons. Effs = "<<eff_1600_rec_wt[i]*100
+		//     <<" % +/- "<<eff_1600_wt_rec_err[i]*100<<" %"<<endl;
 
-		cout<<"Run "<<run<<" WEIGHTED /\(1600) Recons. Effs = "<<eff_1600_rec_wt[i]*100
-		    <<" % +/- "<<eff_1600_wt_rec_err[i]*100<<" %"<<endl;
-
+		// **** Multiply gen. eff by reco eff. to get overall eff.
 		eff_1600[i]         = eff_1600_rec[i]*eff_1600_gen[i];
 		eff_1600_SystErr[i] = eff_1600[i]*sqrt(pow((eff_1600_gen_err[i]/eff_1600_gen[i]),2) +
 		                                       pow((eff_1600_rec_err[i]/eff_1600_rec[i]),2));
@@ -1320,35 +1649,43 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 			cout<<"Get J/psi Lambda(1600) shape from MC"<<endl;
 			cout<<"***************************************"<<endl;
 
-			mcTreeIn_Zero_1600->SetBranchStatus("*",0);
-			mcTreeIn_Zero_1600->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-			mcTreeIn_Zero_1600->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
-			mcTreeIn_Zero_1600->SetBranchStatus("Lb_BKGCAT",1);
-			mcTreeIn_Zero_1600->SetBranchStatus("GB_WT",1);
-			mcTreeIn_Zero_1600->SetBranchStatus("wt_tau",1);
-
-			mcTreeIn_nonZero_1600->SetBranchStatus("*",0);
-			mcTreeIn_nonZero_1600->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-			mcTreeIn_nonZero_1600->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
-			mcTreeIn_nonZero_1600->SetBranchStatus("Lb_BKGCAT",1);
-			mcTreeIn_nonZero_1600->SetBranchStatus("GB_WT",1);
-			mcTreeIn_nonZero_1600->SetBranchStatus("wt_tau",1);
-
-			if(run == 1)
-			{
-				mcTreeIn_Zero_1600->SetBranchStatus("GB_WT_new",1);
-				mcTreeIn_nonZero_1600->SetBranchStatus("GB_WT_new",1);
-			}
-
-			TFile *tempFile_1600 = new TFile("tempFile_1600.root","RECREATE");
-
-			TTree* mcTreeIn_Zero_1600_cut    = (TTree*)mcTreeIn_Zero_1600->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TRUTH MATCHING HERE!
-			TTree* mcTreeIn_nonZero_1600_cut = (TTree*)mcTreeIn_nonZero_1600->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//NOTE NO TRUTH MATCHING HERE!
-
 			TList *list_1600 = new TList;
-			list_1600->Add(mcTreeIn_Zero_1600_cut);
-			list_1600->Add(mcTreeIn_nonZero_1600_cut);
+			if(isoFlag)
+			{
+				mcTreeIn_Zero_1600->SetBranchStatus("*",0);
+				mcTreeIn_Zero_1600->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+				mcTreeIn_Zero_1600->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+				mcTreeIn_Zero_1600->SetBranchStatus("Lb_BKGCAT",1);
+				mcTreeIn_Zero_1600->SetBranchStatus("GB_WT",1);
+				mcTreeIn_Zero_1600->SetBranchStatus("wt_tau",1);
 
+				mcTreeIn_nonZero_1600->SetBranchStatus("*",0);
+				mcTreeIn_nonZero_1600->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+				mcTreeIn_nonZero_1600->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+				mcTreeIn_nonZero_1600->SetBranchStatus("Lb_BKGCAT",1);
+				mcTreeIn_nonZero_1600->SetBranchStatus("GB_WT",1);
+				mcTreeIn_nonZero_1600->SetBranchStatus("wt_tau",1);
+
+				TTree* mcTreeIn_Zero_1600_cut    = (TTree*)mcTreeIn_Zero_1600->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TRUTH MATCHING HERE!
+				TTree* mcTreeIn_nonZero_1600_cut = (TTree*)mcTreeIn_nonZero_1600->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//NOTE NO TRUTH MATCHING HERE!
+
+				list_1600->Add(mcTreeIn_Zero_1600_cut);
+				list_1600->Add(mcTreeIn_nonZero_1600_cut);
+			}
+			else
+			{
+				mcTreeIn_1600->SetBranchStatus("*",0);
+				mcTreeIn_1600->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+				mcTreeIn_1600->SetBranchStatus(Form("BDT%d",bdtConf[i]),1);
+				mcTreeIn_1600->SetBranchStatus("Lb_BKGCAT",1);
+				mcTreeIn_1600->SetBranchStatus("GB_WT",1);
+				mcTreeIn_1600->SetBranchStatus("wt_tau",1);
+
+				TTree* mcTreeIn_1600_cut = (TTree*)mcTreeIn_1600->CopyTree(Form("BDT%d > %f",bdtConf[i],bdtCut[i]));//NOTE NO TRUTH MATCHING HERE!
+
+				list_1600->Add(mcTreeIn_1600_cut);
+			}
+			TFile *tempFile_1600 = new TFile("tempFile_1600.root","RECREATE");
 			TTree *combTree_1600 = TTree::MergeTrees(list_1600);
 			combTree_1600->SetName("combTree_1600");
 
@@ -1601,58 +1938,64 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		Int_t i = run-1;
 		if(!inputFlag)
 		{
-			TFile *filein_xi_nonZero = Open(Form("%s/run%d/jpsixi_cutoutks_LL_nonZeroTracks.root",xibPath,run));
-			TTree *treein_xi_nonZero = (TTree*)filein_xi_nonZero->Get("MyTuple");
-
-			TFile *filein_xi_Zero = Open(Form("%s/run%d/jpsixi_cutoutks_LL_ZeroTracks.root",xibPath,run));
-			TTree *treein_xi_Zero = (TTree*)filein_xi_Zero->Get("MyTuple");
-
-			treein_xi_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsixi_LL_FinalBDT%d_iso%d_%s.root",
-			                                            xibPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-			treein_xi_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsixi_zeroTracksLL_FinalBDT%d.root",
-			                                         xibPath,run,bdtConf_Zero[i]));
-			treein_xi_Zero->SetBranchStatus("*",0);
-			treein_xi_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-			treein_xi_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
-			treein_xi_Zero->SetBranchStatus("Lb_BKGCAT",1);
-			treein_xi_Zero->SetBranchStatus("GB_WT",1);
-			if(run == 1)
-			{
-				treein_xi_Zero->SetBranchStatus("GB_WT_new",1);
-			}
-
-			treein_xi_nonZero->SetBranchStatus("*",0);
-			treein_xi_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-			treein_xi_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
-			treein_xi_nonZero->SetBranchStatus("Lb_BKGCAT",1);
-			treein_xi_nonZero->SetBranchStatus("GB_WT",1);
-			if(run == 1)
-			{
-				treein_xi_Zero->SetBranchStatus("GB_WT_new",1);
-			}
-
-			TFile *tempFile = new TFile("tempFile.root","RECREATE");
-
-			TTree* treein_xi_Zero_cut    = (TTree*)treein_xi_Zero->CopyTree(Form("Lb_BKGCAT==40 && BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));
-			TTree* treein_xi_nonZero_cut = (TTree*)treein_xi_nonZero->CopyTree(Form("Lb_BKGCAT==40 && BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));
-
 			TList *list = new TList;
-			list->Add(treein_xi_Zero_cut);
-			list->Add(treein_xi_nonZero_cut);
+
+			if(isoFlag)
+			{
+				TFile *filein_xi_nonZero = Open(Form("%s/run%d/jpsixi_cutoutks_LL_nonZeroTracks.root",xibPath,run));
+				TTree *treein_xi_nonZero = (TTree*)filein_xi_nonZero->Get("MyTuple");
+
+				TFile *filein_xi_Zero = Open(Form("%s/run%d/jpsixi_cutoutks_LL_ZeroTracks.root",xibPath,run));
+				TTree *treein_xi_Zero = (TTree*)filein_xi_Zero->Get("MyTuple");
+
+				treein_xi_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsixi_LL_FinalBDT%d_iso%d_%s.root",
+				                                            xibPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+				treein_xi_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsixi_zeroTracksLL_FinalBDT%d.root",
+				                                         xibPath,run,bdtConf_Zero[i]));
+				treein_xi_Zero->SetBranchStatus("*",0);
+				treein_xi_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+				treein_xi_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+				treein_xi_Zero->SetBranchStatus("Lb_BKGCAT",1);
+				treein_xi_Zero->SetBranchStatus("GB_WT",1);
+
+				treein_xi_nonZero->SetBranchStatus("*",0);
+				treein_xi_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+				treein_xi_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+				treein_xi_nonZero->SetBranchStatus("Lb_BKGCAT",1);
+				treein_xi_nonZero->SetBranchStatus("GB_WT",1);
+
+				TTree* treein_xi_Zero_cut    = (TTree*)treein_xi_Zero->CopyTree(Form("Lb_BKGCAT==40 && BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));
+				TTree* treein_xi_nonZero_cut = (TTree*)treein_xi_nonZero->CopyTree(Form("Lb_BKGCAT==40 && BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));
+
+				list->Add(treein_xi_Zero_cut);
+				list->Add(treein_xi_nonZero_cut);
+			}
+			else
+			{
+				TFile *filein_xi = Open(Form("%s/run%d/jpsixi_cutoutks_LL.root",xibPath,run));
+				TTree *treein_xi = (TTree*)filein_xi->Get("MyTuple");
+
+				treein_xi->AddFriend("MyTuple",Form("%s/run%d/jpsixi_LL_FinalBDT%d_noIso.root",
+				                                    xibPath,run,bdtConf[i]));
+				treein_xi->SetBranchStatus("*",0);
+				treein_xi->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+				treein_xi->SetBranchStatus(Form("BDT%d",bdtConf[i]),1);
+				treein_xi->SetBranchStatus("Lb_BKGCAT",1);
+				treein_xi->SetBranchStatus("GB_WT",1);
+
+				TTree* treein_xi_cut = (TTree*)treein_xi->CopyTree(Form("Lb_BKGCAT==40 && BDT%d > %f",bdtConf[i],bdtCut[i]));
+
+				list->Add(treein_xi_cut);
+			}
+			TFile *tempFile = new TFile("tempFile.root","RECREATE");
 
 			TTree *combTree = TTree::MergeTrees(list);
 			combTree->SetName("combTree");
 
 			RooRealVar *gbWtVar = nullptr;
 
-			if(run == 1)
-			{
-				gbWtVar  = new RooRealVar("GB_WT","gb Weight Var",-100.,100.);
-			}
-			else if(run == 2)
-			{
-				gbWtVar  = new RooRealVar("GB_WT","gb Weight Var",-100.,100.);
-			}
+			gbWtVar  = new RooRealVar("GB_WT","gb Weight Var",-100.,100.);
+
 			ds_xi[i] = new RooDataSet(Form("ds_xi_Run%d",run),Form("ds_xi_Run%d",run),combTree,RooArgSet(*myVar,*gbWtVar));
 			ds_xi[i]->Print();
 
@@ -1663,7 +2006,6 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 				XIB_KEYS[i] = new RooKeysPdf(Form("XIB_RUN%d",run),Form("XIB_RUN%d",run),*myVar,*(ds_xi_wt[i]),RooKeysPdf::NoMirror);
 			else
 				XIB_KEYS[i] = new RooKeysPdf(Form("XIB_RUN%d",run),Form("XIB_RUN%d",run),*myVar,*(ds_xi[i]),RooKeysPdf::NoMirror);
-
 		}
 		// XIB[i] = new RooHistPdf(Form("XIB%d",run),Form("XIB%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_xib_smooth,0);
 
@@ -1724,35 +2066,53 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 		Int_t i = run-1;
 		if(!inputFlag)
 		{
-			TFile *filein_jpsiks_nonZero = Open(Form("%s/run%d/jpsiks_cutoutks_LL_nonZeroTracks.root",jpsiksPath,run));
-			TTree *treein_jpsiks_nonZero = (TTree*)filein_jpsiks_nonZero->Get("MyTuple");
-
-			TFile *filein_jpsiks_Zero = Open(Form("%s/run%d/jpsiks_cutoutks_LL_ZeroTracks.root",jpsiksPath,run));
-			TTree *treein_jpsiks_Zero = (TTree*)filein_jpsiks_Zero->Get("MyTuple");
-
-			treein_jpsiks_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsiks_LL_FinalBDT%d_iso%d_%s.root",
-			                                                jpsiksPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-			treein_jpsiks_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsiks_zeroTracksLL_FinalBDT%d.root",
-			                                             jpsiksPath,run,bdtConf_Zero[i]));
-			treein_jpsiks_Zero->SetBranchStatus("*",0);
-			treein_jpsiks_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-			treein_jpsiks_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
-			treein_jpsiks_Zero->SetBranchStatus("Lb_BKGCAT",1);
-
-			treein_jpsiks_nonZero->SetBranchStatus("*",0);
-			treein_jpsiks_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-			treein_jpsiks_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
-			treein_jpsiks_nonZero->SetBranchStatus("Lb_BKGCAT",1);
-
-			TFile *tempFile = new TFile("tempFile.root","RECREATE");
-
-			TTree* treein_jpsiks_Zero_cut    = (TTree*)treein_jpsiks_Zero->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));
-			TTree* treein_jpsiks_nonZero_cut = (TTree*)treein_jpsiks_nonZero->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));
-
 			TList *list = new TList;
-			list->Add(treein_jpsiks_Zero_cut);
-			list->Add(treein_jpsiks_nonZero_cut);
 
+			if(isoFlag)
+			{
+				TFile *filein_jpsiks_nonZero = Open(Form("%s/run%d/jpsiks_cutoutks_LL_nonZeroTracks.root",jpsiksPath,run));
+				TTree *treein_jpsiks_nonZero = (TTree*)filein_jpsiks_nonZero->Get("MyTuple");
+
+				TFile *filein_jpsiks_Zero = Open(Form("%s/run%d/jpsiks_cutoutks_LL_ZeroTracks.root",jpsiksPath,run));
+				TTree *treein_jpsiks_Zero = (TTree*)filein_jpsiks_Zero->Get("MyTuple");
+
+				treein_jpsiks_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsiks_LL_FinalBDT%d_iso%d_%s.root",
+				                                                jpsiksPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+				treein_jpsiks_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsiks_zeroTracksLL_FinalBDT%d.root",
+				                                             jpsiksPath,run,bdtConf_Zero[i]));
+				treein_jpsiks_Zero->SetBranchStatus("*",0);
+				treein_jpsiks_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+				treein_jpsiks_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+				treein_jpsiks_Zero->SetBranchStatus("Lb_BKGCAT",1);
+
+				treein_jpsiks_nonZero->SetBranchStatus("*",0);
+				treein_jpsiks_nonZero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+				treein_jpsiks_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+				treein_jpsiks_nonZero->SetBranchStatus("Lb_BKGCAT",1);
+
+				TTree* treein_jpsiks_Zero_cut    = (TTree*)treein_jpsiks_Zero->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));
+				TTree* treein_jpsiks_nonZero_cut = (TTree*)treein_jpsiks_nonZero->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));
+
+				list->Add(treein_jpsiks_Zero_cut);
+				list->Add(treein_jpsiks_nonZero_cut);
+			}
+			else
+			{
+				TFile *filein_jpsiks = Open(Form("%s/run%d/jpsiks_cutoutks_LL.root",jpsiksPath,run));
+				TTree *treein_jpsiks = (TTree*)filein_jpsiks->Get("MyTuple");
+
+				treein_jpsiks->AddFriend("MyTuple",Form("%s/run%d/jpsiks_LL_FinalBDT%d_noIso.root",
+				                                        jpsiksPath,run,bdtConf[i]));
+				treein_jpsiks->SetBranchStatus("*",0);
+				treein_jpsiks->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+				treein_jpsiks->SetBranchStatus(Form("BDT%d",bdtConf[i]),1);
+				treein_jpsiks->SetBranchStatus("Lb_BKGCAT",1);
+
+				TTree* treein_jpsiks_cut = (TTree*)treein_jpsiks->CopyTree(Form("BDT%d > %f",bdtConf[i],bdtCut[i]));
+
+				list->Add(treein_jpsiks_cut);
+			}
+			TFile *tempFile = new TFile("tempFile.root","RECREATE");
 			TTree *combTree = TTree::MergeTrees(list);
 			combTree->SetName("combTree");
 
@@ -1970,60 +2330,72 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	{
 		Int_t i = run-1;
 
-		TFile *mcFileIn_nonZero_Lambda = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_nonZeroTracks.root",
-		                                           lambdaMCPath,run));
-		TTree *mcTreeIn_nonZero_Lambda = (TTree*)mcFileIn_nonZero_Lambda->Get("MyTuple");
-
-		TFile *mcFileIn_Zero_Lambda    = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_ZeroTracks.root",
-		                                           lambdaMCPath,run));
-		TTree *mcTreeIn_Zero_Lambda    = (TTree*)mcFileIn_Zero_Lambda->Get("MyTuple");
-
-		mcTreeIn_nonZero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s.root",
-		                                                  lambdaMCPath,run,bdtConf_nonZero[i],
-		                                                  isoConf[i],isoVersion[i]));
-		mcTreeIn_Zero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d.root",
-		                                               lambdaMCPath,run,bdtConf_Zero[i]));
-
-		mcTreeIn_Zero_Lambda->SetBranchStatus("*",0);
-		mcTreeIn_Zero_Lambda->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		mcTreeIn_Zero_Lambda->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
-		mcTreeIn_Zero_Lambda->SetBranchStatus("Lb_BKGCAT",1);
-		mcTreeIn_Zero_Lambda->SetBranchStatus("GB_WT",1);
-		mcTreeIn_Zero_Lambda->SetBranchStatus("wt_tau",1);
-		if(run == 1)
-			mcTreeIn_Zero_Lambda->SetBranchStatus("GB_WT_new",1);
-
-		mcTreeIn_nonZero_Lambda->SetBranchStatus("*",0);
-		mcTreeIn_nonZero_Lambda->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-		mcTreeIn_nonZero_Lambda->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
-		mcTreeIn_nonZero_Lambda->SetBranchStatus("Lb_BKGCAT",1);
-		mcTreeIn_nonZero_Lambda->SetBranchStatus("GB_WT",1);
-		mcTreeIn_nonZero_Lambda->SetBranchStatus("wt_tau",1);
-		if(run == 1)
-			mcTreeIn_nonZero_Lambda->SetBranchStatus("GB_WT_new",1);
-
-		TFile *tempFile = new TFile("tempFile_sim.root","RECREATE");
-
-		TTree* mcTreeIn_Zero_Lambda_cut    = (TTree*)mcTreeIn_Zero_Lambda->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//Not TRUTH MATCHING HERE!
-		TTree* mcTreeIn_nonZero_Lambda_cut = (TTree*)mcTreeIn_nonZero_Lambda->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i])); //Not TRUTH MATCHING HERE!
-
 		TList *list_sim = new TList;
-		list_sim->Add(mcTreeIn_Zero_Lambda_cut);
-		list_sim->Add(mcTreeIn_nonZero_Lambda_cut);
+
+		if(isoFlag)
+		{
+			TFile *mcFileIn_nonZero_Lambda = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_nonZeroTracks.root",
+			                                           lambdaMCPath,run));
+			TTree *mcTreeIn_nonZero_Lambda = (TTree*)mcFileIn_nonZero_Lambda->Get("MyTuple");
+
+			TFile *mcFileIn_Zero_Lambda    = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_ZeroTracks.root",
+			                                           lambdaMCPath,run));
+			TTree *mcTreeIn_Zero_Lambda    = (TTree*)mcFileIn_Zero_Lambda->Get("MyTuple");
+
+			mcTreeIn_nonZero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s.root",
+			                                                  lambdaMCPath,run,bdtConf_nonZero[i],
+			                                                  isoConf[i],isoVersion[i]));
+			mcTreeIn_Zero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d.root",
+			                                               lambdaMCPath,run,bdtConf_Zero[i]));
+
+			mcTreeIn_Zero_Lambda->SetBranchStatus("*",0);
+			mcTreeIn_Zero_Lambda->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+			mcTreeIn_Zero_Lambda->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
+			mcTreeIn_Zero_Lambda->SetBranchStatus("Lb_BKGCAT",1);
+			mcTreeIn_Zero_Lambda->SetBranchStatus("GB_WT",1);
+			mcTreeIn_Zero_Lambda->SetBranchStatus("wt_tau",1);
+
+			mcTreeIn_nonZero_Lambda->SetBranchStatus("*",0);
+			mcTreeIn_nonZero_Lambda->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+			mcTreeIn_nonZero_Lambda->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
+			mcTreeIn_nonZero_Lambda->SetBranchStatus("Lb_BKGCAT",1);
+			mcTreeIn_nonZero_Lambda->SetBranchStatus("GB_WT",1);
+			mcTreeIn_nonZero_Lambda->SetBranchStatus("wt_tau",1);
+
+			TTree* mcTreeIn_Zero_Lambda_cut    = (TTree*)mcTreeIn_Zero_Lambda->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//Not TRUTH MATCHING HERE!
+			TTree* mcTreeIn_nonZero_Lambda_cut = (TTree*)mcTreeIn_nonZero_Lambda->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i])); //Not TRUTH MATCHING HERE!
+
+			list_sim->Add(mcTreeIn_Zero_Lambda_cut);
+			list_sim->Add(mcTreeIn_nonZero_Lambda_cut);
+		}
+		else
+		{
+			TFile *mcFileIn_Lambda = Open(Form("%s/run%d/jpsilambda_cutoutks_LL.root",
+			                                   lambdaMCPath,run));
+			TTree *mcTreeIn_Lambda = (TTree*)mcFileIn_Lambda->Get("MyTuple");
+
+			mcTreeIn_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_noIso.root",
+			                                          lambdaMCPath,run,bdtConf[i]));
+
+			mcTreeIn_Lambda->SetBranchStatus("*",0);
+			mcTreeIn_Lambda->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
+			mcTreeIn_Lambda->SetBranchStatus(Form("BDT%d",bdtConf[i]),1);
+			mcTreeIn_Lambda->SetBranchStatus("Lb_BKGCAT",1);
+			mcTreeIn_Lambda->SetBranchStatus("GB_WT",1);
+			mcTreeIn_Lambda->SetBranchStatus("wt_tau",1);
+
+			TTree* mcTreeIn_Lambda_cut = (TTree*)mcTreeIn_Lambda->CopyTree(Form("BDT%d > %f",bdtConf[i],bdtCut[i])); //Not TRUTH MATCHING HERE!
+
+			list_sim->Add(mcTreeIn_Lambda_cut);
+		}
+		TFile *tempFile = new TFile("tempFile_sim.root","RECREATE");
 
 		TTree *combTree_sim = TTree::MergeTrees(list_sim);
 		combTree_sim->SetName("combTree_sim");
 
 		RooRealVar *gbWtVar = nullptr;
 
-		if(run == 1)
-		{
-			gbWtVar  = new RooRealVar("GB_WT_new","gb Weight Var",-100.,100.);
-		}
-		else if(run == 2)
-		{
-			gbWtVar  = new RooRealVar("GB_WT","gb Weight Var",-100.,100.);
-		}
+		gbWtVar  = new RooRealVar("GB_WT","gb Weight Var",-100.,100.);
 
 		RooRealVar *tauWtVar = new RooRealVar("wt_tau","tau Weight Var",-100.,100.);
 
@@ -2038,8 +2410,8 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 
 		// if(run == 1)
 		//   {
-		//      mcTreeIn_nonZero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*GB_WT_new*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
-		//      mcTreeIn_Zero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*GB_WT_new*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+		//      mcTreeIn_nonZero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_nonZero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*GB_WT*wt_tau", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+		//      mcTreeIn_Zero_Lambda->Draw(Form("Lb_DTF_M_JpsiLConstr>>wt_Lambda_Zero(%d,%d,%d)",nbins*2,myLow,myHigh),Form("(BDT%d > %f)*GB_WT*wt_tau", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 		//   }
 		// else if(run == 2)
 		//   {
@@ -2186,83 +2558,135 @@ void Fitscript_simul(Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
 	//*********Input Data************************************************
 	const char *dataPath = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda";
 
-	for(Int_t run = 1; run<=2; run++) {
+	for(Int_t run = 1; run<=2; run++)
+	{
 		cout<<"Importing Run "<<run<<" data"<<endl;
 		Int_t i = run-1;
 
-		TFile *filein_nonZero = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_nonZeroTracks.root",
-		                                  dataPath,run),"READ");
-		TTree *treein_nonZero = (TTree*)filein_nonZero->Get("MyTuple");
-
-		TFile *filein_Zero = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_ZeroTracks.root",
-		                               dataPath,run),"READ");
-		TTree *treein_Zero = (TTree*)filein_Zero->Get("MyTuple");
-
-		treein_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s.root",
-		                                         dataPath,run,bdtConf_nonZero[i],
-		                                         isoConf[i],isoVersion[i]));
-		treein_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d.root",
-		                                      dataPath,run,bdtConf_Zero[i]));
-
-		if(!isBinned)
+		if(isoFlag)
 		{
-			TFile *tempFile_data = new TFile("tempFile_data.root","RECREATE");
+			TFile *fileIn_nonZero = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_nonZeroTracks.root",
+			                                  dataPath,run),"READ");
+			TTree *treeIn_nonZero = (TTree*)fileIn_nonZero->Get("MyTuple");
 
-			TTree* treein_Zero_cut    = (TTree*)treein_Zero->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));
-			TTree* treein_nonZero_cut = (TTree*)treein_nonZero->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));
+			TFile *fileIn_Zero = Open(Form("%s/run%d/jpsilambda_cutoutks_LL_ZeroTracks.root",
+			                               dataPath,run),"READ");
+			TTree *treeIn_Zero = (TTree*)fileIn_Zero->Get("MyTuple");
 
-			TList *list_data = new TList;
-			list_data->Add(treein_Zero_cut);
-			list_data->Add(treein_nonZero_cut);
+			treeIn_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s.root",
+			                                         dataPath,run,bdtConf_nonZero[i],
+			                                         isoConf[i],isoVersion[i]));
+			treeIn_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d.root",
+			                                      dataPath,run,bdtConf_Zero[i]));
 
-			TTree *combTree_data = TTree::MergeTrees(list_data);
-			combTree_data->SetName("combTree_data");
-			nentries[i] = combTree_data->GetEntries();
-			cout<<"Run "<<run<<" nentries = "<<nentries[i]<<endl;
-
-			ds_unb[i] = new RooDataSet(Form("ds%d",run),Form("ds%d",run),combTree_data,*(w.var("Lb_DTF_M_JpsiLConstr")));
-			(ds_unb[i])->Print();
-			w.import(*(ds_unb[i]));
-		}
-		else
-		{
-			if(inputFlag)
+			if(!isBinned)
 			{
-				ds[0] = (RooDataHist*)w1->data("ds1");
-				ds[1] = (RooDataHist*)w1->data("ds2");
+				TFile *tempFile_data = new TFile("tempFile_data.root","RECREATE");
 
-				nentries[0] = (ds[0])->sum(kFALSE);
-				nentries[1] = (ds[1])->sum(kFALSE);
+				TTree* treeIn_Zero_cut    = (TTree*)treeIn_Zero->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));
+				TTree* treeIn_nonZero_cut = (TTree*)treeIn_nonZero->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));
+
+				TList *list_data = new TList;
+				list_data->Add(treeIn_Zero_cut);
+				list_data->Add(treeIn_nonZero_cut);
+
+				TTree *combTree_data = TTree::MergeTrees(list_data);
+				combTree_data->SetName("combTree_data");
+				nentries[i] = combTree_data->GetEntries();
+				cout<<"Run "<<run<<" nentries = "<<nentries[i]<<endl;
+
+				ds_unb[i] = new RooDataSet(Form("ds%d",run),Form("ds%d",run),combTree_data,*(w.var("Lb_DTF_M_JpsiLConstr")));
+				(ds_unb[i])->Print();
+				w.import(*(ds_unb[i]));
 			}
 			else
 			{
-				treein_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist_nonzero%d(%d,%d,%d)",run,nbins,myLow,myHigh),
-				                     Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
+				if(inputFlag)
+				{
+					ds[0] = (RooDataHist*)w1->data("ds1");
+					ds[1] = (RooDataHist*)w1->data("ds2");
 
-				treein_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist_zero%d(%d,%d,%d)",run,nbins,myLow,myHigh),
-				                  Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
+					nentries[0] = (ds[0])->sum(kFALSE);
+					nentries[1] = (ds[1])->sum(kFALSE);
+				}
+				else
+				{
+					treeIn_nonZero->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist_nonZero%d(%d,%d,%d)",run,nbins,myLow,myHigh),
+					                     Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
 
-				TH1D *myhist_nonzero = (TH1D*)gDirectory->Get(Form("myhist_nonzero%d",run));
-				TH1D *myhist_zero = (TH1D*)gDirectory->Get(Form("myhist_zero%d",run));
+					treeIn_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist_zero%d(%d,%d,%d)",run,nbins,myLow,myHigh),
+					                  Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 
-				myhist[i] = new TH1D(Form("myhist%d",run),"",nbins,myLow,myHigh);
+					TH1D *myhist_nonZero = (TH1D*)gDirectory->Get(Form("myhist_nonZero%d",run));
+					TH1D *myhist_zero = (TH1D*)gDirectory->Get(Form("myhist_zero%d",run));
 
-				myhist[i]->Sumw2();
-				myhist[i]->Add(myhist_zero,myhist_nonzero);
+					myhist[i] = new TH1D(Form("myhist%d",run),"",nbins,myLow,myHigh);
 
-				nentries[i] = myhist[i]->Integral();
+					myhist[i]->Sumw2();
+					myhist[i]->Add(myhist_zero,myhist_nonZero);
+
+					nentries[i] = myhist[i]->Integral();
+					cout<<"Run "<<run<<" nentries = "<<nentries[i]<<endl;
+
+					ds[i] = new RooDataHist(Form("ds%d",run),Form("ds%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),myhist[i]);
+
+					w1->import(*(ds[i]));
+				}
+				cout<<"Done making RooDataHist"<<endl;
+				(ds[i])->Print();
+
+				w.import(*(ds[i]));
+			}
+		}
+		else // no isolation
+		{
+			TFile *fileIn = Open(Form("%s/run%d/jpsilambda_cutoutks_LL.root",
+			                          dataPath,run),"READ");
+			TTree *treeIn = (TTree*)fileIn->Get("MyTuple");
+
+			treeIn->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_noIso.root",
+			                                 dataPath,run,bdtConf[i]));
+			if(!isBinned)
+			{
+				TTree* treeIn_cut = (TTree*)treeIn->CopyTree(Form("BDT%d > %f",bdtConf[i],bdtCut[i]));
+
+				nentries[i] = treeIn_cut->GetEntries();
 				cout<<"Run "<<run<<" nentries = "<<nentries[i]<<endl;
 
-				ds[i] = new RooDataHist(Form("ds%d",run),Form("ds%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),myhist[i]);
-
-				w1->import(*(ds[i]));
+				ds_unb[i] = new RooDataSet(Form("ds%d",run),Form("ds%d",run),treeIn_cut,*(w.var("Lb_DTF_M_JpsiLConstr")));
+				(ds_unb[i])->Print();
+				w.import(*(ds_unb[i]));
 			}
-			cout<<"Done making RooDataHist"<<endl;
-			(ds[i])->Print();
+			else
+			{
+				if(inputFlag)
+				{
+					ds[0] = (RooDataHist*)w1->data("ds1");
+					ds[1] = (RooDataHist*)w1->data("ds2");
 
-			w.import(*(ds[i]));
+					nentries[0] = (ds[0])->sum(kFALSE);
+					nentries[1] = (ds[1])->sum(kFALSE);
+				}
+				else
+				{
+					treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>myhist%d(%d,%d,%d)",run,nbins,myLow,myHigh),
+					             Form("BDT%d > %f",bdtConf[i],bdtCut[i]),"goff");
+
+					TH1D *myhist = (TH1D*)gDirectory->Get(Form("myhist%d",run));
+
+					nentries[i] = myhist[i]->Integral();
+					cout<<"Run "<<run<<" nentries = "<<nentries[i]<<endl;
+
+					ds[i] = new RooDataHist(Form("ds%d",run),Form("ds%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),myhist[i]);
+
+					w1->import(*(ds[i]));
+				}
+				cout<<"Done making RooDataHist"<<endl;
+				(ds[i])->Print();
+
+				w.import(*(ds[i]));
+			}
 		}
-
 		cout<<"Done importing Run "<<run<<" data"<<endl;
 	}
 
