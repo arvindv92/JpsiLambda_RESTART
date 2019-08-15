@@ -1,410 +1,213 @@
-Info in <TCanvas::Print>: pdf file plots/FOM_run2_nonZeroTracks_bdtConf1_iso1_v1_noPID.pdf has been created
-Info in <TCanvas::Print>: pdf file plots/FOM_run2_ZeroTracks_bdtConf1_noPID.pdf has been created
-timizing for nonZeroTracks****************
-nEntries= 7478228
-siginit = 25081
-bkginit = 718665
-SIG = 25081 BKG = 718665For BDT = -0.995 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.985 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.975 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.965 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.955 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.945 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.935 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.925 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.915 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.905 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.895 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.885 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.875 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.865 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.855 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.845 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.835 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.825 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.815 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.805 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.795 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.785 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.775 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.765 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.755 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.745 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.735 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.725 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.715 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.705 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.695 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.685 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.675 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.665 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.655 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.645 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.635 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.625 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.615 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.605 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.595 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.585 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.575 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.565 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.555 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.545 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.535 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.525 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.515 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.505 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.495 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.485 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.475 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.465 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.455 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.445 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.435 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.425 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.415 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.405 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.395 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.385 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.375 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.365 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.355 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.345 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.335 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.325 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.315 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.305 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.295 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.285 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.275 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.265 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.255 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.245 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.235 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718665For BDT = -0.225 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100%
-SIG = 25081 BKG = 718664For BDT = -0.215 FOM = 29.5334 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 99.9999%
-SIG = 25081 BKG = 718660For BDT = -0.205 FOM = 29.5335 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 99.9993%
-SIG = 25081 BKG = 718653For BDT = -0.195 FOM = 29.5337 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 99.9983%
-SIG = 25081 BKG = 718635For BDT = -0.185 FOM = 29.534 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 99.9958%
-SIG = 25081 BKG = 718604For BDT = -0.175 FOM = 29.5347 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 99.9916%
-SIG = 25081 BKG = 718512For BDT = -0.165 FOM = 29.5366 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 99.9787%
-SIG = 25081 BKG = 718350For BDT = -0.155 FOM = 29.5399 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 99.9562%
-SIG = 25081 BKG = 718037For BDT = -0.145 FOM = 29.5463 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 99.9126%
-SIG = 25081 BKG = 717441For BDT = -0.135 FOM = 29.5586 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 99.8297%
-SIG = 25081 BKG = 716331For BDT = -0.125 FOM = 29.5814 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 99.6753%
-SIG = 25081 BKG = 714317For BDT = -0.115 FOM = 29.623 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 99.395%
-SIG = 25079.4 BKG = 710694For BDT = -0.105 FOM = 29.6964 sig_eff = 99.9943% sig_eff_wt = 99.9937% bkg_eff = 98.8908%
-SIG = 25076.8 BKG = 704158For BDT = -0.095 FOM = 29.8306 sig_eff = 99.9887% sig_eff_wt = 99.9834% bkg_eff = 97.9814%
-SIG = 25076.8 BKG = 692692For BDT = -0.085 FOM = 30.076 sig_eff = 99.9887% sig_eff_wt = 99.9834% bkg_eff = 96.3859%
-SIG = 25076.2 BKG = 673882For BDT = -0.075 FOM = 30.4914 sig_eff = 99.983% sig_eff_wt = 99.981% bkg_eff = 93.7686%
-SIG = 25070.9 BKG = 644283For BDT = -0.065 FOM = 31.1761 sig_eff = 99.9603% sig_eff_wt = 99.9599% bkg_eff = 89.6499%
-SIG = 25068.3 BKG = 600064For BDT = -0.055 FOM = 32.2988 sig_eff = 99.9433% sig_eff_wt = 99.9494% bkg_eff = 83.4971%
-SIG = 25060.9 BKG = 539054For BDT = -0.045 FOM = 34.0638 sig_eff = 99.9036% sig_eff_wt = 99.9198% bkg_eff = 75.0078%
-SIG = 25050.5 BKG = 462082For BDT = -0.035 FOM = 36.7705 sig_eff = 99.8695% sig_eff_wt = 99.8785% bkg_eff = 64.2973%
-SIG = 25036.6 BKG = 373747For BDT = -0.025 FOM = 40.8529 sig_eff = 99.8128% sig_eff_wt = 99.8231% bkg_eff = 52.0058%
-SIG = 25009.6 BKG = 283572For BDT = -0.015 FOM = 46.8332 sig_eff = 99.7391% sig_eff_wt = 99.7152% bkg_eff = 39.4581%
-SIG = 24962.1 BKG = 203602For BDT = -0.005 FOM = 55.1378 sig_eff = 99.586% sig_eff_wt = 99.526% bkg_eff = 28.3305%
-SIG = 24937.4 BKG = 142674For BDT = 0.005 FOM = 65.7593 sig_eff = 99.4895% sig_eff_wt = 99.4274% bkg_eff = 19.8527%
-SIG = 24898.2 BKG = 101487For BDT = 0.015 FOM = 77.7899 sig_eff = 99.3251% sig_eff_wt = 99.2712% bkg_eff = 14.1216%
-SIG = 24875.5 BKG = 76519.7For BDT = 0.025 FOM = 89.441 sig_eff = 99.2173% sig_eff_wt = 99.1807% bkg_eff = 10.6475%
-SIG = 24836.3 BKG = 61828.9For BDT = 0.035 FOM = 99.2838 sig_eff = 99.0528% sig_eff_wt = 99.0242% bkg_eff = 8.60329%
-SIG = 24761 BKG = 52506.1For BDT = 0.045 FOM = 107.357 sig_eff = 98.86% sig_eff_wt = 98.7243% bkg_eff = 7.30607%
-SIG = 24717.7 BKG = 46039.9For BDT = 0.055 FOM = 114.397 sig_eff = 98.7125% sig_eff_wt = 98.5513% bkg_eff = 6.40631%
-SIG = 24649.8 BKG = 40785.3For BDT = 0.065 FOM = 121.157 sig_eff = 98.497% sig_eff_wt = 98.2806% bkg_eff = 5.67515%
-SIG = 24597.1 BKG = 36218.9For BDT = 0.075 FOM = 128.235 sig_eff = 98.2701% sig_eff_wt = 98.0705% bkg_eff = 5.03974%
-SIG = 24522.4 BKG = 32152.5For BDT = 0.085 FOM = 135.624 sig_eff = 98.0092% sig_eff_wt = 97.7728% bkg_eff = 4.47392%
-SIG = 24455.7 BKG = 28478.7For BDT = 0.095 FOM = 143.64 sig_eff = 97.7483% sig_eff_wt = 97.5068% bkg_eff = 3.96272%
-SIG = 24389.9 BKG = 25183.6For BDT = 0.105 FOM = 152.253 sig_eff = 97.4477% sig_eff_wt = 97.2447% bkg_eff = 3.50422%
-SIG = 24333.5 BKG = 22186.7For BDT = 0.115 FOM = 161.736 sig_eff = 97.1868% sig_eff_wt = 97.0197% bkg_eff = 3.08721%
-SIG = 24270 BKG = 19403.8For BDT = 0.125 FOM = 172.375 sig_eff = 96.9486% sig_eff_wt = 96.7666% bkg_eff = 2.69998%
-SIG = 24211.2 BKG = 16961.5For BDT = 0.135 FOM = 183.785 sig_eff = 96.699% sig_eff_wt = 96.5319% bkg_eff = 2.36014%
-SIG = 24137.4 BKG = 14815.7For BDT = 0.145 FOM = 195.89 sig_eff = 96.4041% sig_eff_wt = 96.2379% bkg_eff = 2.06155%
-SIG = 24024.9 BKG = 12845.7For BDT = 0.155 FOM = 209.205 sig_eff = 96.0127% sig_eff_wt = 95.7891% bkg_eff = 1.78744%
-SIG = 23929.1 BKG = 11199.1For BDT = 0.165 FOM = 222.958 sig_eff = 95.627% sig_eff_wt = 95.4074% bkg_eff = 1.55832%
-SIG = 23823 BKG = 9723.13For BDT = 0.175 FOM = 237.977 sig_eff = 95.2016% sig_eff_wt = 94.9841% bkg_eff = 1.35294%
-SIG = 23709.9 BKG = 8472.53For BDT = 0.185 FOM = 253.456 sig_eff = 94.7365% sig_eff_wt = 94.5333% bkg_eff = 1.17893%
-SIG = 23573.1 BKG = 7358.87For BDT = 0.195 FOM = 270.074 sig_eff = 94.2431% sig_eff_wt = 93.988% bkg_eff = 1.02396%
-SIG = 23416.5 BKG = 6408.13For BDT = 0.205 FOM = 287.14 sig_eff = 93.6646% sig_eff_wt = 93.3637% bkg_eff = 0.891672%
-SIG = 23268.8 BKG = 5579.6For BDT = 0.215 FOM = 305.378 sig_eff = 93.1257% sig_eff_wt = 92.7746% bkg_eff = 0.776384%
-SIG = 23104.3 BKG = 4855.07For BDT = 0.225 FOM = 324.597 sig_eff = 92.5529% sig_eff_wt = 92.1186% bkg_eff = 0.675567%
-SIG = 22941.7 BKG = 4225.87For BDT = 0.235 FOM = 344.954 sig_eff = 92.0311% sig_eff_wt = 91.4705% bkg_eff = 0.588016%
-SIG = 22809.2 BKG = 3669.47For BDT = 0.245 FOM = 367.439 sig_eff = 91.4979% sig_eff_wt = 90.9422% bkg_eff = 0.510595%
-SIG = 22668.7 BKG = 3172.87For BDT = 0.255 FOM = 392.001 sig_eff = 90.9704% sig_eff_wt = 90.382% bkg_eff = 0.441495%
-SIG = 22456.7 BKG = 2775.07For BDT = 0.265 FOM = 414.492 sig_eff = 90.2048% sig_eff_wt = 89.5368% bkg_eff = 0.386142%
-SIG = 22258.3 BKG = 2421.47For BDT = 0.275 FOM = 438.947 sig_eff = 89.4334% sig_eff_wt = 88.7456% bkg_eff = 0.33694%
-SIG = 22044.6 BKG = 2092.13For BDT = 0.285 FOM = 466.652 sig_eff = 88.5486% sig_eff_wt = 87.8936% bkg_eff = 0.291114%
-SIG = 21830.4 BKG = 1794For BDT = 0.295 FOM = 497.779 sig_eff = 87.7829% sig_eff_wt = 87.0397% bkg_eff = 0.24963%
-SIG = 21598.6 BKG = 1557.4For BDT = 0.305 FOM = 527.259 sig_eff = 86.9037% sig_eff_wt = 86.1153% bkg_eff = 0.216707%
-SIG = 21377.6 BKG = 1329.47For BDT = 0.315 FOM = 563.133 sig_eff = 86.0473% sig_eff_wt = 85.2342% bkg_eff = 0.184991%
-SIG = 21175.5 BKG = 1142.27For BDT = 0.325 FOM = 599.916 sig_eff = 85.2703% sig_eff_wt = 84.4285% bkg_eff = 0.158943%
-SIG = 20913.5 BKG = 1004.47For BDT = 0.335 FOM = 630.053 sig_eff = 84.289% sig_eff_wt = 83.384% bkg_eff = 0.139768%
-SIG = 20678 BKG = 870.133For BDT = 0.345 FOM = 667.075 sig_eff = 83.3475% sig_eff_wt = 82.4449% bkg_eff = 0.121076%
-SIG = 20395 BKG = 756.6For BDT = 0.355 FOM = 703.12 sig_eff = 82.3209% sig_eff_wt = 81.3164% bkg_eff = 0.105279%
-SIG = 20074.7 BKG = 672.533For BDT = 0.365 FOM = 731.765 sig_eff = 81.1242% sig_eff_wt = 80.0394% bkg_eff = 0.0935809%
-SIG = 19766.5 BKG = 580.667For BDT = 0.375 FOM = 772.218 sig_eff = 79.9387% sig_eff_wt = 78.8106% bkg_eff = 0.080798%
-SIG = 19416 BKG = 498.333For BDT = 0.385 FOM = 814.997 sig_eff = 78.7306% sig_eff_wt = 77.4131% bkg_eff = 0.0693415%
-SIG = 19116.4 BKG = 432.467For BDT = 0.395 FOM = 857.398 sig_eff = 77.5339% sig_eff_wt = 76.2186% bkg_eff = 0.0601764%
-SIG = 18808.7 BKG = 373.533For BDT = 0.405 FOM = 903.089 sig_eff = 76.3712% sig_eff_wt = 74.9916% bkg_eff = 0.051976%
-SIG = 18459.7 BKG = 325For BDT = 0.415 FOM = 945.308 sig_eff = 74.9078% sig_eff_wt = 73.6005% bkg_eff = 0.0452227%
-SIG = 18095.4 BKG = 286For BDT = 0.425 FOM = 982.828 sig_eff = 73.6203% sig_eff_wt = 72.1477% bkg_eff = 0.039796%
-SIG = 17778.7 BKG = 245.267For BDT = 0.435 FOM = 1035.99 sig_eff = 72.3158% sig_eff_wt = 70.8851% bkg_eff = 0.0341281%
-SIG = 17455.2 BKG = 219.267For BDT = 0.445 FOM = 1070.37 sig_eff = 70.9489% sig_eff_wt = 69.5954% bkg_eff = 0.0305103%
-SIG = 17125 BKG = 198.467For BDT = 0.455 FOM = 1098.61 sig_eff = 69.7124% sig_eff_wt = 68.2787% bkg_eff = 0.027616%
-SIG = 16762.1 BKG = 180.267For BDT = 0.465 FOM = 1122.99 sig_eff = 68.2605% sig_eff_wt = 66.832% bkg_eff = 0.0250835%
-SIG = 16424.8 BKG = 157.733For BDT = 0.475 FOM = 1168.26 sig_eff = 66.8255% sig_eff_wt = 65.4871% bkg_eff = 0.0219481%
-SIG = 16035 BKG = 140.4For BDT = 0.485 FOM = 1201.21 sig_eff = 65.3735% sig_eff_wt = 63.9328% bkg_eff = 0.0195362%
-SIG = 15584.4 BKG = 123.067For BDT = 0.495 FOM = 1237.49 sig_eff = 63.6663% sig_eff_wt = 62.1363% bkg_eff = 0.0171243%
-SIG = 15193.5 BKG = 109.2For BDT = 0.505 FOM = 1271.44 sig_eff = 62.0498% sig_eff_wt = 60.5779% bkg_eff = 0.0151948%
-SIG = 14770.6 BKG = 101.4For BDT = 0.515 FOM = 1276.66 sig_eff = 60.3993% sig_eff_wt = 58.8916% bkg_eff = 0.0141095%
-SIG = 14319.4 BKG = 95.3333For BDT = 0.525 FOM = 1271.27 sig_eff = 58.6127% sig_eff_wt = 57.0926% bkg_eff = 0.0132653%
-SIG = 13829.2 BKG = 83.2For BDT = 0.535 FOM = 1302.01 sig_eff = 56.6899% sig_eff_wt = 55.1381% bkg_eff = 0.011577%
-SIG = 13389.7 BKG = 76.2667For BDT = 0.545 FOM = 1308.47 sig_eff = 54.8182% sig_eff_wt = 53.3858% bkg_eff = 0.0106123%
-SIG = 12922.6 BKG = 66.7333For BDT = 0.555 FOM = 1336.49 sig_eff = 52.9692% sig_eff_wt = 51.5234% bkg_eff = 0.00928574%
-SIG = 12482.4 BKG = 60.6667For BDT = 0.565 FOM = 1343.8 sig_eff = 51.2506% sig_eff_wt = 49.7685% bkg_eff = 0.00844158%
-SIG = 11973.3 BKG = 55.4667For BDT = 0.575 FOM = 1338.16 sig_eff = 49.1918% sig_eff_wt = 47.7386% bkg_eff = 0.00771801%
-SIG = 11431.1 BKG = 49.4For BDT = 0.585 FOM = 1340.34 sig_eff = 47.0308% sig_eff_wt = 45.5767% bkg_eff = 0.00687386%
-SIG = 10929 BKG = 45.9333For BDT = 0.595 FOM = 1320.34 sig_eff = 45.0513% sig_eff_wt = 43.5747% bkg_eff = 0.00639148%
-SIG = 10392.3 BKG = 40.7333For BDT = 0.605 FOM = 1318.44 sig_eff = 42.9187% sig_eff_wt = 41.435% bkg_eff = 0.00566792%
-SIG = 9865.33 BKG = 39For BDT = 0.615 FOM = 1273.77 sig_eff = 40.8201% sig_eff_wt = 39.3339% bkg_eff = 0.00542673%
-SIG = 9333.79 BKG = 33.8For BDT = 0.625 FOM = 1276.19 sig_eff = 38.7102% sig_eff_wt = 37.2146% bkg_eff = 0.00470316%
-SIG = 8781.39 BKG = 31.2For BDT = 0.635 FOM = 1239.31 sig_eff = 36.5266% sig_eff_wt = 35.0121% bkg_eff = 0.00434138%
-SIG = 8222.06 BKG = 23.4For BDT = 0.645 FOM = 1297.4 sig_eff = 34.2975% sig_eff_wt = 32.782% bkg_eff = 0.00325604%
-SIG = 7664.92 BKG = 20.8For BDT = 0.655 FOM = 1264.69 sig_eff = 32.0061% sig_eff_wt = 30.5607% bkg_eff = 0.00289426%
-SIG = 7130.05 BKG = 19.9333For BDT = 0.665 FOM = 1195.38 sig_eff = 29.7544% sig_eff_wt = 28.4281% bkg_eff = 0.00277366%
-SIG = 6602.39 BKG = 18.2For BDT = 0.675 FOM = 1145.03 sig_eff = 27.5878% sig_eff_wt = 26.3243% bkg_eff = 0.00253247%
-SIG = 5999.3 BKG = 13.8667For BDT = 0.685 FOM = 1148.46 sig_eff = 25.1375% sig_eff_wt = 23.9197% bkg_eff = 0.0019295%
-SIG = 5514.67 BKG = 11.2667For BDT = 0.695 FOM = 1135.5 sig_eff = 23.1581% sig_eff_wt = 21.9874% bkg_eff = 0.00156772%
-SIG = 4993.13 BKG = 10.4For BDT = 0.705 FOM = 1056.77 sig_eff = 21.0141% sig_eff_wt = 19.908% bkg_eff = 0.00144713%
-SIG = 4488.94 BKG = 7.8For BDT = 0.715 FOM = 1045.68 sig_eff = 18.9326% sig_eff_wt = 17.8978% bkg_eff = 0.00108535%
-SIG = 4010.38 BKG = 6.06667For BDT = 0.725 FOM = 1011.94 sig_eff = 16.9531% sig_eff_wt = 15.9897% bkg_eff = 0.000844158%
-SIG = 3586.1 BKG = 6.06667For BDT = 0.735 FOM = 904.88 sig_eff = 15.1495% sig_eff_wt = 14.2981% bkg_eff = 0.000844158%
-SIG = 3094.3 BKG = 4.33333For BDT = 0.745 FOM = 863.928 sig_eff = 13.1813% sig_eff_wt = 12.3372% bkg_eff = 0.00060297%
-SIG = 2645.9 BKG = 4.33333For BDT = 0.755 FOM = 738.733 sig_eff = 11.2529% sig_eff_wt = 10.5494% bkg_eff = 0.00060297%
-SIG = 2274.3 BKG = 3.46667For BDT = 0.765 FOM = 676.492 sig_eff = 9.63644% sig_eff_wt = 9.06781% bkg_eff = 0.000482376%
-SIG = 1881.21 BKG = 3.46667For BDT = 0.775 FOM = 559.567 sig_eff = 8.04832% sig_eff_wt = 7.50052% bkg_eff = 0.000482376%
-SIG = 1534.44 BKG = 3.46667For BDT = 0.785 FOM = 456.422 sig_eff = 6.58499% sig_eff_wt = 6.11795% bkg_eff = 0.000482376%
-SIG = 1186.64 BKG = 2.6For BDT = 0.795 FOM = 381.256 sig_eff = 5.12166% sig_eff_wt = 4.73124% bkg_eff = 0.000361782%
-SIG = 918.128 BKG = 1.73333For BDT = 0.805 FOM = 325.975 sig_eff = 4.00998% sig_eff_wt = 3.66065% bkg_eff = 0.000241188%
-SIG = 680.716 BKG = 1.73333For BDT = 0.815 FOM = 241.684 sig_eff = 2.98338% sig_eff_wt = 2.71407% bkg_eff = 0.000241188%
-SIG = 470.319 BKG = 1.73333For BDT = 0.825 FOM = 166.983 sig_eff = 2.09858% sig_eff_wt = 1.8752% bkg_eff = 0.000241188%
-SIG = 286.097 BKG = 0.866667For BDT = 0.835 FOM = 117.689 sig_eff = 1.27616% sig_eff_wt = 1.14069% bkg_eff = 0.000120594%
-SIG = 163.318 BKG = 0.866667For BDT = 0.845 FOM = 67.1826 sig_eff = 0.754353% sig_eff_wt = 0.651161% bkg_eff = 0.000120594%
-SIG = 91.2084 BKG = 0.866667For BDT = 0.855 FOM = 37.5196 sig_eff = 0.419715% sig_eff_wt = 0.363655% bkg_eff = 0.000120594%
-SIG = 40.3879 BKG = 0For BDT = 0.865 FOM = 26.9253 sig_eff = 0.192842% sig_eff_wt = 0.16103% bkg_eff = 0%
-SIG = 14.6128 BKG = 0For BDT = 0.875 FOM = 9.74187 sig_eff = 0.0623901% sig_eff_wt = 0.0582625% bkg_eff = 0%
-SIG = 3.54252 BKG = 0For BDT = 0.885 FOM = 2.36168 sig_eff = 0.0113437% sig_eff_wt = 0.0141243% bkg_eff = 0%
-SIG = 0 BKG = 0For BDT = 0.895 FOM = 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
-SIG = 0 BKG = 0For BDT = 0.905 FOM = 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
-SIG = 0 BKG = 0For BDT = 0.915 FOM = 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
-SIG = 0 BKG = 0For BDT = 0.925 FOM = 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
-SIG = 0 BKG = 0For BDT = 0.935 FOM = 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
-SIG = 0 BKG = 0For BDT = 0.945 FOM = 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
-SIG = 0 BKG = 0For BDT = 0.955 FOM = 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
-SIG = 0 BKG = 0For BDT = 0.965 FOM = 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
-SIG = 0 BKG = 0For BDT = 0.975 FOM = 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
-SIG = 0 BKG = 0For BDT = 0.985 FOM = 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
-MAXIMUM FOM = 1343.8 at BDT = 0.565 with sig_eff = 51.2506% sig_eff_wt = 49.7685% and bkg_eff = 0.00844158%
+Info in <TCanvas::Print>: pdf file plots/ANA/FOM_run2_nonZeroTracks_bdtConf1_iso1_v1.pdf has been created
+Info in <TCanvas::Print>: pdf file plots/ANA/FOM_run2_ZeroTracks_bdtConf1.pdf has been created
+**Optimizing for nonZeroTracks****************
+nEntries= 5047915
+siginit = 24898 +/- 245
+bkginit = 568880 +/- 754.241
+SIG = 24672.6 BKG = 77183For BDT = 0.005 FOM = 88.3315 +/- 0.885965 sig_eff = 99.1862% sig_eff_wt = 99.0947% bkg_eff = 13.5675%
+SIG = 24620.6 BKG = 60648For BDT = 0.015 FOM = 99.3695 +/- 1.0016 sig_eff = 98.987% sig_eff_wt = 98.8858% bkg_eff = 10.6609%
+SIG = 24558.2 BKG = 50014For BDT = 0.025 FOM = 109.081 +/- 1.10499 sig_eff = 98.7651% sig_eff_wt = 98.6353% bkg_eff = 8.79166%
+SIG = 24513.8 BKG = 42514For BDT = 0.035 FOM = 118.031 +/- 1.20135 sig_eff = 98.5887% sig_eff_wt = 98.457% bkg_eff = 7.47328%
+SIG = 24460.1 BKG = 36947For BDT = 0.045 FOM = 126.268 +/- 1.2914 sig_eff = 98.3781% sig_eff_wt = 98.2412% bkg_eff = 6.49469%
+SIG = 24407.3 BKG = 32238For BDT = 0.055 FOM = 134.81 +/- 1.38599 sig_eff = 98.1675% sig_eff_wt = 98.0292% bkg_eff = 5.66692%
+SIG = 24327.9 BKG = 28158For BDT = 0.065 FOM = 143.694 +/- 1.4864 sig_eff = 97.8716% sig_eff_wt = 97.7101% bkg_eff = 4.94973%
+SIG = 24266.2 BKG = 24625For BDT = 0.075 FOM = 153.173 +/- 1.59478 sig_eff = 97.6724% sig_eff_wt = 97.4624% bkg_eff = 4.32868%
+SIG = 24188.5 BKG = 21437For BDT = 0.085 FOM = 163.531 +/- 1.71567 sig_eff = 97.3936% sig_eff_wt = 97.1502% bkg_eff = 3.76828%
+SIG = 24103.5 BKG = 18607For BDT = 0.095 FOM = 174.78 +/- 1.84983 sig_eff = 97.0692% sig_eff_wt = 96.8089% bkg_eff = 3.27081%
+SIG = 24016.1 BKG = 16152For BDT = 0.105 FOM = 186.764 +/- 1.99601 sig_eff = 96.7221% sig_eff_wt = 96.4579% bkg_eff = 2.83926%
+SIG = 23915.4 BKG = 13959For BDT = 0.115 FOM = 199.881 +/- 2.16052 sig_eff = 96.3408% sig_eff_wt = 96.0535% bkg_eff = 2.45377%
+SIG = 23774.6 BKG = 12062For BDT = 0.125 FOM = 213.556 +/- 2.33864 sig_eff = 95.8229% sig_eff_wt = 95.4881% bkg_eff = 2.12031%
+SIG = 23650.4 BKG = 10470For BDT = 0.135 FOM = 227.796 +/- 2.52931 sig_eff = 95.3335% sig_eff_wt = 94.9893% bkg_eff = 1.84046%
+SIG = 23516.2 BKG = 9053For BDT = 0.145 FOM = 243.32 +/- 2.74454 sig_eff = 94.8725% sig_eff_wt = 94.4502% bkg_eff = 1.59137%
+SIG = 23381.6 BKG = 7813For BDT = 0.155 FOM = 260.11 +/- 2.98596 sig_eff = 94.3603% sig_eff_wt = 93.9095% bkg_eff = 1.3734%
+SIG = 23216.6 BKG = 6759For BDT = 0.165 FOM = 277.335 +/- 3.24593 sig_eff = 93.7344% sig_eff_wt = 93.2468% bkg_eff = 1.18812%
+SIG = 23088.7 BKG = 5838For BDT = 0.175 FOM = 296.364 +/- 3.54233 sig_eff = 93.2392% sig_eff_wt = 92.7333% bkg_eff = 1.02623%
+SIG = 22916.9 BKG = 5077For BDT = 0.185 FOM = 314.995 +/- 3.85029 sig_eff = 92.6303% sig_eff_wt = 92.0429% bkg_eff = 0.892455%
+SIG = 22796.8 BKG = 4405For BDT = 0.195 FOM = 335.888 +/- 4.20604 sig_eff = 92.1352% sig_eff_wt = 91.5608% bkg_eff = 0.774329%
+SIG = 22656.3 BKG = 3835For BDT = 0.205 FOM = 357.2 +/- 4.58959 sig_eff = 91.606% sig_eff_wt = 90.9963% bkg_eff = 0.674132%
+SIG = 22488.2 BKG = 3312For BDT = 0.215 FOM = 380.834 +/- 5.04021 sig_eff = 90.9572% sig_eff_wt = 90.3214% bkg_eff = 0.582197%
+SIG = 22269.3 BKG = 2831For BDT = 0.225 FOM = 407.063 +/- 5.57638 sig_eff = 90.1719% sig_eff_wt = 89.442% bkg_eff = 0.497644%
+SIG = 22068.4 BKG = 2468For BDT = 0.235 FOM = 431.2 +/- 6.10122 sig_eff = 89.3638% sig_eff_wt = 88.6352% bkg_eff = 0.433835%
+SIG = 21868.3 BKG = 2131For BDT = 0.245 FOM = 458.814 +/- 6.73456 sig_eff = 88.5613% sig_eff_wt = 87.8317% bkg_eff = 0.374596%
+SIG = 21634.3 BKG = 1831For BDT = 0.255 FOM = 488.466 +/- 7.46584 sig_eff = 87.7134% sig_eff_wt = 86.8916% bkg_eff = 0.32186%
+SIG = 21389.2 BKG = 1585For BDT = 0.265 FOM = 517.747 +/- 8.24275 sig_eff = 86.7801% sig_eff_wt = 85.9073% bkg_eff = 0.278618%
+SIG = 21150.6 BKG = 1359For BDT = 0.275 FOM = 551.305 +/- 9.18621 sig_eff = 85.8753% sig_eff_wt = 84.949% bkg_eff = 0.23889%
+SIG = 20893.8 BKG = 1174For BDT = 0.285 FOM = 584.219 +/- 10.1886 sig_eff = 84.9476% sig_eff_wt = 83.9177% bkg_eff = 0.20637%
+SIG = 20642.9 BKG = 1009For BDT = 0.295 FOM = 620.564 +/- 11.3668 sig_eff = 83.9802% sig_eff_wt = 82.9099% bkg_eff = 0.177366%
+SIG = 20347.3 BKG = 867For BDT = 0.305 FOM = 657.535 +/- 12.6776 sig_eff = 82.8534% sig_eff_wt = 81.7227% bkg_eff = 0.152405%
+SIG = 20061.7 BKG = 738For BDT = 0.315 FOM = 699.841 +/- 14.2735 sig_eff = 81.664% sig_eff_wt = 80.5757% bkg_eff = 0.129729%
+SIG = 19778.9 BKG = 633For BDT = 0.325 FOM = 741.908 +/- 15.9914 sig_eff = 80.5258% sig_eff_wt = 79.4397% bkg_eff = 0.111271%
+SIG = 19452.8 BKG = 543For BDT = 0.335 FOM = 784.311 +/- 17.8944 sig_eff = 79.308% sig_eff_wt = 78.1298% bkg_eff = 0.0954507%
+SIG = 19117.2 BKG = 466For BDT = 0.345 FOM = 828.047 +/- 20.0204 sig_eff = 77.9706% sig_eff_wt = 76.7819% bkg_eff = 0.0819153%
+SIG = 18788.9 BKG = 410For BDT = 0.355 FOM = 863.918 +/- 21.9491 sig_eff = 76.7471% sig_eff_wt = 75.4634% bkg_eff = 0.0720714%
+SIG = 18457.2 BKG = 358For BDT = 0.365 FOM = 903.839 +/- 24.2174 sig_eff = 75.4439% sig_eff_wt = 74.1312% bkg_eff = 0.0629307%
+SIG = 18097 BKG = 305For BDT = 0.375 FOM = 954.271 +/- 27.2462 sig_eff = 74.0724% sig_eff_wt = 72.6847% bkg_eff = 0.0536141%
+SIG = 17736.5 BKG = 265For BDT = 0.385 FOM = 997.617 +/- 30.1394 sig_eff = 72.718% sig_eff_wt = 71.2365% bkg_eff = 0.0465828%
+SIG = 17364.2 BKG = 227For BDT = 0.395 FOM = 1048.15 +/- 33.7136 sig_eff = 71.3066% sig_eff_wt = 69.7413% bkg_eff = 0.039903%
+SIG = 16986.1 BKG = 201For BDT = 0.405 FOM = 1083.48 +/- 36.6272 sig_eff = 69.9522% sig_eff_wt = 68.2228% bkg_eff = 0.0353326%
+SIG = 16616.2 BKG = 175For BDT = 0.415 FOM = 1128.14 +/- 40.3629 sig_eff = 68.501% sig_eff_wt = 66.737% bkg_eff = 0.0307622%
+SIG = 16210.1 BKG = 149For BDT = 0.425 FOM = 1182.65 +/- 45.1998 sig_eff = 66.9019% sig_eff_wt = 65.1059% bkg_eff = 0.0261918%
+SIG = 15803.3 BKG = 133For BDT = 0.435 FOM = 1212.6 +/- 48.5696 sig_eff = 65.3654% sig_eff_wt = 63.4721% bkg_eff = 0.0233793%
+SIG = 15378.1 BKG = 118For BDT = 0.445 FOM = 1243.9 +/- 52.3449 sig_eff = 63.641% sig_eff_wt = 61.7642% bkg_eff = 0.0207425%
+SIG = 14908 BKG = 106For BDT = 0.455 FOM = 1263.85 +/- 55.5963 sig_eff = 61.8996% sig_eff_wt = 59.8761% bkg_eff = 0.0186331%
+SIG = 14467.4 BKG = 98For BDT = 0.465 FOM = 1269.13 +/- 57.6758 sig_eff = 60.2379% sig_eff_wt = 58.1068% bkg_eff = 0.0172268%
+SIG = 14055.1 BKG = 87For BDT = 0.475 FOM = 1298.11 +/- 61.9439 sig_eff = 58.6387% sig_eff_wt = 56.4507% bkg_eff = 0.0152932%
+SIG = 13627.6 BKG = 78For BDT = 0.485 FOM = 1319 +/- 65.8181 sig_eff = 57.0055% sig_eff_wt = 54.7337% bkg_eff = 0.0137112%
+SIG = 13146.4 BKG = 74For BDT = 0.495 FOM = 1301.33 +/- 66.3772 sig_eff = 55.0137% sig_eff_wt = 52.8012% bkg_eff = 0.013008%
+SIG = 12672.1 BKG = 68For BDT = 0.505 FOM = 1300.21 +/- 68.6581 sig_eff = 53.1584% sig_eff_wt = 50.8962% bkg_eff = 0.0119533%
+SIG = 12171.9 BKG = 61For BDT = 0.515 FOM = 1307.37 +/- 72.1501 sig_eff = 51.2065% sig_eff_wt = 48.887% bkg_eff = 0.0107228%
+SIG = 11730.4 BKG = 52For BDT = 0.525 FOM = 1346.6 +/- 79.2184 sig_eff = 49.4821% sig_eff_wt = 47.1136% bkg_eff = 0.00914077%
+SIG = 11258.1 BKG = 47For BDT = 0.535 FOM = 1347.36 +/- 82.5367 sig_eff = 47.6269% sig_eff_wt = 45.2167% bkg_eff = 0.00826185%
+SIG = 10746.4 BKG = 42For BDT = 0.545 FOM = 1346.54 +/- 86.2565 sig_eff = 45.5611% sig_eff_wt = 43.1616% bkg_eff = 0.00738293%
+SIG = 10233.5 BKG = 39For BDT = 0.555 FOM = 1321.3 +/- 87.1775 sig_eff = 43.5693% sig_eff_wt = 41.1015% bkg_eff = 0.00685558%
+SIG = 9720.85 BKG = 33For BDT = 0.565 FOM = 1341.81 +/- 94.4696 sig_eff = 41.4352% sig_eff_wt = 39.0427% bkg_eff = 0.00580087%
+SIG = 9216.51 BKG = 29For BDT = 0.575 FOM = 1338.6 +/- 99.0543 sig_eff = 39.3581% sig_eff_wt = 37.0171% bkg_eff = 0.00509774%
+SIG = 8607.83 BKG = 27For BDT = 0.585 FOM = 1285.49 +/- 97.811 sig_eff = 36.985% sig_eff_wt = 34.5724% bkg_eff = 0.00474617%
+SIG = 8052.36 BKG = 23For BDT = 0.595 FOM = 1279 +/- 103.381 sig_eff = 34.7029% sig_eff_wt = 32.3414% bkg_eff = 0.00404303%
+SIG = 7625.06 BKG = 19For BDT = 0.605 FOM = 1301.45 +/- 112.858 sig_eff = 32.916% sig_eff_wt = 30.6252% bkg_eff = 0.0033399%
+SIG = 7156.99 BKG = 15For BDT = 0.615 FOM = 1332.03 +/- 125.734 sig_eff = 30.947% sig_eff_wt = 28.7452% bkg_eff = 0.00263676%
+SIG = 6605.57 BKG = 15For BDT = 0.625 FOM = 1229.4 +/- 116.164 sig_eff = 28.7104% sig_eff_wt = 26.5305% bkg_eff = 0.00263676%
+SIG = 6102.48 BKG = 13For BDT = 0.635 FOM = 1195.26 +/- 118.796 sig_eff = 26.5934% sig_eff_wt = 24.5099% bkg_eff = 0.00228519%
+SIG = 5590.3 BKG = 12For BDT = 0.645 FOM = 1126.14 +/- 115.151 sig_eff = 24.4878% sig_eff_wt = 22.4528% bkg_eff = 0.00210941%
+SIG = 5099.21 BKG = 11For BDT = 0.655 FOM = 1058.67 +/- 111.603 sig_eff = 22.3879% sig_eff_wt = 20.4804% bkg_eff = 0.00193362%
+SIG = 4607.98 BKG = 11For BDT = 0.665 FOM = 956.682 +/- 100.997 sig_eff = 20.3904% sig_eff_wt = 18.5074% bkg_eff = 0.00193362%
+SIG = 4108.41 BKG = 9For BDT = 0.675 FOM = 912.98 +/- 103.112 sig_eff = 18.3417% sig_eff_wt = 16.501% bkg_eff = 0.00158206%
+SIG = 3651.05 BKG = 6For BDT = 0.685 FOM = 924.436 +/- 118.688 sig_eff = 16.4637% sig_eff_wt = 14.664% bkg_eff = 0.0010547%
+SIG = 3239.42 BKG = 2For BDT = 0.695 FOM = 1111.59 +/- 192.366 sig_eff = 14.7394% sig_eff_wt = 13.0108% bkg_eff = 0.000351568%
+SIG = 2832.88 BKG = 2For BDT = 0.705 FOM = 972.092 +/- 168.416 sig_eff = 12.998% sig_eff_wt = 11.378% bkg_eff = 0.000351568%
+SIG = 2472.52 BKG = 2For BDT = 0.715 FOM = 848.435 +/- 147.186 sig_eff = 11.4614% sig_eff_wt = 9.9306% bkg_eff = 0.000351568%
+SIG = 2143.95 BKG = 2For BDT = 0.725 FOM = 735.687 +/- 127.829 sig_eff = 9.98179% sig_eff_wt = 8.61092% bkg_eff = 0.000351568%
+SIG = 1811.09 BKG = 2For BDT = 0.735 FOM = 621.468 +/- 108.219 sig_eff = 8.45094% sig_eff_wt = 7.27404% bkg_eff = 0.000351568%
+SIG = 1518.26 BKG = 2For BDT = 0.745 FOM = 520.983 +/- 90.9663 sig_eff = 7.20464% sig_eff_wt = 6.09791% bkg_eff = 0.000351568%
+SIG = 1241.5 BKG = 2For BDT = 0.755 FOM = 426.015 +/- 74.6599 sig_eff = 5.9242% sig_eff_wt = 4.98634% bkg_eff = 0.000351568%
+SIG = 985.655 BKG = 0For BDT = 0.765 FOM = 657.103 +/- 26.2744 sig_eff = 4.72911% sig_eff_wt = 3.95877% bkg_eff = 0%
+SIG = 747.288 BKG = 0For BDT = 0.775 FOM = 498.192 +/- 22.8195 sig_eff = 3.69907% sig_eff_wt = 3.0014% bkg_eff = 0%
+SIG = 584.346 BKG = 0For BDT = 0.785 FOM = 389.564 +/- 20.1434 sig_eff = 2.91373% sig_eff_wt = 2.34696% bkg_eff = 0%
+SIG = 406.264 BKG = 0For BDT = 0.795 FOM = 270.843 +/- 16.7597 sig_eff = 2.0601% sig_eff_wt = 1.63171% bkg_eff = 0%
+SIG = 291.36 BKG = 0For BDT = 0.805 FOM = 194.24 +/- 14.1662 sig_eff = 1.45686% sig_eff_wt = 1.17021% bkg_eff = 0%
+SIG = 187.303 BKG = 0For BDT = 0.815 FOM = 124.869 +/- 11.3731 sig_eff = 0.97883% sig_eff_wt = 0.752281% bkg_eff = 0%
+SIG = 111.515 BKG = 0For BDT = 0.825 FOM = 74.3435 +/- 8.73837 sig_eff = 0.574778% sig_eff_wt = 0.447888% bkg_eff = 0%
+SIG = 70.7301 BKG = 0For BDT = 0.835 FOM = 47.1534 +/- 6.99027 sig_eff = 0.358525% sig_eff_wt = 0.284079% bkg_eff = 0%
+SIG = 23.5296 BKG = 0For BDT = 0.845 FOM = 15.6864 +/- 4.01975 sig_eff = 0.125199% sig_eff_wt = 0.0945041% bkg_eff = 0%
+SIG = 8.97466 BKG = 0For BDT = 0.855 FOM = 5.98311 +/- 2.58473 sig_eff = 0.0512178% sig_eff_wt = 0.0360457% bkg_eff = 0%
+SIG = 2.77478 BKG = 0For BDT = 0.865 FOM = 1.84985 +/- 1.57795 sig_eff = 0.0113817% sig_eff_wt = 0.0111446% bkg_eff = 0%
+SIG = 0.822855 BKG = 0For BDT = 0.875 FOM = 0.54857 +/- 1.21148 sig_eff = 0.00569087% sig_eff_wt = 0.0033049% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.885 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.895 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.905 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.915 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.925 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.935 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.945 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.955 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.965 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.975 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.985 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+MAXIMUM FOM = 1347.36 +/- 82.5367 at BDT = 0.535 with sig_eff = 47.6269% sig_eff_wt = 45.2167% and bkg_eff = 0.00826185%
 ****************Optimizing for ZeroTracks****************
-nEntries= 81301
-siginit = 1169
-bkginit = 4660
-SIG = 1169 BKG = 4660.93For BDT = -0.995 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.985 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.975 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.965 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.955 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.945 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.935 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.925 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.915 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.905 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.895 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.885 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.875 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.865 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.855 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.845 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.835 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.825 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.815 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.805 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.795 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.785 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.775 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.765 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.755 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.745 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.735 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.725 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.715 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.705 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.695 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.685 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.675 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.665 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.655 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.645 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.635 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.625 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.615 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.605 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.595 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.585 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.575 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.565 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.555 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.545 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.535 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.525 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.515 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.505 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.495 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.485 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.475 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.465 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.455 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.445 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.435 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.425 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.415 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.405 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.395 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.385 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.375 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.365 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.355 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.345 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.335 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.325 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.315 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.305 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.295 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.285 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.275 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.265 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.255 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.245 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.235 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.225 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.215 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.205 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.195 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.185 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.175 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.165 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.155 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4660.93For BDT = -0.145 FOM = 16.7548 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 100.02%
-SIG = 1169 BKG = 4658.33For BDT = -0.135 FOM = 16.7594 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 99.9642%
-SIG = 1169 BKG = 4655.73For BDT = -0.125 FOM = 16.764 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 99.9084%
-SIG = 1169 BKG = 4645.33For BDT = -0.115 FOM = 16.7823 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 99.6853%
-SIG = 1169 BKG = 4623.67For BDT = -0.105 FOM = 16.8207 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 99.2203%
-SIG = 1169 BKG = 4580.33For BDT = -0.095 FOM = 16.8984 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 98.2904%
-SIG = 1169 BKG = 4499.73For BDT = -0.085 FOM = 17.0458 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 96.5608%
-SIG = 1169 BKG = 4366.27For BDT = -0.075 FOM = 17.2986 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 93.6967%
-SIG = 1169 BKG = 4145.27For BDT = -0.065 FOM = 17.7434 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 88.9542%
-SIG = 1169 BKG = 3803.8For BDT = -0.055 FOM = 18.5042 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 81.6266%
-SIG = 1169 BKG = 3354.87For BDT = -0.045 FOM = 19.6731 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 71.9928%
-SIG = 1169 BKG = 2781.13For BDT = -0.035 FOM = 21.5538 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 59.681%
-SIG = 1169 BKG = 2177.93For BDT = -0.025 FOM = 24.2691 sig_eff = 100% sig_eff_wt = 100% bkg_eff = 46.7368%
-SIG = 1168.8 BKG = 1601.6For BDT = -0.015 FOM = 28.1504 sig_eff = 99.9219% sig_eff_wt = 99.9831% bkg_eff = 34.3691%
-SIG = 1168.8 BKG = 1176.93For BDT = -0.005 FOM = 32.6422 sig_eff = 99.9219% sig_eff_wt = 99.9831% bkg_eff = 25.2561%
-SIG = 1168.8 BKG = 840.667For BDT = 0.005 FOM = 38.3286 sig_eff = 99.9219% sig_eff_wt = 99.9831% bkg_eff = 18.0401%
-SIG = 1168.8 BKG = 608.4For BDT = 0.015 FOM = 44.6692 sig_eff = 99.9219% sig_eff_wt = 99.9831% bkg_eff = 13.0558%
-SIG = 1168.12 BKG = 468For BDT = 0.025 FOM = 50.4953 sig_eff = 99.8439% sig_eff_wt = 99.9251% bkg_eff = 10.0429%
-SIG = 1168.12 BKG = 384.8For BDT = 0.035 FOM = 55.3186 sig_eff = 99.8439% sig_eff_wt = 99.9251% bkg_eff = 8.25751%
-SIG = 1167.63 BKG = 321.533For BDT = 0.045 FOM = 60.0898 sig_eff = 99.7658% sig_eff_wt = 99.8825% bkg_eff = 6.89986%
-SIG = 1163.87 BKG = 272.133For BDT = 0.055 FOM = 64.6723 sig_eff = 99.6097% sig_eff_wt = 99.5613% bkg_eff = 5.83977%
-SIG = 1162.32 BKG = 238.333For BDT = 0.065 FOM = 68.622 sig_eff = 99.4536% sig_eff_wt = 99.4288% bkg_eff = 5.11445%
-SIG = 1161.28 BKG = 200.2For BDT = 0.075 FOM = 74.2068 sig_eff = 99.3755% sig_eff_wt = 99.3394% bkg_eff = 4.29614%
-SIG = 1161.28 BKG = 182For BDT = 0.085 FOM = 77.4663 sig_eff = 99.3755% sig_eff_wt = 99.3394% bkg_eff = 3.90558%
-SIG = 1157.78 BKG = 168.133For BDT = 0.095 FOM = 80.031 sig_eff = 99.2194% sig_eff_wt = 99.04% bkg_eff = 3.60801%
-SIG = 1155.89 BKG = 150.8For BDT = 0.105 FOM = 83.8815 sig_eff = 99.1413% sig_eff_wt = 98.8787% bkg_eff = 3.23605%
-SIG = 1151.5 BKG = 139.533For BDT = 0.115 FOM = 86.4983 sig_eff = 98.829% sig_eff_wt = 98.5032% bkg_eff = 2.99428%
-SIG = 1150.38 BKG = 122.2For BDT = 0.125 FOM = 91.6318 sig_eff = 98.751% sig_eff_wt = 98.4074% bkg_eff = 2.62232%
-SIG = 1150.38 BKG = 112.667For BDT = 0.135 FOM = 94.9595 sig_eff = 98.751% sig_eff_wt = 98.4074% bkg_eff = 2.41774%
-SIG = 1148.42 BKG = 107.467For BDT = 0.145 FOM = 96.7775 sig_eff = 98.6729% sig_eff_wt = 98.2396% bkg_eff = 2.30615%
-SIG = 1148.42 BKG = 91.8667For BDT = 0.155 FOM = 103.604 sig_eff = 98.6729% sig_eff_wt = 98.2396% bkg_eff = 1.97139%
-SIG = 1147.87 BKG = 84.0667For BDT = 0.165 FOM = 107.591 sig_eff = 98.5948% sig_eff_wt = 98.1923% bkg_eff = 1.80401%
-SIG = 1146.07 BKG = 77.1333For BDT = 0.175 FOM = 111.457 sig_eff = 98.4387% sig_eff_wt = 98.0382% bkg_eff = 1.65522%
-SIG = 1146.07 BKG = 73.6667For BDT = 0.185 FOM = 113.664 sig_eff = 98.4387% sig_eff_wt = 98.0382% bkg_eff = 1.58083%
-SIG = 1145.59 BKG = 65For BDT = 0.195 FOM = 119.804 sig_eff = 98.3607% sig_eff_wt = 97.9976% bkg_eff = 1.39485%
-SIG = 1144.15 BKG = 59.8For BDT = 0.205 FOM = 123.919 sig_eff = 98.2826% sig_eff_wt = 97.8745% bkg_eff = 1.28326%
-SIG = 1140.96 BKG = 57.2For BDT = 0.215 FOM = 125.891 sig_eff = 98.0484% sig_eff_wt = 97.6015% bkg_eff = 1.22747%
-SIG = 1138.81 BKG = 50.2667For BDT = 0.225 FOM = 132.575 sig_eff = 97.8142% sig_eff_wt = 97.4172% bkg_eff = 1.07868%
-SIG = 1134.07 BKG = 43.3333For BDT = 0.235 FOM = 140.307 sig_eff = 97.4239% sig_eff_wt = 97.0121% bkg_eff = 0.9299%
-SIG = 1129.92 BKG = 38.1333For BDT = 0.245 FOM = 147.217 sig_eff = 97.0336% sig_eff_wt = 96.6573% bkg_eff = 0.818312%
-SIG = 1127.35 BKG = 33.8For BDT = 0.255 FOM = 154.141 sig_eff = 96.8774% sig_eff_wt = 96.4371% bkg_eff = 0.725322%
-SIG = 1124.02 BKG = 28.6For BDT = 0.265 FOM = 164.141 sig_eff = 96.5652% sig_eff_wt = 96.1523% bkg_eff = 0.613734%
-SIG = 1121.88 BKG = 25.1333For BDT = 0.275 FOM = 172.245 sig_eff = 96.331% sig_eff_wt = 95.9695% bkg_eff = 0.539342%
-SIG = 1117.54 BKG = 19.9333For BDT = 0.285 FOM = 187.36 sig_eff = 96.0968% sig_eff_wt = 95.5982% bkg_eff = 0.427754%
-SIG = 1112.19 BKG = 18.2For BDT = 0.295 FOM = 192.884 sig_eff = 95.6284% sig_eff_wt = 95.1407% bkg_eff = 0.390558%
-SIG = 1105.54 BKG = 16.4667For BDT = 0.305 FOM = 198.912 sig_eff = 94.9258% sig_eff_wt = 94.5711% bkg_eff = 0.353362%
-SIG = 1098.11 BKG = 13.8667For BDT = 0.315 FOM = 210.212 sig_eff = 94.3794% sig_eff_wt = 93.9354% bkg_eff = 0.297568%
-SIG = 1093.24 BKG = 12.1333For BDT = 0.325 FOM = 219.381 sig_eff = 93.8329% sig_eff_wt = 93.5194% bkg_eff = 0.260372%
-SIG = 1085.94 BKG = 11.2667For BDT = 0.335 FOM = 223.601 sig_eff = 93.2865% sig_eff_wt = 92.8947% bkg_eff = 0.241774%
-SIG = 1077.64 BKG = 10.4For BDT = 0.345 FOM = 228.076 sig_eff = 92.662% sig_eff_wt = 92.1845% bkg_eff = 0.223176%
-SIG = 1071.48 BKG = 9.53333For BDT = 0.355 FOM = 233.559 sig_eff = 92.1155% sig_eff_wt = 91.6574% bkg_eff = 0.204578%
-SIG = 1058.41 BKG = 9.53333For BDT = 0.365 FOM = 230.71 sig_eff = 91.491% sig_eff_wt = 90.5395% bkg_eff = 0.204578%
-SIG = 1045.04 BKG = 9.53333For BDT = 0.375 FOM = 227.796 sig_eff = 90.5543% sig_eff_wt = 89.3962% bkg_eff = 0.204578%
-SIG = 1038.34 BKG = 8.66667For BDT = 0.385 FOM = 233.654 sig_eff = 90.0078% sig_eff_wt = 88.8227% bkg_eff = 0.18598%
-SIG = 1030.99 BKG = 7.8For BDT = 0.395 FOM = 240.164 sig_eff = 89.3833% sig_eff_wt = 88.194% bkg_eff = 0.167382%
-SIG = 1018.26 BKG = 7.8For BDT = 0.405 FOM = 237.199 sig_eff = 88.4465% sig_eff_wt = 87.1051% bkg_eff = 0.167382%
-SIG = 1006.84 BKG = 7.8For BDT = 0.415 FOM = 234.538 sig_eff = 87.5098% sig_eff_wt = 86.128% bkg_eff = 0.167382%
-SIG = 988.013 BKG = 6.93333For BDT = 0.425 FOM = 239.048 sig_eff = 86.4949% sig_eff_wt = 84.5178% bkg_eff = 0.148784%
-SIG = 980.376 BKG = 6.93333For BDT = 0.435 FOM = 237.2 sig_eff = 85.5582% sig_eff_wt = 83.8645% bkg_eff = 0.148784%
-SIG = 968.455 BKG = 6.93333For BDT = 0.445 FOM = 234.316 sig_eff = 84.6214% sig_eff_wt = 82.8447% bkg_eff = 0.148784%
-SIG = 959.333 BKG = 6.06667For BDT = 0.455 FOM = 242.069 sig_eff = 83.8407% sig_eff_wt = 82.0644% bkg_eff = 0.130186%
-SIG = 947.423 BKG = 6.06667For BDT = 0.465 FOM = 239.063 sig_eff = 82.6698% sig_eff_wt = 81.0456% bkg_eff = 0.130186%
-SIG = 928.608 BKG = 6.06667For BDT = 0.475 FOM = 234.316 sig_eff = 81.4208% sig_eff_wt = 79.4361% bkg_eff = 0.130186%
-SIG = 915.591 BKG = 6.06667For BDT = 0.485 FOM = 231.031 sig_eff = 80.3279% sig_eff_wt = 78.3226% bkg_eff = 0.130186%
-SIG = 906.553 BKG = 6.06667For BDT = 0.495 FOM = 228.751 sig_eff = 79.3911% sig_eff_wt = 77.5495% bkg_eff = 0.130186%
-SIG = 894.421 BKG = 6.06667For BDT = 0.505 FOM = 225.689 sig_eff = 78.2201% sig_eff_wt = 76.5116% bkg_eff = 0.130186%
-SIG = 889.138 BKG = 5.2For BDT = 0.515 FOM = 235.2 sig_eff = 77.6737% sig_eff_wt = 76.0597% bkg_eff = 0.111588%
-SIG = 865.719 BKG = 5.2For BDT = 0.525 FOM = 229.005 sig_eff = 75.644% sig_eff_wt = 74.0564% bkg_eff = 0.111588%
-SIG = 853.427 BKG = 5.2For BDT = 0.535 FOM = 225.753 sig_eff = 74.7853% sig_eff_wt = 73.0049% bkg_eff = 0.111588%
-SIG = 842.334 BKG = 5.2For BDT = 0.545 FOM = 222.819 sig_eff = 73.6924% sig_eff_wt = 72.056% bkg_eff = 0.111588%
-SIG = 823.009 BKG = 5.2For BDT = 0.555 FOM = 217.707 sig_eff = 72.1311% sig_eff_wt = 70.4028% bkg_eff = 0.111588%
-SIG = 808.501 BKG = 5.2For BDT = 0.565 FOM = 213.869 sig_eff = 71.1944% sig_eff_wt = 69.1618% bkg_eff = 0.111588%
-SIG = 794.307 BKG = 4.33333For BDT = 0.575 FOM = 221.77 sig_eff = 70.1015% sig_eff_wt = 67.9476% bkg_eff = 0.09299%
-SIG = 776.125 BKG = 4.33333For BDT = 0.585 FOM = 216.694 sig_eff = 68.5402% sig_eff_wt = 66.3922% bkg_eff = 0.09299%
-SIG = 760.447 BKG = 4.33333For BDT = 0.595 FOM = 212.317 sig_eff = 67.3692% sig_eff_wt = 65.0511% bkg_eff = 0.09299%
-SIG = 738.581 BKG = 4.33333For BDT = 0.605 FOM = 206.212 sig_eff = 65.886% sig_eff_wt = 63.1806% bkg_eff = 0.09299%
-SIG = 721.664 BKG = 4.33333For BDT = 0.615 FOM = 201.488 sig_eff = 64.4809% sig_eff_wt = 61.7335% bkg_eff = 0.09299%
-SIG = 701.151 BKG = 4.33333For BDT = 0.625 FOM = 195.761 sig_eff = 62.6854% sig_eff_wt = 59.9787% bkg_eff = 0.09299%
-SIG = 674.628 BKG = 4.33333For BDT = 0.635 FOM = 188.356 sig_eff = 60.5777% sig_eff_wt = 57.7098% bkg_eff = 0.09299%
-SIG = 660.003 BKG = 4.33333For BDT = 0.645 FOM = 184.273 sig_eff = 59.0945% sig_eff_wt = 56.4588% bkg_eff = 0.09299%
-SIG = 641.039 BKG = 4.33333For BDT = 0.655 FOM = 178.978 sig_eff = 57.299% sig_eff_wt = 54.8365% bkg_eff = 0.09299%
-SIG = 614.206 BKG = 4.33333For BDT = 0.665 FOM = 171.486 sig_eff = 55.1913% sig_eff_wt = 52.5411% bkg_eff = 0.09299%
-SIG = 591.842 BKG = 4.33333For BDT = 0.675 FOM = 165.242 sig_eff = 53.0835% sig_eff_wt = 50.628% bkg_eff = 0.09299%
-SIG = 548.09 BKG = 4.33333For BDT = 0.685 FOM = 153.027 sig_eff = 49.8829% sig_eff_wt = 46.8854% bkg_eff = 0.09299%
-SIG = 524.91 BKG = 4.33333For BDT = 0.695 FOM = 146.555 sig_eff = 47.8532% sig_eff_wt = 44.9025% bkg_eff = 0.09299%
-SIG = 484.032 BKG = 4.33333For BDT = 0.705 FOM = 135.141 sig_eff = 44.4965% sig_eff_wt = 41.4056% bkg_eff = 0.09299%
-SIG = 447.604 BKG = 2.6For BDT = 0.715 FOM = 143.811 sig_eff = 41.6081% sig_eff_wt = 38.2895% bkg_eff = 0.055794%
-SIG = 423.346 BKG = 0.866667For BDT = 0.725 FOM = 174.148 sig_eff = 39.4223% sig_eff_wt = 36.2143% bkg_eff = 0.018598%
-SIG = 393.194 BKG = 0.866667For BDT = 0.735 FOM = 161.745 sig_eff = 36.6901% sig_eff_wt = 33.6351% bkg_eff = 0.018598%
-SIG = 362.888 BKG = 0.866667For BDT = 0.745 FOM = 149.278 sig_eff = 33.8017% sig_eff_wt = 31.0426% bkg_eff = 0.018598%
-SIG = 329.11 BKG = 0.866667For BDT = 0.755 FOM = 135.383 sig_eff = 31.1475% sig_eff_wt = 28.1531% bkg_eff = 0.018598%
-SIG = 296.825 BKG = 0For BDT = 0.765 FOM = 197.883 sig_eff = 28.2592% sig_eff_wt = 25.3914% bkg_eff = 0%
-SIG = 262.5 BKG = 0For BDT = 0.775 FOM = 175 sig_eff = 25.0585% sig_eff_wt = 22.455% bkg_eff = 0%
-SIG = 223.307 BKG = 0For BDT = 0.785 FOM = 148.871 sig_eff = 21.3895% sig_eff_wt = 19.1024% bkg_eff = 0%
-SIG = 196.622 BKG = 0For BDT = 0.795 FOM = 131.081 sig_eff = 18.9696% sig_eff_wt = 16.8196% bkg_eff = 0%
-SIG = 161.794 BKG = 0For BDT = 0.805 FOM = 107.863 sig_eff = 15.6909% sig_eff_wt = 13.8404% bkg_eff = 0%
-SIG = 133.161 BKG = 0For BDT = 0.815 FOM = 88.7741 sig_eff = 12.8806% sig_eff_wt = 11.391% bkg_eff = 0%
-SIG = 102.463 BKG = 0For BDT = 0.825 FOM = 68.3085 sig_eff = 10.0703% sig_eff_wt = 8.76499% bkg_eff = 0%
-SIG = 77.898 BKG = 0For BDT = 0.835 FOM = 51.932 sig_eff = 7.72834% sig_eff_wt = 6.66364% bkg_eff = 0%
-SIG = 52.53 BKG = 0For BDT = 0.845 FOM = 35.02 sig_eff = 5.30835% sig_eff_wt = 4.49359% bkg_eff = 0%
-SIG = 34.3166 BKG = 0For BDT = 0.855 FOM = 22.8777 sig_eff = 3.51288% sig_eff_wt = 2.93555% bkg_eff = 0%
-SIG = 14.129 BKG = 0For BDT = 0.865 FOM = 9.4193 sig_eff = 1.63934% sig_eff_wt = 1.20864% bkg_eff = 0%
-SIG = 6.16109 BKG = 0For BDT = 0.875 FOM = 4.10739 sig_eff = 0.78064% sig_eff_wt = 0.527039% bkg_eff = 0%
-SIG = 3.32246 BKG = 0For BDT = 0.885 FOM = 2.21497 sig_eff = 0.39032% sig_eff_wt = 0.284214% bkg_eff = 0%
-SIG = 0 BKG = 0For BDT = 0.895 FOM = 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
-SIG = 0 BKG = 0For BDT = 0.905 FOM = 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
-SIG = 0 BKG = 0For BDT = 0.915 FOM = 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
-SIG = 0 BKG = 0For BDT = 0.925 FOM = 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
-SIG = 0 BKG = 0For BDT = 0.935 FOM = 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
-SIG = 0 BKG = 0For BDT = 0.945 FOM = 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
-SIG = 0 BKG = 0For BDT = 0.955 FOM = 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
-SIG = 0 BKG = 0For BDT = 0.965 FOM = 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
-SIG = 0 BKG = 0For BDT = 0.975 FOM = 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
-SIG = 0 BKG = 0For BDT = 0.985 FOM = 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
-MAXIMUM FOM = 242.069 at BDT = 0.455 with sig_eff = 83.8407% sig_eff_wt = 82.0644% and bkg_eff = 0.130186%
+nEntries= 51752
+siginit = 1151 +/- 39
+bkginit = 3733 +/- 61.0983
+SIG = 1149.67 BKG = 512For BDT = 0.005 FOM = 47.6499 +/- 1.89363 sig_eff = 99.9216% sig_eff_wt = 99.8843% bkg_eff = 13.7155%
+SIG = 1148.96 BKG = 389For BDT = 0.015 FOM = 54.1374 +/- 2.23535 sig_eff = 99.8433% sig_eff_wt = 99.8229% bkg_eff = 10.4206%
+SIG = 1148.15 BKG = 315For BDT = 0.025 FOM = 59.6494 +/- 2.54882 sig_eff = 99.7649% sig_eff_wt = 99.7521% bkg_eff = 8.43825%
+SIG = 1148.15 BKG = 274For BDT = 0.035 FOM = 63.5989 +/- 2.78543 sig_eff = 99.7649% sig_eff_wt = 99.7521% bkg_eff = 7.33994%
+SIG = 1146.78 BKG = 233For BDT = 0.045 FOM = 68.4058 +/- 3.09107 sig_eff = 99.6865% sig_eff_wt = 99.6332% bkg_eff = 6.24163%
+SIG = 1143.02 BKG = 204For BDT = 0.055 FOM = 72.4215 +/- 3.36566 sig_eff = 99.4514% sig_eff_wt = 99.3065% bkg_eff = 5.46477%
+SIG = 1141.87 BKG = 176For BDT = 0.065 FOM = 77.3282 +/- 3.71171 sig_eff = 99.373% sig_eff_wt = 99.2065% bkg_eff = 4.71471%
+SIG = 1141.17 BKG = 159For BDT = 0.075 FOM = 80.8796 +/- 3.97317 sig_eff = 99.2947% sig_eff_wt = 99.1461% bkg_eff = 4.25931%
+SIG = 1138.42 BKG = 136For BDT = 0.085 FOM = 86.4938 +/- 4.41405 sig_eff = 99.1379% sig_eff_wt = 98.9073% bkg_eff = 3.64318%
+SIG = 1135.12 BKG = 120For BDT = 0.095 FOM = 91.1413 +/- 4.80168 sig_eff = 98.9812% sig_eff_wt = 98.6199% bkg_eff = 3.21457%
+SIG = 1132 BKG = 108For BDT = 0.105 FOM = 95.1873 +/- 5.15721 sig_eff = 98.8245% sig_eff_wt = 98.3489% bkg_eff = 2.89312%
+SIG = 1131.54 BKG = 97For BDT = 0.115 FOM = 99.7052 +/- 5.55922 sig_eff = 98.7461% sig_eff_wt = 98.3093% bkg_eff = 2.59845%
+SIG = 1127.36 BKG = 87For BDT = 0.125 FOM = 104.121 +/- 5.98513 sig_eff = 98.511% sig_eff_wt = 97.9462% bkg_eff = 2.33057%
+SIG = 1125.03 BKG = 80For BDT = 0.135 FOM = 107.717 +/- 6.34175 sig_eff = 98.3542% sig_eff_wt = 97.7437% bkg_eff = 2.14305%
+SIG = 1125.03 BKG = 73For BDT = 0.145 FOM = 112.01 +/- 6.76939 sig_eff = 98.3542% sig_eff_wt = 97.7437% bkg_eff = 1.95553%
+SIG = 1122.47 BKG = 67For BDT = 0.155 FOM = 115.893 +/- 7.18355 sig_eff = 98.1191% sig_eff_wt = 97.5212% bkg_eff = 1.7948%
+SIG = 1122.47 BKG = 57For BDT = 0.165 FOM = 124.032 +/- 8.06635 sig_eff = 98.1191% sig_eff_wt = 97.5212% bkg_eff = 1.52692%
+SIG = 1122.47 BKG = 53For BDT = 0.175 FOM = 127.842 +/- 8.49925 sig_eff = 98.1191% sig_eff_wt = 97.5212% bkg_eff = 1.41977%
+SIG = 1122.24 BKG = 44For BDT = 0.185 FOM = 137.982 +/- 9.71402 sig_eff = 98.0408% sig_eff_wt = 97.5013% bkg_eff = 1.17868%
+SIG = 1120.34 BKG = 38For BDT = 0.195 FOM = 146.174 +/- 10.7767 sig_eff = 97.884% sig_eff_wt = 97.3363% bkg_eff = 1.01795%
+SIG = 1118.85 BKG = 35For BDT = 0.205 FOM = 150.868 +/- 11.4168 sig_eff = 97.8056% sig_eff_wt = 97.2068% bkg_eff = 0.937584%
+SIG = 1107.48 BKG = 33For BDT = 0.215 FOM = 152.871 +/- 11.797 sig_eff = 97.1787% sig_eff_wt = 96.2192% bkg_eff = 0.884008%
+SIG = 1098.06 BKG = 30For BDT = 0.225 FOM = 157.377 +/- 12.5291 sig_eff = 96.395% sig_eff_wt = 95.4003% bkg_eff = 0.803643%
+SIG = 1096.57 BKG = 27For BDT = 0.235 FOM = 163.762 +/- 13.4839 sig_eff = 96.1599% sig_eff_wt = 95.2713% bkg_eff = 0.723279%
+SIG = 1092.65 BKG = 26For BDT = 0.245 FOM = 165.577 +/- 13.8028 sig_eff = 95.9248% sig_eff_wt = 94.9302% bkg_eff = 0.696491%
+SIG = 1088.97 BKG = 23For BDT = 0.255 FOM = 172.967 +/- 14.9989 sig_eff = 95.6113% sig_eff_wt = 94.6107% bkg_eff = 0.616126%
+SIG = 1085.21 BKG = 19For BDT = 0.265 FOM = 185.225 +/- 17.0765 sig_eff = 95.2978% sig_eff_wt = 94.2843% bkg_eff = 0.508974%
+SIG = 1080.41 BKG = 18For BDT = 0.275 FOM = 188.139 +/- 17.6509 sig_eff = 95.0627% sig_eff_wt = 93.8674% bkg_eff = 0.482186%
+SIG = 1072.51 BKG = 16For BDT = 0.285 FOM = 195.002 +/- 19.0019 sig_eff = 94.4357% sig_eff_wt = 93.181% bkg_eff = 0.42861%
+SIG = 1066.43 BKG = 15For BDT = 0.295 FOM = 198.48 +/- 19.7453 sig_eff = 94.0439% sig_eff_wt = 92.6523% bkg_eff = 0.401822%
+SIG = 1057.13 BKG = 15For BDT = 0.305 FOM = 196.749 +/- 19.5834 sig_eff = 93.4169% sig_eff_wt = 91.8444% bkg_eff = 0.401822%
+SIG = 1041.26 BKG = 12For BDT = 0.315 FOM = 209.758 +/- 22.4079 sig_eff = 92.5549% sig_eff_wt = 90.4659% bkg_eff = 0.321457%
+SIG = 1035.58 BKG = 11For BDT = 0.325 FOM = 215.001 +/- 23.6004 sig_eff = 91.9279% sig_eff_wt = 89.9722% bkg_eff = 0.294669%
+SIG = 1021.41 BKG = 10For BDT = 0.335 FOM = 219.08 +/- 24.7781 sig_eff = 90.9875% sig_eff_wt = 88.7412% bkg_eff = 0.267881%
+SIG = 1014 BKG = 10For BDT = 0.345 FOM = 217.491 +/- 24.6076 sig_eff = 90.2821% sig_eff_wt = 88.0975% bkg_eff = 0.267881%
+SIG = 999.767 BKG = 10For BDT = 0.355 FOM = 214.437 +/- 24.2793 sig_eff = 89.1066% sig_eff_wt = 86.8607% bkg_eff = 0.267881%
+SIG = 986.094 BKG = 10For BDT = 0.365 FOM = 211.505 +/- 23.9633 sig_eff = 88.0094% sig_eff_wt = 85.6728% bkg_eff = 0.267881%
+SIG = 973.762 BKG = 9For BDT = 0.375 FOM = 216.392 +/- 25.3264 sig_eff = 86.9906% sig_eff_wt = 84.6014% bkg_eff = 0.241093%
+SIG = 963.994 BKG = 7For BDT = 0.385 FOM = 232.526 +/- 29.3306 sig_eff = 86.3636% sig_eff_wt = 83.7527% bkg_eff = 0.187517%
+SIG = 955.406 BKG = 7For BDT = 0.395 FOM = 230.454 +/- 29.0807 sig_eff = 85.5016% sig_eff_wt = 83.0066% bkg_eff = 0.187517%
+SIG = 950.827 BKG = 6For BDT = 0.405 FOM = 240.747 +/- 31.7678 sig_eff = 85.0313% sig_eff_wt = 82.6088% bkg_eff = 0.160729%
+SIG = 943.474 BKG = 6For BDT = 0.415 FOM = 238.885 +/- 31.5309 sig_eff = 84.4828% sig_eff_wt = 81.9699% bkg_eff = 0.160729%
+SIG = 926.973 BKG = 6For BDT = 0.425 FOM = 234.707 +/- 31.0014 sig_eff = 83.4639% sig_eff_wt = 80.5363% bkg_eff = 0.160729%
+SIG = 912.765 BKG = 6For BDT = 0.435 FOM = 231.11 +/- 30.5452 sig_eff = 82.2884% sig_eff_wt = 79.3019% bkg_eff = 0.160729%
+SIG = 901.506 BKG = 6For BDT = 0.445 FOM = 228.259 +/- 30.184 sig_eff = 81.348% sig_eff_wt = 78.3237% bkg_eff = 0.160729%
+SIG = 883.855 BKG = 6For BDT = 0.455 FOM = 223.79 +/- 29.6166 sig_eff = 79.6238% sig_eff_wt = 76.7902% bkg_eff = 0.160729%
+SIG = 861.265 BKG = 6For BDT = 0.465 FOM = 218.07 +/- 28.8917 sig_eff = 77.8213% sig_eff_wt = 74.8275% bkg_eff = 0.160729%
+SIG = 852.468 BKG = 6For BDT = 0.475 FOM = 215.843 +/- 28.6093 sig_eff = 76.7241% sig_eff_wt = 74.0632% bkg_eff = 0.160729%
+SIG = 840.227 BKG = 6For BDT = 0.485 FOM = 212.743 +/- 28.2158 sig_eff = 75.3918% sig_eff_wt = 72.9998% bkg_eff = 0.160729%
+SIG = 818.194 BKG = 6For BDT = 0.495 FOM = 207.165 +/- 27.5082 sig_eff = 73.6677% sig_eff_wt = 71.0855% bkg_eff = 0.160729%
+SIG = 803.338 BKG = 6For BDT = 0.505 FOM = 203.403 +/- 27.0315 sig_eff = 72.3354% sig_eff_wt = 69.7948% bkg_eff = 0.160729%
+SIG = 781.523 BKG = 6For BDT = 0.515 FOM = 197.88 +/- 26.3309 sig_eff = 70.3762% sig_eff_wt = 67.8995% bkg_eff = 0.160729%
+SIG = 762.726 BKG = 5For BDT = 0.525 FOM = 204.152 +/- 28.6032 sig_eff = 68.5737% sig_eff_wt = 66.2663% bkg_eff = 0.133941%
+SIG = 744.292 BKG = 5For BDT = 0.535 FOM = 199.218 +/- 27.9415 sig_eff = 67.0063% sig_eff_wt = 64.6648% bkg_eff = 0.133941%
+SIG = 717.81 BKG = 5For BDT = 0.545 FOM = 192.13 +/- 26.9915 sig_eff = 64.8903% sig_eff_wt = 62.364% bkg_eff = 0.133941%
+SIG = 699.345 BKG = 5For BDT = 0.555 FOM = 187.187 +/- 26.3286 sig_eff = 63.1661% sig_eff_wt = 60.7597% bkg_eff = 0.133941%
+SIG = 680.276 BKG = 5For BDT = 0.565 FOM = 182.083 +/- 25.6444 sig_eff = 61.5204% sig_eff_wt = 59.103% bkg_eff = 0.133941%
+SIG = 653.339 BKG = 5For BDT = 0.575 FOM = 174.873 +/- 24.6775 sig_eff = 59.6395% sig_eff_wt = 56.7627% bkg_eff = 0.133941%
+SIG = 614.729 BKG = 5For BDT = 0.585 FOM = 164.539 +/- 23.2915 sig_eff = 56.8966% sig_eff_wt = 53.4082% bkg_eff = 0.133941%
+SIG = 588.387 BKG = 5For BDT = 0.595 FOM = 157.488 +/- 22.3456 sig_eff = 54.6238% sig_eff_wt = 51.1196% bkg_eff = 0.133941%
+SIG = 552.365 BKG = 5For BDT = 0.605 FOM = 147.847 +/- 21.052 sig_eff = 51.8809% sig_eff_wt = 47.99% bkg_eff = 0.133941%
+SIG = 523.295 BKG = 5For BDT = 0.615 FOM = 140.066 +/- 20.0081 sig_eff = 49.6865% sig_eff_wt = 45.4644% bkg_eff = 0.133941%
+SIG = 495.145 BKG = 5For BDT = 0.625 FOM = 132.531 +/- 18.9967 sig_eff = 47.3354% sig_eff_wt = 43.0187% bkg_eff = 0.133941%
+SIG = 462.521 BKG = 4For BDT = 0.635 FOM = 132.149 +/- 20.1404 sig_eff = 44.5925% sig_eff_wt = 40.1842% bkg_eff = 0.107152%
+SIG = 433.844 BKG = 4For BDT = 0.645 FOM = 123.955 +/- 18.9669 sig_eff = 41.9279% sig_eff_wt = 37.6928% bkg_eff = 0.107152%
+SIG = 405.086 BKG = 3For BDT = 0.655 FOM = 125.334 +/- 20.6504 sig_eff = 39.4984% sig_eff_wt = 35.1942% bkg_eff = 0.0803643%
+SIG = 374.825 BKG = 3For BDT = 0.665 FOM = 115.971 +/- 19.1987 sig_eff = 36.7555% sig_eff_wt = 32.5651% bkg_eff = 0.0803643%
+SIG = 343.606 BKG = 3For BDT = 0.675 FOM = 106.312 +/- 17.7004 sig_eff = 33.8558% sig_eff_wt = 29.8528% bkg_eff = 0.0803643%
+SIG = 303.187 BKG = 1For BDT = 0.685 FOM = 121.275 +/- 25.5209 sig_eff = 30.2508% sig_eff_wt = 26.3412% bkg_eff = 0.0267881%
+SIG = 282.804 BKG = 1For BDT = 0.695 FOM = 113.122 +/- 23.8896 sig_eff = 28.0564% sig_eff_wt = 24.5703% bkg_eff = 0.0267881%
+SIG = 246.949 BKG = 0For BDT = 0.705 FOM = 164.633 +/- 11.9415 sig_eff = 25.3918% sig_eff_wt = 21.4552% bkg_eff = 0%
+SIG = 227.215 BKG = 0For BDT = 0.715 FOM = 151.477 +/- 11.4582 sig_eff = 23.2759% sig_eff_wt = 19.7407% bkg_eff = 0%
+SIG = 200.845 BKG = 0For BDT = 0.725 FOM = 133.897 +/- 10.7587 sig_eff = 20.768% sig_eff_wt = 17.4496% bkg_eff = 0%
+SIG = 177.028 BKG = 0For BDT = 0.735 FOM = 118.019 +/- 10.1088 sig_eff = 18.4953% sig_eff_wt = 15.3804% bkg_eff = 0%
+SIG = 152.847 BKG = 0For BDT = 0.745 FOM = 101.898 +/- 9.38436 sig_eff = 15.8307% sig_eff_wt = 13.2795% bkg_eff = 0%
+SIG = 130.67 BKG = 0For BDT = 0.755 FOM = 87.1134 +/- 8.68067 sig_eff = 13.7931% sig_eff_wt = 11.3527% bkg_eff = 0%
+SIG = 106.314 BKG = 0For BDT = 0.765 FOM = 70.8762 +/- 7.82414 sig_eff = 11.442% sig_eff_wt = 9.23669% bkg_eff = 0%
+SIG = 89.7766 BKG = 0For BDT = 0.775 FOM = 59.8511 +/- 7.18041 sig_eff = 9.40439% sig_eff_wt = 7.79988% bkg_eff = 0%
+SIG = 66.8309 BKG = 0For BDT = 0.785 FOM = 44.5539 +/- 6.23161 sig_eff = 7.21003% sig_eff_wt = 5.80633% bkg_eff = 0%
+SIG = 49.5899 BKG = 0For BDT = 0.795 FOM = 33.0599 +/- 5.33645 sig_eff = 5.48589% sig_eff_wt = 4.30842% bkg_eff = 0%
+SIG = 33.526 BKG = 0For BDT = 0.805 FOM = 22.3507 +/- 4.42025 sig_eff = 4.07524% sig_eff_wt = 2.91277% bkg_eff = 0%
+SIG = 21.1599 BKG = 0For BDT = 0.815 FOM = 14.1066 +/- 3.48274 sig_eff = 2.89969% sig_eff_wt = 1.8384% bkg_eff = 0%
+SIG = 12.985 BKG = 0For BDT = 0.825 FOM = 8.65664 +/- 2.76942 sig_eff = 1.80251% sig_eff_wt = 1.12815% bkg_eff = 0%
+SIG = 9.67531 BKG = 0For BDT = 0.835 FOM = 6.45021 +/- 2.33482 sig_eff = 1.33229% sig_eff_wt = 0.8406% bkg_eff = 0%
+SIG = 5.13885 BKG = 0For BDT = 0.845 FOM = 3.4259 +/- 1.79584 sig_eff = 0.705329% sig_eff_wt = 0.446468% bkg_eff = 0%
+SIG = 1.14836 BKG = 0For BDT = 0.855 FOM = 0.765572 +/- 1.0165 sig_eff = 0.23511% sig_eff_wt = 0.0997705% bkg_eff = 0%
+SIG = 0.647553 BKG = 0For BDT = 0.865 FOM = 0.431702 +/- 1.01627 sig_eff = 0.15674% sig_eff_wt = 0.05626% bkg_eff = 0%
+SIG = 0.207955 BKG = 0For BDT = 0.875 FOM = 0.138637 +/- 0.699175 sig_eff = 0.0783699% sig_eff_wt = 0.0180674% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.885 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.895 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.905 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.915 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.925 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.935 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.945 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.955 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.965 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.975 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+SIG = 0 BKG = 0For BDT = 0.985 FOM = 0 +/- 0 sig_eff = 0% sig_eff_wt = 0% bkg_eff = 0%
+MAXIMUM FOM = 240.747 +/- 31.7678 at BDT = 0.405 with sig_eff = 85.0313% sig_eff_wt = 82.6088% and bkg_eff = 0.160729%
+$$$$FOM TOTAL = 1390.52 +/- 81.0494
+$$$$SIG EFF TOTAL = 46.8689
+$$$$BKG EFF TOTAL = 0.00925582
