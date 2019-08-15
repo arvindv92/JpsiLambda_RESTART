@@ -2091,9 +2091,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		Int_t i = run-1;
 		if(!inputFlag)
 		{
-			TFile *tempFile = new TFile("tempFile.root","RECREATE");
-			TList *list = new TList;
-
+			TList *list_ks = new TList;
 			if(isoFlag)
 			{
 				TFile *filein_jpsiks_nonZero = Open(Form("%s/run%d/jpsiks_cutoutks_LL_nonZeroTracks.root",jpsiksPath,run));
@@ -2116,11 +2114,12 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				treein_jpsiks_nonZero->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
 				treein_jpsiks_nonZero->SetBranchStatus("Lb_BKGCAT",1);
 
+				TFile *tempFile_ks = new TFile("tempFile_ks.root","RECREATE");
 				TTree* treein_jpsiks_Zero_cut    = (TTree*)treein_jpsiks_Zero->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));
 				TTree* treein_jpsiks_nonZero_cut = (TTree*)treein_jpsiks_nonZero->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));
 
-				list->Add(treein_jpsiks_Zero_cut);
-				list->Add(treein_jpsiks_nonZero_cut);
+				list_ks->Add(treein_jpsiks_Zero_cut);
+				list_ks->Add(treein_jpsiks_nonZero_cut);
 			}
 			else
 			{
@@ -2134,14 +2133,15 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				treein_jpsiks->SetBranchStatus(Form("BDT%d",bdtConf[i]),1);
 				treein_jpsiks->SetBranchStatus("Lb_BKGCAT",1);
 
+				TFile *tempFile_ks = new TFile("tempFile_ks.root","RECREATE");
 				TTree* treein_jpsiks_cut = (TTree*)treein_jpsiks->CopyTree(Form("BDT%d > %f",bdtConf[i],bdtCut[i]));
 
-				list->Add(treein_jpsiks_cut);
+				list_ks->Add(treein_jpsiks_cut);
 			}
-			TTree *combTree = TTree::MergeTrees(list);
-			combTree->SetName("combTree");
+			TTree *combTree_ks = TTree::MergeTrees(list_ks);
+			combTree_ks->SetName("combTree_ks");
 
-			ds_jpsiks[i] = new RooDataSet(Form("ds_jpsiks_Run%d",run),Form("ds_jpsiks_Run%d",run),combTree,RooArgSet(*myVar));
+			ds_jpsiks[i] = new RooDataSet(Form("ds_jpsiks_Run%d",run),Form("ds_jpsiks_Run%d",run),combTree_ks,RooArgSet(*myVar));
 			ds_jpsiks[i]->Print();
 
 			JPSIKS_KEYS[i] = new RooKeysPdf(Form("JPSIKS_RUN%d",run),Form("JPSIKS_RUN%d",run),*myVar,*(ds_jpsiks[i]),RooKeysPdf::NoMirror);
@@ -2355,7 +2355,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	{
 		Int_t i = run-1;
 
-		TFile *tempFile = new TFile("tempFile_sim.root","RECREATE");
 		TList *list_sim = new TList;
 
 		if(isoFlag)
@@ -2388,6 +2387,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			mcTreeIn_nonZero_Lambda->SetBranchStatus("GB_WT",1);
 			mcTreeIn_nonZero_Lambda->SetBranchStatus("wt_tau",1);
 
+			TFile *tempFile = new TFile("tempFile_sim.root","RECREATE");
 			TTree* mcTreeIn_Zero_Lambda_cut    = (TTree*)mcTreeIn_Zero_Lambda->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//Not TRUTH MATCHING HERE!
 			TTree* mcTreeIn_nonZero_Lambda_cut = (TTree*)mcTreeIn_nonZero_Lambda->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i])); //Not TRUTH MATCHING HERE!
 
@@ -2410,6 +2410,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			mcTreeIn_Lambda->SetBranchStatus("GB_WT",1);
 			mcTreeIn_Lambda->SetBranchStatus("wt_tau",1);
 
+			TFile *tempFile = new TFile("tempFile_sim.root","RECREATE");
 			TTree* mcTreeIn_Lambda_cut = (TTree*)mcTreeIn_Lambda->CopyTree(Form("BDT%d > %f",bdtConf[i],bdtCut[i])); //Not TRUTH MATCHING HERE!
 
 			list_sim->Add(mcTreeIn_Lambda_cut);
@@ -2463,11 +2464,11 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		w.import(*(ds_sim_wt[i]));
 	}
 
-	// w.factory("Exponential::mcbkg_run1(Lb_DTF_M_JpsiLConstr,tau_run1[-0.0007,-0.01,-0.0000001])");
-	// w.factory("Exponential::mcbkg_run2(Lb_DTF_M_JpsiLConstr,tau_run2[-0.0007,-0.01,-0.0000001])");
+	// w.factory("Exponential::mcbkg_Run1(Lb_DTF_M_JpsiLConstr,tau_run1[-0.0007,-0.01,-0.0000001])");
+	// w.factory("Exponential::mcbkg_Run2(Lb_DTF_M_JpsiLConstr,tau_run2[-0.0007,-0.01,-0.0000001])");
 
-	w.factory("Exponential::mcbkg_run1(Lb_DTF_M_JpsiLConstr,tau_run1[-1e-7,-1e-5,-1e-9])");
-	w.factory("Exponential::mcbkg_run2(Lb_DTF_M_JpsiLConstr,tau_run2[-1e-7,-1e-5,-1e-9])");
+	w.factory("Exponential::mcbkg_Run1(Lb_DTF_M_JpsiLConstr,tau_run1[-1e-7,-1e-5,-1e-9])");
+	w.factory("Exponential::mcbkg_Run2(Lb_DTF_M_JpsiLConstr,tau_run2[-1e-7,-1e-5,-1e-9])");
 
 	w.factory(Form("mcnsig_run1[%f,%f,%f]",mcNentries[0]-5,mcNentries[0]/2,mcNentries[0]));
 	w.factory(Form("mcnsig_run2[%f,%f,%f]",mcNentries[1]-5,mcNentries[1]/2,mcNentries[1]));
@@ -2475,8 +2476,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	w.factory(Form("mcnbkg_run1[1, %f]",mcNentries[0]));
 	w.factory(Form("mcnbkg_run2[1, %f]",mcNentries[1]));
 
-	RooAbsPdf* sumPdf1 = static_cast<RooAbsPdf*>(w.factory("SUM::mcFit_Run1(mcnsig_run1*Lb_Run1, mcnbkg_run1*mcbkg_run1)"));
-	RooAbsPdf* sumPdf2 = static_cast<RooAbsPdf*>(w.factory("SUM::mcFit_Run2(mcnsig_run2*Lb_Run2, mcnbkg_run2*mcbkg_run2)"));
+	RooAbsPdf* sumPdf1 = static_cast<RooAbsPdf*>(w.factory("SUM::mcFit_Run1(mcnsig_run1*Lb_Run1, mcnbkg_run1*mcbkg_Run1)"));
+	RooAbsPdf* sumPdf2 = static_cast<RooAbsPdf*>(w.factory("SUM::mcFit_Run2(mcnsig_run2*Lb_Run2, mcnbkg_run2*mcbkg_Run2)"));
 
 	// (w.pdf("mcFit_Run1"))->fitTo(*(mc_ds[0]),Range(5500,5740));
 	// (w.pdf("mcFit_Run2"))->fitTo(*(mc_ds[1]),Range(5500,5740));
@@ -2496,7 +2497,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	(ds_sim_wt[0])->plotOn(simframe_Run1,Name("simdata_Run1"),DataError(RooAbsData::SumW2));
 	// (w.pdf("mcFit_Run1"))->plotOn(simframe_Run1,Name("simfit_Run1"));
 	// (w.pdf("Lb_Run1"))->plotOn(simframe_Run1,Name("mcsig_Run1"),LineColor(kMagenta+2));
-	// (w.pdf("mcbkg_run1"))->plotOn(simframe_Run1,Name("mcbkg_Run1"),LineColor(kRed),RooFit::Normalization(w.var("mcnbkg_run1")->getValV(),RooAbsReal::NumEvent));
+	// (w.pdf("mcbkg_Run1"))->plotOn(simframe_Run1,Name("mcbkg_Run1"),LineColor(kRed),RooFit::Normalization(w.var("mcnbkg_run1")->getValV(),RooAbsReal::NumEvent));
 	sumPdf1->plotOn(simframe_Run1,Name("simfit_Run1"));
 	sumPdf1->plotOn(simframe_Run1,Name("mcsig_Run1"),LineColor(kMagenta+2),RooFit::Components("Lb_Run1"));
 	sumPdf1->plotOn(simframe_Run1,Name("mcbkg_Run1"),LineColor(kRed),RooFit::Components("mcbkg_Run1"));
@@ -2513,7 +2514,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	(ds_sim_wt[1])->plotOn(simframe_Run2,Name("simdata_Run2"),DataError(RooAbsData::SumW2));
 	// (w.pdf("mcFit_Run2"))->plotOn(simframe_Run2,Name("simfit_Run2"));
 	// (w.pdf("Lb_Run2"))->plotOn(simframe_Run2,Name("mcsig_Run2"),LineColor(kMagenta+2));
-	// (w.pdf("mcbkg_run2"))->plotOn(simframe_Run2,Name("mcbkg_Run2"),LineColor(kRed),RooFit::Normalization(w.var("mcnbkg_run2")->getValV(),RooAbsReal::NumEvent));
+	// (w.pdf("mcbkg_Run2"))->plotOn(simframe_Run2,Name("mcbkg_Run2"),LineColor(kRed),RooFit::Normalization(w.var("mcnbkg_run2")->getValV(),RooAbsReal::NumEvent));
 	sumPdf2->plotOn(simframe_Run2,Name("simfit_Run2"));
 	sumPdf2->plotOn(simframe_Run2,Name("mcsig_Run2"),LineColor(kMagenta+2),RooFit::Components("Lb_Run2"));
 	sumPdf2->plotOn(simframe_Run2,Name("mcbkg_Run2"),LineColor(kRed),RooFit::Components("mcbkg_Run2"));
@@ -2832,7 +2833,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	w.factory("nMiscLst_Run2[4000,200,9000]");
 	// w.factory(Form("nBkg_Run1[1,%d]",nentries[0]));
 	// w.factory(Form("nBkg_Run2[1,%d]",nentries[1]));
-	w.factory("nBkg_Run1[700,500,1000]");
+	w.factory("nBkg_Run1[700,500,1500]");
 	w.factory("nBkg_Run2[2500,2000,3000]");
 
 	//****************Xib Bkg Yield**************************************
