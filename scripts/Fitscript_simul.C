@@ -692,7 +692,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			TTree *mcTreeIn_Lambda = (TTree*)mcFileIn_Lambda->Get("MyTuple");
 
 			mcTreeIn_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_noIso.root",
-			                                          lambdaMCPath,run,bdtConf_nonZero[i]));
+			                                          lambdaMCPath,run,bdtConf[i]));
 			mcTreeIn_Lambda->Draw("GB_WT*wt_tau>>wt_lambda",Form("BDT%d > %f", bdtConf[i],bdtCut[i]),"goff");
 
 			TH1F *wt_lambda = (TH1F*)gDirectory->Get("wt_lambda");
