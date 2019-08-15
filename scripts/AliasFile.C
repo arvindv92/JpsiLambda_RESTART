@@ -4,11 +4,13 @@
 void AliasFile(Int_t run = 1, Int_t mcType = 1)
 //mcType = 1 for JpsiLambda MC
 //mcType = 2 for JpsiSigma MC
+//mcType = 3 for JpsiXi reco'd J/psi Lambda
 //mcType = 6 for JpsiLst(1405) MC
 //mcType = 7 for JpsiLst(1520) MC
 //mcType = 8 for JpsiLst(1600) MC
 //mcType = 9 for chiC1 Lambda MC
 //mcType = 11 for Xib0 -> JpsiLambda
+//mcType = 12 for JpsiXi reco'd J/psi Xi
 {
 	TFile *fileIn = nullptr;
 	TTree *treeIn = nullptr;
@@ -40,6 +42,18 @@ void AliasFile(Int_t run = 1, Int_t mcType = 1)
 		part = "jpsixi";
 		break;
 	}
+	case 4:
+	{
+		folder = "Bu_JpsiX";
+		part = "bu_jpsix";
+		break;
+	}
+	case 5:
+	{
+		folder = "Bd_JpsiX";
+		part = "bd_jpsix";
+		break;
+	}
 	case 6:
 	{
 		folder = "Lst1405";
@@ -66,8 +80,8 @@ void AliasFile(Int_t run = 1, Int_t mcType = 1)
 	}
 	case 10:
 	{
-		folder = "JpsiXi";
-		part = "jpsixi";
+		folder = "JpsiKs";
+		part = "jpsiks";
 		break;
 	}
 	case 11:
@@ -76,21 +90,27 @@ void AliasFile(Int_t run = 1, Int_t mcType = 1)
 		part = "xib0";
 		break;
 	}
+	case 12:
+	{
+		folder = "JpsiXi";
+		part = "jpsixi";
+		break;
 	}
-	if(mcType!=10)
+	}
+	if(mcType!=12)
 		fileIn = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",folder,run,part),"UPDATE");
 	else
 		fileIn = TFile::Open(Form("../rootFiles/mcFiles/JpsiXi/run%d/%s.root",run,part),"UPDATE");
 
 	treeIn = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
 
-	if(!(mcType == 3 || mcType == 10 || mcType == 11))
+	if(!(mcType == 3 || mcType == 12 || mcType == 11))
 	{
 		treeIn->SetAlias("Lb_PT","Lambda_b0_TRUEPT");
 		treeIn->SetAlias("Lb_P","sqrt(Lambda_b0_TRUEPT**2+Lambda_b0_TRUEP_Z**2)");
 		treeIn->SetAlias("Lb_ETA","-log(tan(0.5*atan(Lambda_b0_TRUEPT/Lambda_b0_TRUEP_Z)))");
 	}
-	else if(mcType == 3 || mcType == 10)
+	else if(mcType == 3 || mcType == 12)
 	{
 		treeIn->SetAlias("Lb_PT","Xi_bminus_TRUEPT");
 		treeIn->SetAlias("Lb_P","sqrt(Xi_bminus_TRUEPT**2+Xi_bminus_TRUEP_Z**2)");
