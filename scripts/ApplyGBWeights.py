@@ -21,12 +21,15 @@ if isGen:
 else:
     print 'Reconstructed\n'
 
-if not isGen:
-    columns = ['Lb_P', 'Lb_PT', 'Jpsi_P', 'Jpsi_PT', 'L_P',
-               'L_PT', 'p_P', 'p_PT', 'pi_P', 'pi_PT', 'p_ProbNNghost', 'pi_ProbNNghost']
+if mcOpt != 3 and mcOpt != 12:
+    if not isGen:
+        columns = ['Lb_P', 'Lb_PT', 'Jpsi_P', 'Jpsi_PT', 'L_P',
+                   'L_PT', 'p_P', 'p_PT', 'pi_P', 'pi_PT', 'p_ProbNNghost', 'pi_ProbNNghost']
+    else:
+        columns = ['Lb_P', 'Lb_PT', 'Jpsi_P', 'Jpsi_PT', 'L_P',
+                   'L_PT', 'p_P', 'p_PT', 'pi_P', 'pi_PT']
 else:
-    columns = ['Lb_P', 'Lb_PT', 'Jpsi_P', 'Jpsi_PT', 'L_P',
-               'L_PT', 'p_P', 'p_PT', 'pi_P', 'pi_PT']
+    columns = ['Lb_P', 'Lb_PT', '(p_P-pi_P)/(p_P+pi_P)', 'SW']
 # columns = ['Lb_P', 'Lb_PT', 'Jpsi_P', 'Jpsi_PT',
 #            'L_P', 'L_PT', 'p_P', 'p_PT', 'pi_P', 'pi_PT']
 
@@ -81,7 +84,7 @@ else:
         fileName = part + '_cut_LL.root'
 filePath = filePath.format(run)
 
-if mcOpt != 3:
+if mcOpt != 3 and mcOpt != 12:
     if not isGen:
         wtsFileName = 'gb_wts.pkl'
     else:
