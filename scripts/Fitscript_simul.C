@@ -12,34 +12,37 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 //myLow and myHigh define the fit range
 //rwType 0 is no RW, 1 is MV RW, 2 is BONN RW
 //bkgType = 0 for Exponential. 1 for 2nd order Chebychev. 2 for 3rd order Chebychev
+//sigType = 0 for Hypatia, 1 for Double sided Crystal Ball.
 {
 	Int_t binwidth = 4;
 	Bool_t logFlag = false;
+	const char* sigPDF = (sigType == 0) ? "Hypatia" : "CB";
+	const char* bkgPDF = (bkgType == 0) ? "Expo" : ( (bkgType == 1) ? "Cheby2" : "Cheby3" );
 
 	if(isoFlag)
 	{
 		if(mcRW && logFlag)
 		{
-			gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/Hypatia_Expo_%d_%d_%dMeVBins_config%d_config%d.txt",
-			                             myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
+			gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d.txt",
+			                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
 		}
 		else if(!mcRW && logFlag)
 		{
-			gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/Hypatia_Expo_%d_%d_%dMeVBins_config%d_config%d_noRW.txt",
-			                             myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
+			gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noRW.txt",
+			                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
 		}
 	}
 	else
 	{
 		if(mcRW && logFlag)
 		{
-			gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/Hypatia_Expo_%d_%d_%dMeVBins_config%d_config%d_noIso.txt",
-			                             myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
+			gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noIso.txt",
+			                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
 		}
 		else if(!mcRW && logFlag)
 		{
-			gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/Hypatia_Expo_%d_%d_%dMeVBins_config%d_config%d_noRW_noIso.txt",
-			                             myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
+			gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noRW_noIso.txt",
+			                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
 		}
 	}
 	{cout<<"************************"<<endl;
@@ -52,6 +55,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	 cout<<"************************"<<endl;
 	 cout<<"************************"<<endl;
 	 cout<<"************************"<<endl;}
+
 	gSystem->Exec("date");
 	gROOT->ProcessLine(".x lhcbStyle.C");
 
@@ -314,7 +318,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	Int_t sigWindow_low  = 5365;
 	Int_t sigWindow_high = 5600;
 
-	gSystem->Load("RooHypatia2_cpp.so"); //Load library for Hypatia shape
+	if(sigType == 0)
+		gSystem->Load("RooHypatia2_cpp.so"); //Load library for Hypatia shape
 
 	// Xib normalization & errs
 
@@ -518,23 +523,36 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	Int_t jpsiksflag   = 0;
 	// ************************Master Workspace**************************
 	RooWorkspace w("w");
-	cout<<"before importClassCode"<<endl;
-	Bool_t importFlag = w.importClassCode("RooHypatia2",kTRUE);
-	cout<<"importFlag = "<<importFlag<<endl;
-	cout<<"after importClassCode"<<endl;
+	// cout<<"before importClassCode"<<endl;
+	// Bool_t importFlag = w.importClassCode("RooHypatia2",kTRUE);
+	// cout<<"importFlag = "<<importFlag<<endl;
+	// cout<<"after importClassCode"<<endl;
 
 	// ************************Workspace for input data**************************
 	Bool_t inputFlag = false;
 	const char* inputFileName = "";
-	if(mcRW)
+	if(isoFlag)
 	{
-		inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV.root",myLow,myHigh,binwidth);
+		if(mcRW)
+		{
+			inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+		}
+		else
+		{
+			inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noRW.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+		}
 	}
 	else
 	{
-		inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_noRW.root",myLow,myHigh,binwidth);
+		if(mcRW)
+		{
+			inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noIso.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+		}
+		else
+		{
+			inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noRW_noIso.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+		}
 	}
-
 	if(!(gSystem->AccessPathName(inputFileName)))
 	{
 		inputFlag = true;
@@ -550,11 +568,13 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	}
 	else
 	{
+		cout<<"#######################################"<<endl;
 		cout<<"Input file exists! Hurray!"<<endl;
 		TFile *inputFile = Open(inputFileName);
 		w1 = (RooWorkspace*)inputFile->Get("w1");
 		cout<<"Printing contents of w1 from input file"<<endl;
 		w1->Print("v");
+		cout<<"#######################################"<<endl;
 	}
 	//*********MASTER VARIABLE*******************************************
 	w.factory(Form("Lb_DTF_M_JpsiLConstr[%d,%d]",myLow,myHigh));
@@ -588,7 +608,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		{
 			gSystem->Exec(Form("python -c \'from GetXibNorm import GetNorm;"
 			                   " GetNorm(%d, %d, \"%s\", %d, %d, %d, %f, %f, 0)\'",
-			                   run, false, isoVersion[i], isoConf[i], bdtConf[i],
+			                   run, false, "", 0, bdtConf[i],
 			                   0, bdtCut[i], 0.));
 		}
 
@@ -631,9 +651,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 		genFile_Lambda>>nGen_Lambda[i]; //Get number of generated events
 
-		TFile *genWtsFile_Lambda = nullptr;
-		genWtsFile_Lambda = Open(Form("%s/run%d/RW/gbWeights_gen.root",
-		                              lambdaMCPath,run));
+		TFile *genWtsFile_Lambda = Open(Form("%s/run%d/RW/gbWeights_gen.root",
+		                                     lambdaMCPath,run));
 
 		TTree *genWtsTree_Lambda = (TTree*)genWtsFile_Lambda->Get("MyTuple");
 
@@ -645,7 +664,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		TH1F *genWt_Lambda = (TH1F*)gDirectory->Get("genWt_Lambda");
 		nGen_Lambda_wt[i] = genWt_Lambda->GetEntries()*genWt_Lambda->GetMean();
 
-		genEffFile_Lambda.open(Form("../logs/mc/JpsiLambda/JpsiLambda/run%d/Generator_Effs_Combined.txt",run));
+		genEffFile_Lambda.open(Form("../logs/mc/JpsiLambda/JpsiLambda/run%d/"
+		                            "Generator_Effs_Combined.txt",run));
 
 		genEffFile_Lambda>>eff_Lambda_gen[i]; //Get generator efficiency
 		genEffFile_Lambda>>eff_Lambda_gen_err[i]; //and error on above
@@ -700,10 +720,11 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			num_Lambda_wt = (wt_lambda->GetMean()*wt_lambda->GetEntries());
 			num_Lambda    = mcTreeIn_Lambda->GetEntries(Form("BDT%d > %f", bdtConf[i],bdtCut[i])); //NOTE NO TM HERE
 		}
-		eff_Lambda_rec[i]     = num_Lambda*1.0/nGen_Lambda[i]; //Calc. reco eff.
+
+		eff_Lambda_rec[i]     = num_Lambda/nGen_Lambda[i]; //Calc. reco eff.
 		eff_Lambda_rec_err[i] = sqrt(eff_Lambda_rec[i]*(1-eff_Lambda_rec[i])/nGen_Lambda[i]); //statistical error on recon. eff.
 
-		eff_Lambda_rec_wt[i]     = num_Lambda_wt*1.0/nGen_Lambda_wt[i]; //Calc. weighted reco eff.
+		eff_Lambda_rec_wt[i]     = num_Lambda_wt/nGen_Lambda_wt[i]; //Calc. weighted reco eff.
 		eff_Lambda_rec_err_wt[i] = sqrt(eff_Lambda_rec_wt[i]*(1-eff_Lambda_rec_wt[i])/nGen_Lambda_wt[i]); //statistical error on weighted recon. eff.
 
 		// cout<<"Run "<<run<<" UNWEIGHTED Lambda Recons. Effs = "<<eff_Lambda_rec[i]*100
@@ -731,7 +752,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	//****Get J/psi Sigma efficiencies and shape from MC*****************
 	// RooHistPdf* SIG[2];
 	RooKeysPdf* SIG_KEYS[2];//No Mirror
-
 	RooDataSet* ds_sig[2];
 	RooDataSet* ds_sig_wt[2];
 
@@ -765,10 +785,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 		genFile_Sigma>>nGen_Sigma[i]; // Get number of generated events
 
-		TFile *genWtsFile_Sigma = nullptr;
-
-		genWtsFile_Sigma = Open(Form("%s/run%d/RW/gbWeights_gen.root",
-		                             sigmaPath,run));
+		TFile *genWtsFile_Sigma = Open(Form("%s/run%d/RW/gbWeights_gen.root",
+		                                    sigmaPath,run));
 
 		TTree *genWtsTree_Sigma = (TTree*)genWtsFile_Sigma->Get("MyTuple");
 
@@ -780,7 +798,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		TH1F *genWt_Sigma = (TH1F*)gDirectory->Get("genWt_Sigma");
 
 		nGen_Sigma_wt[i] = genWt_Sigma->GetEntries()*genWt_Sigma->GetMean();
-
 
 		genEffFile_Sigma.open(Form("../logs/mc/JpsiLambda/JpsiSigma/run%d/Generator_Effs_Combined.txt",run));
 
@@ -802,9 +819,9 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			                                   sigmaPath,run));
 			mcTreeIn_nonZero_Sigma = (TTree*)mcFileIn_nonZero_Sigma->Get("MyTuple");
 
-			mcFileIn_Zero_Sigma    = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_ZeroTracks.root",
-			                                   sigmaPath,run));
-			mcTreeIn_Zero_Sigma    = (TTree*)mcFileIn_Zero_Sigma->Get("MyTuple");
+			mcFileIn_Zero_Sigma = Open(Form("%s/run%d/jpsisigma_cutoutks_LL_ZeroTracks.root",
+			                                sigmaPath,run));
+			mcTreeIn_Zero_Sigma = (TTree*)mcFileIn_Zero_Sigma->Get("MyTuple");
 
 			mcTreeIn_nonZero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_LL_FinalBDT%d_iso%d_%s.root",
 			                                                 sigmaPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
@@ -839,10 +856,11 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			num_Sigma_wt = (wt_Sigma->GetMean()*wt_Sigma->GetEntries());
 			num_Sigma    = mcTreeIn_Sigma->GetEntries(Form("BDT%d > %f", bdtConf[i],bdtCut[i]));
 		}
-		eff_Sigma_rec[i]     = num_Sigma*1.0/nGen_Sigma[i];  // Calc. reco. eff.
+
+		eff_Sigma_rec[i]     = num_Sigma/nGen_Sigma[i]; // Calc. reco. eff.
 		eff_Sigma_rec_err[i] = sqrt(eff_Sigma_rec[i]*(1-eff_Sigma_rec[i])/nGen_Sigma[i]);    //stat error on recon. eff.
 
-		eff_Sigma_rec_wt[i]     = num_Sigma_wt*1.0/nGen_Sigma_wt[i];   //Calc. weighted reco eff.
+		eff_Sigma_rec_wt[i]     = num_Sigma_wt/nGen_Sigma_wt[i]; //Calc. weighted reco eff.
 		eff_Sigma_rec_err_wt[i] = sqrt(eff_Sigma_rec_wt[i]*(1-eff_Sigma_rec_wt[i])/nGen_Sigma_wt[i]);  //statistical error on weighted recon. eff.
 
 		// cout<<"Run "<<run<<" Sigma Recons. Effs = "
@@ -852,11 +870,11 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		//     <<" % +/- "<<eff_Sigma_rec_err_wt[i]*100<<" %"<<endl;
 
 		// **** Multiply gen. eff by reco eff. to get overall eff.
-		eff_JpsiSigma[i] = eff_Sigma_gen[i] * eff_Sigma_rec[i];      // Calc overall eff.
+		eff_JpsiSigma[i]         = eff_Sigma_gen[i] * eff_Sigma_rec[i]; // Calc overall eff.
 		eff_JpsiSigma_SystErr[i] = eff_JpsiSigma[i]*sqrt(pow((eff_Sigma_gen_err[i]/eff_Sigma_gen[i]),2) +
-		                                                 pow((eff_Sigma_rec_err[i]/eff_Sigma_rec[i]),2));  // and stat. error on above
+		                                                 pow((eff_Sigma_rec_err[i]/eff_Sigma_rec[i]),2)); // and stat. error on above
 
-		eff_JpsiSigma_wt[i]     = eff_Sigma_rec_wt[i]*eff_Sigma_gen[i]; // Calc. total eff.
+		eff_JpsiSigma_wt[i]         = eff_Sigma_rec_wt[i]*eff_Sigma_gen[i]; // Calc. total eff.
 		eff_JpsiSigma_wt_SystErr[i] = eff_JpsiSigma_wt[i]*sqrt(pow((eff_Sigma_gen_err[i]/eff_Sigma_gen[i]),2) +
 		                                                       pow((eff_Sigma_rec_err_wt[i]/eff_Sigma_rec_wt[i]),2));
 		cout<<"************************************************"<<endl;
@@ -903,8 +921,10 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				mcTreeIn_nonZero_Sigma->SetBranchStatus("GB_WT",1);
 				mcTreeIn_nonZero_Sigma->SetBranchStatus("wt_tau",1);
 
-				TTree* mcTreeIn_Zero_Sigma_cut    = (TTree*)mcTreeIn_Zero_Sigma->CopyTree(Form("(BDT%d > %f)",bdtConf_Zero[i],bdtCut_Zero[i]));//Not TRUTH MATCHING HERE!
-				TTree* mcTreeIn_nonZero_Sigma_cut = (TTree*)mcTreeIn_nonZero_Sigma->CopyTree(Form("(BDT%d > %f)",bdtConf_nonZero[i],bdtCut_nonZero[i])); //Not TRUTH MATCHING HERE!
+				TTree* mcTreeIn_Zero_Sigma_cut    = (TTree*)mcTreeIn_Zero_Sigma->CopyTree(Form("(BDT%d > %f)",
+				                                                                               bdtConf_Zero[i],bdtCut_Zero[i]));//Not TRUTH MATCHING HERE!
+				TTree* mcTreeIn_nonZero_Sigma_cut = (TTree*)mcTreeIn_nonZero_Sigma->CopyTree(Form("(BDT%d > %f)",
+				                                                                                  bdtConf_nonZero[i],bdtCut_nonZero[i])); //Not TRUTH MATCHING HERE!
 
 				list_sig->Add(mcTreeIn_Zero_Sigma_cut);
 				list_sig->Add(mcTreeIn_nonZero_Sigma_cut);
@@ -1070,9 +1090,9 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			                                  Lst1405Path,run));
 			mcTreeIn_nonZero_1405 = (TTree*)mcFileIn_nonZero_1405->Get("MyTuple");
 
-			mcFileIn_Zero_1405    = Open(Form("%s/run%d/lst1405_cutoutks_LL_ZeroTracks.root",
-			                                  Lst1405Path,run));
-			mcTreeIn_Zero_1405    = (TTree*)mcFileIn_Zero_1405->Get("MyTuple");
+			mcFileIn_Zero_1405 = Open(Form("%s/run%d/lst1405_cutoutks_LL_ZeroTracks.root",
+			                               Lst1405Path,run));
+			mcTreeIn_Zero_1405 = (TTree*)mcFileIn_Zero_1405->Get("MyTuple");
 
 			mcTreeIn_nonZero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_LL_FinalBDT%d_iso%d_%s.root",
 			                                                Lst1405Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
