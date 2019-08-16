@@ -530,7 +530,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 	// ************************Workspace for input data**************************
 	Bool_t inputFlag = false;
-	const char* inputFileName = "";
+	TString inputFileName = "";
 	if(isoFlag)
 	{
 		if(mcRW)
@@ -553,7 +553,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noRW_noIso.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
 		}
 	}
-	if(!(gSystem->AccessPathName(inputFileName)))
+	if(!(gSystem->AccessPathName(inputFileName.Data())))
 	{
 		inputFlag = true;
 	}
@@ -570,7 +570,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	{
 		cout<<"#######################################"<<endl;
 		cout<<"Input file exists! Hurray!"<<endl;
-		TFile *inputFile = Open(inputFileName);
+		TFile *inputFile = Open(inputFileName.Data());
 		w1 = (RooWorkspace*)inputFile->Get("w1");
 		cout<<"Printing contents of w1 from input file"<<endl;
 		w1->Print("v");
@@ -4281,7 +4281,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 	if(!inputFlag)
 	{
-		w1->writeToFile(inputFileName,true);
+		w1->writeToFile(inputFileName.Data(),true);
 	}
 	cout << "workspace written to file " << fileName << endl;
 
