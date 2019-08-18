@@ -1,0 +1,1377 @@
+Info in <StandardHypoTestInvDemo>: Model ModelConfig has no snapshot  - make one using model poi
+Info in <StandardHypoTestInvDemo>: Using Minuit as minimizer for computing the test statistic
+Info in <StandardHypoTestInvDemo>:  Doing a first fit to the observed data 
+Info in <TCanvas::Print>: pdf file ../plots/ANA/CLs_Hypatia_Expo_4700_6200_config1.pdf has been created
+#######################################
+Input file exists! Hurray!
+Printing contents of w1 from input file
+
+RooWorkspace(w1) w1 contents
+
+variables
+---------
+(GB_WT,Lb_DTF_M_JpsiLConstr,sample,totWt,wt_tau)
+
+p.d.f.s
+-------
+RooKeysPdf::JPSIKS_RUN1[ x=Lb_DTF_M_JpsiLConstr ] = 0.00490232
+RooKeysPdf::JPSIKS_RUN2[ x=Lb_DTF_M_JpsiLConstr ] = 0.00462242
+RooKeysPdf::LST1405_Run1[ x=Lb_DTF_M_JpsiLConstr ] = 0.000203841
+RooKeysPdf::LST1405_Run2[ x=Lb_DTF_M_JpsiLConstr ] = 0.000221882
+RooKeysPdf::LST1520_Run1[ x=Lb_DTF_M_JpsiLConstr ] = 8.62245e-05
+RooKeysPdf::LST1520_Run2[ x=Lb_DTF_M_JpsiLConstr ] = 8.6584e-05
+RooKeysPdf::LST1600_Run1[ x=Lb_DTF_M_JpsiLConstr ] = 5.78022e-05
+RooKeysPdf::LST1600_Run2[ x=Lb_DTF_M_JpsiLConstr ] = 6.36857e-05
+RooKeysPdf::SIG_Run1[ x=Lb_DTF_M_JpsiLConstr ] = 0.00432764
+RooKeysPdf::SIG_Run2[ x=Lb_DTF_M_JpsiLConstr ] = 0.00420125
+RooKeysPdf::XIB_RUN1[ x=Lb_DTF_M_JpsiLConstr ] = 0.0022805
+RooKeysPdf::XIB_RUN2[ x=Lb_DTF_M_JpsiLConstr ] = 0.00192398
+
+datasets
+--------
+RooDataSet::ds_sig_Run1(Lb_DTF_M_JpsiLConstr,GB_WT,wt_tau,totWt)
+RooDataSet::ds_sig_wt_Run1(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_sig_Run2(Lb_DTF_M_JpsiLConstr,GB_WT,wt_tau,totWt)
+RooDataSet::ds_sig_wt_Run2(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_1405_Run1(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_1405_Run2(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_1520_Run1(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_1520_Run2(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_1600_Run1(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_1600_Run2(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_xi_Run1(Lb_DTF_M_JpsiLConstr,GB_WT)
+RooDataSet::ds_xi_wt_Run1(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_xi_Run2(Lb_DTF_M_JpsiLConstr,GB_WT)
+RooDataSet::ds_xi_wt_Run2(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_jpsiks_Run1(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_jpsiks_Run2(Lb_DTF_M_JpsiLConstr)
+RooDataHist::ds1(Lb_DTF_M_JpsiLConstr)
+RooDataHist::ds2(Lb_DTF_M_JpsiLConstr)
+RooDataHist::combData(sample,Lb_DTF_M_JpsiLConstr)
+
+#######################################
+[#1] INFO:Eval -- RooRealVar::setRange(Lb_DTF_M_JpsiLConstr) new range named 'signal_window' created with bounds [5365,5600]
+[#1] INFO:Eval -- RooRealVar::setRange(Lb_DTF_M_JpsiLConstr) new range named 'sideband_window' created with bounds [5800,6200]
+[#1] INFO:Eval -- RooRealVar::setRange(Lb_DTF_M_JpsiLConstr) new range named 'simFit_window' created with bounds [5500,5740]
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Get Xib Normalization
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+xibYield = 36.361+/-7.75666+/-3.27249
+UNWEIGHTED Xib->JpsiXi Eff = 0.0631 % +/- 0.0014 %
+WEIGHTED Xib->JpsiXi Eff = 0.0728 % +/- 0.0015 %
+UNWEIGHTED Xib->JpsiLambda Eff = 0.0110 % +/-0.0006 %
+WEIGHTED Xib->JpsiLambda Eff = 0.0161 % +/-0.0007 %
+UNWEIGTED Norm = 12.1975941614+/-2.60203489255+/-1.49471628644
+WEIGHTED Norm = 15.4394242731+/-3.2935938143+/-1.84526470886
+BREAKUP OF SYSTEMATICS:
+Overall Syst     = 11.9516419539%
+*Tracking        = 5.0%
+*Xi Vtx          = 1.4%
+*Xib Yield       = 9.0%
+*Xib->JpsiL eff  = 4.42543484981%
+*Xib->JpsiXi eff = 2.08057811171%
+*tauXib-/tauXib0 = 3.3118675253%
+************************************************
+The UNWEIGHTED LL Xib normalization for Run 1 is 12.1976 +/- 2.60203 +/- 1.49472
+The WEIGHTED LL Xib normalization for Run 1 is 15.4394 +/- 3.29359 +/- 1.84526
+************************************************
+xibYield = 173.281+/-16.4207+/-10.39686
+UNWEIGHTED Xib->JpsiXi Eff = 0.0650 % +/- 0.0014 %
+WEIGHTED Xib->JpsiXi Eff = 0.0725 % +/- 0.0015 %
+UNWEIGHTED Xib->JpsiLambda Eff = 0.0133 % +/-0.0006 %
+WEIGHTED Xib->JpsiLambda Eff = 0.0192 % +/-0.0008 %
+UNWEIGTED Norm = 68.3130004947+/-6.47357348598+/-6.83171500385
+WEIGHTED Norm = 88.1479848668+/-8.35320442+/-8.55336453368
+BREAKUP OF SYSTEMATICS:
+Overall Syst     = 9.70341471402%
+*Tracking        = 5.0%
+*Xi Vtx          = 1.4%
+*Xib Yield       = 6.0%
+*Xib->JpsiL eff  = 3.97677429054%
+*Xib->JpsiXi eff = 2.10072769515%
+*tauXib-/tauXib0 = 3.3118675253%
+************************************************
+The UNWEIGHTED LL Xib normalization for Run 2 is 68.313 +/- 6.47357 +/- 6.83172
+The WEIGHTED LL Xib normalization for Run 2 is 88.148 +/- 8.3532 +/- 8.55336
+************************************************
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Get Lb -> J/psi Lambda efficiency
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+************************************************
+Run 1 UNWEIGHTED Jpsi Lambda Eff = 0.093722 % +/- 0.00119639 %
+Run 1 WEIGHTED Jpsi Lambda Eff = 0.109849 % +/- 0.00135396 %
+************************************************
+************************************************
+Run 2 UNWEIGHTED Jpsi Lambda Eff = 0.107441 % +/- 0.000793103 %
+Run 2 WEIGHTED Jpsi Lambda Eff = 0.105063 % +/- 0.000820663 %
+************************************************
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Get Lb -> J/psi Sigma efficiency and shape
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+************************************************
+Run 1 UNWEIGHTED Jpsi Sigma Eff = 0.0770636 % +/- 0.00165072 %
+Run 1 WEIGHTED Jpsi Sigma Eff = 0.0900865 % +/- 0.00188804 %
+************************************************
+***************************************
+Run 1 UNWEIGHTED Lambda/Sigma efficiency ratio = 1.21616 +/- 0.0303257
+Run 1 WEIGHTED Lambda/Sigma efficiency ratio   = 1.21937 +/- 0.0296476
+***************************************
+Done importing Jpsi Sigma shape
+************************************************
+Run 2 UNWEIGHTED Jpsi Sigma Eff = 0.0977029 % +/- 0.000987493 %
+Run 2 WEIGHTED Jpsi Sigma Eff = 0.0969362 % +/- 0.00104753 %
+************************************************
+***************************************
+Run 2 UNWEIGHTED Lambda/Sigma efficiency ratio = 1.09967 +/- 0.0137632
+Run 2 WEIGHTED Lambda/Sigma efficiency ratio   = 1.08384 +/- 0.0144518
+***************************************
+Done importing Jpsi Sigma shape
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Get Lb -> J/psi Lst(1405) efficiency and shape
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+************************************************
+Run 1 UNWEIGHTED Jpsi /(1405) Eff = 0.0569127 % +/- 0.000481149 %
+Run 1 WEIGHTED Jpsi /(1405) Eff = 0.0577025 % +/- 0.000477405 %
+************************************************
+***************************************
+Run 1 UNWEIGHTED /(1405)/Lambda efficiency ratio = 0.5181 +/- 0.00774373
+Run 1 WEIGHTED /(1405)/Lambda efficiency ratio   = 0.525289 +/- 0.00779792
+***************************************
+Done importing Jpsi Lst(1405) shape
+************************************************
+Run 2 UNWEIGHTED Jpsi /(1405) Eff = 0.0641391 % +/- 0.000777578 %
+Run 2 WEIGHTED Jpsi /(1405) Eff = 0.0644896 % +/- 0.000778114 %
+************************************************
+***************************************
+Run 2 UNWEIGHTED /(1405)/Lambda efficiency ratio = 0.61048 +/- 0.00880421
+Run 2 WEIGHTED /(1405)/Lambda efficiency ratio   = 0.613816 +/- 0.00882263
+***************************************
+Done importing Jpsi Lst(1405) shape
+************************************************
+Run 1 UNWEIGHTED Jpsi /(1520) Eff = 0.0475913 % +/- 0.000447328 %
+Run 1 WEIGHTED Jpsi /(1520) Eff = 0.0482552 % +/- 0.000443768 %
+************************************************
+***************************************
+Run 1 UNWEIGHTED /(1520)/Lambda efficiency ratio = 0.433243 +/- 0.00671555
+Run 1 WEIGHTED /(1520)/Lambda efficiency ratio   = 0.439286 +/- 0.0067555
+***************************************
+Done importing Jpsi Lst(1520) shape
+************************************************
+Run 2 UNWEIGHTED Jpsi /(1520) Eff = 0.0531468 % +/- 0.000842582 %
+Run 2 WEIGHTED Jpsi /(1520) Eff = 0.0534143 % +/- 0.000843881 %
+************************************************
+***************************************
+Run 2 UNWEIGHTED /(1520)/Lambda efficiency ratio = 0.505854 +/- 0.00894029
+Run 2 WEIGHTED /(1520)/Lambda efficiency ratio   = 0.5084 +/- 0.00896018
+***************************************
+Done importing Jpsi Lst(1520) shape
+************************************************
+Run 1 UNWEIGHTED Jpsi /(1600) Eff = 0.0414348 % +/- 0.00039782 %
+Run 1 WEIGHTED Jpsi /(1600) Eff = 0.0420052 % +/- 0.000394553 %
+************************************************
+***************************************
+Run 1 UNWEIGHTED /(1600)/Lambda efficiency ratio = 0.377197 +/- 0.00589326
+Run 1 WEIGHTED /(1600)/Lambda efficiency ratio   = 0.38239 +/- 0.00592582
+***************************************
+Done importing Jpsi Lst(1600) shape
+************************************************
+Run 2 UNWEIGHTED Jpsi /(1600) Eff = 0.0451267 % +/- 0.000605245 %
+Run 2 WEIGHTED Jpsi /(1600) Eff = 0.0453497 % +/- 0.000604812 %
+************************************************
+***************************************
+Run 2 UNWEIGHTED /(1600)/Lambda efficiency ratio = 0.429519 +/- 0.00666651
+Run 2 WEIGHTED /(1600)/Lambda efficiency ratio   = 0.431641 +/- 0.00667132
+***************************************
+Done importing Jpsi Lst(1600) shape
+***************************************
+Get J/psi Xi shape from MC
+***************************************
+Done importing Xib shape
+Done importing Xib shape
+***************************************
+Get J/psi Ks shape from MC
+***************************************
+Done importing Xib shape
+Done defining J/psi Lambda Hypatia shapes
+*****UING EXPONENTIAL BKG SHAPE*****
+Done defining cont. bkg exp. shapes
+Done defining Misc Lambda* Gaussian shapes
+RooDataSet::ds_sim1[Lb_DTF_M_JpsiLConstr,GB_WT,wt_tau] = 6803 entries
+RooDataSet::ds_sim_wt1[Lb_DTF_M_JpsiLConstr,weight:totWt] = 6803 entries (7367.59 weighted)
+mcNentries = 7367.59
+RooDataSet::ds_sim2[Lb_DTF_M_JpsiLConstr,GB_WT,wt_tau] = 22955 entries
+RooDataSet::ds_sim_wt2[Lb_DTF_M_JpsiLConstr,weight:totWt] = 22955 entries (19958.2 weighted)
+mcNentries = 19958.2
+reduceEng varSubset = (Lb_DTF_M_JpsiLConstr) _wgtVar = totWt
+ **********
+ **    1 **SET PRINT           1
+ **********
+ **********
+ **    2 **SET NOGRAD
+ **********
+ PARAMETER DEFINITIONS:
+    NO.   NAME         VALUE      STEP SIZE      LIMITS
+     1 a1_Run1      1.80000e+00  1.00000e-01    1.00000e+00  2.00000e+00
+     2 a2_Run1      1.70000e+00  4.00000e-02    1.50000e+00  1.90000e+00
+     3 lambda_Run1  -2.59000e+00  8.00000e-02   -2.80000e+00 -2.00000e+00
+     4 mcnbkg_run1   3.68429e+03  7.36659e+02    1.00000e+00  7.36759e+03
+     5 mcnsig_run1   7.36259e+03  2.50000e+00    3.68379e+03  7.36759e+03
+     6 mean_Run1    5.61960e+03  2.00000e-01    5.61900e+03  5.62100e+03
+     7 sigma_Run1   1.50000e+01  6.00000e-01    1.20000e+01  1.80000e+01
+     8 tau_run1    -1.00000e-07  4.95000e-08   -1.00000e-05 -1.00000e-09
+ **********
+ **    3 **SET ERR         0.5
+ **********
+ **********
+ **    4 **SET PRINT           1
+ **********
+ **********
+ **    5 **SET STR           2
+ **********
+ NOW USING STRATEGY  2: MAKE SURE MINIMUM TRUE, ERRORS CORRECT  
+ **********
+ **    6 **MIGRAD        4000           1
+ **********
+ FIRST CALL TO USER FUNCTION AT NEW START POINT, WITH IFLAG=4.
+ START MIGRAD MINIMIZATION.  STRATEGY  2.  CONVERGENCE WHEN EDM .LT. 1.00e-03
+ MINUIT WARNING IN HESSE   
+ ============== Negative diagonal element 5 in Error Matrix
+ MINUIT WARNING IN HESSE   
+ ============== 181.501 added to diagonal of error matrix
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-28997.9 FROM HESSE     STATUS=OK             85 CALLS          86 TOTAL
+                     EDM=12943.9    STRATEGY= 2      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  a1_Run1      1.80000e+00   2.75927e-02   5.00000e-01  -1.47129e+01
+   2  a2_Run1      1.70000e+00   1.46379e-02   5.00000e-01  -9.48059e+00
+   3  lambda_Run1  -2.59000e+00   2.21547e-02   3.67998e-01   7.16197e+01
+   4  mcnbkg_run1   3.68429e+03   1.96131e+02   2.35946e-01   2.91306e+03
+   5  mcnsig_run1   7.36259e+03   2.39958e+03   2.76850e-01   1.40998e+01
+   6  mean_Run1    5.61960e+03   5.72576e-02   4.24365e-01  -1.85239e+01
+   7  sigma_Run1   1.50000e+01   1.56435e-01   2.37588e-01   9.15080e+01
+   8  tau_run1    -1.00000e-07   7.34168e-08   5.00000e-01  -2.34449e-04
+                               ERR DEF= 0.5
+ MIGRAD FAILS TO FIND IMPROVEMENT
+ MIGRAD MINIMIZATION HAS CONVERGED.
+ MIGRAD WILL VERIFY CONVERGENCE AND ERROR MATRIX.
+ MINUIT WARNING IN HESSE   
+ ============== Negative diagonal element 8 in Error Matrix
+ MINUIT WARNING IN HESSE   
+ ============== 1 added to diagonal of error matrix
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-31574.2 FROM MIGRAD    STATUS=CONVERGED     708 CALLS         709 TOTAL
+                     EDM=9.6304e-05    STRATEGY= 2      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  a1_Run1      1.61391e+00   1.55098e-01   2.44485e-02   1.93335e-02
+   2  a2_Run1      1.56354e+00   1.08675e-01   7.45910e-02   7.37092e-03
+   3  lambda_Run1  -2.59215e+00   1.72844e-01   1.30022e-02  -5.46197e-02
+   4  mcnbkg_run1   1.00012e+00   9.17704e+00   8.58946e-03** at limit **
+   5  mcnsig_run1   7.36724e+03   3.77412e+02   1.07654e-01  -2.90601e-03
+   6  mean_Run1    5.61980e+03   9.42962e-02   1.18551e-02  -3.06140e-02
+   7  sigma_Run1   1.59725e+01   7.12553e-01   7.41965e-03   5.13823e-02
+   8  tau_run1    -1.00004e-07   2.25274e-06   5.00000e-01   6.20403e-07
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  8    ERR DEF=0.5
+  2.492e-02  1.191e-02  2.256e-02  2.566e-04  2.125e-03 -5.256e-04  8.486e-02  1.222e-13 
+  1.191e-02  1.501e-02  1.692e-02  1.619e-04  1.341e-03  2.250e-04  6.329e-02 -4.560e-14 
+  2.256e-02  1.692e-02  3.266e-02 -2.201e-04 -1.821e-03 -2.335e-04  1.263e-01  3.821e-14 
+  2.566e-04  1.619e-04 -2.201e-04  4.318e-03  2.029e-02  5.533e-07 -8.277e-04  1.311e-14 
+  2.125e-03  1.341e-03 -1.821e-03  2.029e-02  5.413e+02  4.584e-06 -6.850e-03  1.087e-13 
+ -5.256e-04  2.250e-04 -2.335e-04  5.533e-07  4.584e-06  8.919e-03 -1.013e-03 -2.497e-15 
+  8.486e-02  6.329e-02  1.263e-01 -8.277e-04 -6.850e-03 -1.013e-03  5.188e-01  1.473e-13 
+  1.222e-13 -4.560e-14  3.821e-14  1.311e-14  1.087e-13 -2.497e-15  1.473e-13  9.801e-13 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL      1      2      3      4      5      6      7      8
+        1  0.79686   1.000  0.616  0.791  0.025  0.001 -0.035  0.746  0.000
+        2  0.77172   0.616  1.000  0.764  0.020  0.000  0.019  0.717 -0.000
+        3  0.97860   0.791  0.764  1.000 -0.019 -0.000 -0.014  0.970  0.000
+        4  0.08745   0.025  0.020 -0.019  1.000  0.013  0.000 -0.017  0.000
+        5  0.01330   0.001  0.000 -0.000  0.013  1.000  0.000 -0.000  0.000
+        6  0.06380  -0.035  0.019 -0.014  0.000  0.000  1.000 -0.015 -0.000
+        7  0.97117   0.746  0.717  0.970 -0.017 -0.000 -0.015  1.000  0.000
+        8  0.00000   0.000 -0.000  0.000  0.000  0.000 -0.000  0.000  1.000
+ **********
+ **    7 **SET ERR         0.5
+ **********
+ **********
+ **    8 **SET PRINT           1
+ **********
+ **********
+ **    9 **HESSE        4000
+ **********
+ MINUIT WARNING IN HESSE   
+ ============== Negative diagonal element 8 in Error Matrix
+ MINUIT WARNING IN HESSE   
+ ============== 1 added to diagonal of error matrix
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-31574.2 FROM HESSE     STATUS=OK             69 CALLS         778 TOTAL
+                     EDM=8.33347e-05    STRATEGY= 2      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                INTERNAL      INTERNAL  
+  NO.   NAME      VALUE            ERROR       STEP SIZE       VALUE   
+   1  a1_Run1      1.61391e+00   1.43556e-01   4.88970e-03   2.29832e-01
+   2  a2_Run1      1.56354e+00   1.01071e-01   2.98364e-03  -7.50871e-01
+   3  lambda_Run1  -2.59215e+00   1.51124e-01   5.20090e-04  -5.01089e-01
+   4  mcnbkg_run1   1.00012e+00   9.21785e+00   1.71789e-03  -1.41369e+01
+                                 WARNING -   - ABOVE PARAMETER IS AT LIMIT.
+   5  mcnsig_run1   7.36724e+03   3.14589e+01   5.00000e-01  -1.11507e+02
+   6  mean_Run1    5.61980e+03   9.43164e-02   2.37102e-03  -1.97692e-01
+   7  sigma_Run1   1.59725e+01   6.19264e-01   2.96786e-04   2.81148e+00
+   8  tau_run1    -1.00004e-07   2.25274e-06   1.00000e-01   1.37145e+00
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  8    ERR DEF=0.5
+  2.123e-02  8.744e-03  1.694e-02  6.681e-05  3.145e-04 -5.674e-04  6.241e-02 -3.641e-13 
+  8.744e-03  1.245e-02  1.229e-02  4.026e-05  1.895e-04  2.330e-04  4.500e-02  1.319e-13 
+  1.694e-02  1.229e-02  2.441e-02 -5.088e-05 -2.395e-04 -2.369e-04  9.360e-02 -1.131e-13 
+  6.681e-05  4.026e-05 -5.088e-05  4.337e-03  1.496e-03 -2.077e-07 -1.909e-04 -9.654e-15 
+  3.145e-04  1.895e-04 -2.395e-04  1.496e-03  4.367e+01 -9.778e-07 -8.987e-04 -4.576e-14 
+ -5.674e-04  2.330e-04 -2.369e-04 -2.077e-07 -9.778e-07  8.923e-03 -9.933e-04  8.559e-15 
+  6.241e-02  4.500e-02  9.360e-02 -1.909e-04 -8.987e-04 -9.933e-04  3.897e-01 -4.237e-13 
+ -3.641e-13  1.319e-13 -1.131e-13 -9.654e-15 -4.576e-14  8.559e-15 -4.237e-13  9.801e-13 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL      1      2      3      4      5      6      7      8
+        1  0.75147   1.000  0.538  0.744  0.007  0.000 -0.041  0.686 -0.000
+        2  0.71413   0.538  1.000  0.705  0.005  0.000  0.022  0.646  0.000
+        3  0.97126   0.744  0.705  1.000 -0.005 -0.000 -0.016  0.960 -0.000
+        4  0.02146   0.007  0.005 -0.005  1.000  0.003 -0.000 -0.005 -0.000
+        5  0.00356   0.000  0.000 -0.000  0.003  1.000 -0.000 -0.000 -0.000
+        6  0.06736  -0.041  0.022 -0.016 -0.000 -0.000  1.000 -0.017  0.000
+        7  0.96143   0.686  0.646  0.960 -0.005 -0.000 -0.017  1.000 -0.000
+        8  0.00000  -0.000  0.000 -0.000 -0.000 -0.000  0.000 -0.000  1.000
+ **********
+ **   10 **SET ERR         0.5
+ **********
+ **********
+ **   11 **SET PRINT           1
+ **********
+ **********
+ **   12 **HESSE        4000
+ **********
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-44058.9 FROM HESSE     STATUS=OK             95 CALLS         873 TOTAL
+                     EDM=0.21317    STRATEGY= 2      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                INTERNAL      INTERNAL  
+  NO.   NAME      VALUE            ERROR       STEP SIZE       VALUE   
+   1  a1_Run1      1.61391e+00   1.85043e-01   9.97499e-02   2.29832e-01
+   2  a2_Run1      1.56354e+00   2.25707e-01   6.08663e-02  -7.50871e-01
+   3  lambda_Run1  -2.59215e+00   2.30587e-01   1.06098e-02  -5.01089e-01
+   4  mcnbkg_run1   1.00012e+00   2.62724e+00   1.42003e-01  -1.41369e+01
+                                 WARNING -   - ABOVE PARAMETER IS AT LIMIT.
+   5  mcnsig_run1   7.36724e+03   2.36230e+01   5.00000e-01  -1.11507e+02
+   6  mean_Run1    5.61980e+03   8.02304e-02   4.83688e-02  -1.97692e-01
+   7  sigma_Run1   1.59725e+01   9.54628e-01   6.05443e-03   2.81148e+00
+   8  tau_run1    -1.00004e-07   5.01662e-06   5.00000e-01   1.37145e+00
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  8    ERR DEF=0.5
+  3.603e-02  2.658e-02  4.209e-02  4.233e-04  7.628e-03 -1.922e-04  1.594e-01  3.786e-09 
+  2.658e-02  2.927e-02  3.830e-02  2.747e-04  4.975e-03  3.722e-04  1.447e-01 -5.878e-09 
+  4.209e-02  3.830e-02  6.331e-02 -1.152e-03 -2.049e-02  9.077e-05  2.421e-01  5.535e-09 
+  4.233e-04  2.747e-04 -1.152e-03  1.236e-03  2.176e-02  6.663e-06 -4.270e-03 -5.447e-09 
+  7.628e-03  4.975e-03 -2.049e-02  2.176e-02  3.277e+01  1.199e-04 -7.600e-02 -9.901e-08 
+ -1.922e-04  3.722e-04  9.077e-05  6.663e-06  1.199e-04  6.451e-03  1.998e-04 -1.961e-10 
+  1.594e-01  1.447e-01  2.421e-01 -4.270e-03 -7.600e-02  1.998e-04  9.479e-01  2.093e-08 
+  3.786e-09 -5.878e-09  5.535e-09 -5.447e-09 -9.901e-08 -1.961e-10  2.093e-08  6.173e-08 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL      1      2      3      4      5      6      7      8
+        1  0.90160   1.000  0.819  0.881  0.063  0.007 -0.013  0.862  0.000
+        2  0.90770   0.819  1.000  0.890  0.046  0.005  0.027  0.869 -0.000
+        3  0.99198   0.881  0.890  1.000 -0.130 -0.014  0.004  0.988  0.000
+        4  0.51600   0.063  0.046 -0.130  1.000  0.108  0.002 -0.125 -0.001
+        5  0.10816   0.007  0.005 -0.014  0.108  1.000  0.000 -0.014 -0.000
+        6  0.06761  -0.013  0.027  0.004  0.002  0.000  1.000  0.003 -0.000
+        7  0.98880   0.862  0.869  0.988 -0.125 -0.014  0.003  1.000  0.000
+        8  0.00073   0.000 -0.000  0.000 -0.001 -0.000 -0.000  0.000  1.000
+reduceEng varSubset = (Lb_DTF_M_JpsiLConstr) _wgtVar = totWt
+ **********
+ **   13 **SET PRINT           1
+ **********
+ **********
+ **   14 **SET NOGRAD
+ **********
+ PARAMETER DEFINITIONS:
+    NO.   NAME         VALUE      STEP SIZE      LIMITS
+     1 a1_Run2      2.00000e+00  1.00000e-01    1.50000e+00  2.50000e+00
+     2 a2_Run2      1.75000e+00  2.00000e-01    1.00000e+00  3.00000e+00
+     3 lambda_Run2  -2.30000e+00  8.00000e-02   -2.80000e+00 -2.00000e+00
+     4 mcnbkg_run2   9.97958e+03  1.99572e+03    1.00000e+00  1.99582e+04
+     5 mcnsig_run2   1.99532e+04  2.50000e+00    9.97908e+03  1.99582e+04
+     6 mean_Run2    5.61960e+03  2.00000e-01    5.61900e+03  5.62100e+03
+     7 sigma_Run2   1.40000e+01  6.00000e-01    1.10000e+01  1.70000e+01
+     8 tau_run2    -1.00000e-07  4.95000e-08   -1.00000e-05 -1.00000e-09
+ **********
+ **   15 **SET ERR         0.5
+ **********
+ **********
+ **   16 **SET PRINT           1
+ **********
+ **********
+ **   17 **SET STR           2
+ **********
+ NOW USING STRATEGY  2: MAKE SURE MINIMUM TRUE, ERRORS CORRECT  
+ **********
+ **   18 **MIGRAD        4000           1
+ **********
+ FIRST CALL TO USER FUNCTION AT NEW START POINT, WITH IFLAG=4.
+ START MIGRAD MINIMIZATION.  STRATEGY  2.  CONVERGENCE WHEN EDM .LT. 1.00e-03
+ MINUIT WARNING IN HESSE   
+ ============== Negative diagonal element 5 in Error Matrix
+ MINUIT WARNING IN HESSE   
+ ============== 542.167 added to diagonal of error matrix
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-97779.9 FROM HESSE     STATUS=OK             83 CALLS          84 TOTAL
+                     EDM=25788    STRATEGY= 2      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  a1_Run2      2.00000e+00   2.06370e-02   5.00000e-01  -4.04226e+01
+   2  a2_Run2      1.75000e+00   3.34925e-02   3.98426e-01  -1.42966e+02
+   3  lambda_Run2  -2.30000e+00   1.52641e-02   4.70502e-01   2.13833e+02
+   4  mcnbkg_run2   9.97958e+03   2.86257e+02   2.52532e-01   7.78252e+03
+   5  mcnsig_run2   1.99532e+04   6.25300e+03   1.18214e-01   2.45233e+01
+   6  mean_Run2    5.61960e+03   3.46764e-02   5.00000e-01  -1.32712e+02
+   7  sigma_Run2   1.40000e+01   9.03063e-02   2.50788e-01   1.85989e+02
+   8  tau_run2    -1.00000e-07   4.25044e-08   5.00000e-01  -5.62575e-04
+                               ERR DEF= 0.5
+ MINUIT WARNING IN MIGRAD  
+ ============== Negative diagonal element 4 in Error Matrix
+ MINUIT WARNING IN MIGRAD  
+ ============== Negative diagonal element 5 in Error Matrix
+ MINUIT WARNING IN MIGRAD  
+ ============== 1.92779 added to diagonal of error matrix
+ MIGRAD MINIMIZATION HAS CONVERGED.
+ MIGRAD WILL VERIFY CONVERGENCE AND ERROR MATRIX.
+ MINUIT WARNING IN HESSE   
+ ============== Negative diagonal element 8 in Error Matrix
+ MINUIT WARNING IN HESSE   
+ ============== 1.00001 added to diagonal of error matrix
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-104714 FROM HESSE     STATUS=OK             79 CALLS         566 TOTAL
+                     EDM=0.000878645    STRATEGY= 2      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  a1_Run2      2.09954e+00   1.36844e-01   4.98646e-02   1.08582e-02
+   2  a2_Run2      2.26312e+00   1.79698e-01   3.31705e-02  -1.21166e-03
+   3  lambda_Run2  -2.05666e+00   6.05714e-02   1.98816e-02  -3.98784e-02
+   4  mcnbkg_run2   1.00000e+00   5.72390e+00   7.61936e-03** at limit **
+   5  mcnsig_run2   1.99569e+04   4.93395e+02   1.02083e-01  -2.03236e-03
+   6  mean_Run2    5.62012e+03   5.88865e-02   1.32698e-02   4.71083e-02
+   7  sigma_Run2   1.42710e+01   2.88163e-01   7.20340e-03   3.31563e-01
+   8  tau_run2    -9.98777e-08   2.25280e-06   5.00000e-01   1.77839e-06
+                               ERR DEF= 0.5
+ MIGRAD FAILS TO FIND IMPROVEMENT
+ MINUIT WARNING IN HESSE   
+ ============== Negative diagonal element 8 in Error Matrix
+ MINUIT WARNING IN HESSE   
+ ============== 1.00001 added to diagonal of error matrix
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-104714 FROM HESSE     STATUS=OK             83 CALLS         731 TOTAL
+                     EDM=7.55776e-07    STRATEGY= 2      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  a1_Run2      2.11009e+00   1.35346e-01   5.02196e-02   2.62805e-03
+   2  a2_Run2      2.27673e+00   1.77636e-01   3.32432e-02   3.46694e-03
+   3  lambda_Run2  -2.04967e+00   5.74092e-02   2.09329e-02  -8.67529e-03
+   4  mcnbkg_run2   1.00000e+00   5.73603e+00   7.56678e-03** at limit **
+   5  mcnsig_run2   1.99571e+04   3.41132e+02   1.34409e-01  -1.05275e-03
+   6  mean_Run2    5.62012e+03   5.88797e-02   1.32662e-02   2.65161e-03
+   7  sigma_Run2   1.42385e+01   2.74426e-01   7.18106e-03  -1.93829e-02
+   8  tau_run2    -9.98846e-08   2.25280e-06   5.00000e-01   1.75525e-06
+                               ERR DEF= 0.5
+ MIGRAD MINIMIZATION HAS CONVERGED.
+ MIGRAD WILL VERIFY CONVERGENCE AND ERROR MATRIX.
+ MINUIT WARNING IN HESSE   
+ ============== Negative diagonal element 8 in Error Matrix
+ MINUIT WARNING IN HESSE   
+ ============== 1.00001 added to diagonal of error matrix
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-104714 FROM MIGRAD    STATUS=CONVERGED     824 CALLS         825 TOTAL
+                     EDM=5.9013e-07    STRATEGY= 2      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  a1_Run2      2.11005e+00   1.59371e-01   4.01757e-03  -1.22969e-04
+   2  a2_Run2      2.27667e+00   2.12167e-01   2.65945e-03  -2.27352e-04
+   3  lambda_Run2  -2.04966e+00   7.95169e-02   1.67463e-03   3.79302e-04
+   4  mcnbkg_run2   1.00000e+00   5.73263e+00   7.56670e-03** at limit **
+   5  mcnsig_run2   1.99571e+04   1.48290e+03   2.15054e-03  -9.65683e-04
+   6  mean_Run2    5.62012e+03   5.88747e-02   5.30649e-03   2.53661e-05
+   7  sigma_Run2   1.42385e+01   3.80198e-01   2.87243e-03   3.79006e-04
+   8  tau_run2    -9.98863e-08   2.25280e-06   5.00000e-01   1.75511e-06
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  8    ERR DEF=0.5
+  2.636e-02  1.986e-02  1.003e-02  2.147e-06 -2.672e-03 -9.253e-05 -4.369e-02  5.883e-14 
+  1.986e-02  4.577e-02  1.304e-02  3.271e-06 -4.066e-03  4.507e-04 -5.662e-02 -1.048e-13 
+  1.003e-02  1.304e-02  6.717e-03 -9.791e-09  1.765e-05  8.684e-05 -3.020e-02 -6.056e-15 
+  2.147e-06  3.271e-06 -9.791e-09  2.596e-07 -1.935e-04  4.358e-09 -2.618e-08  2.814e-16 
+ -2.672e-03 -4.066e-03  1.765e-05 -1.935e-04  6.859e+03 -5.479e-06  7.319e-06 -1.086e-12 
+ -9.253e-05  4.507e-04  8.684e-05  4.358e-09 -5.479e-06  3.470e-03 -4.214e-04 -6.737e-16 
+ -4.369e-02 -5.662e-02 -3.020e-02 -2.618e-08  7.319e-06 -4.214e-04  1.453e-01  2.592e-14 
+  5.883e-14 -1.048e-13 -6.056e-15  2.814e-16 -1.086e-12 -6.737e-16  2.592e-14  9.790e-13 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL      1      2      3      4      5      6      7      8
+        1  0.76012   1.000  0.572  0.754  0.026 -0.000 -0.010 -0.706  0.000
+        2  0.75067   0.572  1.000  0.744  0.030 -0.000  0.036 -0.694 -0.000
+        3  0.97556   0.754  0.744  1.000 -0.000  0.000  0.018 -0.966 -0.000
+        4  0.06105   0.026  0.030 -0.000  1.000 -0.005  0.000 -0.000  0.000
+        5  0.00459  -0.000 -0.000  0.000 -0.005  1.000 -0.000  0.000 -0.000
+        6  0.05280  -0.010  0.036  0.018  0.000 -0.000  1.000 -0.019 -0.000
+        7  0.96773  -0.706 -0.694 -0.966 -0.000  0.000 -0.019  1.000  0.000
+        8  0.00000   0.000 -0.000 -0.000  0.000 -0.000 -0.000  0.000  1.000
+ **********
+ **   19 **SET ERR         0.5
+ **********
+ **********
+ **   20 **SET PRINT           1
+ **********
+ **********
+ **   21 **HESSE        4000
+ **********
+ MINUIT WARNING IN HESSE   
+ ============== Negative diagonal element 8 in Error Matrix
+ MINUIT WARNING IN HESSE   
+ ============== 1.00001 added to diagonal of error matrix
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-104714 FROM HESSE     STATUS=OK             63 CALLS         888 TOTAL
+                     EDM=5.88776e-07    STRATEGY= 2      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                INTERNAL      INTERNAL  
+  NO.   NAME      VALUE            ERROR       STEP SIZE       VALUE   
+   1  a1_Run2      2.11005e+00   1.62658e-01   1.60703e-04   2.21910e-01
+   2  a2_Run2      2.27667e+00   2.16500e-01   1.06378e-04   2.80331e-01
+   3  lambda_Run2  -2.04966e+00   8.22282e-02   6.69852e-05   1.06719e+00
+   4  mcnbkg_run2   1.00000e+00   5.74536e+00   1.51334e-03  -3.92699e+01
+                                 WARNING -   - ABOVE PARAMETER IS AT LIMIT.
+   5  mcnsig_run2   1.99571e+04   1.47782e+03   8.60216e-05  -3.44025e+02
+   6  mean_Run2    5.62012e+03   5.88796e-02   4.24519e-05   1.21376e-01
+   7  sigma_Run2   1.42385e+01   3.93529e-01   2.29794e-05   6.36276e+00
+   8  tau_run2    -9.98863e-08   2.25280e-06   5.00000e-01   1.37157e+00
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  8    ERR DEF=0.5
+  2.750e-02  2.129e-02  1.079e-02  4.294e-07  2.976e-03 -8.269e-05 -4.713e-02  7.346e-14 
+  2.129e-02  4.769e-02  1.399e-02  6.577e-07  3.699e-03  4.722e-04 -6.092e-02 -9.064e-14 
+  1.079e-02  1.399e-02  7.215e-03 -3.192e-09  3.133e-03  9.455e-05 -3.247e-02  6.142e-15 
+  4.294e-07  6.577e-07 -3.192e-09  2.602e-07 -4.007e-05  1.012e-09  2.724e-09  5.630e-17 
+  2.976e-03  3.699e-03  3.133e-03 -4.007e-05  6.834e+03  4.126e-05 -1.452e-02 -2.187e-11 
+ -8.269e-05  4.722e-04  9.455e-05  1.012e-09  4.126e-05  3.471e-03 -4.579e-04 -3.164e-16 
+ -4.713e-02 -6.092e-02 -3.247e-02  2.724e-09 -1.452e-02 -4.579e-04  1.558e-01 -3.369e-14 
+  7.346e-14 -9.064e-14  6.142e-15  5.630e-17 -2.187e-11 -3.164e-16 -3.369e-14  9.790e-13 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL      1      2      3      4      5      6      7      8
+        1  0.77136   1.000  0.588  0.766  0.005  0.000 -0.008 -0.720  0.000
+        2  0.76075   0.588  1.000  0.754  0.006  0.000  0.037 -0.707 -0.000
+        3  0.97727   0.766  0.754  1.000 -0.000  0.000  0.019 -0.969  0.000
+        4  0.01227   0.005  0.006 -0.000  1.000 -0.001  0.000  0.000  0.000
+        5  0.00108   0.000  0.000  0.000 -0.001  1.000  0.000 -0.000 -0.000
+        6  0.05379  -0.008  0.037  0.019  0.000  0.000  1.000 -0.020 -0.000
+        7  0.96993  -0.720 -0.707 -0.969  0.000 -0.000 -0.020  1.000 -0.000
+        8  0.00000   0.000 -0.000  0.000  0.000 -0.000 -0.000 -0.000  1.000
+ **********
+ **   22 **SET ERR         0.5
+ **********
+ **********
+ **   23 **SET PRINT           1
+ **********
+ **********
+ **   24 **HESSE        4000
+ **********
+ MINUIT WARNING IN HESSE   
+ ============== Negative diagonal element 8 in Error Matrix
+ MINUIT WARNING IN HESSE   
+ ============== 1.00002 added to diagonal of error matrix
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-120780 FROM HESSE     STATUS=OK             97 CALLS         985 TOTAL
+                     EDM=14.7752    STRATEGY= 2      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                INTERNAL      INTERNAL  
+  NO.   NAME      VALUE            ERROR       STEP SIZE       VALUE   
+   1  a1_Run2      2.11005e+00   1.55326e-01   3.27834e-03   2.21910e-01
+   2  a2_Run2      2.27667e+00   2.73537e-01   2.17011e-03   2.80331e-01
+   3  lambda_Run2  -2.04966e+00   4.31742e-02   1.36650e-03   1.06719e+00
+   4  mcnbkg_run2   1.00000e+00   4.35145e+00   1.86413e-01  -3.92699e+01
+                                 WARNING -   - ABOVE PARAMETER IS AT LIMIT.
+   5  mcnsig_run2   1.99571e+04   2.82289e+01   5.00000e-01  -3.44025e+02
+   6  mean_Run2    5.62012e+03   5.48104e-02   8.66019e-04   1.21376e-01
+   7  sigma_Run2   1.42385e+01   2.07287e-01   4.68780e-04   6.36276e+00
+   8  tau_run2    -9.98863e-08   2.25280e-06   5.00000e-01   1.37157e+00
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  8    ERR DEF=0.5
+  2.499e-02  2.576e-02  4.204e-03  3.789e-05  1.241e-01 -7.429e-05 -1.612e-02  7.236e-13 
+  2.576e-02  7.694e-02  7.760e-03  7.463e-05  2.444e-01  7.719e-04 -2.939e-02  1.081e-12 
+  4.204e-03  7.760e-03  1.896e-03  5.097e-06  1.670e-02  5.958e-05 -8.076e-03  7.660e-14 
+  3.789e-05  7.463e-05  5.097e-06  1.971e-07  6.431e-04  4.260e-07 -2.085e-05  3.396e-15 
+  1.241e-01  2.444e-01  1.670e-02  6.431e-04  1.240e+02  1.395e-03 -6.828e-02  1.116e-11 
+ -7.429e-05  7.719e-04  5.958e-05  4.260e-07  1.395e-03  3.007e-03 -2.723e-04  4.682e-15 
+ -1.612e-02 -2.939e-02 -8.076e-03 -2.085e-05 -6.828e-02 -2.723e-04  4.304e-02 -3.185e-13 
+  7.236e-13  1.081e-12  7.660e-14  3.396e-15  1.116e-11  4.682e-15 -3.185e-13  9.790e-13 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL      1      2      3      4      5      6      7      8
+        1  0.73550   1.000  0.588  0.611  0.540  0.070 -0.009 -0.492  0.000
+        2  0.79769   0.588  1.000  0.643  0.606  0.079  0.051 -0.511  0.000
+        3  0.93467   0.611  0.643  1.000  0.264  0.034  0.025 -0.894  0.000
+        4  0.71396   0.540  0.606  0.264  1.000  0.130  0.018 -0.226  0.000
+        5  0.13009   0.070  0.079  0.034  0.130  1.000  0.002 -0.030  0.000
+        6  0.07040  -0.009  0.051  0.025  0.018  0.002  1.000 -0.024  0.000
+        7  0.90193  -0.492 -0.511 -0.894 -0.226 -0.030 -0.024  1.000 -0.000
+        8  0.00001   0.000  0.000  0.000  0.000  0.000  0.000 -0.000  1.000
+Importing Run 1 data
+Done making RooDataHist
+RooDataHist::ds1[Lb_DTF_M_JpsiLConstr] = 375 bins (6128 weights)
+Done importing Run 1 data
+Importing Run 2 data
+Done making RooDataHist
+RooDataHist::ds2[Lb_DTF_M_JpsiLConstr] = 375 bins (21987 weights)
+Done importing Run 2 data
+before sb fit
+ **********
+ **    1 **SET PRINT           1
+ **********
+ **********
+ **    2 **SET NOGRAD
+ **********
+ PARAMETER DEFINITIONS:
+    NO.   NAME         VALUE      STEP SIZE      LIMITS
+     1 slope_Run2  -2.00000e+00  2.50000e-01   -5.00000e+00  0.00000e+00
+ **********
+ **    3 **SET ERR         0.5
+ **********
+ **********
+ **    4 **SET PRINT           1
+ **********
+ **********
+ **    5 **SET STR           1
+ **********
+ NOW USING STRATEGY  1: TRY TO BALANCE SPEED AGAINST RELIABILITY
+ **********
+ **    6 **MIGRAD         500           1
+ **********
+ FIRST CALL TO USER FUNCTION AT NEW START POINT, WITH IFLAG=4.
+ START MIGRAD MINIMIZATION.  STRATEGY  1.  CONVERGENCE WHEN EDM .LT. 1.00e-03
+ FCN=73.3269 FROM MIGRAD    STATUS=INITIATE        4 CALLS           5 TOTAL
+                     EDM= unknown      STRATEGY= 1      NO ERROR MATRIX       
+  EXT PARAMETER               CURRENT GUESS       STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  slope_Run2  -2.00000e+00   2.50000e-01   1.02263e-01   9.42015e+00
+                               ERR DEF= 0.5
+ MIGRAD MINIMIZATION HAS CONVERGED.
+ MIGRAD WILL VERIFY CONVERGENCE AND ERROR MATRIX.
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=73.1818 FROM MIGRAD    STATUS=CONVERGED      14 CALLS          15 TOTAL
+                     EDM=4.55766e-05    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  slope_Run2  -2.07925e+00   1.58735e-01   3.21932e-04   1.04737e-01
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  1    ERR DEF=0.5
+  2.523e-02 
+ **********
+ **    7 **SET ERR         0.5
+ **********
+ **********
+ **    8 **SET PRINT           1
+ **********
+ **********
+ **    9 **HESSE         500
+ **********
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=73.1818 FROM HESSE     STATUS=OK              5 CALLS          20 TOTAL
+                     EDM=4.5575e-05    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                INTERNAL      INTERNAL  
+  NO.   NAME      VALUE            ERROR       STEP SIZE       VALUE   
+   1  slope_Run2  -2.07925e+00   1.58735e-01   6.43864e-05   1.69103e-01
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  1    ERR DEF=0.5
+  2.523e-02 
+RooDataHist::combData[sample,Lb_DTF_M_JpsiLConstr] = 750 bins (28115 weights)
+Done importing combData and simPdf
+**********Printing w after all imports***********
+
+RooWorkspace(w) w contents
+
+variables
+---------
+(Lb_DTF_M_JpsiLConstr,R,R_1405,R_1520,R_1600,a1_Run1,a1_Run2,a2_Run1,a2_Run2,eff_ratio1,eff_ratio2,eff_ratio_1405_1,eff_ratio_1405_2,eff_ratio_1520_1,eff_ratio_1520_2,eff_ratio_1600_1,eff_ratio_1600_2,geff_ratio1,geff_ratio2,geff_ratio_1405_1,geff_ratio_1405_2,geff_ratio_1520_1,geff_ratio_1520_2,geff_ratio_1600_1,geff_ratio_1600_2,gnXib1,gnXib2,gshift_Xib,lambda_Run1,lambda_Run2,mcnbkg_run1,mcnbkg_run2,mcnsig_run1,mcnsig_run2,mean_Run1,mean_Run2,miscLstMean_Run1,miscLstMean_Run2,miscLstSigma_Run1,miscLstSigma_Run2,nBkg_Run1,nBkg_Run2,nJpsiKs_Run1,nJpsiKs_Run2,nLb_Run1,nLb_Run2,nMiscLst_Run1,nMiscLst_Run2,nXib1,nXib2,nXib_JpsiLambda_Run1,nXib_JpsiLambda_Run2,sample,shift_Xib,sigma_Run1,sigma_Run2,slope_Run1,slope_Run2,tau_run1,tau_run2)
+
+p.d.f.s
+-------
+RooExponential::Bkg_Run1[ x=Lb_DTF_M_JpsiLConstr c=Bkg_Run1_2 ] = 2.14265e-24
+RooExponential::Bkg_Run2[ x=Lb_DTF_M_JpsiLConstr c=Bkg_Run2_2 ] = 1.9017e-20
+RooKeysPdf::JPSIKS_RUN1[ x=Lb_DTF_M_JpsiLConstr ] = 0.00490232
+RooKeysPdf::JPSIKS_RUN2[ x=Lb_DTF_M_JpsiLConstr ] = 0.00462242
+RooKeysPdf::LST1405_Run1[ x=Lb_DTF_M_JpsiLConstr ] = 0.000203841
+RooKeysPdf::LST1405_Run2[ x=Lb_DTF_M_JpsiLConstr ] = 0.000221882
+RooKeysPdf::LST1520_Run1[ x=Lb_DTF_M_JpsiLConstr ] = 8.62245e-05
+RooKeysPdf::LST1520_Run2[ x=Lb_DTF_M_JpsiLConstr ] = 8.6584e-05
+RooKeysPdf::LST1600_Run1[ x=Lb_DTF_M_JpsiLConstr ] = 5.78022e-05
+RooKeysPdf::LST1600_Run2[ x=Lb_DTF_M_JpsiLConstr ] = 6.36857e-05
+RooHypatia2::Lb_Run1[ x=Lb_DTF_M_JpsiLConstr l=lambda_Run1 zeta=0 fb=0 sigma=sigma_Run1 mu=mean_Run1 a=a1_Run1 n=2 a2=a2_Run1 n2=2 ] = 0.000104344
+RooHypatia2::Lb_Run2[ x=Lb_DTF_M_JpsiLConstr l=lambda_Run2 zeta=0 fb=0 sigma=sigma_Run2 mu=mean_Run2 a=a1_Run2 n=2 a2=a2_Run2 n2=2 ] = 0.000115508
+RooKeysPdf::SIG_Run1[ x=Lb_DTF_M_JpsiLConstr ] = 0.00432764
+RooKeysPdf::SIG_Run2[ x=Lb_DTF_M_JpsiLConstr ] = 0.00420125
+RooKeysPdf::XIB_RUN1[ x=Lb_DTF_M_JpsiLConstr ] = 0.0022805
+RooKeysPdf::XIB_RUN2[ x=Lb_DTF_M_JpsiLConstr ] = 0.00192398
+RooHypatia2::Xib_Run1[ x=Lb_DTF_M_JpsiLConstr l=lambda_Run1 zeta=0 fb=0 sigma=sigma_Run1 mu=XibMean_Run1 a=a1_Run1 n=2 a2=a2_Run1 n2=2 ] = 2.3462e-05
+RooHypatia2::Xib_Run2[ x=Lb_DTF_M_JpsiLConstr l=lambda_Run2 zeta=0 fb=0 sigma=sigma_Run2 mu=XibMean_Run2 a=a1_Run2 n=2 a2=a2_Run2 n2=2 ] = 2.57867e-05
+RooGaussian::eff_ratio_1405_constraint1[ x=geff_ratio_1405_1 mean=eff_ratio_1405_1 sigma=0.007798 ] = 1
+RooGaussian::eff_ratio_1405_constraint2[ x=geff_ratio_1405_2 mean=eff_ratio_1405_2 sigma=0.008823 ] = 1
+RooGaussian::eff_ratio_1520_constraint1[ x=geff_ratio_1520_1 mean=eff_ratio_1520_1 sigma=0.006756 ] = 1
+RooGaussian::eff_ratio_1520_constraint2[ x=geff_ratio_1520_2 mean=eff_ratio_1520_2 sigma=0.00896 ] = 1
+RooGaussian::eff_ratio_1600_constraint1[ x=geff_ratio_1600_1 mean=eff_ratio_1600_1 sigma=0.005926 ] = 1
+RooGaussian::eff_ratio_1600_constraint2[ x=geff_ratio_1600_2 mean=eff_ratio_1600_2 sigma=0.006671 ] = 1
+RooGaussian::eff_ratio_constraint1[ x=geff_ratio1 mean=eff_ratio1 sigma=0.029648 ] = 1
+RooGaussian::eff_ratio_constraint2[ x=geff_ratio2 mean=eff_ratio2 sigma=0.014452 ] = 1
+RooGaussian::lstLump_Run1[ x=Lb_DTF_M_JpsiLConstr mean=miscLstMean_Run1 sigma=miscLstSigma_Run1 ] = 1.8585e-12
+RooGaussian::lstLump_Run2[ x=Lb_DTF_M_JpsiLConstr mean=miscLstMean_Run2 sigma=miscLstSigma_Run2 ] = 1.8585e-12
+RooAddPdf::mcFit_Run1[ mcnsig_run1 * Lb_Run1 + mcnbkg_run1 * mcbkg_Run1 ] = 0.000239989
+RooAddPdf::mcFit_Run2[ mcnsig_run2 * Lb_Run2 + mcnbkg_run2 * mcbkg_Run2 ] = 0.00016558
+RooExponential::mcbkg_Run1[ x=Lb_DTF_M_JpsiLConstr c=tau_run1 ] = 0.999455
+RooExponential::mcbkg_Run2[ x=Lb_DTF_M_JpsiLConstr c=tau_run2 ] = 0.999456
+RooAddPdf::model1[ nSigma1 * SIG_Run1 + nLb_Run1 * Lb_Run1 + nXib1 * XIB_RUN1 + n1405_Run1 * LST1405_Run1 + n1520_Run1 * LST1520_Run1 + n1600_Run1 * LST1600_Run1 + nMiscLst_Run1 * lstLump_Run1 + nBkg_Run1 * Bkg_Run1 + nXib_JpsiLambda_Run1 * Xib_Run1 + nJpsiKs_Run1 * JPSIKS_RUN1 ] = 7.71278e-05
+RooAddPdf::model2[ nSigma2 * SIG_Run2 + nLb_Run2 * Lb_Run2 + nXib2 * XIB_RUN2 + n1405_Run2 * LST1405_Run2 + n1520_Run2 * LST1520_Run2 + n1600_Run2 * LST1600_Run2 + nMiscLst_Run2 * lstLump_Run2 + nBkg_Run2 * Bkg_Run2 + nXib_JpsiLambda_Run2 * Xib_Run2 + nJpsiKs_Run2 * JPSIKS_RUN2 ] = 9.01581e-05
+RooProdPdf::model_const1[ model1 * eff_ratio_constraint1 * nXib_constraint1 * eff_ratio_1405_constraint1 * eff_ratio_1520_constraint1 * eff_ratio_1600_constraint1 * shift_Xib_constraint ] = 7.71278e-05
+RooProdPdf::model_const2[ model2 * eff_ratio_constraint2 * nXib_constraint2 * eff_ratio_1405_constraint2 * eff_ratio_1520_constraint2 * eff_ratio_1600_constraint2 * shift_Xib_constraint ] = 9.01581e-05
+RooGaussian::nXib_constraint1[ x=gnXib1 mean=nXib1 sigma=3.77528 ] = 1
+RooGaussian::nXib_constraint2[ x=gnXib2 mean=nXib2 sigma=11.9556 ] = 1
+RooGaussian::shift_Xib_constraint[ x=gshift_Xib mean=shift_Xib sigma=0.4 ] = 1
+RooSimultaneous::simPdf[ indexCat=sample run1=model_const1 run2=model_const2 ] = 6.91289e-05
+
+functions
+--------
+RooFormulaVar::Bkg_Run1_2[ actualVars=(slope_Run1) formula="-1*pow(10,slope_Run1)" ] = -0.01
+RooFormulaVar::Bkg_Run2_2[ actualVars=(slope_Run2) formula="-1*pow(10,slope_Run2)" ] = -0.00833192
+RooFormulaVar::XibMean_Run1[ actualVars=(mean_Run1,shift_Xib) formula="mean_Run1+shift_Xib" ] = 5792.3
+RooFormulaVar::XibMean_Run2[ actualVars=(mean_Run2,shift_Xib) formula="mean_Run2+shift_Xib" ] = 5792.62
+RooFormulaVar::n1405_Run1[ actualVars=(R_1405,nLb_Run1,eff_ratio_1405_1) formula="R_1405*nLb_Run1*eff_ratio_1405_1" ] = 26.2645
+RooFormulaVar::n1405_Run2[ actualVars=(R_1405,nLb_Run2,eff_ratio_1405_2) formula="R_1405*nLb_Run2*eff_ratio_1405_2" ] = 104.349
+RooFormulaVar::n1520_Run1[ actualVars=(R_1520,nLb_Run1,eff_ratio_1520_1) formula="R_1520*nLb_Run1*eff_ratio_1520_1" ] = 21.9643
+RooFormulaVar::n1520_Run2[ actualVars=(R_1520,nLb_Run2,eff_ratio_1520_2) formula="R_1520*nLb_Run2*eff_ratio_1520_2" ] = 86.428
+RooFormulaVar::n1600_Run1[ actualVars=(R_1600,nLb_Run1,eff_ratio_1600_1) formula="R_1600*nLb_Run1*eff_ratio_1600_1" ] = 191.195
+RooFormulaVar::n1600_Run2[ actualVars=(R_1600,nLb_Run2,eff_ratio_1600_2) formula="R_1600*nLb_Run2*eff_ratio_1600_2" ] = 733.79
+RooFormulaVar::nSigma1[ actualVars=(R,nLb_Run1,eff_ratio1) formula="pow(10,-5)*R*nLb_Run1/(eff_ratio1*1.058)" ] = 0.00387568
+RooFormulaVar::nSigma2[ actualVars=(R,nLb_Run2,eff_ratio2) formula="pow(10,-5)*R*nLb_Run2/(eff_ratio2*1.058)" ] = 0.0148251
+
+datasets
+--------
+RooDataSet::ds_sim_wt1(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_sim_wt2(Lb_DTF_M_JpsiLConstr)
+RooDataHist::ds1(Lb_DTF_M_JpsiLConstr)
+RooDataHist::ds2(Lb_DTF_M_JpsiLConstr)
+RooDataHist::combData(sample,Lb_DTF_M_JpsiLConstr)
+
+named sets
+----------
+globObs:(geff_ratio1,geff_ratio2,gnXib1,gnXib2,geff_ratio_1405_1,geff_ratio_1405_2,geff_ratio_1520_1,geff_ratio_1520_2,geff_ratio_1600_1,geff_ratio_1600_2,gshift_Xib)
+nuisParams:(nLb_Run1,mean_Run1,sigma_Run1,nBkg_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,eff_ratio1,nXib1,eff_ratio_1405_1,eff_ratio_1520_1,eff_ratio_1600_1,nLb_Run2,mean_Run2,sigma_Run2,nBkg_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,eff_ratio2,nXib2,eff_ratio_1405_2,eff_ratio_1520_2,eff_ratio_1600_2,R_1405,R_1520,R_1600,nXib_JpsiLambda_Run1,nXib_JpsiLambda_Run2,shift_Xib,slope_Run1,slope_Run2)
+obs:(Lb_DTF_M_JpsiLConstr,sample)
+poi:(R)
+
+*****Done Printing w after all imports***********
+**********Printing w1 after all imports***********
+
+RooWorkspace(w1) w1 contents
+
+variables
+---------
+(GB_WT,Lb_DTF_M_JpsiLConstr,sample,totWt,wt_tau)
+
+p.d.f.s
+-------
+RooKeysPdf::JPSIKS_RUN1[ x=Lb_DTF_M_JpsiLConstr ] = 0.00490232
+RooKeysPdf::JPSIKS_RUN2[ x=Lb_DTF_M_JpsiLConstr ] = 0.00462242
+RooKeysPdf::LST1405_Run1[ x=Lb_DTF_M_JpsiLConstr ] = 0.000203841
+RooKeysPdf::LST1405_Run2[ x=Lb_DTF_M_JpsiLConstr ] = 0.000221882
+RooKeysPdf::LST1520_Run1[ x=Lb_DTF_M_JpsiLConstr ] = 8.62245e-05
+RooKeysPdf::LST1520_Run2[ x=Lb_DTF_M_JpsiLConstr ] = 8.6584e-05
+RooKeysPdf::LST1600_Run1[ x=Lb_DTF_M_JpsiLConstr ] = 5.78022e-05
+RooKeysPdf::LST1600_Run2[ x=Lb_DTF_M_JpsiLConstr ] = 6.36857e-05
+RooKeysPdf::SIG_Run1[ x=Lb_DTF_M_JpsiLConstr ] = 0.00432764
+RooKeysPdf::SIG_Run2[ x=Lb_DTF_M_JpsiLConstr ] = 0.00420125
+RooKeysPdf::XIB_RUN1[ x=Lb_DTF_M_JpsiLConstr ] = 0.0022805
+RooKeysPdf::XIB_RUN2[ x=Lb_DTF_M_JpsiLConstr ] = 0.00192398
+
+datasets
+--------
+RooDataSet::ds_sig_Run1(Lb_DTF_M_JpsiLConstr,GB_WT,wt_tau,totWt)
+RooDataSet::ds_sig_wt_Run1(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_sig_Run2(Lb_DTF_M_JpsiLConstr,GB_WT,wt_tau,totWt)
+RooDataSet::ds_sig_wt_Run2(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_1405_Run1(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_1405_Run2(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_1520_Run1(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_1520_Run2(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_1600_Run1(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_1600_Run2(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_xi_Run1(Lb_DTF_M_JpsiLConstr,GB_WT)
+RooDataSet::ds_xi_wt_Run1(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_xi_Run2(Lb_DTF_M_JpsiLConstr,GB_WT)
+RooDataSet::ds_xi_wt_Run2(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_jpsiks_Run1(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_jpsiks_Run2(Lb_DTF_M_JpsiLConstr)
+RooDataHist::ds1(Lb_DTF_M_JpsiLConstr)
+RooDataHist::ds2(Lb_DTF_M_JpsiLConstr)
+RooDataHist::combData(sample,Lb_DTF_M_JpsiLConstr)
+
+*****Done Printing w1 after all imports***********
+ **********
+ **    1 **SET PRINT           1
+ **********
+ **********
+ **    2 **SET NOGRAD
+ **********
+ PARAMETER DEFINITIONS:
+    NO.   NAME         VALUE      STEP SIZE      LIMITS
+     1 R            1.00000e-01  1.00000e+00    0.00000e+00  5.00000e+02
+ MINUIT WARNING IN PARAMETR
+ ============== VARIABLE1 BROUGHT BACK INSIDE LIMITS.
+     2 R_1405       1.00000e-02  4.50000e-03    1.00000e-03  4.00000e-01
+     3 R_1520       1.00000e-02  4.50000e-03    1.00000e-03  4.00000e-01
+     4 R_1600       1.00000e-01  3.99000e-02    1.00000e-03  4.00000e-01
+     5 eff_ratio1   1.21937e+00  5.00000e-01    0.00000e+00  5.00000e+00
+     6 eff_ratio2   1.08384e+00  5.00000e-01    0.00000e+00  5.00000e+00
+     7 eff_ratio_1405_1   5.25289e-01  2.62645e-01    0.00000e+00  5.00000e+00
+     8 eff_ratio_1405_2   6.13816e-01  3.06908e-01    0.00000e+00  5.00000e+00
+     9 eff_ratio_1520_1   4.39286e-01  2.19643e-01    0.00000e+00  5.00000e+00
+    10 eff_ratio_1520_2   5.08400e-01  2.54200e-01    0.00000e+00  5.00000e+00
+    11 eff_ratio_1600_1   3.82390e-01  1.91195e-01    0.00000e+00  5.00000e+00
+    12 eff_ratio_1600_2   4.31641e-01  2.15820e-01    0.00000e+00  5.00000e+00
+    13 mean_Run1    5.61980e+03  1.11110e-01    5.61900e+03  5.62100e+03
+    14 mean_Run2    5.62012e+03  6.33451e-02    5.61900e+03  5.62100e+03
+    15 miscLstMean_Run1   5.00900e+03  5.00000e+00    4.99000e+03  5.04000e+03
+    16 miscLstMean_Run2   5.00900e+03  5.00000e+00    4.99000e+03  5.04000e+03
+    17 miscLstSigma_Run1   6.00000e+01  6.00000e+00    3.00000e+01  9.00000e+01
+    18 miscLstSigma_Run2   6.00000e+01  6.00000e+00    3.00000e+01  9.00000e+01
+    19 nBkg_Run1    7.00000e+02  1.00000e+02    5.00000e+02  1.50000e+03
+    20 nBkg_Run2    2.50000e+03  2.00000e+02    1.00000e+03  3.00000e+03
+    21 nLb_Run1     5.00000e+03  7.00000e+02    1.00000e+03  8.00000e+03
+    22 nLb_Run2     1.70000e+04  2.30000e+03    1.00000e+03  2.40000e+04
+    23 nMiscLst_Run1   1.50000e+03  3.90000e+02    1.00000e+02  4.00000e+03
+    24 nMiscLst_Run2   4.00000e+03  8.80000e+02    2.00000e+02  9.00000e+03
+    25 nXib1        1.54394e+01  7.71971e+00    0.00000e+00  2.00000e+02
+    26 nXib2        8.81480e+01  4.00000e+01    0.00000e+00  4.00000e+02
+    27 nXib_JpsiLambda_Run1   5.00000e+00  2.50000e+00    0.00000e+00  5.00000e+01
+    28 nXib_JpsiLambda_Run2   1.00000e+01  5.00000e+00    0.00000e+00  1.00000e+02
+    29 shift_Xib    1.72500e+02  3.00000e-01    1.71000e+02  1.74000e+02
+    30 sigma_Run1   1.59725e+01  4.53544e-01    1.20000e+01  1.80000e+01
+    31 sigma_Run2   1.42385e+01  8.33212e-01    1.10000e+01  1.70000e+01
+    32 slope_Run1  -2.00000e+00  2.50000e-01   -5.00000e+00  0.00000e+00
+    33 slope_Run2  -2.07925e+00  1.58735e-01   -5.00000e+00  0.00000e+00
+ **********
+ **    3 **SET ERR         0.5
+ **********
+ **********
+ **    4 **SET PRINT           1
+ **********
+ **********
+ **    5 **SET STR           1
+ **********
+ NOW USING STRATEGY  1: TRY TO BALANCE SPEED AGAINST RELIABILITY
+ **********
+ **    6 **MIGRAD    1.65e+04           1
+ **********
+ FIRST CALL TO USER FUNCTION AT NEW START POINT, WITH IFLAG=4.
+ START MIGRAD MINIMIZATION.  STRATEGY  1.  CONVERGENCE WHEN EDM .LT. 1.00e-03
+ FCN=-75558.1 FROM MIGRAD    STATUS=INITIATE      430 CALLS         431 TOTAL
+                     EDM= unknown      STRATEGY= 1      NO ERROR MATRIX       
+  EXT PARAMETER               CURRENT GUESS       STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  R            1.09066e-04   1.00000e+00   0.00000e+00** at limit **
+   2  R_1405       2.06553e-01   4.50000e-03   0.00000e+00  -1.13239e+02
+   3  R_1520       1.00000e-02   4.50000e-03   0.00000e+00  -1.83975e+01
+   4  R_1600       1.00000e-01   3.99000e-02   0.00000e+00  -3.64915e+01
+   5  eff_ratio1   1.21937e+00   5.00000e-01   0.00000e+00   1.07466e-02
+   6  eff_ratio2   1.08384e+00   5.00000e-01   0.00000e+00   1.23800e-02
+   7  eff_ratio_1405_1   5.25289e-01   2.62645e-01   0.00000e+00  -1.97427e+02
+   8  eff_ratio_1405_2   6.13816e-01   3.06908e-01   0.00000e+00  -1.32672e+02
+   9  eff_ratio_1520_1   4.39286e-01   2.19643e-01   0.00000e+00  -2.97924e+00
+  10  eff_ratio_1520_2   5.08400e-01   2.54200e-01   0.00000e+00  -6.66966e+00
+  11  eff_ratio_1600_1   3.82390e-01   1.91195e-01   0.00000e+00  -6.27157e+00
+  12  eff_ratio_1600_2   4.31641e-01   2.15820e-01   0.00000e+00  -6.29760e+01
+  13  mean_Run1    5.61980e+03   1.11110e-01   0.00000e+00   1.58978e+01
+  14  mean_Run2    5.62012e+03   6.33451e-02   0.00000e+00   5.92415e+01
+  15  miscLstMean_Run1   5.00900e+03   5.00000e+00   0.00000e+00  -3.74961e+01
+  16  miscLstMean_Run2   5.00900e+03   5.00000e+00   0.00000e+00  -1.85053e+01
+  17  miscLstSigma_Run1   6.00000e+01   6.00000e+00   0.00000e+00  -1.37735e+02
+  18  miscLstSigma_Run2   6.00000e+01   6.00000e+00   0.00000e+00  -4.20132e+02
+  19  nBkg_Run1    7.00000e+02   1.00000e+02   0.00000e+00   1.48187e+02
+  20  nBkg_Run2    1.36447e+03   2.00000e+02  -1.21229e+00  -1.98449e+01
+  21  nLb_Run1     5.00000e+03   7.00000e+02   0.00000e+00   7.56641e+02
+  22  nLb_Run2     1.70000e+04   2.30000e+03   0.00000e+00   1.68875e+03
+  23  nMiscLst_Run1   1.50000e+03   3.90000e+02   0.00000e+00   6.26026e+02
+  24  nMiscLst_Run2   4.00000e+03   8.80000e+02   0.00000e+00   8.30719e+02
+  25  nXib1        1.54394e+01   7.71971e+00   0.00000e+00  -6.43861e+00
+  26  nXib2        8.81480e+01   4.00000e+01   0.00000e+00   2.59997e+01
+  27  nXib_JpsiLambda_Run1   5.00000e+00   2.50000e+00   0.00000e+00  -1.03206e+01
+  28  nXib_JpsiLambda_Run2   1.00000e+01   5.00000e+00   0.00000e+00  -7.81635e+00
+  29  shift_Xib    1.72500e+02   3.00000e-01   0.00000e+00  -1.03780e-01
+  30  sigma_Run1   1.59725e+01   4.53544e-01   0.00000e+00   2.37776e+01
+  31  sigma_Run2   1.42385e+01   8.33212e-01   0.00000e+00   2.06028e+02
+  32  slope_Run1  -2.00000e+00   2.50000e-01   0.00000e+00   6.84975e+02
+  33  slope_Run2  -2.07925e+00   1.58735e-01   0.00000e+00   4.55704e+02
+                               ERR DEF= 0.5
+ MIGRAD MINIMIZATION HAS CONVERGED.
+ MIGRAD WILL VERIFY CONVERGENCE AND ERROR MATRIX.
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-76470.4 FROM MIGRAD    STATUS=CONVERGED    3566 CALLS        3567 TOTAL
+                     EDM=0.000782868    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  R            4.81365e-08   3.32662e+02   2.30144e-01** at limit **
+   2  R_1405       2.31457e-02   4.64694e-02   1.37571e-02   4.48782e-02
+   3  R_1520       2.74494e-01   9.67894e-02   9.88603e-03   1.41270e-01
+   4  R_1600       2.69371e-01   7.05626e-02   1.21610e-02   1.23068e-01
+   5  eff_ratio1   1.21937e+00   2.96471e-02   2.63681e-03  -1.08569e-02
+   6  eff_ratio2   1.08384e+00   1.44519e-02   1.33952e-03  -1.25122e-02
+   7  eff_ratio_1405_1   5.25783e-01   7.86104e-03   9.70618e-04  -2.40694e-02
+   8  eff_ratio_1405_2   6.13274e-01   8.93627e-03   1.02615e-03   6.09810e-02
+   9  eff_ratio_1520_1   4.42809e-01   6.82161e-03   8.91620e-04   9.46118e-02
+  10  eff_ratio_1520_2   5.02939e-01   9.19424e-03   1.03179e-03   4.49751e-01
+  11  eff_ratio_1600_1   3.84585e-01   5.93041e-03   8.39720e-04   9.16858e-02
+  12  eff_ratio_1600_2   4.29143e-01   6.72238e-03   8.68640e-04   3.51435e-01
+  13  mean_Run1    5.61953e+03   1.26080e-01   2.72871e-02  -9.60136e-03
+  14  mean_Run2    5.61985e+03   6.55610e-02   1.26756e-02  -1.50179e-03
+  15  miscLstMean_Run1   5.02446e+03   4.44975e+00   3.45114e-02   9.26429e-03
+  16  miscLstMean_Run2   5.01659e+03   2.71992e+00   1.77287e-02   7.01741e-03
+  17  miscLstSigma_Run1   6.35004e+01   5.54792e+00   2.58353e-02   2.30804e-02
+  18  miscLstSigma_Run2   6.44938e+01   3.05718e+00   1.26654e-02   2.86343e-02
+  19  nBkg_Run1    6.35541e+02   5.00972e+01   2.01406e-02   6.17994e-03
+  20  nBkg_Run2    1.74031e+03   9.76554e+01   1.16370e-02   4.19782e-02
+  21  nLb_Run1     3.87191e+03   6.16385e+01   3.25393e-03   9.29409e-02
+  22  nLb_Run2     1.41074e+04   1.18838e+02   1.84275e-03   3.37676e-01
+  23  nMiscLst_Run1   6.76632e+02   5.60981e+01   4.86202e-03   5.85705e-02
+  24  nMiscLst_Run2   2.27344e+03   1.38723e+02   3.32431e-03   1.35321e-01
+  25  nXib1        1.63375e+01   3.68816e+00   1.26970e-02  -2.54512e-02
+  26  nXib2        8.03214e+01   1.12397e+01   1.29563e-02  -4.61438e-03
+  27  nXib_JpsiLambda_Run1   7.82813e+00   3.24476e+00   3.39776e-02   7.58965e-03
+  28  nXib_JpsiLambda_Run2   1.19269e+01   4.16778e+00   2.43610e-02   4.68943e-03
+  29  shift_Xib    1.72510e+02   3.90571e-01   5.02986e-02   1.14505e-04
+  30  sigma_Run1   1.53145e+01   2.35548e-01   1.50163e-02   2.06896e-03
+  31  sigma_Run2   1.32962e+01   1.06850e-01   6.96337e-03   5.85878e-03
+  32  slope_Run1  -2.42945e+00   3.08899e-02   1.94171e-03  -2.99747e-03
+  33  slope_Run2  -2.33734e+00   2.52069e-02   1.29993e-03  -1.54035e-01
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  34    NPAR= 33    ERR DEF=0.5
+ ELEMENTS ABOVE DIAGONAL ARE NOT PRINTED.
+  3.613e-05 
+ -3.384e-05  2.377e-03 
+  5.510e-05 -4.323e-03  1.037e-02 
+  2.019e-06  7.533e-04 -4.761e-03  5.234e-03 
+ -1.398e-07  1.309e-07 -2.132e-07 -7.804e-09  8.790e-04 
+  1.604e-07 -1.502e-07  2.445e-07  8.965e-09 -6.201e-10  2.089e-04 
+ -6.979e-07  4.883e-05 -8.983e-05  1.568e-05  2.700e-09 -3.097e-09  6.180e-05 
+  9.519e-07 -6.956e-05  1.223e-04 -2.134e-05 -3.682e-09  4.224e-09 -1.413e-06  7.986e-05 
+  7.222e-07 -5.504e-05  1.252e-04 -5.904e-05 -2.794e-09  3.205e-09 -1.238e-06  1.662e-06  4.653e-05 
+ -1.157e-06  8.821e-05 -2.454e-04  9.467e-05  4.475e-09 -5.134e-09  1.983e-06 -2.661e-06 -1.992e-06  8.454e-05 
+  3.739e-08  5.235e-06 -3.774e-05  3.831e-05 -1.446e-10  1.660e-10  5.365e-08 -8.744e-08 -8.349e-07  1.330e-06  3.517e-05 
+ -4.404e-08 -6.371e-06  4.565e-05 -7.482e-05  1.703e-10 -1.955e-10 -6.899e-08  1.105e-07  9.881e-07 -1.575e-06 -2.980e-07 
+ -4.404e-08 -6.371e-06  4.565e-05 -7.482e-05  1.703e-10 -1.955e-10 -6.899e-08  1.105e-07  9.881e-07 -1.575e-06 -2.980e-07  4.519e-05 
+  2.137e-06 -1.820e-06  2.577e-06  3.591e-07 -8.265e-09  9.484e-09 -4.123e-08  5.522e-08  8.610e-09 -1.448e-08 -1.032e-08 
+  2.137e-06 -1.820e-06  2.577e-06  3.591e-07 -8.265e-09  9.484e-09 -4.123e-08  5.522e-08  8.610e-09 -1.448e-08 -1.032e-08  1.161e-08  1.600e-02 
+  1.707e-06 -4.044e-06  6.011e-06  1.142e-06 -6.603e-09  7.576e-09 -8.401e-08  1.144e-07  7.224e-08 -1.161e-07  6.345e-09 
+  1.707e-06 -4.044e-06  6.011e-06  1.142e-06 -6.603e-09  7.576e-09 -8.401e-08  1.144e-07  7.224e-08 -1.161e-07  6.345e-09 -7.993e-09  1.700e-07  4.305e-03 
+  5.880e-04 -5.573e-02  1.310e-01 -6.984e-02 -2.275e-06  2.610e-06 -1.295e-03  1.728e-03  1.025e-03 -1.656e-03 -1.135e-03 
+  5.880e-04 -5.573e-02  1.310e-01 -6.984e-02 -2.275e-06  2.610e-06 -1.295e-03  1.728e-03  1.025e-03 -1.656e-03 -1.135e-03  1.338e-03  1.124e-04  6.063e-05  2.005e+01 
+  5.493e-04 -5.729e-02  1.231e-01 -5.459e-02 -2.125e-06  2.438e-06 -1.154e-03  1.581e-03  1.719e-03 -2.751e-03 -2.986e-04 
+  5.493e-04 -5.729e-02  1.231e-01 -5.459e-02 -2.125e-06  2.438e-06 -1.154e-03  1.581e-03  1.719e-03 -2.751e-03 -2.986e-04  3.692e-04  3.317e-05  7.256e-05  1.887e+00  7.427e+00 
+ -9.675e-04  7.968e-02 -8.421e-02 -8.176e-02  3.743e-06 -4.294e-06  1.544e-03 -2.132e-03 -2.408e-03  3.832e-03 -1.911e-03 
+ -9.675e-04  7.968e-02 -8.421e-02 -8.176e-02  3.743e-06 -4.294e-06  1.544e-03 -2.132e-03 -2.408e-03  3.832e-03 -1.911e-03  2.237e-03 -1.344e-04 -1.796e-04  2.693e-01 -8.041e-01  3.114e+01 
+ -9.349e-04  8.489e-02 -1.252e-01 -2.719e-02  3.617e-06 -4.149e-06  1.773e-03 -2.413e-03 -1.401e-03  2.250e-03 -8.760e-05 
+ -9.349e-04  8.489e-02 -1.252e-01 -2.719e-02  3.617e-06 -4.149e-06  1.773e-03 -2.413e-03 -1.401e-03  2.250e-03 -8.760e-05  1.143e-04 -4.207e-05 -1.034e-04 -1.217e+00 -1.684e+00  4.445e+00  9.380e+00 
+ -2.062e-02  3.144e-01 -4.312e-01 -3.006e-01  7.977e-05 -9.152e-05  4.704e-03 -6.887e-03 -1.983e-02  3.147e-02 -1.263e-02 
+ -2.062e-02  3.144e-01 -4.312e-01 -3.006e-01  7.977e-05 -9.152e-05  4.704e-03 -6.887e-03 -1.983e-02  3.147e-02 -1.263e-02  1.468e-02  3.733e-03 -1.529e-03  2.168e+01 -8.977e-01 -7.167e+01  2.013e+01  2.528e+03 
+ -6.683e-02  4.969e-01  1.383e-01 -1.964e+00  2.585e-04 -2.966e-04  1.179e-02 -1.569e-02  1.211e-02 -1.915e-02 -8.072e-03 
+ -6.683e-02  4.969e-01  1.383e-01 -1.964e+00  2.585e-04 -2.966e-04  1.179e-02 -1.569e-02  1.211e-02 -1.915e-02 -8.072e-03  1.025e-02 -3.595e-03 -8.141e-03  2.163e+01  4.925e+01  8.432e+01 -1.809e+01  5.083e+02  9.569e+03 
+  1.046e-03 -5.156e-02  3.365e-02 -2.560e-02 -4.045e-06  4.641e-06 -2.196e-03  2.710e-03 -6.783e-03  1.080e-02 -4.498e-03 
+  1.046e-03 -5.156e-02  3.365e-02 -2.560e-02 -4.045e-06  4.641e-06 -2.196e-03  2.710e-03 -6.783e-03  1.080e-02 -4.498e-03  5.238e-03 -8.605e-03  2.849e-05 -1.423e+01  3.194e+00 -2.704e+01  6.855e-01 -4.198e+02  1.202e+02  3.800e+03 
+ -1.994e-03 -2.025e-02 -1.636e-01 -2.993e-01  7.711e-06 -8.851e-06  1.259e-03 -1.204e-03  8.998e-03 -1.378e-02  4.308e-03 
+ -1.994e-03 -2.025e-02 -1.636e-01 -2.993e-01  7.711e-06 -8.851e-06  1.259e-03 -1.204e-03  8.998e-03 -1.378e-02  4.308e-03 -4.569e-03  3.136e-04 -8.826e-03  1.468e+01 -3.616e+00  2.874e+01 -2.677e-01  2.740e+02 -5.306e+02  1.300e+02  1.412e+04 
+ -1.466e-02  1.190e+00 -1.477e+00 -8.348e-01  5.671e-05 -6.505e-05  2.371e-02 -3.256e-02 -3.393e-02  5.408e-02 -2.100e-02 
+ -1.466e-02  1.190e+00 -1.477e+00 -8.348e-01  5.671e-05 -6.505e-05  2.371e-02 -3.256e-02 -3.393e-02  5.408e-02 -2.100e-02  2.457e-02 -1.656e-03 -2.506e-03 -9.554e+00 -1.604e+01  2.095e+02  6.062e+01 -7.418e+02  1.015e+03 -3.056e+02  3.232e+02 
+ -1.466e-02  1.190e+00 -1.477e+00 -8.348e-01  5.671e-05 -6.505e-05  2.371e-02 -3.256e-02 -3.393e-02  5.408e-02 -2.100e-02  2.457e-02 -1.656e-03 -2.506e-03 -9.554e+00 -1.604e+01  2.095e+02  6.062e+01 -7.418e+02  1.015e+03 -3.056e+02  3.232e+02  3.149e+03 
+ -5.198e-02  4.570e+00 -6.141e+00 -2.268e+00  2.011e-04 -2.307e-04  9.522e-02 -1.296e-01 -6.951e-02  1.117e-01 -1.146e-02 
+ -5.198e-02  4.570e+00 -6.141e+00 -2.268e+00  2.011e-04 -2.307e-04  9.522e-02 -1.296e-01 -6.951e-02  1.117e-01 -1.146e-02  1.434e-02 -2.449e-03 -5.844e-03 -5.858e+01 -7.688e+01  2.535e+02  3.185e+02  1.115e+03 -2.181e+02  2.155e+01  1.937e+01 
+ -5.198e-02  4.570e+00 -6.141e+00 -2.268e+00  2.011e-04 -2.307e-04  9.522e-02 -1.296e-01 -6.951e-02  1.117e-01 -1.146e-02  1.434e-02 -2.449e-03 -5.844e-03 -5.858e+01 -7.688e+01  2.535e+02  3.185e+02  1.115e+03 -2.181e+02  2.155e+01  1.937e+01  3.424e+03  1.925e+04 
+ -3.327e-04 -4.948e-03  7.490e-03  1.236e-03  1.287e-06 -1.477e-06 -1.011e-04  1.381e-04  1.416e-04 -2.260e-04  5.104e-05 
+ -3.327e-04 -4.948e-03  7.490e-03  1.236e-03  1.287e-06 -1.477e-06 -1.011e-04  1.381e-04  1.416e-04 -2.260e-04  5.104e-05 -5.937e-05  2.847e-03 -9.130e-06  8.347e-02  8.898e-02  6.445e-01 -2.271e-01 -2.111e+01 -2.400e+00 -3.944e+00 -9.151e-01 
+ -3.327e-04 -4.948e-03  7.490e-03  1.236e-03  1.287e-06 -1.477e-06 -1.011e-04  1.381e-04  1.416e-04 -2.260e-04  5.104e-05 -5.937e-05  2.847e-03 -9.130e-06  8.347e-02  8.898e-02  6.445e-01 -2.271e-01 -2.111e+01 -2.400e+00 -3.944e+00 -9.151e-01  7.343e+00 -1.258e+01  1.362e+01 
+ -4.247e-03 -5.810e-02  8.725e-02  1.461e-02  1.643e-05 -1.885e-05 -1.210e-03  1.647e-03  9.987e-04 -1.604e-03  4.182e-05 
+ -4.247e-03 -5.810e-02  8.725e-02  1.461e-02  1.643e-05 -1.885e-05 -1.210e-03  1.647e-03  9.987e-04 -1.604e-03  4.182e-05 -5.594e-05 -2.579e-04  7.145e-03  9.082e-01  7.829e-01 -2.968e+00 -1.013e+00 -1.085e+01 -1.801e+02 -2.354e-01 -4.737e+01 
+ -4.247e-03 -5.810e-02  8.725e-02  1.461e-02  1.643e-05 -1.885e-05 -1.210e-03  1.647e-03  9.987e-04 -1.604e-03  4.182e-05 -5.594e-05 -2.579e-04  7.145e-03  9.082e-01  7.829e-01 -2.968e+00 -1.013e+00 -1.085e+01 -1.801e+02 -2.354e-01 -4.737e+01 -4.070e+01 -5.938e+01  2.076e-01  1.265e+02 
+  1.403e-04  1.585e-03 -1.123e-03 -3.324e-04 -5.426e-07  6.226e-07  5.411e-05 -6.815e-05  1.150e-04 -1.815e-04  6.998e-05 
+  1.403e-04  1.585e-03 -1.123e-03 -3.324e-04 -5.426e-07  6.226e-07  5.411e-05 -6.815e-05  1.150e-04 -1.815e-04  6.998e-05 -8.034e-05  7.132e-04  2.089e-06 -5.884e-02 -6.653e-02  5.616e-01  2.437e-02 -1.511e+01 -1.837e+00  2.966e+00 -2.272e+00 
+  1.403e-04  1.585e-03 -1.123e-03 -3.324e-04 -5.426e-07  6.226e-07  5.411e-05 -6.815e-05  1.150e-04 -1.815e-04  6.998e-05 -8.034e-05  7.132e-04  2.089e-06 -5.884e-02 -6.653e-02  5.616e-01  2.437e-02 -1.511e+01 -1.837e+00  2.966e+00 -2.272e+00  7.125e+00  1.749e+00  2.208e-01 -4.355e-02  1.064e+01 
+  3.547e-04  5.151e-03 -7.053e-03  2.275e-03 -1.372e-06  1.574e-06  9.428e-05 -1.317e-04 -1.658e-04  2.639e-04 -2.818e-05 
+  3.547e-04  5.151e-03 -7.053e-03  2.275e-03 -1.372e-06  1.574e-06  9.428e-05 -1.317e-04 -1.658e-04  2.639e-04 -2.818e-05  3.127e-05  3.123e-05 -3.882e-04 -2.045e-01 -2.950e-01  5.754e-03  4.222e-01 -1.273e+00 -4.294e+01 -9.921e-01  1.410e+00 
+  3.547e-04  5.151e-03 -7.053e-03  2.275e-03 -1.372e-06  1.574e-06  9.428e-05 -1.317e-04 -1.658e-04  2.639e-04 -2.818e-05  3.127e-05  3.123e-05 -3.882e-04 -2.045e-01 -2.950e-01  5.754e-03  4.222e-01 -1.273e+00 -4.294e+01 -9.921e-01  1.410e+00  6.919e-01  2.370e+01 -9.809e-03  1.108e+00  2.037e-02  1.747e+01 
+  3.053e-07  3.946e-06 -4.549e-07 -4.194e-06 -1.176e-09  1.355e-09  1.893e-07 -2.297e-07  6.466e-07 -1.022e-06  3.348e-07 
+  3.053e-07  3.946e-06 -4.549e-07 -4.194e-06 -1.176e-09  1.355e-09  1.893e-07 -2.297e-07  6.466e-07 -1.022e-06  3.348e-07 -3.830e-07 -1.939e-04 -5.582e-05 -9.903e-05 -7.302e-05  2.582e-03 -1.955e-04 -6.724e-02  2.761e-02  1.610e-02 -5.644e-03 
+  3.053e-07  3.946e-06 -4.549e-07 -4.194e-06 -1.176e-09  1.355e-09  1.893e-07 -2.297e-07  6.466e-07 -1.022e-06  3.348e-07 -3.830e-07 -1.939e-04 -5.582e-05 -9.903e-05 -7.302e-05  2.582e-03 -1.955e-04 -6.724e-02  2.761e-02  1.610e-02 -5.644e-03  3.240e-02 -8.976e-03  1.057e-03 -1.375e-03  9.988e-03 -1.028e-02  1.561e-01 
+ -4.583e-06  7.272e-05 -5.275e-05 -1.540e-05  1.772e-08 -2.034e-08  2.460e-06 -3.101e-06  5.182e-06 -8.173e-06  3.179e-06 
+ -4.583e-06  7.272e-05 -5.275e-05 -1.540e-05  1.772e-08 -2.034e-08  2.460e-06 -3.101e-06  5.182e-06 -8.173e-06  3.179e-06 -3.647e-06 -2.563e-04 -2.346e-07 -4.251e-03 -2.978e-03  2.569e-02  1.018e-03 -7.566e-01 -6.617e-02  3.518e-01 -1.024e-01 
+ -4.583e-06  7.272e-05 -5.275e-05 -1.540e-05  1.772e-08 -2.034e-08  2.460e-06 -3.101e-06  5.182e-06 -8.173e-06  3.179e-06 -3.647e-06 -2.563e-04 -2.346e-07 -4.251e-03 -2.978e-03  2.569e-02  1.018e-03 -7.566e-01 -6.617e-02  3.518e-01 -1.024e-01  3.248e-01  7.454e-02 -2.863e-02 -4.132e-04  1.351e-02  8.264e-04 -4.158e-05  5.560e-02 
+ -3.043e-06  9.522e-05 -1.352e-04  2.019e-05  1.177e-08 -1.350e-08  1.824e-06 -2.523e-06 -2.602e-06  4.155e-06 -3.749e-07 
+ -3.043e-06  9.522e-05 -1.352e-04  2.019e-05  1.177e-08 -1.350e-08  1.824e-06 -2.523e-06 -2.602e-06  4.155e-06 -3.749e-07  4.238e-07 -2.317e-07 -8.173e-05 -3.000e-03 -4.459e-03  1.567e-03  6.229e-03 -5.736e-03 -5.164e-01 -1.220e-02  1.934e-01 
+ -3.043e-06  9.522e-05 -1.352e-04  2.019e-05  1.177e-08 -1.350e-08  1.824e-06 -2.523e-06 -2.602e-06  4.155e-06 -3.749e-07  4.238e-07 -2.317e-07 -8.173e-05 -3.000e-03 -4.459e-03  1.567e-03  6.229e-03 -5.736e-03 -5.164e-01 -1.220e-02  1.934e-01  2.924e-02  3.496e-01 -1.209e-04 -6.560e-02  2.394e-04  5.529e-03  1.967e-05  1.133e-05  1.142e-02 
+  7.626e-06  2.035e-04 -1.843e-04 -1.022e-04 -2.950e-08  3.385e-08  5.624e-06 -7.294e-06  5.476e-06 -8.603e-06  3.068e-06 
+  7.626e-06  2.035e-04 -1.843e-04 -1.022e-04 -2.950e-08  3.385e-08  5.624e-06 -7.294e-06  5.476e-06 -8.603e-06  3.068e-06 -3.478e-06 -1.140e-06  1.272e-07 -4.028e-04 -5.784e-03  3.182e-02  6.574e-03 -7.450e-01 -4.150e-02  2.373e-01 -1.322e-01 
+  7.626e-06  2.035e-04 -1.843e-04 -1.022e-04 -2.950e-08  3.385e-08  5.624e-06 -7.294e-06  5.476e-06 -8.603e-06  3.068e-06 -3.478e-06 -1.140e-06  1.272e-07 -4.028e-04 -5.784e-03  3.182e-02  6.574e-03 -7.450e-01 -4.150e-02  2.373e-01 -1.322e-01  4.416e-01  3.991e-01  1.454e-02 -6.161e-03  1.296e-02  1.502e-03  5.849e-05  6.086e-04  1.896e-05  9.542e-04 
+  1.306e-05  2.744e-04 -3.223e-04 -2.024e-05 -5.052e-08  5.796e-08  5.196e-06 -7.208e-06 -7.014e-06  1.118e-05 -1.853e-06 
+  1.306e-05  2.744e-04 -3.223e-04 -2.024e-05 -5.052e-08  5.796e-08  5.196e-06 -7.208e-06 -7.014e-06  1.118e-05 -1.853e-06  2.142e-06  6.886e-07  1.779e-06 -8.229e-03 -1.104e-02  5.727e-03  1.906e-02 -2.766e-02 -1.475e+00 -3.893e-02  1.685e-01 
+  1.306e-05  2.744e-04 -3.223e-04 -2.024e-05 -5.052e-08  5.796e-08  5.196e-06 -7.208e-06 -7.014e-06  1.118e-05 -1.853e-06  2.142e-06  6.886e-07  1.779e-06 -8.229e-03 -1.104e-02  5.727e-03  1.906e-02 -2.766e-02 -1.475e+00 -3.893e-02  1.685e-01  9.821e-02  1.121e+00 -6.208e-04  4.217e-02  8.744e-04  1.509e-02 -7.928e-06  3.447e-05  1.867e-04  6.848e-05  6.354e-04 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL      1      2      3      4      5      6      7      8      9     10     11     12     13     14     15     16
+        1  0.20969   1.000 -0.115  0.090  0.005 -0.001  0.002 -0.015  0.018  0.018 -0.021  0.001 -0.001  0.003  0.004  0.022  0.034
+        2  0.99105  -0.115  1.000 -0.871  0.214  0.000 -0.000  0.127 -0.160 -0.166  0.197  0.018 -0.019 -0.000 -0.001 -0.255 -0.431
+        3  0.99560   0.090 -0.871  1.000 -0.646 -0.000  0.000 -0.112  0.134  0.180 -0.262 -0.062  0.067  0.000  0.001  0.287  0.444
+        4  0.98618   0.005  0.214 -0.646  1.000 -0.000  0.000  0.028 -0.033 -0.120  0.142  0.089 -0.154  0.000  0.000 -0.216 -0.277
+        5  0.00078  -0.001  0.000 -0.000 -0.000  1.000 -0.000  0.000 -0.000 -0.000  0.000 -0.000  0.000 -0.000 -0.000 -0.000 -0.000
+        6  0.00185   0.002 -0.000  0.000  0.000 -0.000  1.000 -0.000  0.000  0.000 -0.000  0.000 -0.000  0.000  0.000  0.000  0.000
+        7  0.12847  -0.015  0.127 -0.112  0.028  0.000 -0.000  1.000 -0.020 -0.023  0.027  0.001 -0.001 -0.000 -0.000 -0.037 -0.054
+        8  0.16511   0.018 -0.160  0.134 -0.033 -0.000  0.000 -0.020  1.000  0.027 -0.032 -0.002  0.002  0.000  0.000  0.043  0.065
+        9  0.23226   0.018 -0.166  0.180 -0.120 -0.000  0.000 -0.023  0.027  1.000 -0.032 -0.021  0.022  0.000  0.000  0.034  0.092
+       10  0.46543  -0.021  0.197 -0.262  0.142  0.000 -0.000  0.027 -0.032 -0.032  1.000  0.024 -0.025 -0.000 -0.000 -0.040 -0.110
+       11  0.15648   0.001  0.018 -0.062  0.089 -0.000  0.000  0.001 -0.002 -0.021  0.024  1.000 -0.007 -0.000  0.000 -0.043 -0.018
+       12  0.32124  -0.001 -0.019  0.067 -0.154  0.000 -0.000 -0.001  0.002  0.022 -0.025 -0.007  1.000  0.000 -0.000  0.044  0.020
+       13  0.01166   0.003 -0.000  0.000  0.000 -0.000  0.000 -0.000  0.000  0.000 -0.000 -0.000  0.000  1.000  0.000  0.000  0.000
+       14  0.01579   0.004 -0.001  0.001  0.000 -0.000  0.000 -0.000  0.000  0.000 -0.000  0.000 -0.000  0.000  1.000  0.000  0.000
+       15  0.35862   0.022 -0.255  0.287 -0.216 -0.000  0.000 -0.037  0.043  0.034 -0.040 -0.043  0.044  0.000  0.000  1.000  0.155
+       16  0.52662   0.034 -0.431  0.444 -0.277 -0.000  0.000 -0.054  0.065  0.092 -0.110 -0.018  0.020  0.000  0.000  0.155  1.000
+       17  0.69169  -0.029  0.293 -0.148 -0.203  0.000 -0.000  0.035 -0.043 -0.063  0.075 -0.058  0.060 -0.000 -0.000  0.011 -0.053
+                     1.000  0.260 -0.255  0.154 -0.079  0.043  0.669  0.327  0.031 -0.047  0.031  0.000  0.001  0.020  0.003  0.185
+       18  0.76628  -0.051  0.569 -0.401 -0.123  0.000 -0.000  0.074 -0.088 -0.067  0.080 -0.005  0.006 -0.000 -0.001 -0.089 -0.202
+                     0.260  1.000  0.131 -0.060  0.004 -0.001  0.353  0.749 -0.020 -0.029  0.002  0.033 -0.000  0.001  0.019  0.069
+       19  0.69605  -0.068  0.128 -0.084 -0.083  0.000 -0.000  0.012 -0.015 -0.058  0.068 -0.042  0.043  0.001 -0.000  0.096 -0.007
+                    -0.255  0.131  1.000  0.103 -0.135  0.046 -0.263  0.160 -0.114 -0.019 -0.092 -0.006 -0.003 -0.064 -0.001 -0.480
+       20  0.79868  -0.114  0.104  0.014 -0.277  0.000 -0.000  0.015 -0.018  0.018 -0.021 -0.014  0.016 -0.000 -0.001  0.049  0.185
+                     0.154 -0.060  0.103  1.000  0.020 -0.046  0.185 -0.016 -0.007 -0.164 -0.006 -0.105  0.001 -0.003 -0.049 -0.014
+       21  0.30672   0.003 -0.017  0.005 -0.006 -0.000  0.000 -0.005  0.005 -0.016  0.019 -0.012  0.013 -0.001  0.000 -0.052  0.019
+                    -0.079  0.004 -0.135  0.020  1.000  0.018 -0.088  0.003 -0.017 -0.000  0.015 -0.004  0.001  0.024 -0.002  0.125
+       22  0.38082  -0.003 -0.003 -0.014 -0.035  0.000 -0.000  0.001 -0.001  0.011 -0.013  0.006 -0.006  0.000 -0.001  0.028 -0.011
+                     0.043 -0.001  0.046 -0.046  0.018  1.000  0.048  0.001 -0.002 -0.035 -0.006  0.003 -0.000 -0.004  0.015 -0.036
+       23  0.77805  -0.043  0.435 -0.258 -0.206  0.000 -0.000  0.054 -0.065 -0.089  0.105 -0.063  0.065 -0.000 -0.001 -0.038 -0.105
+                     0.669  0.353 -0.263  0.185 -0.088  0.048  1.000  0.440  0.035 -0.064  0.039  0.003  0.001  0.025  0.005  0.255
+       24  0.88340  -0.062  0.676 -0.435 -0.226  0.000 -0.000  0.087 -0.105 -0.073  0.088 -0.014  0.015 -0.000 -0.001 -0.094 -0.203
+                     0.327  0.749  0.160 -0.016  0.003  0.001  0.440  1.000 -0.025 -0.038  0.004  0.041 -0.000  0.002  0.024  0.093
+       25  0.16178  -0.015 -0.027  0.020  0.005  0.000 -0.000 -0.003  0.004  0.006 -0.007  0.002 -0.002  0.006 -0.000  0.005  0.009
+                     0.031 -0.020 -0.114 -0.007 -0.017 -0.002  0.035 -0.025  1.000  0.005  0.018 -0.001  0.001 -0.033 -0.000  0.128
+       26  0.25649  -0.063 -0.106  0.076  0.018  0.000 -0.000 -0.014  0.016  0.013 -0.016  0.001 -0.001 -0.000  0.010  0.018  0.026
+                    -0.047 -0.029 -0.019 -0.164 -0.000 -0.035 -0.064 -0.038  0.005  1.000 -0.001  0.024 -0.000 -0.000 -0.055 -0.018
+       27  0.13358   0.007  0.010 -0.003 -0.001 -0.000  0.000  0.002 -0.002  0.005 -0.006  0.004 -0.004  0.002  0.000 -0.004 -0.007
+                     0.031  0.002 -0.092 -0.006  0.015 -0.006  0.039  0.004  0.018 -0.001  1.000  0.001  0.008  0.018  0.001  0.129
+       28  0.14552   0.014  0.025 -0.017  0.008 -0.000  0.000  0.003 -0.004 -0.006  0.007 -0.001  0.001  0.000 -0.001 -0.011 -0.026
+                     0.000  0.033 -0.006 -0.105 -0.004  0.003  0.003  0.041 -0.001  0.024  0.001  1.000 -0.006  0.001  0.012  0.012
+       29  0.01167   0.000  0.000 -0.000 -0.000 -0.000  0.000  0.000 -0.000  0.000 -0.000  0.000 -0.000 -0.004 -0.002 -0.000 -0.000
+                     0.001 -0.000 -0.003  0.001  0.001 -0.000  0.001 -0.000  0.001 -0.000  0.008 -0.006  1.000 -0.000  0.000  0.005
+       30  0.10042  -0.003  0.006 -0.002 -0.001  0.000 -0.000  0.001 -0.001  0.003 -0.004  0.002 -0.002 -0.009 -0.000 -0.004 -0.005
+                     0.020  0.001 -0.064 -0.003  0.024 -0.004  0.025  0.002 -0.033 -0.000  0.018  0.001 -0.000  1.000  0.000  0.084
+       31  0.09938  -0.005  0.018 -0.012  0.003  0.000 -0.000  0.002 -0.003 -0.004  0.004 -0.001  0.001 -0.000 -0.012 -0.006 -0.015
+                     0.003  0.019 -0.001 -0.049 -0.002  0.015  0.005  0.024 -0.000 -0.055  0.001  0.012  0.000  0.000  1.000  0.006
+       32  0.56843   0.041  0.135 -0.059 -0.046 -0.000  0.000  0.023 -0.026  0.026 -0.030  0.017 -0.017 -0.000  0.000 -0.003 -0.069
+                     0.185  0.069 -0.480 -0.014  0.125 -0.036  0.255  0.093  0.128 -0.018  0.129  0.012  0.005  0.084  0.006  1.000
+       33  0.73879   0.086  0.223 -0.126 -0.011 -0.000  0.000  0.026 -0.032 -0.041  0.048 -0.012  0.013  0.000  0.001 -0.073 -0.161
+                     0.041  0.247 -0.022 -0.598 -0.025  0.056  0.069  0.320 -0.007  0.149  0.011  0.143 -0.001  0.006  0.069  0.088
+                     0.041  0.247 -0.022 -0.598 -0.025  0.056  0.069  0.320 -0.007  0.149  0.011  0.143 -0.001  0.006  0.069  0.088  1.000
+ ELEMENTS ABOVE DIAGONAL ARE NOT PRINTED.
+ **********
+ **    7 **MINOS    1.65e+04           1
+ **********
+    THE NEGATIVE MINOS ERROR OF PARAMETER   1, R EXCEEDS ITS LIMIT.
+ MINUIT WARNING IN MIGRAD  
+ ============== VARIABLE1 IS AT ITS LOWER ALLOWED LIMIT.
+ FCN=-76470.4 FROM MINOS     STATUS=SUCCESSFUL   2467 CALLS        6034 TOTAL
+                     EDM=0.000782868    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                  PARABOLIC         MINOS ERRORS        
+  NO.   NAME      VALUE            ERROR      NEGATIVE      POSITIVE   
+   1  R            4.81365e-08   3.32662e+02   at limit      1.09826e+02
+                                 WARNING -   - ABOVE PARAMETER IS AT LIMIT.
+   2  R_1405       2.31457e-02   4.64694e-02                            
+   3  R_1520       2.74494e-01   9.67894e-02                            
+   4  R_1600       2.69371e-01   7.05626e-02                            
+   5  eff_ratio1   1.21937e+00   2.96471e-02                            
+   6  eff_ratio2   1.08384e+00   1.44519e-02                            
+   7  eff_ratio_1405_1   5.25783e-01   7.86104e-03                            
+   8  eff_ratio_1405_2   6.13274e-01   8.93627e-03                            
+   9  eff_ratio_1520_1   4.42809e-01   6.82161e-03                            
+  10  eff_ratio_1520_2   5.02939e-01   9.19424e-03                            
+  11  eff_ratio_1600_1   3.84585e-01   5.93041e-03                            
+  12  eff_ratio_1600_2   4.29143e-01   6.72238e-03                            
+  13  mean_Run1    5.61953e+03   1.26080e-01                            
+  14  mean_Run2    5.61985e+03   6.55610e-02                            
+  15  miscLstMean_Run1   5.02446e+03   4.44975e+00                            
+  16  miscLstMean_Run2   5.01659e+03   2.71992e+00                            
+  17  miscLstSigma_Run1   6.35004e+01   5.54792e+00                            
+  18  miscLstSigma_Run2   6.44938e+01   3.05718e+00                            
+  19  nBkg_Run1    6.35541e+02   5.00972e+01                            
+  20  nBkg_Run2    1.74031e+03   9.76554e+01                            
+  21  nLb_Run1     3.87191e+03   6.16385e+01                            
+  22  nLb_Run2     1.41074e+04   1.18838e+02                            
+  23  nMiscLst_Run1   6.76632e+02   5.60981e+01                            
+  24  nMiscLst_Run2   2.27344e+03   1.38723e+02                            
+  25  nXib1        1.63375e+01   3.68816e+00                            
+  26  nXib2        8.03214e+01   1.12397e+01                            
+  27  nXib_JpsiLambda_Run1   7.82813e+00   3.24476e+00                            
+  28  nXib_JpsiLambda_Run2   1.19269e+01   4.16778e+00                            
+  29  shift_Xib    1.72510e+02   3.90571e-01                            
+  30  sigma_Run1   1.53145e+01   2.35548e-01                            
+  31  sigma_Run2   1.32962e+01   1.06850e-01                            
+  32  slope_Run1  -2.42945e+00   3.08899e-02                            
+  33  slope_Run2  -2.33734e+00   2.52069e-02                            
+                               ERR DEF= 0.5
+
+  RooFitResult: minimized FCN value: -76470.4, estimated distance to minimum: 0.000782868
+                covariance matrix quality: Full, accurate covariance matrix
+                Status : MINIMIZE=0 MINOS=0 
+
+    Floating Parameter    FinalValue +/-  Error   
+  --------------------  --------------------------
+                     R    4.8136e-08 +/-  3.33e+02
+                R_1405    2.3146e-02 +/-  4.65e-02
+                R_1520    2.7449e-01 +/-  9.68e-02
+                R_1600    2.6937e-01 +/-  7.06e-02
+            eff_ratio1    1.2194e+00 +/-  2.96e-02
+            eff_ratio2    1.0838e+00 +/-  1.45e-02
+      eff_ratio_1405_1    5.2578e-01 +/-  7.86e-03
+      eff_ratio_1405_2    6.1327e-01 +/-  8.94e-03
+      eff_ratio_1520_1    4.4281e-01 +/-  6.82e-03
+      eff_ratio_1520_2    5.0294e-01 +/-  9.19e-03
+      eff_ratio_1600_1    3.8459e-01 +/-  5.93e-03
+      eff_ratio_1600_2    4.2914e-01 +/-  6.72e-03
+             mean_Run1    5.6195e+03 +/-  1.26e-01
+             mean_Run2    5.6198e+03 +/-  6.56e-02
+      miscLstMean_Run1    5.0245e+03 +/-  4.45e+00
+      miscLstMean_Run2    5.0166e+03 +/-  2.72e+00
+     miscLstSigma_Run1    6.3500e+01 +/-  5.55e+00
+     miscLstSigma_Run2    6.4494e+01 +/-  3.06e+00
+             nBkg_Run1    6.3554e+02 +/-  5.01e+01
+             nBkg_Run2    1.7403e+03 +/-  9.77e+01
+              nLb_Run1    3.8719e+03 +/-  6.16e+01
+              nLb_Run2    1.4107e+04 +/-  1.19e+02
+         nMiscLst_Run1    6.7663e+02 +/-  5.61e+01
+         nMiscLst_Run2    2.2734e+03 +/-  1.39e+02
+                 nXib1    1.6337e+01 +/-  3.69e+00
+                 nXib2    8.0321e+01 +/-  1.12e+01
+  nXib_JpsiLambda_Run1    7.8281e+00 +/-  3.24e+00
+  nXib_JpsiLambda_Run2    1.1927e+01 +/-  4.17e+00
+             shift_Xib    1.7251e+02 +/-  3.91e-01
+            sigma_Run1    1.5315e+01 +/-  2.36e-01
+            sigma_Run2    1.3296e+01 +/-  1.07e-01
+            slope_Run1   -2.4294e+00 +/-  3.09e-02
+            slope_Run2   -2.3373e+00 +/-  2.52e-02
+
+RooArgSet::parameters_selection = (R,R_1405,R_1520,R_1600,eff_ratio1,eff_ratio2,eff_ratio_1405_1,eff_ratio_1405_2,eff_ratio_1520_1,eff_ratio_1520_2,eff_ratio_1600_1,eff_ratio_1600_2,mean_Run1,mean_Run2,miscLstMean_Run1,miscLstMean_Run2,miscLstSigma_Run1,miscLstSigma_Run2,nBkg_Run1,nBkg_Run2,nLb_Run1,nLb_Run2,nMiscLst_Run1,nMiscLst_Run2,nXib1,nXib2,nXib_JpsiLambda_Run1,nXib_JpsiLambda_Run2,sample,shift_Xib,sigma_Run1,sigma_Run2,slope_Run1,slope_Run2)
+run1 float pars = 33
+chi square2/dof = 0.838984
+chi square2 = 286.933
+Run1 Pull Mean Y = 0.0387555
+Run1 Pull RMS Y = 0.71706
+RooArgSet::parameters = (R,R_1405,R_1520,R_1600,a1_Run1,a1_Run2,a2_Run1,a2_Run2,eff_ratio1,eff_ratio2,eff_ratio_1405_1,eff_ratio_1405_2,eff_ratio_1520_1,eff_ratio_1520_2,eff_ratio_1600_1,eff_ratio_1600_2,geff_ratio1,geff_ratio2,geff_ratio_1405_1,geff_ratio_1405_2,geff_ratio_1520_1,geff_ratio_1520_2,geff_ratio_1600_1,geff_ratio_1600_2,gnXib1,gnXib2,gshift_Xib,lambda_Run1,lambda_Run2,mean_Run1,mean_Run2,miscLstMean_Run1,miscLstMean_Run2,miscLstSigma_Run1,miscLstSigma_Run2,nBkg_Run1,nBkg_Run2,nJpsiKs_Run1,nJpsiKs_Run2,nLb_Run1,nLb_Run2,nMiscLst_Run1,nMiscLst_Run2,nXib1,nXib2,nXib_JpsiLambda_Run1,nXib_JpsiLambda_Run2,sample,shift_Xib,sigma_Run1,sigma_Run2,slope_Run1,slope_Run2)
+run2 float pars = 33
+chi square2/dof = 1.0445
+chi square2 = 357.22
+****************************
+Global Fit chi2/dof = 0.941743
+****************************
+Starting Model Config
+    ----> Doing a re-scan first
+Starting Asimov Dataset
+RooDataSet::AsimovData0[Lb_DTF_M_JpsiLConstr,sample,weight:binWeightAsimov] = 375 entries (6126.96 weighted)
+RooDataSet::AsimovData1[Lb_DTF_M_JpsiLConstr,sample,weight:binWeightAsimov] = 375 entries (21991.4 weighted)
+workspace written to file conf1.root
+0x174bd470	../rootFiles/dataFiles/JpsiLambda/ModelConfigs/conf1.root
+Running HypoTestInverter on the workspace w
+
+RooWorkspace(w) w contents
+
+variables
+---------
+(Lb_DTF_M_JpsiLConstr,R,R_1405,R_1520,R_1600,a1_Run1,a1_Run2,a2_Run1,a2_Run2,eff_ratio1,eff_ratio2,eff_ratio_1405_1,eff_ratio_1405_2,eff_ratio_1520_1,eff_ratio_1520_2,eff_ratio_1600_1,eff_ratio_1600_2,geff_ratio1,geff_ratio2,geff_ratio_1405_1,geff_ratio_1405_2,geff_ratio_1520_1,geff_ratio_1520_2,geff_ratio_1600_1,geff_ratio_1600_2,gnXib1,gnXib2,gshift_Xib,lambda_Run1,lambda_Run2,mcnbkg_run1,mcnbkg_run2,mcnsig_run1,mcnsig_run2,mean_Run1,mean_Run2,miscLstMean_Run1,miscLstMean_Run2,miscLstSigma_Run1,miscLstSigma_Run2,nBkg_Run1,nBkg_Run2,nJpsiKs_Run1,nJpsiKs_Run2,nLb_Run1,nLb_Run2,nMiscLst_Run1,nMiscLst_Run2,nXib1,nXib2,nXib_JpsiLambda_Run1,nXib_JpsiLambda_Run2,sample,shift_Xib,sigma_Run1,sigma_Run2,slope_Run1,slope_Run2,tau_run1,tau_run2)
+
+p.d.f.s
+-------
+RooExponential::Bkg_Run1[ x=Lb_DTF_M_JpsiLConstr c=Bkg_Run1_2 ] = 2.53016e-08
+RooExponential::Bkg_Run2[ x=Lb_DTF_M_JpsiLConstr c=Bkg_Run2_2 ] = 4.04084e-10
+RooKeysPdf::JPSIKS_RUN1[ x=Lb_DTF_M_JpsiLConstr ] = 3.6348e-07
+RooKeysPdf::JPSIKS_RUN2[ x=Lb_DTF_M_JpsiLConstr ] = 1.83829e-07
+RooKeysPdf::LST1405_Run1[ x=Lb_DTF_M_JpsiLConstr ] = 2.13624e-05
+RooKeysPdf::LST1405_Run2[ x=Lb_DTF_M_JpsiLConstr ] = 1.27763e-05
+RooKeysPdf::LST1520_Run1[ x=Lb_DTF_M_JpsiLConstr ] = 4.47497e-05
+RooKeysPdf::LST1520_Run2[ x=Lb_DTF_M_JpsiLConstr ] = 3.85982e-05
+RooKeysPdf::LST1600_Run1[ x=Lb_DTF_M_JpsiLConstr ] = 0.00020581
+RooKeysPdf::LST1600_Run2[ x=Lb_DTF_M_JpsiLConstr ] = 0.000161067
+RooHypatia2::Lb_Run1[ x=Lb_DTF_M_JpsiLConstr l=lambda_Run1 zeta=0 fb=0 sigma=sigma_Run1 mu=mean_Run1 a=a1_Run1 n=2 a2=a2_Run1 n2=2 ] = 2.84129e-06
+RooHypatia2::Lb_Run2[ x=Lb_DTF_M_JpsiLConstr l=lambda_Run2 zeta=0 fb=0 sigma=sigma_Run2 mu=mean_Run2 a=a1_Run2 n=2 a2=a2_Run2 n2=2 ] = 2.94718e-06
+RooKeysPdf::SIG_Run1[ x=Lb_DTF_M_JpsiLConstr ] = 1.21341e-16
+RooKeysPdf::SIG_Run2[ x=Lb_DTF_M_JpsiLConstr ] = 2.88818e-09
+RooKeysPdf::XIB_RUN1[ x=Lb_DTF_M_JpsiLConstr ] = 0
+RooKeysPdf::XIB_RUN2[ x=Lb_DTF_M_JpsiLConstr ] = 0
+RooHypatia2::Xib_Run1[ x=Lb_DTF_M_JpsiLConstr l=lambda_Run1 zeta=0 fb=0 sigma=sigma_Run1 mu=XibMean_Run1 a=a1_Run1 n=2 a2=a2_Run1 n2=2 ] = 2.00354e-06
+RooHypatia2::Xib_Run2[ x=Lb_DTF_M_JpsiLConstr l=lambda_Run2 zeta=0 fb=0 sigma=sigma_Run2 mu=XibMean_Run2 a=a1_Run2 n=2 a2=a2_Run2 n2=2 ] = 2.07775e-06
+RooGaussian::eff_ratio_1405_constraint1[ x=geff_ratio_1405_1 mean=eff_ratio_1405_1 sigma=0.007798 ] = 0.997764
+RooGaussian::eff_ratio_1405_constraint2[ x=geff_ratio_1405_2 mean=eff_ratio_1405_2 sigma=0.008823 ] = 0.997889
+RooGaussian::eff_ratio_1520_constraint1[ x=geff_ratio_1520_1 mean=eff_ratio_1520_1 sigma=0.006756 ] = 0.875342
+RooGaussian::eff_ratio_1520_constraint2[ x=geff_ratio_1520_2 mean=eff_ratio_1520_2 sigma=0.00896 ] = 0.834026
+RooGaussian::eff_ratio_1600_constraint1[ x=geff_ratio_1600_1 mean=eff_ratio_1600_1 sigma=0.005926 ] = 0.932929
+RooGaussian::eff_ratio_1600_constraint2[ x=geff_ratio_1600_2 mean=eff_ratio_1600_2 sigma=0.006671 ] = 0.931748
+RooGaussian::eff_ratio_constraint1[ x=geff_ratio1 mean=eff_ratio1 sigma=0.029648 ] = 1
+RooGaussian::eff_ratio_constraint2[ x=geff_ratio2 mean=eff_ratio2 sigma=0.014452 ] = 1
+RooGaussian::lstLump_Run1[ x=Lb_DTF_M_JpsiLConstr mean=miscLstMean_Run1 sigma=miscLstSigma_Run1 ] = 2.52757e-06
+RooGaussian::lstLump_Run2[ x=Lb_DTF_M_JpsiLConstr mean=miscLstMean_Run2 sigma=miscLstSigma_Run2 ] = 6.91737e-06
+RooAddPdf::mcFit_Run1[ mcnsig_run1 * Lb_Run1 + mcnbkg_run1 * mcbkg_Run1 ] = 0.000138511
+RooAddPdf::mcFit_Run2[ mcnsig_run2 * Lb_Run2 + mcnbkg_run2 * mcbkg_Run2 ] = 5.30286e-05
+RooExponential::mcbkg_Run1[ x=Lb_DTF_M_JpsiLConstr c=tau_run1 ] = 0.99953
+RooExponential::mcbkg_Run2[ x=Lb_DTF_M_JpsiLConstr c=tau_run2 ] = 0.99953
+RooAddPdf::model1[ nSigma1 * SIG_Run1 + nLb_Run1 * Lb_Run1 + nXib1 * XIB_RUN1 + n1405_Run1 * LST1405_Run1 + n1520_Run1 * LST1520_Run1 + n1600_Run1 * LST1600_Run1 + nMiscLst_Run1 * lstLump_Run1 + nBkg_Run1 * Bkg_Run1 + nXib_JpsiLambda_Run1 * Xib_Run1 + nJpsiKs_Run1 * JPSIKS_RUN1 ] = 1.91987e-05
+RooAddPdf::model2[ nSigma2 * SIG_Run2 + nLb_Run2 * Lb_Run2 + nXib2 * XIB_RUN2 + n1405_Run2 * LST1405_Run2 + n1520_Run2 * LST1520_Run2 + n1600_Run2 * LST1600_Run2 + nMiscLst_Run2 * lstLump_Run2 + nBkg_Run2 * Bkg_Run2 + nXib_JpsiLambda_Run2 * Xib_Run2 + nJpsiKs_Run2 * JPSIKS_RUN2 ] = 1.8119e-05
+RooProdPdf::model_const1[ model1 * eff_ratio_constraint1 * nXib_constraint1 * eff_ratio_1405_constraint1 * eff_ratio_1520_constraint1 * eff_ratio_1600_constraint1 * shift_Xib_constraint ] = 1.51994e-05
+RooProdPdf::model_const2[ model2 * eff_ratio_constraint2 * nXib_constraint2 * eff_ratio_1405_constraint2 * eff_ratio_1520_constraint2 * eff_ratio_1600_constraint2 * shift_Xib_constraint ] = 1.1326e-05
+RooGaussian::nXib_constraint1[ x=gnXib1 mean=nXib1 sigma=3.77528 ] = 0.971931
+RooGaussian::nXib_constraint2[ x=gnXib2 mean=nXib2 sigma=11.9556 ] = 0.806339
+RooGaussian::shift_Xib_constraint[ x=gshift_Xib mean=shift_Xib sigma=0.4 ] = 0.999689
+RooSimultaneous::simPdf[ indexCat=sample run1=model_const1 run2=model_const2 ] = 8.85806e-06
+
+functions
+--------
+RooFormulaVar::Bkg_Run1_2[ actualVars=(slope_Run1) formula="-1*pow(10,slope_Run1)" ] = -0.0037202
+RooFormulaVar::Bkg_Run2_2[ actualVars=(slope_Run2) formula="-1*pow(10,slope_Run2)" ] = -0.00460004
+RooFormulaVar::XibMean_Run1[ actualVars=(mean_Run1,shift_Xib) formula="mean_Run1+shift_Xib" ] = 5792.05
+RooFormulaVar::XibMean_Run2[ actualVars=(mean_Run2,shift_Xib) formula="mean_Run2+shift_Xib" ] = 5792.36
+RooFormulaVar::n1405_Run1[ actualVars=(R_1405,nLb_Run1,eff_ratio_1405_1) formula="R_1405*nLb_Run1*eff_ratio_1405_1" ] = 49.6229
+RooFormulaVar::n1405_Run2[ actualVars=(R_1405,nLb_Run2,eff_ratio_1405_2) formula="R_1405*nLb_Run2*eff_ratio_1405_2" ] = 210.867
+RooFormulaVar::n1520_Run1[ actualVars=(R_1520,nLb_Run1,eff_ratio_1520_1) formula="R_1520*nLb_Run1*eff_ratio_1520_1" ] = 465.361
+RooFormulaVar::n1520_Run2[ actualVars=(R_1520,nLb_Run2,eff_ratio_1520_2) formula="R_1520*nLb_Run2*eff_ratio_1520_2" ] = 1926.2
+RooFormulaVar::n1600_Run1[ actualVars=(R_1600,nLb_Run1,eff_ratio_1600_1) formula="R_1600*nLb_Run1*eff_ratio_1600_1" ] = 403.292
+RooFormulaVar::n1600_Run2[ actualVars=(R_1600,nLb_Run2,eff_ratio_1600_2) formula="R_1600*nLb_Run2*eff_ratio_1600_2" ] = 1639.56
+RooFormulaVar::nSigma1[ actualVars=(R,nLb_Run1,eff_ratio1) formula="pow(10,-5)*R*nLb_Run1/(eff_ratio1*1.058)" ] = 2.66577e-07
+RooFormulaVar::nSigma2[ actualVars=(R,nLb_Run2,eff_ratio2) formula="pow(10,-5)*R*nLb_Run2/(eff_ratio2*1.058)" ] = 1.09274e-06
+
+datasets
+--------
+RooDataSet::ds_sim_wt1(Lb_DTF_M_JpsiLConstr)
+RooDataSet::ds_sim_wt2(Lb_DTF_M_JpsiLConstr)
+RooDataHist::ds1(Lb_DTF_M_JpsiLConstr)
+RooDataHist::ds2(Lb_DTF_M_JpsiLConstr)
+RooDataHist::combData(sample,Lb_DTF_M_JpsiLConstr)
+
+parameter snapshots
+-------------------
+ModelConfig__snapshot = (R=8.88228e-06 +/- 330.653)
+bkgOnlyModel__snapshot = (R=0 +/- 330.653)
+
+named sets
+----------
+ModelConfig_GlobalObservables:(geff_ratio1,geff_ratio2,gnXib1,gnXib2,geff_ratio_1405_1,geff_ratio_1405_2,geff_ratio_1520_1,geff_ratio_1520_2,geff_ratio_1600_1,geff_ratio_1600_2,gshift_Xib)
+ModelConfig_NuisParams:(nLb_Run1,mean_Run1,sigma_Run1,nBkg_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,eff_ratio1,nXib1,eff_ratio_1405_1,eff_ratio_1520_1,eff_ratio_1600_1,nLb_Run2,mean_Run2,sigma_Run2,nBkg_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,eff_ratio2,nXib2,eff_ratio_1405_2,eff_ratio_1520_2,eff_ratio_1600_2,R_1405,R_1520,R_1600,nXib_JpsiLambda_Run1,nXib_JpsiLambda_Run2,shift_Xib,slope_Run1,slope_Run2)
+ModelConfig_Observables:(Lb_DTF_M_JpsiLConstr,sample)
+ModelConfig_POI:(R)
+ModelConfig__snapshot:(R)
+bkgOnlyModel__snapshot:(R)
+globObs:(geff_ratio1,geff_ratio2,gnXib1,gnXib2,geff_ratio_1405_1,geff_ratio_1405_2,geff_ratio_1520_1,geff_ratio_1520_2,geff_ratio_1600_1,geff_ratio_1600_2,gshift_Xib)
+nuisParams:(nLb_Run1,mean_Run1,sigma_Run1,nBkg_Run1,nMiscLst_Run1,miscLstMean_Run1,miscLstSigma_Run1,eff_ratio1,nXib1,eff_ratio_1405_1,eff_ratio_1520_1,eff_ratio_1600_1,nLb_Run2,mean_Run2,sigma_Run2,nBkg_Run2,nMiscLst_Run2,miscLstMean_Run2,miscLstSigma_Run2,eff_ratio2,nXib2,eff_ratio_1405_2,eff_ratio_1520_2,eff_ratio_1600_2,R_1405,R_1520,R_1600,nXib_JpsiLambda_Run1,nXib_JpsiLambda_Run2,shift_Xib,slope_Run1,slope_Run2)
+obs:(Lb_DTF_M_JpsiLConstr,sample)
+poi:(R)
+
+generic objects
+---------------
+RooStats::ModelConfig::ModelConfig
+RooStats::ModelConfig::bkgOnlyModel
+
+Using data set combData
+StandardHypoTestInvDemo : POI initial value:   R = 8.88228e-06
+ **********
+ **   34 **SET NOGRAD
+ **********
+ PARAMETER DEFINITIONS:
+    NO.   NAME         VALUE      STEP SIZE      LIMITS
+     1 R            8.88228e-06  3.30653e+02    0.00000e+00  5.00000e+02
+     2 R_1405       2.43743e-02  4.54629e-02    1.00000e-03  4.00000e-01
+     3 R_1520       2.71449e-01  9.49921e-02    1.00000e-03  4.00000e-01
+     4 R_1600       2.70827e-01  7.01836e-02    1.00000e-03  4.00000e-01
+     5 eff_ratio1   1.21937e+00  2.96471e-02    0.00000e+00  5.00000e+00
+     6 eff_ratio2   1.08384e+00  1.44519e-02    0.00000e+00  5.00000e+00
+     7 eff_ratio_1405_1   5.25811e-01  7.85747e-03    0.00000e+00  5.00000e+00
+     8 eff_ratio_1405_2   6.13242e-01  8.93015e-03    0.00000e+00  5.00000e+00
+     9 eff_ratio_1520_1   4.42772e-01  6.81801e-03    0.00000e+00  5.00000e+00
+    10 eff_ratio_1520_2   5.03002e-01  9.18487e-03    0.00000e+00  5.00000e+00
+    11 eff_ratio_1600_1   3.84598e-01  5.92995e-03    0.00000e+00  5.00000e+00
+    12 eff_ratio_1600_2   4.29133e-01  6.72075e-03    0.00000e+00  5.00000e+00
+    13 mean_Run1    5.61954e+03  1.26074e-01    5.61900e+03  5.62100e+03
+    14 mean_Run2    5.61985e+03  6.55609e-02    5.61900e+03  5.62100e+03
+    15 miscLstMean_Run1   5.02442e+03  4.44042e+00    4.99000e+03  5.04000e+03
+    16 miscLstMean_Run2   5.01655e+03  2.70597e+00    4.99000e+03  5.04000e+03
+    17 miscLstSigma_Run1   6.35051e+01  5.53147e+00    3.00000e+01  9.00000e+01
+    18 miscLstSigma_Run2   6.45271e+01  3.03134e+00    3.00000e+01  9.00000e+01
+    19 nBkg_Run1    6.35741e+02  5.00850e+01    5.00000e+02  1.50000e+03
+    20 nBkg_Run2    1.74015e+03  9.75972e+01    1.00000e+03  3.00000e+03
+    21 nLb_Run1     3.87187e+03  6.16368e+01    1.00000e+03  8.00000e+03
+    22 nLb_Run2     1.41073e+04  1.18834e+02    1.00000e+03  2.40000e+04
+    23 nMiscLst_Run1   6.76913e+02  5.57889e+01    1.00000e+02  4.00000e+03
+    24 nMiscLst_Run2   2.27511e+03  1.36991e+02    2.00000e+02  9.00000e+03
+    25 nXib1        1.63403e+01  3.68807e+00    0.00000e+00  2.00000e+02
+    26 nXib2        8.03036e+01  1.12356e+01    0.00000e+00  4.00000e+02
+    27 nXib_JpsiLambda_Run1   7.82371e+00  3.24374e+00    0.00000e+00  5.00000e+01
+    28 nXib_JpsiLambda_Run2   1.19270e+01  4.16741e+00    0.00000e+00  1.00000e+02
+    29 shift_Xib    1.72510e+02  3.91083e-01    1.71000e+02  1.74000e+02
+    30 sigma_Run1   1.53145e+01  2.35546e-01    1.20000e+01  1.80000e+01
+    31 sigma_Run2   1.32962e+01  1.06848e-01    1.10000e+01  1.70000e+01
+    32 slope_Run1  -2.42943e+00  3.08653e-02   -5.00000e+00  0.00000e+00
+    33 slope_Run2  -2.33724e+00  2.51746e-02   -5.00000e+00  0.00000e+00
+ **********
+ **   35 **SET ERR         0.5
+ **********
+ **********
+ **   36 **SET PRINT           0
+ **********
+ **********
+ **   37 **SET STR           0
+ **********
+ **********
+ **   38 **MIGRAD    1.65e+04           1
+ **********
+ MIGRAD MINIMIZATION HAS CONVERGED.
+ FCN=-23.4856 FROM MIGRAD    STATUS=CONVERGED     200 CALLS         201 TOTAL
+                     EDM=6.99887e-07    STRATEGY= 0      NO ERROR MATRIX       
+  EXT PARAMETER               CURRENT GUESS       STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  R            4.72291e-07   3.30653e+02  -3.28036e-04** at limit **
+   2  R_1405       2.43746e-02   4.54629e-02   2.97125e-06   2.44978e-03
+   3  R_1520       2.71447e-01   9.49921e-02  -1.20204e-05   8.80556e-03
+   4  R_1600       2.70831e-01   7.01836e-02   2.03582e-05   4.03079e-04
+   5  eff_ratio1   1.21937e+00   2.96471e-02   2.41556e-07   2.37434e-04
+   6  eff_ratio2   1.08384e+00   1.44519e-02   8.68905e-08   3.31136e-04
+   7  eff_ratio_1405_1   5.25811e-01   7.85747e-03   1.47924e-07   1.31126e-03
+   8  eff_ratio_1405_2   6.13243e-01   8.93015e-03   4.86647e-07   4.95493e-03
+   9  eff_ratio_1520_1   4.42772e-01   6.81801e-03  -1.46846e-08   5.85790e-03
+  10  eff_ratio_1520_2   5.03001e-01   9.18487e-03  -2.22784e-07   1.63634e-02
+  11  eff_ratio_1600_1   3.84598e-01   5.92995e-03   1.91751e-07   5.08320e-03
+  12  eff_ratio_1600_2   4.29134e-01   6.72075e-03   6.63543e-07   2.06338e-02
+  13  mean_Run1    5.61954e+03   1.26074e-01   2.41348e-05   2.04656e-04
+  14  mean_Run2    5.61985e+03   6.55609e-02   1.81129e-06   6.64768e-05
+  15  miscLstMean_Run1   5.02442e+03   4.44042e+00  -2.52438e-05  -1.85735e-04
+  16  miscLstMean_Run2   5.01655e+03   2.70597e+00   3.55572e-06   2.38674e-04
+  17  miscLstSigma_Run1   6.35044e+01   5.53147e+00  -2.43269e-05   1.86252e-04
+  18  miscLstSigma_Run2   6.45271e+01   3.03134e+00  -1.85709e-06  -1.32996e-04
+  19  nBkg_Run1    6.35748e+02   5.00850e+01   2.21788e-05   6.14664e-04
+  20  nBkg_Run2    1.74016e+03   9.75972e+01   2.66966e-06   1.78249e-03
+  21  nLb_Run1     3.87187e+03   6.16368e+01   1.96986e-07   3.27632e-03
+  22  nLb_Run2     1.41073e+04   1.18834e+02   7.37405e-07   9.83468e-03
+  23  nMiscLst_Run1   6.76913e+02   5.57889e+01   4.11183e-07   7.43146e-03
+  24  nMiscLst_Run2   2.27511e+03   1.36991e+02   1.86916e-06   7.92821e-03
+  25  nXib1        1.63412e+01   3.68807e+00   1.57503e-05   8.17589e-04
+  26  nXib2        8.03038e+01   1.12356e+01   1.41085e-06   2.07230e-04
+  27  nXib_JpsiLambda_Run1   7.82335e+00   3.24374e+00  -1.99046e-05  -6.49140e-05
+  28  nXib_JpsiLambda_Run2   1.19268e+01   4.16741e+00  -6.76335e-06  -6.55584e-05
+  29  shift_Xib    1.72510e+02   3.91083e-01  -2.87758e-05  -7.23510e-05
+  30  sigma_Run1   1.53144e+01   2.35546e-01  -5.50992e-06   8.02779e-05
+  31  sigma_Run2   1.32962e+01   1.06848e-01  -6.44123e-07  -1.87028e-05
+  32  slope_Run1  -2.42943e+00   3.08653e-02  -2.41061e-07   7.64175e-03
+  33  slope_Run2  -2.33724e+00   2.51746e-02  -7.04808e-08  -2.74836e-05
+                               ERR DEF= 0.5
+StandardHypoTestInvDemo - Best Fit value : R = 4.72291e-07 +/- 330.653
+Time for fitting : Real time 0:00:01, CP time 1.080
+StandardHypoTestInvo: snapshot of S+B Model ModelConfig is set to the best fit value
+Doing a fixed scan  in interval : 0 , 500
+Time to perform limit scan 
+Real time 0:01:40, CP time 76.280
+The computed upper limit is: 279.683 +/- 0
+Expected upper limits, using the B (alternate) model : 
+ expected limit (median) 312.331
+ expected limit (-1 sig) 226.423
+ expected limit (+1 sig) 434.068
+ expected limit (-2 sig) 168.752
+ expected limit (+2 sig) 500
+(double) 279.68295
