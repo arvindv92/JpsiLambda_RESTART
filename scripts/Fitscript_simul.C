@@ -77,13 +77,13 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		case 1:
 		{
 			bdtConf[0] = 1;
-			bdtCut[0] = 0.385;
+			bdtCut[0] = 0.395;
 			break;
 		}
 		case 2:
 		{
 			bdtConf[0] = 2;
-			bdtCut[0] = 0.405;
+			bdtCut[0] = 0.415;
 			break;
 		}
 		}
@@ -98,7 +98,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		case 2:
 		{
 			bdtConf[1] = 2;
-			bdtCut[1]  = 0.525;
+			bdtCut[1]  = 0.555;
 			break;
 		}
 		}
@@ -2854,7 +2854,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	// w.factory(Form("nBkg_Run1[1,%d]",nentries[0]));
 	// w.factory(Form("nBkg_Run2[1,%d]",nentries[1]));
 	w.factory("nBkg_Run1[700,500,1500]");
-	w.factory("nBkg_Run2[2500,2000,3000]");
+	w.factory("nBkg_Run2[2500,1000,3000]");
 
 	//****************Xib Bkg Yield**************************************
 
