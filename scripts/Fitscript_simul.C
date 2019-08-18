@@ -4285,7 +4285,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	}
 	cout << "workspace written to file " << fileName << endl;
 
-	gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"../rootFiles/dataFiles/JpsiLambda/ModelConfigs/%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,3,true,20,0,500,100,false,0,%d,%d,%d,%d)",fileName,myLow,myHigh,sigType,config));
+	gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"../rootFiles/dataFiles/JpsiLambda/ModelConfigs/%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,3,true,20,0,500,100,false,0,%d,%d,%d,%d)",fileName,myLow,myHigh,sigType,config_Run1));
 	// gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,2,true,20,100,2000,100,false,0,%d,%d)",fileName,myLow,myHigh));
 	// Get Lower and Upper limits from Profile Calculator
 	//	cout << "Profile lower limit on s = " << ((LikelihoodInterval*) lr_int)->LowerLimit(*(w.var("R"))) << endl;
