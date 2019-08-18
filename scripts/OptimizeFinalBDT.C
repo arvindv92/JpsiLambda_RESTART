@@ -175,7 +175,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 	}
 	else //No Isolation
 	{
-		fileIn = TFile::Open(Form("%s/jpsilambda_%s_withsw.root",
+		fileIn = TFile::Open(Form("%s/jpsilambda_cutoutks_%s.root",
 		                          rootFolder,type));
 		if (!fileIn)
 		{
@@ -184,7 +184,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 		}
 		treeIn = (TTree*)fileIn->Get("MyTuple");
 
-		friendFileName = Form("%s/jpsilambda_%ssig_FinalBDT%d_noIso.root",
+		friendFileName = Form("%s/jpsilambda_%s_FinalBDT%d_noIso.root",
 		                      rootFolder,type,bdtConf);
 		treeIn->AddFriend("MyTuple",friendFileName);
 
