@@ -161,6 +161,7 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	else//train on MC for signal
 	{
 		sigTree->SetBranchStatus("Lb_BKGCAT",1);
+		sigTree->SetBranchStatus("GB_WT",1);
 	}
 	bkgTree->SetBranchStatus("SW",1);
 
