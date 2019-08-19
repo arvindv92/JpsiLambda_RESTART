@@ -188,23 +188,45 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 				fileIn      = TFile::Open(Form("%s/%s_cutoutks_%s_nonZeroTracks.root",
 				                               rootFolder,part,type));
 				treeIn      = (TTree*)fileIn->Get("MyTuple");
-				fileIn_iso  = TFile::Open(Form("%s/%s_%s_iso%d_%s.root",
-				                               rootFolder,part,type,isoConf,isoVersion));
-				treeIn_iso  = (TTree*)fileIn_iso->Get("MyTuple");
 
-				treeIn->AddFriend(treeIn_iso);
-				fileOut     = new TFile(Form("%s/%s_%s_FinalBDT%d_iso%d_%s.root",
-				                             rootFolder,part,type,bdtConf,isoConf,isoVersion),
-				                        "RECREATE");
+				if(!simFlag)
+				{
+					fileIn_iso  = TFile::Open(Form("%s/%s_%s_iso%d_%s.root",
+					                               rootFolder,part,type,isoConf,isoVersion));
+					treeIn_iso  = (TTree*)fileIn_iso->Get("MyTuple");
+					treeIn->AddFriend(treeIn_iso);
+					fileOut     = new TFile(Form("%s/%s_%s_FinalBDT%d_iso%d_%s.root",
+					                             rootFolder,part,type,bdtConf,isoConf,isoVersion),
+					                        "RECREATE");
+				}
+				else
+				{
+					fileIn_iso  = TFile::Open(Form("%s/%s_%s_MCiso%d_%s.root",
+					                               rootFolder,part,type,isoConf,isoVersion));
+					treeIn_iso  = (TTree*)fileIn_iso->Get("MyTuple");
+					treeIn->AddFriend(treeIn_iso);
+					fileOut     = new TFile(Form("%s/%s_%s_MCFinalBDT%d_MCiso%d_%s.root",
+					                             rootFolder,part,type,bdtConf,isoConf,isoVersion),
+					                        "RECREATE");
+				}
 			}
 			else
 			{
 				fileIn  = TFile::Open(Form("%s/%s_cutoutks_%s_ZeroTracks.root",
 				                           rootFolder,part,type));
 				treeIn  = (TTree*)fileIn->Get("MyTuple");
-				fileOut = new TFile(Form("%s/%s_zeroTracks%s_FinalBDT%d.root",
-				                         rootFolder,part,type,bdtConf),
-				                    "RECREATE");
+				if(!simFlag)
+				{
+					fileOut = new TFile(Form("%s/%s_zeroTracks%s_FinalBDT%d.root",
+					                         rootFolder,part,type,bdtConf),
+					                    "RECREATE");
+				}
+				else
+				{
+					fileOut = new TFile(Form("%s/%s_zeroTracks%s_MCFinalBDT%d.root",
+					                         rootFolder,part,type,bdtConf),
+					                    "RECREATE");
+				}
 			}
 		}
 		else
@@ -212,8 +234,16 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 			fileIn  = TFile::Open(Form("%s/%s_cutoutks_%s.root",
 			                           rootFolder,part,type));
 			treeIn  = (TTree*)fileIn->Get("MyTuple");
-			fileOut = new TFile(Form("%s/%s_%s_FinalBDT%d_noIso.root",
-			                         rootFolder,part,type,bdtConf),"RECREATE");
+			if(!simFlag)
+			{
+				fileOut = new TFile(Form("%s/%s_%s_FinalBDT%d_noIso.root",
+				                         rootFolder,part,type,bdtConf),"RECREATE");
+			}
+			else
+			{
+				fileOut = new TFile(Form("%s/%s_%s_MCFinalBDT%d_noIso.root",
+				                         rootFolder,part,type,bdtConf),"RECREATE");
+			}
 		}
 	}//end MC block
 	else // Apply on Data
@@ -228,35 +258,66 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 					fileIn      = TFile::Open(Form("%s/jpsilambda_cutoutks_%s_nonZeroTracks.root",
 					                               rootFolder,type));
 					treeIn      = (TTree*)fileIn->Get("MyTuple");
-					fileIn_iso  = TFile::Open(Form("%s/jpsilambda_%s_iso%d_%s.root",
-					                               rootFolder,type,isoConf,isoVersion));
-					treeIn_iso  = (TTree*)fileIn_iso->Get("MyTuple");
-					treeIn->AddFriend(treeIn_iso);
-					fileOut     = new TFile(Form("%s/jpsilambda_%s_FinalBDT%d_iso%d_%s.root",
-					                             rootFolder,type,bdtConf,isoConf,isoVersion),
-					                        "RECREATE");
+					if(!simFlag)
+					{
+						fileIn_iso  = TFile::Open(Form("%s/jpsilambda_%s_iso%d_%s.root",
+						                               rootFolder,type,isoConf,isoVersion));
+						treeIn_iso  = (TTree*)fileIn_iso->Get("MyTuple");
+						treeIn->AddFriend(treeIn_iso);
+						fileOut     = new TFile(Form("%s/jpsilambda_%s_FinalBDT%d_iso%d_%s.root",
+						                             rootFolder,type,bdtConf,isoConf,isoVersion),
+						                        "RECREATE");
+					}
+					else
+					{
+						fileIn_iso  = TFile::Open(Form("%s/jpsilambda_%s_MCiso%d_%s.root",
+						                               rootFolder,type,isoConf,isoVersion));
+						treeIn_iso  = (TTree*)fileIn_iso->Get("MyTuple");
+						treeIn->AddFriend(treeIn_iso);
+						fileOut     = new TFile(Form("%s/jpsilambda_%s_MCFinalBDT%d_MCiso%d_%s.root",
+						                             rootFolder,type,bdtConf,isoConf,isoVersion),
+						                        "RECREATE");
+					}
 				}
 				else
 				{
 					fileIn  = TFile::Open(Form("%s/jpsilambda_cutoutks_%s_ZeroTracks.root",
 					                           rootFolder,type));
 					treeIn  = (TTree*)fileIn->Get("MyTuple");
-					fileOut = new TFile(Form("%s/jpsilambda_zeroTracks%s_FinalBDT%d.root",
-					                         rootFolder,type,bdtConf),
-					                    "RECREATE");
+					if(!simFlag)
+					{
+						fileOut = new TFile(Form("%s/jpsilambda_zeroTracks%s_FinalBDT%d.root",
+						                         rootFolder,type,bdtConf),
+						                    "RECREATE");
+					}
+					else
+					{
+						fileOut = new TFile(Form("%s/jpsilambda_zeroTracks%s_MCinalBDT%d.root",
+						                         rootFolder,type,bdtConf),
+						                    "RECREATE");
+					}
 				}
 			}
 			else
 			{
-				gSystem->Exec(Form("hadd -f %s/jpsilambda_cutoutks_LL.root "
-				                   "%s/jpsilambda_cutoutks_LL_nonZeroTracks.root %s/jpsilambda_cutoutks_LL_ZeroTracks.root ",
-				                   rootFolder,rootFolder,rootFolder));
+				// gSystem->Exec(Form("hadd -f %s/jpsilambda_cutoutks_LL.root "
+				//                    "%s/jpsilambda_cutoutks_LL_nonZeroTracks.root %s/jpsilambda_cutoutks_LL_ZeroTracks.root ",
+				//                    rootFolder,rootFolder,rootFolder));
 				fileIn  = TFile::Open(Form("%s/jpsilambda_cutoutks_%s.root",
 				                           rootFolder,type));
 				treeIn  = (TTree*)fileIn->Get("MyTuple");
-				fileOut = new TFile(Form("%s/jpsilambda_%s_FinalBDT%d_noIso.root",
-				                         rootFolder,type,bdtConf),
-				                    "RECREATE");
+				if(!simFlag)
+				{
+					fileOut = new TFile(Form("%s/jpsilambda_%s_FinalBDT%d_noIso.root",
+					                         rootFolder,type,bdtConf),
+					                    "RECREATE");
+				}
+				else
+				{
+					fileOut = new TFile(Form("%s/jpsilambda_%s_MCFinalBDT%d_noIso.root",
+					                         rootFolder,type,bdtConf),
+					                    "RECREATE");
+				}
 			}
 		}
 		else if(flag == 2)
@@ -268,22 +329,44 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 					fileIn     = TFile::Open(Form("%s/jpsilambda_%s_withsw_nonZeroTracks.root",
 					                              rootFolder,type));
 					treeIn     = (TTree*)fileIn->Get("MyTuple");
-					fileIn_iso = TFile::Open(Form("%s/jpsilambda_%ssig_iso%d_%s.root",
-					                              rootFolder,type,isoConf,isoVersion));
-					treeIn_iso = (TTree*)fileIn_iso->Get("MyTuple");
-					treeIn->AddFriend(treeIn_iso);
-					fileOut    = new TFile(Form("%s/jpsilambda_%ssig_FinalBDT%d_iso%d_%s.root",
-					                            rootFolder,type,bdtConf,isoConf,isoVersion),
-					                       "RECREATE");
+					if(!simFlag)
+					{
+						fileIn_iso = TFile::Open(Form("%s/jpsilambda_%ssig_iso%d_%s.root",
+						                              rootFolder,type,isoConf,isoVersion));
+						treeIn_iso = (TTree*)fileIn_iso->Get("MyTuple");
+						treeIn->AddFriend(treeIn_iso);
+						fileOut    = new TFile(Form("%s/jpsilambda_%ssig_FinalBDT%d_iso%d_%s.root",
+						                            rootFolder,type,bdtConf,isoConf,isoVersion),
+						                       "RECREATE");
+					}
+					else
+					{
+						fileIn_iso = TFile::Open(Form("%s/jpsilambda_%ssig_MCiso%d_%s.root",
+						                              rootFolder,type,isoConf,isoVersion));
+						treeIn_iso = (TTree*)fileIn_iso->Get("MyTuple");
+						treeIn->AddFriend(treeIn_iso);
+						fileOut    = new TFile(Form("%s/jpsilambda_%ssig_MCFinalBDT%d_MCiso%d_%s.root",
+						                            rootFolder,type,bdtConf,isoConf,isoVersion),
+						                       "RECREATE");
+					}
 				}
 				else
 				{
 					fileIn  = TFile::Open(Form("%s/jpsilambda_%s_withsw_ZeroTracks.root",
 					                           rootFolder,type));
 					treeIn  = (TTree*)fileIn->Get("MyTuple");
-					fileOut = new TFile(Form("%s/jpsilambda_zeroTracks%ssig_FinalBDT%d.root",
-					                         rootFolder,type,bdtConf),
-					                    "RECREATE");
+					if(!simFlag)
+					{
+						fileOut = new TFile(Form("%s/jpsilambda_zeroTracks%ssig_FinalBDT%d.root",
+						                         rootFolder,type,bdtConf),
+						                    "RECREATE");
+					}
+					else
+					{
+						fileOut = new TFile(Form("%s/jpsilambda_zeroTracks%ssig_MCFinalBDT%d.root",
+						                         rootFolder,type,bdtConf),
+						                    "RECREATE");
+					}
 				}
 			}
 			else
@@ -291,8 +374,16 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 				fileIn  = TFile::Open(Form("%s/jpsilambda_%s_withsw.root",
 				                           rootFolder,type));
 				treeIn  = (TTree*)fileIn->Get("MyTuple");
-				fileOut = new TFile(Form("%s/jpsilambda_%ssig_FinalBDT%d_noIso.root",
-				                         rootFolder,type,bdtConf),"RECREATE");
+				if(!simFlag)
+				{
+					fileOut = new TFile(Form("%s/jpsilambda_%ssig_FinalBDT%d_noIso.root",
+					                         rootFolder,type,bdtConf),"RECREATE");
+				}
+				else
+				{
+					fileOut = new TFile(Form("%s/jpsilambda_%ssig_MCFinalBDT%d_noIso.root",
+					                         rootFolder,type,bdtConf),"RECREATE");
+				}
 			}
 		}
 	}//end Data block
@@ -363,7 +454,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	//***********Load weights file**********************************
 	TString dir    = "dataset/weights/";
 	TString prefix;
-	if(!simFlag)//train on data
+	if(!)//train on data
 	{
 		if(isoFlag && !zeroFlag)
 		{

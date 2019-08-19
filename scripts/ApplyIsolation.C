@@ -155,8 +155,16 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 
 		fileIn  = TFile::Open(Form("%s/%s_cutoutks_%s_nonZeroTracks.root",
 		                           rootFolder,part,type));
-		fileOut = new TFile(Form("%s/%s_%s_iso%d_%s.root",
-		                         rootFolder,part,type,isoConf,isoVersion),"RECREATE");
+		if(!simFlag)
+		{
+			fileOut = new TFile(Form("%s/%s_%s_iso%d_%s.root",
+			                         rootFolder,part,type,isoConf,isoVersion),"RECREATE");
+		}
+		else
+		{
+			fileOut = new TFile(Form("%s/%s_%s_MCiso%d_%s.root",
+			                         rootFolder,part,type,isoConf,isoVersion),"RECREATE");
+		}
 	}//end MC block
 	else // Data
 	{
@@ -166,15 +174,31 @@ void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 		{
 			fileIn  = TFile::Open(Form("%s/jpsilambda_cutoutks_%s_nonZeroTracks.root",
 			                           rootFolder,type));
-			fileOut = new TFile(Form("%s/jpsilambda_%s_iso%d_%s.root",
-			                         rootFolder,type,isoConf,isoVersion),"RECREATE");
+			if(!simFlag)
+			{
+				fileOut = new TFile(Form("%s/jpsilambda_%s_iso%d_%s.root",
+				                         rootFolder,type,isoConf,isoVersion),"RECREATE");
+			}
+			else
+			{
+				fileOut = new TFile(Form("%s/jpsilambda_%s_MCiso%d_%s.root",
+				                         rootFolder,type,isoConf,isoVersion),"RECREATE");
+			}
 		}
 		else if(flag == 2)
 		{
 			fileIn  = TFile::Open(Form("%s/jpsilambda_%s_withsw_nonZeroTracks.root",
 			                           rootFolder,type));
-			fileOut = new TFile(Form("%s/jpsilambda_%ssig_iso%d_%s.root",
-			                         rootFolder,type,isoConf,isoVersion),"RECREATE");
+			if(!simFlag)
+			{
+				fileOut = new TFile(Form("%s/jpsilambda_%ssig_iso%d_%s.root",
+				                         rootFolder,type,isoConf,isoVersion),"RECREATE");
+			}
+			else
+			{
+				fileOut = new TFile(Form("%s/jpsilambda_%ssig_MCiso%d_%s.root",
+				                         rootFolder,type,isoConf,isoVersion),"RECREATE");
+			}
 		}
 	}
 	//end Data block
