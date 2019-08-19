@@ -9,3 +9,4 @@ dataset/*
 *.DS_Store
 *cxx*
 *~
+*icloud*
