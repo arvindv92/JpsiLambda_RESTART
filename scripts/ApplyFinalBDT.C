@@ -231,9 +231,9 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 		}
 		else
 		{
-			gSystem->Exec(Form("hadd -f %s/%s_cutoutks_LL.root "
-			                   "%s/%s_cutoutks_LL_nonZeroTracks.root %s/%s_cutoutks_LL_ZeroTracks.root ",
-			                   rootFolder,part,rootFolder,part,rootFolder,part));
+			// gSystem->Exec(Form("hadd -f %s/%s_cutoutks_LL.root "
+			//                    "%s/%s_cutoutks_LL_nonZeroTracks.root %s/%s_cutoutks_LL_ZeroTracks.root ",
+			//                    rootFolder,part,rootFolder,part,rootFolder,part));
 			fileIn  = TFile::Open(Form("%s/%s_cutoutks_%s.root",
 			                           rootFolder,part,type));
 			treeIn  = (TTree*)fileIn->Get("MyTuple");
