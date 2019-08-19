@@ -5,26 +5,27 @@
 ******************************************
 ******************************************
 ==> Starting Sanity: 
-Tue May 21 14:06:29 EDT 2019
+Mon Aug 12 15:12:10 EDT 2019
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
 ******************************************
 Input file = rootFiles/mcFiles/JpsiLambda/Lst1600/run1/lst1600_triggered.root
-LL Output file = rootFiles/mcFiles/JpsiLambda/Lst1600/run1/lst1600_sanity_LL_noPID.root
+LL Output file = rootFiles/mcFiles/JpsiLambda/Lst1600/run1/lst1600_sanity_LL.root
 ******************************************
 Incoming entries = 129342
 I am making the following sanity cuts, and then separating in LL and DD files. Sit tight
 OBJ: TCut	CUT	(Lb_TAU > 0)&&(L_TAU > 0)
 OBJ: TCut	CUT	(Lb_ConsLb_chi2/Lb_ConsLb_nDOF > 0 && Lb_ConsLb_chi2/Lb_ConsLb_nDOF < 50)
 OBJ: TCut	CUT	(Lb_ETA > 2 && Lb_ETA < 6 && Lb_PT < 20000)
+OBJ: TCut	CUT	(L_M > 1104 && L_M < 1129)
 0
 100000
-Outgoing LL entries = 89054
+Outgoing LL entries = 77548
 ******************************************
-LL Sanity cuts made with exclusive efficiency = 68.8516% +/- 0.128767 %
+LL Sanity cuts made with exclusive efficiency = 97.9297% +/- 0.0631361 %
 ******************************************
 Original generated number = 4176693
 ******************************************
-LL Sanity cuts made with inclusive efficiency = 2.13217% +/- 0.00706829 %
+LL Sanity cuts made with inclusive efficiency = 1.19255% +/- 0.00531149 %
 ******************************************
-==> Sanity is done! Mazel Tov!: Real time 0:01:09, CP time 68.400
+==> Sanity is done! Mazel Tov!: Real time 0:01:02, CP time 61.310

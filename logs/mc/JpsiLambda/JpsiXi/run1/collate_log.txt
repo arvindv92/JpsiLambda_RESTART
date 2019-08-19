@@ -1,0 +1,11 @@
+Collating MC for JpsiXirun 1
+WD = /data1/avenkate/JpsiLambda/massdump/mc/LooseLL
+hadd Target file: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_pidgen.root
+hadd compression setting for all ouput: 1
+hadd Source file 1: JpsiXi/2011_MagDown_pidgen.root
+hadd Source file 2: JpsiXi/2011_MagUp_pidgen.root
+hadd Source file 3: JpsiXi/2012_MagDown_pidgen.root
+hadd Source file 4: JpsiXi/2012_MagUp_pidgen.root
+hadd Target path: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_pidgen.root:/
+DONE COLLATING
+WD = /data1/avenkate/JpsiLambda_RESTART

@@ -1,14 +1,19 @@
 ******************************************
+******************************************
+******************************************
+******************************************
+******************************************
+******************************************
 ==> Starting Trigger: 
 WD = /data1/avenkate/JpsiLambda_RESTART
-Wed Apr 24 16:25:28 EDT 2019
+Mon Aug 12 15:10:33 EDT 2019
 ******************************************
 ******************************************
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
 ******************************************
-Input file = rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_BONN.root
-Output file = rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_BONN_triggered.root
+Input file = rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405.root
+Output file = rootFiles/mcFiles/JpsiLambda/Lst1405/run2/lst1405_triggered.root
 ******************************************
 Incoming entries = 123445
 I am making the following trigger cuts. Sit tight
@@ -22,4 +27,4 @@ Trigger cut made with exclusive efficiency = 77.3008% +/- 0.119223 %
 ******************************************
 Trigger cut made with inclusive efficiency = 2.75767% +/- 0.00880322 %
 ******************************************
-==> Trigger is done! Huzzah!: Real time 0:01:03, CP time 62.510
+==> Trigger is done! Huzzah!: Real time 0:01:07, CP time 65.840

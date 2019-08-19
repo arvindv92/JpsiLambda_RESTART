@@ -5,7 +5,7 @@
 ******************************************
 ******************************************
 ==> Starting CutOutKs: 
-Tue May 21 14:26:56 EDT 2019
+Mon Aug 12 17:39:05 EDT 2019
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
 ******************************************
@@ -16,11 +16,11 @@ WD = /data1/avenkate/JpsiLambda_RESTART
 Processing Run 1 LL MC type 10
 ******************************************
 ******************************************
-Input file = rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsiks_sanity_LL_noPID.root
-nonZeroTracks Output file = rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsiks_cutoutks_LL_nonZeroTracks_noPID.root
-ZeroTracks Output file = rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsiks_cutoutks_LL_ZeroTracks_noPID.root
+Input file = rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsiks_sanity_LL.root
+nonZeroTracks Output file = rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsiks_cutoutks_LL_nonZeroTracks.root
+ZeroTracks Output file = rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsiks_cutoutks_LL_ZeroTracks.root
 ******************************************
-Incoming entries = 302883
+Incoming entries = 202943
 Making LL file
 I am making the following cutoutks cuts only on events within 480-520 MeV in Lb_DTF_L_WMpipi_JpsiConstr. Events outside this window aren't cut on. Sit tight
 L_dm < 7.5
@@ -28,14 +28,13 @@ p_PIDp > 10
 0
 100000
 200000
-300000
-Outgoing Entries with nonZeroTracks = 223900
-Outgoing Entries with ZeroTracks = 5636
+Outgoing Entries with nonZeroTracks = 163839
+Outgoing Entries with ZeroTracks = 4618
 ******************************************
-LL CutOutKs cuts made with exclusive efficiency = 75.7837% +/- 0.0778402 %
+LL CutOutKs cuts made with exclusive efficiency = 100% +/- 0 %
 ******************************************
 Original generated number = 24304097
 ******************************************
-LL CutOutKs cuts made with inclusive efficiency = 0.944433% +/- 0.00196194 %
+LL CutOutKs cuts made with inclusive efficiency = 1.23436e-05% +/- 7.12658e-06 %
 ******************************************
-==> CutOutKs is done! Death to Ks0!: Real time 0:03:10, CP time 187.040
+==> CutOutKs is done! Death to Ks0!: Real time 0:01:58, CP time 113.610

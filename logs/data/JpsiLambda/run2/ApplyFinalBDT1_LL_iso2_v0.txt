@@ -184,4 +184,193 @@ Output file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_zeroTracksLL_FinalB
 Incoming Entries = 81301<FATAL>                          : <BookMVA> fatal error: unable to open input weight file: dataset/weights/TMVAClassification-JpsiLambdaLL_dataRun2_noIso_BDT1_noPID_BDTconf1.weights.xml
 ***> abort program execution
 Error in <TRint::HandleTermInput()>: std::runtime_error caught: FATAL error
-[0mroot [1] [0m
+[0mroot [1] [0m******************************************
+******************************************
+******************************************
+******************************************
+******************************************
+Starting ApplyFinalBDT 
+Sun Aug 11 19:17:50 EDT 2019
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+Processing Run 2 LL Data0
+******************************************
+******************************************
+Input file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL_nonZeroTracks.root
+Output file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_LL_FinalBDT1_iso2_v0.root
+******************************************
+Incoming Entries = 5047915                         : Booking "BDT method" of type "CrossValidation" from dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1.weights.xml.
+                         : Reading weight file: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1.weights.xml
+<HEADER> DataSetInfo              : [Default] : Added class "Signal"
+<HEADER> DataSetInfo              : [Default] : Added class "Background"
+                         : Reading weightfile: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1_fold1.weights.xml
+                         : Reading weight file: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1_fold1.weights.xml
+                         : Reading weightfile: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1_fold2.weights.xml
+                         : Reading weight file: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1_fold2.weights.xml
+                         : Reading weightfile: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1_fold3.weights.xml
+                         : Reading weight file: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1_fold3.weights.xml
+                         : Reading weightfile: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1_fold4.weights.xml
+                         : Reading weight file: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1_fold4.weights.xml
+                         : Reading weightfile: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1_fold5.weights.xml
+                         : Reading weight file: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1_fold5.weights.xml
+                         : Booked classifier "BDTconf1" of type: "CrossValidation"
+--- TMVAClassificationApp    : Using input file: rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL_nonZeroTracks.root
+--- Processing: 5047915 events
+--- ... Processing event: 0
+--- ... Processing event: 50000
+--- ... Processing event: 100000
+--- ... Processing event: 150000
+--- ... Processing event: 200000
+--- ... Processing event: 250000
+--- ... Processing event: 300000
+--- ... Processing event: 350000
+--- ... Processing event: 400000
+--- ... Processing event: 450000
+--- ... Processing event: 500000
+--- ... Processing event: 550000
+--- ... Processing event: 600000
+--- ... Processing event: 650000
+--- ... Processing event: 700000
+--- ... Processing event: 750000
+--- ... Processing event: 800000
+--- ... Processing event: 850000
+--- ... Processing event: 900000
+--- ... Processing event: 950000
+--- ... Processing event: 1000000
+--- ... Processing event: 1050000
+--- ... Processing event: 1100000
+--- ... Processing event: 1150000
+--- ... Processing event: 1200000
+--- ... Processing event: 1250000
+--- ... Processing event: 1300000
+--- ... Processing event: 1350000
+--- ... Processing event: 1400000
+--- ... Processing event: 1450000
+--- ... Processing event: 1500000
+--- ... Processing event: 1550000
+--- ... Processing event: 1600000
+--- ... Processing event: 1650000
+--- ... Processing event: 1700000
+--- ... Processing event: 1750000
+--- ... Processing event: 1800000
+--- ... Processing event: 1850000
+--- ... Processing event: 1900000
+--- ... Processing event: 1950000
+--- ... Processing event: 2000000
+--- ... Processing event: 2050000
+--- ... Processing event: 2100000
+--- ... Processing event: 2150000
+--- ... Processing event: 2200000
+--- ... Processing event: 2250000
+--- ... Processing event: 2300000
+--- ... Processing event: 2350000
+--- ... Processing event: 2400000
+--- ... Processing event: 2450000
+--- ... Processing event: 2500000
+--- ... Processing event: 2550000
+--- ... Processing event: 2600000
+--- ... Processing event: 2650000
+--- ... Processing event: 2700000
+--- ... Processing event: 2750000
+--- ... Processing event: 2800000
+--- ... Processing event: 2850000
+--- ... Processing event: 2900000
+--- ... Processing event: 2950000
+--- ... Processing event: 3000000
+--- ... Processing event: 3050000
+--- ... Processing event: 3100000
+--- ... Processing event: 3150000
+--- ... Processing event: 3200000
+--- ... Processing event: 3250000
+--- ... Processing event: 3300000
+--- ... Processing event: 3350000
+--- ... Processing event: 3400000
+--- ... Processing event: 3450000
+--- ... Processing event: 3500000
+--- ... Processing event: 3550000
+--- ... Processing event: 3600000
+--- ... Processing event: 3650000
+--- ... Processing event: 3700000
+--- ... Processing event: 3750000
+--- ... Processing event: 3800000
+--- ... Processing event: 3850000
+--- ... Processing event: 3900000
+--- ... Processing event: 3950000
+--- ... Processing event: 4000000
+--- ... Processing event: 4050000
+--- ... Processing event: 4100000
+--- ... Processing event: 4150000
+--- ... Processing event: 4200000
+--- ... Processing event: 4250000
+--- ... Processing event: 4300000
+--- ... Processing event: 4350000
+--- ... Processing event: 4400000
+--- ... Processing event: 4450000
+--- ... Processing event: 4500000
+--- ... Processing event: 4550000
+--- ... Processing event: 4600000
+--- ... Processing event: 4650000
+--- ... Processing event: 4700000
+--- ... Processing event: 4750000
+--- ... Processing event: 4800000
+--- ... Processing event: 4850000
+--- ... Processing event: 4900000
+--- ... Processing event: 4950000
+--- ... Processing event: 5000000
+--- End of event loop: --- Created root file: rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_LL_FinalBDT1_iso2_v0.root containing the MVA output histograms
+==> ApplyFinalBDT is done! Go optimize and fit!: Real time 0:09:35, CP time 411.140
+******************************************
+******************************************
+******************************************
+******************************************
+******************************************
+Starting ApplyFinalBDT 
+Sun Aug 11 19:27:28 EDT 2019
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+Processing Run 2 LL Data0sWeighted
+******************************************
+******************************************
+Input file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_LL_withsw_nonZeroTracks.root
+Output file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_LLsig_FinalBDT1_iso2_v0.root
+******************************************
+Incoming Entries = 933751                         : Booking "BDT method" of type "CrossValidation" from dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1.weights.xml.
+                         : Reading weight file: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1.weights.xml
+<HEADER> DataSetInfo              : [Default] : Added class "Signal"
+<HEADER> DataSetInfo              : [Default] : Added class "Background"
+                         : Reading weightfile: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1_fold1.weights.xml
+                         : Reading weight file: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1_fold1.weights.xml
+                         : Reading weightfile: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1_fold2.weights.xml
+                         : Reading weight file: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1_fold2.weights.xml
+                         : Reading weightfile: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1_fold3.weights.xml
+                         : Reading weight file: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1_fold3.weights.xml
+                         : Reading weightfile: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1_fold4.weights.xml
+                         : Reading weight file: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1_fold4.weights.xml
+                         : Reading weightfile: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1_fold5.weights.xml
+                         : Reading weight file: dataset/weights/CVdataRun2_iso2_v0_BDT1_BDTconf1_fold5.weights.xml
+                         : Booked classifier "BDTconf1" of type: "CrossValidation"
+--- TMVAClassificationApp    : Using input file: rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_LL_withsw_nonZeroTracks.root
+--- Processing: 933751 events
+--- ... Processing event: 0
+--- ... Processing event: 50000
+--- ... Processing event: 100000
+--- ... Processing event: 150000
+--- ... Processing event: 200000
+--- ... Processing event: 250000
+--- ... Processing event: 300000
+--- ... Processing event: 350000
+--- ... Processing event: 400000
+--- ... Processing event: 450000
+--- ... Processing event: 500000
+--- ... Processing event: 550000
+--- ... Processing event: 600000
+--- ... Processing event: 650000
+--- ... Processing event: 700000
+--- ... Processing event: 750000
+--- ... Processing event: 800000
+--- ... Processing event: 850000
+--- ... Processing event: 900000
+--- End of event loop: --- Created root file: rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_LLsig_FinalBDT1_iso2_v0.root containing the MVA output histograms
+==> ApplyFinalBDT is done! Go optimize and fit!: Real time 0:01:27, CP time 73.250

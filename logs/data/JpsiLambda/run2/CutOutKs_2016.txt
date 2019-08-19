@@ -1,6 +1,11 @@
 ******************************************
+******************************************
+******************************************
+******************************************
+******************************************
+******************************************
 ==> Starting CutOutKs: 
-Fri Apr 26 12:13:55 EDT 2019
+Wed Aug  7 17:31:09 EDT 2019
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
 ******************************************
@@ -11,11 +16,11 @@ WD = /data1/avenkate/JpsiLambda_RESTART
 Processing Run 2 YEAR 2016 LL Data0
 ******************************************
 ******************************************
-Input file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_sanity_LL_2016_noPID.root
-nonZeroTracks Output file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL_2016_nonZeroTracks_noPID.root
-ZeroTracks Output file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL_2016_ZeroTracks_noPID.root
+Input file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_sanity_LL_2016.root
+nonZeroTracks Output file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL_2016_nonZeroTracks.root
+ZeroTracks Output file = rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL_2016_ZeroTracks.root
 ******************************************
-Incoming entries = 3056656
+Incoming entries = 1968648
 Making LL file
 I am making the following cutoutks cuts only on events within 480-520 MeV in Lb_DTF_L_WMpipi_JpsiConstr. Events outside this window aren't cut on. Sit tight
 L_dm < 7.5
@@ -40,17 +45,6 @@ p_PIDp > 10
 1700000
 1800000
 1900000
-2000000
-2100000
-2200000
-2300000
-2400000
-2500000
-2600000
-2700000
-2800000
-2900000
-3000000
-Outgoing Entries with nonZeroTracks = 2408932
-Outgoing Entries with ZeroTracks = 24161
-==> CutOutKs is done! Death to Ks0!: Real time 0:40:07, CP time 1850.110
+Outgoing Entries with nonZeroTracks = 1621929
+Outgoing Entries with ZeroTracks = 15358
+==> CutOutKs is done! Death to Ks0!: Real time 0:29:53, CP time 1272.730

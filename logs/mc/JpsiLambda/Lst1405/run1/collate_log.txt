@@ -1,0 +1,11 @@
+Collating MC for Lst1405run 1
+WD = /data1/avenkate/JpsiLambda/massdump/mc/LooseLL
+hadd Target file: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/Lst1405/run1/lst1405_pidgen.root
+hadd compression setting for all ouput: 1
+hadd Source file 1: Lst1405/2011_MagDown_pidgen.root
+hadd Source file 2: Lst1405/2011_MagUp_pidgen.root
+hadd Source file 3: Lst1405/2012_MagDown_pidgen.root
+hadd Source file 4: Lst1405/2012_MagUp_pidgen.root
+hadd Target path: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/Lst1405/run1/lst1405_pidgen.root:/
+DONE COLLATING
+WD = /data1/avenkate/JpsiLambda_RESTART

@@ -6,7 +6,7 @@
 ******************************************
 ==> Starting Trigger: 
 WD = /data1/avenkate/JpsiLambda_RESTART
-Tue May 21 13:55:43 EDT 2019
+Thu Aug 15 15:39:56 EDT 2019
 ******************************************
 ******************************************
 WD = /data1/avenkate/JpsiLambda_RESTART
@@ -26,4 +26,4 @@ Trigger cut made with exclusive efficiency = 77.1394% +/- 0.145924 %
 ******************************************
 Trigger cut made with inclusive efficiency = 1.87301% +/- 0.00734076 %
 ******************************************
-==> Trigger is done! Huzzah!: Real time 0:00:50, CP time 46.870
+==> Trigger is done! Huzzah!: Real time 0:00:43, CP time 42.780
