@@ -424,30 +424,36 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	reader->AddSpectator("runNumber", &runNo);
 	reader->AddSpectator("ntracks", &ntracks);
 
-	reader->AddVariable("log_dtfchi2         := log10(Lb_ConsLb_chi2)", &log_dtfChi2);
-	reader->AddVariable("log_lbminipchi2     := log10(Lb_MINIPCHI2)", &log_lbMinIpChi2);
-	reader->AddVariable("logacos_lbdira      := log10(acos(Lb_DIRA_OWNPV))", &logAcos_lbDira_ownPV);
-	reader->AddVariable("log_lbfd_ownpv      := log10(Lb_FD_OWNPV)", &log_lbFd_ownPV);
+	reader->AddVariable("log_dtfchi2     := log10(Lb_ConsLb_chi2)", &log_dtfChi2);
+	reader->AddVariable("log_lbminipchi2 := log10(Lb_MINIPCHI2)", &log_lbMinIpChi2);
+	reader->AddVariable("logacos_lbdira  := log10(acos(Lb_DIRA_OWNPV))", &logAcos_lbDira_ownPV);
+	reader->AddVariable("log_lbfd_ownpv  := log10(Lb_FD_OWNPV)", &log_lbFd_ownPV);
 
-	reader->AddVariable("log_jpsiminipchi2   := log10(Jpsi_MINIPCHI2)", &log_jpsiMinIpChi2);
-	reader->AddVariable("log_jpsimass        := log10(Jpsi_M)", &log_jpsiMass);
+	reader->AddVariable("log_jpsiminipchi2 := log10(Jpsi_MINIPCHI2)", &log_jpsiMinIpChi2);
+	reader->AddVariable("log_jpsimass      := log10(Jpsi_M)", &log_jpsiMass);
 
 	reader->AddVariable("log_lfdchi2         := log10(L_FDCHI2_ORIVX)", &log_lFdChi2_orivX);
 	reader->AddVariable("logacos_ldira_orivx := log10(acos(L_DIRA_ORIVX))", &logAcos_lDira_orivX);
 	reader->AddVariable("log_lfd_orivx       := log10(L_FD_ORIVX)", &log_lFd_orivX);
 	reader->AddVariable("logacos_ldira_ownpv := log10(acos(L_DIRA_OWNPV))", &logAcos_lDira_ownPV);
 	reader->AddVariable("L_dm", &l_dm);
-	reader->AddVariable("log_lminipchi2      := log10(L_MINIPCHI2)", &log_lMinIpChi2);
+	reader->AddVariable("log_lminipchi2 := log10(L_MINIPCHI2)", &log_lMinIpChi2);
 	reader->AddVariable("L_ENDVERTEX_CHI2",&l_EndVtx_Chi2);
 
-	reader->AddVariable("log_pminipchi2      := log10(p_MINIPCHI2)", &log_pMinIpChi2);
+	reader->AddVariable("log_pminipchi2 := log10(p_MINIPCHI2)", &log_pMinIpChi2);
 	reader->AddVariable("p_ProbNNghost", &p_ghostProbNN);
-	reader->AddVariable("log_p_PT            := log10(p_PT)", &log_p_pt);
-	reader->AddVariable("p_ProbNNp", &p_ProbNNp);
-
+	reader->AddVariable("log_p_PT := log10(p_PT)", &log_p_pt);
+	if(!simFlag)
+	{
+		reader->AddVariable("p_ProbNNp", &p_ProbNNp);
+	}
+	else
+	{
+		reader->AddVariable("p_ProbNNp_corr", &p_ProbNNp);
+	}
 	reader->AddVariable("pi_ProbNNghost", &pi_ghostProbNN);
-	reader->AddVariable("log_piminipchi2     := log10(pi_MINIPCHI2)", &log_piMinIpChi2);
-	reader->AddVariable("log_pi_PT           := log10(pi_PT)", &log_pi_pt);
+	reader->AddVariable("log_piminipchi2 := log10(pi_MINIPCHI2)", &log_piMinIpChi2);
+	reader->AddVariable("log_pi_PT       := log10(pi_PT)", &log_pi_pt);
 
 	if(isoFlag && !zeroFlag)
 	{

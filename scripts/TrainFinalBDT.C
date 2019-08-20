@@ -158,8 +158,14 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	dataLoader->AddVariable("log_pminipchi2 := log10(p_MINIPCHI2)",'F');
 	dataLoader->AddVariable("p_ProbNNghost",'F');
 	dataLoader->AddVariable("log_p_PT := log10(p_PT)",'F');
-	dataLoader->AddVariable("p_ProbNNp",'F');
-
+	if(!simFlag)
+	{
+		dataLoader->AddVariable("p_ProbNNp",'F');
+	}
+	else
+	{
+		dataLoader->AddVariable("p_ProbNNp_corr",'F');
+	}
 	dataLoader->AddVariable("pi_ProbNNghost",'F');
 	dataLoader->AddVariable("log_piminipchi2 := log10(pi_MINIPCHI2)",'F');
 	dataLoader->AddVariable("log_pi_PT := log10(pi_PT)",'F');
@@ -212,10 +218,17 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 			                                  MCrootFolder,type,isoConf,isoVersion));//This is the isolation applied to sWeighted data
 			treeIn_iso_sig = (TTree*)input_iso_sig->Get("MyTuple");
 
-			input_bkg      = TFile::Open(Form("%s/jpsilambda_%s_withsw_nonZeroTracks.root",
+			// input_bkg      = TFile::Open(Form("%s/jpsilambda_%s_withsw_nonZeroTracks.root",
+			//                                   rootFolder,type),"READ");
+			// treeIn_bkg     = (TTree*)input_bkg->Get("MyTuple");
+			// input_iso_bkg  = TFile::Open(Form("%s/jpsilambda_%ssig_iso%d_%s.root",
+			//                                   rootFolder,type,isoConf,isoVersion));//This is the isolation applied to sWeighted data
+			// treeIn_iso_bkg = (TTree*)input_iso_bkg->Get("MyTuple");
+
+			input_bkg      = TFile::Open(Form("%s/jpsilambda_cutoutks_%s_nonZeroTracks.root",
 			                                  rootFolder,type),"READ");
 			treeIn_bkg     = (TTree*)input_bkg->Get("MyTuple");
-			input_iso_bkg  = TFile::Open(Form("%s/jpsilambda_%ssig_iso%d_%s.root",
+			input_iso_bkg  = TFile::Open(Form("%s/jpsilambda_%s_iso%d_%s.root",
 			                                  rootFolder,type,isoConf,isoVersion));//This is the isolation applied to sWeighted data
 			treeIn_iso_bkg = (TTree*)input_iso_bkg->Get("MyTuple");
 		}
@@ -225,7 +238,10 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 			                                  MCrootFolder,type),"READ");
 			treeIn_sig     = (TTree*)input_sig->Get("MyTuple");
 
-			input_bkg      = TFile::Open(Form("%s/jpsilambda_%s_withsw.root",
+			// input_bkg      = TFile::Open(Form("%s/jpsilambda_%s_withsw.root",
+			//                                   rootFolder,type),"READ");
+			// treeIn_bkg     = (TTree*)input_bkg->Get("MyTuple");
+			input_bkg      = TFile::Open(Form("%s/jpsilambda_cutoutks_%s.root",
 			                                  rootFolder,type),"READ");
 			treeIn_bkg     = (TTree*)input_bkg->Get("MyTuple");
 		}
@@ -241,13 +257,9 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		treeIn->SetBranchStatus("Lb_MINIPCHI2",1);
 		treeIn->SetBranchStatus("Lb_DIRA_OWNPV",1);
 		treeIn->SetBranchStatus("Lb_FD_OWNPV",1);
-		//	treeIn->SetBranchStatus("Lb_DTF_CTAUS_L",1);
-		// treeIn->SetBranchStatus("L_TAU",1);
 
 		treeIn->SetBranchStatus("Jpsi_MINIPCHI2",1);
 		treeIn->SetBranchStatus("Jpsi_M",1);
-		// treeIn->SetBranchStatus("Jpsi_CosTheta",1);
-		// treeIn->SetBranchStatus("Jpsi_PT",1);
 
 		treeIn->SetBranchStatus("L_FDCHI2_ORIVX",1);
 		treeIn->SetBranchStatus("L_DIRA_ORIVX",1);
@@ -255,21 +267,16 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		treeIn->SetBranchStatus("L_DIRA_OWNPV",1);
 		treeIn->SetBranchStatus("L_dm",1);
 		treeIn->SetBranchStatus("L_MINIPCHI2",1);
-		// treeIn->SetBranchStatus("L_PT",1);
 		treeIn->SetBranchStatus("L_ENDVERTEX_CHI2",1);
-		// treeIn->SetBranchStatus("L_CosTheta",1);
 
-		//	treeIn->SetBranchStatus("p_PIDp",1);
 		treeIn->SetBranchStatus("p_MINIPCHI2",1);
 		treeIn->SetBranchStatus("p_ProbNNghost",1);
 		treeIn->SetBranchStatus("p_PT",1);
 		treeIn->SetBranchStatus("p_ProbNNp",1);
 
-		//	treeIn->SetBranchStatus("pi_PIDK",1);
 		treeIn->SetBranchStatus("pi_MINIPCHI2",1);
 		treeIn->SetBranchStatus("pi_ProbNNghost",1);
 		treeIn->SetBranchStatus("pi_PT",1);
-		// treeIn->SetBranchStatus("pi_ProbNNpi",1);
 
 		treeIn->SetBranchStatus("SW",1);
 		treeIn->SetBranchStatus("BW",1);
@@ -292,13 +299,9 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		treeIn_bkg->SetBranchStatus("Lb_MINIPCHI2",1);
 		treeIn_bkg->SetBranchStatus("Lb_DIRA_OWNPV",1);
 		treeIn_bkg->SetBranchStatus("Lb_FD_OWNPV",1);
-		//	treeIn_bkg->SetBranchStatus("Lb_DTF_CTAUS_L",1);
-		// treeIn_bkg->SetBranchStatus("L_TAU",1);
 
 		treeIn_bkg->SetBranchStatus("Jpsi_MINIPCHI2",1);
 		treeIn_bkg->SetBranchStatus("Jpsi_M",1);
-		// treeIn_bkg->SetBranchStatus("Jpsi_CosTheta",1);
-		// treeIn_bkg->SetBranchStatus("Jpsi_PT",1);
 
 		treeIn_bkg->SetBranchStatus("L_FDCHI2_ORIVX",1);
 		treeIn_bkg->SetBranchStatus("L_DIRA_ORIVX",1);
@@ -306,11 +309,8 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		treeIn_bkg->SetBranchStatus("L_DIRA_OWNPV",1);
 		treeIn_bkg->SetBranchStatus("L_dm",1);
 		treeIn_bkg->SetBranchStatus("L_MINIPCHI2",1);
-		// treeIn_bkg->SetBranchStatus("L_PT",1);
 		treeIn_bkg->SetBranchStatus("L_ENDVERTEX_CHI2",1);
-		// treeIn_bkg->SetBranchStatus("L_CosTheta",1);
 
-		//	treeIn_bkg->SetBranchStatus("p_PIDp",1);
 		treeIn_bkg->SetBranchStatus("p_MINIPCHI2",1);
 		treeIn_bkg->SetBranchStatus("p_ProbNNghost",1);
 		treeIn_bkg->SetBranchStatus("p_PT",1);
@@ -345,7 +345,7 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		treeIn_sig->SetBranchStatus("p_MINIPCHI2",1);
 		treeIn_sig->SetBranchStatus("p_ProbNNghost",1);
 		treeIn_sig->SetBranchStatus("p_PT",1);
-		treeIn_sig->SetBranchStatus("p_ProbNNp",1);
+		treeIn_sig->SetBranchStatus("p_ProbNNp_corr",1);
 
 		treeIn_sig->SetBranchStatus("pi_MINIPCHI2",1);
 		treeIn_sig->SetBranchStatus("pi_ProbNNghost",1);
