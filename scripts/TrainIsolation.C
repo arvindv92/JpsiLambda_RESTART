@@ -135,14 +135,12 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	sigTree = (TTree*)input_sig->Get("MyTuple");
 	bkgTree = (TTree*)input_bkg->Get("MyTuple");
 
-	cout<<"poop1"<<endl;
 	sigTree->SetBranchStatus("*",0);
 	sigTree->SetBranchStatus("psi_1S_H_MINIPCHI2",1);
 	sigTree->SetBranchStatus("psi_1S_H_IPCHI2_NEW",1);
 	sigTree->SetBranchStatus("psi_1S_H_VERTEXCHI2_NEW",1);
 	sigTree->SetBranchStatus("eventNumber",1);
 
-	cout<<"poop2"<<endl;
 	bkgTree->SetBranchStatus("*",0);
 	bkgTree->SetBranchStatus("MINIPCHI2",1);
 	bkgTree->SetBranchStatus("IPCHI2",1);
@@ -165,6 +163,13 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	}
 	bkgTree->SetBranchStatus("SW",1);
 
+	TTree *sigTree_TM = nullptr;
+	if(simFlag)
+	{
+		TFile *tempFile_sig = new TFile("tempFile_sig.root","RECREATE");
+		sigTree_TM = (TTree*)sigTree->CopyTree("(Lb_BKGCAT==0||Lb_BKGCAT==50)");
+	}
+
 	if(!simFlag)
 	{
 		dataLoader->AddSignalTree(sigTree,1.0);
@@ -172,7 +177,7 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	}
 	else
 	{
-		dataLoader->AddSignalTree(sigTree,1.0);
+		dataLoader->AddSignalTree(sigTree_TM,1.0);
 		dataLoader->SetSignalWeightExpression("GB_WT");
 	}
 	dataLoader->AddBackgroundTree(bkgTree,1.0);
@@ -182,9 +187,12 @@ void TrainIsolation(Int_t run, Int_t trackType,
 
 	if(simFlag)
 	{
-		myCutS = myCutS && "(Lb_BKGCAT==0||Lb_BKGCAT=50)";
+		nEntries_S = sigTree_TM->GetEntries(myCutS);
 	}
-	nEntries_S = sigTree->GetEntries(myCutS);
+	else
+	{
+		nEntries_S = sigTree->GetEntries(myCutS);
+	}
 	nEntries_B = bkgTree->GetEntries(myCutB);
 
 	Int_t nTrain_S = (Int_t)nEntries_S*0.8;// 80/20 split

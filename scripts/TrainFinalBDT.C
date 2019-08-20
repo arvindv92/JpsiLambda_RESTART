@@ -132,21 +132,21 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	dataLoader->AddSpectator("runNumber", 'I');
 	dataLoader->AddSpectator("ntracks", 'I');
 
-	dataLoader->AddVariable("log_dtfchi2     := log10(Lb_ConsLb_chi2)",'F');
+	dataLoader->AddVariable("log_dtfchi2 := log10(Lb_ConsLb_chi2)",'F');
 	dataLoader->AddVariable("log_lbminipchi2 := log10(Lb_MINIPCHI2)",'F');
-	dataLoader->AddVariable("logacos_lbdira  := log10(acos(Lb_DIRA_OWNPV))",'F');
-	dataLoader->AddVariable("log_lbfd_ownpv  := log10(Lb_FD_OWNPV)",'F');
-	//	dataLoader->AddVariable("log_ltau        := log10(L_TAU)",'F');
+	dataLoader->AddVariable("logacos_lbdira := log10(acos(Lb_DIRA_OWNPV))",'F');
+	dataLoader->AddVariable("log_lbfd_ownpv := log10(Lb_FD_OWNPV)",'F');
+	//	dataLoader->AddVariable("log_ltau := log10(L_TAU)",'F');
 	//dataLoader->AddVariable("Lb_DTF_CTAUS_L",'F');
 
 	dataLoader->AddVariable("log_jpsiminipchi2 := log10(Jpsi_MINIPCHI2)",'F');
-	dataLoader->AddVariable("log_jpsimass      := log10(Jpsi_M)",'F');
+	dataLoader->AddVariable("log_jpsimass := log10(Jpsi_M)",'F');
 	//	dataLoader->AddVariable("Jpsi_CosTheta",'F');
 	//	dataLoader->AddVariable("Jpsi_PT",'F');
 
-	dataLoader->AddVariable("log_lfdchi2         := log10(L_FDCHI2_ORIVX)",'F');
+	dataLoader->AddVariable("log_lfdchi2 := log10(L_FDCHI2_ORIVX)",'F');
 	dataLoader->AddVariable("logacos_ldira_orivx := log10(acos(L_DIRA_ORIVX))",'F');
-	dataLoader->AddVariable("log_lfd_orivx       := log10(L_FD_ORIVX)",'F');
+	dataLoader->AddVariable("log_lfd_orivx := log10(L_FD_ORIVX)",'F');
 	dataLoader->AddVariable("logacos_ldira_ownpv := log10(acos(L_DIRA_OWNPV))",'F');
 	dataLoader->AddVariable("L_dm",'F');
 	dataLoader->AddVariable("log_lminipchi2 := log10(L_MINIPCHI2)",'F');
@@ -155,14 +155,14 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 
 	//	dataLoader->AddVariable("L_CosTheta",'F');
 
-	dataLoader->AddVariable("log_pminipchi2      := log10(p_MINIPCHI2)",'F');
+	dataLoader->AddVariable("log_pminipchi2 := log10(p_MINIPCHI2)",'F');
 	dataLoader->AddVariable("p_ProbNNghost",'F');
-	dataLoader->AddVariable("log_p_PT            := log10(p_PT)",'F');
+	dataLoader->AddVariable("log_p_PT := log10(p_PT)",'F');
 	dataLoader->AddVariable("p_ProbNNp",'F');
 
 	dataLoader->AddVariable("pi_ProbNNghost",'F');
-	dataLoader->AddVariable("log_piminipchi2     := log10(pi_MINIPCHI2)",'F');
-	dataLoader->AddVariable("log_pi_PT           := log10(pi_PT)",'F');
+	dataLoader->AddVariable("log_piminipchi2 := log10(pi_MINIPCHI2)",'F');
+	dataLoader->AddVariable("log_pi_PT := log10(pi_PT)",'F');
 
 	if(isoFlag) dataLoader->AddVariable(Form("BDTkMin_%s",isoVersion),'F');
 
@@ -316,11 +316,9 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		treeIn_bkg->SetBranchStatus("p_PT",1);
 		treeIn_bkg->SetBranchStatus("p_ProbNNp",1);
 
-		//	treeIn_bkg->SetBranchStatus("pi_PIDK",1);
 		treeIn_bkg->SetBranchStatus("pi_MINIPCHI2",1);
 		treeIn_bkg->SetBranchStatus("pi_ProbNNghost",1);
 		treeIn_bkg->SetBranchStatus("pi_PT",1);
-		// treeIn_bkg->SetBranchStatus("pi_ProbNNpi",1);
 
 		treeIn_bkg->SetBranchStatus("eventNumber",1);
 		treeIn_bkg->SetBranchStatus("runNumber",1);
@@ -332,13 +330,9 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		treeIn_sig->SetBranchStatus("Lb_MINIPCHI2",1);
 		treeIn_sig->SetBranchStatus("Lb_DIRA_OWNPV",1);
 		treeIn_sig->SetBranchStatus("Lb_FD_OWNPV",1);
-		//	treeIn_sig->SetBranchStatus("Lb_DTF_CTAUS_L",1);
-		// treeIn_sig->SetBranchStatus("L_TAU",1);
 
 		treeIn_sig->SetBranchStatus("Jpsi_MINIPCHI2",1);
 		treeIn_sig->SetBranchStatus("Jpsi_M",1);
-		// treeIn_sig->SetBranchStatus("Jpsi_CosTheta",1);
-		// treeIn_sig->SetBranchStatus("Jpsi_PT",1);
 
 		treeIn_sig->SetBranchStatus("L_FDCHI2_ORIVX",1);
 		treeIn_sig->SetBranchStatus("L_DIRA_ORIVX",1);
@@ -346,21 +340,16 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		treeIn_sig->SetBranchStatus("L_DIRA_OWNPV",1);
 		treeIn_sig->SetBranchStatus("L_dm",1);
 		treeIn_sig->SetBranchStatus("L_MINIPCHI2",1);
-		// treeIn_sig->SetBranchStatus("L_PT",1);
 		treeIn_sig->SetBranchStatus("L_ENDVERTEX_CHI2",1);
-		// treeIn_sig->SetBranchStatus("L_CosTheta",1);
 
-		//	treeIn_sig->SetBranchStatus("p_PIDp",1);
 		treeIn_sig->SetBranchStatus("p_MINIPCHI2",1);
 		treeIn_sig->SetBranchStatus("p_ProbNNghost",1);
 		treeIn_sig->SetBranchStatus("p_PT",1);
 		treeIn_sig->SetBranchStatus("p_ProbNNp",1);
 
-		//	treeIn_sig->SetBranchStatus("pi_PIDK",1);
 		treeIn_sig->SetBranchStatus("pi_MINIPCHI2",1);
 		treeIn_sig->SetBranchStatus("pi_ProbNNghost",1);
 		treeIn_sig->SetBranchStatus("pi_PT",1);
-		// treeIn_sig->SetBranchStatus("pi_ProbNNpi",1);
 
 		treeIn_sig->SetBranchStatus("GB_WT",1);
 		treeIn_sig->SetBranchStatus("Lb_BKGCAT",1);
@@ -376,6 +365,12 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 		}
 
 	}
+	TTree *treeIn_sig_TM = nullptr;
+	if(simFlag)
+	{
+		TFile *tempFile_sig = new TFile("tempFile_sig.root","RECREATE");
+		treeIn_sig_TM = (TTree*)treeIn_sig->CopyTree("(Lb_BKGCAT==0||Lb_BKGCAT==50)");
+	}
 	signalCut = "";
 	bkgCut    = "";
 
@@ -386,7 +381,7 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	}
 	else
 	{
-		dataLoader->SetSignalTree(treeIn_sig);
+		dataLoader->SetSignalTree(treeIn_sig_TM);
 		dataLoader->SetBackgroundTree(treeIn_bkg);
 		dataLoader->SetSignalWeightExpression("GB_WT");
 	}
@@ -413,8 +408,7 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 
 	if(simFlag)
 	{
-		myCutS = myCutS && "(Lb_BKGCAT==0||Lb_BKGCAT==50)";
-		nEntries_S = treeIn_sig->GetEntries(myCutS);
+		nEntries_S = treeIn_sig_TM->GetEntries(myCutS);
 		nEntries_B = treeIn_bkg->GetEntries(myCutB);
 	}
 	else
