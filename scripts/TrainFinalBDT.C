@@ -397,7 +397,7 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 	          "pi_PT > 0";
 
 	myCutS = baseCut;//removed M < 5700 cut as it was not helping
-	myCutB = baseCut && "Lb_DTF_M_JpsiLConstr > 5700 && "
+	myCutB = baseCut && "Lb_DTF_M_JpsiLConstr > 5700 && Lb_DTF_M_JpsiLConstr < 6000"
 	         "!(Lb_DTF_M_JpsiLConstr>5770 && Lb_DTF_M_JpsiLConstr<5810)";//cutting out portion where Xib0->J/psi Lambda hides
 
 	if(isoFlag)
