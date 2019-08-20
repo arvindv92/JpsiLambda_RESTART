@@ -330,6 +330,11 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 		treeOut_nonZero->SetAlias("GHOSTPROB","Added_H_GHOST");
 		treeOut_nonZero->SetAlias("TRACKCHI2DOF","Added_H_TRACKCHI2");
 	}
+	else
+	{
+		treeOut_nonZero->SetAlias("p_ProbNNp_corr","p_ProbNNp");
+		treeOut_Zero->SetAlias("p_ProbNNp_corr","p_ProbNNp");
+	}
 	fileOut_nonZero->Write();
 	fileOut_nonZero->Close();
 
