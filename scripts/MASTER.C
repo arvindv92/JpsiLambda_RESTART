@@ -256,7 +256,7 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 			{
 				//****ALL THIS STUFF IN THIS BLOCK IS INDEPENDENT OF ISOLATION. ONLY NEEDS TO BE EXECUTED TWICE. ONCE FOR EACH BDT CONF*******
 
-				if((isData && !simFlag) || (!isData && simFlag))
+				if((isData && !simFlag) || (!isData && simFlag && mcType == 1))
 				{
 					// cout<<"*****Hadding nonZero and Zero sPlot files"<<endl;
 					// gSystem->cd(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/"
@@ -293,7 +293,7 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 			}
 			else if(block == 3)
 			{
-				if((isData && !simFlag) || (!isData && simFlag))
+				if((isData && !simFlag) || (!isData && simFlag && mcType == 1))
 				{
 					// Train Isolation BDT on nonZeroTracks data/MC. 2 configs train separately,
 					cout<<"***TrainIsolation run "<<run<<" isoVersion "<<isoVersion<<" isoConf "<<isoConf<<"***"<<endl;
@@ -320,7 +320,7 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 			}
 			else if(block == 4)
 			{
-				if(isoFlag && ((isData && !simFlag) || (!isData && simFlag)))
+				if(isoFlag && ((isData && !simFlag) || (!isData && simFlag && mcType == 1)))
 				{
 					//Train Final BDT on data w/ isolation. 2 configs. Train separately.
 					cout<<"***TrainFinalBDT nonZeroTracks run "<<run<<" isoVersion "<<isoVersion<<
