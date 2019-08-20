@@ -73,7 +73,7 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 	Bool_t loose    = true;// when true, analysis will run over data/MC from "loose" stripping line. Only LL
 	Bool_t isoFlag  = true;// when true, isolation will be used in final BDT.
 	Bool_t logFlag  = true;// set to false only while testing.
-	Bool_t simFlag  = false;
+	Bool_t simFlag  = true;// set to true to train on simulation
 
 	Float_t bdtCut            = 0.0;
 	Float_t bdtCut_ZeroTracks = 0.0;
@@ -256,90 +256,97 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 			{
 				//****ALL THIS STUFF IN THIS BLOCK IS INDEPENDENT OF ISOLATION. ONLY NEEDS TO BE EXECUTED TWICE. ONCE FOR EACH BDT CONF*******
 
-				if(isData)
+				if((isData && !simFlag) || (!isData && simFlag))
 				{
-					cout<<"*****Hadding nonZero and Zero sPlot files"<<endl;
-					gSystem->cd(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/"
-					                 "JpsiLambda/run%d/",run));
-					gSystem->Exec("hadd -f jpsilambda_LL_withsw.root jpsilambda_LL_withsw_nonZeroTracks.root jpsilambda_LL_withsw_ZeroTracks.root ");
-					gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts/");
+					// cout<<"*****Hadding nonZero and Zero sPlot files"<<endl;
+					// gSystem->cd(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/"
+					//                  "JpsiLambda/run%d/",run));
+					// gSystem->Exec("hadd -f jpsilambda_LL_withsw.root jpsilambda_LL_withsw_nonZeroTracks.root jpsilambda_LL_withsw_ZeroTracks.root ");
+					// gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts/");
 
-					//Train Final BDT on data sans isolation
+					//Train noIso Final BDT on data/MC sans isolation
 					cout<<"***TrainFinalBDT ZeroTracks run "<<run<<"finalBDTconf "<<finalBDTconf<<" ***"<<endl;
-
-					//                                                isoFlag
-					//					TrainFinalBDT(run, trackType, isoVersion, isoConf, false, finalBDTconf, logFlag, simFlag);
-					gSystem->Exec(Form("root -l -b -q \'TrainFinalBDT.C(%d,%d,\"%s\",%d,false,%d,%d,%d)\'",run, trackType, isoVersion, isoConf, finalBDTconf, logFlag, simFlag));
+					Bool_t isoFlag_temp = false;
+					gSystem->Exec(Form("root -l -b -q \'TrainFinalBDT.C(%d,%d,\"%s\",%d,%d,%d,%d,%d)\'",
+					                   run, trackType, isoVersion, isoConf, isoFlag_temp, finalBDTconf, logFlag, simFlag));
 				}
 
-				//Apply final BDT on zeroTracks data/MC
+				//Apply noIso final BDT on zeroTracks data/MC
 				cout<<"***ApplyFinalBDT all ZeroTracks run "<<run<<" finalBDTconf "<<
 				        finalBDTconf<<" ***"<<endl;
-				//				ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 1, isoFlag, true, logFlag, simFlag);
-				gSystem->Exec(Form("root -l -b -q \'ApplyFinalBDT.C(%d,%d,%d,%d,\"%s\",%d,%d,1,%d,true,%d,%d)\'",run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, isoFlag, logFlag, simFlag));
+				Int_t flag = 1;
+				Bool_t zeroFlag = true;//these 2 flags make it apply on all zeroTracks data
+
+				gSystem->Exec(Form("root -l -b -q \'ApplyFinalBDT.C(%d,%d,%d,%d,\"%s\",%d,%d,%d,%d,%d,%d,%d)\'",
+				                   run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf,flag,isoFlag, zeroFlag, logFlag, simFlag));
 				if(isData)
 				{
 					//Apply final BDT on ZeroTracks sWeighted data
 					cout<<"***ApplyFinalBDT sWeight ZeroTracks run "<<run<<" isoVersion "<<
 					        isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
 					        finalBDTconf<<"***"<<endl;
-					//					ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 2, isoFlag, true, logFlag, simFlag);
-					gSystem->Exec(Form("root -l -b -q \'ApplyFinalBDT.C(%d,%d,%d,%d,\"%s\",%d,%d,2,%d,true,%d, %d)\'",run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, isoFlag, logFlag, simFlag));
+					flag = 2;// this makes it apply only on the sWeighted data sample
+					gSystem->Exec(Form("root -l -b -q \'ApplyFinalBDT.C(%d,%d,%d,%d,\"%s\",%d,%d,%d,%d,%d,%d,%d)\'",
+					                   run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf,flag,isoFlag, zeroFlag, logFlag, simFlag));
 				}
 				// ****************************************************************************************************************************
 			}
 			else if(block == 3)
 			{
-				if(isData)
+				if((isData && !simFlag) || (!isData && simFlag))
 				{
-					// Train Isolation BDT on nonZeroTracks data. 2 configs train separately,
+					// Train Isolation BDT on nonZeroTracks data/MC. 2 configs train separately,
 					cout<<"***TrainIsolation run "<<run<<" isoVersion "<<isoVersion<<" isoConf "<<isoConf<<"***"<<endl;
-					//					TrainIsolation(run, trackType, isoVersion, isoConf, logFlag, simFlag);
-					gSystem->Exec(Form("root -l -b -q \'TrainIsolation.C(%d,%d,\"%s\",%d,%d,%d)\'",run, trackType, isoVersion, isoConf, logFlag, simFlag));
+					gSystem->Exec(Form("root -l -b -q \'TrainIsolation.C(%d,%d,\"%s\",%d,%d,%d)\'",
+					                   run, trackType, isoVersion, isoConf, logFlag, simFlag));
 				}
 
+				Int_t flag = 1;//apply on all nonZeroTracks data/MC
 				// Apply isolation BDT on nonZeroTracks data/MC
 				cout<<"***ApplyIsolation on nonZeroTracks  data/MC run "<<run<<" isoVersion "<<isoVersion<<
 				        " isoConf "<<isoConf<<"***"<<endl;
-				//				ApplyIsolation(run, isData, mcType, trackType, 1, isoVersion, isoConf, logFlag, simFlag);
-				gSystem->Exec(Form("root -l -q -b \'ApplyIsolation.C(%d,%d,%d,%d,1,\"%s\",%d,%d, %d)\'",run, isData, mcType, trackType, isoVersion, isoConf, logFlag, simFlag));
+				gSystem->Exec(Form("root -l -q -b \'ApplyIsolation.C(%d,%d,%d,%d,%d,\"%s\",%d,%d, %d)\'",
+				                   run, isData, mcType, trackType, flag, isoVersion, isoConf, logFlag, simFlag));
 
 				if(isData)
 				{
-					//Apply isolation BDT on nonZeroTracks Weighted data
+					//Apply isolation BDT on nonZeroTracks sWeighted data
 					cout<<"***ApplyIsolation sWeight data run "<<run<<" isoVersion "<<isoVersion<<
 					        " isoConf "<<isoConf<<"***"<<endl;
-					//					ApplyIsolation(run, isData, mcType, trackType, 2, isoVersion, isoConf, logFlag, simFlag);
-					gSystem->Exec(Form("root -l -q -b \'ApplyIsolation.C(%d,%d,%d,%d,2,\"%s\",%d,%d,%d)\'",run, isData, mcType, trackType, isoVersion, isoConf, logFlag, simFlag));
+					flag = 2; // apply on only sWeighted nonZeroTracks data
+					gSystem->Exec(Form("root -l -q -b \'ApplyIsolation.C(%d,%d,%d,%d,%d,\"%s\",%d,%d,%d)\'",
+					                   run, isData, mcType, trackType,flag, isoVersion, isoConf, logFlag, simFlag));
 				}
 			}
 			else if(block == 4)
 			{
-				if(isData && isoFlag)
+				if(isoFlag && ((isData && !simFlag) || (!isData && simFlag)))
 				{
 					//Train Final BDT on data w/ isolation. 2 configs. Train separately.
 					cout<<"***TrainFinalBDT nonZeroTracks run "<<run<<" isoVersion "<<isoVersion<<
 					        " isoConf "<<isoConf<<" ***"<<endl;
-
-					//                                                isoFlag
-					//					TrainFinalBDT(run, trackType, isoVersion, isoConf, true, finalBDTconf, logFlag, simFlag);
-					gSystem->Exec(Form("root -l -b -q \'TrainFinalBDT.C(%d,%d,\"%s\",%d,true,%d,%d,%d)\'",run, trackType, isoVersion, isoConf, finalBDTconf, logFlag, simFlag));
+					gSystem->Exec(Form("root -l -b -q \'TrainFinalBDT.C(%d,%d,\"%s\",%d,%d,%d,%d,%d)\'",
+					                   run, trackType, isoVersion, isoConf, isoFlag, finalBDTconf, logFlag, simFlag));
 				}
 
-				//Apply final BDT on nonZeroTracks data/MC
+				Int_t flag = 1;
+				Bool_t zeroFlag = false;
+
+				//Apply final BDT on nonZeroTracks data/MC (if isoFlag is true. otherwise will apply noIso BDT on ALL data)
 				cout<<"***ApplyFinalBDT all nonZeroTracks run "<<run<<"isoVersion "<<
 				        isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
 				        finalBDTconf<<" ***"<<endl;
-				//				ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 1, isoFlag, false, logFlag, simFlag);
-				gSystem->Exec(Form("root -l -b -q \'ApplyFinalBDT.C(%d,%d,%d,%d,\"%s\",%d,%d,1,%d,false,%d,%d)\'",run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, isoFlag, logFlag, simFlag));
+				gSystem->Exec(Form("root -l -b -q \'ApplyFinalBDT.C(%d,%d,%d,%d,\"%s\",%d,%d,%d,%d,%d,%d,%d)\'",
+				                   run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, flag, isoFlag, zeroFlag, logFlag, simFlag));
 				if(isData)
 				{
-					// Apply final BDT on nonZeroTracks sWeighted data
+					flag = 2;
+					// Apply final BDT on nonZeroTracks sWeighted data (if isoFlag is true. otherwise will apply noIso BDT on ALL sWeighted data)
 					cout<<"***ApplyFinalBDT sWeight nonZeroTracks run "<<run<<" isoVersion "<<
 					        isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
 					        finalBDTconf<<" ***"<<endl;
-					//					ApplyFinalBDT(run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, 2, isoFlag, false, logFlag, simFlag);
-					gSystem->Exec(Form("root -l -b -q \'ApplyFinalBDT.C(%d,%d,%d,%d,\"%s\",%d,%d,2,%d,false,%d, %d)\'",run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf, isoFlag, logFlag, simFlag));
+					gSystem->Exec(Form("root -l -b -q \'ApplyFinalBDT.C(%d,%d,%d,%d,\"%s\",%d,%d,%d,%d,%d,%d,%d)\'",
+					                   run, isData, mcType, trackType, isoVersion, isoConf, finalBDTconf,flag,isoFlag, zeroFlag, logFlag, simFlag));
 
 				}
 			}
@@ -351,7 +358,8 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 					cout<<"***OptimizeFinalBDT run "<<run<<" isoVersion "<<
 					        isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
 					        finalBDTconf<<" FOM "<<FOM<<" ***"<<endl;
-					gSystem->Exec(Form("root -l -b -q \'OptimizeFinalBDT.C(%d,\"%s\",%d,%d,%d,%d,\"%s\",\"sigma\")\'",run, isoVersion, isoConf,finalBDTconf, isoFlag, logFlag, FOM));
+					gSystem->Exec(Form("root -l -b -q \'OptimizeFinalBDT.C(%d,\"%s\",%d,%d,%d,%d,\"%s\",\"Sigma\")\'",
+					                   run, isoVersion, isoConf,finalBDTconf, isoFlag, logFlag, FOM));
 					// bdtCuts = OptimizeFinalBDT(run, isoVersion, isoConf,finalBDTconf, isoFlag, logFlag, FOM,"sigma");
 				}
 			}
