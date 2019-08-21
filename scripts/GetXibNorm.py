@@ -127,7 +127,7 @@ def GetNorm(run=1, isoFlag=False, isoVersion="v0", isoConf=1, finalBDTConf_nonZe
     else:
         fileIn = TFile(path + "jpsixi_cutoutks_LL.root")
         treeIn = fileIn.MyTuple
-        if simFlag:
+        if not simFlag:
             treeIn.AddFriend("MyTuple", path + "jpsixi_LL_FinalBDT"
                              + str(finalBDTConf_nonZero) + "_noIso.root")
         else:
