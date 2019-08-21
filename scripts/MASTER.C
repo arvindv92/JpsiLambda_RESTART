@@ -256,7 +256,7 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 			{
 				//****ALL THIS STUFF IN THIS BLOCK IS INDEPENDENT OF ISOLATION. ONLY NEEDS TO BE EXECUTED TWICE. ONCE FOR EACH BDT CONF*******
 
-				if((isData && !simFlag) || (!isData && simFlag && mcType == 1))
+				if((isData && !simFlag && isoFlag) || (!isData && simFlag && mcType == 1 && isoFlag))
 				{
 					// cout<<"*****Hadding nonZero and Zero sPlot files"<<endl;
 					// gSystem->cd(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/"
