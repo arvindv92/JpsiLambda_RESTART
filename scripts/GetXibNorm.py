@@ -5,7 +5,7 @@ from ROOT import TFile, gDirectory
 
 def GetNorm(run=1, isoFlag=False, isoVersion="v0", isoConf=1, finalBDTConf_nonZero=1,
             finalBDTConf_Zero=1, bdtCut_nonZero=-1.0, bdtCut_Zero=-1.0,
-            shift_trEff=0.0):
+            shift_trEff=0.0, simFlag=False):
     # (tau Xib-/tau Xib0)
     tauXibmin_tauXib0 = 1.087  # despite the name of the variable, this is (tau(Xib-)*B(Xi- -> Lambda pi-))/(tau(Xib0)*B(Xi0 -> Lambda pi0)
     err_tauXibmin_tauXib0 = 0.036
@@ -94,13 +94,20 @@ def GetNorm(run=1, isoFlag=False, isoVersion="v0", isoConf=1, finalBDTConf_nonZe
         nonZeroTracksTree = nonZeroTracksFile.MyTuple
         ZeroTracksTree = ZeroTracksFile.MyTuple
 
-        nonZeroTracksTree.AddFriend("MyTuple", path + "jpsixi_LL_FinalBDT"
-                                    + str(finalBDTConf_nonZero) + "_iso"
-                                    + str(isoConf) + "_" + isoVersion
-                                    + ".root")
-        ZeroTracksTree.AddFriend("MyTuple", path + "jpsixi_zeroTracksLL_FinalBDT"
-                                 + str(finalBDTConf_Zero) + ".root")
-
+        if simFlag:
+            nonZeroTracksTree.AddFriend("MyTuple", path + "jpsixi_LL_FinalBDT"
+                                        + str(finalBDTConf_nonZero) + "_iso"
+                                        + str(isoConf) + "_" + isoVersion
+                                        + ".root")
+            ZeroTracksTree.AddFriend("MyTuple", path + "jpsixi_zeroTracksLL_FinalBDT"
+                                     + str(finalBDTConf_Zero) + ".root")
+        else:
+            nonZeroTracksTree.AddFriend("MyTuple", path + "jpsixi_LL_MCFinalBDT"
+                                        + str(finalBDTConf_nonZero) + "_MCiso"
+                                        + str(isoConf) + "_" + isoVersion
+                                        + ".root")
+            ZeroTracksTree.AddFriend("MyTuple", path + "jpsixi_zeroTracksLL_MCFinalBDT"
+                                     + str(finalBDTConf_Zero) + ".root")
         num = nonZeroTracksTree.GetEntries("BDT" + str(finalBDTConf_nonZero) + ">"
                                            + str(bdtCut_nonZero))
         + ZeroTracksTree.GetEntries("BDT" + str(finalBDTConf_Zero)
@@ -120,8 +127,12 @@ def GetNorm(run=1, isoFlag=False, isoVersion="v0", isoConf=1, finalBDTConf_nonZe
     else:
         fileIn = TFile(path + "jpsixi_cutoutks_LL.root")
         treeIn = fileIn.MyTuple
-        treeIn.AddFriend("MyTuple", path + "jpsixi_LL_FinalBDT"
-                         + str(finalBDTConf_nonZero) + "_noIso.root")
+        if simFlag:
+            treeIn.AddFriend("MyTuple", path + "jpsixi_LL_FinalBDT"
+                             + str(finalBDTConf_nonZero) + "_noIso.root")
+        else:
+            treeIn.AddFriend("MyTuple", path + "jpsixi_LL_MCFinalBDT"
+                             + str(finalBDTConf_nonZero) + "_noIso.root")
         num = treeIn.GetEntries("BDT" + str(finalBDTConf_nonZero) + ">"
                                 + str(bdtCut_nonZero))
         treeIn.Draw("GB_WT>>h_noIso", "BDT"
@@ -129,6 +140,7 @@ def GetNorm(run=1, isoFlag=False, isoVersion="v0", isoConf=1, finalBDTConf_nonZe
                     + str(bdtCut_nonZero), "goff")
         h_noIso = gDirectory.Get("h_noIso")
         num_wt = h_noIso.GetEntries() * h_noIso.GetMean()
+
     xibEff_JpsiLambda_wt = (num_wt / den_wt)  # Weighted efficiency for Xib->JpsiLambda
 
     xibEff_JpsiLambda = (num / genYield)  # Unweighted efficiency for Xib->JpsiLambda
