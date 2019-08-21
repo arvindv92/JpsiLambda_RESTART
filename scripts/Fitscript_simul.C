@@ -7,7 +7,7 @@ using namespace RooStats;
 #define Open TFile::Open
 
 void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t myLow, Int_t myHigh, Int_t Lst1405_rwtype,
-                     Int_t bkgType, Int_t sigType, Float_t loosen, const char* fileName,
+                     Int_t bkgType, Int_t sigType, Float_t loosen, const char* fileName, Bool_t simFlag,
                      const char* suffix, Bool_t mcRW)
 //myLow and myHigh define the fit range
 //rwType 0 is no RW, 1 is MV RW, 2 is BONN RW
@@ -19,30 +19,62 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	const char* sigPDF = (sigType == 0) ? "Hypatia" : "CB";
 	const char* bkgPDF = (bkgType == 0) ? "Expo" : ( (bkgType == 1) ? "Cheby2" : "Cheby3" );
 
-	if(isoFlag)
+	if(!simFlag)
 	{
-		if(mcRW && logFlag)
+		if(isoFlag)
 		{
-			gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d.txt",
-			                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
+			if(mcRW && logFlag)
+			{
+				gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d.txt",
+				                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
+			}
+			else if(!mcRW && logFlag)
+			{
+				gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noRW.txt",
+				                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
+			}
 		}
-		else if(!mcRW && logFlag)
+		else
 		{
-			gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noRW.txt",
-			                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
+			if(mcRW && logFlag)
+			{
+				gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noIso.txt",
+				                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
+			}
+			else if(!mcRW && logFlag)
+			{
+				gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noRW_noIso.txt",
+				                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
+			}
 		}
 	}
 	else
 	{
-		if(mcRW && logFlag)
+		if(isoFlag)
 		{
-			gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noIso.txt",
-			                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
+			if(mcRW && logFlag)
+			{
+				gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_MC.txt",
+				                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
+			}
+			else if(!mcRW && logFlag)
+			{
+				gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noRW_MC.txt",
+				                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
+			}
 		}
-		else if(!mcRW && logFlag)
+		else
 		{
-			gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noRW_noIso.txt",
-			                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
+			if(mcRW && logFlag)
+			{
+				gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noIso_MC.txt",
+				                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
+			}
+			else if(!mcRW && logFlag)
+			{
+				gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noRW_noIso_MC.txt",
+				                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
+			}
 		}
 	}
 	{cout<<"************************"<<endl;
@@ -70,240 +102,480 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 	const char *isoVersion[2] = {"",""};
 
-	if(!isoFlag)
+	if(!simFlag) //trained on data
 	{
-		switch(config_Run1)
+		if(!isoFlag)
 		{
-		case 1:
+			switch(config_Run1)
+			{
+			case 1:
+			{
+				bdtConf[0] = 1;
+				bdtCut[0] = 0.385;//0.395;
+				break;
+			}
+			case 2:
+			{
+				bdtConf[0] = 2;
+				bdtCut[0] = 0.405;//0.415;
+				break;
+			}
+			}
+			switch(config_Run2)
+			{
+			case 1:
+			{
+				bdtConf[1] = 1;
+				bdtCut[1] = 0.495;
+				break;
+			}
+			case 2:
+			{
+				bdtConf[1] = 2;
+				bdtCut[1]  = 0.525;//0.555;
+				break;
+			}
+			}
+		}
+		else
 		{
-			bdtConf[0] = 1;
-			bdtCut[0] = 0.395;
-			break;
+			switch(config_Run1)
+			{
+			case 1:
+			{
+				isoVersion[0]      = "v0";
+				isoConf[0]         = 1;
+
+				bdtConf_nonZero[0] = 1;
+				bdtConf_Zero[0]    = 1;
+
+				bdtCut_nonZero[0]  = 0.435;
+				bdtCut_Zero[0]     = 0.335;
+				break;
+			}
+			case 2:
+			{
+				isoVersion[0]      = "v0";
+				isoConf[0]         = 1;
+
+				bdtConf_nonZero[0] = 2;
+				bdtConf_Zero[0]    = 2;
+
+				bdtCut_nonZero[0]  = 0.375;//0.455;
+				bdtCut_Zero[0]     = 0.295;
+				break;
+			}
+			case 3:
+			{
+				isoVersion[0]      = "v0";
+				isoConf[0]         = 2;
+
+				bdtConf_nonZero[0] = 1;
+				bdtConf_Zero[0]    = 1;
+
+				bdtCut_nonZero[0]  = 0.425;
+				bdtCut_Zero[0]     = 0.335;
+				break;
+			}
+			case 4:
+			{
+				isoVersion[0]      = "v0";
+				isoConf[0]         = 2;
+
+				bdtConf_nonZero[0] = 2;
+				bdtConf_Zero[0]    = 2;
+
+				bdtCut_nonZero[0]  = 0.395;//0.425;
+				bdtCut_Zero[0]     = 0.295;
+				break;
+			}
+			case 5:
+			{
+				isoVersion[0]      = "v1";
+				isoConf[0]         = 1;
+
+				bdtConf_nonZero[0] = 1;
+				bdtConf_Zero[0]    = 1;
+
+				bdtCut_nonZero[0]  = 0.425;
+				bdtCut_Zero[0]     = 0.335;
+				break;
+			}
+			case 6:
+			{
+				isoVersion[0]      = "v1";
+				isoConf[0]         = 1;
+
+				bdtConf_nonZero[0] = 2;
+				bdtConf_Zero[0]    = 2;
+
+				bdtCut_nonZero[0]  = 0.395;//0.445;
+				bdtCut_Zero[0]     = 0.295;
+				break;
+			}
+			case 7:
+			{
+				isoVersion[0]      = "v1";
+				isoConf[0]         = 2;
+
+				bdtConf_nonZero[0] = 1;
+				bdtConf_Zero[0]    = 1;
+
+				bdtCut_nonZero[0]  = 0.405;//0.415;
+				bdtCut_Zero[0]     = 0.335;
+				break;
+			}
+			case 8:
+			{
+				isoVersion[0]      = "v1";
+				isoConf[0]         = 2;
+
+				bdtConf_nonZero[0] = 2;
+				bdtConf_Zero[0]    = 2;
+
+				bdtCut_nonZero[0]  = 0.415;
+				bdtCut_Zero[0]     = 0.295;
+				break;
+			}//end Run1 switch
+			}
+			switch(config_Run2)
+			{
+			case 1:
+			{
+				isoVersion[1]      = "v0";
+				isoConf[1]         = 1;
+
+				bdtConf_nonZero[1] = 1;
+				bdtConf_Zero[1]    = 1;
+
+				bdtCut_nonZero[1]  = 0.515;//0.535;
+				bdtCut_Zero[1]     = 0.405;
+				break;
+			}
+			case 2:
+			{
+				isoVersion[1]      = "v0";
+				isoConf[1]         = 1;
+
+				bdtConf_nonZero[1] = 2;
+				bdtConf_Zero[1]    = 2;
+
+				bdtCut_nonZero[1]  = 0.485;//0.545;
+				bdtCut_Zero[1]     = 0.325;//0.435;
+				break;
+			}
+			case 3:
+			{
+				isoVersion[1]      = "v0";
+				isoConf[1]         = 2;
+
+				bdtConf_nonZero[1] = 1;
+				bdtConf_Zero[1]    = 1;
+
+				bdtCut_nonZero[1]  = 0.535;//0.585;
+				bdtCut_Zero[1]     = 0.405;
+				break;
+			}
+			case 4:
+			{
+				isoVersion[1]      = "v0";
+				isoConf[1]         = 2;
+
+				bdtConf_nonZero[1] = 2;
+				bdtConf_Zero[1]    = 2;
+
+				bdtCut_nonZero[1]  = 0.485;//0.605;
+				bdtCut_Zero[1]     = 0.325;//0.435;
+				break;
+			}
+			case 5:
+			{
+				isoVersion[1]      = "v1";
+				isoConf[1]         = 1;
+
+				bdtConf_nonZero[1] = 1;
+				bdtConf_Zero[1]    = 1;
+
+				bdtCut_nonZero[1]  = 0.485;//0.535;
+				bdtCut_Zero[1]     = 0.405;
+				break;
+			}
+			case 6:
+			{
+				isoVersion[1]      = "v1";
+				isoConf[1]         = 1;
+
+				bdtConf_nonZero[1] = 2;
+				bdtConf_Zero[1]    = 2;
+
+				bdtCut_nonZero[1]  = 0.495;//0.525;
+				bdtCut_Zero[1]     = 0.325;//0.435;
+				break;
+			}
+			case 7:
+			{
+				isoVersion[1]      = "v1";
+				isoConf[1]         = 2;
+
+				bdtConf_nonZero[1] = 1;
+				bdtConf_Zero[1]    = 1;
+
+				bdtCut_nonZero[1]  = 0.475;//0.545;
+				bdtCut_Zero[1]     = 0.405;
+				break;
+			}
+			case 8:
+			{
+				isoVersion[1]      = "v1";
+				isoConf[1]         = 2;
+
+				bdtConf_nonZero[1] = 2;
+				bdtConf_Zero[1]    = 2;
+
+				bdtCut_nonZero[1]  = 0.495;//0.515;
+				bdtCut_Zero[1]     = 0.325;//0.435;
+				break;
+			}
+			}//end Run2 switch
 		}
-		case 2:
-		{
-			bdtConf[0] = 2;
-			bdtCut[0] = 0.415;
-			break;
-		}
-		}
-		switch(config_Run2)
-		{
-		case 1:
-		{
-			bdtConf[1] = 1;
-			bdtCut[1] = 0.495;
-			break;
-		}
-		case 2:
-		{
-			bdtConf[1] = 2;
-			bdtCut[1]  = 0.555;
-			break;
-		}
-		}
-	}
+	}//end if for !simFlag
 	else
 	{
-		switch(config_Run1)
+		if(!isoFlag)
 		{
-		case 1:
-		{
-			isoVersion[0]      = "v0";
-			isoConf[0]         = 1;
-
-			bdtConf_nonZero[0] = 1;
-			bdtConf_Zero[0]    = 1;
-
-			bdtCut_nonZero[0]  = 0.435;
-			bdtCut_Zero[0]     = 0.335;
-			break;
+			switch(config_Run1)
+			{
+			case 1:
+			{
+				bdtConf[0] = 1;
+				bdtCut[0] = 0.315;
+				break;
+			}
+			case 2:
+			{
+				bdtConf[0] = 2;
+				bdtCut[0] = 0.335;
+				break;
+			}
+			}
+			switch(config_Run2)
+			{
+			case 1:
+			{
+				bdtConf[1] = 1;
+				bdtCut[1] = 0.305;
+				break;
+			}
+			case 2:
+			{
+				bdtConf[1] = 2;
+				bdtCut[1]  = 0.285;
+				break;
+			}
+			}
 		}
-		case 2:
+		else
 		{
-			isoVersion[0]      = "v0";
-			isoConf[0]         = 1;
+			switch(config_Run1)
+			{
+			case 1:
+			{
+				isoVersion[0]      = "v0";
+				isoConf[0]         = 1;
 
-			bdtConf_nonZero[0] = 2;
-			bdtConf_Zero[0]    = 2;
+				bdtConf_nonZero[0] = 1;
+				bdtConf_Zero[0]    = 1;
 
-			bdtCut_nonZero[0]  = 0.455;
-			bdtCut_Zero[0]     = 0.295;
-			break;
+				bdtCut_nonZero[0]  = 0.275;
+				bdtCut_Zero[0]     = 0.135;
+				break;
+			}
+			case 2:
+			{
+				isoVersion[0]      = "v0";
+				isoConf[0]         = 1;
+
+				bdtConf_nonZero[0] = 2;
+				bdtConf_Zero[0]    = 2;
+
+				bdtCut_nonZero[0]  = 0.215;
+				bdtCut_Zero[0]     = 0.125;
+				break;
+			}
+			case 3:
+			{
+				isoVersion[0]      = "v0";
+				isoConf[0]         = 2;
+
+				bdtConf_nonZero[0] = 1;
+				bdtConf_Zero[0]    = 1;
+
+				bdtCut_nonZero[0]  = 0.275;
+				bdtCut_Zero[0]     = 0.135;
+				break;
+			}
+			case 4:
+			{
+				isoVersion[0]      = "v0";
+				isoConf[0]         = 2;
+
+				bdtConf_nonZero[0] = 2;
+				bdtConf_Zero[0]    = 2;
+
+				bdtCut_nonZero[0]  = 0.255;
+				bdtCut_Zero[0]     = 0.125;
+				break;
+			}
+			case 5:
+			{
+				isoVersion[0]      = "v1";
+				isoConf[0]         = 1;
+
+				bdtConf_nonZero[0] = 1;
+				bdtConf_Zero[0]    = 1;
+
+				bdtCut_nonZero[0]  = 0.225;
+				bdtCut_Zero[0]     = 0.135;
+				break;
+			}
+			case 6:
+			{
+				isoVersion[0]      = "v1";
+				isoConf[0]         = 1;
+
+				bdtConf_nonZero[0] = 2;
+				bdtConf_Zero[0]    = 2;
+
+				bdtCut_nonZero[0]  = 0.225;
+				bdtCut_Zero[0]     = 0.125;
+				break;
+			}
+			case 7:
+			{
+				isoVersion[0]      = "v1";
+				isoConf[0]         = 2;
+
+				bdtConf_nonZero[0] = 1;
+				bdtConf_Zero[0]    = 1;
+
+				bdtCut_nonZero[0]  = 0.245;
+				bdtCut_Zero[0]     = 0.135;
+				break;
+			}
+			case 8:
+			{
+				isoVersion[0]      = "v1";
+				isoConf[0]         = 2;
+
+				bdtConf_nonZero[0] = 2;
+				bdtConf_Zero[0]    = 2;
+
+				bdtCut_nonZero[0]  = 0.305;
+				bdtCut_Zero[0]     = 0.125;
+				break;
+			}//end Run1 switch
+			}
+			switch(config_Run2)
+			{
+			case 1:
+			{
+				isoVersion[1]      = "v0";
+				isoConf[1]         = 1;
+
+				bdtConf_nonZero[1] = 1;
+				bdtConf_Zero[1]    = 1;
+
+				bdtCut_nonZero[1]  = 0.275;
+				bdtCut_Zero[1]     = 0.175;
+				break;
+			}
+			case 2:
+			{
+				isoVersion[1]      = "v0";
+				isoConf[1]         = 1;
+
+				bdtConf_nonZero[1] = 2;
+				bdtConf_Zero[1]    = 2;
+
+				bdtCut_nonZero[1]  = 0.275;
+				bdtCut_Zero[1]     = 0.145;
+				break;
+			}
+			case 3:
+			{
+				isoVersion[1]      = "v0";
+				isoConf[1]         = 2;
+
+				bdtConf_nonZero[1] = 1;
+				bdtConf_Zero[1]    = 1;
+
+				bdtCut_nonZero[1]  = 0.285;
+				bdtCut_Zero[1]     = 0.175;
+				break;
+			}
+			case 4:
+			{
+				isoVersion[1]      = "v0";
+				isoConf[1]         = 2;
+
+				bdtConf_nonZero[1] = 2;
+				bdtConf_Zero[1]    = 2;
+
+				bdtCut_nonZero[1]  = 0.295;
+				bdtCut_Zero[1]     = 0.145;
+				break;
+			}
+			case 5:
+			{
+				isoVersion[1]      = "v1";
+				isoConf[1]         = 1;
+
+				bdtConf_nonZero[1] = 1;
+				bdtConf_Zero[1]    = 1;
+
+				bdtCut_nonZero[1]  = 0.265;
+				bdtCut_Zero[1]     = 0.175;
+				break;
+			}
+			case 6:
+			{
+				isoVersion[1]      = "v1";
+				isoConf[1]         = 1;
+
+				bdtConf_nonZero[1] = 2;
+				bdtConf_Zero[1]    = 2;
+
+				bdtCut_nonZero[1]  = 0.255;
+				bdtCut_Zero[1]     = 0.145;
+				break;
+			}
+			case 7:
+			{
+				isoVersion[1]      = "v1";
+				isoConf[1]         = 2;
+
+				bdtConf_nonZero[1] = 1;
+				bdtConf_Zero[1]    = 1;
+
+				bdtCut_nonZero[1]  = 0.245;
+				bdtCut_Zero[1]     = 0.175;
+				break;
+			}
+			case 8:
+			{
+				isoVersion[1]      = "v1";
+				isoConf[1]         = 2;
+
+				bdtConf_nonZero[1] = 2;
+				bdtConf_Zero[1]    = 2;
+
+				bdtCut_nonZero[1]  = 0.305;
+				bdtCut_Zero[1]     = 0.145;
+				break;
+			}
+			}//end Run2 switch
 		}
-		case 3:
-		{
-			isoVersion[0]      = "v0";
-			isoConf[0]         = 2;
-
-			bdtConf_nonZero[0] = 1;
-			bdtConf_Zero[0]    = 1;
-
-			bdtCut_nonZero[0]  = 0.425;
-			bdtCut_Zero[0]     = 0.335;
-			break;
-		}
-		case 4:
-		{
-			isoVersion[0]      = "v0";
-			isoConf[0]         = 2;
-
-			bdtConf_nonZero[0] = 2;
-			bdtConf_Zero[0]    = 2;
-
-			bdtCut_nonZero[0]  = 0.425;
-			bdtCut_Zero[0]     = 0.295;
-			break;
-		}
-		case 5:
-		{
-			isoVersion[0]      = "v1";
-			isoConf[0]         = 1;
-
-			bdtConf_nonZero[0] = 1;
-			bdtConf_Zero[0]    = 1;
-
-			bdtCut_nonZero[0]  = 0.425;
-			bdtCut_Zero[0]     = 0.335;
-			break;
-		}
-		case 6:
-		{
-			isoVersion[0]      = "v1";
-			isoConf[0]         = 1;
-
-			bdtConf_nonZero[0] = 2;
-			bdtConf_Zero[0]    = 2;
-
-			bdtCut_nonZero[0]  = 0.445;
-			bdtCut_Zero[0]     = 0.295;
-			break;
-		}
-		case 7:
-		{
-			isoVersion[0]      = "v1";
-			isoConf[0]         = 2;
-
-			bdtConf_nonZero[0] = 1;
-			bdtConf_Zero[0]    = 1;
-
-			bdtCut_nonZero[0]  = 0.415;
-			bdtCut_Zero[0]     = 0.335;
-			break;
-		}
-		case 8:
-		{
-			isoVersion[0]      = "v1";
-			isoConf[0]         = 2;
-
-			bdtConf_nonZero[0] = 2;
-			bdtConf_Zero[0]    = 2;
-
-			bdtCut_nonZero[0]  = 0.415;
-			bdtCut_Zero[0]     = 0.295;
-			break;
-		}//end Run1 switch
-		}
-		switch(config_Run2)
-		{
-		case 1:
-		{
-			isoVersion[1]      = "v0";
-			isoConf[1]         = 1;
-
-			bdtConf_nonZero[1] = 1;
-			bdtConf_Zero[1]    = 1;
-
-			bdtCut_nonZero[1]  = 0.535;
-			bdtCut_Zero[1]     = 0.405;
-			break;
-		}
-		case 2:
-		{
-			isoVersion[1]      = "v0";
-			isoConf[1]         = 1;
-
-			bdtConf_nonZero[1] = 2;
-			bdtConf_Zero[1]    = 2;
-
-			bdtCut_nonZero[1]  = 0.545;
-			bdtCut_Zero[1]     = 0.435;
-			break;
-		}
-		case 3:
-		{
-			isoVersion[1]      = "v0";
-			isoConf[1]         = 2;
-
-			bdtConf_nonZero[1] = 1;
-			bdtConf_Zero[1]    = 1;
-
-			bdtCut_nonZero[1]  = 0.585;
-			bdtCut_Zero[1]     = 0.405;
-			break;
-		}
-		case 4:
-		{
-			isoVersion[1]      = "v0";
-			isoConf[1]         = 2;
-
-			bdtConf_nonZero[1] = 2;
-			bdtConf_Zero[1]    = 2;
-
-			bdtCut_nonZero[1]  = 0.605;
-			bdtCut_Zero[1]     = 0.435;
-			break;
-		}
-		case 5:
-		{
-			isoVersion[1]      = "v1";
-			isoConf[1]         = 1;
-
-			bdtConf_nonZero[1] = 1;
-			bdtConf_Zero[1]    = 1;
-
-			bdtCut_nonZero[1]  = 0.535;
-			bdtCut_Zero[1]     = 0.405;
-			break;
-		}
-		case 6:
-		{
-			isoVersion[1]      = "v1";
-			isoConf[1]         = 1;
-
-			bdtConf_nonZero[1] = 2;
-			bdtConf_Zero[1]    = 2;
-
-			bdtCut_nonZero[1]  = 0.525;
-			bdtCut_Zero[1]     = 0.435;
-			break;
-		}
-		case 7:
-		{
-			isoVersion[1]      = "v1";
-			isoConf[1]         = 2;
-
-			bdtConf_nonZero[1] = 1;
-			bdtConf_Zero[1]    = 1;
-
-			bdtCut_nonZero[1]  = 0.545;
-			bdtCut_Zero[1]     = 0.405;
-			break;
-		}
-		case 8:
-		{
-			isoVersion[1]      = "v1";
-			isoConf[1]         = 2;
-
-			bdtConf_nonZero[1] = 2;
-			bdtConf_Zero[1]    = 2;
-
-			bdtCut_nonZero[1]  = 0.515;
-			bdtCut_Zero[1]     = 0.435;
-			break;
-		}
-		}//end Run2 switch
-	}
+	}//end if for simFlag
 	Bool_t calcUL   = true;
 	Bool_t isBinned = true; //set to false if you want unbinned ML fit.
 	Bool_t saveFlag = false;
@@ -531,26 +803,54 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	// ************************Workspace for input data**************************
 	Bool_t inputFlag = false;
 	TString inputFileName = "";
-	if(isoFlag)
+	if(!simFlag)
 	{
-		if(mcRW)
+		if(isoFlag)
 		{
-			inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+			if(mcRW)
+			{
+				inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+			}
+			else
+			{
+				inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noRW.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+			}
 		}
 		else
 		{
-			inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noRW.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+			if(mcRW)
+			{
+				inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noIso.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+			}
+			else
+			{
+				inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noRW_noIso.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+			}
 		}
 	}
 	else
 	{
-		if(mcRW)
+		if(isoFlag)
 		{
-			inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noIso.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+			if(mcRW)
+			{
+				inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_MC.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+			}
+			else
+			{
+				inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noRW_MC.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+			}
 		}
 		else
 		{
-			inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noRW_noIso.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+			if(mcRW)
+			{
+				inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noIso_MC.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+			}
+			else
+			{
+				inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noRW_noIso_MC.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+			}
 		}
 	}
 	if(!(gSystem->AccessPathName(inputFileName.Data())))
@@ -600,16 +900,16 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		if(isoFlag)
 		{
 			gSystem->Exec(Form("python -c \'from GetXibNorm import GetNorm;"
-			                   " GetNorm(%d, %d, \"%s\", %d, %d, %d, %f, %f, 0)\'",
+			                   " GetNorm(%d, %d, \"%s\", %d, %d, %d, %f, %f, 0, %d)\'",
 			                   run, true, isoVersion[i], isoConf[i], bdtConf_nonZero[i],
-			                   bdtConf_Zero[i], bdtCut_nonZero[i], bdtCut_Zero[i]));
+			                   bdtConf_Zero[i], bdtCut_nonZero[i], bdtCut_Zero[i], simFlag));
 		}
 		else
 		{
 			gSystem->Exec(Form("python -c \'from GetXibNorm import GetNorm;"
-			                   " GetNorm(%d, %d, \"%s\", %d, %d, %d, %f, %f, 0)\'",
+			                   " GetNorm(%d, %d, \"%s\", %d, %d, %d, %f, %f, 0, %d)\'",
 			                   run, false, "", 0, bdtConf[i],
-			                   0, bdtCut[i], 0.));
+			                   0, bdtCut[i], 0., simFlag));
 		}
 
 		ifstream infile(Form("../logs/mc/JpsiXi/run%d/xibNorm_log.txt",run));
@@ -687,12 +987,22 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			                                        lambdaMCPath,run));
 			TTree *mcTreeIn_Zero_Lambda = (TTree*)mcFileIn_Zero_Lambda->Get("MyTuple");
 
-			mcTreeIn_nonZero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s.root",
-			                                                  lambdaMCPath,run,bdtConf_nonZero[i],
-			                                                  isoConf[i],isoVersion[i]));
-			mcTreeIn_Zero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d.root",
-			                                               lambdaMCPath,run,bdtConf_Zero[i]));
-
+			if(!simFlag)
+			{
+				mcTreeIn_nonZero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s.root",
+				                                                  lambdaMCPath,run,bdtConf_nonZero[i],
+				                                                  isoConf[i],isoVersion[i]));
+				mcTreeIn_Zero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d.root",
+				                                               lambdaMCPath,run,bdtConf_Zero[i]));
+			}
+			else
+			{
+				mcTreeIn_nonZero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_MCFinalBDT%d_MCiso%d_%s.root",
+				                                                  lambdaMCPath,run,bdtConf_nonZero[i],
+				                                                  isoConf[i],isoVersion[i]));
+				mcTreeIn_Zero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_MCFinalBDT%d.root",
+				                                               lambdaMCPath,run,bdtConf_Zero[i]));
+			}
 			mcTreeIn_nonZero_Lambda->Draw("GB_WT*wt_tau>>wt_lambda_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
 			mcTreeIn_Zero_Lambda->Draw("GB_WT*wt_tau>>wt_lambda_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 
@@ -711,8 +1021,16 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			                                   lambdaMCPath,run));
 			TTree *mcTreeIn_Lambda = (TTree*)mcFileIn_Lambda->Get("MyTuple");
 
-			mcTreeIn_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_noIso.root",
-			                                          lambdaMCPath,run,bdtConf[i]));
+			if(!simFlag)
+			{
+				mcTreeIn_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_noIso.root",
+				                                          lambdaMCPath,run,bdtConf[i]));
+			}
+			else
+			{
+				mcTreeIn_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_MCFinalBDT%d_noIso.root",
+				                                          lambdaMCPath,run,bdtConf[i]));
+			}
 			mcTreeIn_Lambda->Draw("GB_WT*wt_tau>>wt_lambda",Form("BDT%d > %f", bdtConf[i],bdtCut[i]),"goff");
 
 			TH1F *wt_lambda = (TH1F*)gDirectory->Get("wt_lambda");
@@ -823,11 +1141,20 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			                                sigmaPath,run));
 			mcTreeIn_Zero_Sigma = (TTree*)mcFileIn_Zero_Sigma->Get("MyTuple");
 
-			mcTreeIn_nonZero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_LL_FinalBDT%d_iso%d_%s.root",
-			                                                 sigmaPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-			mcTreeIn_Zero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_zeroTracksLL_FinalBDT%d.root",
-			                                              sigmaPath,run,bdtConf_Zero[i]));
-
+			if(!simFlag)
+			{
+				mcTreeIn_nonZero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_LL_FinalBDT%d_iso%d_%s.root",
+				                                                 sigmaPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+				mcTreeIn_Zero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_zeroTracksLL_FinalBDT%d.root",
+				                                              sigmaPath,run,bdtConf_Zero[i]));
+			}
+			else
+			{
+				mcTreeIn_nonZero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_LL_MCFinalBDT%d_MCiso%d_%s.root",
+				                                                 sigmaPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+				mcTreeIn_Zero_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_zeroTracksLL_MCFinalBDT%d.root",
+				                                              sigmaPath,run,bdtConf_Zero[i]));
+			}
 			mcTreeIn_nonZero_Sigma->Draw("GB_WT*wt_tau>>wt_Sigma_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
 			mcTreeIn_Zero_Sigma->Draw("GB_WT*wt_tau>>wt_Sigma_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
 
@@ -846,9 +1173,16 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			                           sigmaPath,run));
 			mcTreeIn_Sigma = (TTree*)mcFileIn_Sigma->Get("MyTuple");
 
-			mcTreeIn_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_LL_FinalBDT%d_noIso.root",
-			                                         sigmaPath,run,bdtConf[i]));
-
+			if(!simFlag)
+			{
+				mcTreeIn_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_LL_FinalBDT%d_noIso.root",
+				                                         sigmaPath,run,bdtConf[i]));
+			}
+			else
+			{
+				mcTreeIn_Sigma->AddFriend("MyTuple",Form("%s/run%d/jpsisigma_LL_MCFinalBDT%d_noIso.root",
+				                                         sigmaPath,run,bdtConf[i]));
+			}
 			mcTreeIn_Sigma->Draw("GB_WT*wt_tau>>wt_Sigma",Form("BDT%d > %f", bdtConf[i],bdtCut[i]),"goff");
 
 			TH1F *wt_Sigma = (TH1F*)gDirectory->Get("wt_Sigma");
@@ -1094,11 +1428,20 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			                               Lst1405Path,run));
 			mcTreeIn_Zero_1405 = (TTree*)mcFileIn_Zero_1405->Get("MyTuple");
 
-			mcTreeIn_nonZero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_LL_FinalBDT%d_iso%d_%s.root",
-			                                                Lst1405Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-			mcTreeIn_Zero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_zeroTracksLL_FinalBDT%d.root",
-			                                             Lst1405Path,run,bdtConf_Zero[i]));
-
+			if(!simFlag)
+			{
+				mcTreeIn_nonZero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_LL_FinalBDT%d_iso%d_%s.root",
+				                                                Lst1405Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+				mcTreeIn_Zero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_zeroTracksLL_FinalBDT%d.root",
+				                                             Lst1405Path,run,bdtConf_Zero[i]));
+			}
+			else
+			{
+				mcTreeIn_nonZero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_LL_MCFinalBDT%d_MCiso%d_%s.root",
+				                                                Lst1405Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+				mcTreeIn_Zero_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_zeroTracksLL_MCFinalBDT%d.root",
+				                                             Lst1405Path,run,bdtConf_Zero[i]));
+			}
 			if(Lst1405_rwtype==0)
 			{
 				num_1405 = mcTreeIn_nonZero_1405->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
@@ -1138,8 +1481,16 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			                          Lst1405Path,run));
 			mcTreeIn_1405 = (TTree*)mcFileIn_1405->Get("MyTuple");
 
-			mcTreeIn_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_LL_FinalBDT%d_noIso.root",
-			                                        Lst1405Path,run,bdtConf[i]));
+			if(!simFlag)
+			{
+				mcTreeIn_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_LL_FinalBDT%d_noIso.root",
+				                                        Lst1405Path,run,bdtConf[i]));
+			}
+			else
+			{
+				mcTreeIn_1405->AddFriend("MyTuple",Form("%s/run%d/lst1405_LL_MCFinalBDT%d_noIso.root",
+				                                        Lst1405Path,run,bdtConf[i]));
+			}
 			if(Lst1405_rwtype==0)
 			{
 				num_1405 = mcTreeIn_1405->GetEntries(Form("BDT%d > %f", bdtConf[i],bdtCut[i])); //NOTE NO TM HERE
@@ -1374,11 +1725,20 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			                                  Lst1520Path,run));
 			mcTreeIn_Zero_1520    = (TTree*)mcFileIn_Zero_1520->Get("MyTuple");
 
-			mcTreeIn_nonZero_1520->AddFriend("MyTuple",Form("%s/run%d/lst1520_LL_FinalBDT%d_iso%d_%s.root",
-			                                                Lst1520Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-			mcTreeIn_Zero_1520->AddFriend("MyTuple",Form("%s/run%d/lst1520_zeroTracksLL_FinalBDT%d.root",
-			                                             Lst1520Path,run,bdtConf_Zero[i]));
-
+			if(!simFlag)
+			{
+				mcTreeIn_nonZero_1520->AddFriend("MyTuple",Form("%s/run%d/lst1520_LL_FinalBDT%d_iso%d_%s.root",
+				                                                Lst1520Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+				mcTreeIn_Zero_1520->AddFriend("MyTuple",Form("%s/run%d/lst1520_zeroTracksLL_FinalBDT%d.root",
+				                                             Lst1520Path,run,bdtConf_Zero[i]));
+			}
+			else
+			{
+				mcTreeIn_nonZero_1520->AddFriend("MyTuple",Form("%s/run%d/lst1520_LL_MCFinalBDT%d_MCiso%d_%s.root",
+				                                                Lst1520Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+				mcTreeIn_Zero_1520->AddFriend("MyTuple",Form("%s/run%d/lst1520_zeroTracksLL_MCFinalBDT%d.root",
+				                                             Lst1520Path,run,bdtConf_Zero[i]));
+			}
 			num_1520 = mcTreeIn_nonZero_1520->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
 			           mcTreeIn_Zero_1520->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));  //NOTE NO TM HERE
 
@@ -1397,8 +1757,16 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			                          Lst1520Path,run));
 			mcTreeIn_1520 = (TTree*)mcFileIn_1520->Get("MyTuple");
 
-			mcTreeIn_1520->AddFriend("MyTuple",Form("%s/run%d/lst1520_LL_FinalBDT%d_noIso.root",
-			                                        Lst1520Path,run,bdtConf[i]));
+			if(!simFlag)
+			{
+				mcTreeIn_1520->AddFriend("MyTuple",Form("%s/run%d/lst1520_LL_FinalBDT%d_noIso.root",
+				                                        Lst1520Path,run,bdtConf[i]));
+			}
+			else
+			{
+				mcTreeIn_1520->AddFriend("MyTuple",Form("%s/run%d/lst1520_LL_MCFinalBDT%d_noIso.root",
+				                                        Lst1520Path,run,bdtConf[i]));
+			}
 			num_1520 = mcTreeIn_1520->GetEntries(Form("BDT%d > %f", bdtConf[i],bdtCut[i])); //NOTE NO TM HERE
 
 			mcTreeIn_1520->Draw("wt_tau>>wt_1520",Form("BDT%d > %f", bdtConf[i],bdtCut[i]),"goff");
@@ -1601,10 +1969,20 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			                                  Lst1600Path,run));
 			mcTreeIn_Zero_1600    = (TTree*)mcFileIn_Zero_1600->Get("MyTuple");
 
-			mcTreeIn_nonZero_1600->AddFriend("MyTuple",Form("%s/run%d/lst1600_LL_FinalBDT%d_iso%d_%s.root",
-			                                                Lst1600Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-			mcTreeIn_Zero_1600->AddFriend("MyTuple",Form("%s/run%d/lst1600_zeroTracksLL_FinalBDT%d.root",
-			                                             Lst1600Path,run,bdtConf_Zero[i]));
+			if(!simFlag)
+			{
+				mcTreeIn_nonZero_1600->AddFriend("MyTuple",Form("%s/run%d/lst1600_LL_FinalBDT%d_iso%d_%s.root",
+				                                                Lst1600Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+				mcTreeIn_Zero_1600->AddFriend("MyTuple",Form("%s/run%d/lst1600_zeroTracksLL_FinalBDT%d.root",
+				                                             Lst1600Path,run,bdtConf_Zero[i]));
+			}
+			else
+			{
+				mcTreeIn_nonZero_1600->AddFriend("MyTuple",Form("%s/run%d/lst1600_LL_MCFinalBDT%d_MCiso%d_%s.root",
+				                                                Lst1600Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+				mcTreeIn_Zero_1600->AddFriend("MyTuple",Form("%s/run%d/lst1600_zeroTracksLL_MCFinalBDT%d.root",
+				                                             Lst1600Path,run,bdtConf_Zero[i]));
+			}
 			num_1600 = mcTreeIn_nonZero_1600->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
 			           mcTreeIn_Zero_1600->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));  //NOTE NO TM HERE
 
@@ -1623,9 +2001,16 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			                          Lst1600Path,run));
 			mcTreeIn_1600 = (TTree*)mcFileIn_1600->Get("MyTuple");
 
-			mcTreeIn_1600->AddFriend("MyTuple",Form("%s/run%d/lst1600_LL_FinalBDT%d_noIso.root",
-			                                        Lst1600Path,run,bdtConf[i]));
-
+			if(!simFlag)
+			{
+				mcTreeIn_1600->AddFriend("MyTuple",Form("%s/run%d/lst1600_LL_FinalBDT%d_noIso.root",
+				                                        Lst1600Path,run,bdtConf[i]));
+			}
+			else
+			{
+				mcTreeIn_1600->AddFriend("MyTuple",Form("%s/run%d/lst1600_LL_MCFinalBDT%d_noIso.root",
+				                                        Lst1600Path,run,bdtConf[i]));
+			}
 			num_1600 = mcTreeIn_1600->GetEntries(Form("BDT%d > %f", bdtConf[i],bdtCut[i])); //NOTE NO TM HERE
 
 			mcTreeIn_1600->Draw("wt_tau>>wt_1600",Form("BDT%d > %f", bdtConf[i],bdtCut[i]),"goff");
@@ -1992,10 +2377,20 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				TFile *filein_xi_Zero = Open(Form("%s/run%d/jpsixi_cutoutks_LL_ZeroTracks.root",xibPath,run));
 				TTree *treein_xi_Zero = (TTree*)filein_xi_Zero->Get("MyTuple");
 
-				treein_xi_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsixi_LL_FinalBDT%d_iso%d_%s.root",
-				                                            xibPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-				treein_xi_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsixi_zeroTracksLL_FinalBDT%d.root",
-				                                         xibPath,run,bdtConf_Zero[i]));
+				if(!simFlag)
+				{
+					treein_xi_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsixi_LL_FinalBDT%d_iso%d_%s.root",
+					                                            xibPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+					treein_xi_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsixi_zeroTracksLL_FinalBDT%d.root",
+					                                         xibPath,run,bdtConf_Zero[i]));
+				}
+				else
+				{
+					treein_xi_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsixi_LL_MCFinalBDT%d_MCiso%d_%s.root",
+					                                            xibPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+					treein_xi_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsixi_zeroTracksLL_MCFinalBDT%d.root",
+					                                         xibPath,run,bdtConf_Zero[i]));
+				}
 				treein_xi_Zero->SetBranchStatus("*",0);
 				treein_xi_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 				treein_xi_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
@@ -2019,8 +2414,16 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				TFile *filein_xi = Open(Form("%s/run%d/jpsixi_cutoutks_LL.root",xibPath,run));
 				TTree *treein_xi = (TTree*)filein_xi->Get("MyTuple");
 
-				treein_xi->AddFriend("MyTuple",Form("%s/run%d/jpsixi_LL_FinalBDT%d_noIso.root",
-				                                    xibPath,run,bdtConf[i]));
+				if(!simFlag)
+				{
+					treein_xi->AddFriend("MyTuple",Form("%s/run%d/jpsixi_LL_FinalBDT%d_noIso.root",
+					                                    xibPath,run,bdtConf[i]));
+				}
+				else
+				{
+					treein_xi->AddFriend("MyTuple",Form("%s/run%d/jpsixi_LL_MCFinalBDT%d_noIso.root",
+					                                    xibPath,run,bdtConf[i]));
+				}
 				treein_xi->SetBranchStatus("*",0);
 				treein_xi->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 				treein_xi->SetBranchStatus(Form("BDT%d",bdtConf[i]),1);
@@ -2120,10 +2523,20 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				TFile *filein_jpsiks_Zero = Open(Form("%s/run%d/jpsiks_cutoutks_LL_ZeroTracks.root",jpsiksPath,run));
 				TTree *treein_jpsiks_Zero = (TTree*)filein_jpsiks_Zero->Get("MyTuple");
 
-				treein_jpsiks_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsiks_LL_FinalBDT%d_iso%d_%s.root",
-				                                                jpsiksPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-				treein_jpsiks_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsiks_zeroTracksLL_FinalBDT%d.root",
-				                                             jpsiksPath,run,bdtConf_Zero[i]));
+				if(!simFlag)
+				{
+					treein_jpsiks_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsiks_LL_FinalBDT%d_iso%d_%s.root",
+					                                                jpsiksPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+					treein_jpsiks_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsiks_zeroTracksLL_FinalBDT%d.root",
+					                                             jpsiksPath,run,bdtConf_Zero[i]));
+				}
+				else
+				{
+					treein_jpsiks_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsiks_LL_MCFinalBDT%d_MCiso%d_%s.root",
+					                                                jpsiksPath,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
+					treein_jpsiks_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsiks_zeroTracksLL_MCFinalBDT%d.root",
+					                                             jpsiksPath,run,bdtConf_Zero[i]));
+				}
 				treein_jpsiks_Zero->SetBranchStatus("*",0);
 				treein_jpsiks_Zero->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 				treein_jpsiks_Zero->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
@@ -2146,8 +2559,16 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				TFile *filein_jpsiks = Open(Form("%s/run%d/jpsiks_cutoutks_LL.root",jpsiksPath,run));
 				TTree *treein_jpsiks = (TTree*)filein_jpsiks->Get("MyTuple");
 
-				treein_jpsiks->AddFriend("MyTuple",Form("%s/run%d/jpsiks_LL_FinalBDT%d_noIso.root",
-				                                        jpsiksPath,run,bdtConf[i]));
+				if(!simFlag)
+				{
+					treein_jpsiks->AddFriend("MyTuple",Form("%s/run%d/jpsiks_LL_FinalBDT%d_noIso.root",
+					                                        jpsiksPath,run,bdtConf[i]));
+				}
+				else
+				{
+					treein_jpsiks->AddFriend("MyTuple",Form("%s/run%d/jpsiks_LL_MCFinalBDT%d_noIso.root",
+					                                        jpsiksPath,run,bdtConf[i]));
+				}
 				treein_jpsiks->SetBranchStatus("*",0);
 				treein_jpsiks->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 				treein_jpsiks->SetBranchStatus(Form("BDT%d",bdtConf[i]),1);
@@ -2387,12 +2808,22 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			                                           lambdaMCPath,run));
 			TTree *mcTreeIn_Zero_Lambda    = (TTree*)mcFileIn_Zero_Lambda->Get("MyTuple");
 
-			mcTreeIn_nonZero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s.root",
-			                                                  lambdaMCPath,run,bdtConf_nonZero[i],
-			                                                  isoConf[i],isoVersion[i]));
-			mcTreeIn_Zero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d.root",
-			                                               lambdaMCPath,run,bdtConf_Zero[i]));
-
+			if(!simFlag)
+			{
+				mcTreeIn_nonZero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s.root",
+				                                                  lambdaMCPath,run,bdtConf_nonZero[i],
+				                                                  isoConf[i],isoVersion[i]));
+				mcTreeIn_Zero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d.root",
+				                                               lambdaMCPath,run,bdtConf_Zero[i]));
+			}
+			else
+			{
+				mcTreeIn_nonZero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_MCFinalBDT%d_MCiso%d_%s.root",
+				                                                  lambdaMCPath,run,bdtConf_nonZero[i],
+				                                                  isoConf[i],isoVersion[i]));
+				mcTreeIn_Zero_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_MCFinalBDT%d.root",
+				                                               lambdaMCPath,run,bdtConf_Zero[i]));
+			}
 			mcTreeIn_Zero_Lambda->SetBranchStatus("*",0);
 			mcTreeIn_Zero_Lambda->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 			mcTreeIn_Zero_Lambda->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
@@ -2420,9 +2851,16 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			                                   lambdaMCPath,run));
 			TTree *mcTreeIn_Lambda = (TTree*)mcFileIn_Lambda->Get("MyTuple");
 
-			mcTreeIn_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_noIso.root",
-			                                          lambdaMCPath,run,bdtConf[i]));
-
+			if(!simFlag)
+			{
+				mcTreeIn_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_noIso.root",
+				                                          lambdaMCPath,run,bdtConf[i]));
+			}
+			else
+			{
+				mcTreeIn_Lambda->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_MCFinalBDT%d_noIso.root",
+				                                          lambdaMCPath,run,bdtConf[i]));
+			}
 			mcTreeIn_Lambda->SetBranchStatus("*",0);
 			mcTreeIn_Lambda->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 			mcTreeIn_Lambda->SetBranchStatus(Form("BDT%d",bdtConf[i]),1);
@@ -2618,11 +3056,22 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			                               dataPath,run),"READ");
 			TTree *treeIn_Zero = (TTree*)fileIn_Zero->Get("MyTuple");
 
-			treeIn_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s.root",
-			                                         dataPath,run,bdtConf_nonZero[i],
-			                                         isoConf[i],isoVersion[i]));
-			treeIn_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d.root",
-			                                      dataPath,run,bdtConf_Zero[i]));
+			if(!simFlag)
+			{
+				treeIn_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_iso%d_%s.root",
+				                                         dataPath,run,bdtConf_nonZero[i],
+				                                         isoConf[i],isoVersion[i]));
+				treeIn_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_FinalBDT%d.root",
+				                                      dataPath,run,bdtConf_Zero[i]));
+			}
+			else
+			{
+				treeIn_nonZero->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_MCFinalBDT%d_MCiso%d_%s.root",
+				                                         dataPath,run,bdtConf_nonZero[i],
+				                                         isoConf[i],isoVersion[i]));
+				treeIn_Zero->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_zeroTracksLL_MCFinalBDT%d.root",
+				                                      dataPath,run,bdtConf_Zero[i]));
+			}
 
 			if(!isBinned)
 			{
@@ -2689,8 +3138,16 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			                          dataPath,run),"READ");
 			TTree *treeIn = (TTree*)fileIn->Get("MyTuple");
 
-			treeIn->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_noIso.root",
-			                                 dataPath,run,bdtConf[i]));
+			if(!simFlag)
+			{
+				treeIn->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_FinalBDT%d_noIso.root",
+				                                 dataPath,run,bdtConf[i]));
+			}
+			else
+			{
+				treeIn->AddFriend("MyTuple",Form("%s/run%d/jpsilambda_LL_MCFinalBDT%d_noIso.root",
+				                                 dataPath,run,bdtConf[i]));
+			}
 			if(!isBinned)
 			{
 				TTree* treeIn_cut = (TTree*)treeIn->CopyTree(Form("BDT%d > %f",bdtConf[i],bdtCut[i]));
@@ -4285,7 +4742,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	}
 	cout << "workspace written to file " << fileName << endl;
 
-	gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"../rootFiles/dataFiles/JpsiLambda/ModelConfigs/%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,3,true,20,0,500,100,false,0,%d,%d,%d,%d)",fileName,myLow,myHigh,sigType,config_Run1));
+	gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"../rootFiles/dataFiles/JpsiLambda/ModelConfigs/%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,3,true,20,0,500,100,false,0,%d,%d,%d,%d,%d)",fileName,myLow,myHigh,sigType,config_Run1,config_Run2));
 	// gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,2,true,20,100,2000,100,false,0,%d,%d)",fileName,myLow,myHigh));
 	// Get Lower and Upper limits from Profile Calculator
 	//	cout << "Profile lower limit on s = " << ((LikelihoodInterval*) lr_int)->LowerLimit(*(w.var("R"))) << endl;
