@@ -295,7 +295,7 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 					}
 					else
 					{
-						fileOut = new TFile(Form("%s/jpsilambda_zeroTracks%s_MCinalBDT%d.root",
+						fileOut = new TFile(Form("%s/jpsilambda_zeroTracks%s_MCFinalBDT%d.root",
 						                         rootFolder,type,bdtConf),
 						                    "RECREATE");
 					}
