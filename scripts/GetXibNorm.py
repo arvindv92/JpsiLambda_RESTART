@@ -94,7 +94,7 @@ def GetNorm(run=1, isoFlag=False, isoVersion="v0", isoConf=1, finalBDTConf_nonZe
         nonZeroTracksTree = nonZeroTracksFile.MyTuple
         ZeroTracksTree = ZeroTracksFile.MyTuple
 
-        if simFlag:
+        if not simFlag:
             nonZeroTracksTree.AddFriend("MyTuple", path + "jpsixi_LL_FinalBDT"
                                         + str(finalBDTConf_nonZero) + "_iso"
                                         + str(isoConf) + "_" + isoVersion
