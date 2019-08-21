@@ -15,7 +15,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 //sigType = 0 for Hypatia, 1 for Double sided Crystal Ball.
 {
 	Int_t binwidth = 4;
-	Bool_t logFlag = false;
+	Bool_t logFlag = true;
 	const char* sigPDF = (sigType == 0) ? "Hypatia" : "CB";
 	const char* bkgPDF = (bkgType == 0) ? "Expo" : ( (bkgType == 1) ? "Cheby2" : "Cheby3" );
 
@@ -3196,12 +3196,12 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 	//************************MAKE COMBINED MODEL************************
 
-	w.factory("R[0.1,0,500]"); // R*10^5 is the parameter of interest  This is shared b/w Run1 and Run2
+	w.factory("R[0.01,0,500]"); // R*10^5 is the parameter of interest  This is shared b/w Run1 and Run2
 	// R*10^5 =  [N(Jpsi Sigma)/N(Jpsi Lambda)] * [eff(Jpsi Lambda)/eff(Jpsi Sigma)]
-	w.var("R")->setError(1.0);
+	w.var("R")->setError(0.1);
 	w.var("R")->SetTitle("R.10^{5}");
 
-	w.factory("R_1405[0.01,0.001,0.4]"); //R_1405 = N_corr(Lb -> Jpsi Lambda(1405)) / N_corr(Lb -> Jpsi Lambda)
+	w.factory("R_1405[0.01,0.0001,0.1]"); //R_1405 = N_corr(Lb -> Jpsi Lambda(1405)) / N_corr(Lb -> Jpsi Lambda)
 	w.factory("R_1520[0.01,0.001,0.4]"); //R_1520 = N_corr(Lb -> Jpsi Lambda(1520)) / N_corr(Lb -> Jpsi Lambda)
 	w.factory("R_1600[0.1,0.001,0.4]"); //R_1600 = N_corr(Lb -> Jpsi Lambda(1600)) / N_corr(Lb -> Jpsi Lambda)
 	//	w.factory("R_chic1[0.1,0.0,0.5]"); //R_chic1 = N_corr(Lb -> chic1 Lambda / N_corr(Lb -> Jpsi Lambda)
