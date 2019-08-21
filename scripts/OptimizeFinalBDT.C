@@ -374,7 +374,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 
 		hsig = (TH1D*)gDirectory->Get("hsig0");
 
-		bkginit = myTree->GetEntries("!(Lb_DTF_M_JpsiLConstr>5770 && Lb_DTF_M_JpsiLConstr<5810) && Lb_DTF_M_JpsiLConstr > 5700")*width/260;        //scaling background to width of signal region
+		bkginit = myTree->GetEntries("!(Lb_DTF_M_JpsiLConstr>5770 && Lb_DTF_M_JpsiLConstr<5810) && Lb_DTF_M_JpsiLConstr > 5700 && Lb_DTF_M_JpsiLConstr < 6000")*width/260;        //scaling background to width of signal region
 		err_bkginit = sqrt((double)myTree->GetEntries("!(Lb_DTF_M_JpsiLConstr>5770 && Lb_DTF_M_JpsiLConstr<5810) && Lb_DTF_M_JpsiLConstr > 5700 && Lb_DTF_M_JpsiLConstr < 6000"))*width/260;
 
 		cout<<"siginit = "<<siginit<<" +/- "<<err_siginit<<endl;
@@ -427,7 +427,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 				err_sig = sig*sqrt((double) (pow(err_siginit/siginit,2) + pow(err_eff/eff_sig_wt_TM,2)));
 			else
 				err_sig = 0.;
-			Int_t nBkg = myTree->GetEntries(Form("!(Lb_DTF_M_JpsiLConstr>5770 && Lb_DTF_M_JpsiLConstr<5810) && Lb_DTF_M_JpsiLConstr > 5700 && BDT%d > %f",bdtConf,BDT));
+			Int_t nBkg = myTree->GetEntries(Form("!(Lb_DTF_M_JpsiLConstr>5770 && Lb_DTF_M_JpsiLConstr<5810) && Lb_DTF_M_JpsiLConstr > 5700 && Lb_DTF_M_JpsiLConstr < 6000 && BDT%d > %f",bdtConf,BDT));
 			bkg = nBkg*width/260;        //assumes flat background
 			err_bkg = sqrt((double)nBkg)*width/260;
 
