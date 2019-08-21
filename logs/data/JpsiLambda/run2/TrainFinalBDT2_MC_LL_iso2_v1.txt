@@ -1,0 +1,300 @@
+*****************************
+*****************************
+*****************************
+*****************************
+*****************************
+==> Starting TrainFinalBDT: 
+Tue Aug 20 18:37:50 EDT 2019
+WD = /data1/avenkate/JpsiLambda_RESTART
+*****************************
+DataSetInfo              : [dataset] : Added class "Signal"
+                         : Add Tree MyTuple of type Signal with 37552 events
+DataSetInfo              : [dataset] : Added class "Background"
+                         : Add Tree MyTuple of type Background with 5047915 events
+                         : Evaluate method: BDTconf2
+<HEADER> Factory                  : Booking method: BDTconf2_fold1
+                         : 
+<HEADER> BDTconf2_fold1           : #events: (reweighted) sig: 95541 bkg: 95541
+                         : #events: (unweighted) sig: 29956 bkg: 161126
+                         : Training 500 Decision Trees ... patience please
+                         : Elapsed time for training with 191082 events: 139 sec         
+<HEADER> BDTconf2_fold1           : [dataset] : Evaluation of BDTconf2_fold1 on training sample (191082 events)
+                         : Elapsed time for evaluation of 191082 events: 12.8 sec       
+                         : Creating xml weight file: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2_fold1.weights.xml
+                         : Creating standalone class: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2_fold1.class.C
+<HEADER> Factory                  : Test all methods
+<HEADER> Factory                  : Test method: BDTconf2_fold1 for Classification performance
+                         : 
+<HEADER> BDTconf2_fold1           : [dataset] : Evaluation of BDTconf2_fold1 on testing sample (47583 events)
+                         : Elapsed time for evaluation of 47583 events: 3.77 sec       
+<HEADER> Factory                  : Evaluate all methods
+<HEADER> Factory                  : Evaluate classifier: BDTconf2_fold1
+                         : 
+<HEADER> BDTconf2_fold1           : [dataset] : Loop over test events and fill histograms with classifier response...
+                         : 
+<HEADER> Factory                  : Thank you for using TMVA!
+                         : For citation information, please visit: http://tmva.sf.net/citeTMVA.html
+<HEADER> Factory                  : Booking method: BDTconf2_fold2
+                         : 
+<HEADER> BDTconf2_fold2           : #events: (reweighted) sig: 95529.5 bkg: 95529.5
+                         : #events: (unweighted) sig: 30108 bkg: 160951
+                         : Training 500 Decision Trees ... patience please
+                         : Elapsed time for training with 191059 events: 135 sec         
+<HEADER> BDTconf2_fold2           : [dataset] : Evaluation of BDTconf2_fold2 on training sample (191059 events)
+                         : Elapsed time for evaluation of 191059 events: 13 sec       
+                         : Creating xml weight file: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2_fold2.weights.xml
+                         : Creating standalone class: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2_fold2.class.C
+<HEADER> Factory                  : Test all methods
+<HEADER> Factory                  : Test method: BDTconf2_fold2 for Classification performance
+                         : 
+<HEADER> BDTconf2_fold2           : [dataset] : Evaluation of BDTconf2_fold2 on testing sample (47606 events)
+                         : Elapsed time for evaluation of 47606 events: 3.53 sec       
+<HEADER> Factory                  : Evaluate all methods
+<HEADER> Factory                  : Evaluate classifier: BDTconf2_fold2
+                         : 
+<HEADER> BDTconf2_fold2           : [dataset] : Loop over test events and fill histograms with classifier response...
+                         : 
+<HEADER> Factory                  : Thank you for using TMVA!
+                         : For citation information, please visit: http://tmva.sf.net/citeTMVA.html
+<HEADER> Factory                  : Booking method: BDTconf2_fold3
+                         : 
+<HEADER> BDTconf2_fold3           : #events: (reweighted) sig: 95269.5 bkg: 95269.5
+                         : #events: (unweighted) sig: 30044 bkg: 160495
+                         : Training 500 Decision Trees ... patience please
+                         : Elapsed time for training with 190539 events: 133 sec         
+<HEADER> BDTconf2_fold3           : [dataset] : Evaluation of BDTconf2_fold3 on training sample (190539 events)
+                         : Elapsed time for evaluation of 190539 events: 14.3 sec       
+                         : Creating xml weight file: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2_fold3.weights.xml
+                         : Creating standalone class: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2_fold3.class.C
+<HEADER> Factory                  : Test all methods
+<HEADER> Factory                  : Test method: BDTconf2_fold3 for Classification performance
+                         : 
+<HEADER> BDTconf2_fold3           : [dataset] : Evaluation of BDTconf2_fold3 on testing sample (48126 events)
+                         : Elapsed time for evaluation of 48126 events: 3.58 sec       
+<HEADER> Factory                  : Evaluate all methods
+<HEADER> Factory                  : Evaluate classifier: BDTconf2_fold3
+                         : 
+<HEADER> BDTconf2_fold3           : [dataset] : Loop over test events and fill histograms with classifier response...
+                         : 
+<HEADER> Factory                  : Thank you for using TMVA!
+                         : For citation information, please visit: http://tmva.sf.net/citeTMVA.html
+<HEADER> Factory                  : Booking method: BDTconf2_fold4
+                         : 
+<HEADER> BDTconf2_fold4           : #events: (reweighted) sig: 95406.5 bkg: 95406.5
+                         : #events: (unweighted) sig: 29983 bkg: 160830
+                         : Training 500 Decision Trees ... patience please
+                         : Elapsed time for training with 190813 events: 135 sec         
+<HEADER> BDTconf2_fold4           : [dataset] : Evaluation of BDTconf2_fold4 on training sample (190813 events)
+                         : Elapsed time for evaluation of 190813 events: 12.5 sec       
+                         : Creating xml weight file: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2_fold4.weights.xml
+                         : Creating standalone class: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2_fold4.class.C
+<HEADER> Factory                  : Test all methods
+<HEADER> Factory                  : Test method: BDTconf2_fold4 for Classification performance
+                         : 
+<HEADER> BDTconf2_fold4           : [dataset] : Evaluation of BDTconf2_fold4 on testing sample (47852 events)
+                         : Elapsed time for evaluation of 47852 events: 3.44 sec       
+<HEADER> Factory                  : Evaluate all methods
+<HEADER> Factory                  : Evaluate classifier: BDTconf2_fold4
+                         : 
+<HEADER> BDTconf2_fold4           : [dataset] : Loop over test events and fill histograms with classifier response...
+                         : 
+<HEADER> Factory                  : Thank you for using TMVA!
+                         : For citation information, please visit: http://tmva.sf.net/citeTMVA.html
+<HEADER> Factory                  : Booking method: BDTconf2_fold5
+                         : 
+<HEADER> BDTconf2_fold5           : #events: (reweighted) sig: 95583.5 bkg: 95583.5
+                         : #events: (unweighted) sig: 30113 bkg: 161054
+                         : Training 500 Decision Trees ... patience please
+                         : Elapsed time for training with 191167 events: 95.9 sec         
+<HEADER> BDTconf2_fold5           : [dataset] : Evaluation of BDTconf2_fold5 on training sample (191167 events)
+                         : Elapsed time for evaluation of 191167 events: 14.1 sec       
+                         : Creating xml weight file: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2_fold5.weights.xml
+                         : Creating standalone class: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2_fold5.class.C
+<HEADER> Factory                  : Test all methods
+<HEADER> Factory                  : Test method: BDTconf2_fold5 for Classification performance
+                         : 
+<HEADER> BDTconf2_fold5           : [dataset] : Evaluation of BDTconf2_fold5 on testing sample (47498 events)
+                         : Elapsed time for evaluation of 47498 events: 3.03 sec       
+<HEADER> Factory                  : Evaluate all methods
+<HEADER> Factory                  : Evaluate classifier: BDTconf2_fold5
+                         : 
+<HEADER> BDTconf2_fold5           : [dataset] : Loop over test events and fill histograms with classifier response...
+                         : 
+<HEADER> Factory                  : Thank you for using TMVA!
+                         : For citation information, please visit: http://tmva.sf.net/citeTMVA.html
+<HEADER> Factory                  : Booking method: BDTconf2
+                         : 
+                         : Reading weightfile: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2_fold1.weights.xml
+                         : Reading weight file: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2_fold1.weights.xml
+                         : Reading weightfile: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2_fold2.weights.xml
+                         : Reading weight file: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2_fold2.weights.xml
+                         : Reading weightfile: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2_fold3.weights.xml
+                         : Reading weight file: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2_fold3.weights.xml
+                         : Reading weightfile: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2_fold4.weights.xml
+                         : Reading weight file: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2_fold4.weights.xml
+                         : Reading weightfile: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2_fold5.weights.xml
+                         : Reading weight file: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2_fold5.weights.xml
+<HEADER> Factory                  : [dataset] : Create Transformation "I" with events from all classes.
+                         : 
+<HEADER>                          : Transformation, Variable selection : 
+                         : Input : variable 'log_dtfchi2' <---> Output : variable 'log_dtfchi2'
+                         : Input : variable 'log_lbminipchi2' <---> Output : variable 'log_lbminipchi2'
+                         : Input : variable 'logacos_lbdira' <---> Output : variable 'logacos_lbdira'
+                         : Input : variable 'log_lbfd_ownpv' <---> Output : variable 'log_lbfd_ownpv'
+                         : Input : variable 'log_jpsiminipchi2' <---> Output : variable 'log_jpsiminipchi2'
+                         : Input : variable 'log_jpsimass' <---> Output : variable 'log_jpsimass'
+                         : Input : variable 'log_lfdchi2' <---> Output : variable 'log_lfdchi2'
+                         : Input : variable 'logacos_ldira_orivx' <---> Output : variable 'logacos_ldira_orivx'
+                         : Input : variable 'log_lfd_orivx' <---> Output : variable 'log_lfd_orivx'
+                         : Input : variable 'logacos_ldira_ownpv' <---> Output : variable 'logacos_ldira_ownpv'
+                         : Input : variable 'L_dm' <---> Output : variable 'L_dm'
+                         : Input : variable 'log_lminipchi2' <---> Output : variable 'log_lminipchi2'
+                         : Input : variable 'L_ENDVERTEX_CHI2' <---> Output : variable 'L_ENDVERTEX_CHI2'
+                         : Input : variable 'log_pminipchi2' <---> Output : variable 'log_pminipchi2'
+                         : Input : variable 'p_ProbNNghost' <---> Output : variable 'p_ProbNNghost'
+                         : Input : variable 'log_p_PT' <---> Output : variable 'log_p_PT'
+                         : Input : variable 'p_ProbNNp_corr' <---> Output : variable 'p_ProbNNp_corr'
+                         : Input : variable 'pi_ProbNNghost' <---> Output : variable 'pi_ProbNNghost'
+                         : Input : variable 'log_piminipchi2' <---> Output : variable 'log_piminipchi2'
+                         : Input : variable 'log_pi_PT' <---> Output : variable 'log_pi_PT'
+                         : Input : variable 'BDTkMin_v1' <---> Output : variable 'BDTkMin_v1'
+<HEADER> TFHandler_Factory        :            Variable                   Mean                   RMS           [        Min                   Max ]
+                         : ------------------------------------------------------------------------------------------------------------------
+                         :         log_dtfchi2:               1.4200              0.48254   [              -1.0096               2.4770 ]
+                         :     log_lbminipchi2:               1.2621              0.92901   [              -5.0262               5.8145 ]
+                         :      logacos_lbdira:              -1.8865              0.56341   [              -5.1253              0.49355 ]
+                         :      log_lbfd_ownpv:              0.76640              0.40161   [              0.17609               2.7854 ]
+                         :   log_jpsiminipchi2:               1.4271              0.82523   [              -3.9415               5.8032 ]
+                         :        log_jpsimass:               3.4908            0.0023125   [               3.4825               3.4991 ]
+                         :         log_lfdchi2:               2.5608               1.3380   [              -2.8209               7.0171 ]
+                         : logacos_ldira_orivx:              -2.7394              0.83902   [              -6.0045              0.49714 ]
+                         :       log_lfd_orivx:               2.1949              0.65947   [              -2.2506               3.3605 ]
+                         : logacos_ldira_ownpv:              -2.6421              0.85173   [              -6.2330              0.49712 ]
+                         :                L_dm:               3.9927               3.6177   [           3.5845e-05               13.317 ]
+                         :      log_lminipchi2:               1.0014              0.93840   [              -5.2207               5.4609 ]
+                         :    L_ENDVERTEX_CHI2:               2.0844               2.9101   [               0.0000               11.999 ]
+                         :      log_pminipchi2:               1.9693              0.67024   [              0.95424               5.3550 ]
+                         :       p_ProbNNghost:              0.18106              0.27999   [           1.6662e-05              0.99732 ]
+                         :            log_p_PT:               2.8680              0.31770   [              0.46251               4.0421 ]
+                         :      p_ProbNNp_corr:              0.36814              0.38409   [           1.6901e-07               1.0000 ]
+                         :      pi_ProbNNghost:              0.38941              0.38233   [           6.0315e-05              0.99993 ]
+                         :     log_piminipchi2:               2.1936              0.80605   [              0.95425               6.3089 ]
+                         :           log_pi_PT:               2.2216              0.31349   [             0.039894               3.4886 ]
+                         :          BDTkMin_v1:            -0.035220              0.33882   [             -0.91831              0.71221 ]
+                         : ------------------------------------------------------------------------------------------------------------------
+                         : 
+                         : <PlotVariables> Will not produce scatter plots ==> 
+                         : |  The number of 21 input variables and 0 target values would require 210 two-dimensional
+                         : |  histograms, which would occupy the computer's memory. Note that this
+                         : |  suppression does not have any consequences for your analysis, other
+                         : |  than not disposing of these scatter plots. You can modify the maximum
+                         : |  number of input variables allowed to generate scatter plots in your
+                         : |  script via the command line:
+                         : |  "(TMVA::gConfig().GetVariablePlotting()).fMaxNumOfAllowedVariablesForScatterPlots = <some int>;"
+                         : 
+                         : Some more output
+                         : Ranking input variables (method unspecific)...
+<HEADER> IdTransformation         : Ranking result (top variable is best ranked)
+                         : --------------------------------------------
+                         : Rank : Variable            : Separation
+                         : --------------------------------------------
+                         :    1 : log_lbminipchi2     : 5.988e-01
+                         :    2 : log_dtfchi2         : 5.142e-01
+                         :    3 : logacos_ldira_orivx : 5.076e-01
+                         :    4 : logacos_lbdira      : 4.429e-01
+                         :    5 : p_ProbNNp_corr      : 4.093e-01
+                         :    6 : log_p_PT            : 3.264e-01
+                         :    7 : log_pi_PT           : 3.026e-01
+                         :    8 : pi_ProbNNghost      : 2.809e-01
+                         :    9 : log_lfdchi2         : 2.771e-01
+                         :   10 : L_dm                : 2.697e-01
+                         :   11 : log_lminipchi2      : 2.601e-01
+                         :   12 : BDTkMin_v1          : 2.101e-01
+                         :   13 : log_piminipchi2     : 1.608e-01
+                         :   14 : log_pminipchi2      : 1.492e-01
+                         :   15 : log_lfd_orivx       : 1.327e-01
+                         :   16 : log_jpsiminipchi2   : 1.233e-01
+                         :   17 : p_ProbNNghost       : 1.097e-01
+                         :   18 : logacos_ldira_ownpv : 6.147e-02
+                         :   19 : log_lbfd_ownpv      : 5.027e-02
+                         :   20 : L_ENDVERTEX_CHI2    : 3.452e-02
+                         :   21 : log_jpsimass        : 2.288e-02
+                         : --------------------------------------------
+                         : Elapsed time for training with 238665 events: 1.29e-05 sec         
+<HEADER> BDTconf2                 : [dataset] : Evaluation of BDTconf2 on training sample (238665 events)
+                         : Elapsed time for evaluation of 238665 events: 9.11 sec       
+                         : Creating xml weight file: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2.weights.xml
+                         : Creating standalone class: dataset/weights/CVMCRun2_iso2_v1_BDT2_BDTconf2.class.C
+<WARNING> <WARNING>                : MakeClassSpecificHeader not implemented for CrossValidation
+<WARNING> <WARNING>                : MakeClassSpecific not implemented for CrossValidation
+<HEADER> Factory                  : Test all methods
+<HEADER> Factory                  : Test method: BDTconf2 for Classification performance
+                         : 
+<HEADER> BDTconf2                 : [dataset] : Evaluation of BDTconf2 on testing sample (238665 events)
+                         : Elapsed time for evaluation of 238665 events: 9.07 sec       
+<HEADER> Factory                  : Evaluate all methods
+<HEADER> Factory                  : Evaluate classifier: BDTconf2
+                         : 
+<HEADER> BDTconf2                 : [dataset] : Loop over test events and fill histograms with classifier response...
+                         : 
+<HEADER> TFHandler_BDTconf2       :            Variable                   Mean                   RMS           [        Min                   Max ]
+                         : ------------------------------------------------------------------------------------------------------------------
+                         :         log_dtfchi2:               1.4200              0.48254   [              -1.0096               2.4770 ]
+                         :     log_lbminipchi2:               1.2621              0.92901   [              -5.0262               5.8145 ]
+                         :      logacos_lbdira:              -1.8865              0.56341   [              -5.1253              0.49355 ]
+                         :      log_lbfd_ownpv:              0.76640              0.40161   [              0.17609               2.7854 ]
+                         :   log_jpsiminipchi2:               1.4271              0.82523   [              -3.9415               5.8032 ]
+                         :        log_jpsimass:               3.4908            0.0023125   [               3.4825               3.4991 ]
+                         :         log_lfdchi2:               2.5608               1.3380   [              -2.8209               7.0171 ]
+                         : logacos_ldira_orivx:              -2.7394              0.83902   [              -6.0045              0.49714 ]
+                         :       log_lfd_orivx:               2.1949              0.65947   [              -2.2506               3.3605 ]
+                         : logacos_ldira_ownpv:              -2.6421              0.85173   [              -6.2330              0.49712 ]
+                         :                L_dm:               3.9927               3.6177   [           3.5845e-05               13.317 ]
+                         :      log_lminipchi2:               1.0014              0.93840   [              -5.2207               5.4609 ]
+                         :    L_ENDVERTEX_CHI2:               2.0844               2.9101   [               0.0000               11.999 ]
+                         :      log_pminipchi2:               1.9693              0.67024   [              0.95424               5.3550 ]
+                         :       p_ProbNNghost:              0.18106              0.27999   [           1.6662e-05              0.99732 ]
+                         :            log_p_PT:               2.8680              0.31770   [              0.46251               4.0421 ]
+                         :      p_ProbNNp_corr:              0.36814              0.38409   [           1.6901e-07               1.0000 ]
+                         :      pi_ProbNNghost:              0.38941              0.38233   [           6.0315e-05              0.99993 ]
+                         :     log_piminipchi2:               2.1936              0.80605   [              0.95425               6.3089 ]
+                         :           log_pi_PT:               2.2216              0.31349   [             0.039894               3.4886 ]
+                         :          BDTkMin_v1:            -0.035220              0.33882   [             -0.91831              0.71221 ]
+                         : ------------------------------------------------------------------------------------------------------------------
+                         : 
+                         : <PlotVariables> Will not produce scatter plots ==> 
+                         : |  The number of 21 input variables and 0 target values would require 210 two-dimensional
+                         : |  histograms, which would occupy the computer's memory. Note that this
+                         : |  suppression does not have any consequences for your analysis, other
+                         : |  than not disposing of these scatter plots. You can modify the maximum
+                         : |  number of input variables allowed to generate scatter plots in your
+                         : |  script via the command line:
+                         : |  "(TMVA::gConfig().GetVariablePlotting()).fMaxNumOfAllowedVariablesForScatterPlots = <some int>;"
+                         : 
+                         : Some more output
+                         : 
+                         : Evaluation results ranked by best signal efficiency and purity (area)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : DataSet       MVA                       
+                         : Name:         Method:          ROC-integ
+                         : dataset       BDTconf2       : 0.998
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : 
+                         : Testing efficiency compared to training efficiency (overtraining check)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : DataSet              MVA              Signal efficiency: from test sample (from training sample) 
+                         : Name:                Method:          @B=0.01             @B=0.10            @B=0.30   
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : dataset              BDTconf2       : 0.961 (0.961)       1.000 (1.000)      1.000 (1.000)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : 
+<HEADER> Dataset:dataset          : Created tree 'TestTree' with 238665 events
+                         : 
+<HEADER> Dataset:dataset          : Created tree 'TrainTree' with 238665 events
+                         : 
+<HEADER> Factory                  : Thank you for using TMVA!
+                         : For citation information, please visit: http://tmva.sf.net/citeTMVA.html
+                         : Evaluation done.
+==> Wrote root file: rootFiles/dataFiles/JpsiLambda/run2/TMVAtraining/iso/CVMC_iso2_v1_BDT2.root
+==> TMVAClassification is done!
+==> TrainFinalBDT is done! Home streeeeetch!: Real time 0:16:02, CP time 3356.560
