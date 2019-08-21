@@ -23,6 +23,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run = 1, const char* isoVersion = 
                                         Bool_t isoFlag = true,
                                         Bool_t logFlag = false,
                                         const char* FOM = "Sig",
-                                        const char *part = "lambda");
+                                        const char *part = "lambda",
+                                        Bool_t simFlag = false);
 
 #endif
