@@ -359,7 +359,7 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 					        isoVersion<<" isoConf "<<isoConf<<" finalBDTconf "<<
 					        finalBDTconf<<" FOM "<<FOM<<" ***"<<endl;
 					gSystem->Exec(Form("root -l -b -q \'OptimizeFinalBDT.C(%d,\"%s\",%d,%d,%d,%d,\"%s\",\"Sigma\")\'",
-					                   run, isoVersion, isoConf,finalBDTconf, isoFlag, logFlag, FOM));
+					                   run, isoVersion, isoConf,finalBDTconf, isoFlag, logFlag, FOM, simFlag));
 					// bdtCuts = OptimizeFinalBDT(run, isoVersion, isoConf,finalBDTconf, isoFlag, logFlag, FOM,"sigma");
 				}
 			}
