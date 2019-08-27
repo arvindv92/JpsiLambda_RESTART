@@ -196,28 +196,28 @@ void Fitscript_dataEffs(Int_t run = 1, TString stage = "Trigger", Bool_t isData 
 		treeIn = (TTree*)fileIn->Get("MyTuple");
 		if(run == 1)
 		{
-			treeIn->AddFriend("MyTuple",Form("%s/JpsiLambda/run%d/jpsilambda_LL_FinalBDT2_iso2_v0.root",prefix,run));
-			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high),Form("(BDT2 > 0.475)%s",bdtwtexp));
+			treeIn->AddFriend("MyTuple",Form("%s/JpsiLambda/run%d/jpsilambda_LL_FinalBDT1_iso2_v1.root",prefix,run));
+			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high),Form("(BDT1 > 0.405)%s",bdtwtexp));
 		}
 		else if(run == 2)
 		{
-			treeIn->AddFriend("MyTuple",Form("%s/JpsiLambda/run%d/jpsilambda_LL_FinalBDT2_iso1_v0.root",prefix,run));
-			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high),Form("(BDT2 > 0.555)%s",bdtwtexp));
+			treeIn->AddFriend("MyTuple",Form("%s/JpsiLambda/run%d/jpsilambda_LL_FinalBDT1_iso2_v1.root",prefix,run));
+			treeIn->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass(%d,%d,%d)",nbins,low,high),Form("(BDT1 > 0.475)%s",bdtwtexp));
 		}
 
 		hMass = (TH1D*)gDirectory->Get("hMass");
 
 		fileIn_Zero = Open(Form("%s/JpsiLambda/run%d/jpsilambda_cutoutks_LL_ZeroTracks.root",prefix,run));
 		treeIn_Zero = (TTree*)fileIn_Zero->Get("MyTuple");
-		treeIn_Zero->AddFriend("MyTuple",Form("%s/JpsiLambda/run%d/jpsilambda_zeroTracksLL_FinalBDT2.root",prefix,run));
+		treeIn_Zero->AddFriend("MyTuple",Form("%s/JpsiLambda/run%d/jpsilambda_zeroTracksLL_FinalBDT1.root",prefix,run));
 
 		if(run == 1)
 		{
-			treeIn_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass_Zero(%d,%d,%d)",nbins,low,high),Form("(BDT2 > 0.365)%s",bdtwtexp));
+			treeIn_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass_Zero(%d,%d,%d)",nbins,low,high),Form("(BDT1 > 0.335)%s",bdtwtexp));
 		}
 		else if(run == 2)
 		{
-			treeIn_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass_Zero(%d,%d,%d)",nbins,low,high),Form("(BDT2 > 0.495)%s",bdtwtexp));
+			treeIn_Zero->Draw(Form("Lb_DTF_M_JpsiLConstr>>hMass_Zero(%d,%d,%d)",nbins,low,high),Form("(BDT1 > 0.405)%s",bdtwtexp));
 		}
 		hMass_Zero = (TH1D*)gDirectory->Get("hMass_Zero");
 
