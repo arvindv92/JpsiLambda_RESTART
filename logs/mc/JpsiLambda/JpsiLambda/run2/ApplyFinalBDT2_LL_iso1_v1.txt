@@ -35,3 +35,42 @@ Incoming Entries = 61426                         : Booking "BDT method" of type 
 --- ... Processing event: 50000
 --- End of event loop: --- Created root file: rootFiles/mcFiles/JpsiLambda/JpsiLambda/run2/jpsilambda_LL_FinalBDT2_iso1_v1.root containing the MVA output histograms
 ==> ApplyFinalBDT is done! Go optimize and fit!: Real time 0:00:06, CP time 5.100
+******************************************
+******************************************
+******************************************
+******************************************
+******************************************
+Starting ApplyFinalBDT 
+Tue Aug 20 18:53:45 EDT 2019
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+Processing Run 2 LL MC type 1
+******************************************
+******************************************
+Input file = rootFiles/mcFiles/JpsiLambda/JpsiLambda/run2/jpsilambda_cutoutks_LL_nonZeroTracks.root
+Output file = rootFiles/mcFiles/JpsiLambda/JpsiLambda/run2/jpsilambda_LL_MCFinalBDT2_MCiso1_v1.root
+******************************************
+Incoming Entries = 61426                         : Booking "BDT method" of type "CrossValidation" from dataset/weights/CVMCRun2_iso1_v1_BDT2_BDTconf2.weights.xml.
+                         : Reading weight file: dataset/weights/CVMCRun2_iso1_v1_BDT2_BDTconf2.weights.xml
+<HEADER> DataSetInfo              : [Default] : Added class "Signal"
+<HEADER> DataSetInfo              : [Default] : Added class "Background"
+                         : Reading weightfile: dataset/weights/CVMCRun2_iso1_v1_BDT2_BDTconf2_fold1.weights.xml
+                         : Reading weight file: dataset/weights/CVMCRun2_iso1_v1_BDT2_BDTconf2_fold1.weights.xml
+                         : Reading weightfile: dataset/weights/CVMCRun2_iso1_v1_BDT2_BDTconf2_fold2.weights.xml
+                         : Reading weight file: dataset/weights/CVMCRun2_iso1_v1_BDT2_BDTconf2_fold2.weights.xml
+                         : Reading weightfile: dataset/weights/CVMCRun2_iso1_v1_BDT2_BDTconf2_fold3.weights.xml
+                         : Reading weight file: dataset/weights/CVMCRun2_iso1_v1_BDT2_BDTconf2_fold3.weights.xml
+                         : Reading weightfile: dataset/weights/CVMCRun2_iso1_v1_BDT2_BDTconf2_fold4.weights.xml
+                         : Reading weight file: dataset/weights/CVMCRun2_iso1_v1_BDT2_BDTconf2_fold4.weights.xml
+                         : Reading weightfile: dataset/weights/CVMCRun2_iso1_v1_BDT2_BDTconf2_fold5.weights.xml
+                         : Reading weight file: dataset/weights/CVMCRun2_iso1_v1_BDT2_BDTconf2_fold5.weights.xml
+                         : Booked classifier "BDTconf2" of type: "CrossValidation"
+--- TMVAClassificationApp    : Using input file: rootFiles/mcFiles/JpsiLambda/JpsiLambda/run2/jpsilambda_cutoutks_LL_nonZeroTracks.root
+Error in <TTree::SetBranchAddress>: The pointer type given "Float_t" (5) does not correspond to the type needed "UInt_t" (13) by the branch: runNumber
+Error in <TTree::SetBranchAddress>: The pointer type given "Float_t" (5) does not correspond to the type needed "Double_t" (8) by the branch: ntracks
+--- Processing: 61426 events
+--- ... Processing event: 0
+--- ... Processing event: 50000
+--- End of event loop: --- Created root file: rootFiles/mcFiles/JpsiLambda/JpsiLambda/run2/jpsilambda_LL_MCFinalBDT2_MCiso1_v1.root containing the MVA output histograms
+==> ApplyFinalBDT is done! Go optimize and fit!: Real time 0:00:04, CP time 4.190

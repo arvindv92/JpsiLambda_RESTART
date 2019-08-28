@@ -1,42 +1,32 @@
+Error in <TTree::SetBranchAddress>: The pointer type given "Float_t" (5) does not correspond to the type needed "UInt_t" (13) by the branch: runNumber
+Error in <TTree::SetBranchAddress>: The pointer type given "Float_t" (5) does not correspond to the type needed "Double_t" (8) by the branch: ntracks
+ESTART
 ******************************************
-******************************************
-******************************************
-******************************************
-******************************************
-Starting ApplyFinalBDT 
-Tue Aug 13 14:42:29 EDT 2019
-WD = /data1/avenkate/JpsiLambda_RESTART
-******************************************
-hadd Target file: rootFiles/mcFiles/JpsiLambda/Lst1600/run1/lst1600_cutoutks_LL.root
-hadd compression setting for all ouput: 1
-hadd Source file 1: rootFiles/mcFiles/JpsiLambda/Lst1600/run1/lst1600_cutoutks_LL_nonZeroTracks.root
-hadd Source file 2: rootFiles/mcFiles/JpsiLambda/Lst1600/run1/lst1600_cutoutks_LL_ZeroTracks.root
-hadd Target path: rootFiles/mcFiles/JpsiLambda/Lst1600/run1/lst1600_cutoutks_LL.root:/
 ******************************************
 Processing Run 1 LL MC type 8
 ******************************************
 ******************************************
 Input file = rootFiles/mcFiles/JpsiLambda/Lst1600/run1/lst1600_cutoutks_LL.root
-Output file = rootFiles/mcFiles/JpsiLambda/Lst1600/run1/lst1600_LL_FinalBDT2_noIso.root
+Output file = rootFiles/mcFiles/JpsiLambda/Lst1600/run1/lst1600_LL_MCFinalBDT2_noIso.root
 ******************************************
-Incoming Entries = 73180                         : Booking "BDT method" of type "CrossValidation" from dataset/weights/CVdataRun1_noIso_BDT2_BDTconf2.weights.xml.
-                         : Reading weight file: dataset/weights/CVdataRun1_noIso_BDT2_BDTconf2.weights.xml
+Incoming Entries = 73180                         : Booking "BDT method" of type "CrossValidation" from dataset/weights/CVMCRun1_noIso_BDT2_BDTconf2.weights.xml.
+                         : Reading weight file: dataset/weights/CVMCRun1_noIso_BDT2_BDTconf2.weights.xml
 <HEADER> DataSetInfo              : [Default] : Added class "Signal"
 <HEADER> DataSetInfo              : [Default] : Added class "Background"
-                         : Reading weightfile: dataset/weights/CVdataRun1_noIso_BDT2_BDTconf2_fold1.weights.xml
-                         : Reading weight file: dataset/weights/CVdataRun1_noIso_BDT2_BDTconf2_fold1.weights.xml
-                         : Reading weightfile: dataset/weights/CVdataRun1_noIso_BDT2_BDTconf2_fold2.weights.xml
-                         : Reading weight file: dataset/weights/CVdataRun1_noIso_BDT2_BDTconf2_fold2.weights.xml
-                         : Reading weightfile: dataset/weights/CVdataRun1_noIso_BDT2_BDTconf2_fold3.weights.xml
-                         : Reading weight file: dataset/weights/CVdataRun1_noIso_BDT2_BDTconf2_fold3.weights.xml
-                         : Reading weightfile: dataset/weights/CVdataRun1_noIso_BDT2_BDTconf2_fold4.weights.xml
-                         : Reading weight file: dataset/weights/CVdataRun1_noIso_BDT2_BDTconf2_fold4.weights.xml
-                         : Reading weightfile: dataset/weights/CVdataRun1_noIso_BDT2_BDTconf2_fold5.weights.xml
-                         : Reading weight file: dataset/weights/CVdataRun1_noIso_BDT2_BDTconf2_fold5.weights.xml
+                         : Reading weightfile: dataset/weights/CVMCRun1_noIso_BDT2_BDTconf2_fold1.weights.xml
+                         : Reading weight file: dataset/weights/CVMCRun1_noIso_BDT2_BDTconf2_fold1.weights.xml
+                         : Reading weightfile: dataset/weights/CVMCRun1_noIso_BDT2_BDTconf2_fold2.weights.xml
+                         : Reading weight file: dataset/weights/CVMCRun1_noIso_BDT2_BDTconf2_fold2.weights.xml
+                         : Reading weightfile: dataset/weights/CVMCRun1_noIso_BDT2_BDTconf2_fold3.weights.xml
+                         : Reading weight file: dataset/weights/CVMCRun1_noIso_BDT2_BDTconf2_fold3.weights.xml
+                         : Reading weightfile: dataset/weights/CVMCRun1_noIso_BDT2_BDTconf2_fold4.weights.xml
+                         : Reading weight file: dataset/weights/CVMCRun1_noIso_BDT2_BDTconf2_fold4.weights.xml
+                         : Reading weightfile: dataset/weights/CVMCRun1_noIso_BDT2_BDTconf2_fold5.weights.xml
+                         : Reading weight file: dataset/weights/CVMCRun1_noIso_BDT2_BDTconf2_fold5.weights.xml
                          : Booked classifier "BDTconf2" of type: "CrossValidation"
 --- TMVAClassificationApp    : Using input file: rootFiles/mcFiles/JpsiLambda/Lst1600/run1/lst1600_cutoutks_LL.root
 --- Processing: 73180 events
 --- ... Processing event: 0
 --- ... Processing event: 50000
---- End of event loop: --- Created root file: rootFiles/mcFiles/JpsiLambda/Lst1600/run1/lst1600_LL_FinalBDT2_noIso.root containing the MVA output histograms
-==> ApplyFinalBDT is done! Go optimize and fit!: Real time 0:00:08, CP time 5.840
+--- End of event loop: --- Created root file: rootFiles/mcFiles/JpsiLambda/Lst1600/run1/lst1600_LL_MCFinalBDT2_noIso.root containing the MVA output histograms
+==> ApplyFinalBDT is done! Go optimize and fit!: Real time 0:00:05, CP time 4.950

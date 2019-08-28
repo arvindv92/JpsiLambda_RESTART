@@ -1,30 +1,14 @@
-******************************************
-******************************************
+
+ *** Break *** keyboard interrupt
+
+ *** Break *** segmentation violation
+***********
 ******************************************
 ******************************************
 ******************************************
 ******************************************
 ==> Starting Trigger: 
 WD = /data1/avenkate/JpsiLambda_RESTART
-Mon Aug 12 14:59:07 EDT 2019
+Fri Aug 23 15:29:15 EDT 2019
 ******************************************
-******************************************
-WD = /data1/avenkate/JpsiLambda_RESTART
-******************************************
-******************************************
-Input file = rootFiles/mcFiles/JpsiLambda/JpsiLambda/run2/jpsilambda.root
-Output file = rootFiles/mcFiles/JpsiLambda/JpsiLambda/run2/jpsilambda_triggered.root
-******************************************
-Incoming entries = 150766
-I am making the following trigger cuts. Sit tight
-(Lb_Hlt1DiMuonHighMassDecision_TOS==1||Lb_Hlt1TrackMuonDecision_TOS==1||Lb_Hlt1TrackAllL0Decision_TOS==1)&&(Lb_Hlt2DiMuonDetachedJPsiDecision_TOS==1)
-0
-100000
-Outgoing entries = 115675
-******************************************
-Trigger cut made with exclusive efficiency = 76.7249% +/- 0.108833 %
-******************************************
-******************************************
-Trigger cut made with inclusive efficiency = 2.72047% +/- 0.00788923 %
-******************************************
-==> Trigger is done! Huzzah!: Real time 0:01:29, CP time 86.620
+[0mRoot > [0m

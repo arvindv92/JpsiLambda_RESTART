@@ -1,0 +1,32 @@
+******************************************
+==> Start of ApplyIsolation
+Fri Aug 23 16:51:52 EDT 2019
+WD = /data1/avenkate/JpsiLambda_RESTART
+******************************************
+******************************************
+Processing Run 2 LL MC type 11
+******************************************
+******************************************
+Input file  = rootFiles/mcFiles/JpsiLambda/Xib0/run2/xib0_cutoutks_LL_nonZeroTracks.root
+Output file = rootFiles/mcFiles/JpsiLambda/Xib0/run2/xib0_LL_iso1_v1.root
+******************************************
+Incoming entries = 23642
+                         : Booking "BDT method" of type "CrossValidation" from dataset/weights/CVisok_dataRun2_v1_iso1_isoConf1_300.weights.xml.
+                         : Reading weight file: dataset/weights/CVisok_dataRun2_v1_iso1_isoConf1_300.weights.xml
+<HEADER> DataSetInfo              : [Default] : Added class "Signal"
+<HEADER> DataSetInfo              : [Default] : Added class "Background"
+                         : Reading weightfile: dataset/weights/CVisok_dataRun2_v1_iso1_isoConf1_300_fold1.weights.xml
+                         : Reading weight file: dataset/weights/CVisok_dataRun2_v1_iso1_isoConf1_300_fold1.weights.xml
+                         : Reading weightfile: dataset/weights/CVisok_dataRun2_v1_iso1_isoConf1_300_fold2.weights.xml
+                         : Reading weight file: dataset/weights/CVisok_dataRun2_v1_iso1_isoConf1_300_fold2.weights.xml
+                         : Reading weightfile: dataset/weights/CVisok_dataRun2_v1_iso1_isoConf1_300_fold3.weights.xml
+                         : Reading weight file: dataset/weights/CVisok_dataRun2_v1_iso1_isoConf1_300_fold3.weights.xml
+                         : Reading weightfile: dataset/weights/CVisok_dataRun2_v1_iso1_isoConf1_300_fold4.weights.xml
+                         : Reading weight file: dataset/weights/CVisok_dataRun2_v1_iso1_isoConf1_300_fold4.weights.xml
+                         : Reading weightfile: dataset/weights/CVisok_dataRun2_v1_iso1_isoConf1_300_fold5.weights.xml
+                         : Reading weight file: dataset/weights/CVisok_dataRun2_v1_iso1_isoConf1_300_fold5.weights.xml
+                         : Booked classifier "isoConf1_300" of type: "CrossValidation"
+--- Processing: 23642 events
+--- ... Processing event: 0
+--- Created root file: rootFiles/mcFiles/JpsiLambda/Xib0/run2/xib0_LL_iso1_v1.root containing the MVA output histograms
+==> End of ApplyIsolation! Isolated forever!: Real time 0:00:05, CP time 4.930

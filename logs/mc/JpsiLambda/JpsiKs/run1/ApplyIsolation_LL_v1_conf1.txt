@@ -1,6 +1,6 @@
 ******************************************
 ==> Start of ApplyIsolation
-Mon Aug 12 17:43:42 EDT 2019
+Tue Aug 20 16:41:35 EDT 2019
 WD = /data1/avenkate/JpsiLambda_RESTART
 ******************************************
 ******************************************
@@ -8,28 +8,28 @@ Processing Run 1 LL MC type 10
 ******************************************
 ******************************************
 Input file  = rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsiks_cutoutks_LL_nonZeroTracks.root
-Output file = rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsiks_LL_iso1_v1.root
+Output file = rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsiks_LL_MCiso1_v1.root
 ******************************************
 Incoming entries = 163839
-                         : Booking "BDT method" of type "CrossValidation" from dataset/weights/CVisok_dataRun1_v1_iso1_isoConf1_300.weights.xml.
-                         : Reading weight file: dataset/weights/CVisok_dataRun1_v1_iso1_isoConf1_300.weights.xml
+                         : Booking "BDT method" of type "CrossValidation" from dataset/weights/CVisok_MCRun1_v1_iso1_isoConf1_300.weights.xml.
+                         : Reading weight file: dataset/weights/CVisok_MCRun1_v1_iso1_isoConf1_300.weights.xml
 <HEADER> DataSetInfo              : [Default] : Added class "Signal"
 <HEADER> DataSetInfo              : [Default] : Added class "Background"
-                         : Reading weightfile: dataset/weights/CVisok_dataRun1_v1_iso1_isoConf1_300_fold1.weights.xml
-                         : Reading weight file: dataset/weights/CVisok_dataRun1_v1_iso1_isoConf1_300_fold1.weights.xml
-                         : Reading weightfile: dataset/weights/CVisok_dataRun1_v1_iso1_isoConf1_300_fold2.weights.xml
-                         : Reading weight file: dataset/weights/CVisok_dataRun1_v1_iso1_isoConf1_300_fold2.weights.xml
-                         : Reading weightfile: dataset/weights/CVisok_dataRun1_v1_iso1_isoConf1_300_fold3.weights.xml
-                         : Reading weight file: dataset/weights/CVisok_dataRun1_v1_iso1_isoConf1_300_fold3.weights.xml
-                         : Reading weightfile: dataset/weights/CVisok_dataRun1_v1_iso1_isoConf1_300_fold4.weights.xml
-                         : Reading weight file: dataset/weights/CVisok_dataRun1_v1_iso1_isoConf1_300_fold4.weights.xml
-                         : Reading weightfile: dataset/weights/CVisok_dataRun1_v1_iso1_isoConf1_300_fold5.weights.xml
-                         : Reading weight file: dataset/weights/CVisok_dataRun1_v1_iso1_isoConf1_300_fold5.weights.xml
+                         : Reading weightfile: dataset/weights/CVisok_MCRun1_v1_iso1_isoConf1_300_fold1.weights.xml
+                         : Reading weight file: dataset/weights/CVisok_MCRun1_v1_iso1_isoConf1_300_fold1.weights.xml
+                         : Reading weightfile: dataset/weights/CVisok_MCRun1_v1_iso1_isoConf1_300_fold2.weights.xml
+                         : Reading weight file: dataset/weights/CVisok_MCRun1_v1_iso1_isoConf1_300_fold2.weights.xml
+                         : Reading weightfile: dataset/weights/CVisok_MCRun1_v1_iso1_isoConf1_300_fold3.weights.xml
+                         : Reading weight file: dataset/weights/CVisok_MCRun1_v1_iso1_isoConf1_300_fold3.weights.xml
+                         : Reading weightfile: dataset/weights/CVisok_MCRun1_v1_iso1_isoConf1_300_fold4.weights.xml
+                         : Reading weight file: dataset/weights/CVisok_MCRun1_v1_iso1_isoConf1_300_fold4.weights.xml
+                         : Reading weightfile: dataset/weights/CVisok_MCRun1_v1_iso1_isoConf1_300_fold5.weights.xml
+                         : Reading weight file: dataset/weights/CVisok_MCRun1_v1_iso1_isoConf1_300_fold5.weights.xml
                          : Booked classifier "isoConf1_300" of type: "CrossValidation"
 --- Processing: 163839 events
 --- ... Processing event: 0
 --- ... Processing event: 50000
 --- ... Processing event: 100000
 --- ... Processing event: 150000
---- Created root file: rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsiks_LL_iso1_v1.root containing the MVA output histograms
-==> End of ApplyIsolation! Isolated forever!: Real time 0:00:39, CP time 39.060
+--- Created root file: rootFiles/mcFiles/JpsiLambda/JpsiKs/run1/jpsiks_LL_MCiso1_v1.root containing the MVA output histograms
+==> End of ApplyIsolation! Isolated forever!: Real time 0:01:17, CP time 38.940
