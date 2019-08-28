@@ -73,7 +73,7 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 	Bool_t loose    = true;// when true, analysis will run over data/MC from "loose" stripping line. Only LL
 	Bool_t isoFlag  = true;// when true, isolation will be used in final BDT.
 	Bool_t logFlag  = true;// set to false only while testing.
-	Bool_t simFlag  = true;// set to true to train on simulation
+	Bool_t simFlag  = false;// set to true to train on simulation
 
 	Float_t bdtCut            = 0.0;
 	Float_t bdtCut_ZeroTracks = 0.0;
@@ -155,7 +155,7 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 	for(mcType = 1; mcType <=len; mcType++)
 	{
 		if(isData) mcType = 0;
-		if(mcType != 4 && mcType != 5 && mcType != 9 && mcType !=11)
+		if(mcType != 4 && mcType != 5 && mcType != 9)
 		{
 			cout<<"$$$$$$$$$$$ Processing MC Type "<<mcType<< " $$$$$$$$$$$$$$"<<endl;
 			cout<<"$$$$$$$$$$$ Processing Run "<<run<<" $$$$$$$$$$$"<<endl;
@@ -163,8 +163,8 @@ void MASTER(Int_t run = 1, Int_t year = 2015, Int_t config = 1, Int_t block = 1,
 			{
 				if(!isData) //MC
 				{
-					cout<<"****Collating MC PIDGEN files"<<endl;
-					gSystem->Exec(Form("root -l -b -q \'CollateFiles.C(%d,%d,%d,%d)\'",run, year, isData, mcType));
+					// cout<<"****Collating MC PIDGEN files"<<endl;
+					// gSystem->Exec(Form("root -l -b -q \'CollateFiles.C(%d,%d,%d,%d)\'",run, year, isData, mcType));
 
 					if(mcType!=10)
 					{

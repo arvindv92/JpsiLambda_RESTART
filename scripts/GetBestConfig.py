@@ -15,9 +15,9 @@ isoFlag = args.ISO
 
 # isoFlag = True
 if isoFlag:
-    files = glob.glob("../logs/data/JpsiLambda/run{}/OptimizeFinalBDT*_iso*_Punzi_Sigma.txt".format(run))
+    files = glob.glob("../logs/data/JpsiLambda/run{}/OptimizeFinalMCBDT*_iso*_Punzi_Sigma.txt".format(run))
 else:
-    files = glob.glob("../logs/data/JpsiLambda/run{}/OptimizeFinalBDT*_noIso*_Punzi_Sigma.txt".format(run))
+    files = glob.glob("../logs/data/JpsiLambda/run{}/OptimizeFinalMCBDT*_noIso*_Punzi_Sigma.txt".format(run))
 ctr = 0
 myFOM_nonZero = 0.0
 myFOM_Zero = 0.0

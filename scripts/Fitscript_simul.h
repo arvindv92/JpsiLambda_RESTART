@@ -17,6 +17,7 @@
 #include "RooKeysPdf.h"
 #include "TCanvas.h"
 #include "TPad.h"
+#include "TStyle.h"
 #include "TPaveText.h"
 #include "RooHist.h"
 #include "TAxis.h"

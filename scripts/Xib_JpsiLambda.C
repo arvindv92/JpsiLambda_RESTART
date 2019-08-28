@@ -91,17 +91,17 @@ void Xib_JpsiLambda()
 	Float_t Err_RecEff_Xib0_JpsiLambda_Run2_wt = 0.0;
 
 	//Reconstruction MC Eff for Xib- -> J/psi Xi-
-	Float_t RecEff_Xibm_JpsiXim_Run1 = 0.0648/100;
-	Float_t RecEff_Xibm_JpsiXim_Run2 = 0.0670/100;
+	Float_t RecEff_Xibm_JpsiXim_Run1 = 0.0631/100;
+	Float_t RecEff_Xibm_JpsiXim_Run2 = 0.0650/100;
 
 	Float_t Err_RecEff_Xibm_JpsiXim_Run1 = 0.0014/100;
 	Float_t Err_RecEff_Xibm_JpsiXim_Run2 = 0.0014/100;
 
 	//Weighted Reconstruction MC Eff for Xib- -> J/psi Xi-
-	Float_t RecEff_Xibm_JpsiXim_Run1_wt = 0.0683/100;
-	Float_t RecEff_Xibm_JpsiXim_Run2_wt = 0.0681/100;
+	Float_t RecEff_Xibm_JpsiXim_Run1_wt = 0.0728/100;
+	Float_t RecEff_Xibm_JpsiXim_Run2_wt = 0.0725/100;
 
-	Float_t Err_RecEff_Xibm_JpsiXim_Run1_wt = 0.0017/100;
+	Float_t Err_RecEff_Xibm_JpsiXim_Run1_wt = 0.0015/100;
 	Float_t Err_RecEff_Xibm_JpsiXim_Run2_wt = 0.0015/100;
 
 	//Generator MC Eff for Xib- -> J/psi Xi-

@@ -129,7 +129,7 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 
 	Bool_t hlt1DiMuonHighMass = false, hlt1TrackMuon      = false;
 	Bool_t hlt1TrackAllL0     = false, hlt2DiMuonDetached = false;
-	Bool_t collateFlag        = true;//NB set to false
+	Bool_t collateFlag        = false;//NB set to false
 	/*f you don't want to re-collate MC, set this to false.
 	   For example, if only the trigger condition changes.*/
 

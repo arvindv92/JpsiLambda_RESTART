@@ -54,30 +54,17 @@ void reweight_Lst1405(Int_t run = 1)
 	TH1D *theory_MVmodel   = new TH1D("theory_MVmodel","",nbins_MV,low_MV,high_MV);
 	TH1D *theory_BONNmodel = new TH1D("theory_BONNmodel","",nbins_BONN,low_BONN,high_BONN);
 
-	// gSystem->Exec("cp ./Lst1405_total.root ./Lst1405_total_MVrw.root");
-	// gSystem->Exec("cp ./Lst1405_total.root ./Lst1405_total_BONNrw.root");
-
-	// mcfile = TFile::Open("./Lst1405_total_MVrw.root","UPDATE");
-	// treeIn = (TTree*)mcfile->Get("MCDecayTreeTuple/MCDecayTree");
-
-	fileIn = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405_pidgen.root",run),"UPDATE");
+	fileIn = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405_cutoutks_LL_ZeroTracks.root",run),"UPDATE");
 	treeIn     = (TTree*)fileIn->Get("MyTuple");
 
 	fileIn_gen = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405.root",run),"READ");
 	treeIn_gen = (TTree*)fileIn_gen->Get("MCTuple/MCDecayTree");
 
-	cout<<"Copying Trees"<<endl;
+	// genFile_MV = new TFile(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/RW/lst1405_gen_MV.root",run),"RECREATE");
+	// genTreeout_MV = new TTree("MCDecayTree","");
 
-	// mcfile_MV = new TFile(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405_MV.root",run),"RECREATE");
-	// treeout_MV = (TTree*)treeIn->CopyTree("");
-	// mcfile_BONN = new TFile(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/lst1405_BONN.root",run),"RECREATE");
-	// treeout_BONN = (TTree*)treeIn->CopyTree("");
-
-	genFile_MV = new TFile(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/RW/lst1405_gen_MV.root",run),"RECREATE");
-	genTreeout_MV = new TTree("MCDecayTree","");
-
-	genFile_BONN = new TFile(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/RW/lst1405_gen_BONN.root",run),"RECREATE");
-	genTreeout_BONN = new TTree("MCDecayTree","");
+	// genFile_BONN = new TFile(Form("../rootFiles/mcFiles/JpsiLambda/Lst1405/run%d/RW/lst1405_gen_BONN.root",run),"RECREATE");
+	// genTreeout_BONN = new TTree("MCDecayTree","");
 
 	cout<<"Done copying Trees"<<endl;
 
@@ -105,22 +92,12 @@ void reweight_Lst1405(Int_t run = 1)
 	theory_MVmodel->SetLineColor(kMagenta+2);
 	hmv->SetLineColor(kRed);
 	hbonn->SetLineColor(kRed);
-	//
-	// theory_BONNmodel->Draw("HIST");
-	// theory_MVmodel->Draw("sameHIST");
-	// hmv->Draw("same");
 
 	TH1D *wts_MV = (TH1D*)theory_MVmodel->Clone("wts_MV");
 	TH1D *wts_BONN = (TH1D*)theory_BONNmodel->Clone("wts_BONN");
 
 	wts_MV->Divide(hmv);
 	wts_BONN->Divide(hbonn);
-
-	// new TCanvas();
-	// wts_MV->Draw();
-	//
-	// new TCanvas();
-	// wts_BONN->Draw();
 
 	nentries = treeIn->GetEntries();
 	nentries_gen = treeIn_gen->GetEntries();
@@ -149,13 +126,9 @@ void reweight_Lst1405(Int_t run = 1)
 
 	TBranch *MVwtbranch = treeIn->Branch("MVweight",&MVweight,"MVweight/D");
 	TBranch *BONNwtbranch = treeIn->Branch("BONNweight",&BONNweight,"BONNweight/D");
-	//TBranch *MVwtbranch = treeout_MV->Branch("MVweight",&MVweight,"MVweight/D");
-	// TBranch *BONNwtbranch = treeout_BONN->Branch("BONNweight",&BONNweight,"BONNweight/D");
-	// TBranch *JpsiLMass_MV = treeout_MV->Branch("JpsiLmass",&JpsiLmass,"JpsiLmass/D");
-	// TBranch *JpsiLMass_BONN = treeout_BONN->Branch("JpsiLmass",&JpsiLmass,"JpsiLmass/D");
 
-	TBranch *MVwtbranch_gen = genTreeout_MV->Branch("MVweight",&MVweight_gen,"MVweight/D");
-	TBranch *BONNwtbranch_gen = genTreeout_BONN->Branch("BONNweight",&BONNweight_gen,"BONNweight/D");
+	// TBranch *MVwtbranch_gen = genTreeout_MV->Branch("MVweight",&MVweight_gen,"MVweight/D");
+	// TBranch *BONNwtbranch_gen = genTreeout_BONN->Branch("BONNweight",&BONNweight_gen,"BONNweight/D");
 	Int_t ctr = 0;
 
 	//First loop over reco tree
@@ -194,17 +167,14 @@ void reweight_Lst1405(Int_t run = 1)
 		treeIn_gen->GetEntry(i);
 
 		//*****Reweight the generator MC also*****
-		mass_gen       = sqrt(Lst_PE*Lst_PE - Lst_PX*Lst_PX - Lst_PY*Lst_PY - Lst_PZ*Lst_PZ);
-		massbin_MV     = wts_MV->FindBin(mass_gen);
-		massbin_BONN   = wts_BONN->FindBin(mass_gen);
-		MVweight_gen   = wts_MV->GetBinContent(massbin_MV);
-		BONNweight_gen = wts_BONN->GetBinContent(massbin_BONN);
-		// MVwtbranch_gen->Fill();
-		// BONNwtbranch_gen->Fill();
-		genTreeout_MV->Fill();
-		genTreeout_BONN->Fill();
+		// mass_gen       = sqrt(Lst_PE*Lst_PE - Lst_PX*Lst_PX - Lst_PY*Lst_PY - Lst_PZ*Lst_PZ);
+		// massbin_MV     = wts_MV->FindBin(mass_gen);
+		// massbin_BONN   = wts_BONN->FindBin(mass_gen);
+		// MVweight_gen   = wts_MV->GetBinContent(massbin_MV);
+		// BONNweight_gen = wts_BONN->GetBinContent(massbin_BONN);
+		// genTreeout_MV->Fill();
+		// genTreeout_BONN->Fill();
 		//****************************************
-
 
 		//The purpose of the loop below is to fill the generated Lst mass corresponding to a reconstructed event
 		for(Int_t j=0; j<len; j++)
@@ -215,43 +185,6 @@ void reweight_Lst1405(Int_t run = 1)
 				lstmass_gen[j] = sqrt(Lst_PE*Lst_PE - Lst_PX*Lst_PX - Lst_PY*Lst_PY - Lst_PZ*Lst_PZ);
 			}
 		}
-
-		// vector<UInt_t>::iterator it_runno = std::find(runno.begin(),runno.end(),runno_gen);
-		// vector<ULong64_t>::iterator it_evtno = std::find(evtno.begin(),evtno.end(),evtno_gen);
-		//
-		// if(it_runno == runno.end() || it_evtno == evtno.end())//this event in the gen tree was not found in the reco tree.
-		// {
-		//      ctr_notfound++;
-		//      continue;
-		// }
-		// //At this point both runNumber and eventNumber have some match in the reco tree. Might not be the same index.
-		// index_rno = std::distance(runno.begin(),it_runno);
-		// index_eno = std::distance(evtno.begin(),it_evtno);
-		//
-		// if(index_rno != index_eno)//index doesnt match.
-		// {
-		//      Int_t flag = 0;
-		//      while(flag == 0)
-		//      {
-		//              //search for next event number match, starting from the previous match
-		//              it_evtno  = std::find(it_evtno+1,evtno.end(),evtno_gen);
-		//              if(it_evtno == evtno.end()) //no other match found for evtno.
-		//                      break;
-		//              index_eno = std::distance(evtno.begin(),it_evtno);
-		//              //now get the run number corresponding to the new index_eno
-		//              UInt_t new_runno = runno.at(index_eno);
-		//              //check if this run number matches the one we want
-		//              if(new_runno == runno_gen)
-		//              {
-		//                      flag = 1;
-		//              }
-		//      }
-		//      if(it_evtno == evtno.end())
-		//              continue;
-		// }
-		//hopefully match should be found by now.
-		//calculate lstmass_gen and insert it into lstmass_gen at position index_eno
-		// lstmass_gen[index_eno] = sqrt(Lst_PE*Lst_PE - Lst_PX*Lst_PX - Lst_PY*Lst_PY - Lst_PZ*Lst_PZ);
 	}
 
 	cout<<"Done looping over generated tree."<<endl;
@@ -286,8 +219,6 @@ void reweight_Lst1405(Int_t run = 1)
 			BONNweight = 1.0;
 			MVwtbranch->Fill();
 			BONNwtbranch->Fill();
-			// treeout_MV->Fill();
-			// treeout_BONN->Fill();
 			continue;
 		}
 		else
@@ -299,87 +230,22 @@ void reweight_Lst1405(Int_t run = 1)
 			BONNweight = wts_BONN->GetBinContent(massbin_BONN);
 			MVwtbranch->Fill();
 			BONNwtbranch->Fill();
-			// treeout_MV->Fill();
-			// treeout_BONN->Fill();
 			ctr++;
 		}
 
 	}
-	// for(Int_t i=0; i<nentries; i++)
-	// {
-	//      // if(i==100) break;
-	//
-	//      if(i%10000 == 0)
-	//              cout<<i<<endl;
-	//
-	//      treeIn->GetEntry(i);
-	//
-	//      cout<<"bkgcat = "<<bkgcat<<endl;
-	//      if(bkgcat==50)
-	//      {
-	//              // treeIn_gen->Draw("sqrt(pow(Lambda_1405_0_TRUEP_E,2) - pow(Lambda_1405_0_TRUEP_X,2) - pow(Lambda_1405_0_TRUEP_Y,2) - pow(Lambda_1405_0_TRUEP_Z,2) )>>h1",Form("eventNumber==%llu",evtno_rec),"goff");
-	//              // TH1F *h1 = (TH1F*)gDirectory->Get("h1");
-	//
-	//              cout<<"poop1"<<endl;
-	//              treeIn_gen->Draw(">>elist",Form("eventNumber == %llu && runNumber == %u",evtno_rec,runno_rec),"entrylist");
-	//              cout<<"poop2"<<endl;
-	//              TEntryList *elist = (TEntryList*)gDirectory->Get("elist");
-	//              cout<<"poop3"<<endl;
-	//              treeIn_gen->SetEntryList(elist);
-	//
-	//              cout<<"list N = "<<elist->GetN()<<endl;
-	//
-	//              Int_t entryNum = treeIn_gen->GetEntryNumber(0);
-	//              cout<<"entryNum = "<<entryNum<<endl;
-	//
-	//              treeIn_gen->GetEntry(entryNum);
-	//
-	//              cout<<"evtno_rec = "<<evtno_rec<<" evtno_gen = "<<evtno_gen<<endl;
-	//              cout<<"runno_rec = "<<runno_rec<<" runno_gen = "<<runno_gen<<endl;
-	//              // mass_gen = h1->GetBinCenter(51);
-	//              mass_gen = sqrt(Lst_PE*Lst_PE - Lst_PX*Lst_PX - Lst_PY*Lst_PY - Lst_PZ*Lst_PZ);
-	//              cout<<"mass_gen = "<<mass_gen<<endl;
-	//              // JpsiLmass = sqrt(pow(Jpsi_PE+Lambda_PE,2) - pow(Jpsi_PX+Lambda_PX,2) - pow(Jpsi_PY+Lambda_PY,2) - pow(Jpsi_PZ+Lambda_PZ,2));
-	//
-	//              massbin_MV = wts_MV->FindBin(mass_gen);
-	//              massbin_BONN = wts_BONN->FindBin(mass_gen);
-	//              MVweight = wts_MV->GetBinContent(massbin_MV);
-	//              BONNweight = wts_BONN->GetBinContent(massbin_BONN);
-	//
-	//              ctr++;
-	//      }
-	//      else
-	//      {
-	//              MVweight = 1.0;
-	//              BONNweight = 1.0;
-	//      }
-	//      MVwtbranch->Fill();
-	//      BONNwtbranch->Fill();
-	//      // JpsiLMass_MV->Fill();
-	// }
 	cout<<"ctr = "<<ctr<<endl;
 
 	fileIn->cd();
 	treeIn->Write("",TObject::kOverwrite);
 	fileIn->Close();
 
-	// mcfile_MV->cd();
-	// treeout_MV->Write("",TObject::kOverwrite);
-	// mcfile_MV->Close();
-	// cout<<"MV DONE"<<endl;
-	//
-	// mcfile_BONN->cd();
-	// treeout_BONN->Write("",TObject::kOverwrite);
-	// mcfile_BONN->Close();
-	// cout<<"BONN DONE"<<endl;
+	// cout<<"Writing out reweighted generator"<<endl;
+	// genFile_MV->cd();
+	// genTreeout_MV->Write();
+	// genFile_MV->Close();
 
-	cout<<"Writing out reweighted generator"<<endl;
-	genFile_MV->cd();
-	genTreeout_MV->Write();
-	genFile_MV->Close();
-
-	genFile_BONN->cd();
-	genTreeout_BONN->Write();
-	genFile_BONN->Close();
-
+	// genFile_BONN->cd();
+	// genTreeout_BONN->Write();
+	// genFile_BONN->Close();
 }

@@ -132,9 +132,9 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0, TString option = "kinematic"
 			                        "log10(L_FD_ORIVX)","log10(acos(L_DIRA_OWNPV))","L_dm","log10(L_MINIPCHI2)",
 			                        "log10(p_MINIPCHI2)","p_ProbNNghost","log10(p_PT)","p_ProbNNp","pi_ProbNNghost",
 			                        "log10(pi_MINIPCHI2)","log10(pi_PT)","BDTkMin_v0"};
-		Float_t lowArray[20]         = {-1,-4,-5,0,-2,3.48,-2,-6,-1,-5,0,-2,0,0,2,0,0,1,0.5,-1};
-		Float_t highArray[20]        = {3,6,0,3,5,3.5,6,0,4,0,30,6,5,1,4,1,1,5,3.5,1};
-		Float_t nBinArray[20]        = {50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50};
+		Float_t lowArray[20]         = {-1,-4,-5,0,-2,3.48,-2,-6,-1,-5,0,-2,0,0,2,0,0,1,1.0,-1};
+		Float_t highArray[20]        = {3,4,0,2.5,5,3.5,6,-1,4,0,15,6,5,0.3,4,1,0.3,4.5,3.5,1};
+		Float_t nBinArray[20]        = {50,50,50,50,50,50,50,50,50,50,50,50,50,30,50,50,30,50,50,50};
 		TString units[20]            = {"","","","mm","","MeV/#it{c}^{2}","","","mm","","MeV/#it{c}^{2}","","","","MeV/#it{c}^{2}","","","","MeV/#it{c}^{2}",""};
 
 		TCanvas *canArray[20];

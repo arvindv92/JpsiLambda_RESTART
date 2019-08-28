@@ -73,7 +73,7 @@ using namespace std;
 struct HypoTestInvOptions {
 
 	bool plotHypoTestResult = true;  // plot test statistic result at each point
-	bool writeResult = true;         // write HypoTestInverterResult in a file
+	bool writeResult = false;         // write HypoTestInverterResult in a file
 	TString resultFileName;          // file with results (by default is built automatically using the workspace input file name)
 	bool optimize = true;            // optimize evaluation of test statistic
 	bool useVectorStore = true;      // convert data to use new roofit data store
@@ -146,7 +146,9 @@ AnalyzeResult( HypoTestInverterResult * r,
                const char * fileNameBase = 0,
                Int_t myLow = 4700,
                Int_t myHigh = 6200,
-	       Int_t sigType = 0);
+	       Int_t sigType = 0,
+	       Int_t config_Run1 = 1,
+	       Int_t config_Run2 = 1);
 
 void SetParameter(const char * name, const char * value);
 void SetParameter(const char * name, bool value);
@@ -299,7 +301,9 @@ StandardHypoTestInvDemo(const char * infile = 0,
                         const char * nuisPriorName = 0,
                         Int_t myLow = 4700,
                         Int_t myHigh = 6200,
-			Int_t sigType = 0){
+			Int_t sigType = 0,
+			Int_t config_Run1 = 1,
+			Int_t config_Run2 = 1){
 /*
 
    Other Parameter to pass in tutorial
@@ -437,7 +441,7 @@ StandardHypoTestInvDemo(const char * infile = 0,
 		}
 	}
 
-	double myUL = calc.AnalyzeResult( r, calculatorType, testStatType, useCLs, npoints, infile, myLow, myHigh, sigType);
+	double myUL = calc.AnalyzeResult( r, calculatorType, testStatType, useCLs, npoints, infile, myLow, myHigh, sigType, config_Run1, config_Run2);
 
 	// gSystem->RedirectOutput(0);
 	return myUL;
@@ -454,7 +458,9 @@ RooStats::HypoTestInvTool::AnalyzeResult( HypoTestInverterResult * r,
                                           const char * fileNameBase,
                                           Int_t myLow,
                                           Int_t myHigh,
-					  Int_t sigType){
+					  Int_t sigType,
+					  Int_t config_Run1 = 1,
+					  Int_t config_Run2 = 1){
 
 	// analyze result produced by the inverter, optionally save it in a file
 
@@ -559,9 +565,9 @@ RooStats::HypoTestInvTool::AnalyzeResult( HypoTestInverterResult * r,
 	plot->Draw(""); // plot all and Clb
 	
 	if(sigType == 0)
-	  c1->SaveAs(Form("../plots/ANA/CLs_Hypatia_Expo_%d_%d_noRW.pdf",myLow,myHigh));
+	    c1->SaveAs(Form("../plots/ANA/CLs_Hypatia_Expo_%d_%d_config%d_config%d.pdf",myLow,myHigh,config_Run1,config_Run2));
 	else if(sigType == 1)
-	  c1->SaveAs(Form("../plots/ANA/CLs_CB_Expo_%d_%d.pdf",myLow,myHigh));
+	    c1->SaveAs(Form("../plots/ANA/CLs_CB_Expo_%d_%d_config%d_config%d.pdf",myLow,myHigh,config_Run1,config_Run2));
 	// if (useCLs)
 	//    plot->Draw("CLb 2CL");  // plot all and Clb
 	// else

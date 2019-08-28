@@ -69,6 +69,26 @@ void MakePlots()
 	lhcbName->SetTextAlign(12);
 	lhcbName->SetBorderSize(0);
 
+	TPaveText* lhcbName_Run1 = new TPaveText(gStyle->GetPadLeftMargin() + 0.05,
+	                                    0.87 - gStyle->GetPadTopMargin(),
+	                                    gStyle->GetPadLeftMargin() + 0.20,
+	                                    0.95 - gStyle->GetPadTopMargin(),
+	                                    "BRNDC");
+	lhcbName_Run1->AddText("LHCb Run1");
+	lhcbName_Run1->SetFillColor(0);
+	lhcbName_Run1->SetTextAlign(12);
+	lhcbName_Run1->SetBorderSize(0);
+
+	TPaveText* lhcbName_Run2 = new TPaveText(gStyle->GetPadLeftMargin() + 0.05,
+	                                    0.87 - gStyle->GetPadTopMargin(),
+	                                    gStyle->GetPadLeftMargin() + 0.20,
+	                                    0.95 - gStyle->GetPadTopMargin(),
+	                                    "BRNDC");
+	lhcbName_Run2->AddText("LHCb Run2");
+	lhcbName_Run2->SetFillColor(0);
+	lhcbName_Run2->SetTextAlign(12);
+	lhcbName_Run2->SetBorderSize(0);
+
 	TText *lhcbLabel = new TText();
 	lhcbLabel->SetTextFont(132);
 	lhcbLabel->SetTextColor(1);
@@ -117,83 +137,83 @@ void MakePlots()
 	//      //Ks -> Lambda misID veto plot
 	//      TFile *fileIn1 = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_sanity_LL.root");
 	//      TTree *treeIn1 = (TTree*)fileIn1->Get("MyTuple");
-	//
+	
 	//      TFile *fileIn1_cut = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_cutoutks_LL.root");
 	//      TTree *treeIn1_cut = (TTree*)fileIn1_cut->Get("MyTuple");
-	//
+	
 	//      TFile *fileIn2 = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_sanity_LL.root");
 	//      TTree *treeIn2 = (TTree*)fileIn2->Get("MyTuple");
-	//
+	
 	//      TFile *fileIn2_cut = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL.root");
 	//      TTree *treeIn2_cut = (TTree*)fileIn2_cut->Get("MyTuple");
-	//
+	
 	//      treeIn1->Draw("L_WMpipi>>h2(100,300,700)","","goff");
 	//      treeIn1_cut->Draw("L_WMpipi>>h3(100,300,700)","","goff");
-	//
+	
 	//      treeIn2->Draw("L_WMpipi>>h4(100,300,700)","","goff");
 	//      treeIn2_cut->Draw("L_WMpipi>>h5(100,300,700)","","goff");
-	//
+	
 	//      TH1F *h2 = (TH1F*)gDirectory->Get("h2");
 	//      TH1F *h3 = (TH1F*)gDirectory->Get("h3");
 	//      TH1F *h4 = (TH1F*)gDirectory->Get("h4");
 	//      TH1F *h5 = (TH1F*)gDirectory->Get("h5");
-	//
+	
 	//      addGraphics(h2,m_pipi,bin_4,1);
 	//      addGraphics(h3,m_pipi,bin_4,2);
 	//      addGraphics(h4,m_pipi,bin_4,1);
 	//      addGraphics(h5,m_pipi,bin_4,2);
-	//
+	
 	//      TCanvas *c1 = new TCanvas("c1","",600,400);
 	//      c1->SetTopMargin(0.07);
 	//      h2->Draw();
 	//      h3->Draw("same");
-	//      lhcbName->Draw();
-	//
+	//      lhcbName_Run1->Draw();
+	
 	//      // myLatex->DrawLatex(0.18,0.85,"LHCb Run 1");
 	//      TCanvas *d1 = new TCanvas("d1","",600,400);
 	//      d1->SetTopMargin(0.07);
 	//      h4->Draw();
 	//      h5->Draw("same");
-	//      lhcbName->Draw();
+	//      lhcbName_Run2->Draw();
 	//      // myLatex->DrawLatex(0.18,0.85,"LHCb Run 2");
-	//
+	
 	//      c1->SaveAs("../plots/ANA/lambda_veto_run1.pdf");
 	//      d1->SaveAs("../plots/ANA/lambda_veto_run2.pdf");
-	//
+	
 	// }
 	// {
 	//      //mass distributions after cutoutks
 	//      TFile *fileIn1_cut = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_cutoutks_LL.root");
 	//      TTree *treeIn1_cut = (TTree*)fileIn1_cut->Get("MyTuple");
-	//
+	
 	//      TFile *fileIn2_cut = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL.root");
 	//      TTree *treeIn2_cut = (TTree*)fileIn2_cut->Get("MyTuple");
-	//
+	
 	//      treeIn1_cut->Draw("Lb_DTF_M_JpsiLConstr>>h6(150,5200,5800)","","goff");
 	//      treeIn2_cut->Draw("Lb_DTF_M_JpsiLConstr>>h7(150,5200,5800)","","goff");
-	//
+	
 	//      TH1F *h6 = (TH1F*)gDirectory->Get("h6");
 	//      TH1F *h7 = (TH1F*)gDirectory->Get("h7");
-	//
+	
 	//      addGraphics(h6,m_jpsiL,bin_4,1);
 	//      addGraphics(h7,m_jpsiL,bin_4,1);
-	//
+	
 	//      TCanvas *c2 = new TCanvas("c2","",600,400);
-	//
+	
 	//      h6->Draw();
-	//      lhcbName->Draw();
+	//      lhcbName_Run1->Draw();
 	//      // myLatex->DrawLatex(0.18,0.85,"LHCb Run 1");
-	//
+	
 	//      TCanvas *d2 = new TCanvas("d2","",600,400);
-	//
+	
 	//      h7->Draw();
 	//      h7->GetYaxis()->SetTitleOffset(1.0);
-	//      lhcbName->Draw();
+	//      lhcbName_Run2->Draw();
 	//      // myLatex->DrawLatex(0.18,0.85,"LHCb Run 2");
-	//
+	
 	//      c2->SaveAs("../plots/ANA/mass_cutoutks_run1.pdf");
 	//      d2->SaveAs("../plots/ANA/mass_cutoutks_run2.pdf");
-	//
+	
 	// }
 	// {
 	//      // isolation BDT output before final BDT
@@ -226,160 +246,160 @@ void MakePlots()
 	//      c3->SaveAs("../plots/ANA/isolation_run1.pdf");
 	//      d3->SaveAs("../plots/ANA/isolation_run2.pdf");
 	// }
-	// {
-	//      //mass distributions after finalBDT cut
-	//      TFile *fileIn1 = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/jpsilambdaoutks_LL_nonZeroTracks.root");
-	//      TTree *treeIn1 = (TTree*)fileIn1->Get("MyTuple");
-	//
-	//      treeIn1->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_FinalBDT2_iso2_v0.root");
-	//
-	//      TFile *fileIn2 = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run2/jpsilambdaoutks_LL_nonZeroTracks.root");
-	//      TTree *treeIn2 = (TTree*)fileIn2->Get("MyTuple");
-	//
-	//      treeIn2->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_LL_FinalBDT2_iso1_v0.root");
-	//
-	//      TFile *fileIn1_zero = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/jpsilambdaoutks_LL_ZeroTracks.root");
-	//      TTree *treeIn1_zero = (TTree*)fileIn1_zero->Get("MyTuple");
-	//
-	//      treeIn1_zero->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_zeroTracksLL_FinalBDT2.root");
-	//
-	//      TFile *fileIn2_zero = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run2/jpsilambdaoutks_LL_ZeroTracks.root");
-	//      TTree *treeIn2_zero = (TTree*)fileIn2_zero->Get("MyTuple");
-	//
-	//      treeIn2_zero->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_zeroTracksLL_FinalBDT2.root");
-	//
-	//      treeIn1->Draw("Lb_DTF_M_JpsiLConstr>>g1(150,5200,5800)","BDT2 > 0.475","goff");
-	//      treeIn2->Draw("Lb_DTF_M_JpsiLConstr>>g2(150,5200,5800)","BDT2 > 0.555","goff");
-	//
-	//      treeIn1_zero->Draw("Lb_DTF_M_JpsiLConstr>>g3(150,5200,5800)","BDT2 > 0.365","goff");
-	//      treeIn2_zero->Draw("Lb_DTF_M_JpsiLConstr>>g4(150,5200,5800)","BDT2 > 0.495","goff");
-	//
-	//      treeIn1->Draw("Lb_DTF_M_JpsiLConstr>>f1(750,4000,7000)","BDT2 > 0.475","goff");
-	//      treeIn2->Draw("Lb_DTF_M_JpsiLConstr>>f2(750,4000,7000)","BDT2 > 0.555","goff");
-	//
-	//      treeIn1_zero->Draw("Lb_DTF_M_JpsiLConstr>>f3(750,4000,7000)","BDT2 > 0.365","goff");
-	//      treeIn2_zero->Draw("Lb_DTF_M_JpsiLConstr>>f4(750,4000,7000)","BDT2 > 0.495","goff");
-	//
-	//      TH1F *g1 = (TH1F*)gDirectory->Get("g1");
-	//      TH1F *g2 = (TH1F*)gDirectory->Get("g2");
-	//      TH1F *g3 = (TH1F*)gDirectory->Get("g3");
-	//      TH1F *g4 = (TH1F*)gDirectory->Get("g4");
-	//
-	//      TH1F *f1 = (TH1F*)gDirectory->Get("f1");
-	//      TH1F *f2 = (TH1F*)gDirectory->Get("f2");
-	//      TH1F *f3 = (TH1F*)gDirectory->Get("f3");
-	//      TH1F *f4 = (TH1F*)gDirectory->Get("f4");
-	//
-	//      TH1F *tot1 = (TH1F*)g1->Clone();
-	//      tot1->Add(g3);//Add histograms for nonZeroTracks and ZeroTracks
-	//
-	//      TH1F *tot2 = (TH1F*)g2->Clone();
-	//      tot2->Add(g4);//Add histograms for nonZeroTracks and ZeroTracks
-	//
-	//      TH1F *tot1_wide = (TH1F*)f1->Clone();
-	//      tot1_wide->Add(f3);//Add histograms for nonZeroTracks and ZeroTracks
-	//
-	//      TH1F *tot2_wide = (TH1F*)f2->Clone();
-	//      tot2_wide->Add(f4);//Add histograms for nonZeroTracks and ZeroTracks
-	//
-	//      TH1F *tot1_clone = (TH1F*)tot1->Clone();
-	//      TH1F *tot2_clone = (TH1F*)tot2->Clone();
-	//
-	//      addGraphics(g1,m_jpsiL,bin_4,1);
-	//      addGraphics(g2,m_jpsiL,bin_4,1);
-	//      addGraphics(g3,m_jpsiL,bin_4,1);
-	//      addGraphics(g4,m_jpsiL,bin_4,1);
-	//
-	//      addGraphics(f1,m_jpsiL,bin_4,1);
-	//      addGraphics(f2,m_jpsiL,bin_4,1);
-	//      addGraphics(f3,m_jpsiL,bin_4,1);
-	//      addGraphics(f4,m_jpsiL,bin_4,1);
-	//
-	//      addGraphics(tot1,m_jpsiL,bin_4,1);
-	//      addGraphics(tot2,m_jpsiL,bin_4,1);
-	//      addGraphics(tot1_wide,m_jpsiL,bin_4,1);
-	//      addGraphics(tot2_wide,m_jpsiL,bin_4,1);
-	//
-	//      addGraphics(tot1_clone,m_jpsiL,bin_4,1);
-	//      addGraphics(tot2_clone,m_jpsiL,bin_4,1);
-	//
-	//      tot1_clone->SetMaximum(40);
-	//      tot2_clone->SetMaximum(100);
-	//
-	//      TCanvas *c4 = new TCanvas("c4","",600,400);
-	//      g1->Draw();
-	//      lhcbName->Draw();
-	//
-	//      TCanvas *c5 = new TCanvas("c5","",600,400);
-	//      g2->Draw();
-	//      lhcbName->Draw();
-	//
-	//      TCanvas *c6 = new TCanvas("c6","",600,400);
-	//      g3->Draw();
-	//      lhcbName->Draw();
-	//
-	//      TCanvas *c7 = new TCanvas("c7","",600,400);
-	//      g4->Draw();
-	//      lhcbName->Draw();
-	//
-	//      TCanvas *d4 = new TCanvas("d4","",600,400);
-	//      f1->Draw();
-	//      lhcbName->Draw();
-	//
-	//      TCanvas *d5 = new TCanvas("d5","",600,400);
-	//      f2->Draw();
-	//      lhcbName->Draw();
-	//
-	//      TCanvas *d6 = new TCanvas("d6","",600,400);
-	//      f3->Draw();
-	//      lhcbName->Draw();
-	//
-	//      TCanvas *d7 = new TCanvas("d7","",600,400);
-	//      f4->Draw();
-	//      lhcbName->Draw();
-	//
-	//      TCanvas *e4 = new TCanvas("e4","",600,400);
-	//      tot1->Draw();
-	//      lhcbName->Draw();
-	//
-	//      TCanvas *e5 = new TCanvas("e5","",600,400);
-	//      tot2->Draw();
-	//      lhcbName->Draw();
-	//
-	//      TCanvas *e6 = new TCanvas("e6","",600,400);
-	//      tot1_wide->Draw();
-	//      lhcbName->Draw();
-	//
-	//      TCanvas *e7 = new TCanvas("e7","",600,400);
-	//      tot2_wide->Draw();
-	//      lhcbName->Draw();
-	//
-	//      TCanvas *e8 = new TCanvas("e8","",600,400);
-	//      tot1_clone->Draw();
-	//      lhcbName->Draw();
-	//
-	//      TCanvas *e9 = new TCanvas("e9","",600,400);
-	//      tot2_clone->Draw();
-	//      lhcbName->Draw();
-	//
-	//      c4->SaveAs("../plots/ANA/mass_run1_finalBDT_nonZeroTracks.pdf");
-	//      c5->SaveAs("../plots/ANA/mass_run2_finalBDT_nonZeroTracks.pdf");
-	//      c6->SaveAs("../plots/ANA/mass_run1_finalBDT_ZeroTracks.pdf");
-	//      c7->SaveAs("../plots/ANA/mass_run2_finalBDT_ZeroTracks.pdf");
-	//
-	//      d4->SaveAs("../plots/ANA/mass_run1_finalBDT_nonZeroTracks_wide.pdf");
-	//      d5->SaveAs("../plots/ANA/mass_run2_finalBDT_nonZeroTracks_wide.pdf");
-	//      d6->SaveAs("../plots/ANA/mass_run1_finalBDT_ZeroTracks_wide.pdf");
-	//      d7->SaveAs("../plots/ANA/mass_run2_finalBDT_ZeroTracks_wide.pdf");
-	//
-	//      e4->SaveAs("../plots/ANA/mass_run1_finalBDT_total.pdf");
-	//      e5->SaveAs("../plots/ANA/mass_run2_finalBDT_total.pdf");
-	//      e6->SaveAs("../plots/ANA/mass_run1_finalBDT_total_wide.pdf");
-	//      e7->SaveAs("../plots/ANA/mass_run2_finalBDT_total_wide.pdf");
-	//
-	//      e8->SaveAs("../plots/ANA/mass_run1_finalBDT_total_zoomY.pdf");
-	//      e9->SaveAs("../plots/ANA/mass_run2_finalBDT_total_zoomY.pdf");
-	// }
+	{
+	     //mass distributions after finalBDT cut
+	     TFile *fileIn1 = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_cutoutks_LL_nonZeroTracks.root");
+	     TTree *treeIn1 = (TTree*)fileIn1->Get("MyTuple");
+	
+	     treeIn1->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_FinalBDT1_iso2_v1.root");
+	
+	     TFile *fileIn2 = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL_nonZeroTracks.root");
+	     TTree *treeIn2 = (TTree*)fileIn2->Get("MyTuple");
+	
+	     treeIn2->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_LL_FinalBDT1_iso2_v1.root");
+	
+	     TFile *fileIn1_zero = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_cutoutks_LL_ZeroTracks.root");
+	     TTree *treeIn1_zero = (TTree*)fileIn1_zero->Get("MyTuple");
+	
+	     treeIn1_zero->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_zeroTracksLL_FinalBDT1.root");
+	
+	     TFile *fileIn2_zero = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL_ZeroTracks.root");
+	     TTree *treeIn2_zero = (TTree*)fileIn2_zero->Get("MyTuple");
+	
+	     treeIn2_zero->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_zeroTracksLL_FinalBDT1.root");
+	
+	     treeIn1->Draw("Lb_DTF_M_JpsiLConstr>>g1(150,5200,5800)","BDT1 > 0.405","goff");
+	     treeIn2->Draw("Lb_DTF_M_JpsiLConstr>>g2(150,5200,5800)","BDT1 > 0.475","goff");
+	
+	     treeIn1_zero->Draw("Lb_DTF_M_JpsiLConstr>>g3(150,5200,5800)","BDT1 > 0.335","goff");
+	     treeIn2_zero->Draw("Lb_DTF_M_JpsiLConstr>>g4(150,5200,5800)","BDT1 > 0.405","goff");
+	
+	     treeIn1->Draw("Lb_DTF_M_JpsiLConstr>>f1(250,5000,6000)","BDT1 > 0.405","goff");
+	     treeIn2->Draw("Lb_DTF_M_JpsiLConstr>>f2(250,5000,6000)","BDT1 > 0.475","goff");
+	
+	     treeIn1_zero->Draw("Lb_DTF_M_JpsiLConstr>>f3(250,5000,6000)","BDT1 > 0.335","goff");
+	     treeIn2_zero->Draw("Lb_DTF_M_JpsiLConstr>>f4(250,5000,6000)","BDT1 > 0.405","goff");
+	
+	     TH1F *g1 = (TH1F*)gDirectory->Get("g1");
+	     TH1F *g2 = (TH1F*)gDirectory->Get("g2");
+	     TH1F *g3 = (TH1F*)gDirectory->Get("g3");
+	     TH1F *g4 = (TH1F*)gDirectory->Get("g4");
+	
+	     TH1F *f1 = (TH1F*)gDirectory->Get("f1");
+	     TH1F *f2 = (TH1F*)gDirectory->Get("f2");
+	     TH1F *f3 = (TH1F*)gDirectory->Get("f3");
+	     TH1F *f4 = (TH1F*)gDirectory->Get("f4");
+	
+	     TH1F *tot1 = (TH1F*)g1->Clone();
+	     tot1->Add(g3);//Add histograms for nonZeroTracks and ZeroTracks
+	
+	     TH1F *tot2 = (TH1F*)g2->Clone();
+	     tot2->Add(g4);//Add histograms for nonZeroTracks and ZeroTracks
+	
+	     TH1F *tot1_wide = (TH1F*)f1->Clone();
+	     tot1_wide->Add(f3);//Add histograms for nonZeroTracks and ZeroTracks
+	
+	     TH1F *tot2_wide = (TH1F*)f2->Clone();
+	     tot2_wide->Add(f4);//Add histograms for nonZeroTracks and ZeroTracks
+	
+	     TH1F *tot1_clone = (TH1F*)tot1->Clone();
+	     TH1F *tot2_clone = (TH1F*)tot2->Clone();
+	
+	     addGraphics(g1,m_jpsiL,bin_4,1);
+	     addGraphics(g2,m_jpsiL,bin_4,1);
+	     addGraphics(g3,m_jpsiL,bin_4,1);
+	     addGraphics(g4,m_jpsiL,bin_4,1);
+	
+	     addGraphics(f1,m_jpsiL,bin_4,1);
+	     addGraphics(f2,m_jpsiL,bin_4,1);
+	     addGraphics(f3,m_jpsiL,bin_4,1);
+	     addGraphics(f4,m_jpsiL,bin_4,1);
+	
+	     addGraphics(tot1,m_jpsiL,bin_4,1);
+	     addGraphics(tot2,m_jpsiL,bin_4,1);
+	     addGraphics(tot1_wide,m_jpsiL,bin_4,1);
+	     addGraphics(tot2_wide,m_jpsiL,bin_4,1);
+	
+	     addGraphics(tot1_clone,m_jpsiL,bin_4,1);
+	     addGraphics(tot2_clone,m_jpsiL,bin_4,1);
+	
+	     tot1_clone->SetMaximum(30);
+	     tot2_clone->SetMaximum(90);
+	
+	     TCanvas *c4 = new TCanvas("c4","",600,400);
+	     g1->Draw();
+	     lhcbName_Run1->Draw();
+	
+	     TCanvas *c5 = new TCanvas("c5","",600,400);
+	     g2->Draw();
+	     lhcbName_Run2->Draw();
+	
+	     TCanvas *c6 = new TCanvas("c6","",600,400);
+	     g3->Draw();
+	     lhcbName_Run1->Draw();
+	
+	     TCanvas *c7 = new TCanvas("c7","",600,400);
+	     g4->Draw();
+	     lhcbName_Run2->Draw();
+	
+	     TCanvas *d4 = new TCanvas("d4","",600,400);
+	     f1->Draw();
+	     lhcbName_Run1->Draw();
+	
+	     TCanvas *d5 = new TCanvas("d5","",600,400);
+	     f2->Draw();
+	     lhcbName_Run2->Draw();
+	
+	     TCanvas *d6 = new TCanvas("d6","",600,400);
+	     f3->Draw();
+	     lhcbName_Run1->Draw();
+	
+	     TCanvas *d7 = new TCanvas("d7","",600,400);
+	     f4->Draw();
+	     lhcbName_Run2->Draw();
+	
+	     TCanvas *e4 = new TCanvas("e4","",600,400);
+	     tot1->Draw();
+	     lhcbName_Run1->Draw();
+	
+	     TCanvas *e5 = new TCanvas("e5","",600,400);
+	     tot2->Draw();
+	     lhcbName_Run2->Draw();
+	
+	     TCanvas *e6 = new TCanvas("e6","",600,400);
+	     tot1_wide->Draw();
+	     lhcbName_Run1->Draw();
+	
+	     TCanvas *e7 = new TCanvas("e7","",600,400);
+	     tot2_wide->Draw();
+	     lhcbName_Run2->Draw();
+	
+	     TCanvas *e8 = new TCanvas("e8","",600,400);
+	     tot1_clone->Draw();
+	     lhcbName_Run1->Draw();
+	
+	     TCanvas *e9 = new TCanvas("e9","",600,400);
+	     tot2_clone->Draw();
+	     lhcbName_Run2->Draw();
+	
+	     c4->SaveAs("../plots/ANA/mass_run1_finalBDT_nonZeroTracks.pdf");
+	     c5->SaveAs("../plots/ANA/mass_run2_finalBDT_nonZeroTracks.pdf");
+	     c6->SaveAs("../plots/ANA/mass_run1_finalBDT_ZeroTracks.pdf");
+	     c7->SaveAs("../plots/ANA/mass_run2_finalBDT_ZeroTracks.pdf");
+	
+	     d4->SaveAs("../plots/ANA/mass_run1_finalBDT_nonZeroTracks_wide.pdf");
+	     d5->SaveAs("../plots/ANA/mass_run2_finalBDT_nonZeroTracks_wide.pdf");
+	     d6->SaveAs("../plots/ANA/mass_run1_finalBDT_ZeroTracks_wide.pdf");
+	     d7->SaveAs("../plots/ANA/mass_run2_finalBDT_ZeroTracks_wide.pdf");
+	
+	     e4->SaveAs("../plots/ANA/mass_run1_finalBDT_total.pdf");
+	     e5->SaveAs("../plots/ANA/mass_run2_finalBDT_total.pdf");
+	     e6->SaveAs("../plots/ANA/mass_run1_finalBDT_total_wide.pdf");
+	     e7->SaveAs("../plots/ANA/mass_run2_finalBDT_total_wide.pdf");
+	
+	     e8->SaveAs("../plots/ANA/mass_run1_finalBDT_total_zoomY.pdf");
+	     e9->SaveAs("../plots/ANA/mass_run2_finalBDT_total_zoomY.pdf");
+	}
 	// {
 	//      //J/psi Xi mass reco'd as J/psi Lambda, after BDT selection
 	//      TFile *file1 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_cutoutks_LL_nonZeroTracks.root");
@@ -792,141 +812,141 @@ void MakePlots()
 	//      ks_run1->SaveAs("../plots/ANA/jpsiks_wmpipi_run1.pdf");
 	//      ks_run2->SaveAs("../plots/ANA/jpsiks_wmpipi_run2.pdf");
 	// }
-	{
-		// J\psi and Lambda mass distributions after all selections. Data and MC overlaid.
-		TFile *fileIn1 = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_cutoutks_LL_nonZeroTracks.root");
-		TTree *treeIn1 = (TTree*)fileIn1->Get("MyTuple");
+	// {
+	// 	// J\psi and Lambda mass distributions after all selections. Data and MC overlaid.
+	// 	TFile *fileIn1 = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_cutoutks_LL_nonZeroTracks.root");
+	// 	TTree *treeIn1 = (TTree*)fileIn1->Get("MyTuple");
 
-		treeIn1->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_FinalBDT2_iso2_v0.root");
+	// 	treeIn1->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_LL_FinalBDT2_iso2_v0.root");
 
-		TFile *fileIn2 = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL_nonZeroTracks.root");
-		TTree *treeIn2 = (TTree*)fileIn2->Get("MyTuple");
+	// 	TFile *fileIn2 = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL_nonZeroTracks.root");
+	// 	TTree *treeIn2 = (TTree*)fileIn2->Get("MyTuple");
 
-		treeIn2->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_LL_FinalBDT2_iso1_v0.root");
+	// 	treeIn2->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_LL_FinalBDT2_iso1_v0.root");
 
-		TFile *fileIn1_zero = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_cutoutks_LL_ZeroTracks.root");
-		TTree *treeIn1_zero = (TTree*)fileIn1_zero->Get("MyTuple");
+	// 	TFile *fileIn1_zero = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_cutoutks_LL_ZeroTracks.root");
+	// 	TTree *treeIn1_zero = (TTree*)fileIn1_zero->Get("MyTuple");
 
-		treeIn1_zero->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_zeroTracksLL_FinalBDT2.root");
+	// 	treeIn1_zero->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run1/jpsilambda_zeroTracksLL_FinalBDT2.root");
 
-		TFile *fileIn2_zero = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL_ZeroTracks.root");
-		TTree *treeIn2_zero = (TTree*)fileIn2_zero->Get("MyTuple");
+	// 	TFile *fileIn2_zero = TFile::Open("../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_cutoutks_LL_ZeroTracks.root");
+	// 	TTree *treeIn2_zero = (TTree*)fileIn2_zero->Get("MyTuple");
 
-		treeIn2_zero->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_zeroTracksLL_FinalBDT2.root");
+	// 	treeIn2_zero->AddFriend("MyTuple","../rootFiles/dataFiles/JpsiLambda/run2/jpsilambda_zeroTracksLL_FinalBDT2.root");
 
-		treeIn1->Draw("Jpsi_M>>jpsi1(110,3040,3150)","BDT2 > 0.475","goff");
-		treeIn2->Draw("Jpsi_M>>jpsi2(110,3040,3150)","BDT2 > 0.555","goff");
+	// 	treeIn1->Draw("Jpsi_M>>jpsi1(110,3040,3150)","BDT2 > 0.475","goff");
+	// 	treeIn2->Draw("Jpsi_M>>jpsi2(110,3040,3150)","BDT2 > 0.555","goff");
 
-		treeIn1_zero->Draw("Jpsi_M>>jpsi3(110,3040,3150)","BDT2 > 0.365","goff");
-		treeIn2_zero->Draw("Jpsi_M>>jpsi4(110,3040,3150)","BDT2 > 0.495","goff");
+	// 	treeIn1_zero->Draw("Jpsi_M>>jpsi3(110,3040,3150)","BDT2 > 0.365","goff");
+	// 	treeIn2_zero->Draw("Jpsi_M>>jpsi4(110,3040,3150)","BDT2 > 0.495","goff");
 
-		treeIn1->Draw("L_M>>lambda1(50,1105,1130)","BDT2 > 0.475","goff");
-		treeIn2->Draw("L_M>>lambda2(50,1105,1130)","BDT2 > 0.555","goff");
+	// 	treeIn1->Draw("L_M>>lambda1(50,1105,1130)","BDT2 > 0.475","goff");
+	// 	treeIn2->Draw("L_M>>lambda2(50,1105,1130)","BDT2 > 0.555","goff");
 
-		treeIn1_zero->Draw("L_M>>lambda3(50,1105,1130)","BDT2 > 0.365","goff");
-		treeIn2_zero->Draw("L_M>>lambda4(50,1105,1130)","BDT2 > 0.495","goff");
+	// 	treeIn1_zero->Draw("L_M>>lambda3(50,1105,1130)","BDT2 > 0.365","goff");
+	// 	treeIn2_zero->Draw("L_M>>lambda4(50,1105,1130)","BDT2 > 0.495","goff");
 
-		TH1F *jpsi1 = (TH1F*)gDirectory->Get("jpsi1");
-		TH1F *jpsi2 = (TH1F*)gDirectory->Get("jpsi2");
-		TH1F *jpsi3 = (TH1F*)gDirectory->Get("jpsi3");
-		TH1F *jpsi4 = (TH1F*)gDirectory->Get("jpsi4");
+	// 	TH1F *jpsi1 = (TH1F*)gDirectory->Get("jpsi1");
+	// 	TH1F *jpsi2 = (TH1F*)gDirectory->Get("jpsi2");
+	// 	TH1F *jpsi3 = (TH1F*)gDirectory->Get("jpsi3");
+	// 	TH1F *jpsi4 = (TH1F*)gDirectory->Get("jpsi4");
 
-		TH1F *lambda1 = (TH1F*)gDirectory->Get("lambda1");
-		TH1F *lambda2 = (TH1F*)gDirectory->Get("lambda2");
-		TH1F *lambda3 = (TH1F*)gDirectory->Get("lambda3");
-		TH1F *lambda4 = (TH1F*)gDirectory->Get("lambda4");
+	// 	TH1F *lambda1 = (TH1F*)gDirectory->Get("lambda1");
+	// 	TH1F *lambda2 = (TH1F*)gDirectory->Get("lambda2");
+	// 	TH1F *lambda3 = (TH1F*)gDirectory->Get("lambda3");
+	// 	TH1F *lambda4 = (TH1F*)gDirectory->Get("lambda4");
 
-		jpsi1->Add(jpsi3);
-		jpsi2->Add(jpsi4);
+	// 	jpsi1->Add(jpsi3);
+	// 	jpsi2->Add(jpsi4);
 
-		lambda1->Add(lambda3);
-		lambda2->Add(lambda4);
+	// 	lambda1->Add(lambda3);
+	// 	lambda2->Add(lambda4);
 
-		addGraphics(jpsi1,"m_{#mu#mu}[MeV/#it{c}^{2}]",bin_1,1);
-		addGraphics(jpsi2,"m_{#mu#mu}[MeV/#it{c}^{2}]",bin_1,1);
+	// 	addGraphics(jpsi1,"m_{#mu#mu}[MeV/#it{c}^{2}]",bin_1,1);
+	// 	addGraphics(jpsi2,"m_{#mu#mu}[MeV/#it{c}^{2}]",bin_1,1);
 
-		addGraphics(lambda1,"m_{p#pi}[MeV/#it{c}^{2}]",bin_half,1);
-		addGraphics(lambda2,"m_{p#pi}[MeV/#it{c}^{2}]",bin_half,1);
+	// 	addGraphics(lambda1,"m_{p#pi}[MeV/#it{c}^{2}]",bin_half,1);
+	// 	addGraphics(lambda2,"m_{p#pi}[MeV/#it{c}^{2}]",bin_half,1);
 
-		TFile *mcfileIn1 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/jpsilambda_cutoutks_LL_nonZeroTracks.root");
-		TTree *mcTreeIn1 = (TTree*)mcfileIn1->Get("MyTuple");
+	// 	TFile *mcfileIn1 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/jpsilambda_cutoutks_LL_nonZeroTracks.root");
+	// 	TTree *mcTreeIn1 = (TTree*)mcfileIn1->Get("MyTuple");
 
-		mcTreeIn1->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/jpsilambda_LL_FinalBDT2_iso2_v0.root");
+	// 	mcTreeIn1->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/jpsilambda_LL_FinalBDT2_iso2_v0.root");
 
-		TFile *mcfileIn2 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run2/jpsilambda_cutoutks_LL_nonZeroTracks.root");
-		TTree *mcTreeIn2 = (TTree*)mcfileIn2->Get("MyTuple");
+	// 	TFile *mcfileIn2 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run2/jpsilambda_cutoutks_LL_nonZeroTracks.root");
+	// 	TTree *mcTreeIn2 = (TTree*)mcfileIn2->Get("MyTuple");
 
-		mcTreeIn2->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run2/jpsilambda_LL_FinalBDT2_iso1_v0.root");
+	// 	mcTreeIn2->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run2/jpsilambda_LL_FinalBDT2_iso1_v0.root");
 
-		TFile *mcfileIn1_zero = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/jpsilambda_cutoutks_LL_ZeroTracks.root");
-		TTree *mcTreeIn1_zero = (TTree*)mcfileIn1_zero->Get("MyTuple");
+	// 	TFile *mcfileIn1_zero = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/jpsilambda_cutoutks_LL_ZeroTracks.root");
+	// 	TTree *mcTreeIn1_zero = (TTree*)mcfileIn1_zero->Get("MyTuple");
 
-		mcTreeIn1_zero->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/jpsilambda_zeroTracksLL_FinalBDT2.root");
+	// 	mcTreeIn1_zero->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run1/jpsilambda_zeroTracksLL_FinalBDT2.root");
 
-		TFile *mcfileIn2_zero = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run2/jpsilambda_cutoutks_LL_ZeroTracks.root");
-		TTree *mcTreeIn2_zero = (TTree*)mcfileIn2_zero->Get("MyTuple");
+	// 	TFile *mcfileIn2_zero = TFile::Open("../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run2/jpsilambda_cutoutks_LL_ZeroTracks.root");
+	// 	TTree *mcTreeIn2_zero = (TTree*)mcfileIn2_zero->Get("MyTuple");
 
-		mcTreeIn2_zero->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run2/jpsilambda_zeroTracksLL_FinalBDT2.root");
+	// 	mcTreeIn2_zero->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run2/jpsilambda_zeroTracksLL_FinalBDT2.root");
 
-		mcTreeIn1->Draw("Jpsi_M>>mcjpsi1(110,3040,3150)","GB_WT*wt_tau*(BDT2 > 0.475)","goff");
-		mcTreeIn2->Draw("Jpsi_M>>mcjpsi2(110,3040,3150)","GB_WT*wt_tau*(BDT2 > 0.555)","goff");
+	// 	mcTreeIn1->Draw("Jpsi_M>>mcjpsi1(110,3040,3150)","GB_WT*wt_tau*(BDT2 > 0.475)","goff");
+	// 	mcTreeIn2->Draw("Jpsi_M>>mcjpsi2(110,3040,3150)","GB_WT*wt_tau*(BDT2 > 0.555)","goff");
 
-		mcTreeIn1_zero->Draw("Jpsi_M>>mcjpsi3(110,3040,3150)","GB_WT*wt_tau*(BDT2 > 0.365)","goff");
-		mcTreeIn2_zero->Draw("Jpsi_M>>mcjpsi4(110,3040,3150)","GB_WT*wt_tau*(BDT2 > 0.495)","goff");
+	// 	mcTreeIn1_zero->Draw("Jpsi_M>>mcjpsi3(110,3040,3150)","GB_WT*wt_tau*(BDT2 > 0.365)","goff");
+	// 	mcTreeIn2_zero->Draw("Jpsi_M>>mcjpsi4(110,3040,3150)","GB_WT*wt_tau*(BDT2 > 0.495)","goff");
 
-		mcTreeIn1->Draw("L_M>>mclambda1(50,1105,1130)","GB_WT*wt_tau*(BDT2 > 0.475)","goff");
-		mcTreeIn2->Draw("L_M>>mclambda2(50,1105,1130)","GB_WT*wt_tau*(BDT2 > 0.555)","goff");
+	// 	mcTreeIn1->Draw("L_M>>mclambda1(50,1105,1130)","GB_WT*wt_tau*(BDT2 > 0.475)","goff");
+	// 	mcTreeIn2->Draw("L_M>>mclambda2(50,1105,1130)","GB_WT*wt_tau*(BDT2 > 0.555)","goff");
 
-		mcTreeIn1_zero->Draw("L_M>>mclambda3(50,1105,1130)","GB_WT*wt_tau*(BDT2 > 0.365)","goff");
-		mcTreeIn2_zero->Draw("L_M>>mclambda4(50,1105,1130)","GB_WT*wt_tau*(BDT2 > 0.495)","goff");
+	// 	mcTreeIn1_zero->Draw("L_M>>mclambda3(50,1105,1130)","GB_WT*wt_tau*(BDT2 > 0.365)","goff");
+	// 	mcTreeIn2_zero->Draw("L_M>>mclambda4(50,1105,1130)","GB_WT*wt_tau*(BDT2 > 0.495)","goff");
 
-		TH1F *mcjpsi1 = (TH1F*)gDirectory->Get("mcjpsi1");
-		TH1F *mcjpsi2 = (TH1F*)gDirectory->Get("mcjpsi2");
-		TH1F *mcjpsi3 = (TH1F*)gDirectory->Get("mcjpsi3");
-		TH1F *mcjpsi4 = (TH1F*)gDirectory->Get("mcjpsi4");
+	// 	TH1F *mcjpsi1 = (TH1F*)gDirectory->Get("mcjpsi1");
+	// 	TH1F *mcjpsi2 = (TH1F*)gDirectory->Get("mcjpsi2");
+	// 	TH1F *mcjpsi3 = (TH1F*)gDirectory->Get("mcjpsi3");
+	// 	TH1F *mcjpsi4 = (TH1F*)gDirectory->Get("mcjpsi4");
 
-		TH1F *mclambda1 = (TH1F*)gDirectory->Get("mclambda1");
-		TH1F *mclambda2 = (TH1F*)gDirectory->Get("mclambda2");
-		TH1F *mclambda3 = (TH1F*)gDirectory->Get("mclambda3");
-		TH1F *mclambda4 = (TH1F*)gDirectory->Get("mclambda4");
+	// 	TH1F *mclambda1 = (TH1F*)gDirectory->Get("mclambda1");
+	// 	TH1F *mclambda2 = (TH1F*)gDirectory->Get("mclambda2");
+	// 	TH1F *mclambda3 = (TH1F*)gDirectory->Get("mclambda3");
+	// 	TH1F *mclambda4 = (TH1F*)gDirectory->Get("mclambda4");
 
-		mcjpsi1->Add(mcjpsi3);
-		mcjpsi2->Add(mcjpsi4);
+	// 	mcjpsi1->Add(mcjpsi3);
+	// 	mcjpsi2->Add(mcjpsi4);
 
-		mclambda1->Add(mclambda3);
-		mclambda2->Add(mclambda4);
+	// 	mclambda1->Add(mclambda3);
+	// 	mclambda2->Add(mclambda4);
 
-		addGraphics(mcjpsi1,"m_{#mu#mu}[MeV/#it{c}^{2}]",bin_1,2);
-		addGraphics(mcjpsi2,"m_{#mu#mu}[MeV/#it{c}^{2}]",bin_1,2);
+	// 	addGraphics(mcjpsi1,"m_{#mu#mu}[MeV/#it{c}^{2}]",bin_1,2);
+	// 	addGraphics(mcjpsi2,"m_{#mu#mu}[MeV/#it{c}^{2}]",bin_1,2);
 
-		addGraphics(mclambda1,"m_{p#pi}[MeV/#it{c}^{2}]",bin_half,2);
-		addGraphics(mclambda2,"m_{p#pi}[MeV/#it{c}^{2}]",bin_half,2);
+	// 	addGraphics(mclambda1,"m_{p#pi}[MeV/#it{c}^{2}]",bin_half,2);
+	// 	addGraphics(mclambda2,"m_{p#pi}[MeV/#it{c}^{2}]",bin_half,2);
 
-		TCanvas *jpsi_can1 = new TCanvas();
-		jpsi1->DrawNormalized();
-		mcjpsi1->DrawNormalized("same");
-		lhcbName->Draw();
+	// 	TCanvas *jpsi_can1 = new TCanvas();
+	// 	jpsi1->DrawNormalized();
+	// 	mcjpsi1->DrawNormalized("same");
+	// 	lhcbName->Draw();
 
-		TCanvas *jpsi_can2 = new TCanvas();
-		jpsi2->DrawNormalized();
-		mcjpsi2->DrawNormalized("same");
-		lhcbName->Draw();
+	// 	TCanvas *jpsi_can2 = new TCanvas();
+	// 	jpsi2->DrawNormalized();
+	// 	mcjpsi2->DrawNormalized("same");
+	// 	lhcbName->Draw();
 
-		TCanvas *lambda_can1 = new TCanvas();
-		lambda1->DrawNormalized();
-		mclambda1->DrawNormalized("same");
-		lhcbName->Draw();
+	// 	TCanvas *lambda_can1 = new TCanvas();
+	// 	lambda1->DrawNormalized();
+	// 	mclambda1->DrawNormalized("same");
+	// 	lhcbName->Draw();
 
-		TCanvas *lambda_can2 = new TCanvas();
-		lambda2->DrawNormalized();
-		mclambda2->DrawNormalized("same");
-		lhcbName->Draw();
+	// 	TCanvas *lambda_can2 = new TCanvas();
+	// 	lambda2->DrawNormalized();
+	// 	mclambda2->DrawNormalized("same");
+	// 	lhcbName->Draw();
 
-		jpsi_can1->SaveAs("../plots/ANA/mass_jpsi_run1.pdf");
-		jpsi_can2->SaveAs("../plots/ANA/mass_jpsi_run2.pdf");
+	// 	jpsi_can1->SaveAs("../plots/ANA/mass_jpsi_run1.pdf");
+	// 	jpsi_can2->SaveAs("../plots/ANA/mass_jpsi_run2.pdf");
 
-		lambda_can1->SaveAs("../plots/ANA/mass_lambda_run1.pdf");
-		lambda_can2->SaveAs("../plots/ANA/mass_lambda_run2.pdf");
+	// 	lambda_can1->SaveAs("../plots/ANA/mass_lambda_run1.pdf");
+	// 	lambda_can2->SaveAs("../plots/ANA/mass_lambda_run2.pdf");
 
-	}
+	// }
 }

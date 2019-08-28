@@ -578,7 +578,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	}//end if for simFlag
 	Bool_t calcUL   = true;
 	Bool_t isBinned = true; //set to false if you want unbinned ML fit.
-	Bool_t saveFlag = false;
+	Bool_t saveFlag = true;
 
 	// Fit params
 	// If final fit is a binned fit ,it will use binwidth for binning (MeV)
@@ -782,6 +782,17 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	Float_t Ncomb[2]         = {0.0,0.0}; // no. of events counted in sideband window above peak in data
 	Float_t Ncomb_StatErr[2] = {0.0,0.0};
 
+	TPaveText* lhcbName_sim = new TPaveText(gStyle->GetPadLeftMargin() + 0.05,
+	                                    0.87 - gStyle->GetPadTopMargin(),
+	                                    gStyle->GetPadLeftMargin() + 0.20,
+	                                    0.95 - gStyle->GetPadTopMargin(),
+	                                    "BRNDC");
+	lhcbName_sim->AddText("LHCb Simulation");
+	lhcbName_sim->SetFillColor(0);
+	lhcbName_sim->SetTextAlign(12);
+	lhcbName_sim->SetBorderSize(0);
+	lhcbName_sim->SetTextSize(0.06);
+
 	// ***************************Flags**********************************
 	// Flags controlling shapes
 	Int_t lst1405flag  = 1;
@@ -791,7 +802,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	// Int_t chic1flag = 0;
 	Int_t xibflag      = 1;
 	Int_t sigmaflag    = 1;
-	Int_t xib0flag     = 1;
+	Int_t xib0flag     = 0;
 	Int_t jpsiksflag   = 0;
 	// ************************Master Workspace**************************
 	RooWorkspace w("w");
@@ -1039,15 +1050,20 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			num_Lambda    = mcTreeIn_Lambda->GetEntries(Form("BDT%d > %f", bdtConf[i],bdtCut[i])); //NOTE NO TM HERE
 		}
 
-		eff_Lambda_rec[i]     = num_Lambda/nGen_Lambda[i]; //Calc. reco eff.
-		eff_Lambda_rec_err[i] = sqrt(eff_Lambda_rec[i]*(1-eff_Lambda_rec[i])/nGen_Lambda[i]); //statistical error on recon. eff.
-
-		eff_Lambda_rec_wt[i]     = num_Lambda_wt/nGen_Lambda_wt[i]; //Calc. weighted reco eff.
-		eff_Lambda_rec_err_wt[i] = sqrt(eff_Lambda_rec_wt[i]*(1-eff_Lambda_rec_wt[i])/nGen_Lambda_wt[i]); //statistical error on weighted recon. eff.
+		if(nGen_Lambda[i] > 0)
+		{
+		    eff_Lambda_rec[i]     = num_Lambda/nGen_Lambda[i]; //Calc. reco eff.
+		    eff_Lambda_rec_err[i] = sqrt(eff_Lambda_rec[i]*(1-eff_Lambda_rec[i])/nGen_Lambda[i]); //statistical error on recon. eff.
+		}
+		if(nGen_Lambda_wt[i] > 0)
+		{
+		    eff_Lambda_rec_wt[i]     = num_Lambda_wt/nGen_Lambda_wt[i]; //Calc. weighted reco eff.
+		    eff_Lambda_rec_err_wt[i] = sqrt(eff_Lambda_rec_wt[i]*(1-eff_Lambda_rec_wt[i])/nGen_Lambda_wt[i]); //statistical error on weighted recon. eff.
+		}
 
 		// cout<<"Run "<<run<<" UNWEIGHTED Lambda Recons. Effs = "<<eff_Lambda_rec[i]*100
 		//     <<" % +/- "<<eff_Lambda_rec_err[i]*100<<" %"<<endl;
-		//
+		
 		// cout<<"Run "<<run<<" WEIGHTED Lambda Recons. Effs = "<<eff_Lambda_rec_wt[i]*100
 		//     <<" % +/- "<<eff_Lambda_rec_err_wt[i]*100<<" %"<<endl;
 
@@ -1324,6 +1340,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 		TCanvas *csigma = new TCanvas(Form("JpsiSigma%d",run),Form("JpsiSigma%d",run));
 		framesigma->Draw();
+		lhcbName_sim->Draw();
 
 		w.import(*(SIG_KEYS[i]));
 
@@ -1651,6 +1668,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 		TCanvas *c1405 = new TCanvas(Form("Jpsi1405%d",run),Form("Jpsi1405%d",run));
 		frame1405->Draw();
+		lhcbName_sim->Draw();
 
 		w.import(*(KEYS_1405[i]));
 		if(!inputFlag)
@@ -1894,6 +1912,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 		TCanvas *c1520 = new TCanvas(Form("Jpsi1520%d",run),Form("Jpsi1520%d",run));
 		frame1520->Draw();
+		lhcbName_sim->Draw();
 
 		w.import(*(KEYS_1520[i]));
 		if(!inputFlag)
@@ -2137,6 +2156,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 		TCanvas *c1600 = new TCanvas(Form("Jpsi1600%d",run),Form("Jpsi1600%d",run));
 		frame1600->Draw();
+		lhcbName_sim->Draw();
 
 		w.import(*(KEYS_1600[i]));
 		if(!inputFlag)
@@ -2457,6 +2477,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		RooPlot *framexib = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
 		framexib->SetTitle("#Xi_{b} #rightarrow J/#psi #Xi");
 		framexib->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
+		framexib->GetXaxis()->SetRangeUser(5200,5800);
 		framexib->GetYaxis()->SetTitle("Candidates/(4 MeV)");
 
 		if(mcRW)
@@ -2468,6 +2489,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 		TCanvas *cxib = new TCanvas(Form("JpsiXi%d",run),Form("JpsiXi%d",run));
 		framexib->Draw();
+		lhcbName_sim->Draw();
 
 		// w.import(*(XIB[i]));
 		w.import(*(XIB_KEYS[i]));
@@ -2598,6 +2620,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 			TCanvas *cjpsiks = new TCanvas(Form("JpsiKs%d",run),Form("JpsiKs%d",run));
 			framejpsiks->Draw();
+			lhcbName_sim->Draw();
 		}
 		// w.import(*(JPSIKS[i]));
 		w.import(*(JPSIKS_KEYS[i]));
@@ -2961,6 +2984,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	sumPdf1->plotOn(simframe_Run1,Name("mcbkg_Run1"),LineColor(kRed),RooFit::Components("mcbkg_Run1"));
 	simframe_Run1->GetYaxis()->SetRangeUser(0.01,1000);
 	simframe_Run1->Draw();
+	lhcbName_sim->Draw();
 	sim_Run1->SetLogy();
 
 	TCanvas *sim_Run2      = new TCanvas("sim_Run2","sim_Run2");
@@ -2979,6 +3003,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 	simframe_Run2->GetYaxis()->SetRangeUser(0.01,3000);
 	simframe_Run2->Draw();
+	lhcbName_sim->Draw();
 	sim_Run2->SetLogy();
 
 	if(sigType == 0)
@@ -3201,8 +3226,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	w.var("R")->setError(0.1);
 	w.var("R")->SetTitle("R.10^{5}");
 
-	w.factory("R_1405[0.01,0.0001,0.1]"); //R_1405 = N_corr(Lb -> Jpsi Lambda(1405)) / N_corr(Lb -> Jpsi Lambda)
-	w.factory("R_1520[0.01,0.001,0.4]"); //R_1520 = N_corr(Lb -> Jpsi Lambda(1520)) / N_corr(Lb -> Jpsi Lambda)
+	w.factory("R_1405[0.01,0.00001,0.4]"); //R_1405 = N_corr(Lb -> Jpsi Lambda(1405)) / N_corr(Lb -> Jpsi Lambda)
+	w.factory("R_1520[0.01,0.00001,0.5]"); //R_1520 = N_corr(Lb -> Jpsi Lambda(1520)) / N_corr(Lb -> Jpsi Lambda)
 	w.factory("R_1600[0.1,0.001,0.4]"); //R_1600 = N_corr(Lb -> Jpsi Lambda(1600)) / N_corr(Lb -> Jpsi Lambda)
 	//	w.factory("R_chic1[0.1,0.0,0.5]"); //R_chic1 = N_corr(Lb -> chic1 Lambda / N_corr(Lb -> Jpsi Lambda)
 
@@ -3311,7 +3336,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	// w.factory(Form("nBkg_Run1[1,%d]",nentries[0]));
 	// w.factory(Form("nBkg_Run2[1,%d]",nentries[1]));
 	w.factory("nBkg_Run1[700,500,1500]");
-	w.factory("nBkg_Run2[2500,1000,3000]");
+	w.factory("nBkg_Run2[2500,1000,5000]");
 
 	//****************Xib Bkg Yield**************************************
 
@@ -4742,7 +4767,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	}
 	cout << "workspace written to file " << fileName << endl;
 
-	gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"../rootFiles/dataFiles/JpsiLambda/ModelConfigs/%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,3,true,20,0,500,100,false,0,%d,%d,%d,%d,%d)",fileName,myLow,myHigh,sigType,config_Run1,config_Run2));
+//	gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"../rootFiles/dataFiles/JpsiLambda/ModelConfigs/%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,3,true,20,0,500,100,false,0,%d,%d,%d,%d,%d)",fileName,myLow,myHigh,sigType,config_Run1,config_Run2));
 	// gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,2,true,20,100,2000,100,false,0,%d,%d)",fileName,myLow,myHigh));
 	// Get Lower and Upper limits from Profile Calculator
 	//	cout << "Profile lower limit on s = " << ((LikelihoodInterval*) lr_int)->LowerLimit(*(w.var("R"))) << endl;
