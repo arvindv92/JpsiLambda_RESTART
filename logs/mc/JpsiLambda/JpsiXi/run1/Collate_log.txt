@@ -1,48 +1,11 @@
 Collating MC for JpsiXirun 1
 WD = /data1/avenkate/JpsiLambda/massdump/mc/LooseLL
-hadd Target file: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi.root
+hadd Target file: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_pidgen.root
 hadd compression setting for all ouput: 1
-hadd Source file 1: JpsiXi/Pythia8/2011_MagDown/1362_0/jpsilambda.root
-hadd Source file 2: JpsiXi/Pythia8/2011_MagDown/1362_1/jpsilambda.root
-hadd Source file 3: JpsiXi/Pythia8/2011_MagDown/1362_2/jpsilambda.root
-hadd Source file 4: JpsiXi/Pythia8/2011_MagDown/1362_3/jpsilambda.root
-hadd Source file 5: JpsiXi/Pythia8/2011_MagDown/1362_4/jpsilambda.root
-hadd Source file 6: JpsiXi/Pythia8/2011_MagDown/1362_5/jpsilambda.root
-hadd Source file 7: JpsiXi/Pythia8/2011_MagDown/1362_6/jpsilambda.root
-hadd Source file 8: JpsiXi/Pythia8/2011_MagDown/1362_7/jpsilambda.root
-hadd Source file 9: JpsiXi/Pythia8/2011_MagDown/1362_8/jpsilambda.root
-hadd Source file 10: JpsiXi/Pythia8/2011_MagUp/1363_0/jpsilambda.root
-hadd Source file 11: JpsiXi/Pythia8/2011_MagUp/1363_1/jpsilambda.root
-hadd Source file 12: JpsiXi/Pythia8/2011_MagUp/1363_2/jpsilambda.root
-hadd Source file 13: JpsiXi/Pythia8/2011_MagUp/1363_3/jpsilambda.root
-hadd Source file 14: JpsiXi/Pythia8/2011_MagUp/1363_4/jpsilambda.root
-hadd Source file 15: JpsiXi/Pythia8/2011_MagUp/1363_5/jpsilambda.root
-hadd Source file 16: JpsiXi/Pythia8/2011_MagUp/1363_6/jpsilambda.root
-hadd Source file 17: JpsiXi/Pythia8/2011_MagUp/1363_7/jpsilambda.root
-hadd Source file 18: JpsiXi/Pythia8/2011_MagUp/1363_8/jpsilambda.root
-hadd Source file 19: JpsiXi/Pythia8/2011_MagUp/1363_9/jpsilambda.root
-hadd Source file 20: JpsiXi/Pythia8/2012_MagDown/1364_0/jpsilambda.root
-hadd Source file 21: JpsiXi/Pythia8/2012_MagDown/1364_1/jpsilambda.root
-hadd Source file 22: JpsiXi/Pythia8/2012_MagDown/1364_2/jpsilambda.root
-hadd Source file 23: JpsiXi/Pythia8/2012_MagDown/1364_3/jpsilambda.root
-hadd Source file 24: JpsiXi/Pythia8/2012_MagDown/1364_4/jpsilambda.root
-hadd Source file 25: JpsiXi/Pythia8/2012_MagDown/1364_5/jpsilambda.root
-hadd Source file 26: JpsiXi/Pythia8/2012_MagDown/1364_6/jpsilambda.root
-hadd Source file 27: JpsiXi/Pythia8/2012_MagDown/1364_7/jpsilambda.root
-hadd Source file 28: JpsiXi/Pythia8/2012_MagUp/1365_0/jpsilambda.root
-hadd Source file 29: JpsiXi/Pythia8/2012_MagUp/1365_1/jpsilambda.root
-hadd Source file 30: JpsiXi/Pythia8/2012_MagUp/1365_2/jpsilambda.root
-hadd Source file 31: JpsiXi/Pythia8/2012_MagUp/1365_3/jpsilambda.root
-hadd Source file 32: JpsiXi/Pythia8/2012_MagUp/1365_4/jpsilambda.root
-hadd Source file 33: JpsiXi/Pythia8/2012_MagUp/1365_5/jpsilambda.root
-hadd Source file 34: JpsiXi/Pythia8/2012_MagUp/1365_6/jpsilambda.root
-hadd Source file 35: JpsiXi/Pythia8/2012_MagUp/1365_7/jpsilambda.root
-hadd Source file 36: JpsiXi/Pythia8/2012_MagUp/1365_8/jpsilambda.root
-hadd Sources and Target have different compression levels
-hadd merging will be slower
-hadd Target path: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi.root:/
-hadd Target path: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi.root:/EventTuple
-hadd Target path: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi.root:/MCTuple
-hadd Target path: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi.root:/Lb2JpsiLTree
+hadd Source file 1: JpsiXi/2011_MagDown_pidgen.root
+hadd Source file 2: JpsiXi/2011_MagUp_pidgen.root
+hadd Source file 3: JpsiXi/2012_MagDown_pidgen.root
+hadd Source file 4: JpsiXi/2012_MagUp_pidgen.root
+hadd Target path: /data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi/run1/jpsixi_pidgen.root:/
 DONE COLLATING
 WD = /data1/avenkate/JpsiLambda_RESTART
