@@ -10,7 +10,7 @@ using namespace std;
 
 void Process_B2JpsiK(Int_t run = 1)
 {
-	gSystem->RedirectOutput(Form("logs/data/B_JpsiK/run%d/Process_Cuts.txt",run),"w");
+	gSystem->RedirectOutput(Form("/data1/avenkate/JpsiLambda_RESTART/logs/data/B_JpsiK/run%d/Process_Cuts.txt",run),"w");
 	TStopwatch sw;
 	sw.Start();
 

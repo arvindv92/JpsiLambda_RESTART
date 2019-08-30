@@ -39,7 +39,7 @@ Double_t MakePlots_JpsiK(RooWorkspace*, Int_t);
 
 Double_t DoSWeight_JpsiK(Int_t run = 1)
 {
-	gSystem->RedirectOutput(Form("logs/data/B2JpsiK/run%d/sPlot.txt",run),"w");
+	gSystem->RedirectOutput(Form("/data1/avenkate/JpsiLambda_RESTART/logs/data/B2JpsiK/run%d/sPlot.txt",run),"w");
 
 	gROOT->ProcessLine(".x lhcbStyle.C");
 	TStopwatch sw;
