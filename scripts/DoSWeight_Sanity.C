@@ -129,8 +129,7 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 	wSpace->Print();
 
 	//save workspace in ROOT file so you don't have to make and load input data each time, dummy
-	wSpace->writeToFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/"
-	                         "wSpace_sPlot_Sanity.root",run));
+	wSpace->writeToFile(Form("%s/wSpace_sPlot_Sanity.root",rootFolder));
 
 	fileOut->cd();
 	treeOut->Write("",TObject::kOverwrite);
@@ -149,7 +148,9 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 void AddModel_Sanity(RooWorkspace *ws, Int_t lowRange, Int_t highRange,
                      Int_t nEntries, Int_t run)
 {
+	cout<<"******************************************"<<endl;
 	cout<<"Starting AddModel()"<<endl;
+	cout<<"******************************************"<<endl;
 
 	Int_t binSize = 4; //4 MeV bins.
 
@@ -210,35 +211,43 @@ void AddModel_Sanity(RooWorkspace *ws, Int_t lowRange, Int_t highRange,
 	ws->import(model);
 	ws->Print();
 
+	cout<<"******************************************"<<endl;
 	cout<<"AddModel() complete"<<endl;
+	cout<<"******************************************"<<endl;
 }
 void AddData_Sanity(RooWorkspace *ws, Int_t run, TTree *treeIn)
 {
+	cout<<"******************************************"<<endl;
 	cout<<"Starting AddData()"<<endl;
+	cout<<"******************************************"<<endl;
 
-	// get what we need out of the workspace to make toy data
 	treeIn->SetBranchStatus("*",0);
 	treeIn->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
 	RooRealVar Lb_Mass = *(ws->var("Lb_DTF_M_JpsiLConstr"));
 
-	//Import the data
-	cout<<"Importing data. This could take a while. Sit tight"<<endl;
+	cout<<"Importing data into workspace. This could take a while. Sit tight"<<endl;
 
 	RooArgSet s(Lb_Mass);
 	RooDataSet data("data","dataset with x",treeIn,s);
 
 	ws->import(data, Rename("data"));
 	ws->Print();
+
+	cout<<"******************************************"<<endl;
 	cout<<"Finishing AddData()"<<endl;
+	cout<<"******************************************"<<endl;
 }
 Double_t DosPlot_Sanity(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
                         TH1D *hMass)
 {
+	cout<<"******************************************"<<endl;
+	cout<<"Starting DoSPlot()"<<endl;
+	cout<<"******************************************"<<endl;
+
 	Float_t SIGW = 0., BKGW = 0., bMASS = 0.;
 	TBranch *sigW = nullptr;
 	TBranch *bkgW = nullptr;
 
-	cout<<"Starting DoSPlot()"<<endl;
 	cout << "Calculating sWeights" << endl;
 
 	// get what we need out of the workspace to do the fit
@@ -410,50 +419,6 @@ Double_t DosPlot_Sanity(RooWorkspace* ws, Int_t run, const char *type, TTree *tr
 	cout <<" after splot import data set looks like"<<endl;
 	ws->Print();
 
-	// TCanvas *sWeightCanvas = new TCanvas();
-	// RooRealVar *sigYield_sw = ws->var("sigYield_sw");
-	// sigYield_sw->setRange(-1.0,1.5);
-	// RooPlot* frame_sigsw = sigYield_sw->frame();
-	// frame_sigsw->SetTitle("Signal sweights");
-	// data->plotOn(frame_sigsw);
-	// frame_sigsw->Draw();
-	// sWeightCanvas->Update();
-	// sWeightCanvas->SaveAs(Form("plots/fit_sanity_run%d%s_sWeights.pdf",run,type));
-
-	// TCanvas *sWeightVsMass = new TCanvas();
-	// RooPlot* frame_sigsw_x = Lb_Mass->frame();
-	// frame_sigsw_x->SetTitle("sWeights vs bmass");
-	// data->plotOnXY(frame_sigsw_x,YVar(*sigYield_sw),MarkerColor(kBlue));
-	// frame_sigsw_x->Draw();
-	// sWeightVsMass->Update();
-	// sWeightVsMass->SaveAs(Form("plots/fit_sanity_run%d%s_sWeightsVsMass.pdf",run,type));
-
-	// create weighted data set
-	// RooDataSet *dataw_sig = new RooDataSet(data->GetName(),data->GetTitle(),
-	//                                        data,*data->get(),0,"sigYield_sw");
-	// RooDataSet *dataw_bkg = new RooDataSet(data->GetName(),data->GetTitle(),
-	//                                        data,*data->get(),0,"bkgYield_sw");
-
-	// TCanvas *sWeightMass = new TCanvas();
-	// sWeightMass->Divide(1,2);
-	//
-	// sWeightMass->cd(1);
-	//
-	// RooPlot* frame2_1 = Lb_Mass->frame();
-	// dataw_sig->plotOn(frame2_1, DataError(RooAbsData::SumW2));
-	// frame2_1->SetTitle("Lb DTF Mass Distribution (SW)");
-	// frame2_1->Draw();
-	//
-	// sWeightMass->cd(2);
-	//
-	// RooPlot* frame2_2 = Lb_Mass->frame();
-	// dataw_bkg->plotOn(frame2_2, DataError(RooAbsData::SumW2));
-	// frame2_2->SetTitle("Lb DTF Mass Distribution (BW)");
-	// frame2_2->Draw();
-	//
-	// sWeightMass->Update();
-	// sWeightMass->SaveAs(Form("plots/fit_run%d%s_sWeightedMass.pdf",run,type));
-
 	Int_t dsentries = data->numEntries();
 	cout<<"No. of entries in dataset = "<<dsentries<<endl;
 
@@ -475,7 +440,8 @@ Double_t DosPlot_Sanity(RooWorkspace* ws, Int_t run, const char *type, TTree *tr
 		bkgW->Fill();
 	}
 
+	cout<<"******************************************"<<endl;
 	cout<<"Finishing DoSPlot()"<<endl;
-
+	cout<<"******************************************"<<endl;
 	return chi2;
 }
