@@ -102,11 +102,11 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
 
 	if(isData && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/collate_%d_log.txt",run,year),"w");
+		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/Collate_%d_log.txt",run,year),"w");
 	}
 	else if(!isData && logFlag)
 	{
-		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/collate_log.txt",folder,run),"w");
+		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/Collate_log.txt",folder,run),"w");
 	}
 
 	if(isData)
