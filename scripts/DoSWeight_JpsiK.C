@@ -39,7 +39,8 @@ Double_t MakePlots_JpsiK(RooWorkspace*, Int_t);
 
 Double_t DoSWeight_JpsiK(Int_t run = 1)
 {
-	gSystem->RedirectOutput(Form("/data1/avenkate/JpsiLambda_RESTART/logs/data/B2JpsiK/run%d/sPlot.txt",run),"w");
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	gSystem->RedirectOutput(Form("logs/data/B2JpsiK/run%d/sPlot.txt",run),"w");
 
 	gROOT->ProcessLine(".x lhcbStyle.C");
 	TStopwatch sw;
@@ -436,8 +437,7 @@ Double_t MakePlots_JpsiK(RooWorkspace* ws, Int_t run)
 	cout<<"Pull Mean Y = "<<hpull->GetMean(2)<<endl;
 	cout<<"Pull RMS Y = "<<hpull->GetRMS(2)<<endl;
 
-	fitCanvas->SaveAs(Form("/data1/avenkate/JpsiLambda_RESTART/plots/"
-	                       "ANA/sPlot_JpsiK_Run%d.pdf",run));
+	fitCanvas->SaveAs(Form("plots/ANA/sPlot_JpsiK_Run%d.pdf",run));
 	cout<<"******************************************"<<endl;
 	cout<<"Finished MakePlots()"<<endl; sw.Print();
 	cout<<"******************************************"<<endl;
