@@ -39,6 +39,7 @@ Double_t MakePlots_JpsiK(RooWorkspace*, Int_t);
 
 Double_t DoSWeight_JpsiK(Int_t run = 1)
 {
+	ROOT::EnableImplicitMT();
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 	gSystem->RedirectOutput(Form("logs/data/B2JpsiK/run%d/sPlot.txt",run),"w");
 
