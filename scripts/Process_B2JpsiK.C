@@ -4,6 +4,8 @@
 #include "TCut.h"
 #include "TStopwatch.h"
 #include "TSystem.h"
+#include "TFileCollection.h"
+#include "TCollection.h"
 #include <iostream>
 
 using namespace std;
@@ -29,21 +31,34 @@ void Process_B2JpsiK(Int_t run = 1)
 	cout<<"********************************"<<endl;
 
 	TChain *h1 = new TChain("B2JpsiKTree/MyTuple");
+	TString dir = "/data1/avenkate/B+toJpsiK+/RealData_AllKaons";
 
 	if(run == 1)
 	{
-		for(Int_t i=0; i<=272; i++)
-		{
-			h1->Add(TString::Format("/data1/avenkate/B+toJpsiK+/RealData_AllKaons/2011_MagDown/1158_%d/jpsik.root",i),-1);
-		}
+		gSystem->Exec(Form("ls %s/2011_MagDown/1158_*/jpsik.root > fileList/B2JpsiK_run1Files.txt",dir.Data()));
 	}
-	else if(run == 2)
+	if(run == 2)
 	{
-		for(Int_t i=0; i<=398; i++)
-		{
-			h1->Add(TString::Format("/data1/avenkate/B+toJpsiK+/RealData_AllKaons/2016_MagDown/1170_%d/jpsik.root",i),-1);
-		}
+		gSystem->Exec(Form("ls %s/2011_MagDown/1170_*/jpsik.root > fileList/B2JpsiK_run2Files.txt",dir.Data()));
 	}
+	TFileCollection fc(Form("run%d",run),"",Form("fileList/B2JpsiK_run%dFiles.txt",run));
+	TCollection *fc_list = (TCollection*)fc.GetList();
+
+	h1->AddFileInfoList(fc_list);
+	// if(run == 1)
+	// {
+	//      for(Int_t i=0; i<=272; i++)
+	//      {
+	//              h1->Add(TString::Format("/data1/avenkate/B+toJpsiK+/RealData_AllKaons/2011_MagDown/1158_%d/jpsik.root",i),-1);
+	//      }
+	// }
+	// else if(run == 2)
+	// {
+	//      for(Int_t i=0; i<=398; i++)
+	//      {
+	//              h1->Add(TString::Format("/data1/avenkate/B+toJpsiK+/RealData_AllKaons/2016_MagDown/1170_%d/jpsik.root",i),-1);
+	//      }
+	// }
 
 	cout<<"DONE ATTACHING ROOT FILES"<<endl;
 
