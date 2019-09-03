@@ -6,12 +6,14 @@
 #include "TSystem.h"
 #include "TFileCollection.h"
 #include "TCollection.h"
+#include "TROOT.h"
 #include <iostream>
 
 using namespace std;
 
 void Process_B2JpsiK(Int_t run = 1)
 {
+	ROOT::EnableImplicitMT();
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
 	gSystem->RedirectOutput(Form("logs/data/B2JpsiK/run%d/Process_Cuts.txt",run),"w");
@@ -77,7 +79,7 @@ void Process_B2JpsiK(Int_t run = 1)
 
 	TTree *treeIn = (TTree*)h1;
 
-	TFile *fileOut = new TFile("jpsik.root","RECREATE");
+	TFile *fileOut = new TFile(Form("rootFiles/dataFiles/B2JpsiK/run%d/jpsik.root",run),"RECREATE");
 	TTree *treeOut = (TTree*)treeIn->CloneTree(0);
 
 	Long64_t entries_init = 0, entries_final = 0;
