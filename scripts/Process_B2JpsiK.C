@@ -37,9 +37,9 @@ void Process_B2JpsiK(Int_t run = 1)
 	{
 		gSystem->Exec(Form("ls %s/2011_MagDown/1158_*/jpsik.root > fileList/B2JpsiK_run1Files.txt",dir.Data()));
 	}
-	if(run == 2)
+	else if(run == 2)
 	{
-		gSystem->Exec(Form("ls %s/2011_MagDown/1170_*/jpsik.root > fileList/B2JpsiK_run2Files.txt",dir.Data()));
+		gSystem->Exec(Form("ls %s/2016_MagDown/1170_*/jpsik.root > fileList/B2JpsiK_run2Files.txt",dir.Data()));
 	}
 	TFileCollection fc(Form("run%d",run),"",Form("fileList/B2JpsiK_run%dFiles.txt",run));
 	TCollection *fc_list = (TCollection*)fc.GetList();
