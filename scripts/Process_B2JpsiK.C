@@ -10,10 +10,14 @@ using namespace std;
 
 void Process_B2JpsiK(Int_t run = 1)
 {
-	gSystem->RedirectOutput(Form("/data1/avenkate/JpsiLambda_RESTART/logs/data/B_JpsiK/run%d/Process_Cuts.txt",run),"w");
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+
+	gSystem->RedirectOutput(Form("logs/data/B2JpsiK/run%d/Process_Cuts.txt",run),"w");
 	TStopwatch sw;
 	sw.Start();
 
+	cout<<"********************************"<<endl;
+	cout<<"********************************"<<endl;
 	cout<<"********************************"<<endl;
 	cout<<"********************************"<<endl;
 	cout<<"********************************"<<endl;
@@ -48,7 +52,7 @@ void Process_B2JpsiK(Int_t run = 1)
 	TCut b_minipchi2_cut = "B_MINIPCHI2 < 25";
 	TCut b_trig_cut      = "(Jpsi_Hlt1DiMuonHighMassDecision_TOS==1||Jpsi_Hlt1TrackMuonDecision_TOS==1||Jpsi_Hlt1TrackAllL0Decision_TOS==1)&&(Jpsi_Hlt2DiMuonDetachedJPsiDecision_TOS==1)";
 	TCut b_dira_cut      = "B_DIRA_OWNPV > 0.999";
-	TCut b_mass_cut      = "B_DTF_M_JpsiConstr > 5000 && B_DTF_M_JpsiConstr < 5600";
+	TCut b_mass_cut      = "B_DTF_M_JpsiConstr > 5200 && B_DTF_M_JpsiConstr < 5360";
 
 	b_dtf_cut.Print();
 	b_minipchi2_cut.Print();
@@ -93,7 +97,7 @@ void Process_B2JpsiK(Int_t run = 1)
 			cout<<i<<endl;
 
 		treeIn->GetEntry(i);
-		if(B_DTF_M_JpsiConstr > 5200 && B_DTF_M_JpsiConstr < 5360)//CHANGE: EARLIER MASS CUT WAS 5200 - 5600.
+		if(B_DTF_M_JpsiConstr > 5200 && B_DTF_M_JpsiConstr < 5360)//CHANGE: EARLIER MASS CUT WAS 5000 - 5600.
 		{
 			if(B_DTF_VCHI2NDOF_JpsiConstr > 0 && B_DTF_VCHI2NDOF_JpsiConstr < 20)
 			{
