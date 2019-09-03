@@ -69,21 +69,22 @@ void Process_B2JpsiK(Int_t run = 1)
 
 	entries_init = treeIn->GetEntries();
 
-	Double_t B_DTF_VCHI2NDOF_JpsiConstr = 0.0;
+	Double_t B_DTF_VCHI2 = 0.0;
 	Double_t B_MINIPCHI2 = 0.0;
-	Bool_t Jpsi_Hlt1DiMuonHighMassDecision_TOS = 0;
-	Bool_t Jpsi_Hlt1TrackMuonDecision_TOS = 0;
-	Bool_t Jpsi_Hlt1TrackAllL0Decision_TOS = 0;
-	Bool_t Jpsi_Hlt2DiMuonDetachedJPsiDecision_TOS = 0;
+	Bool_t Jpsi_Hlt1DiMuon = 0;
+	Bool_t Jpsi_Hlt1TrackMuon = 0;
+	Bool_t Jpsi_Hlt1TrackAllL0 = 0;
+	Bool_t Jpsi_Hlt2DiMuon = 0;
 	Double_t B_DIRA_OWNPV = 0.0;
 	Double_t B_TAU = 0.0;
 	Double_t B_DTF_M_JpsiConstr = 0.0;
 
-	treeIn->SetBranchAddress("B_DTF_VCHI2NDOF_JpsiConstr",&B_DTF_VCHI2NDOF_JpsiConstr);
+	treeIn->SetBranchAddress("B_DTF_VCHI2NDOF_JpsiConstr",&B_DTF_VCHI2);
 	treeIn->SetBranchAddress("B_MINIPCHI2",&B_MINIPCHI2);
-	treeIn->SetBranchAddress("Jpsi_Hlt1DiMuonHighMassDecision_TOS",&Jpsi_Hlt1DiMuonHighMassDecision_TOS);
-	treeIn->SetBranchAddress("Jpsi_Hlt1TrackMuonDecision_TOS",&Jpsi_Hlt1TrackMuonDecision_TOS);
-	treeIn->SetBranchAddress("Jpsi_Hlt1TrackAllL0Decision_TOS",&Jpsi_Hlt1TrackAllL0Decision_TOS);
+	treeIn->SetBranchAddress("Jpsi_Hlt1DiMuonHighMassDecision_TOS",&Jpsi_Hlt1DiMuon);
+	treeIn->SetBranchAddress("Jpsi_Hlt1TrackMuonDecision_TOS",&Jpsi_Hlt1TrackMuon);
+	treeIn->SetBranchAddress("Jpsi_Hlt1TrackAllL0Decision_TOS",&Jpsi_Hlt1TrackAllL0);
+	treeIn->SetBranchAddress("Jpsi_Hlt2DiMuonDetachedJPsiDecision_TOS",&Jpsi_Hlt2DiMuon);
 	treeIn->SetBranchAddress("B_DIRA_OWNPV",&B_DIRA_OWNPV);
 	treeIn->SetBranchAddress("B_TAU",&B_TAU);
 	treeIn->SetBranchAddress("B_DTF_M_JpsiConstr",&B_DTF_M_JpsiConstr);
@@ -99,12 +100,11 @@ void Process_B2JpsiK(Int_t run = 1)
 		treeIn->GetEntry(i);
 		if(B_DTF_M_JpsiConstr > 5200 && B_DTF_M_JpsiConstr < 5360)//CHANGE: EARLIER MASS CUT WAS 5000 - 5600.
 		{
-			if(B_DTF_VCHI2NDOF_JpsiConstr > 0 && B_DTF_VCHI2NDOF_JpsiConstr < 20)
+			if(B_DTF_VCHI2 > 0 && B_DTF_VCHI2 < 20)
 			{
 				if(B_MINIPCHI2 < 25)
 				{
-					if((Jpsi_Hlt1DiMuonHighMassDecision_TOS==1||Jpsi_Hlt1TrackMuonDecision_TOS==1||Jpsi_Hlt1TrackAllL0Decision_TOS==1)
-					   &&(Jpsi_Hlt2DiMuonDetachedJPsiDecision_TOS==1))
+					if((Jpsi_Hlt1DiMuon==1||Jpsi_Hlt1TrackMuon==1||Jpsi_Hlt1TrackAllL0==1)&&(Jpsi_Hlt2DiMuon==1))
 					{
 						if(B_DIRA_OWNPV > 0.999)
 						{
