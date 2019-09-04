@@ -223,7 +223,7 @@ void AddData_JpsiK(RooWorkspace *ws, Int_t run, TTree *treeIn)
 	cout<<"Finishing AddData()"<<endl; sw.Print();
 	cout<<"******************************************"<<endl;
 }
-void DosPlot_JpsiK(RooWorkspace *ws, Int_t run, TTree *treeOut, TH1D *hMass)
+void DoSPlot_JpsiK(RooWorkspace *ws, Int_t run, TTree *treeOut, TH1D *hMass)
 {
 	cout<<"******************************************"<<endl;
 	cout<<"Starting DoSPlot()"<<endl;
