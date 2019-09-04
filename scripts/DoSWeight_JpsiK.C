@@ -85,7 +85,7 @@ Double_t DoSWeight_JpsiK(Int_t run = 1)
 	entries_init       = treeIn->GetEntries();
 	cout<<"Incoming Entries = "<<entries_init<<endl;
 
-	treeIn->Draw(Form("B_Mass>>hMass(%d,%d,%d)",nBins,lowRange,highRange),"","goff");
+	treeIn->Draw(Form("B_DTF_M_JpsiConstr>>hMass(%d,%d,%d)",nBins,lowRange,highRange),"","goff");
 	TH1D *hMass = (TH1D*)gDirectory->Get("hMass");
 
 	fileOut = new TFile(outFileName,"RECREATE");
