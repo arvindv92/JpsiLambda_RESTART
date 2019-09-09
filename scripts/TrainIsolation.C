@@ -9,8 +9,7 @@
  *********************************/
  #include "TrainIsolation.h"
 
-void TrainIsolation(Int_t run, Int_t trackType,
-                    const char* isoVersion, Int_t isoConf, Bool_t logFlag,
+void TrainIsolation(Int_t run, const char* isoVersion, Int_t isoConf, Bool_t logFlag,
                     Bool_t simFlag)
 /*
    >run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC.
@@ -33,8 +32,7 @@ void TrainIsolation(Int_t run, Int_t trackType,
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
-	const char *type = "";
-	type        = (trackType == 3) ? ("LL") : ("DD");
+	const char *type = "LL";
 
 	if(logFlag && !simFlag) //set up logging
 	{
@@ -46,6 +44,11 @@ void TrainIsolation(Int_t run, Int_t trackType,
 		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/TrainIsolation_MC_%s_%s_iso%d.txt",
 		                             run,type,isoVersion,isoConf),"w");
 	}
+	cout<<"*****************************"<<endl;
+	cout<<"*****************************"<<endl;
+	cout<<"*****************************"<<endl;
+	cout<<"*****************************"<<endl;
+	cout<<"*****************************"<<endl;
 	cout<<"*****************************"<<endl;
 	cout<<"==> Starting TrainIsolation: "<<isoVersion<<endl;
 	gSystem->Exec("date");
@@ -62,31 +65,31 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	TMVA::Factory *factory       = nullptr;
 	TMVA::Tools::Instance(); // This loads the library
 
-	if(!simFlag)//train on data
+	if(!simFlag)//train on data for signal
 	{
-		// outFileName = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
-		//                    "TMVAtraining/iso/TMVA300-isok_data_%s_iso%d.root",
-		//                    run,isoVersion,isoConf);
-		// outputFile  = TFile::Open(outFileName, "RECREATE");
-		// factory     = new TMVA::Factory(Form("isok_dataRun%d_%s_iso%d",
-		//                                      run,isoVersion,isoConf), outputFile,
-		//                                 "!V:!Silent:Color:!DrawProgressBar:"
-		//                                 "AnalysisType=Classification" );
 		fname_sig = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
 		                 "jpsilambda_%s_withsw_nonZeroTracks.root",run,type);
 	}
-	else //train on simulation
+	else //train on simulation for signal
 	{
-		// outFileName = Form("rootFiles/dataFiles/JpsiLambda/run%d/"
-		//                    "TMVAtraining/iso/TMVA300-isok_MC_%s_iso%d.root",
-		//                    run,isoVersion,isoConf);
-		// outputFile  = TFile::Open(outFileName, "RECREATE");
-		// factory     = new TMVA::Factory(Form("isok_MCRun%d_%s_iso%d",
-		//                                      run,isoVersion,isoConf), outputFile,
-		//                                 "!V:!Silent:Color:!DrawProgressBar:"
-		//                                 "AnalysisType=Classification" );
 		fname_sig = Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/"
 		                 "jpsilambda_cutoutks_%s_nonZeroTracks.root",run,type);//NB: Using MC for control channel because it has more statistics.
+	}
+
+	input_sig = TFile::Open(fname_sig);
+	if (!input_sig)
+	{
+		cout << "ERROR: could not open signal training file" << endl;
+		exit(1);
+	}
+
+	fname_bkg = Form("rootFiles/dataFiles/B2JpsiK/run%d/jpsik_withsw.root", run);
+	input_bkg = TFile::Open(fname_bkg);
+
+	if (!input_bkg)
+	{
+		cout << "ERROR: could not open background training file" << endl;
+		exit(1);
 	}
 
 	dataLoader  = new TMVA::DataLoader("dataset");
@@ -106,26 +109,6 @@ void TrainIsolation(Int_t run, Int_t trackType,
 		myCutS = myCutS && "PT > 0 ";
 		myCutB = myCutB && "PT > 0 ";
 	}
-
-	input_sig = TFile::Open(fname_sig);
-	if (!input_sig)
-	{
-		cout << "ERROR: could not open signal training file" << endl;
-		exit(1);
-	}
-
-	fname_bkg = Form("/data1/avenkate/B+toJpsiK+/RealData_AllKaons/"
-	                 "total_run%d/splot/maketuples/jpsik_forTMVAisoTraining.root",
-	                 run);
-	input_bkg = TFile::Open(fname_bkg);
-	if (!input_bkg)
-	{
-		cout << "ERROR: could not open background training file" << endl;
-		exit(1);
-	}
-
-	// TString fname2 = "./jpsikpi.root";//Background 2 Training Sample
-	// input2 = TFile::Open( fname2 );
 
 	cout << "--- TMVAClassification : Using background input file: "
 	     << input_bkg->GetName() << endl;
@@ -195,11 +178,11 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	}
 	nEntries_B = bkgTree->GetEntries(myCutB);
 
-	Int_t nTrain_S = (Int_t)nEntries_S*0.8;// 80/20 split
-	Int_t nTest_S  = nEntries_S - nTrain_S;
-
-	Int_t nTrain_B = (Int_t)nEntries_B*0.8;// 80/20 split
-	Int_t nTest_B  = nEntries_B - nTrain_B;
+	// Int_t nTrain_S = (Int_t)nEntries_S*0.8;// 80/20 split
+	// Int_t nTest_S  = nEntries_S - nTrain_S;
+	//
+	// Int_t nTrain_B = (Int_t)nEntries_B*0.8;// 80/20 split
+	// Int_t nTest_B  = nEntries_B - nTrain_B;
 
 	// dataLoader->PrepareTrainingAndTestTree( myCutS, myCutB,
 	//                                         Form("nTrain_Signal=%d:nTest_Signal=%d:"
@@ -271,27 +254,6 @@ void TrainIsolation(Int_t run, Int_t trackType,
 		               "nCuts=200" );
 	}
 
-	/*	factory->BookMethod( TMVA::Types::kBDT, "BDTconf2",
-	   "!H:!V:NTrees=850:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.7:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=-1" );
-
-	   factory->BookMethod( TMVA::Types::kBDT, "BDTconf3",
-	   "!H:!V:NTrees=850:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.7:SeparationType=GiniIndex:nCuts=-1" );
-
-	   factory->BookMethod( TMVA::Types::kBDT, "BDTconf4",
-	   "!H:!V:NTrees=1000:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=-1" );
-
-	   factory->BookMethod( TMVA::Types::kBDT, "BDTMitFisher",
-	   "!H:!V:NTrees=50:MinNodeSize=2.5%:UseFisherCuts:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:SeparationType=GiniIndex:nCuts=-1" );
-
-	   factory->BookMethod( TMVA::Types::kBDT, "BDTG",
-	   "!H:!V:NTrees=1000:MinNodeSize=2.5%:BoostType=Grad:Shrinkage=0.10:UseBaggedBoost:BaggedSampleFraction=0.5:nCuts=-1:MaxDepth=2" );
-	 */
-	// ---- STILL EXPERIMENTAL and only implemented for BDT's !
-	// factory->OptimizeAllMethods("SigEffAt001","Scan");
-	// factory->OptimizeAllMethods("ROCIntegral","FitGA");
-
-	// -----------------------------------------------------------------------
-
 	// ---- train, test, and evaluate the MVAs
 
 	// factory->TrainAllMethods();
@@ -311,7 +273,6 @@ void TrainIsolation(Int_t run, Int_t trackType,
 	sw.Stop();
 	cout << "==> End of TrainIsolation! Cheers!: "; sw.Print();
 
-	// if(logFlag) gROOT->ProcessLine(".>");
 	if(logFlag) gSystem->RedirectOutput(0);
 
 }

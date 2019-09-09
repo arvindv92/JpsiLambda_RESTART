@@ -9,15 +9,32 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
                   Int_t mcType, TChain** h1, TChain** h2, Bool_t testing,
                   Bool_t loose, Bool_t logFlag)//defaults provided in header
 /*DOC
-   run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
+   run = 1 or 2
    isData = true for data, false for MC
-   mcType = 0 when running over data. When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
+
+   mcType = 0 when processing data. non zero for processing MC.
+   mcType = 1 for Lb -> J/psi Lambda MC
+   mcType = 2 for Lb -> J/psi Sigma MC        (reco'd JpsiLambda)
+   mcType = 3 for Xib -> Jpsi Xi MC           (reco'd JpsiLambda)
+   mcType = 4 for Lb -> J/psi Lambda*(1405)MC (reco'd JpsiLambda)
+   mcType = 5 for Lb -> J/psi Lambda*(1520)MC (reco'd JpsiLambda)
+   mcType = 6 for Lb -> J/psi Lambda*(1600)MC (reco'd JpsiLambda)
+   mcType = 7 forB0 -> Jpsi Ks MC             (reco'd JpsiLambda)
+   mcType = 8 for Xib0 -> J/psi Lambda MC
+   mcType = 9 for Xib- -> J/psi Xi- MC          (reco'd J/psi Xi-)
+
    testing = true to run only over a subset of data
-   loose = true to run over data from loose stripping line. Only LL for loose stripping line
+   loose   = true to run over data from loose stripping line. Only LL for loose stripping line
+   logFlag = true if you want the output to be piped to a log file.
  */
 {
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
 	cout<<"******************************************"<<endl;
 	cout<<"==> Starting CollateFiles: "<<endl;
 	gSystem->Exec("date");
@@ -53,50 +70,37 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
 	}
 	case 4:
 	{
-		folder = "Bu_JpsiX";
-		part = "bu_jpsix";
-		break;
-	}
-	case 5:
-	{
-		folder = "Bd_JpsiX";
-		part = "bd_jpsix";
-		break;
-	}
-	case 6:
-	{
 		folder = "Lst1405";
 		part = "lst1405";
 		break;
 	}
-	case 7:
+	case 5:
 	{
 		folder = "Lst1520";
 		part = "lst1520";
 		break;
 	}
-	case 8:
+	case 6:
 	{
 		folder = "Lst1600";
 		part = "lst1600";
 		break;
 	}
-	case 9:
-	{
-		folder = "chiC1";
-		part = "chic1";
-		break;
-	}
-	case 10:
+	case 7:
 	{
 		folder = "JpsiKs";
 		part = "jpsiks";
 		break;
 	}
-	case 11:
+	case 8:
 	{
 		folder = "Xib0";
 		part = "xib0";
+	}
+	default:
+	{
+		cout<<"$$$ MC Type doesn't match any of the allowed cases. Exiting! $$$"<<endl;
+		exit(1);
 	}
 	}
 
@@ -152,82 +156,25 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
 		}
 		cout<<"WD = "<<gSystem->pwd()<<endl;
 		const char *path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda";
-		if(mcType!=2)
+
+		if(run == 1)
 		{
-			if(run == 1)
+			if(mcType!=2)
 			{
-				// gSystem->Exec(Form("hadd -f %s/JpsiLambda/run1/jpsilambda.root JpsiLambda/2011*/*/*.root JpsiLambda/2012*/*/*.root",path));
+				gSystem->Exec(Form("hadd -f %s/%s/run1/%s.root %s/2011*/*/*.root %s/2012*/*/*.root",path,folder,part,folder,folder));
 				gSystem->Exec(Form("hadd -f %s/%s/run1/%s_pidgen.root %s/2011*_pidgen.root %s/2012*_pidgen.root",path,folder,part,folder,folder));
 			}
-			else if(run == 2)
+			else //Lb -> J/psi Sigma Run 1 MC doesn't exist for 2011.
 			{
-				// gSystem->Exec(Form("hadd -f %s/JpsiLambda/run2/jpsilambda.root JpsiLambda/2015*/*/*.root JpsiLambda/2016*/*/*.root",path));
-				gSystem->Exec(Form("hadd -f %s/%s/run2/%s_pidgen.root %s/2015*_pidgen.root %s/2016*_pidgen.root",path,folder,part,folder,folder));
-			}
-		}
-		else
-		{
-			if(run == 1)
-			{
-				// gSystem->Exec(Form("hadd -f %s/JpsiLambda/run1/jpsilambda.root JpsiLambda/2011*/*/*.root JpsiLambda/2012*/*/*.root",path));
+				gSystem->Exec(Form("hadd -f %s/%s/run1/%s.root %s/2012*/*/*.root",path,folder,part,folder));
 				gSystem->Exec(Form("hadd -f %s/%s/run1/%s_pidgen.root %s/2012*_pidgen.root",path,folder,part,folder));
 			}
-			else if(run == 2)
-			{
-				// gSystem->Exec(Form("hadd -f %s/JpsiLambda/run2/jpsilambda.root JpsiLambda/2015*/*/*.root JpsiLambda/2016*/*/*.root",path));
-				gSystem->Exec(Form("hadd -f %s/%s/run2/%s_pidgen.root %s/2015*_pidgen.root %s/2016*_pidgen.root",path,folder,part,folder,folder));
-			}
 		}
-		// if(mcType == 1)//Jpsi Lambda MC
-		// {
-		//      if(run == 1)
-		//      {
-		//              // gSystem->Exec(Form("hadd -f %s/JpsiLambda/run1/jpsilambda.root JpsiLambda/2011*/*/*.root JpsiLambda/2012*/*/*.root",path));
-		//              gSystem->Exec(Form("hadd -f %s/JpsiLambda/run1/jpsilambda_pidgen.root JpsiLambda/2011*_pidgen.root JpsiLambda/2012*_pidgen.root",path));
-		//      }
-		//      else if(run == 2)
-		//      {
-		//              // gSystem->Exec(Form("hadd -f %s/JpsiLambda/run2/jpsilambda.root JpsiLambda/2015*/*/*.root JpsiLambda/2016*/*/*.root",path));
-		//              gSystem->Exec(Form("hadd -f %s/JpsiLambda/run2/jpsilambda_pidgen.root JpsiLambda/2015*_pidgen.root JpsiLambda/2016*_pidgen.root",path));
-		//      }
-		// }
-		// else if(mcType == 2)//Jpsi Sigma MC
-		// {
-		//      if(run == 1)
-		//      {
-		//              // gSystem->Exec(Form("hadd -f %s/JpsiSigma/run1/jpsisigma.root JpsiSigma/2012*/*/*.root",path));
-		//              gSystem->Exec(Form("hadd -f %s/JpsiSigma/run1/jpsisigma_pidgen.root JpsiSigma/2012*_pidgen.root",path));
-		//      }
-		//      else if(run == 2)
-		//      {
-		//              // gSystem->Exec(Form("hadd -f %s/JpsiSigma/run2/jpsisigma.root JpsiSigma/2015*/*/*.root JpsiSigma/2016*/*/*.root",path));
-		//              gSystem->Exec(Form("hadd -f %s/JpsiSigma/run2/jpsisigma_pidgen.root JpsiSigma/2015*_pidgen.root JpsiSigma/2016*_pidgen.root",path));
-		//      }
-		// }
-		// else if(mcType == 3)//Jpsi Xi MC
-		// {
-		//      if(run == 1)
-		//      {
-		//              // gSystem->Exec(Form("hadd -f %s/JpsiXi/run1/jpsixi.root JpsiXi/2011*/*/*.root JpsiXi/2012*/*/*.root",path));
-		//              gSystem->Exec(Form("hadd -f %s/JpsiXi/run1/jpsixi_pidgen.root JpsiXi/2011*_pidgen.root JpsiXi/2012*_pidgen.root",path));
-		//      }
-		//      else if(run == 2)
-		//      {
-		//              // gSystem->Exec(Form("hadd -f %s/JpsiXi/run2/jpsixi.root JpsiXi/2015*/*/*.root JpsiXi/2016*/*/*.root",path));
-		//              gSystem->Exec(Form("hadd -f %s/JpsiXi/run2/jpsixi_pidgen.root JpsiXi/2015*_pidgen.root JpsiXi/2016*_pidgen.root",path));
-		//      }
-		// }
-		// else if(mcType == 6||mcType==7||mcType==8||mcType==9||mcType==11) //Lambda* and chiC1 MC
-		// {
-		//      if(run == 1)
-		//      {
-		//              gSystem->Exec(Form("hadd -f %s/%s/run1/%s.root %s/2011*/*/*.root %s/2012*/*/*.root",path,folder,part,folder,folder));
-		//      }
-		//      else if(run == 2)
-		//      {
-		//              gSystem->Exec(Form("hadd -f %s/%s/run2/%s.root %s/2015*/*/*.root %s/2016*/*/*.root",path,folder,part,folder,folder));
-		//      }
-		// }
+		else if(run == 2)
+		{
+			gSystem->Exec(Form("hadd -f %s/%s/run1/%s.root %s/2015*/*/*.root %s/2016*/*/*.root",path,folder,part,folder,folder));
+			gSystem->Exec(Form("hadd -f %s/%s/run2/%s_pidgen.root %s/2015*_pidgen.root %s/2016*_pidgen.root",path,folder,part,folder,folder));
+		}
 	}//end MC loop
 	cout<<"DONE COLLATING"<<endl;
 

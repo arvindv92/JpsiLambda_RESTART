@@ -28,7 +28,12 @@
 #include "TBranch.h"
 #include "TPaveLabel.h"
 #include "TStopwatch.h"
+#include <iostream>
+#include <fstream>
+// use this order for safety on library loading
+using namespace RooFit;
+using namespace RooStats;
+using namespace std;
 
-Double_t DoSWeight(Int_t run = 1, Int_t trackType = 3,
-                   Bool_t logFlag = false, Bool_t zeroFlag = false);
+Double_t DoSWeight(Int_t run = 1, Bool_t logFlag = false, Bool_t zeroFlag = false);
 #endif

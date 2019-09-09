@@ -4,103 +4,99 @@
 
 #include "ApplyFinalBDT.h"
 
-void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
+void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType,
                    const char* isoVersion, Int_t isoConf, Int_t bdtConf,
                    Int_t flag, Bool_t isoFlag, Bool_t zeroFlag, Bool_t logFlag,
                    Bool_t simFlag)
 /*
-   run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
+   run    = 1 or 2.
    isData = 1 for data, 0 for MC
-   mcType = 0 when running over data. When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
-   trackType = 3 for LL, 5 for DD.
-   isoVersion = "v1","v2", "v3" or "v4". Refers to isolation isoVersion.
-   isoConf = 1 or 2. Refers to config of isolation BDT.
-   bdtConf = 1 or 2. refers to finalBDT training configs
-   flag = 1 when applying on all data, flag = 2 when applying only on signal training sample
-   isoFlag = true if you want to use isolation in the final BDT.
-   zeroFlag = true to apply final BDT on zeroTrack data, false to apply on nonZeroTracks data.
+
+   MCType = 1 for Lb -> J/psi Lambda MC
+   MCType = 2 for Lb -> J/psi Sigma MC        (reco'd JpsiLambda)
+   MCType = 3 for Xib -> Jpsi Xi MC           (reco'd JpsiLambda)
+   MCType = 4 for Lb -> J/psi Lambda*(1405)MC (reco'd JpsiLambda)
+   MCType = 5 for Lb -> J/psi Lambda*(1520)MC (reco'd JpsiLambda)
+   MCType = 6 for Lb -> J/psi Lambda*(1600)MC (reco'd JpsiLambda)
+   MCType = 7 forB0 -> Jpsi Ks MC             (reco'd JpsiLambda)
+   MCType = 8 for Xib0 -> J/psi Lambda MC
+
+   isoVersion = "v0","v1".
+   isoConf    = 1 or 2.
+   bdtConf    = 1 or 2.
+   flag       = 1 when applying on all data, flag = 2 when applying only on signal training sample
+   isoFlag    = true if you want to use isolation in the final BDT.
+   zeroFlag   = true to apply final BDT on zeroTrack data, false to apply on nonZeroTracks data.
+   logFlag    = true if you want output piped to log file
+   simFlag    = true to train final BDT on simulation for signal
  */
-//NB MODIFIED: Removing pi_ProbNNpi from variables because MC doesn't model it well
 {
 	TStopwatch sw;
 	sw.Start();
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
-	const char *folder = "", *part = "", *type = "";
+	const char *folder = "", *part = "";
 
-	type        = (trackType == 3) ? ("LL") : ("DD");
+	const char *type = ("LL");
 	switch(mcType)
 	{
 	case 0:
 	{
 		folder = "";
-		part = "";
+		part   = "";
 		break;
 	}
 	case 1:
 	{
 		folder = "JpsiLambda";
-		part = "jpsilambda";
+		part   = "jpsilambda";
 		break;
 	}
 	case 2:
 	{
 		folder = "JpsiSigma";
-		part = "jpsisigma";
+		part   = "jpsisigma";
 		break;
 	}
 	case 3:
 	{
 		folder = "JpsiXi";
-		part = "jpsixi";
+		part   = "jpsixi";
 		break;
 	}
 	case 4:
 	{
-		folder = "Bu_JpsiX";
-		part = "bu_jpsix";
+		folder = "Lst1405";
+		part   = "lst1405";
 		break;
 	}
 	case 5:
 	{
-		folder = "Bd_JpsiX";
-		part = "bd_jpsix";
+		folder = "Lst1520";
+		part   = "lst1520";
 		break;
 	}
 	case 6:
 	{
-		folder = "Lst1405";
-		part = "lst1405";
+		folder = "Lst1600";
+		part   = "lst1600";
 		break;
 	}
 	case 7:
 	{
-		folder = "Lst1520";
-		part = "lst1520";
+		folder = "JpsiKs";
+		part   = "jpsiks";
 		break;
 	}
 	case 8:
 	{
-		folder = "Lst1600";
-		part = "lst1600";
-		break;
-	}
-	case 9:
-	{
-		folder = "chiC1";
-		part = "chic1";
-		break;
-	}
-	case 10:
-	{
-		folder = "JpsiKs";
-		part = "jpsiks";
-		break;
-	}
-	case 11:
-	{
 		folder = "Xib0";
-		part = "xib0";
+		part   = "xib0";
+	}
+	default:
+	{
+		cout<<"$$$ MC Type doesn't match any of the allowed cases. Exiting! $$$"<<endl;
+		exit(1);
 	}
 	}
 	//Set up logging
@@ -155,7 +151,6 @@ void ApplyFinalBDT(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
 	Float_t log_pi_pt = 0.;
 	Float_t BDTK      = 0.;
 	Float_t chi2array[200] {0.};
-	Int_t bkgcat = 0;
 	Float_t evtNo = 0., runNo = 0., ntracks = 0.;
 
 	Double_t lbMinIpChi2   = 0., lbDira_ownPV = 0., lbFd_ownPV = 0.;

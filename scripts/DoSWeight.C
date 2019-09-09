@@ -9,10 +9,6 @@
 //NEW CHANGE: WHY WRITE OUT TWO DIFFERENT FILES (ONE FOR BDT TRAINING), WHEN THE ONLY DIFFERENCE BETWEEN THEM IS ALIASING
 //NOW WRITING OUT ONLY ONE ROOT FILE WITH THE ALIASED BRANCHES
 #include "DoSWeight.h"
-// use this order for safety on library loading
-using namespace RooFit;
-using namespace RooStats;
-using namespace std;
 
 void AddModel(RooWorkspace *ws = nullptr, Int_t lowRange = 5200,
               Int_t highRange = 6000, Int_t nEntries = 0, Int_t run = 1);
@@ -24,7 +20,7 @@ Double_t DosPlot(RooWorkspace *ws = nullptr, Int_t run = 1,
                  const char *type = "LL", TTree *treeOut = nullptr,
                  Bool_t zeroFlag = false,TH1D *hMass = nullptr);
 
-Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
+Double_t DoSWeight(Int_t run, Bool_t logFlag, Bool_t zeroFlag)
 /*
    >run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC.
    Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data.
@@ -38,20 +34,20 @@ Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 	TStopwatch sw;
 	sw.Start();
 
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	gROOT->ProcessLine(".x lhcbStyle.C");
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	gROOT->ProcessLine(".x scripts/lhcbStyle.C");
 
-	const char *type = "", *suffix = "";
-
-	suffix        = (zeroFlag) ? ("_ZeroTracks") : ("_nonZeroTracks");
-	type          = (trackType == 3) ? ("LL")    : ("DD");
+	const char *suffix = (zeroFlag) ? ("_ZeroTracks") : ("_nonZeroTracks");
+	const char *type   = "LL";
 
 	if(logFlag)//Redirect output to log file
 	{
 		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/sPlot_%s%s.txt",
 		                             run, type, suffix),"w");
 	}
+	cout<<"********************************"<<endl;
+	cout<<"********************************"<<endl;
+	cout<<"********************************"<<endl;
+	cout<<"********************************"<<endl;
 	cout<<"********************************"<<endl;
 	cout<<"==> Starting DoSWeight: "<<endl;
 	gSystem->Exec("date");
@@ -172,6 +168,10 @@ Double_t DoSWeight(Int_t run, Int_t trackType, Bool_t logFlag, Bool_t zeroFlag)
 	// if(logFlag) gROOT->ProcessLine(".>"); //end redirect
 	if(logFlag) gSystem->RedirectOutput(0); //end redirect
 
+	ofstream myfile;
+	myfile.open(Form("chi2%s.txt",suffix));
+	myfile<<myChi2<<"\n";
+	myfile.close();
 	return myChi2;
 }
 

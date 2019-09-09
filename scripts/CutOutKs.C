@@ -10,14 +10,22 @@
 
 #include "CutOutKs.h"
 
-void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackType, Bool_t logFlag)
+void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 /*
-   run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
+   run = 1 or 2
    isData = 1 for data, 0 for MC
-   mcType = 0 when running over data.
-   When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
-   mcType = 4 for Bu_JpsiX, 5 for Bd_JpsiX
-   trackType = 3 for LL, 5 for DD.
+
+   mcType = 0 when processing data. non zero for processing MC.
+   mcType = 1 for Lb -> J/psi Lambda MC
+   mcType = 2 for Lb -> J/psi Sigma MC        (reco'd JpsiLambda)
+   mcType = 3 for Xib -> Jpsi Xi MC           (reco'd JpsiLambda)
+   mcType = 4 for Lb -> J/psi Lambda*(1405)MC (reco'd JpsiLambda)
+   mcType = 5 for Lb -> J/psi Lambda*(1520)MC (reco'd JpsiLambda)
+   mcType = 6 for Lb -> J/psi Lambda*(1600)MC (reco'd JpsiLambda)
+   mcType = 7 forB0 -> Jpsi Ks MC             (reco'd JpsiLambda)
+   mcType = 8 for Xib0 -> J/psi Lambda MC
+
+   logFlag = true if you want the output to be piped to a log file.
  */
 {
 	TStopwatch sw;
@@ -53,47 +61,29 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 	}
 	case 4:
 	{
-		folder = "Bu_JpsiX";
-		part = "bu_jpsix";
-		break;
-	}
-	case 5:
-	{
-		folder = "Bd_JpsiX";
-		part = "bd_jpsix";
-		break;
-	}
-	case 6:
-	{
 		folder = "Lst1405";
 		part = "lst1405";
 		break;
 	}
-	case 7:
+	case 5:
 	{
 		folder = "Lst1520";
 		part = "lst1520";
 		break;
 	}
-	case 8:
+	case 6:
 	{
 		folder = "Lst1600";
 		part = "lst1600";
 		break;
 	}
-	case 9:
-	{
-		folder = "chiC1";
-		part = "chic1";
-		break;
-	}
-	case 10:
+	case 7:
 	{
 		folder = "JpsiKs";
 		part = "jpsiks";
 		break;
 	}
-	case 11:
+	case 8:
 	{
 		folder = "Xib0";
 		part = "xib0";
@@ -103,12 +93,10 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 	//Set up logging
 	if(isData && logFlag && run == 1)
 	{
-		//		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/CutOutKs_%d.txt",run,year),"w");
 		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/CutOutKs.txt",run),"w");
 	}
 	else if(isData && logFlag && run == 2)
 	{
-		//		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/CutOutKs_%d.txt",run,year),"w");
 		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/CutOutKs_%d.txt",run,year),"w");
 	}
 	else if(!isData && logFlag)
@@ -132,7 +120,7 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 	TTree *treeOut_nonZero = nullptr, *treeOut_Zero = nullptr;
 	TTree *treeIn          = nullptr;
 
-	const char *L_dmCut       = "", *pidCut           = "", *type        = "";
+	const char *L_dmCut       = "", *pidCut           = "";
 	const char *logFolder     = "", *rootFolder       = "";
 	const char *fileName_Zero = "", *fileName_nonZero = "";
 
@@ -146,7 +134,7 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Int_t trackTyp
 	Bool_t genFlag = false;
 	fstream genFile;
 
-	type = (trackType == 3) ? ("LL") : ("DD");
+	const char* type = ("LL");
 
 	//Setup input and output.
 	if(!isData)  // MC

@@ -9,106 +9,94 @@
  *********************************/
 
 #include "ApplyIsolation.h"
-void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType, Int_t trackType,
+void ApplyIsolation(Int_t run, Bool_t isData, Int_t mcType,
                     Int_t flag, const char* isoVersion, Int_t isoConf,
                     Bool_t logFlag, Bool_t simFlag)
-/* >run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC.
-   Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
+/* run = 1 or 2.
+   isData = true for data, false for MC
 
-   >isData = true for data, false for MC
+   mcType = 0 when processing data. non zero for processing MC.
+   mcType = 1 for Lb -> J/psi Lambda MC
+   mcType = 2 for Lb -> J/psi Sigma MC        (reco'd JpsiLambda)
+   mcType = 3 for Xib -> Jpsi Xi MC           (reco'd JpsiLambda)
+   mcType = 4 for Lb -> J/psi Lambda*(1405)MC (reco'd JpsiLambda)
+   mcType = 5 for Lb -> J/psi Lambda*(1520)MC (reco'd JpsiLambda)
+   mcType = 6 for Lb -> J/psi Lambda*(1600)MC (reco'd JpsiLambda)
+   mcType = 7 forB0 -> Jpsi Ks MC             (reco'd JpsiLambda)
+   mcType = 8 for Xib0 -> J/psi Lambda MC
 
-   >mcType = 0 when running over data. When running over MC,
-   mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
-
-   >trackType = 3 for LL, 5 for DD.
-
-   >flag = 1 when applying on all data,
-   flag = 2 when applying only on signal training sample
-
-   >isoVersion = "v0","v1"
-
-   >isoConf = 1 or 2.
+   flag       = 1 when applying on all data,
+   flag       = 2 when applying only on signal training sample
+   isoVersion = "v0" or "v1"
+   isoConf    = 1 or 2.
  */
 {
 	TStopwatch sw;
 	sw.Start();
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
-	const char *folder = "", *part = "", *type = "";
-	type        = (trackType == 3) ? ("LL") : ("DD");
+	const char *folder = "", *part = "";
+	const char *type = ("LL");
 
 	switch(mcType)
 	{
 	case 0:
 	{
 		folder = "";
-		part = "";
+		part   = "";
 		break;
 	}
 	case 1:
 	{
 		folder = "JpsiLambda";
-		part = "jpsilambda";
+		part   = "jpsilambda";
 		break;
 	}
 	case 2:
 	{
 		folder = "JpsiSigma";
-		part = "jpsisigma";
+		part   = "jpsisigma";
 		break;
 	}
 	case 3:
 	{
 		folder = "JpsiXi";
-		part = "jpsixi";
+		part   = "jpsixi";
 		break;
 	}
 	case 4:
 	{
-		folder = "Bu_JpsiX";
-		part = "bu_jpsix";
+		folder = "Lst1405";
+		part   = "lst1405";
 		break;
 	}
 	case 5:
 	{
-		folder = "Bd_JpsiX";
-		part = "bd_jpsix";
+		folder = "Lst1520";
+		part   = "lst1520";
 		break;
 	}
 	case 6:
 	{
-		folder = "Lst1405";
-		part = "lst1405";
+		folder = "Lst1600";
+		part   = "lst1600";
 		break;
 	}
 	case 7:
 	{
-		folder = "Lst1520";
-		part = "lst1520";
+		folder = "JpsiKs";
+		part   = "jpsiks";
 		break;
 	}
 	case 8:
 	{
-		folder = "Lst1600";
-		part = "lst1600";
-		break;
-	}
-	case 9:
-	{
-		folder = "chiC1";
-		part = "chic1";
-		break;
-	}
-	case 10:
-	{
-		folder = "JpsiKs";
-		part = "jpsiks";
-		break;
-	}
-	case 11:
-	{
 		folder = "Xib0";
-		part = "xib0";
+		part   = "xib0";
+	}
+	default:
+	{
+		cout<<"$$$ MC Type doesn't match any of the allowed cases. Exiting! $$$"<<endl;
+		exit(1);
 	}
 	}
 

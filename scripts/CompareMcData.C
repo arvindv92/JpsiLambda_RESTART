@@ -230,53 +230,10 @@ TCanvas* routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_
 		part = "jpsisigma";
 		break;
 	}
-	case 3:
+	default:
 	{
-		folder = "JpsiXi";
-		part = "jpsixi";
-		break;
-	}
-	case 4:
-	{
-		folder = "Bu_JpsiX";
-		part = "bu_jpsix";
-		break;
-	}
-	case 5:
-	{
-		folder = "Bd_JpsiX";
-		part = "bd_jpsix";
-		break;
-	}
-	case 6:
-	{
-		folder = "Lst1405";
-		part = "lst1405";
-		break;
-	}
-	case 7:
-	{
-		folder = "Lst1520";
-		part = "lst1520";
-		break;
-	}
-	case 8:
-	{
-		folder = "Lst1600";
-		part = "lst1600";
-		break;
-	}
-	case 9:
-	{
-		folder = "chiC1";
-		part = "chic1";
-		break;
-	}
-	case 10:
-	{
-		folder = "JpsiKs";
-		part = "jpsiks";
-		break;
+		cout<<"$$$ MC Type doesn't match any of the allowed cases. Exiting! $$$"<<endl;
+		exit(1);
 	}
 	}
 

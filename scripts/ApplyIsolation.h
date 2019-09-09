@@ -23,6 +23,6 @@ using namespace TMVA;
 using namespace std;
 
 void ApplyIsolation(Int_t run = 1, Bool_t isData = true, Int_t mcType = 0,
-                    Int_t trackType = 3, Int_t flag = 1, const char* isoVersion = "v1",
+                    Int_t flag = 1, const char* isoVersion = "v1",
                     Int_t isoConf = 1, Bool_t logFlag = false, Bool_t simFlag = false);
 #endif

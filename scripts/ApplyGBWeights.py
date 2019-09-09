@@ -1,3 +1,7 @@
+# This code applies weights to MC to correct data-MC differences
+# The RW is applied to both reconstructed and generated MC
+# The RW is applied to the pidgen MC files (i.e. before any selections are applied on it)
+
 import sys
 # import numpy
 import root_numpy
@@ -6,22 +10,28 @@ import cPickle as pickle
 # from hep_ml import reweight
 # from sklearn.model_selection import train_test_split
 
-# mcOpt = 1 for JpsiLambda
-# mcOpt = 2 for JpsiSigma
-# mcOpt = 3 for JpsiXi (reco'd JpsiLambda)
-# mcOpt = 12 for JpsiXi (reco'd JpsiXi)
-# mcOpt = 11 for Xib0->J/psi Lambda
+# mcType = 1 for Lb -> J/psi Lambda MC
+# mcType = 2 for Lb -> J/psi Sigma MC        (reco'd JpsiLambda)
+# mcType = 3 for Xib -> Jpsi Xi MC           (reco'd JpsiLambda)
+# mcType = 8 for Xib0 -> J/psi Lambda MC
+# mcType = 9 for Xib- -> J/psi Xi- MC        (reco'd J/psi Xi-)
+
 run = int(sys.argv[1])
-mcOpt = int(sys.argv[2])
+mcType = int(sys.argv[2])
 isGen = int(sys.argv[3])  # set to 1 to run over generator, 0 to run over rec.
 
-print 'Processing Run', run, 'mcOpt ', mcOpt
+list = [1, 2, 3, 8, 9]
+if mcType not in list:
+    print 'mcType not in allowed list. Exiting!\n'
+    sys.exit()
+
+print 'Processing Run', run, 'mcType ', mcType
 if isGen:
     print 'Generator\n'
 else:
     print 'Reconstructed\n'
 
-if mcOpt != 3 and mcOpt != 12:
+if mcType != 3 and mcType != 9:
     if not isGen:
         columns = ['Lb_P', 'Lb_PT', 'Jpsi_P', 'Jpsi_PT', 'L_P',
                    'L_PT', 'p_P', 'p_PT', 'pi_P', 'pi_PT', 'p_ProbNNghost', 'pi_ProbNNghost']
@@ -36,40 +46,19 @@ else:
 
 # mcPath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run{}/'.format(run)
 mcPath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run2/'
-if mcOpt == 1:
+if mcType == 1:
     filePath = '../rootFiles/mcFiles/JpsiLambda/JpsiLambda/run{}/'
     part = 'jpsilambda'
-elif mcOpt == 2:
+elif mcType == 2:
     filePath = '../rootFiles/mcFiles/JpsiLambda/JpsiSigma/run{}/'
     part = 'jpsisigma'
-elif mcOpt == 3:
+elif mcType == 3:
     filePath = '../rootFiles/mcFiles/JpsiLambda/JpsiXi/run{}/'
     part = 'jpsixi'
-elif mcOpt == 4:
-    filePath = '../rootFiles/mcFiles/JpsiLambda/Bu_JpsiX/run{}/'
-    part = 'bu_jpsix'
-elif mcOpt == 5:
-    filePath = '../rootFiles/mcFiles/JpsiLambda/Bd_JpsiX/run{}/'
-    part = 'bd_jpsix'
-elif mcOpt == 6:
-    filePath = '../rootFiles/mcFiles/JpsiLambda/Lst1405/run{}/'
-    part = 'lst1405'
-elif mcOpt == 7:
-    filePath = '../rootFiles/mcFiles/JpsiLambda/Lst1520/run{}/'
-    part = 'lst1520'
-elif mcOpt == 8:
-    filePath = '../rootFiles/mcFiles/JpsiLambda/Lst1600/run{}/'
-    part = 'lst1600'
-elif mcOpt == 9:
-    filePath = '../rootFiles/mcFiles/JpsiLambda/chiC1/run{}/'
-    part = 'chic1'
-elif mcOpt == 10:
-    filePath = '../rootFiles/mcFiles/JpsiLambda/JpsiKs/run{}/'
-    part = 'jpsiks'
-elif mcOpt == 11:
+elif mcType == 8:
     filePath = '../rootFiles/mcFiles/JpsiLambda/Xib0/run{}/'
     part = 'xib0'
-elif mcOpt == 12:
+elif mcType == 9:
     filePath = '../rootFiles/mcFiles/JpsiXi/run{}/'
     part = 'jpsixi'
 
@@ -78,13 +67,13 @@ if isGen:
     treeName = 'MCTuple/MCDecayTree'
 else:
     treeName = 'MyTuple'
-    if mcOpt != 12:
+    if mcType != 9:
         fileName = part + '_pidgen.root'
     else:
         fileName = part + '_cut_LL.root'
 filePath = filePath.format(run)
 
-if mcOpt != 3 and mcOpt != 12:
+if mcType != 3 and mcType != 9:
     if not isGen:
         wtsFileName = 'gb_wts.pkl'
     else:

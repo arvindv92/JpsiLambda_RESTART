@@ -2,7 +2,7 @@
    Author : Aravindhan V.
  *********************************/
 #include "TrainFinalBDT.h"
-void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
+void TrainFinalBDT(Int_t run, const char* isoVersion,
                    Int_t isoConf, Bool_t isoFlag, Int_t bdtConf, Bool_t logFlag,
                    Bool_t simFlag)
 /*
@@ -20,9 +20,7 @@ void TrainFinalBDT(Int_t run, Int_t trackType, const char* isoVersion,
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
-	const char *type = "";
-
-	type = (trackType == 3) ? ("LL") : ("DD");
+	const char *type = "LL";
 
 	if(!simFlag) //training on data
 	{

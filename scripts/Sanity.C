@@ -1,26 +1,28 @@
 /********************************
    Author : Aravindhan V.
-   The purpose of this script is to apply loose sanity cuts to triggered data/MC, and then separate out into LL and DD files.
-   Split by year is only done for data, to allow parallel processing of different years.
+   The purpose of this script is to apply loose sanity cuts to triggered data/MC
+   Split by year is only done for Run 2 data, to allow parallel processing of different years.
    For MC, all years are processed together.
  *********************************/
 #include "Sanity.h"
 
 void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 /*
-   run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
+   run    = 1 or 2.
    isData = 1 for data, 0 for MC
-   mcType = 0 when running over data.
-   When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
-   mcType = 4 for Bu_JpsiX, 5 for Bd_JpsiX
- */
-//***MODIFIED TM CUTS REMOVED. I HATE TM*******
-//***MODIFIED REMOVED PID CUTS FOR TESTING*****
-/*
-   NB: BKGCAT applies to MC, but not data. Read  Steve's analysis and think about exactly what TM condition is to be applied
-   Lb_DTF_CTAU_L -> Lb_TAU
-   DTFchi2 cut is now 0-50
-   PID cuts are applied to reject junk events with PID's of 0 or -1000 for Run1 and reject -1000 for Run2
+
+   mcType = 0 when processing data. non zero for processing MC.
+   mcType = 1 for Lb -> J/psi Lambda MC
+   mcType = 2 for Lb -> J/psi Sigma MC        (reco'd JpsiLambda)
+   mcType = 3 for Xib -> Jpsi Xi MC           (reco'd JpsiLambda)
+   mcType = 4 for Lb -> J/psi Lambda*(1405)MC (reco'd JpsiLambda)
+   mcType = 5 for Lb -> J/psi Lambda*(1520)MC (reco'd JpsiLambda)
+   mcType = 6 for Lb -> J/psi Lambda*(1600)MC (reco'd JpsiLambda)
+   mcType = 7 forB0 -> Jpsi Ks MC             (reco'd JpsiLambda)
+   mcType = 8 for Xib0 -> J/psi Lambda MC
+   mcType = 9 for Xib- -> J/psi Xi- MC          (reco'd J/psi Xi-)
+
+   logFlag = true if you want the output to be piped to a log file.
  */
 {
 	TStopwatch sw;
@@ -34,93 +36,77 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 	case 0:
 	{
 		folder = "";
-		part = "";
+		part   = "";
 		break;
 	}
 	case 1:
 	{
 		folder = "JpsiLambda";
-		part = "jpsilambda";
+		part   = "jpsilambda";
 		break;
 	}
 	case 2:
 	{
 		folder = "JpsiSigma";
-		part = "jpsisigma";
+		part   = "jpsisigma";
 		break;
 	}
 	case 3:
 	{
 		folder = "JpsiXi";
-		part = "jpsixi";
+		part   = "jpsixi";
 		break;
 	}
 	case 4:
 	{
-		folder = "Bu_JpsiX";
-		part = "bu_jpsix";
+		folder = "Lst1405";
+		part   = "lst1405";
 		break;
 	}
 	case 5:
 	{
-		folder = "Bd_JpsiX";
-		part = "bd_jpsix";
+		folder = "Lst1520";
+		part   = "lst1520";
 		break;
 	}
 	case 6:
 	{
-		folder = "Lst1405";
-		part = "lst1405";
+		folder = "Lst1600";
+		part   = "lst1600";
 		break;
 	}
 	case 7:
 	{
-		folder = "Lst1520";
-		part = "lst1520";
+		folder = "JpsiKs";
+		part   = "jpsiks";
 		break;
 	}
 	case 8:
 	{
-		folder = "Lst1600";
-		part = "lst1600";
-		break;
-	}
-	case 9:
-	{
-		folder = "chiC1";
-		part = "chic1";
-		break;
-	}
-	case 10:
-	{
-		folder = "JpsiKs";
-		part = "jpsiks";
-		break;
-	}
-	case 11:
-	{
 		folder = "Xib0";
-		part = "xib0";
+		part   = "xib0";
 		break;
+	}
+	default:
+	{
+		cout<<"$$$ MC Type doesn't match any of the allowed cases. Exiting! $$$"<<endl;
+		exit(1);
 	}
 	}
 
 	//Set up logging
 	if(isData && logFlag && run == 1)
 	{
-		//gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/sanity_%d_log.txt",run,year));
 		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/Sanity.txt",
 		                             run),"w");
 	}
 	else if(isData && logFlag && run == 2)
 	{
-		//gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/sanity_%d_log.txt",run,year));
 		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/Sanity_%d.txt",
 		                             run,year),"w");
 	}
 	else if(!isData && logFlag)
 	{
-		//gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/%s/run%d/sanity_log.txt",folder,run));
 		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/Sanity.txt",
 		                             folder,run),"w");
 	}
@@ -138,13 +124,14 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 	Int_t entries_init = 0, entries_final_LL = 0;
 	Int_t entries_gen  = 0, Lb_BKGCAT        = 0;
 
+	Float_t Lb_ConsLb_chi2 = 0.0, Lb_ConsLb_nDOF  = 0.0;
 	Float_t eff_excl_LL    = 0.0, eff_excl_LL_err = 0.0;
 	Float_t eff_incl_LL    = 0.0, eff_incl_LL_err = 0.0;
-	Float_t Lb_ConsLb_chi2 = 0.0, Lb_ConsLb_nDOF  = 0.0;
 
 	Double_t Lb_TAU  = 0.0, Lb_ETA  = 0.0, Lb_PT  = 0.0;
 	Double_t L_TAU   = 0.0, L_M = 0.0;
-	Bool_t genFlag   = false;
+
+	Bool_t genFlag = false;
 
 	TCut dtfCut   = "", lifetimeCut = "", pidCut = "";
 	TCut accCut   = "", tmCut       = "";
@@ -212,31 +199,6 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 	dtfCut = "(Lb_ConsLb_chi2/Lb_ConsLb_nDOF > 0 && Lb_ConsLb_chi2/Lb_ConsLb_nDOF < 50)";
 	accCut = "(Lb_ETA > 2 && Lb_ETA < 6 && Lb_PT < 20000)";
 	LMassCut = "(L_M > 1104 && L_M < 1129)";
-	// if(run == 1)
-	// {
-	//      //This also ensures that pi_PIDK != -1000 && p_PIDK != -1000
-	//      pidCut = "(pi_PIDp != 0 && pi_PIDp != -1000 && pi_PIDK != 0 && p_PIDp !=0 && p_PIDp!= -1000 && p_PIDK !=0)";
-	// }
-	// else if(run == 2)
-	// {
-	//      pidCut = "(pi_PIDp != -1000 && p_PIDp!= -1000)";
-	// }
-	// if(!isData)
-	// {
-	//      if(mcType == 1)
-	//      {
-	//              // tmCut  = "(abs(p_MOTHER_ID) == 3122 && abs(pi_MOTHER_ID) == 3122 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 5122)";
-	//              tmCut = "(abs(Lb_TRUEID == 5122) || (Lb_BKGCAT == 60 && abs(Lb_DTF_M_JpsiLConstr - 5620) < 35))";
-	//      }
-	//      if(mcType == 2)
-	//      {
-	//              tmCut  = "(abs(p_MOTHER_ID) == 3122 && abs(pi_MOTHER_ID) == 3122 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 3212 && abs(L_GD_MOTHER_ID) == 5122)";
-	//      }
-	//      if(mcType == 2)
-	//      {
-	//              tmCut  = "(abs(p_MOTHER_ID) == 3122 && abs(pi_MOTHER_ID) == 3122 && abs(Jpsi_MOTHER_ID) == 5132 && abs(L_MOTHER_ID) == 3312 && abs(L_GD_MOTHER_ID) == 5122)";
-	//      }
-	// }
 
 	cout<<"I am making the following sanity cuts, and then separating in LL and DD files. Sit tight"<<endl;
 
@@ -258,18 +220,9 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 			{
 				if((Lb_ConsLb_chi2/Lb_ConsLb_nDOF) > 0 && (Lb_ConsLb_chi2/Lb_ConsLb_nDOF) < 50)// DTF chi2 cut, universal
 				{
-					if(Lb_ETA > 2 && Lb_ETA < 6 && Lb_PT < 20000)         //acceptance cut, universal, pt < 20000 cut needs to be added here.
+					if(Lb_ETA > 2 && Lb_ETA < 6 && Lb_PT < 20000) //acceptance cut, universal, pt < 20000 cut needs to be added here.
 					{
-						// if((run == 1 && pi_PIDp != 0 && pi_PIDp != -1000 && pi_PIDK != 0 && p_PIDp !=0 && p_PIDp!= -1000 && p_PIDK !=0)|| (run == 2 && p_PIDp != -1000 && pi_PIDp != -1000))
-						// {
-						// if( (isData == 1) || (isData == 0 && abs(p_MOTHER_ID) == 3122 && abs(pi_MOTHER_ID) == 3122 && ((mcType == 1 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 5122) || (mcType == 2 && abs(Jpsi_MOTHER_ID) == 5122 && abs(L_MOTHER_ID) == 3212 && abs(L_GD_MOTHER_ID) == 5122) || (mcType == 3 && abs(Jpsi_MOTHER_ID) == 5132 && abs(L_MOTHER_ID) == 3312 && abs(L_GD_MOTHER_ID) == 5122))))
-						// {
-						// if(p_TRACK_Type == 3)
-						// {
 						treeOut_LL->Fill();
-						// }
-						// }
-						// }
 					}
 				}
 			}
@@ -317,7 +270,5 @@ void Sanity(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag)
 	sw.Stop();
 	cout << "==> Sanity is done! Mazel Tov!: "; sw.Print();
 
-	//if(logFlag) gROOT->ProcessLine(".>");
 	if(logFlag) gSystem->RedirectOutput(0);
-	//if(logFlag) gSystem->Exec("cat sanity_log.txt");
 }
