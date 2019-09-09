@@ -17,11 +17,13 @@
 #include "TSystem.h"
 #include "TROOT.h"
 #include "RooMCStudy.h"
-
+#include <iostream>
+#include <fstream>
 using namespace RooFit;
 using namespace std;
 
 void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
+//Fit to simulation first. This will give the fit parameters for alpha1, alpha2 and sigma that we will fix in the data fit.
 {
 	TStopwatch sw;
 	sw.Start();
@@ -88,7 +90,7 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 	}
 	//***** *****
 
-	RooRealVar Xib_M("Xib_DTF_M_JpsiXiLConstr","Xib_DTF_M_JpsiXiLConstr",5500.,6100.,"MeV");
+	RooRealVar Xib_M("Xib_DTF_M_JpsiXiLConstr","Xib_DTF_M",5500.,6100.,"MeV");
 
 	//NOMINAL FIT MODEL - Double Crystal Ball (common mean and sigma) + Exp Background
 	RooRealVar mean("mean","Crystal Ball Mean",5795.2,5790.0,5800.0,"MeV");//mean,alpha1,alpha2,sigma are fixed here by fitting to UNREWEIGHTED simulation
@@ -113,6 +115,11 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 
 	RooRealVar nSig("nSig","nSig",5,nEntries);
 	RooRealVar nBkg("nBkg","nBkg",0,nEntries);
+
+	if(isData && run == 2)
+	{
+		nBkg.setMax(1.0);
+	}
 
 	RooAddPdf model_nom("model_nom","Nominal Fit Model",RooArgList(sig,bkg),RooArgList(nSig,nBkg));
 
@@ -171,6 +178,26 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 		fs.setVal(1.0);
 		fs.setConstant(kTRUE);
 	}
+	else
+	{
+		ifstream inFile(Form("logs/mc/JpsiXi/run%d/NominalFitParams.txt",run));
+		if(inFile.is_open())
+		{
+			inFile>>mean_mc;
+			inFile>>sigma_mc;
+			inFile>>alpha1_mc;
+			inFile>>alpha2_mc;
+
+			sigma.setVal(sigma_mc); sigma.setConstant(kTRUE);
+			alpha1.setVal(alpha1_mc); alpha1.setConstant(kTRUE);
+			alpha2.setVal(alpha2_mc); alpha2.setConstant(kTRUE);
+		}
+		else
+		{
+			cout<<"Unable to open input text file. Param values not fixed."<<endl;
+		}
+
+	}
 	// else
 	// {
 	//      mean.setVal(mean_mc); mean.setConstant(kTRUE);
@@ -204,12 +231,32 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 	// model_alt2.fitTo(ds,Extended(),RooFit::Strategy(2));
 	// model_alt3.fitTo(ds,Extended(),RooFit::Strategy(2));
 
+	if(!isData)//Write out MC fitted values for params
+	{
+		ofstream outFile(Form("logs/mc/JpsiXi/run%d/NominalFitParams.txt",run));
+		if(outFile.is_open())
+		{
+			outFile<<mean.getValV()<<endl;
+			outFile<<sigma.getValV()<<endl;
+			outFile<<alpha1.getValV()<<endl;
+			outFile<<alpha2.getValV()<<endl;
+			outFile.close();
+		}
+		else
+		{
+			cout<<"Unable to open output text file."<<endl;
+		}
+	}
+
 	RooAddPdf myModel = model_nom;
 
 	RooPlot *frame = Xib_M.frame();
+	if(!isData)
+	{
+		frame->SetAxisRange(5700,5900);
+	}
 	ds.plotOn(frame,Name("data"));
 	myModel.plotOn(frame,Name("fit"));
-	myModel.paramOn(frame);
 	myModel.plotOn(frame,Components(sig),LineStyle(kDashed));
 	myModel.plotOn(frame,Components(sig1),LineStyle(kDotted),LineColor(kMagenta));
 	myModel.plotOn(frame,Components(sig2),LineStyle(kDotted),LineColor(kMagenta));
@@ -250,6 +297,10 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 
 	// Pull distribution
 	RooPlot *framex2 = Xib_M.frame();
+	if(!isData)
+	{
+		framex2->SetAxisRange(5700,5900);
+	}
 	RooHist* hpull = frame->pullHist("data","fit");
 	framex2->addPlotable(hpull,"P");
 	hpull->SetLineColor(kBlack);
@@ -276,11 +327,11 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 
 	if(!isData)
 	{
-		c->SaveAs(Form("plots/mc/JpsiXi/run%d/NominalFit.pdf",run));
+		c->SaveAs(Form("plots/ANA/NominalFit_JpsiXi_MC_Run%d.pdf",run));
 	}
 	else
 	{
-		c->SaveAs(Form("plots/data/JpsiXi/run%d/NominalFit.pdf",run));
+		c->SaveAs(Form("plots/ANA/NominalFit_JpsiXi_Data_Run%d.pdf",run));
 	}
 
 	nSig.Print();
