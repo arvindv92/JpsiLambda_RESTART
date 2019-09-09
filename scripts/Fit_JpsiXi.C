@@ -248,7 +248,7 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 	}
 	else
 	{
-		model_nom.fitTo(*ds_wt,Extended(),RooFit::Strategy(2),SumW2Error(kTRUE));
+		model_nom.fitTo(*ds_wt,Extended(),RooFit::Strategy(2),SumW2Error(kFALSE));
 	}
 	//Fit alternate fit model to dataset
 	// model_alt1.fitTo(ds,Extended(),RooFit::Strategy(2));
