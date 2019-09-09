@@ -7,13 +7,22 @@
 void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
              Bool_t loose, Bool_t logFlag)
 /* DOCUMENTATION
-   run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
+   run = 1 or 2
    isData = true for data, false for MC
-   mcType = 0 when running over data.
-   When running over MC, mcType = 1 for JpsiLambda, 2 for JpsiSigma, 3 for JpsiXi.
-   MCType = 4 for Bu_JpsiX, 5 for Bd_JpsiX
+   mcType = 0 when processing data. non zero for processing MC.
+   mcType = 1 for Lb -> J/psi Lambda MC
+   mcType = 2 for Lb -> J/psi Sigma MC        (reco'd JpsiLambda)
+   mcType = 3 for Xib -> Jpsi Xi MC           (reco'd JpsiLambda)
+   mcType = 4 for Lb -> J/psi Lambda*(1405)MC (reco'd JpsiLambda)
+   mcType = 5 for Lb -> J/psi Lambda*(1520)MC (reco'd JpsiLambda)
+   mcType = 6 for Lb -> J/psi Lambda*(1600)MC (reco'd JpsiLambda)
+   mcType = 7 forB0 -> Jpsi Ks MC             (reco'd JpsiLambda)
+   mcType = 8 for Xib0 -> J/psi Lambda MC
+   mcType = 9 for Xib- -> J/psi Xi- MC          (reco'd J/psi Xi-)
+
    testing = true to run only over a subset of data
-   loose = true to run over data from loose stripping line. Only LL for loose stripping line
+   loose   = true to run over data from loose stripping line. Only LL for loose stripping line
+   logFlag = true if you want the output to be piped to a log file.
  */
 {
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
@@ -24,85 +33,70 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 	case 0:
 	{
 		folder = "";
-		part = "";
+		part   = "";
 		break;
 	}
 	case 1:
 	{
 		folder = "JpsiLambda";
-		part = "jpsilambda";
+		part   = "jpsilambda";
 		break;
 	}
 	case 2:
 	{
 		folder = "JpsiSigma";
-		part = "jpsisigma";
+		part   = "jpsisigma";
 		break;
 	}
 	case 3:
 	{
 		folder = "JpsiXi";
-		part = "jpsixi";
+		part   = "jpsixi";
 		break;
 	}
 	case 4:
 	{
-		folder = "Bu_JpsiX";
-		part = "bu_jpsix";
+		folder = "Lst1405";
+		part   = "lst1405";
 		break;
 	}
 	case 5:
 	{
-		folder = "Bd_JpsiX";
-		part = "bd_jpsix";
+		folder = "Lst1520";
+		part   = "lst1520";
 		break;
 	}
 	case 6:
 	{
-		folder = "Lst1405";
-		part = "lst1405";
+		folder = "Lst1600";
+		part   = "lst1600";
 		break;
 	}
 	case 7:
 	{
-		folder = "Lst1520";
-		part = "lst1520";
+		folder = "JpsiKs";
+		part   = "jpsiks";
 		break;
 	}
 	case 8:
 	{
-		folder = "Lst1600";
-		part = "lst1600";
-		break;
-	}
-	case 9:
-	{
-		folder = "chiC1";
-		part = "chic1";
-		break;
-	}
-	case 10:
-	{
-		folder = "JpsiKs";
-		part = "jpsiks";
-		break;
-	}
-	case 11:
-	{
 		folder = "Xib0";
-		part = "xib0";
+		part   = "xib0";
+	}
+	default:
+	{
+		cout<<"$$$ MC Type doesn't match any of the allowed cases. Exiting! $$$"<<endl;
+		exit(1);
 	}
 	}
 	//Set up logging
 	if(isData && logFlag)
 	{
-		//gROOT->ProcessLine(Form(".> logs/data/JpsiLambda/run%d/trigger_%d_log.txt",run,year));
 		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/Trigger_%d_log.txt",
 		                             run,year),"w");
 	}
 	else if(!isData && logFlag)
 	{
-		//gROOT->ProcessLine(Form(".> logs/mc/JpsiLambda/%s/run%d/trigger_log.txt",folder,run));
 		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/Trigger_log.txt",
 		                             folder,run),"w");
 	}
@@ -129,9 +123,6 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 
 	Bool_t hlt1DiMuonHighMass = false, hlt1TrackMuon      = false;
 	Bool_t hlt1TrackAllL0     = false, hlt2DiMuonDetached = false;
-	Bool_t collateFlag        = false;//NB set to false
-	/*f you don't want to re-collate MC, set this to false.
-	   For example, if only the trigger condition changes.*/
 
 	TFile *fileOut = nullptr, *fileIn     = nullptr, *fileIn_pid = nullptr;
 	TTree *treeIn  = nullptr, *treeIn_gen = nullptr;
@@ -186,12 +177,6 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 	{
 		genFile.open(Form("logs/mc/JpsiLambda/%s/run%d/gen_log.txt",folder,run));
 
-		// if(collateFlag)
-		// {
-		//      // CollateFiles(run, year, isData, mcType);
-		//      gSystem->Exec(".L CollateFiles.C");
-		//      gSystem->Exec(Form("CollateFiles(%d,%d,%d,%d)",run, year, isData, mcType));
-		// }
 		fileIn     = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",
 		                              folder,run,part));
 		treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
