@@ -116,7 +116,7 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 	RooRealVar nSig("nSig","nSig",5,nEntries);
 	RooRealVar nBkg("nBkg","nBkg",0,nEntries);
 
-	if(isData && run == 2)
+	if(!isData && run == 2)
 	{
 		nBkg.setMax(1.0);
 	}
