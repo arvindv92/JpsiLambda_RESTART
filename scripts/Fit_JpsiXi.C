@@ -67,6 +67,10 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 
 	treeIn->SetBranchStatus("*",0);
 	treeIn->SetBranchStatus("Xib_DTF_M_JpsiXiLConstr",1);
+	if(!isData)
+	{
+		treeIn->SetBranchStatus("GB_WT",1);
+	}
 
 	Int_t nEntries = treeIn->GetEntries();
 	cout<<"nEntries = "<<nEntries<<endl;
@@ -170,8 +174,21 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 //      // RooChebychev bkg("bkg","Chebychev bkg",Xib_M,RooArgSet(c0));
 
 	// Import data into unbinned dataset
-	RooDataSet ds("ds","ds",Xib_M,Import(*treeIn));
-	ds.Print();
+	RooDataSet *ds = nullptr, *ds_wt = nullptr;
+	RooRealVar gbWt("GB_WT","GB_WT",-100.0,100.0);
+
+	if(isData)
+	{
+		ds = new RooDataSet("ds","ds",Xib_M,Import(*treeIn));
+		ds->Print();
+	}
+	else
+	{
+		ds    = new RooDataSet("ds","ds",treeIn,RooArgSet(Xib_M,gbWt));
+		ds->Print();
+		ds_wt = new RooDataSet("ds_wt","ds_wt",RooArgSet(Xib_M,gbWt),Import(*ds),WeightVar(gbWt));
+		ds_wt->Print();
+	}
 
 	if(!isData)
 	{
@@ -225,7 +242,14 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 	// }
 
 	//Fit nominal fit model to dataset
-	model_nom.fitTo(ds,Extended(),RooFit::Strategy(2));
+	if(isData)
+	{
+		model_nom.fitTo(*ds,Extended(),RooFit::Strategy(2));
+	}
+	else
+	{
+		model_nom.fitTo(*ds_wt,Extended(),RooFit::Strategy(2),SumW2Error(kTRUE));
+	}
 	//Fit alternate fit model to dataset
 	// model_alt1.fitTo(ds,Extended(),RooFit::Strategy(2));
 	// model_alt2.fitTo(ds,Extended(),RooFit::Strategy(2));
@@ -255,7 +279,7 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 	{
 		frame->SetAxisRange(5700,5900);
 	}
-	ds.plotOn(frame,Name("data"));
+	ds->plotOn(frame,Name("data"));
 	myModel.plotOn(frame,Name("fit"));
 	myModel.plotOn(frame,Components(sig),LineStyle(kDashed));
 	myModel.plotOn(frame,Components(sig1),LineStyle(kDotted),LineColor(kMagenta));
