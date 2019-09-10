@@ -15,7 +15,7 @@ void Process_B2JpsiK(Int_t run = 1, Bool_t logFlag = true)
 //Input files: Raw data from DaVinci
 //Output file: rootFiles/dataFiles/B2JpsiK/run%d/jpsik.root
 {
-	ROOT::EnableImplicitMT();
+	// ROOT::EnableImplicitMT();
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
 	if(logFlag) gSystem->RedirectOutput(Form("logs/data/B2JpsiK/run%d/Process_Cuts.txt",run),"w");
