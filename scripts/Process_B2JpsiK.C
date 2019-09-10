@@ -11,12 +11,14 @@
 
 using namespace std;
 
-void Process_B2JpsiK(Int_t run = 1)
+void Process_B2JpsiK(Int_t run = 1, Bool_t logFlag = true)
+//Input files: Raw data from DaVinci
+//Output file: rootFiles/dataFiles/B2JpsiK/run%d/jpsik.root
 {
 	ROOT::EnableImplicitMT();
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
-	gSystem->RedirectOutput(Form("logs/data/B2JpsiK/run%d/Process_Cuts.txt",run),"w");
+	if(logFlag) gSystem->RedirectOutput(Form("logs/data/B2JpsiK/run%d/Process_Cuts.txt",run),"w");
 	TStopwatch sw;
 	sw.Start();
 
@@ -47,20 +49,6 @@ void Process_B2JpsiK(Int_t run = 1)
 	TCollection *fc_list = (TCollection*)fc.GetList();
 
 	h1->AddFileInfoList(fc_list);
-	// if(run == 1)
-	// {
-	//      for(Int_t i=0; i<=272; i++)
-	//      {
-	//              h1->Add(TString::Format("/data1/avenkate/B+toJpsiK+/RealData_AllKaons/2011_MagDown/1158_%d/jpsik.root",i),-1);
-	//      }
-	// }
-	// else if(run == 2)
-	// {
-	//      for(Int_t i=0; i<=398; i++)
-	//      {
-	//              h1->Add(TString::Format("/data1/avenkate/B+toJpsiK+/RealData_AllKaons/2016_MagDown/1170_%d/jpsik.root",i),-1);
-	//      }
-	// }
 
 	cout<<"DONE ATTACHING ROOT FILES"<<endl;
 
@@ -142,9 +130,11 @@ void Process_B2JpsiK(Int_t run = 1)
 	fileOut->Write();
 	fileOut->Close();
 
-	cout<<"*****Done with Process_B2JpsiK*****"<<endl;
 	sw.Stop();
+
+	cout<<"*****Done with Process_B2JpsiK*****"<<endl;
 	sw.Print();
-	gSystem->RedirectOutput(0);
+
+	if(logFlag) gSystem->RedirectOutput(0);
 
 }
