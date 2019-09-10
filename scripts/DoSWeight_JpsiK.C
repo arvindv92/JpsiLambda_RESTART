@@ -37,11 +37,14 @@ void AddData_JpsiK(RooWorkspace*, Int_t, TTree*);
 void DoSPlot_JpsiK(RooWorkspace*, Int_t, TTree*, TH1D*);
 Double_t MakePlots_JpsiK(RooWorkspace*, Int_t);
 
-Double_t DoSWeight_JpsiK(Int_t run = 1)
+Double_t DoSWeight_JpsiK(Int_t run = 1, Bool_t logFlag = true)
+//Input file: rootFiles/dataFiles/B2JpsiK/run%d/jpsik.root
+//Output file:rootFiles/dataFiles/B2JpsiK/run%d/jpsik_withsw.root
+//Output file:rootFiles/dataFiles/B2JpsiK/run%d/wSpace_sPlot.root
 {
 	ROOT::EnableImplicitMT();
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
-	gSystem->RedirectOutput(Form("logs/data/B2JpsiK/run%d/sPlot.txt",run),"w");
+	if(logFlag) gSystem->RedirectOutput(Form("logs/data/B2JpsiK/run%d/sPlot.txt",run),"w");
 
 	gROOT->ProcessLine(".x lhcbStyle.C");
 	TStopwatch sw;
@@ -135,7 +138,7 @@ Double_t DoSWeight_JpsiK(Int_t run = 1)
 	sw.Stop();
 	cout<<"*****Done with DoSWeight_JpsiK*****"<<endl;
 	sw.Print();
-	gSystem->RedirectOutput(0);
+	if(logFlag) gSystem->RedirectOutput(0);
 	return chi2;
 }
 void AddModel_JpsiK(RooWorkspace *ws, Int_t lowRange, Int_t highRange,
