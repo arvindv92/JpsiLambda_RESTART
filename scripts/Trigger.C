@@ -4,8 +4,7 @@
  *********************************/
 #include "Trigger.h"
 
-void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
-             Bool_t loose, Bool_t logFlag)
+void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing, Bool_t logFlag)
 /* DOCUMENTATION
    run = 1 or 2
    isData = true for data, false for MC
@@ -21,7 +20,6 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
    mcType = 9 for Xib- -> J/psi Xi- MC          (reco'd J/psi Xi-)
 
    testing = true to run only over a subset of data
-   loose   = true to run over data from loose stripping line. Only LL for loose stripping line
    logFlag = true if you want the output to be piped to a log file.
  */
 {
@@ -118,6 +116,7 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 	//gROOT->ProcessLine(".L scripts/CollateFiles.C++");//Chains/hadds input files
 
 	Int_t entries_init = 0, entries_final = 0, entries_gen = 0;
+	Int_t entries_init_TM = 0, entries_final_TM = 0;
 	Float_t eff_excl   = 0., eff_excl_err = 0.;
 	Float_t eff_incl   = 0., eff_incl_err = 0.;
 
@@ -148,9 +147,9 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 		TChain *h2 = new TChain("GetIntegratedLuminosity/LumiTuple");
 
 		//CollateFiles will cd to the massdump folder and then back to JpsiLambda_RESTART
-		// CollateFiles(run, year, isData, mcType, &h1, &h2, testing, loose, logFlag);
+		// CollateFiles(run, year, isData, mcType, &h1, &h2, testing, logFlag);
 		gSystem->Exec(".L CollateFiles.C");
-		gSystem->Exec(Form("CollateFiles(%d,%d,%d,%d,%p,%p,%d,%d,%d)",run, year, isData, mcType, (void *)&h1, (void *)&h2, testing, loose, logFlag));
+		gSystem->Exec(Form("CollateFiles(%d,%d,%d,%d,%p,%p,%d,%d)",run, year, isData, mcType, (void *)&h1, (void *)&h2, testing, logFlag));
 
 		fileOut = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_%d.root",
 		                         run,year),"RECREATE");
@@ -199,7 +198,6 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 		genFile<<entries_gen<<endl;
 		genFile.close();
 
-		entries_init = treeIn->GetEntries();
 		myTree = treeIn;
 	}//end MC block
 	 //end setup of input, output
@@ -245,10 +243,13 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 
 	if(!isData)//Calculate exclusive and inclusive efficiencies for MC
 	{
-		if(entries_init != 0)
+		entries_init_TM  = myTree->GetEntries("Lb_BKGCAT  = =0 || Lb_BKGCAT = =50");
+		entries_final_TM = treeOut->GetEntries("Lb_BKGCAT = =0 || Lb_BKGCAT = =50");
+
+		if(entries_init_TM != 0)
 		{
-			eff_excl = (Float_t)entries_final*100/entries_init;
-			eff_excl_err = sqrt( eff_excl*(100.0-eff_excl)/entries_init);
+			eff_excl = (Float_t)entries_final_TM*100/entries_init_TM;
+			eff_excl_err = sqrt( eff_excl*(100.0-eff_excl)/entries_init_TM);
 
 			cout<<"******************************************"<<endl;
 			cout<<"Trigger cut made with exclusive efficiency = "<<
@@ -257,7 +258,7 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 		}
 		if(entries_gen != 0)
 		{
-			eff_incl = (Float_t)entries_final*100/entries_gen;
+			eff_incl = (Float_t)entries_final_TM*100/entries_gen;
 			eff_incl_err = sqrt( eff_incl*(100.0-eff_incl)/entries_gen);
 
 			cout<<"******************************************"<<endl;
@@ -274,7 +275,5 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 	sw.Stop();
 	cout << "==> Trigger is done! Huzzah!: "; sw.Print();
 
-	//if(logFlag) gROOT->ProcessLine(".>");
 	if(logFlag) gSystem->RedirectOutput(0);
-	//if(logFlag) gSystem->Exec("cat trigger_log.txt");
 }

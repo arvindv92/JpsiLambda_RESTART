@@ -6,13 +6,11 @@
 using namespace std;
 
 void CollateFiles_JpsiXi(Int_t run, Int_t year, Bool_t isData, TChain** h1,
-                         TChain** h2, Bool_t testing, Bool_t loose,
-                         Bool_t logFlag)
+                         TChain** h2, Bool_t testing, Bool_t logFlag)
 /*DOC
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = true for data, false for MC
    testing = true to run only over a subset of data
-   loose = true to run over data from loose stripping line. Only LL for loose stripping line
  */
 {
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
@@ -30,6 +28,10 @@ void CollateFiles_JpsiXi(Int_t run, Int_t year, Bool_t isData, TChain** h1,
 	}
 
 	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
 	cout<<"==> Starting JpsiXi CollateFiles: "<<endl;
 	gSystem->Exec("date");
 	cout<<"WD = "<<gSystem->pwd()<<endl;
@@ -41,17 +43,11 @@ void CollateFiles_JpsiXi(Int_t run, Int_t year, Bool_t isData, TChain** h1,
 		    <<" to TChain. Sit tight"<<endl;
 
 		const char *dir = "/data1/avenkate/JpsiXi/data";
-		if(loose)
-		{
-			gSystem->Exec(Form("ls %s/LooseLL/%d_Mag*/*/jpsixi.root > run%dFiles_Xi_%d.txt",
-			                   dir,year,run,year));
-		}
-		else
-		{
-			gSystem->Exec(Form("ls %s/%d_Mag*/*/jpsixi.root > run%dFiles_Xi_NotLoose_%d.txt",
-			                   dir,year,run,year));
-		}
-		TFileCollection fc_run(Form("run%d",run),"",Form("run%dFiles_Xi_%d.txt",
+
+		gSystem->Exec(Form("ls %s/LooseLL/%d_Mag*/*/jpsixi.root > fileList/run%dFiles_Xi_%d.txt",
+		                   dir,year,run,year));
+
+		TFileCollection fc_run(Form("run%d",run),"",Form("fileList/run%dFiles_Xi_%d.txt",
 		                                                 run,year));
 		TCollection *run_list = (TCollection*)fc_run.GetList();
 		if(testing)
@@ -67,20 +63,18 @@ void CollateFiles_JpsiXi(Int_t run, Int_t year, Bool_t isData, TChain** h1,
 		}
 		cout<<"DONE ATTACHING ROOT FILES"<<endl;
 	}//end Data block
+
 	else //MC
 	{
 		cout<<"Collating MC for ";
-		if(loose)
-		{
-			gSystem->cd("/data1/avenkate/JpsiXi/mc/LooseLL/Pythia8");
-		}
-		else
-		{
-			gSystem->cd("/data1/avenkate/JpsiXi/mc/Pythia8");
-		}
+
+		gSystem->cd("/data1/avenkate/JpsiXi/mc/LooseLL/Pythia8");
+
 		cout<<"WD = "<<gSystem->pwd()<<endl;
 
 		cout<<"JpsiXi Run "<<run<<endl;
+
+		//No PIDGEN files here because no PID cuts are made
 		if(run == 1)
 		{
 			gSystem->Exec("hadd -f /data1/avenkate/JpsiLambda_RESTART/rootFiles/"

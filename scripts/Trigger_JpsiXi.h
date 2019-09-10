@@ -14,7 +14,6 @@
 using namespace std;
 
 void Trigger_JpsiXi(Int_t run = 1, Int_t year = 2011, Bool_t isData = true,
-                    Bool_t testing = false, Bool_t loose = true,
-                    Bool_t logFlag = false);
+                    Bool_t testing = false, Bool_t logFlag = false);
 
 #endif

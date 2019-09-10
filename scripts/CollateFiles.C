@@ -6,8 +6,7 @@
 using namespace std;
 
 void CollateFiles(Int_t run, Int_t year, Bool_t isData,
-                  Int_t mcType, TChain** h1, TChain** h2, Bool_t testing,
-                  Bool_t loose, Bool_t logFlag)//defaults provided in header
+                  Int_t mcType, TChain** h1, TChain** h2, Bool_t testing, Bool_t logFlag)
 /*DOC
    run = 1 or 2
    isData = true for data, false for MC
@@ -24,7 +23,6 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
    mcType = 9 for Xib- -> J/psi Xi- MC          (reco'd J/psi Xi-)
 
    testing = true to run only over a subset of data
-   loose   = true to run over data from loose stripping line. Only LL for loose stripping line
    logFlag = true if you want the output to be piped to a log file.
  */
 {
@@ -118,16 +116,10 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
 		cout<<"Adding Run "<<run<<" Data ROOT files for "<<year<<" to TChain. Sit tight"<<endl;
 
 		const char *dir = "/data1/avenkate/JpsiLambda/massdump/data";
-		if(loose)
-		{
-			gSystem->Exec(Form("ls %s/LooseLL/%d_Mag*/*/jpsilambda.root > run%dFiles_%d.txt",
-			                   dir,year,run,year));
-		}
-		else
-		{
-			gSystem->Exec(Form("ls %s/%d_Mag*/*/jpsilambda.root > run%dFiles_%d.txt",
-			                   dir,year,run,year));
-		}
+
+		gSystem->Exec(Form("ls %s/LooseLL/%d_Mag*/*/jpsilambda.root > run%dFiles_%d.txt",
+		                   dir,year,run,year));
+
 		TFileCollection fc_run(Form("run%d",run),"",Form("run%dFiles_%d.txt",run,year));
 		TCollection *run_list = (TCollection*)fc_run.GetList();
 		if(testing)
@@ -146,14 +138,7 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
 	else //MC
 	{
 		cout<<"Collating MC for "<<folder<< "run "<<run<<endl;
-		if(loose)
-		{
-			gSystem->cd("/data1/avenkate/JpsiLambda/massdump/mc/LooseLL");
-		}
-		else
-		{
-			gSystem->cd("/data1/avenkate/JpsiLambda/massdump/mc");
-		}
+		gSystem->cd("/data1/avenkate/JpsiLambda/massdump/mc/LooseLL");
 		cout<<"WD = "<<gSystem->pwd()<<endl;
 		const char *path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda";
 

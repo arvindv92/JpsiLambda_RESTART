@@ -7,10 +7,8 @@
    run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC. Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data
    isData = true for data, false for MC
    testing = true to run only over a subset of data
-   loose = true to run over data from loose stripping line. Only LL for loose stripping line
  */
-void Trigger_JpsiXi(Int_t run, Int_t year, Bool_t isData, Bool_t testing,
-                    Bool_t loose, Bool_t logFlag)
+void Trigger_JpsiXi(Int_t run, Int_t year, Bool_t isData, Bool_t testing, Bool_t logFlag)
 {
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
@@ -26,9 +24,13 @@ void Trigger_JpsiXi(Int_t run, Int_t year, Bool_t isData, Bool_t testing,
 		                             run),"w");
 	}
 
-	TStopwatch sw;//helps times stages
+	TStopwatch sw;
 	sw.Start();
 
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
 	cout<<"******************************************"<<endl;
 	cout<<"==> Starting JpsiXi Trigger: "<<endl;
 	cout<<"WD = "<<gSystem->pwd()<<endl;
@@ -37,7 +39,8 @@ void Trigger_JpsiXi(Int_t run, Int_t year, Bool_t isData, Bool_t testing,
 
 //	gROOT->ProcessLine(".L scripts/CollateFiles_JpsiXi.C++");//Chains/hadds input files
 
-	Int_t entries_init = 0, entries_final = 0, entries_gen = 0;
+	Int_t entries_init = 0, entries_final = 0;
+	Int_t entries_gen = 0, entries_init_TM = 0, entries_final_TM = 0;
 	Float_t eff_excl   = 0., eff_excl_err = 0.;
 	Float_t eff_incl   = 0., eff_incl_err = 0.;
 
@@ -66,7 +69,7 @@ void Trigger_JpsiXi(Int_t run, Int_t year, Bool_t isData, Bool_t testing,
 		TChain *h2 = new TChain("GetIntegratedLuminosity/LumiTuple");
 
 		//CollateFiles will cd to the massdump folder and then back to JpsiLambda_RESTART
-		CollateFiles_JpsiXi(run, year, isData, &h1, &h2, testing, loose, logFlag);
+		CollateFiles_JpsiXi(run, year, isData, &h1, &h2, testing, logFlag);
 
 		fileOut = new TFile(Form("rootFiles/dataFiles/JpsiXi/run%d/jpsixi_triggered_%d.root",
 		                         run,year),"RECREATE");
@@ -109,7 +112,6 @@ void Trigger_JpsiXi(Int_t run, Int_t year, Bool_t isData, Bool_t testing,
 		genFile<<entries_gen<<endl;
 		genFile.close();
 
-		entries_init = treeIn->GetEntries();
 		myTree = treeIn;
 	}//end MC block
 	 //end setup of input, output
@@ -153,12 +155,18 @@ void Trigger_JpsiXi(Int_t run, Int_t year, Bool_t isData, Bool_t testing,
 	entries_final = treeOut->GetEntries();
 	cout<<"Outgoing entries = "<<entries_final<<endl;
 
+	if(!isData)
+	{
+		entries_init_TM = myTree->GetEntries("abs(Xib_TRUEID) == 5132 || (Xib_BKGCAT == 60 && (fabs(Xib_DTF_M_JpsiXiLConstr - 5795) < 35))");
+		entries_final_TM = treeOut->GetEntries("abs(Xib_TRUEID) == 5132 || (Xib_BKGCAT == 60 && (fabs(Xib_DTF_M_JpsiXiLConstr - 5795) < 35))");
+	}
+
 	if(!isData)//Calculate exclusive and inclusive efficiencies for MC
 	{
 		if(entries_init != 0)
 		{
-			eff_excl = (Float_t)entries_final*100/entries_init;
-			eff_excl_err = sqrt( eff_excl*(100.0-eff_excl)/entries_init);
+			eff_excl = (Float_t)entries_final_TM*100/entries_init_TM;
+			eff_excl_err = sqrt( eff_excl*(100.0-eff_excl)/entries_init_TM);
 		}
 		cout<<"******************************************"<<endl;
 		cout<<"Trigger cut made with exclusive efficiency = "<<eff_excl
@@ -167,7 +175,7 @@ void Trigger_JpsiXi(Int_t run, Int_t year, Bool_t isData, Bool_t testing,
 
 		if(entries_gen != 0)
 		{
-			eff_incl = (Float_t)entries_final*100/entries_gen;
+			eff_incl = (Float_t)entries_final_TM*100/entries_gen;
 			eff_incl_err = sqrt( eff_incl*(100.0-eff_incl)/entries_gen);
 		}
 		cout<<"******************************************"<<endl;
