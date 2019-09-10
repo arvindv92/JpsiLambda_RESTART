@@ -6,10 +6,6 @@
  *********************************/
 
 #include "DoSWeight_Sanity.h"
-// use this order for safety on library loading
-using namespace RooFit;
-using namespace RooStats;
-using namespace std;
 
 void AddModel_Sanity(RooWorkspace *ws = nullptr, Int_t lowRange = 5200,
                      Int_t highRange = 6000, Int_t nEntries = 0, Int_t run = 1);
@@ -21,7 +17,7 @@ Double_t DosPlot_Sanity(RooWorkspace *ws = nullptr, Int_t run = 1,
                         const char *type = "LL", TTree *treeOut = nullptr,
                         TH1D *hMass = nullptr);
 
-Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
+Double_t DoSWeight_Sanity(Int_t run, Bool_t logFlag)
 /*
    >run = 1/2 for Run 1/2 data/MC. Run 1 = 2011,2012 for both data and MC.
    Run 2 = 2015,2016 for MC, 2015,2016,2017,2018 for data.
@@ -35,17 +31,20 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 	TStopwatch sw;
 	sw.Start();
 
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
-	gROOT->ProcessLine(".x lhcbStyle.C");
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	gROOT->ProcessLine(".x scripts/lhcbStyle.C");
 
-	const char *type       = (trackType == 3) ? ("LL")    : ("DD");
+	const char *type = "LL";
 
 	if(logFlag)//Redirect output to log file
 	{
 		gSystem->RedirectOutput(Form("logs/data/JpsiLambda/run%d/sPlot_Sanity_%s_log.txt",
 		                             run, type),"w");
 	}
+	cout<<"********************************"<<endl;
+	cout<<"********************************"<<endl;
+	cout<<"********************************"<<endl;
+	cout<<"********************************"<<endl;
+	cout<<"********************************"<<endl;
 	cout<<"********************************"<<endl;
 	cout<<"==> Starting DoSWeight: "<<endl;
 	gSystem->Exec("date");
@@ -143,6 +142,10 @@ Double_t DoSWeight_Sanity(Int_t run, Int_t trackType, Bool_t logFlag)
 	// if(logFlag) gROOT->ProcessLine(".>"); //end redirect
 	if(logFlag) gSystem->RedirectOutput(0); //end redirect
 
+	ofstream myfile;
+	myfile.open("chi2_sanity.txt");
+	myfile<<myChi2<<"\n";
+	myfile.close();
 	return myChi2;
 }
 void AddModel_Sanity(RooWorkspace *ws, Int_t lowRange, Int_t highRange,
