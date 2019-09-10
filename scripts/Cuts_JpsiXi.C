@@ -37,6 +37,7 @@ void Cuts_JpsiXi(Int_t run, Int_t year, Bool_t isData, Bool_t logFlag)
 	sw.Start();
 
 	Int_t entries_init      = 0, entries_final_LL   = 0, entries_gen = 0;
+	Int_t entries_init_TM = 0, entries_final_TM = 0;
 	Int_t Xib_BKGCAT        = 0;
 	Int_t Xib_TRUEID        = 0, Xib_ENDVERTEX_NDOF = 0;
 	Int_t BachPi_TRACK_Type = 0;
@@ -155,12 +156,18 @@ void Cuts_JpsiXi(Int_t run, Int_t year, Bool_t isData, Bool_t logFlag)
 	entries_final_LL = treeOut_LL->GetEntries();
 	cout<<"Outgoing LL entries = "<<entries_final_LL<<endl;
 
+	if(!isData)
+	{
+		entries_init_TM = treeIn->GetEntries("abs(Xib_TRUEID) == 5132 || (Xib_BKGCAT == 60 && (fabs(Xib_DTF_M_JpsiXiLConstr - 5795) < 35))");
+		entries_final_TM = treeOut_LL->GetEntries("abs(Xib_TRUEID) == 5132 || (Xib_BKGCAT == 60 && (fabs(Xib_DTF_M_JpsiXiLConstr - 5795) < 35))");
+	}
+
 	if(!isData)//Efficiency calculation for MC.
 	{
 		if(entries_init != 0)//Exclusive efficiency calculation
 		{
-			eff_excl_LL     = (Float_t)entries_final_LL*100/entries_init;
-			eff_excl_LL_err = sqrt( eff_excl_LL*(100.0-eff_excl_LL)/entries_init);
+			eff_excl_LL     = (Float_t)entries_final_TM*100/entries_init_TM;
+			eff_excl_LL_err = sqrt( eff_excl_LL*(100.0-eff_excl_LL)/entries_init_TM);
 		}
 		cout<<"******************************************"<<endl;
 		cout<<"LL cuts made with exclusive efficiency = "
@@ -174,7 +181,7 @@ void Cuts_JpsiXi(Int_t run, Int_t year, Bool_t isData, Bool_t logFlag)
 
 			if(entries_gen != 0)
 			{
-				eff_incl_LL     = (Float_t)entries_final_LL*100/entries_gen;
+				eff_incl_LL     = (Float_t)entries_final_TM*100/entries_gen;
 				eff_incl_LL_err = sqrt(eff_incl_LL*(100.0-eff_incl_LL)/entries_gen);
 			}
 			cout<<"******************************************"<<endl;
