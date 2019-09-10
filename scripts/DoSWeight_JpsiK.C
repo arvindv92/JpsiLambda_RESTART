@@ -42,13 +42,14 @@ Double_t DoSWeight_JpsiK(Int_t run = 1, Bool_t logFlag = true)
 //Output file:rootFiles/dataFiles/B2JpsiK/run%d/jpsik_withsw.root
 //Output file:rootFiles/dataFiles/B2JpsiK/run%d/wSpace_sPlot.root
 {
-	ROOT::EnableImplicitMT();
+	// ROOT::EnableImplicitMT();
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 	if(logFlag) gSystem->RedirectOutput(Form("logs/data/B2JpsiK/run%d/sPlot.txt",run),"w");
 
-	gROOT->ProcessLine(".x lhcbStyle.C");
 	TStopwatch sw;
 	sw.Start();
+
+	gROOT->ProcessLine(".x scripts/lhcbStyle.C");
 
 	cout<<"********************************"<<endl;
 	cout<<"********************************"<<endl;
@@ -63,7 +64,7 @@ Double_t DoSWeight_JpsiK(Int_t run = 1, Bool_t logFlag = true)
 	TFile *fileIn = nullptr, *fileOut = nullptr;
 	TTree *treeIn = nullptr, *treeOut = nullptr;
 
-	const char *rootFolder = "";
+	TString rootFolder = "";
 	TString inFileName     = "";
 	TString outFileName    = "";
 	TString trainFileName  = "";
@@ -75,8 +76,8 @@ Double_t DoSWeight_JpsiK(Int_t run = 1, Bool_t logFlag = true)
 	Int_t nBins        = (Int_t)(highRange-lowRange)/binwidth;
 
 	rootFolder    = Form("rootFiles/dataFiles/B2JpsiK/run%d", run);
-	inFileName    = Form("%s/jpsik.root", rootFolder);
-	outFileName   = Form("%s/jpsik_withsw.root", rootFolder);
+	inFileName    = Form("%s/jpsik.root", rootFolder.Data());
+	outFileName   = Form("%s/jpsik_withsw.root", rootFolder.Data());
 
 	fileIn = TFile::Open(inFileName,"READ");
 	if (!fileIn)
@@ -92,7 +93,7 @@ Double_t DoSWeight_JpsiK(Int_t run = 1, Bool_t logFlag = true)
 	TH1D *hMass = (TH1D*)gDirectory->Get("hMass");
 
 	fileOut = new TFile(outFileName,"RECREATE");
-	treeOut = treeIn->CloneTree(0);
+	treeOut = treeIn->CloneTree(-1);
 
 	cout<<"******************************************"<<endl;
 	cout<<"Input file = "<<fileIn->GetName()<<endl;
@@ -126,7 +127,7 @@ Double_t DoSWeight_JpsiK(Int_t run = 1, Bool_t logFlag = true)
 	wSpace->Print();
 
 	//save workspace in ROOT file
-	wSpace->writeToFile(Form("%s/wSpace_sPlot.root",rootFolder));
+	wSpace->writeToFile(Form("%s/wSpace_sPlot.root",rootFolder.Data()));
 
 	fileOut->cd();
 	treeOut->Write("",TObject::kOverwrite);
@@ -168,7 +169,7 @@ void AddModel_JpsiK(RooWorkspace *ws, Int_t lowRange, Int_t highRange,
 	RooGaussian sig2("sig2","signal pdf2",B_Mass,mB,sigmaB2);
 	RooRealVar f1("f1","fraction",0.5,0.01,1.0);
 
-	RooAddPdf mBModel("mBModel","Sig",RooArgList(sig1,sig2),f1);
+	RooAddPdf mBModel("sig","Sig",RooArgList(sig1,sig2),f1);
 
 	// BACKGROUND MODEL
 
