@@ -35,7 +35,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 	gROOT->ProcessLine(".x lhcbStyle.C");
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
-	if(!simFlag)
+	if(!simFlag)//optimize BDT trained on data
 	{
 		if(logFlag && isoFlag)
 		{
@@ -48,7 +48,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 			                             run,bdtConf,FOM, part),"w");
 		}
 	}
-	else
+	else//optimize BDT trained on MC
 	{
 		if(logFlag && isoFlag)
 		{
@@ -62,6 +62,11 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 		}
 	}
 	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
 	cout<<"==> Starting OptimizeFinalBDT: "<<endl;
 	gSystem->Exec("date");
 	cout<<"WD = "<<gSystem->pwd()<<endl;
@@ -69,42 +74,53 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 
 	const char *type = "LL";
 
-	TFile *fileIn    = nullptr, *fileIn_zeroTracks    = nullptr;
-	TFile *fileIn_mc = nullptr, *fileIn_zeroTracks_mc = nullptr;
+	TFile *fileIn(0), *fileIn_zeroTracks(0);
+	TTree *treeIn(0), *treeIn_zeroTracks(0), *myTree(0);
 
-	TTree *treeIn    = nullptr, *treeIn_zeroTracks    = nullptr, *myTree = nullptr;
-	TTree *treeIn_mc = nullptr, *treeIn_zeroTracks_mc = nullptr;
+	TFile *fileIn_mc(0), *fileIn_zeroTracks_mc(0);
+	TTree *treeIn_mc(0), *treeIn_zeroTracks_mc(0);
 
-	TString friendFileName            = "";
+	TString friendFileName = "";
 	TString friendFileName_zeroTracks = "", t = "";
 
-	TH1D *hsig             = nullptr;
-	Int_t nEntries         = 0, N = 0;
-	Float_t width          = 0.0;
-	const char *rootFolder = "";
+	TString rootFolder      = Form("rootFiles/dataFiles/JpsiLambda/run%d",run);
+	TString mcFolder        = Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d",run);
+	TString mcFolder_Lambda = Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d",run);
+
+	TH1D *hsig(0);
+	TH1D *hPass = new TH1D("hPass","pass",1,0,1);
+	TH1D *hAll  = new TH1D("hAll","all",1,0,1);
+
+	Int_t nEntries = 0, N = 0;
+	Int_t bkgcat   = 0;
+	Int_t bkginit  = 0;
+
 	std::vector <Double_t> cuts;
 
-	Float_t bdtArray_nonZero[99];
-	Float_t fomArray_nonZero[99];
-	Float_t fomErrArray_nonZero[99];
+	Float_t width = 0.0; // width of signal region
+	Float_t bdtArray_nonZero[99]    = {0.};
+	Float_t fomArray_nonZero[99]    = {0.};
+	Float_t fomErrArray_nonZero[99] = {0.};
 
-	Float_t bdtArray_Zero[99];
-	Float_t fomArray_Zero[99];
-	Float_t fomErrArray_Zero[99];
+	Float_t bdtArray_Zero[99]    = {0.};
+	Float_t fomArray_Zero[99]    = {0.};
+	Float_t fomErrArray_Zero[99] = {0.};
 
-	Float_t bdtArray_noIso[99];
-	Float_t fomArray_noIso[99];
-	Float_t fomErrArray_noIso[99];
+	Float_t bdtArray_noIso[99]    = {0.};
+	Float_t fomArray_noIso[99]    = {0.};
+	Float_t fomErrArray_noIso[99] = {0.};
+	Float_t bdtErrArray[99]       = {0.};
 
-	Float_t bdtErrArray[99] = {0.};
+	Double_t BDT   = 0., BDT_max   = 0.;
+	Double_t myFOM = 0., myFOM_max = 0.;
 
-	Double_t BDT           = 0., BDT_max           = 0.;
-	Double_t myFOM         = 0., myFOM_max         = 0.;
 	Double_t eff_sig_wt    = 0., eff_sig_wt_max    = 0.;
 	Double_t eff_sig_wt_TM = 0., eff_sig_wt_TM_max = 0.;
 	Double_t eff_sig       = 0., eff_sig_max       = 0.;
 	Double_t eff_sig_TM    = 0., eff_sig_TM_max    = 0.;
 	Double_t eff_bkg       = 0., eff_bkg_max       = 0.;
+
+
 	Double_t sig           = 0., bkg               = 0., siginit = 0.;
 	Double_t err_sig = 0., err_bkg = 0., err_FOM = 0.;
 	Double_t err_siginit = 0., err_bkginit = 0., err_eff = 0.;
@@ -112,25 +128,32 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 	Double_t gbwt = 0.;
 	Float_t tauwt = 0.;
 	Double_t mcBDT = 0., sumwt_num = 0., sumwt_den = 0.;
-	Int_t bkgcat = 0;
-	Int_t bkginit = 0;
+
 	Double_t sigTot = 0., bkgTot = 0., fomTot = 0.;
 	Double_t err_sigTot_sq = 0., err_bkgTot_sq = 0.;
 	Double_t err_sigTot = 0., err_bkgTot = 0., err_fomTot = 0.;
 	Double_t sig_max = 0., err_sig_max = 0., bkg_max = 0., err_bkg_max = 0;
 	Double_t tot_siginit = 0., tot_bkginit = 0.;
 
-	TH1D *hPass = new TH1D("hPass","pass",1,0,1);
-	TH1D *hAll = new TH1D("hAll","all",1,0,1);
-
 	TGraphAsymmErrors *gr = new TGraphAsymmErrors(1);
 
-	rootFolder = Form("rootFiles/dataFiles/JpsiLambda/run%d",run);
+	Float_t siginit_nonZero = 0., err_siginit_nonZero = 0.;
+	Float_t siginit_Zero    = 0., err_siginit_Zero    = 0.;
+
+	ifstream inFile_nonZero(Form("logs/data/JpsiLambda/run%d/sigYield_nonZeroTracks.txt",run));
+	inFile_nonZero>>siginit_nonZero;
+	inFile_nonZero>>err_siginit_nonZero;
+	inFile_nonZero.close();
+
+	ifstream inFile_Zero(Form("logs/data/JpsiLambda/run%d/sigYield_ZeroTracks.txt",run));
+	inFile_Zero>>siginit_Zero;
+	inFile_Zero>>err_siginit_Zero;
+	inFile_Zero.close();
 
 	if(isoFlag)//Using isolation
 	{
 		fileIn = TFile::Open(Form("%s/jpsilambda_cutoutks_%s_nonZeroTracks.root",
-		                          rootFolder,type),"READ");
+		                          rootFolder.Data(),type),"READ");
 		if (!fileIn)
 		{
 			cout << "ERROR: could not open data file" << endl;
@@ -139,7 +162,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 		treeIn = (TTree*)fileIn->Get("MyTuple");
 
 		fileIn_zeroTracks = TFile::Open(Form("%s/jpsilambda_cutoutks_%s_ZeroTracks.root",
-		                                     rootFolder,type),"READ");
+		                                     rootFolder.Data(),type),"READ");
 		if (!fileIn_zeroTracks)
 		{
 			cout << "ERROR: could not open zeroTracks data file" << endl;
@@ -150,87 +173,82 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 		if(!simFlag)
 		{
 			friendFileName = Form("%s/jpsilambda_%s_FinalBDT%d_iso%d_%s.root",
-			                      rootFolder,type,bdtConf,isoConf,isoVersion);
+			                      rootFolder.Data(),type,bdtConf,isoConf,isoVersion);
 			friendFileName_zeroTracks = Form("%s/jpsilambda_zeroTracks%s_FinalBDT%d.root",
-			                                 rootFolder,type,bdtConf);
+			                                 rootFolder.Data(),type,bdtConf);
 		}
 		else
 		{
 			friendFileName = Form("%s/jpsilambda_%s_MCFinalBDT%d_MCiso%d_%s.root",
-			                      rootFolder,type,bdtConf,isoConf,isoVersion);
+			                      rootFolder.Data(),type,bdtConf,isoConf,isoVersion);
 			friendFileName_zeroTracks = Form("%s/jpsilambda_zeroTracks%s_MCFinalBDT%d.root",
-			                                 rootFolder,type,bdtConf);
+			                                 rootFolder.Data(),type,bdtConf);
 		}
+
 		treeIn->AddFriend("MyTuple",friendFileName);
 		treeIn_zeroTracks->AddFriend("MyTuple",friendFileName_zeroTracks);
 
 		if(TString(part) == "Sigma")
 		{
 			width = 260.0;
-			fileIn_mc = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_cutoutks_%s_nonZeroTracks.root",
-			                             run,type),"READ");
+			fileIn_mc = TFile::Open(Form("%s/jpsisigma_cutoutks_%s_nonZeroTracks.root",
+			                             mcFolder.Data(),type),"READ");
 			treeIn_mc = (TTree*)fileIn_mc->Get("MyTuple");
+
+			fileIn_zeroTracks_mc = TFile::Open(Form("%s/jpsisigma_cutoutks_%s_ZeroTracks.root",
+			                                        mcFolder.Data(),type),"READ");
+			treeIn_zeroTracks_mc = (TTree*)fileIn_zeroTracks_mc->Get("MyTuple");
 
 			if(!simFlag)
 			{
-				treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_%s_FinalBDT%d_iso%d_%s.root",
-				                                    run,type,bdtConf,isoConf,isoVersion));
+				treeIn_mc->AddFriend("MyTuple",Form("%s/jpsisigma_%s_FinalBDT%d_iso%d_%s.root",
+				                                    mcFolder.Data(),type,bdtConf,isoConf,isoVersion));
+
+				treeIn_zeroTracks_mc->AddFriend("MyTuple",Form("%s/jpsisigma_zeroTracks%s_FinalBDT%d.root",
+				                                               mcFolder.Data(),type,bdtConf));
 			}
 			else
 			{
-				treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_%s_MCFinalBDT%d_MCiso%d_%s.root",
-				                                    run,type,bdtConf,isoConf,isoVersion));
-			}
-			fileIn_zeroTracks_mc = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_cutoutks_%s_ZeroTracks.root",
-			                                        run,type),"READ");
-			treeIn_zeroTracks_mc = (TTree*)fileIn_zeroTracks_mc->Get("MyTuple");
-			if(!simFlag)
-			{
-				treeIn_zeroTracks_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_zeroTracks%s_FinalBDT%d.root",
-				                                               run,type,bdtConf));
-			}
-			else
-			{
-				treeIn_zeroTracks_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_zeroTracks%s_MCFinalBDT%d.root",
-				                                               run,type,bdtConf));
+				treeIn_mc->AddFriend("MyTuple",Form("%s/jpsisigma_%s_MCFinalBDT%d_MCiso%d_%s.root",
+				                                    mcFolder.Data(),type,bdtConf,isoConf,isoVersion));
+
+				treeIn_zeroTracks_mc->AddFriend("MyTuple",Form("%s/jpsisigma_zeroTracks%s_MCFinalBDT%d.root",
+				                                               mcFolder.Data(),type,bdtConf));
 			}
 		}
 		else if(TString(part) == "Lambda")
 		{
 			width = 28.0;
-			fileIn_mc = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_cutoutks_%s_nonZeroTracks.root",
-			                             run,type),"READ");
+			fileIn_mc = TFile::Open(Form("%s/jpsilambda_cutoutks_%s_nonZeroTracks.root",
+			                             mcFolder_Lambda.Data(),type),"READ");
 			treeIn_mc = (TTree*)fileIn_mc->Get("MyTuple");
+
+			fileIn_zeroTracks_mc = TFile::Open(Form("%s/jpsilambda_cutoutks_%s_ZeroTracks.root",
+			                                        mcFolder_Lambda.Data(),type),"READ");
+			treeIn_zeroTracks_mc = (TTree*)fileIn_zeroTracks_mc->Get("MyTuple");
 
 			if(!simFlag)
 			{
-				treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_%s_FinalBDT%d_iso%d_%s.root",
-				                                    run,type,bdtConf,isoConf,isoVersion));
+				treeIn_mc->AddFriend("MyTuple",Form("%s/jpsilambda_%s_FinalBDT%d_iso%d_%s.root",
+				                                    mcFolder_Lambda.Data(),type,bdtConf,isoConf,isoVersion));
+
+				treeIn_zeroTracks_mc->AddFriend("MyTuple",Form("%s/jpsilambda_zeroTracks%s_FinalBDT%d.root",
+				                                               mcFolder_Lambda.Data(),type,bdtConf));
 			}
 			else
 			{
-				treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_%s_MCFinalBDT%d_MCiso%d_%s.root",
-				                                    run,type,bdtConf,isoConf,isoVersion));
-			}
-			fileIn_zeroTracks_mc = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_cutoutks_%s_ZeroTracks.root",
-			                                        run,type),"READ");
-			treeIn_zeroTracks_mc = (TTree*)fileIn_zeroTracks_mc->Get("MyTuple");
-			if(!simFlag)
-			{
-				treeIn_zeroTracks_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_zeroTracks%s_FinalBDT%d.root",
-				                                               run,type,bdtConf));
-			}
-			else
-			{
-				treeIn_zeroTracks_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_zeroTracks%s_MCFinalBDT%d.root",
-				                                               run,type,bdtConf));
+				treeIn_mc->AddFriend("MyTuple",Form("%s/jpsilambda_%s_MCFinalBDT%d_MCiso%d_%s.root",
+				                                    mcFolder_Lambda.Data(),type,bdtConf,isoConf,isoVersion));
+
+				treeIn_zeroTracks_mc->AddFriend("MyTuple",Form("%s/jpsilambda_zeroTracks%s_MCFinalBDT%d.root",
+				                                               mcFolder_Lambda.Data(),type,bdtConf));
 			}
 		}
 	}
 	else //No Isolation
 	{
 		fileIn = TFile::Open(Form("%s/jpsilambda_cutoutks_%s.root",
-		                          rootFolder,type));
+		                          rootFolder.Data(),type));
 		if (!fileIn)
 		{
 			cout << "ERROR: could not open data file" << endl;
@@ -241,49 +259,49 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 		if(!simFlag)
 		{
 			friendFileName = Form("%s/jpsilambda_%s_FinalBDT%d_noIso.root",
-			                      rootFolder,type,bdtConf);
+			                      rootFolder.Data(),type,bdtConf);
 		}
 		else
 		{
 			friendFileName = Form("%s/jpsilambda_%s_MCFinalBDT%d_noIso.root",
-			                      rootFolder,type,bdtConf);
+			                      rootFolder.Data(),type,bdtConf);
 		}
 		treeIn->AddFriend("MyTuple",friendFileName);
 
 		if(TString(part) == "Sigma")
 		{
 			width = 260.0;
-			fileIn_mc = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_cutoutks_%s.root",
-			                             run,type),"READ");
+			fileIn_mc = TFile::Open(Form("%s/jpsisigma_cutoutks_%s.root",
+			                             mcFolder.Data(),type),"READ");
 			treeIn_mc = (TTree*)fileIn_mc->Get("MyTuple");
 
 			if(!simFlag)
 			{
-				treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_%s_FinalBDT%d_noIso.root",
-				                                    run,type,bdtConf));
+				treeIn_mc->AddFriend("MyTuple",Form("%s/jpsisigma_%s_FinalBDT%d_noIso.root",
+				                                    mcFolder.Data(),type,bdtConf));
 			}
 			else
 			{
-				treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/JpsiSigma/run%d/jpsisigma_%s_MCFinalBDT%d_noIso.root",
-				                                    run,type,bdtConf));
+				treeIn_mc->AddFriend("MyTuple",Form("%s/jpsisigma_%s_MCFinalBDT%d_noIso.root",
+				                                    mcFolder.Data(),type,bdtConf));
 			}
 		}
 		else if(TString(part) == "Lambda")
 		{
 			width = 28.0;
-			fileIn_mc = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_cutoutks_%s.root",
-			                             run,type),"READ");
+			fileIn_mc = TFile::Open(Form("%s/jpsilambda_cutoutks_%s.root",
+			                             mcFolder_Lambda.Data(),type),"READ");
 			treeIn_mc = (TTree*)fileIn_mc->Get("MyTuple");
 
 			if(!simFlag)
 			{
-				treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_%s_FinalBDT%d_noIso.root",
-				                                    run,type,bdtConf));
+				treeIn_mc->AddFriend("MyTuple",Form("%s/jpsilambda_%s_FinalBDT%d_noIso.root",
+				                                    mcFolder_Lambda.Data(),type,bdtConf));
 			}
 			else
 			{
-				treeIn_mc->AddFriend("MyTuple",Form("rootFiles/mcFiles/JpsiLambda/JpsiLambda/run%d/jpsilambda_%s_MCFinalBDT%d_noIso.root",
-				                                    run,type,bdtConf));
+				treeIn_mc->AddFriend("MyTuple",Form("%s/jpsilambda_%s_MCFinalBDT%d_noIso.root",
+				                                    mcFolder_Lambda.Data(),type,bdtConf));
 			}
 		}
 	}
@@ -320,45 +338,48 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 		{
 			cout<<"****************Optimizing for noIso****************"<<endl;
 			mcTree = treeIn_mc;
-			if(run == 1)
-			{
-				siginit = 7386;
-				err_siginit = 153;
-			}
-			else if(run == 2)
-				siginit = 26050;
-			err_siginit = 248;
+			// if(run == 1)
+			// {
+			siginit     = siginit_nonZero+siginit_Zero;        // 7386; //hardcoded. Dont like this.
+			err_siginit = sqrt(pow(err_siginit_nonZero,2)+pow(err_siginit_Zero,2));        //153;
+			// }
+			// else if(run == 2)
+			// {
+			//      siginit     = 26050;
+			//      err_siginit = 248;
+			// }
 		}
 
 		if(ctr == 0 && isoFlag)
 		{
 			cout<<"****************Optimizing for nonZeroTracks****************"<<endl;
 			mcTree = treeIn_mc;
-			if(run == 1)
-			{
-				siginit = 6939;//7385; //6569;
-				err_siginit = 151;
-			}
-			else if(run == 2)
-			{
-				siginit = 24898; //25081; //24741;
-				err_siginit = 245;
-			}
+			// if(run == 1)
+			// {
+			siginit     = siginit_nonZero;        //6939;
+			err_siginit = err_siginit_nonZero;        //151;
+			// }
+			// else if(run == 2)
+			// {
+			//      siginit     = 24898;
+			//      err_siginit = 245;
+			// }
 		}
+
 		else if(ctr == 1 && isoFlag)
 		{
 			cout<<"****************Optimizing for ZeroTracks****************"<<endl;
 			mcTree = treeIn_zeroTracks_mc;
-			if(run == 1)
-			{
-				siginit = 447;//439; //407;
-				err_siginit = 26;
-			}
-			else if(run == 2)
-			{
-				siginit = 1151; //1169; //1195;
-				err_siginit = 39;
-			}
+			// if(run == 1)
+			// {
+			siginit     = siginit_Zero;        //447;
+			err_siginit = err_siginit_Zero;        //26;
+			// }
+			// else if(run == 2)
+			// {
+			//      siginit     = 1151;
+			//      err_siginit = 39;
+			// }
 		}
 		mcTree->SetBranchAddress("GB_WT",&gbwt);
 		mcTree->SetBranchAddress("wt_tau",&tauwt);
@@ -370,9 +391,9 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 		nEntries = myTree->GetEntries();
 		cout<<"nEntries= "<<nEntries<<endl;
 
-		myTree->Draw(Form("BDT%d>>hsig0(100,0.0,1.0)",bdtConf),"","goff");
+		myTree->Draw(Form("BDT%d>>hsig(100,0.0,1.0)",bdtConf),"","goff");
 
-		hsig = (TH1D*)gDirectory->Get("hsig0");
+		hsig = (TH1D*)gDirectory->Get("hsig");
 
 		bkginit = myTree->GetEntries("!(Lb_DTF_M_JpsiLConstr>5770 && Lb_DTF_M_JpsiLConstr<5810) && Lb_DTF_M_JpsiLConstr > 5700 && Lb_DTF_M_JpsiLConstr < 6000")*width/260;        //scaling background to width of signal region
 		err_bkginit = sqrt((double)myTree->GetEntries("!(Lb_DTF_M_JpsiLConstr>5770 && Lb_DTF_M_JpsiLConstr<5810) && Lb_DTF_M_JpsiLConstr > 5700 && Lb_DTF_M_JpsiLConstr < 6000"))*width/260;
