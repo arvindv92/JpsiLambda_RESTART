@@ -556,6 +556,14 @@ Double_t DosPlot(RooWorkspace* ws, Int_t run, const char *type, TTree *treeOut,
 		treeOut->SetAlias("GHOSTPROB","Added_H_GHOST");
 		treeOut->SetAlias("TRACKCHI2DOF","Added_H_TRACKCHI2");
 	}
+
+	//Write out signal yield and error on signal yield to text file.
+	//This will be read by OptimizeFinalBDT
+	ofstream fileOut(Form("logs/data/JpsiLambda/run%d/sigYield%s.txt",run,suffix));
+	fileOut<<ws->var("sigYield")->getValV()<<endl;
+	fileOut<<ws->var("sigYield")->getError()<<endl;
+	fileOut.close();
+
 	cout<<"Finishing DoSPlot()"<<endl;
 
 	return chi2;
