@@ -8,7 +8,7 @@
 #include "TROOT.h"
 #include "TSystem.h"
 #include "TStopwatch.h"
-#include "CollateFiles.h"
+// #include "CollateFiles.h"
 #include <iostream>
 #include <fstream>
 
