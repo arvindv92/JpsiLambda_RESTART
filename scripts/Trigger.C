@@ -6,6 +6,9 @@
 
 void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing, Bool_t logFlag)
 /* DOCUMENTATION
+   INPUT: For data: Raw data from DaVinci for each year. For MC: PID Corrected MC for each Run
+   OUTPUT: For data: jpsilambda_triggered_{YEAR}.root. For MC: jpsilambda_triggered.root.
+
    run = 1 or 2
    isData = true for data, false for MC
    mcType = 0 when processing data. non zero for processing MC.
@@ -115,17 +118,23 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 
 	//gROOT->ProcessLine(".L scripts/CollateFiles.C++");//Chains/hadds input files
 
-	Int_t entries_init = 0, entries_final = 0, entries_gen = 0;
+	Int_t entries_init    = 0, entries_final    = 0;
 	Int_t entries_init_TM = 0, entries_final_TM = 0;
-	Float_t eff_excl   = 0., eff_excl_err = 0.;
-	Float_t eff_incl   = 0., eff_incl_err = 0.;
+	Int_t entries_gen     = 0;
+
+	Float_t eff_excl = 0., eff_excl_err = 0.;
+	Float_t eff_incl = 0., eff_incl_err = 0.;
 
 	Bool_t hlt1DiMuonHighMass = false, hlt1TrackMuon      = false;
 	Bool_t hlt1TrackAllL0     = false, hlt2DiMuonDetached = false;
 
-	TFile *fileOut = nullptr, *fileIn     = nullptr, *fileIn_pid = nullptr;
+	TFile *fileOut    = nullptr;
+	TFile *fileIn     = nullptr;
+	TFile *fileIn_pid = nullptr;
+
 	TTree *treeIn  = nullptr, *treeIn_gen = nullptr;
 	TTree *treeOut = nullptr, *myTree     = nullptr;
+
 	const char *triggerCut = "(Lb_Hlt1DiMuonHighMassDecision_TOS==1||"
 	                         "Lb_Hlt1TrackMuonDecision_TOS==1||"
 	                         "Lb_Hlt1TrackAllL0Decision_TOS==1)"
@@ -143,6 +152,7 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 		Int_t lumiEntries = 0, lumiErrEntries = 0;
 
 		TH1D *lumiHist = nullptr, *lumiErrHist = nullptr;
+
 		TChain *h1 = new TChain("Lb2JpsiLTree/MyTuple");
 		TChain *h2 = new TChain("GetIntegratedLuminosity/LumiTuple");
 
@@ -165,7 +175,7 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 		lumiErrMean    = lumiErrHist->GetMean();
 		lumiErrEntries = lumiErrHist->GetEntries();
 
-		lumi = lumiMean*lumiEntries;
+		lumi    = lumiMean*lumiEntries;
 		lumiErr = lumiErrMean*lumiErrEntries;
 
 		cout<<"Processing "<<lumi<<" +/- "<<lumiErr<< "luminosity"<<endl;
@@ -185,11 +195,9 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 		if(!fileIn_pid)
 		{
 			cout<<"Unable to open PIDGEN file"<<endl;
+			exit(1);
 		}
-		else
-		{
-			treeIn = (TTree*)fileIn_pid->Get("MyTuple");
-		}
+		treeIn = (TTree*)fileIn_pid->Get("MyTuple");
 
 		fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_triggered.root",
 		                         folder,run,part),"RECREATE");
@@ -243,8 +251,8 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 
 	if(!isData)//Calculate exclusive and inclusive efficiencies for MC
 	{
-		entries_init_TM  = myTree->GetEntries("Lb_BKGCAT  = =0 || Lb_BKGCAT = =50");
-		entries_final_TM = treeOut->GetEntries("Lb_BKGCAT = =0 || Lb_BKGCAT = =50");
+		entries_init_TM  = myTree->GetEntries("Lb_BKGCAT  == 0 || Lb_BKGCAT == 50");
+		entries_final_TM = treeOut->GetEntries("Lb_BKGCAT == 0 || Lb_BKGCAT == 50");
 
 		if(entries_init_TM != 0)
 		{
