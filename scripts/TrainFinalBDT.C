@@ -130,43 +130,33 @@ void TrainFinalBDT(Int_t run, const char* isoVersion,
 	dataLoader->AddSpectator("runNumber", 'I');
 	dataLoader->AddSpectator("ntracks", 'I');
 
-	dataLoader->AddVariable("log_dtfchi2 := log10(Lb_ConsLb_chi2)",'F');
+	dataLoader->AddVariable("log_dtfchi2     := log10(Lb_ConsLb_chi2)",'F');
 	dataLoader->AddVariable("log_lbminipchi2 := log10(Lb_MINIPCHI2)",'F');
-	dataLoader->AddVariable("logacos_lbdira := log10(acos(Lb_DIRA_OWNPV))",'F');
-	dataLoader->AddVariable("log_lbfd_ownpv := log10(Lb_FD_OWNPV)",'F');
-	//	dataLoader->AddVariable("log_ltau := log10(L_TAU)",'F');
-	//dataLoader->AddVariable("Lb_DTF_CTAUS_L",'F');
+	dataLoader->AddVariable("logacos_lbdira  := log10(acos(Lb_DIRA_OWNPV))",'F');
+	dataLoader->AddVariable("log_lbfd_ownpv  := log10(Lb_FD_OWNPV)",'F');
 
 	dataLoader->AddVariable("log_jpsiminipchi2 := log10(Jpsi_MINIPCHI2)",'F');
-	dataLoader->AddVariable("log_jpsimass := log10(Jpsi_M)",'F');
-	//	dataLoader->AddVariable("Jpsi_CosTheta",'F');
-	//	dataLoader->AddVariable("Jpsi_PT",'F');
+	dataLoader->AddVariable("log_jpsimass      := log10(Jpsi_M)",'F');
 
-	dataLoader->AddVariable("log_lfdchi2 := log10(L_FDCHI2_ORIVX)",'F');
+	dataLoader->AddVariable("log_lfdchi2         := log10(L_FDCHI2_ORIVX)",'F');
 	dataLoader->AddVariable("logacos_ldira_orivx := log10(acos(L_DIRA_ORIVX))",'F');
-	dataLoader->AddVariable("log_lfd_orivx := log10(L_FD_ORIVX)",'F');
+	dataLoader->AddVariable("log_lfd_orivx       := log10(L_FD_ORIVX)",'F');
 	dataLoader->AddVariable("logacos_ldira_ownpv := log10(acos(L_DIRA_OWNPV))",'F');
 	dataLoader->AddVariable("L_dm",'F');
-	dataLoader->AddVariable("log_lminipchi2 := log10(L_MINIPCHI2)",'F');
+	dataLoader->AddVariable("log_lminipchi2      := log10(L_MINIPCHI2)",'F');
 	dataLoader->AddVariable("L_ENDVERTEX_CHI2",'F');
-	//	dataLoader->AddVariable("L_PT",'F');
-
-	//	dataLoader->AddVariable("L_CosTheta",'F');
 
 	dataLoader->AddVariable("log_pminipchi2 := log10(p_MINIPCHI2)",'F');
 	dataLoader->AddVariable("p_ProbNNghost",'F');
-	dataLoader->AddVariable("log_p_PT := log10(p_PT)",'F');
+	dataLoader->AddVariable("log_p_PT       := log10(p_PT)",'F');
 	if(!simFlag)
-	{
 		dataLoader->AddVariable("p_ProbNNp",'F');
-	}
 	else
-	{
 		dataLoader->AddVariable("p_ProbNNp_corr",'F');
-	}
+
 	dataLoader->AddVariable("pi_ProbNNghost",'F');
 	dataLoader->AddVariable("log_piminipchi2 := log10(pi_MINIPCHI2)",'F');
-	dataLoader->AddVariable("log_pi_PT := log10(pi_PT)",'F');
+	dataLoader->AddVariable("log_pi_PT       := log10(pi_PT)",'F');
 
 	if(isoFlag) dataLoader->AddVariable(Form("BDTkMin_%s",isoVersion),'F');
 
@@ -188,21 +178,15 @@ void TrainFinalBDT(Int_t run, const char* isoVersion,
 		}
 		else
 		{
-			// gSystem->Exec(Form("hadd -f %s/jpsilambda_%s_withsw.root "
-			//                    "%s/jpsilambda_%s_withsw_nonZeroTracks.root"
-			//                    " %s/jpsilambda_%s_withsw_ZeroTracks.root",
-			//                    rootFolder,type,rootFolder,type,rootFolder,type));
-			input  = TFile::Open(Form("%s/jpsilambda_%s_withsw.root",
-			                          rootFolder,type));
+			input  = TFile::Open(Form("%s/jpsilambda_%s_withsw.root",rootFolder,type));
 			treeIn = (TTree*)input->Get("MyTuple");
 		}
 
-		cout << "--- TMVAClassification : Using input file: "
-		     << input->GetName() << endl;
+		cout << "--- TMVAClassification : Using input file: "<< input->GetName() << endl;
+
 		if(isoFlag)
 		{
-			cout << "--- TMVAClassification : Using isolation file: "
-			     << input_iso->GetName() << endl;
+			cout << "--- TMVAClassification : Using isolation file: "<< input_iso->GetName() << endl;
 		}
 	}
 	else //training on simulation
@@ -215,13 +199,6 @@ void TrainFinalBDT(Int_t run, const char* isoVersion,
 			input_iso_sig  = TFile::Open(Form("%s/jpsilambda_%s_iso%d_%s.root",
 			                                  MCrootFolder,type,isoConf,isoVersion));//This is the isolation applied to sWeighted data
 			treeIn_iso_sig = (TTree*)input_iso_sig->Get("MyTuple");
-
-			// input_bkg      = TFile::Open(Form("%s/jpsilambda_%s_withsw_nonZeroTracks.root",
-			//                                   rootFolder,type),"READ");
-			// treeIn_bkg     = (TTree*)input_bkg->Get("MyTuple");
-			// input_iso_bkg  = TFile::Open(Form("%s/jpsilambda_%ssig_iso%d_%s.root",
-			//                                   rootFolder,type,isoConf,isoVersion));//This is the isolation applied to sWeighted data
-			// treeIn_iso_bkg = (TTree*)input_iso_bkg->Get("MyTuple");
 
 			input_bkg      = TFile::Open(Form("%s/jpsilambda_cutoutks_%s_nonZeroTracks.root",
 			                                  rootFolder,type),"READ");
@@ -236,15 +213,12 @@ void TrainFinalBDT(Int_t run, const char* isoVersion,
 			                                  MCrootFolder,type),"READ");
 			treeIn_sig     = (TTree*)input_sig->Get("MyTuple");
 
-			// input_bkg      = TFile::Open(Form("%s/jpsilambda_%s_withsw.root",
-			//                                   rootFolder,type),"READ");
-			// treeIn_bkg     = (TTree*)input_bkg->Get("MyTuple");
 			input_bkg      = TFile::Open(Form("%s/jpsilambda_cutoutks_%s.root",
 			                                  rootFolder,type),"READ");
 			treeIn_bkg     = (TTree*)input_bkg->Get("MyTuple");
 		}
 	}
-	// treeIn = (TTree*)input->Get("MyTuple");
+
 	if(!simFlag)// train on data
 	{
 		if(isoFlag) treeIn->AddFriend(treeIn_iso);
@@ -394,7 +368,7 @@ void TrainFinalBDT(Int_t run, const char* isoVersion,
 	          "p_MINIPCHI2 > 0 && p_PT > 0 && pi_MINIPCHI2 > 0 &&"
 	          "pi_PT > 0";
 
-	myCutS = baseCut;//removed M < 5700 cut as it was not helping
+	myCutS = baseCut;
 	myCutB = baseCut && "Lb_DTF_M_JpsiLConstr > 5700 && Lb_DTF_M_JpsiLConstr < 6000 && "
 	         "!(Lb_DTF_M_JpsiLConstr>5770 && Lb_DTF_M_JpsiLConstr<5810)";//cutting out portion where Xib0->J/psi Lambda hides
 
@@ -414,18 +388,6 @@ void TrainFinalBDT(Int_t run, const char* isoVersion,
 		nEntries_S = treeIn->GetEntries(myCutS);
 		nEntries_B = treeIn->GetEntries(myCutB);
 	}
-
-	Int_t nTrain_S = (Int_t)nEntries_S*0.8;// 80/20 split
-	Int_t nTest_S  = nEntries_S - nTrain_S;
-
-	Int_t nTrain_B = (Int_t)nEntries_B*0.8;// 80/20 split
-	Int_t nTest_B  = nEntries_B - nTrain_B;
-
-	// dataLoader->PrepareTrainingAndTestTree( myCutS, myCutB,
-	//                                         Form("nTrain_Signal=%d:nTest_Signal=%d:"
-	//                                              "nTrain_Background=%d:nTest_Background=%d"
-	//                                              "SplitMode=Random:NormMode=NumEvents:!V",
-	//                                              nTrain_S,nTest_S,nTrain_B,nTest_B));
 
 	dataLoader->PrepareTrainingAndTestTree( myCutS, myCutB,
 	                                        "nTest_Signal=1"
@@ -450,8 +412,7 @@ void TrainFinalBDT(Int_t run, const char* isoVersion,
 	{
 		if(isoFlag)
 		{
-			outfileName = Form("%s/TMVAtraining/iso/"
-			                   "CVdata_iso%d_%s_BDT%d.root",
+			outfileName = Form("%s/TMVAtraining/iso/CVdata_iso%d_%s_BDT%d.root",
 			                   rootFolder,isoConf,isoVersion,bdtConf);
 			outputFile  = TFile::Open(outfileName, "RECREATE");
 			cv          = new TMVA::CrossValidation{Form("CVdataRun%d_iso%d_%s_BDT%d",
@@ -459,8 +420,7 @@ void TrainFinalBDT(Int_t run, const char* isoVersion,
 		}
 		else
 		{
-			outfileName = Form("%s/TMVAtraining/noIso/"
-			                   "CVdata_noIso_BDT%d.root",
+			outfileName = Form("%s/TMVAtraining/noIso/CVdata_noIso_BDT%d.root",
 			                   rootFolder,bdtConf);
 			outputFile  = TFile::Open( outfileName, "RECREATE");
 			cv          = new TMVA::CrossValidation{Form("CVdataRun%d_noIso_BDT%d",
@@ -471,8 +431,7 @@ void TrainFinalBDT(Int_t run, const char* isoVersion,
 	{
 		if(isoFlag)
 		{
-			outfileName = Form("%s/TMVAtraining/iso/"
-			                   "CVMC_iso%d_%s_BDT%d.root",
+			outfileName = Form("%s/TMVAtraining/iso/CVMC_iso%d_%s_BDT%d.root",
 			                   rootFolder,isoConf,isoVersion,bdtConf);
 			outputFile  = TFile::Open(outfileName, "RECREATE");
 			cv     = new TMVA::CrossValidation{Form("CVMCRun%d_iso%d_%s_BDT%d",
@@ -480,8 +439,7 @@ void TrainFinalBDT(Int_t run, const char* isoVersion,
 		}
 		else
 		{
-			outfileName = Form("%s/TMVAtraining/noIso/"
-			                   "CVMC_noIso_BDT%d.root",
+			outfileName = Form("%s/TMVAtraining/noIso/CVMC_noIso_BDT%d.root",
 			                   rootFolder,bdtConf);
 			outputFile  = TFile::Open( outfileName, "RECREATE");
 			cv = new TMVA::CrossValidation{ Form("CVMCRun%d_noIso_BDT%d",
@@ -509,7 +467,6 @@ void TrainFinalBDT(Int_t run, const char* isoVersion,
 		//                     "nCuts=100" );
 	}
 	else if(bdtConf == 2)
-
 	{
 		cv->BookMethod(TMVA::Types::kBDT, "BDTconf2",
 		               "!H:!V:NTrees=500:MinNodeSize=0.5%:MaxDepth=4:"
@@ -530,40 +487,8 @@ void TrainFinalBDT(Int_t run, const char* isoVersion,
 		//                     "nCuts=100" );
 	}
 
-	/*factory->BookMethod( TMVA::Types::kBDT, "BDTconf6",
-	   "!H:!V:NTrees=1000:MinNodeSize=0.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.3:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=-1" );
-
-	   factory->BookMethod( TMVA::Types::kBDT, "BDTconf2",
-	   "!H:!V:NTrees=850:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.7:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=-1" );
-
-	   factory->BookMethod( TMVA::Types::kBDT, "BDTconf3",
-	   "!H:!V:NTrees=850:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.7:SeparationType=GiniIndex:nCuts=-1" );
-
-	   factory->BookMethod( TMVA::Types::kBDT, "BDTconf4",
-	   "!H:!V:NTrees=1000:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=-1" );
-	   factory->BookMethod( TMVA::Types::kBDT, "BDTGconf1",
-	   "!H:!V:NTrees=200:MinNodeSize=0.625%:BoostType=Grad:Shrinkage=0.10:UseBaggedBoost:BaggedSampleFraction=0.5:nCuts=-1:MaxDepth=3" );
-	   factory->BookMethod( TMVA::Types::kBDT, "BDTGconf2",
-	   "!H:!V:NTrees=400:MinNodeSize=0.625%:BoostType=Grad:Shrinkage=0.10:UseBaggedBoost:BaggedSampleFraction=0.5:nCuts=-1:MaxDepth=3" );
-	   factory->BookMethod( TMVA::Types::kBDT, "BDTGconf3",
-	   "!H:!V:NTrees=800:MinNodeSize=0.625%:BoostType=Grad:Shrinkage=0.10:UseBaggedBoost:BaggedSampleFraction=0.5:nCuts=-1:MaxDepth=3" );
-	   Support Vector Machine
-	   factory->BookMethod( TMVA::Types::kSVM, "SVM", "Gamma=0.25:Tol=0.001:VarTransform=Norm" );*/
-	// ---- STILL EXPERIMENTAL and only implemented for BDT's !
-	// factory->OptimizeAllMethods("SigEffAt001","Scan");
-	// factory->OptimizeAllMethods("ROCIntegral","FitGA");
-
-	// --------------------------------------------------------------------------------------------------
-
 	// ---- Now you can tell the factory to train, test, and evaluate the MVAs
-
-	// cv->TrainAllMethods();
-	//
-	// cv->TestAllMethods();
-	//
-	// cv->EvaluateAllMethods();
 	cv->Evaluate();
-	// --------------------------------------------------------------
 
 	// Save the output
 	outputFile->Close();
@@ -573,16 +498,8 @@ void TrainFinalBDT(Int_t run, const char* isoVersion,
 
 	delete cv;
 
-	// if(!isoFlag)
-	// {
-	//      gSystem->Exec(Form("rm -f %s/jpsilambda_%s_withsw.root",rootFolder,type));
-	// }
-
 	sw.Stop();
 	cout << "==> TrainFinalBDT is done! Home streeeeetch!: "; sw.Print();
 
-	// if(logFlag) gROOT->ProcessLine(".>");
 	if(logFlag) gSystem->RedirectOutput(0);
-	// Launch the GUI for the root macros
-	//   if (!gROOT->IsBatch()) TMVAGui( outfileName );
 }
