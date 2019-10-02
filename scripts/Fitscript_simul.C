@@ -104,20 +104,20 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 	if(!simFlag) //trained on data
 	{
-		if(!isoFlag)
+		if(!isoFlag) // not using isolation
 		{
 			switch(config_Run1)
 			{
 			case 1:
 			{
 				bdtConf[0] = 1;
-				bdtCut[0] = 0.385;//0.395;
+				// bdtCut[0] = 0.385;//0.395;
 				break;
 			}
 			case 2:
 			{
 				bdtConf[0] = 2;
-				bdtCut[0] = 0.405;//0.415;
+				// bdtCut[0] = 0.405;//0.415;
 				break;
 			}
 			}
@@ -126,18 +126,25 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			case 1:
 			{
 				bdtConf[1] = 1;
-				bdtCut[1] = 0.495;
+				// bdtCut[1] = 0.495;
 				break;
 			}
 			case 2:
 			{
 				bdtConf[1] = 2;
-				bdtCut[1]  = 0.525;//0.555;
+				// bdtCut[1]  = 0.525;//0.555;
 				break;
 			}
 			}
+			ifstream fileIn_run1(Form("logs/data/JpsiLambda/run1/bestBDTCuts_noIso_BDT%d.txt",bdtConf[0]));
+			fileIn_run1>>bdtCut[0];
+			fileIn_run1.close();
+
+			ifstream fileIn_run2(Form("logs/data/JpsiLambda/run2/bestBDTCuts_noIso_BDT%d.txt",bdtConf[1]));
+			fileIn_run2>>bdtCut[1];
+			fileIn_run2.close();
 		}
-		else
+		else // using isolation
 		{
 			switch(config_Run1)
 			{
@@ -149,8 +156,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				bdtConf_nonZero[0] = 1;
 				bdtConf_Zero[0]    = 1;
 
-				bdtCut_nonZero[0]  = 0.435;
-				bdtCut_Zero[0]     = 0.335;
+				// bdtCut_nonZero[0]  = 0.435;
+				// bdtCut_Zero[0]     = 0.335;
 				break;
 			}
 			case 2:
@@ -161,8 +168,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				bdtConf_nonZero[0] = 2;
 				bdtConf_Zero[0]    = 2;
 
-				bdtCut_nonZero[0]  = 0.375;//0.455;
-				bdtCut_Zero[0]     = 0.295;
+				// bdtCut_nonZero[0]  = 0.375;//0.455;
+				// bdtCut_Zero[0]     = 0.295;
 				break;
 			}
 			case 3:
@@ -173,8 +180,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				bdtConf_nonZero[0] = 1;
 				bdtConf_Zero[0]    = 1;
 
-				bdtCut_nonZero[0]  = 0.425;
-				bdtCut_Zero[0]     = 0.335;
+				// bdtCut_nonZero[0]  = 0.425;
+				// bdtCut_Zero[0]     = 0.335;
 				break;
 			}
 			case 4:
@@ -185,8 +192,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				bdtConf_nonZero[0] = 2;
 				bdtConf_Zero[0]    = 2;
 
-				bdtCut_nonZero[0]  = 0.395;//0.425;
-				bdtCut_Zero[0]     = 0.295;
+				// bdtCut_nonZero[0]  = 0.395;//0.425;
+				// bdtCut_Zero[0]     = 0.295;
 				break;
 			}
 			case 5:
@@ -197,8 +204,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				bdtConf_nonZero[0] = 1;
 				bdtConf_Zero[0]    = 1;
 
-				bdtCut_nonZero[0]  = 0.425;
-				bdtCut_Zero[0]     = 0.335;
+				// bdtCut_nonZero[0]  = 0.425;
+				// bdtCut_Zero[0]     = 0.335;
 				break;
 			}
 			case 6:
@@ -209,8 +216,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				bdtConf_nonZero[0] = 2;
 				bdtConf_Zero[0]    = 2;
 
-				bdtCut_nonZero[0]  = 0.395;//0.445;
-				bdtCut_Zero[0]     = 0.295;
+				// bdtCut_nonZero[0]  = 0.395;//0.445;
+				// bdtCut_Zero[0]     = 0.295;
 				break;
 			}
 			case 7:
@@ -221,8 +228,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				bdtConf_nonZero[0] = 1;
 				bdtConf_Zero[0]    = 1;
 
-				bdtCut_nonZero[0]  = 0.405;//0.415;
-				bdtCut_Zero[0]     = 0.335;
+				// bdtCut_nonZero[0]  = 0.405;//0.415;
+				// bdtCut_Zero[0]     = 0.335;
 				break;
 			}
 			case 8:
@@ -233,8 +240,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				bdtConf_nonZero[0] = 2;
 				bdtConf_Zero[0]    = 2;
 
-				bdtCut_nonZero[0]  = 0.415;
-				bdtCut_Zero[0]     = 0.295;
+				// bdtCut_nonZero[0]  = 0.415;
+				// bdtCut_Zero[0]     = 0.295;
 				break;
 			}//end Run1 switch
 			}
@@ -248,8 +255,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				bdtConf_nonZero[1] = 1;
 				bdtConf_Zero[1]    = 1;
 
-				bdtCut_nonZero[1]  = 0.515;//0.535;
-				bdtCut_Zero[1]     = 0.405;
+				// bdtCut_nonZero[1]  = 0.515;//0.535;
+				// bdtCut_Zero[1]     = 0.405;
 				break;
 			}
 			case 2:
@@ -260,8 +267,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				bdtConf_nonZero[1] = 2;
 				bdtConf_Zero[1]    = 2;
 
-				bdtCut_nonZero[1]  = 0.485;//0.545;
-				bdtCut_Zero[1]     = 0.325;//0.435;
+				// bdtCut_nonZero[1]  = 0.485;//0.545;
+				// bdtCut_Zero[1]     = 0.325;//0.435;
 				break;
 			}
 			case 3:
@@ -272,8 +279,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				bdtConf_nonZero[1] = 1;
 				bdtConf_Zero[1]    = 1;
 
-				bdtCut_nonZero[1]  = 0.535;//0.585;
-				bdtCut_Zero[1]     = 0.405;
+				// bdtCut_nonZero[1]  = 0.535;//0.585;
+				// bdtCut_Zero[1]     = 0.405;
 				break;
 			}
 			case 4:
@@ -284,8 +291,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				bdtConf_nonZero[1] = 2;
 				bdtConf_Zero[1]    = 2;
 
-				bdtCut_nonZero[1]  = 0.485;//0.605;
-				bdtCut_Zero[1]     = 0.325;//0.435;
+				// bdtCut_nonZero[1]  = 0.485;//0.605;
+				// bdtCut_Zero[1]     = 0.325;//0.435;
 				break;
 			}
 			case 5:
@@ -296,8 +303,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				bdtConf_nonZero[1] = 1;
 				bdtConf_Zero[1]    = 1;
 
-				bdtCut_nonZero[1]  = 0.485;//0.535;
-				bdtCut_Zero[1]     = 0.405;
+				// bdtCut_nonZero[1]  = 0.485;//0.535;
+				// bdtCut_Zero[1]     = 0.405;
 				break;
 			}
 			case 6:
@@ -308,8 +315,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				bdtConf_nonZero[1] = 2;
 				bdtConf_Zero[1]    = 2;
 
-				bdtCut_nonZero[1]  = 0.495;//0.525;
-				bdtCut_Zero[1]     = 0.325;//0.435;
+				// bdtCut_nonZero[1]  = 0.495;//0.525;
+				// bdtCut_Zero[1]     = 0.325;//0.435;
 				break;
 			}
 			case 7:
@@ -320,8 +327,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				bdtConf_nonZero[1] = 1;
 				bdtConf_Zero[1]    = 1;
 
-				bdtCut_nonZero[1]  = 0.475;//0.545;
-				bdtCut_Zero[1]     = 0.405;
+				// bdtCut_nonZero[1]  = 0.475;//0.545;
+				// bdtCut_Zero[1]     = 0.405;
 				break;
 			}
 			case 8:
@@ -332,14 +339,23 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				bdtConf_nonZero[1] = 2;
 				bdtConf_Zero[1]    = 2;
 
-				bdtCut_nonZero[1]  = 0.495;//0.515;
-				bdtCut_Zero[1]     = 0.325;//0.435;
+				// bdtCut_nonZero[1]  = 0.495;//0.515;
+				// bdtCut_Zero[1]     = 0.325;//0.435;
 				break;
 			}
 			}//end Run2 switch
+			ifstream fileIn_run1(Form("logs/data/JpsiLambda/run1/bestBDTCuts_BDT%d_iso%d_%s.txt",bdtConf[0],isoConf[0],isoVersion[0]));
+			fileIn_run1>>bdtCut_nonZero[0];
+			fileIn_run1>>bdtCut_Zero[0];
+			fileIn_run1.close();
+
+			ifstream fileIn_run2(Form("logs/data/JpsiLambda/run2/bestBDTCuts_BDT%d_iso%d_%s.txt",bdtConf[1],isoConf[1],isoVersion[1]));
+			fileIn_run2>>bdtCut_nonZero[1];
+			fileIn_run2>>bdtCut_Zero[1];
+			fileIn_run2.close();
 		}
 	}//end if for !simFlag
-	else
+	else // using BDT trained on MC
 	{
 		if(!isoFlag)
 		{
@@ -783,10 +799,10 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	Float_t Ncomb_StatErr[2] = {0.0,0.0};
 
 	TPaveText* lhcbName_sim = new TPaveText(gStyle->GetPadLeftMargin() + 0.05,
-	                                    0.87 - gStyle->GetPadTopMargin(),
-	                                    gStyle->GetPadLeftMargin() + 0.20,
-	                                    0.95 - gStyle->GetPadTopMargin(),
-	                                    "BRNDC");
+	                                        0.87 - gStyle->GetPadTopMargin(),
+	                                        gStyle->GetPadLeftMargin() + 0.20,
+	                                        0.95 - gStyle->GetPadTopMargin(),
+	                                        "BRNDC");
 	lhcbName_sim->AddText("LHCb Simulation");
 	lhcbName_sim->SetFillColor(0);
 	lhcbName_sim->SetTextAlign(12);
@@ -1052,18 +1068,18 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 		if(nGen_Lambda[i] > 0)
 		{
-		    eff_Lambda_rec[i]     = num_Lambda/nGen_Lambda[i]; //Calc. reco eff.
-		    eff_Lambda_rec_err[i] = sqrt(eff_Lambda_rec[i]*(1-eff_Lambda_rec[i])/nGen_Lambda[i]); //statistical error on recon. eff.
+			eff_Lambda_rec[i]     = num_Lambda/nGen_Lambda[i];//Calc. reco eff.
+			eff_Lambda_rec_err[i] = sqrt(eff_Lambda_rec[i]*(1-eff_Lambda_rec[i])/nGen_Lambda[i]); //statistical error on recon. eff.
 		}
 		if(nGen_Lambda_wt[i] > 0)
 		{
-		    eff_Lambda_rec_wt[i]     = num_Lambda_wt/nGen_Lambda_wt[i]; //Calc. weighted reco eff.
-		    eff_Lambda_rec_err_wt[i] = sqrt(eff_Lambda_rec_wt[i]*(1-eff_Lambda_rec_wt[i])/nGen_Lambda_wt[i]); //statistical error on weighted recon. eff.
+			eff_Lambda_rec_wt[i]     = num_Lambda_wt/nGen_Lambda_wt[i];//Calc. weighted reco eff.
+			eff_Lambda_rec_err_wt[i] = sqrt(eff_Lambda_rec_wt[i]*(1-eff_Lambda_rec_wt[i])/nGen_Lambda_wt[i]); //statistical error on weighted recon. eff.
 		}
 
 		// cout<<"Run "<<run<<" UNWEIGHTED Lambda Recons. Effs = "<<eff_Lambda_rec[i]*100
 		//     <<" % +/- "<<eff_Lambda_rec_err[i]*100<<" %"<<endl;
-		
+
 		// cout<<"Run "<<run<<" WEIGHTED Lambda Recons. Effs = "<<eff_Lambda_rec_wt[i]*100
 		//     <<" % +/- "<<eff_Lambda_rec_err_wt[i]*100<<" %"<<endl;
 

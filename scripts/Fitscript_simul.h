@@ -31,7 +31,6 @@
 #include "RooWorkspace.h"
 #include "RooMinuit.h"
 #include "RooFormulaVar.h"
-#include "RooOneSidedProfileLL.h"
 #include "RooStats/ModelConfig.h"
 #include "RooStats/AsymptoticCalculator.h"
 // #include "RooStats/FrequentistCalculator.h"
