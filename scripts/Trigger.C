@@ -159,7 +159,7 @@ void Trigger(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t testing,
 		//CollateFiles will cd to the massdump folder and then back to JpsiLambda_RESTART
 		// CollateFiles(run, year, isData, mcType, &h1, &h2, testing, logFlag);
 		gSystem->Exec(".L CollateFiles.C");
-		gSystem->Exec(Form("CollateFiles(%d,%d,%d,%d,%p,%p,%d,%d)",run, year, isData, mcType, (void *)&h1, (void *)&h2, testing, logFlag));
+		gSystem->Exec(Form("CollateFiles(%d,%d,%d,%d,%p,%p,%d,%d)",run, year, isData, mcType, (void *)h1, (void *)h2, testing, logFlag));
 
 		fileOut = new TFile(Form("rootFiles/dataFiles/JpsiLambda/run%d/jpsilambda_triggered_%d.root",
 		                         run,year),"RECREATE");
