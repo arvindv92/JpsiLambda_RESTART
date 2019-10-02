@@ -13,7 +13,7 @@ void CollateFiles_JpsiXi(Int_t run, Int_t year, Bool_t isData, TChain** h1,
    testing = true to run only over a subset of data
  */
 {
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 
 	//Set up logging
 	if(isData && logFlag)
@@ -91,7 +91,7 @@ void CollateFiles_JpsiXi(Int_t run, Int_t year, Bool_t isData, TChain** h1,
 
 	cout<<"DONE COLLATING"<<endl;
 
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 
 	if(isData && logFlag)

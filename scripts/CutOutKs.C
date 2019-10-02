@@ -31,7 +31,7 @@ void CutOutKs(Int_t run, Int_t year, Bool_t isData, Int_t mcType, Bool_t logFlag
 	TStopwatch sw;
 	sw.Start();
 
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 	const char *folder = "", *part = "";
 	switch(mcType)
 	{

@@ -33,7 +33,7 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 
 {
 	gROOT->ProcessLine(".x lhcbStyle.C");
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 
 	if(!simFlag)//optimize BDT trained on data
 	{

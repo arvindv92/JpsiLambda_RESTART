@@ -30,7 +30,7 @@ void TrainIsolation(Int_t run, const char* isoVersion, Int_t isoConf, Bool_t log
 	TStopwatch sw;
 	sw.Start();
 
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 
 	const char *type = "LL";
 

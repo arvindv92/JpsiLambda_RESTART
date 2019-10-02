@@ -18,7 +18,7 @@ void TrainFinalBDT(Int_t run, const char* isoVersion,
 	TStopwatch sw;
 	sw.Start();
 
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 
 	const char *type = "LL";
 

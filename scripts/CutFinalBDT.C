@@ -15,7 +15,7 @@ void CutFinalBDT(Int_t run, Bool_t isData, Int_t mcType,
 	TStopwatch sw;
 	sw.Start();
 
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 
 	const char *folder = "", *part = "";
 	const char *type = (trackType == 3) ? ("LL") : ("DD");

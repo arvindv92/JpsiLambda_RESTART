@@ -43,7 +43,7 @@ Double_t DoSWeight_JpsiK(Int_t run = 1, Bool_t logFlag = true)
 //Output file:rootFiles/dataFiles/B2JpsiK/run%d/wSpace_sPlot.root
 {
 	// ROOT::EnableImplicitMT();
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 	if(logFlag) gSystem->RedirectOutput(Form("logs/data/B2JpsiK/run%d/sPlot.txt",run),"w");
 
 	TStopwatch sw;

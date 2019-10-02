@@ -28,7 +28,7 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 	TStopwatch sw;
 	sw.Start();
 
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 	gROOT->ProcessLine(".x scripts/lhcbStyle.C");
 
 	if(isData && logFlag)

@@ -10,7 +10,7 @@
  */
 void Trigger_JpsiXi(Int_t run, Int_t year, Bool_t isData, Bool_t testing, Bool_t logFlag)
 {
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 
 	//Set up logging
 	if(isData && logFlag)

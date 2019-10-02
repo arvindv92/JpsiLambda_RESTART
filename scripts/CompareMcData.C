@@ -91,7 +91,7 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0, TString option = "kinematic"
 			canArray[i]->DrawClonePad();
 		}
 
-		gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+		gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 		c1->SaveAs(Form("plots/ANA/MC_Data_kinematic_run%d_page1.pdf",run));
 		c2->SaveAs(Form("plots/ANA/MC_Data_kinematic_run%d_page2.pdf",run));
 		c3->SaveAs(Form("plots/ANA/MC_Data_kinematic_run%d_page3.pdf",run));
@@ -122,7 +122,7 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0, TString option = "kinematic"
 			canArray[i]->DrawClonePad();
 		}
 
-		gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+		gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 		c1->SaveAs(Form("plots/ANA/MC_Data_pid_run%d_page1.pdf",run));
 	}
 	else if(option == "finalBDT")
@@ -176,7 +176,7 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0, TString option = "kinematic"
 			canArray[i]->DrawClonePad();
 		}
 
-		gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+		gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 		c1->SaveAs(Form("plots/ANA/MC_Data_finalBDT_run%d_page1.pdf",run));
 		c2->SaveAs(Form("plots/ANA/MC_Data_finalBDT_run%d_page2.pdf",run));
 		c3->SaveAs(Form("plots/ANA/MC_Data_finalBDT_run%d_page3.pdf",run));
@@ -186,7 +186,7 @@ void CompareMcData(Int_t run = 1, Int_t mcType = 0, TString option = "kinematic"
 TCanvas* routine(Int_t run, Int_t mcType,const char *varName,Float_t low, Float_t high, Int_t nBins, TString unit, TString option)
 {
 	gROOT->SetBatch(kTRUE);
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 	// gStyle->SetOptStat(0);
 
 	TFile *fileIn_data = nullptr, *fileIn_mc = nullptr;

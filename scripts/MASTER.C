@@ -117,7 +117,7 @@ void MASTER(Int_t run = 1)
 	//**********
 	//Process B -> J/psi K data
 	cout<<"*** Processing raw data for B+ -> J/psi K+ ***"<<endl<<endl;
-	gSystem->Exec(Form("root -l -b -q \'Process_B2JpsiK.C(%d,%d)\'",run,logFlag));
+	gSystem->Exec(Form("root -l -b -q \'Process_B2JpsiK.C(%d,%d,%d)\'",run,testing,logFlag));
 
 	cout<<"*** sWeight B+ -> J/psi K+ data ***"<<endl<<endl;
 	gSystem->Exec(Form("root -l -b -q \'DoSWeight_JpsiK.C(%d,%d)\'",run,logFlag));

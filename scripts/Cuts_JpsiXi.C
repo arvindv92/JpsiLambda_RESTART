@@ -12,7 +12,7 @@ void Cuts_JpsiXi(Int_t run, Int_t year, Bool_t isData, Bool_t logFlag)
    isData = 1 for data, 0 for MC
  */
 {
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 
 	//Set up logging
 	if(isData && logFlag)

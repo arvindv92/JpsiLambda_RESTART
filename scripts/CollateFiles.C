@@ -26,7 +26,7 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
    logFlag = true if you want the output to be piped to a log file.
  */
 {
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 
 	cout<<"******************************************"<<endl;
 	cout<<"******************************************"<<endl;
@@ -164,7 +164,7 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
 	}//end MC loop
 	cout<<"DONE COLLATING"<<endl;
 
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 	cout<<"WD = "<<gSystem->pwd()<<endl;
 
 	if(logFlag && isData)

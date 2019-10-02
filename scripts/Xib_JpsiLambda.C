@@ -15,7 +15,7 @@ void Xib_JpsiLambda(Bool_t logFlag = true)
 	TStopwatch sw;
 	sw.Start();
 
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 
 	if(logFlag) gSystem->RedirectOutput("results/B_Xib_JpsiLambda.txt","w");
 
