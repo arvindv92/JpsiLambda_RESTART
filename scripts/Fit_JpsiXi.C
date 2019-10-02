@@ -77,33 +77,33 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 
 	Float_t mean_mc = 0., sigma_mc = 0.,  alpha1_mc = 0., alpha2_mc = 0.;
 
-	// ***** I dont like this *****
+	// ***** Setting reasonable initial value *****
 	if(run == 1)
 	{
-		mean_mc = 5.79559e+03;
-		sigma_mc = 6.10233e+00;
-		alpha1_mc = 7.94704e-01;
-		alpha2_mc = -8.76836e-01;
+		mean_mc   = 5.7955e+03;
+		sigma_mc  = 6.10+00;
+		alpha1_mc = 7.94e-01;
+		alpha2_mc = -8.76e-01;
 	}
 	else if(run == 2)
 	{
-		mean_mc = 5.79515e+03;
-		sigma_mc = 7.30515e+00;
-		alpha1_mc = 1.03411e+00;
-		alpha2_mc = -1.15930e+00;
+		mean_mc   = 5.7951e+03;
+		sigma_mc  = 7.30e+00;
+		alpha1_mc = 1.03e+00;
+		alpha2_mc = -1.15e+00;
 	}
 	//***** *****
 
 	RooRealVar Xib_M("Xib_DTF_M_JpsiXiLConstr","Xib_DTF_M",5500.,6100.,"MeV");
 
 	//NOMINAL FIT MODEL - Double Crystal Ball (common mean and sigma) + Exp Background
-	RooRealVar mean("mean","Crystal Ball Mean",5795.2,5790.0,5800.0,"MeV");//mean,alpha1,alpha2,sigma are fixed here by fitting to UNREWEIGHTED simulation
+	RooRealVar mean("mean","Crystal Ball Mean",5795.2,5790.0,5800.0,"MeV");
 	RooRealVar sigma("sigma","Crystal Ball sigma",10.0,0.0,20.0,"MeV");
 
 	RooRealVar alpha1("alpha1","alpha1",1.068,0.0,1.5);
 	RooRealVar alpha2("alpha2","alpha2",-1.102,-1.5,0.0);
 
-	RooRealVar CBn("CBn","Crystal Ball n",10.0);//fixed in both sim fit and here
+	RooRealVar CBn("CBn","Crystal Ball n",10.0);//fixed in both sim fit and data fit.
 
 	RooRealVar fs("fs","fs",1.00,0.5,2.0);
 	RooFormulaVar sigma1("sigma1","","sigma*fs",RooArgList(sigma,fs));
@@ -111,7 +111,7 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 	RooCBShape sig1("sig1","Crystal Ball 1",Xib_M,mean,sigma1,alpha1,CBn);
 	RooCBShape sig2("sig2","Crystal Ball 2",Xib_M,mean,sigma1,alpha2,CBn);
 
-	RooRealVar frac1("frac1","Fraction of sig1 in signal",0.5);//fixed in both sim fit and here
+	RooRealVar frac1("frac1","Fraction of sig1 in signal",0.5);//fixed in both sim fit and data fit.
 	RooAddPdf sig("sig","Total CB signal",RooArgList(sig1,sig2),frac1);
 
 	RooRealVar tau("tau","tau",-0.0007,-0.01,-0.0000001);
@@ -184,8 +184,9 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 	}
 	else
 	{
-		ds    = new RooDataSet("ds","ds",treeIn,RooArgSet(Xib_M,gbWt));
+		ds = new RooDataSet("ds","ds",treeIn,RooArgSet(Xib_M,gbWt));
 		ds->Print();
+
 		ds_wt = new RooDataSet("ds_wt","ds_wt",RooArgSet(Xib_M,gbWt),Import(*ds),WeightVar(gbWt));
 		ds_wt->Print();
 	}
@@ -197,6 +198,7 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 	}
 	else
 	{
+		//When fitting to data, take fit params from fit to mc
 		ifstream inFile(Form("logs/mc/JpsiXi/run%d/NominalFitParams.txt",run));
 		if(inFile.is_open())
 		{
@@ -279,6 +281,7 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 	{
 		frame->SetAxisRange(5700,5900);
 	}
+
 	ds->plotOn(frame,Name("data"));
 	myModel.plotOn(frame,Name("fit"));
 	myModel.plotOn(frame,Components(sig),LineStyle(kDashed));
@@ -315,7 +318,6 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 	frame->Draw();
 
 	//  TPaveText *pt = (TPaveText*)pad1->GetListOfPrimitives()->FindObject("model_paramBox");
-
 	// pt->AddText(Form("#chi^{2}/dof = %f",chi2));
 	c->Modified();
 
