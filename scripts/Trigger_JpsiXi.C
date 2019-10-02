@@ -39,22 +39,25 @@ void Trigger_JpsiXi(Int_t run, Int_t year, Bool_t isData, Bool_t testing, Bool_t
 
 //	gROOT->ProcessLine(".L scripts/CollateFiles_JpsiXi.C++");//Chains/hadds input files
 
-	Int_t entries_init = 0, entries_final = 0;
-	Int_t entries_gen = 0, entries_init_TM = 0, entries_final_TM = 0;
+	Int_t entries_gen      = 0, entries_init_TM = 0;
+	Int_t entries_init     = 0, entries_final   = 0;
+	Int_t entries_final_TM = 0;
+
 	Float_t eff_excl   = 0., eff_excl_err = 0.;
 	Float_t eff_incl   = 0., eff_incl_err = 0.;
 
-	Bool_t hlt1DiMuonHighMass = false, hlt1TrackMuon      = false;
 	Bool_t hlt1TrackAllL0     = false, hlt2DiMuonDetached = false;
-	Bool_t collateFlag        = true;//If you don't want to re-collate MC, set this to zero. For example, if only the trigger condition changes.
+	Bool_t hlt1DiMuonHighMass = false, hlt1TrackMuon      = false;
 
 	TFile *fileOut = nullptr, *fileIn     = nullptr;
 	TTree *treeIn  = nullptr, *treeIn_gen = nullptr;
 	TTree *treeOut = nullptr, *myTree     = nullptr;
+
 	const char *triggerCut = "(Xib_Hlt1DiMuonHighMassDecision_TOS==1||"
 	                         "Xib_Hlt1TrackMuonDecision_TOS==1||"
 	                         "Xib_Hlt1TrackAllL0Decision_TOS==1)&&"
 	                         "(Xib_Hlt2DiMuonDetachedJPsiDecision_TOS==1)";
+
 	ofstream genFile;//contains no of generated candidates in MC.
 
 	// Set up input, output
@@ -65,11 +68,14 @@ void Trigger_JpsiXi(Int_t run, Int_t year, Bool_t isData, Bool_t testing, Bool_t
 		Int_t lumiEntries = 0, lumiErrEntries = 0;
 
 		TH1D *lumiHist = nullptr, *lumiErrHist = nullptr;
+
 		TChain *h1 = new TChain("Xib2JpsiXiTree/MyTuple");
 		TChain *h2 = new TChain("GetIntegratedLuminosity/LumiTuple");
 
 		//CollateFiles will cd to the massdump folder and then back to JpsiLambda_RESTART
-		CollateFiles_JpsiXi(run, year, isData, &h1, &h2, testing, logFlag);
+		// CollateFiles_JpsiXi(run, year, isData, &h1, &h2, testing, logFlag);
+		gSystem->Exec(".L CollateFiles_JpsiXi.C");
+		gSystem->Exec(Form("CollateFiles_JpsiXi(%d,%d,%d,%p,%p,%d,%d)",run,year,isData,(void*)&h1,(void*)&h2,testing,logFlag));
 
 		fileOut = new TFile(Form("rootFiles/dataFiles/JpsiXi/run%d/jpsixi_triggered_%d.root",
 		                         run,year),"RECREATE");
@@ -98,10 +104,15 @@ void Trigger_JpsiXi(Int_t run, Int_t year, Bool_t isData, Bool_t testing, Bool_t
 
 		cout<<"PROCESSING MC for Run "<<run<<" Jpsi Xi"<<endl;
 
-		if(collateFlag) CollateFiles_JpsiXi(run, year, isData);
+		// if(collateFlag) CollateFiles_JpsiXi(run, year, isData);
 
 		fileIn     = TFile::Open(Form("rootFiles/mcFiles/JpsiXi/run%d/jpsixi.root",
 		                              run));
+		if(!fileIn)
+		{
+			cout<<"Unable to open MC input file for Trigger ! Exiting!"<<endl;
+			exit(1);
+		}
 		treeIn_gen = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
 		treeIn     = (TTree*)fileIn->Get("Xib2JpsiXiTree/MyTuple");
 
