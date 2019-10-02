@@ -618,6 +618,20 @@ std::vector <Double_t> OptimizeFinalBDT(Int_t run, const char* isoVersion, Int_t
 		c1->SaveAs(Form("plots/ANA/FOM_run%d_nonZeroTracks_bdtConf%d_noIso.pdf",run,bdtConf));
 	}
 
+	if(isoFlag)
+	{
+		ofstream fileOut(Form("logs/data/JpsiLambda/run%d/bestBDTCuts_BDT%d_iso%d_%s.txt",run,bdtConf,isoConf,isoVersion));
+		fileOut<<cuts[0]<<endl;
+		fileOut<<cuts[1]<<endl;
+		fileOut.close();
+	}
+	else
+	{
+		ofstream fileOut(Form("logs/data/JpsiLambda/run%d/bestBDTCuts_noIso_BDT%d.txt",run,bdtConf));
+		fileOut<<cuts[0]<<endl;
+		fileOut.close();
+	}
+
 	if(logFlag) gSystem->RedirectOutput(0);
 	return cuts;
 }
