@@ -1,14 +1,36 @@
 #include "TFile.h"
 #include "TTree.h"
 #include "TH1F.h"
+#include "TStopwatch.h"
+#include "TSystem.h"
 #include <iostream>
 #include <fstream>
 
 using namespace std;
 
 #define Open TFile::Open
-void Xib_JpsiLambda()
+//Lots of inputs to this are hardcoded. That is not good
+void Xib_JpsiLambda(Bool_t logFlag = true)
 {
+	TStopwatch sw;
+	sw.Start();
+
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+
+	if(logFlag) gSystem->RedirectOutput("results/B_Xib_JpsiLambda.txt","w");
+
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"******************************************"<<endl;
+	cout<<"==> Starting Fit_JpsiXi: "<<endl;
+	gSystem->Exec("date");
+	cout<<"WD = "<<gSystem->pwd()<<endl;
+	cout<<"******************************************"<<endl;
+
+
 	//Combined BF result
 	Float_t BF_Ratio_Comb     = 0.0;
 	Float_t StatErr_BF_Ratio_Comb = 0.0;
@@ -170,13 +192,13 @@ void Xib_JpsiLambda()
 	Float_t xiVtxUnc    = 0.014;//1.4%
 
 	//Get efficiencies for Run1
-	TFile *fileIn_nonZero_Run1 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/Xib0/run1/xib0_cutoutks_LL_nonZeroTracks.root","READ");
+	TFile *fileIn_nonZero_Run1 = TFile::Open("rootFiles/mcFiles/JpsiLambda/Xib0/run1/xib0_cutoutks_LL_nonZeroTracks.root","READ");
 	TTree *treeIn_nonZero_Run1 = (TTree*)fileIn_nonZero_Run1->Get("MyTuple");
-	treeIn_nonZero_Run1->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/Xib0/run1/xib0_LL_FinalBDT1_iso2_v1.root");
+	treeIn_nonZero_Run1->AddFriend("MyTuple","rootFiles/mcFiles/JpsiLambda/Xib0/run1/xib0_LL_FinalBDT1_iso2_v1.root");
 
-	TFile *fileIn_Zero_Run1 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/Xib0/run1/xib0_cutoutks_LL_ZeroTracks.root","READ");
+	TFile *fileIn_Zero_Run1 = TFile::Open("rootFiles/mcFiles/JpsiLambda/Xib0/run1/xib0_cutoutks_LL_ZeroTracks.root","READ");
 	TTree *treeIn_Zero_Run1 = (TTree*)fileIn_Zero_Run1->Get("MyTuple");
-	treeIn_Zero_Run1->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/Xib0/run1/xib0_zeroTracksLL_FinalBDT1.root");
+	treeIn_Zero_Run1->AddFriend("MyTuple","rootFiles/mcFiles/JpsiLambda/Xib0/run1/xib0_zeroTracksLL_FinalBDT1.root");
 
 	treeIn_nonZero_Run1->Draw("GB_WT>>wt_Run1_nonZero","BDT1> 0.405","goff");
 	treeIn_Zero_Run1->Draw("GB_WT>>wt_Run1_Zero","BDT1 > 0.335","goff");
@@ -185,12 +207,12 @@ void Xib_JpsiLambda()
 	TH1F *wt_Run1_Zero = (TH1F*)gDirectory->Get("wt_Run1_Zero");
 
 	fstream genFile_Xib0_Run1;
-	genFile_Xib0_Run1.open("../logs/mc/JpsiLambda/Xib0/run1/gen_log.txt");
+	genFile_Xib0_Run1.open("logs/mc/JpsiLambda/Xib0/run1/gen_log.txt");
 
 	genFile_Xib0_Run1>>nGen_Run1; //Get number of generated candidates
 
 	TFile *genWtsFile_Run1 = nullptr;
-	genWtsFile_Run1 = Open("../rootFiles/mcFiles/JpsiLambda/Xib0/run1/RW/gbWeights_gen.root");
+	genWtsFile_Run1 = Open("rootFiles/mcFiles/JpsiLambda/Xib0/run1/RW/gbWeights_gen.root");
 
 	TTree *genWtsTree_Run1 = (TTree*)genWtsFile_Run1->Get("MyTuple");
 
@@ -200,7 +222,7 @@ void Xib_JpsiLambda()
 	nGen_Run1_wt = genWt_Run1->GetEntries()*genWt_Run1->GetMean(); // Get weighted number of generated candidates
 
 	fstream genEffFile_Run1;
-	genEffFile_Run1.open("../logs/mc/JpsiLambda/Xib0/run1/Generator_Effs_Combined.txt");
+	genEffFile_Run1.open("logs/mc/JpsiLambda/Xib0/run1/Generator_Effs_Combined.txt");
 
 	genEffFile_Run1>>GenEff_Xib0_JpsiLambda_Run1;    //Get generator efficiency
 	genEffFile_Run1>>Err_GenEff_Xib0_JpsiLambda_Run1;//and error on above
@@ -241,13 +263,13 @@ void Xib_JpsiLambda()
 	cout<<"************************************************"<<endl;
 
 	//Get efficiencies for Run2
-	TFile *fileIn_nonZero_Run2 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/Xib0/run2/xib0_cutoutks_LL_nonZeroTracks.root","READ");
+	TFile *fileIn_nonZero_Run2 = TFile::Open("rootFiles/mcFiles/JpsiLambda/Xib0/run2/xib0_cutoutks_LL_nonZeroTracks.root","READ");
 	TTree *treeIn_nonZero_Run2 = (TTree*)fileIn_nonZero_Run2->Get("MyTuple");
-	treeIn_nonZero_Run2->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/Xib0/run2/xib0_LL_FinalBDT1_iso2_v1.root");
+	treeIn_nonZero_Run2->AddFriend("MyTuple","rootFiles/mcFiles/JpsiLambda/Xib0/run2/xib0_LL_FinalBDT1_iso2_v1.root");
 
-	TFile *fileIn_Zero_Run2 = TFile::Open("../rootFiles/mcFiles/JpsiLambda/Xib0/run2/xib0_cutoutks_LL_ZeroTracks.root","READ");
+	TFile *fileIn_Zero_Run2 = TFile::Open("rootFiles/mcFiles/JpsiLambda/Xib0/run2/xib0_cutoutks_LL_ZeroTracks.root","READ");
 	TTree *treeIn_Zero_Run2 = (TTree*)fileIn_Zero_Run2->Get("MyTuple");
-	treeIn_Zero_Run2->AddFriend("MyTuple","../rootFiles/mcFiles/JpsiLambda/Xib0/run2/xib0_zeroTracksLL_FinalBDT1.root");
+	treeIn_Zero_Run2->AddFriend("MyTuple","rootFiles/mcFiles/JpsiLambda/Xib0/run2/xib0_zeroTracksLL_FinalBDT1.root");
 
 	treeIn_nonZero_Run2->Draw("GB_WT>>wt_Run2_nonZero","BDT1> 0.475","goff");
 	treeIn_Zero_Run2->Draw("GB_WT>>wt_Run2_Zero","BDT1 > 0.405","goff");
@@ -256,12 +278,12 @@ void Xib_JpsiLambda()
 	TH1F *wt_Run2_Zero = (TH1F*)gDirectory->Get("wt_Run2_Zero");
 
 	fstream genFile_Xib0_Run2;
-	genFile_Xib0_Run2.open("../logs/mc/JpsiLambda/Xib0/run2/gen_log.txt");
+	genFile_Xib0_Run2.open("logs/mc/JpsiLambda/Xib0/run2/gen_log.txt");
 
 	genFile_Xib0_Run2>>nGen_Run2; //Get number of generated candidates
 
 	TFile *genWtsFile_Run2 = nullptr;
-	genWtsFile_Run2 = Open("../rootFiles/mcFiles/JpsiLambda/Xib0/run2/RW/gbWeights_gen.root");
+	genWtsFile_Run2 = Open("rootFiles/mcFiles/JpsiLambda/Xib0/run2/RW/gbWeights_gen.root");
 
 	TTree *genWtsTree_Run2 = (TTree*)genWtsFile_Run2->Get("MyTuple");
 
@@ -270,11 +292,9 @@ void Xib_JpsiLambda()
 	TH1F *genWt_Run2 = (TH1F*)gDirectory->Get("genWt_Run2");
 	nGen_Run2_wt = genWt_Run2->GetEntries()*genWt_Run2->GetMean(); // Get weighted number of generated candidates
 
-
-	//@@@@@@@@@@@@@ NO GEN EFFS FOR RUN2 YET. I'M CHEATING AND USING RUN1 GEN EFFS@@@@@@@@@@@@@@@@@
 	fstream genEffFile_Run2;
-	genEffFile_Run2.open("../logs/mc/JpsiLambda/Xib0/run1/Generator_Effs_Combined.txt");
-	//@@@@@@@@@@@@@ NO GEN EFFS FOR RUN2 YET. I'M CHEATING AND USING RUN1 GEN EFFS@@@@@@@@@@@@@@@@@
+	genEffFile_Run2.open("logs/mc/JpsiLambda/Xib0/run2/Generator_Effs_Combined.txt");
+
 	genEffFile_Run2>>GenEff_Xib0_JpsiLambda_Run2;    //Get generator efficiency
 	genEffFile_Run2>>Err_GenEff_Xib0_JpsiLambda_Run2;//and error on above
 
@@ -454,4 +474,7 @@ void Xib_JpsiLambda()
 	cout<<"Tracking Bach.pi-    :"<<trackingUnc*100<<endl;
 	cout<<"Xi Vtx. Unc.         :"<<xiVtxUnc*100<<endl;
 
+	sw.Stop();
+	cout << "==> Xib_JpsiLambda is done! Congratulations!: "; sw.Print();
+	if(logFlag) gSystem->RedirectOutput(0);
 }
