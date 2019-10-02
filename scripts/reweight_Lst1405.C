@@ -32,11 +32,10 @@ void reweight_Lst1405(Int_t run = 1, Bool_t logFlag = true)
 	gSystem->Exec("date");
 	cout<<"******************************************"<<endl;
 
-	TFile *fileIn        = nullptr, *fileIn_gen = nullptr;// *mcfile_MV       = nullptr, *mcfile_BONN = nullptr;
-	TFile *genFile_MV    = nullptr, *genFile_BONN    = nullptr;
+	TFile *fileIn     = nullptr, *fileIn_gen   = nullptr;
+	TFile *genFile_MV = nullptr, *genFile_BONN = nullptr;
 
 	TTree *treeIn        = nullptr, *treeIn_gen      = nullptr;
-//TTree *treeout_MV    = nullptr, *treeout_BONN    = nullptr;
 	TTree *genTreeout_MV = nullptr, *genTreeout_BONN = nullptr;
 
 	Double_t Lst_PE    = 0.0, Lst_PX    = 0.0, Lst_PY    = 0.0, Lst_PZ    = 0.0;
@@ -55,12 +54,12 @@ void reweight_Lst1405(Int_t run = 1, Bool_t logFlag = true)
 	ULong64_t evtNo_rec = 0, evtNo_gen = 0;
 	UInt_t runNo_rec    = 0, runNo_gen = 0;
 
-	vector<ULong64_t> evtNo;
 	vector<UInt_t> runNo;
+	vector<ULong64_t> evtNo;
 	vector<Double_t>lstMass_gen;
 	vector<Double_t>p_px_rec;
 
-	low_MV    = 1300;//these values are rough estimates. Look at paper and get precise limits
+	low_MV    = 1300; //MeV
 	high_MV   = 2523;
 	low_BONN  = 1328;
 	high_BONN = 2519;
@@ -118,8 +117,10 @@ void reweight_Lst1405(Int_t run = 1, Bool_t logFlag = true)
 	TH1D *wts_MV   = (TH1D*)theory_MVmodel->Clone("wts_MV");
 	TH1D *wts_BONN = (TH1D*)theory_BONNmodel->Clone("wts_BONN");
 
+	//*** Divide histograms to get the weights ***
 	wts_MV->Divide(hMV);
 	wts_BONN->Divide(hBONN);
+	//*** ***
 
 	treeIn_gen->SetBranchAddress("Lambda_1405_0_TRUEP_E",&Lst_PE);
 	treeIn_gen->SetBranchAddress("Lambda_1405_0_TRUEP_X",&Lst_PX);
@@ -154,7 +155,7 @@ void reweight_Lst1405(Int_t run = 1, Bool_t logFlag = true)
 
 	Int_t ctr = 0;
 
-	//First loop over reco tree. For candidates with bkgcat = 50, fill their run no. and evt no. in 2 vectors
+	//First loop over reco tree. For candidates with bkgcat = 50 or 60 , fill their run no. and evt no. in 2 vectors
 	cout<<"First loop over reco tree"<<endl;
 	for(Int_t i=0; i<nEntries; i++)
 	{
@@ -163,7 +164,7 @@ void reweight_Lst1405(Int_t run = 1, Bool_t logFlag = true)
 
 		treeIn->GetEntry(i);
 
-		if(bkgcat==50 || bkgcat == 60)//take another look at this. there is some signal outside bkgcat = 50 (in 60)
+		if(bkgcat==50 || bkgcat == 60)
 		{
 			evtNo.push_back(evtNo_rec);
 			runNo.push_back(runNo_rec);
@@ -211,7 +212,7 @@ void reweight_Lst1405(Int_t run = 1, Bool_t logFlag = true)
 			{
 				if(evtNo_gen == evtNo[j])
 				{
-					if((p_TRUEPX_gen - p_px_rec[j] < 0.001))
+					if((p_TRUEPX_gen - p_px_rec[j] < 0.001)) //this helps deal with multiple candidates in the same event. Makes sure we have the right candidate.
 					{
 						// cout<<"Lst_PE = "<<Lst_PE<<"\tLst_PX = "<<Lst_PX<<"\tLst_PY = "<<Lst_PY<<"\tLst_PZ = "<<Lst_PZ<<endl;
 						lstMass_gen[j] = sqrt(Lst_PE*Lst_PE - Lst_PX*Lst_PX - Lst_PY*Lst_PY - Lst_PZ*Lst_PZ);
