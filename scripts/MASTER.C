@@ -39,7 +39,7 @@ void MASTER(Int_t run = 1)
 	Int_t finalBDTconf = 1;// config for final BDT. Currently 1 or 2 supported
 
 	Bool_t logFlag = true; // set to false only while testing.
-	Bool_t testing = false;// when true, analysis will only run over a subset of data
+	Bool_t testing = true;// when true, analysis will only run over a subset of data
 	Bool_t isoFlag = true; // when true, isolation will be used in final BDT.
 	Bool_t simFlag = false;// set to true to train on simulation
 
