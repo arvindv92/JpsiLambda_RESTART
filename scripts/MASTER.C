@@ -181,11 +181,11 @@ void MASTER(Int_t run = 1)
 				if(mcType == 1 || mcType == 2 || mcType == 3 || mcType == 8)
 				{
 					cout<<"*** Applying GB weights on reco MC ***"<<endl<<endl;
-					gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
+					gSystem->cd("/data1/avenkate/JpsiLambda_TESTING/scripts");
 					gSystem->Exec(Form("python ApplyGBWeights.py %d %d 0", run, mcType));
 
 					cout<<"*** Applying GB weights on generated MC ***"<<endl<<endl;
-					gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
+					gSystem->cd("/data1/avenkate/JpsiLambda_TESTING/scripts");
 					gSystem->Exec(Form("python ApplyGBWeights.py %d %d 1", run, mcType));
 				}
 
@@ -213,13 +213,13 @@ void MASTER(Int_t run = 1)
 					gSystem->Exec(Form("root -l -b -q \'Trigger.C(%d,2012,%d,%d,%d,%d)\'",run, isData, mcType, testing, logFlag));
 
 					cout<<"*** Hadding Run 1 Trigger files ***"<<endl<<endl;
-					gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/"
+					gSystem->cd("/data1/avenkate/JpsiLambda_TESTING/rootFiles/dataFiles/"
 					            "JpsiLambda/run1/");
 
 					gSystem->Exec("hadd -f jpsilambda_triggered.root jpsilambda_triggered_20{11,12}.root");
 					gSystem->Exec("rm -f jpsilambda_triggered_20{11,12}.root");
 
-					gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts/");
+					gSystem->cd("/data1/avenkate/JpsiLambda_TESTING/scripts/");
 
 					//Sanity Cuts
 					cout<<"*** Sanity ***"<<endl<<endl;
@@ -248,7 +248,7 @@ void MASTER(Int_t run = 1)
 
 					cout<<"*** Hadding Run 2 Sanity files ***"<<endl<<endl;
 
-					gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run2/");
+					gSystem->cd("/data1/avenkate/JpsiLambda_TESTING/rootFiles/dataFiles/JpsiLambda/run2/");
 					gSystem->Exec("hadd -f jpsilambda_sanity_LL.root jpsilambda_sanity_LL_20{15,16,17,18}.root");
 					gSystem->Exec("rm -f jpsilambda_sanity_LL_20{15,16,17,18}.root");
 
@@ -263,7 +263,7 @@ void MASTER(Int_t run = 1)
 					gSystem->Exec("rm -f jpsilambda_cutoutks_LL_20{15,16,17,18}_ZeroTracks.root");
 					cout<<"*** Done hadding ZeroTracks files ***"<<endl<<endl;
 
-					gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts/");
+					gSystem->cd("/data1/avenkate/JpsiLambda_TESTING/scripts/");
 				}
 
 				//sWeight data after sanity
@@ -310,12 +310,12 @@ void MASTER(Int_t run = 1)
 					{
 						cout<<"*** Hadding nonZero and Zero sPlot files ***"<<endl<<endl;
 
-						gSystem->cd(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda/run%d/",run));
+						gSystem->cd(Form("/data1/avenkate/JpsiLambda_TESTING/rootFiles/dataFiles/JpsiLambda/run%d/",run));
 						gSystem->Exec("hadd -f jpsilambda_LL_withsw.root jpsilambda_LL_withsw_nonZeroTracks.root jpsilambda_LL_withsw_ZeroTracks.root ");
 
 						cout<<"*** Done hadding nonZero and Zero sPlot files ***"<<endl<<endl;
 
-						gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts/");
+						gSystem->cd("/data1/avenkate/JpsiLambda_TESTING/scripts/");
 					}
 
 					//Train noIso Final BDT on data/MC sans isolation
@@ -439,11 +439,11 @@ void MASTER(Int_t run = 1)
 
 	cout<<"*** Applying Data/MC correction to MC for fully reco'd Xib- -> J/psi Xi- ***"<<endl<<endl;
 	cout<<"*** Applying GB weights on reco MC ***"<<endl<<endl;
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING/scripts");
 	gSystem->Exec(Form("python ApplyGBWeights.py %d 9 0", run));
 
 	cout<<"*** Applying GB weights on generated MC ***"<<endl<<endl;
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts");
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING/scripts");
 	gSystem->Exec(Form("python ApplyGBWeights.py %d 9 1", run));
 
 	cout<<"*** Fit to MC after all cuts for fully reco'd Xib- -> J/psi Xi- ***"<<endl<<endl;
@@ -466,10 +466,10 @@ void MASTER(Int_t run = 1)
 		}
 
 		cout<<"*** Hadding 2011+2012 data files for Run 1 fully reco'd Xib- -> J/psi Xi- ***"<<endl<<endl;
-		gSystem->cd(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiXi/run%d/",run));
+		gSystem->cd(Form("/data1/avenkate/JpsiLambda_TESTING/rootFiles/dataFiles/JpsiXi/run%d/",run));
 		gSystem->Exec("hadd -f jpsixi_cut_Run1.root jpsixi_cut_LL_20{11,12}.root");
 		gSystem->Exec("rm -f jpsixi_cut_LL_20{11,12}.root");
-		gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts/");
+		gSystem->cd("/data1/avenkate/JpsiLambda_TESTING/scripts/");
 	}
 	else if(run == 2)
 	{
@@ -483,10 +483,10 @@ void MASTER(Int_t run = 1)
 		}
 
 		cout<<"*** Hadding 2015+2016+2017+2018 data files for Run 2 fully reco'd Xib- -> J/psi Xi- ***"<<endl<<endl;
-		gSystem->cd(Form("/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiXi/run%d/",run));
+		gSystem->cd(Form("/data1/avenkate/JpsiLambda_TESTING/rootFiles/dataFiles/JpsiXi/run%d/",run));
 		gSystem->Exec("hadd -f jpsixi_cut_Run2.root jpsixi_cut_LL_20{15,16,17,18}.root");
 		gSystem->Exec("rm -f jpsixi_cut_LL_20{15,16,17,18}.root");
-		gSystem->cd("/data1/avenkate/JpsiLambda_RESTART/scripts/");
+		gSystem->cd("/data1/avenkate/JpsiLambda_TESTING/scripts/");
 	}
 
 	cout<<"*** Fit to Data after all cuts for fully reco'd Xib- -> J/psi Xi- ***"<<endl<<endl;
