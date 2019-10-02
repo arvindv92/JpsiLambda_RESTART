@@ -122,6 +122,7 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
 
 		TFileCollection fc_run(Form("run%d",run),"",Form("run%dFiles_%d.txt",run,year));
 		TCollection *run_list = (TCollection*)fc_run.GetList();
+
 		if(testing)
 		{
 			(*h1)->AddFileInfoList(run_list,50);//add only files from 50 subjobs for testing purposes
@@ -173,7 +174,8 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
 	}
 	else if(logFlag && !isData)
 	{
-		gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/Trigger_log.txt",
-		                             folder,run),"a");
+		// gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/Trigger_log.txt",
+		//                              folder,run),"a");
+		gSystem->RedirectOutput(0);
 	}
 }
