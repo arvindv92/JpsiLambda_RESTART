@@ -11,12 +11,12 @@
 
 using namespace std;
 
-void Process_B2JpsiK(Int_t run = 1, Bool_t logFlag = true)
+void Process_B2JpsiK(Int_t run = 1, Bool_t testing = false, Bool_t logFlag = true)
 //Input files: Raw data from DaVinci
 //Output file: rootFiles/dataFiles/B2JpsiK/run%d/jpsik.root
 {
 	// ROOT::EnableImplicitMT();
-	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 
 	if(logFlag) gSystem->RedirectOutput(Form("logs/data/B2JpsiK/run%d/Process_Cuts.txt",run),"w");
 
@@ -49,7 +49,14 @@ void Process_B2JpsiK(Int_t run = 1, Bool_t logFlag = true)
 	TFileCollection fc(Form("run%d",run),"",Form("fileList/B2JpsiK_run%dFiles.txt",run));
 	TCollection *fc_list = (TCollection*)fc.GetList();
 
-	h1->AddFileInfoList(fc_list);
+	if(testing)
+	{
+		h1->AddFileInfoList(fc_list,50);
+	}
+	else
+	{
+		h1->AddFileInfoList(fc_list);
+	}
 
 	cout<<"DONE ATTACHING ROOT FILES"<<endl;
 
