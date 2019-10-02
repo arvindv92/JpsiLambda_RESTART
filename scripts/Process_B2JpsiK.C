@@ -51,7 +51,7 @@ void Process_B2JpsiK(Int_t run = 1, Bool_t testing = false, Bool_t logFlag = tru
 
 	if(testing)
 	{
-		h1->AddFileInfoList(fc_list,50);
+		h1->AddFileInfoList(fc_list,5);
 	}
 	else
 	{
