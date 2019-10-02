@@ -19,6 +19,7 @@ void Process_B2JpsiK(Int_t run = 1, Bool_t logFlag = true)
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
 	if(logFlag) gSystem->RedirectOutput(Form("logs/data/B2JpsiK/run%d/Process_Cuts.txt",run),"w");
+
 	TStopwatch sw;
 	sw.Start();
 
