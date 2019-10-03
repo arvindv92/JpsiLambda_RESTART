@@ -91,6 +91,7 @@ void AliasFile(Int_t run = 1, Int_t mcType = 1, Int_t logFlag = true)
 	}
 	}
 
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 	if(mcType != 9)
 	{
 		if(logFlag) gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/Alias.txt",folder,run),"w");
