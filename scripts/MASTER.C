@@ -165,10 +165,10 @@ void MASTER(Int_t run = 1)
 				if(mcType == 1 || mcType == 2 || mcType == 4 || mcType == 5 || mcType == 6)
 				{
 					cout<<"*** Applying Lifetime RW to reco MC ***"<<endl<<endl;
-					gSystem->Exec(Form("root -l -b -q \'ApplyTauWeight.C(%d,%d,0)\'",run,mcType));
+					gSystem->Exec(Form("root -l -b -q \'ApplyTauWeight.C(%d,%d,0,%d)\'",run,mcType,logFlag));
 
 					cout<<"*** Applying Lifetime RW to generated MC ***"<<endl<<endl;
-					gSystem->Exec(Form("root -l -b -q \'ApplyTauWeight.C(%d,%d,1)\'",run,mcType));
+					gSystem->Exec(Form("root -l -b -q \'ApplyTauWeight.C(%d,%d,1,%d)\'",run,mcType,logFlag));
 				}
 
 				if(mcType == 1)
