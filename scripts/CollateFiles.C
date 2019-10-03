@@ -6,7 +6,7 @@
 using namespace std;
 
 void CollateFiles(Int_t run, Int_t year, Bool_t isData,
-                  Int_t mcType, TChain** h1, TChain** h2, Bool_t testing, Bool_t logFlag)
+                  Int_t mcType, TChain* h1, TChain* h2, Bool_t testing, Bool_t logFlag)
 /*DOC
    run = 1 or 2
    isData = true for data, false for MC
@@ -125,13 +125,13 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
 
 		if(testing)
 		{
-			(*h1)->AddFileInfoList(run_list,50);//add only files from 50 subjobs for testing purposes
-			(*h2)->AddFileInfoList(run_list,50);
+			(h1)->AddFileInfoList(run_list,50);//add only files from 50 subjobs for testing purposes
+			(h2)->AddFileInfoList(run_list,50);
 		}
 		else
 		{
-			(*h1)->AddFileInfoList(run_list);
-			(*h2)->AddFileInfoList(run_list);
+			(h1)->AddFileInfoList(run_list);
+			(h2)->AddFileInfoList(run_list);
 		}
 		cout<<"DONE ATTACHING ROOT FILES"<<endl;
 	}//end Data loop
