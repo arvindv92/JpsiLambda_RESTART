@@ -116,9 +116,9 @@ void AliasFile(Int_t run = 1, Int_t mcType = 1, Int_t logFlag = true)
 	TTree *treeIn = nullptr;
 
 	if(mcType!=9)
-		fileIn = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",folder,run,part),"UPDATE");
+		fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",folder,run,part),"UPDATE");
 	else
-		fileIn = TFile::Open(Form("../rootFiles/mcFiles/JpsiXi/run%d/%s.root",run,part),"UPDATE");
+		fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiXi/run%d/%s.root",run,part),"UPDATE");
 
 	treeIn = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
 

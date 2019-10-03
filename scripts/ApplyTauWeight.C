@@ -75,15 +75,15 @@ void ApplyTauWeight(Int_t run = 1, Int_t mcType = 0, Bool_t isGen = false)
 	}
 
 	if(!isGen)
-		fileIn = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_pidgen.root",folder,run,part),"UPDATE");
+		fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_pidgen.root",folder,run,part),"UPDATE");
 	else
-		fileIn = TFile::Open(Form("../rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",folder,run,part),"READ");
+		fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s.root",folder,run,part),"READ");
 
 	if(!isGen)
 	{
 		treeIn = (TTree*)fileIn->Get("MyTuple");
 		treeIn->SetBranchAddress("Lb_TAU",&Lb_TAU);
-		// fileOut = new TFile(Form("../rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/tauWeights_rec.root",folder,run),"RECREATE");
+		// fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/tauWeights_rec.root",folder,run),"RECREATE");
 		// treeOut = new TTree("MyTuple","MyTuple");
 		fileOut = fileIn;
 		treeOut = treeIn;
@@ -92,7 +92,7 @@ void ApplyTauWeight(Int_t run = 1, Int_t mcType = 0, Bool_t isGen = false)
 	{
 		treeIn = (TTree*)fileIn->Get("MCTuple/MCDecayTree");
 		treeIn->SetBranchAddress("Lambda_b0_TRUETAU",&Lb_TAU);
-		fileOut = new TFile(Form("../rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/tauWeights_gen.root",folder,run),"RECREATE");
+		fileOut = new TFile(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/RW/tauWeights_gen.root",folder,run),"RECREATE");
 		treeOut = new TTree("MyTuple","MyTuple");
 	}
 
