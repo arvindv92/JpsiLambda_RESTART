@@ -141,7 +141,7 @@ void CollateFiles(Int_t run, Int_t year, Bool_t isData,
 		cout<<"Collating MC for "<<folder<< "run "<<run<<endl;
 		gSystem->cd("/data1/avenkate/JpsiLambda/massdump/mc/LooseLL");
 		cout<<"WD = "<<gSystem->pwd()<<endl;
-		const char *path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda";
+		const char *path = "/data1/avenkate/JpsiLambda_TESTING/rootFiles/mcFiles/JpsiLambda";
 
 		if(run == 1)
 		{
