@@ -1,11 +1,12 @@
 #include "TFile.h"
 #include "TTree.h"
 #include "TBranch.h"
+#include "TSystem.h"
 #include <iostream>
 
 using namespace std;
 
-void ApplyTauWeight(Int_t run = 1, Int_t mcType = 0, Bool_t isGen = false)
+void ApplyTauWeight(Int_t run = 1, Int_t mcType = 0, Bool_t isGen = false, Bool_t logFlag = true)
 /*
     mcType = 1 for Lb -> J/psi Lambda MC
     mcType = 2 for Lb -> J/psi Sigma MC        (reco'd JpsiLambda)
@@ -16,6 +17,9 @@ void ApplyTauWeight(Int_t run = 1, Int_t mcType = 0, Bool_t isGen = false)
     isGen = true to reweight generator MC, false to reweight reconstructed MC
  */
 {
+	TStopwatch sw;
+	sw.Start();
+
 	TFile *fileIn = nullptr, *fileOut = nullptr;
 	TTree *treeIn = nullptr, *treeOut = nullptr;
 
@@ -73,6 +77,9 @@ void ApplyTauWeight(Int_t run = 1, Int_t mcType = 0, Bool_t isGen = false)
 		exit(1);
 	}
 	}
+
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
+	if(logFlag) gSystem->RedirectOutput(Form("logs/mc/JpsiLambda/%s/run%d/Alias.txt",folder,run),"w");
 
 	if(!isGen)
 		fileIn = TFile::Open(Form("rootFiles/mcFiles/JpsiLambda/%s/run%d/%s_pidgen.root",folder,run,part),"UPDATE");
@@ -160,4 +167,7 @@ void ApplyTauWeight(Int_t run = 1, Int_t mcType = 0, Bool_t isGen = false)
 		fileOut->Close();
 	}
 
+	sw.Stop();
+	cout << "==> ApplyTauWeights is done! Huzzah!: "; sw.Print();
+	if(logFlag) gSystem->RedirectOutput(0);
 }
