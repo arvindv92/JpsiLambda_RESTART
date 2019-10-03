@@ -34,6 +34,7 @@ Double_t DoSWeight(Int_t run, Bool_t logFlag, Bool_t zeroFlag)
 	TStopwatch sw;
 	sw.Start();
 
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 	gROOT->ProcessLine(".x scripts/lhcbStyle.C");
 
 	const char *suffix = (zeroFlag) ? ("_ZeroTracks") : ("_nonZeroTracks");

@@ -31,6 +31,7 @@ Double_t DoSWeight_Sanity(Int_t run, Bool_t logFlag)
 	TStopwatch sw;
 	sw.Start();
 
+	gSystem->cd("/data1/avenkate/JpsiLambda_TESTING");
 	gROOT->ProcessLine(".x scripts/lhcbStyle.C");
 
 	const char *type = "LL";
