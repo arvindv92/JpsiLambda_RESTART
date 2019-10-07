@@ -19,18 +19,20 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	const char* sigPDF = (sigType == 0) ? "Hypatia" : "CB";
 	const char* bkgPDF = (bkgType == 0) ? "Expo" : ( (bkgType == 1) ? "Cheby2" : "Cheby3" );
 
+	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
+
 	if(!simFlag)
 	{
 		if(isoFlag)
 		{
 			if(mcRW && logFlag)
 			{
-				gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d.txt",
+				gSystem->RedirectOutput(Form("logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d.txt",
 				                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
 			}
 			else if(!mcRW && logFlag)
 			{
-				gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noRW.txt",
+				gSystem->RedirectOutput(Form("logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noRW.txt",
 				                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
 			}
 		}
@@ -38,12 +40,12 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		{
 			if(mcRW && logFlag)
 			{
-				gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noIso.txt",
+				gSystem->RedirectOutput(Form("logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noIso.txt",
 				                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
 			}
 			else if(!mcRW && logFlag)
 			{
-				gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noRW_noIso.txt",
+				gSystem->RedirectOutput(Form("logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noRW_noIso.txt",
 				                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
 			}
 		}
@@ -54,12 +56,12 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		{
 			if(mcRW && logFlag)
 			{
-				gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_MC.txt",
+				gSystem->RedirectOutput(Form("logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_MC.txt",
 				                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
 			}
 			else if(!mcRW && logFlag)
 			{
-				gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noRW_MC.txt",
+				gSystem->RedirectOutput(Form("logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noRW_MC.txt",
 				                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
 			}
 		}
@@ -67,17 +69,48 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		{
 			if(mcRW && logFlag)
 			{
-				gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noIso_MC.txt",
+				gSystem->RedirectOutput(Form("logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noIso_MC.txt",
 				                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
 			}
 			else if(!mcRW && logFlag)
 			{
-				gSystem->RedirectOutput(Form("../logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noRW_noIso_MC.txt",
+				gSystem->RedirectOutput(Form("logs/data/JpsiLambda/Fit/%s_%s_%d_%d_%dMeVBins_config%d_config%d_noRW_noIso_MC.txt",
 				                             sigPDF,bkgPDF,myLow,myHigh,binwidth,config_Run1,config_Run2),"w");
 			}
 		}
 	}
-	{cout<<"************************"<<endl;
+	{
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
+	 cout<<"************************"<<endl;
 	 cout<<"************************"<<endl;
 	 cout<<"************************"<<endl;
 	 cout<<"************************"<<endl;
@@ -353,6 +386,12 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			fileIn_run2>>bdtCut_nonZero[1];
 			fileIn_run2>>bdtCut_Zero[1];
 			fileIn_run2.close();
+
+			cout<<"bdtCut_nonZero[0] = "<<bdtCut_nonZero[0]<<endl;
+			cout<<"bdtCut_Zero[0] = "<<bdtCut_Zero[0]<<endl;
+			cout<<"bdtCut_nonZero[1] = "<<bdtCut_nonZero[1]<<endl;
+			cout<<"bdtCut_Zero[1] = "<<bdtCut_Zero[1]<<endl;
+			
 		}
 	}//end if for !simFlag
 	else // using BDT trained on MC
@@ -818,7 +857,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	// Int_t chic1flag = 0;
 	Int_t xibflag      = 1;
 	Int_t sigmaflag    = 1;
-	Int_t xib0flag     = 0;
+	Int_t xib0flag     = 1;
 	Int_t jpsiksflag   = 0;
 	// ************************Master Workspace**************************
 	RooWorkspace w("w");
@@ -836,22 +875,22 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		{
 			if(mcRW)
 			{
-				inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+				inputFileName = Form("rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
 			}
 			else
 			{
-				inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noRW.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+				inputFileName = Form("rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noRW.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
 			}
 		}
 		else
 		{
 			if(mcRW)
 			{
-				inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noIso.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+				inputFileName = Form("rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noIso.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
 			}
 			else
 			{
-				inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noRW_noIso.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+				inputFileName = Form("rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noRW_noIso.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
 			}
 		}
 	}
@@ -861,22 +900,22 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		{
 			if(mcRW)
 			{
-				inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_MC.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+				inputFileName = Form("rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_MC.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
 			}
 			else
 			{
-				inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noRW_MC.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+				inputFileName = Form("rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noRW_MC.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
 			}
 		}
 		else
 		{
 			if(mcRW)
 			{
-				inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noIso_MC.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+				inputFileName = Form("rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noIso_MC.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
 			}
 			else
 			{
-				inputFileName = Form("../rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noRW_noIso_MC.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
+				inputFileName = Form("rootFiles/dataFiles/JpsiLambda/FITINPUTS/Inputs_%d_%d_%dMeV_config%d_config%d_noRW_noIso_MC.root",myLow,myHigh,binwidth,config_Run1,config_Run2);
 			}
 		}
 	}
@@ -939,7 +978,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			                   0, bdtCut[i], 0., simFlag));
 		}
 
-		ifstream infile(Form("../logs/mc/JpsiXi/run%d/xibNorm_log.txt",run));
+		ifstream infile(Form("logs/mc/JpsiXi/run%d/xibNorm_log.txt",run));
 
 		infile>>XibNorm[i];         // Get normalization
 		infile>>XibNorm_StatErr[i]; // Get statistical error on norm. This is the fit error
@@ -964,7 +1003,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
 	cout<<"Get Lb -> J/psi Lambda efficiency"<<endl;
 	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
-	const char* lambdaMCPath = "../rootFiles/mcFiles/JpsiLambda/JpsiLambda";
+	const char* lambdaMCPath = "rootFiles/mcFiles/JpsiLambda/JpsiLambda";
 
 	for(Int_t run = 1; run<=2; run++)
 	{
@@ -974,7 +1013,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		fstream genFile_Lambda; //contains no of gen. candidates
 		fstream genEffFile_Lambda; //contains combined gen. efficiency
 
-		genFile_Lambda.open((Form("../logs/mc/JpsiLambda/JpsiLambda/run%d/gen_log.txt",run)));
+		genFile_Lambda.open((Form("logs/mc/JpsiLambda/JpsiLambda/run%d/gen_log.txt",run)));
 
 		genFile_Lambda>>nGen_Lambda[i]; //Get number of generated events
 
@@ -991,7 +1030,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		TH1F *genWt_Lambda = (TH1F*)gDirectory->Get("genWt_Lambda");
 		nGen_Lambda_wt[i] = genWt_Lambda->GetEntries()*genWt_Lambda->GetMean();
 
-		genEffFile_Lambda.open(Form("../logs/mc/JpsiLambda/JpsiLambda/run%d/"
+		genEffFile_Lambda.open(Form("logs/mc/JpsiLambda/JpsiLambda/run%d/"
 		                            "Generator_Effs_Combined.txt",run));
 
 		genEffFile_Lambda>>eff_Lambda_gen[i]; //Get generator efficiency
@@ -1131,7 +1170,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		fstream genFile_Sigma; //contains no of gen. candidates
 		fstream genEffFile_Sigma; //contains combined gen. efficiency
 
-		genFile_Sigma.open((Form("../logs/mc/JpsiLambda/JpsiSigma/run%d/gen_log.txt",run)));
+		genFile_Sigma.open((Form("logs/mc/JpsiLambda/JpsiSigma/run%d/gen_log.txt",run)));
 
 		genFile_Sigma>>nGen_Sigma[i]; // Get number of generated events
 
@@ -1149,7 +1188,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 		nGen_Sigma_wt[i] = genWt_Sigma->GetEntries()*genWt_Sigma->GetMean();
 
-		genEffFile_Sigma.open(Form("../logs/mc/JpsiLambda/JpsiSigma/run%d/Generator_Effs_Combined.txt",run));
+		genEffFile_Sigma.open(Form("logs/mc/JpsiLambda/JpsiSigma/run%d/Generator_Effs_Combined.txt",run));
 
 		genEffFile_Sigma>>eff_Sigma_gen[i]; // Get generator efficiency
 		genEffFile_Sigma>>eff_Sigma_gen_err[i]; // and error on above
@@ -1367,7 +1406,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			w1->import(*(ds_sig_wt[i]));
 		}
 		cout<<"Done importing Jpsi Sigma shape"<<endl;
-		if(saveFlag) csigma->SaveAs(Form("../plots/ANA/JpsiSigma_Fit_Run%d.pdf",run));
+		if(saveFlag) csigma->SaveAs(Form("plots/ANA/JpsiSigma_Fit_Run%d.pdf",run));
 	}
 	//********************************************************************
 	//****Get J/psi Lst(1405) efficiencies and shape from MC*******
@@ -1437,7 +1476,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		TH1F *genWt_1405 = (TH1F*)gDirectory->Get("genWt_1405");
 		nGen_1405_wt[i]  = genWt_1405->GetEntries()*genWt_1405->GetMean();
 
-		genEffFile_1405.open(Form("../logs/mc/JpsiLambda/Lst1405/run%d/Generator_Effs_Combined.txt",run));
+		genEffFile_1405.open(Form("logs/mc/JpsiLambda/Lst1405/run%d/Generator_Effs_Combined.txt",run));
 
 		genEffFile_1405>>eff_1405_gen[i]; // Get generator efficiency
 		genEffFile_1405>>eff_1405_gen_err[i]; // and error on above
@@ -1692,7 +1731,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			w1->import(*(ds_1405[i]));
 			w1->import(*(KEYS_1405[i]));
 		}
-		if(saveFlag) c1405->SaveAs(Form("../plots/ANA/Lst1405_Fit_Run%d.pdf",run));
+		if(saveFlag) c1405->SaveAs(Form("plots/ANA/Lst1405_Fit_Run%d.pdf",run));
 		cout<<"Done importing Jpsi Lst(1405) shape"<<endl;
 	}
 	//*******************************************************************
@@ -1719,7 +1758,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		fstream genFile_1520; //contains no of gen. candidates
 		fstream genEffFile_1520; //contains combined gen. efficiency
 
-		genFile_1520.open((Form("../logs/mc/JpsiLambda/Lst1520/run%d/gen_log.txt",run)));
+		genFile_1520.open((Form("logs/mc/JpsiLambda/Lst1520/run%d/gen_log.txt",run)));
 
 		genFile_1520>>nGen_1520[i]; // Get number of generated events
 
@@ -1735,7 +1774,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		TH1F *genWt_1520 = (TH1F*)gDirectory->Get("genWt_1520");
 		nGen_1520_wt[i] = genWt_1520->GetEntries()*genWt_1520->GetMean();
 
-		genEffFile_1520.open(Form("../logs/mc/JpsiLambda/Lst1520/run%d/Generator_Effs_Combined.txt",run));
+		genEffFile_1520.open(Form("logs/mc/JpsiLambda/Lst1520/run%d/Generator_Effs_Combined.txt",run));
 
 		genEffFile_1520>>eff_1520_gen[i]; // Get generator efficiency
 		genEffFile_1520>>eff_1520_gen_err[i]; // and error on above
@@ -1936,7 +1975,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			w1->import(*(ds_1520[i]));
 			w1->import(*(KEYS_1520[i]));
 		}
-		if(saveFlag) c1520->SaveAs(Form("../plots/ANA/Lst1520_Fit_Run%d.pdf",run));
+		if(saveFlag) c1520->SaveAs(Form("plots/ANA/Lst1520_Fit_Run%d.pdf",run));
 		cout<<"Done importing Jpsi Lst(1520) shape"<<endl;
 	}
 	//*******************************************************************
@@ -1963,7 +2002,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		fstream genFile_1600; //contains no of gen. candidates
 		fstream genEffFile_1600; //contains combined gen. efficiency
 
-		genFile_1600.open((Form("../logs/mc/JpsiLambda/Lst1600/run%d/gen_log.txt",run)));
+		genFile_1600.open((Form("logs/mc/JpsiLambda/Lst1600/run%d/gen_log.txt",run)));
 
 		genFile_1600>>nGen_1600[i]; // Get number of generated events
 
@@ -1980,7 +2019,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		nGen_1600_wt[i] = genWt_1600->GetEntries()*genWt_1600->GetMean();
 
 
-		genEffFile_1600.open(Form("../logs/mc/JpsiLambda/Lst1600/run%d/Generator_Effs_Combined.txt",run));
+		genEffFile_1600.open(Form("logs/mc/JpsiLambda/Lst1600/run%d/Generator_Effs_Combined.txt",run));
 
 		genEffFile_1600>>eff_1600_gen[i]; // Get generator efficiency
 		genEffFile_1600>>eff_1600_gen_err[i]; // and error on above
@@ -2180,7 +2219,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			w1->import(*(ds_1600[i]));
 			w1->import(*(KEYS_1600[i]));
 		}
-		if(saveFlag) c1600->SaveAs(Form("../plots/ANA/Lst1600_Fit_Run%d.pdf",run));
+		if(saveFlag) c1600->SaveAs(Form("plots/ANA/Lst1600_Fit_Run%d.pdf",run));
 		cout<<"Done importing Jpsi Lst(1600) shape"<<endl;
 	}
 	//*******************************************************************
@@ -2207,7 +2246,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	//      mcTreeIn_Zero_chic1->AddFriend("MyTuple",Form("%s/run%d/chic1_zeroTracksLL_FinalBDT%d.root",
 	//                                                    chiC1Path,run,bdtConf_Zero[i]));
 	//      fstream genFile_chic1;
-	//      genFile_chic1.open((Form("../logs/mc/JpsiLambda/chiC1/run%d/gen_log.txt",run)));
+	//      genFile_chic1.open((Form("logs/mc/JpsiLambda/chiC1/run%d/gen_log.txt",run)));
 	//
 	//      genFile_chic1>>nGen_chic1[i]; // Get number of generated events
 	//
@@ -2225,7 +2264,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	//
 	//      //***** DONT HAVE GENERATOR EFFS FOR chic1 YET
 	//      // fstream genEffFile_chic1;
-	//      // genEffFile_chic1.open(Form("../logs/mc/JpsiLambda/chiC1/run%d/Generator_Effs_Combined.txt",run));
+	//      // genEffFile_chic1.open(Form("logs/mc/JpsiLambda/chiC1/run%d/Generator_Effs_Combined.txt",run));
 	//      //
 	//      // genEffFile_chic1>>eff_chic1_gen[i]; // Get generator efficiency
 	//      // genEffFile_chic1>>eff_chic1_gen_err[i]; // and error on above
@@ -3069,13 +3108,13 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 	// if(sigType == 0)
 	//   {
-	//     sim_Run1->SaveAs("../plots/ANA/SimFit_run1_HypatiaSig.pdf");
-	//     sim_Run2->SaveAs("../plots/ANA/SimFit_run2_HypatiaSig.pdf");
+	//     sim_Run1->SaveAs("plots/ANA/SimFit_run1_HypatiaSig.pdf");
+	//     sim_Run2->SaveAs("plots/ANA/SimFit_run2_HypatiaSig.pdf");
 	//   }
 	// if(sigType == 1)
 	//   {
-	//     sim_Run1->SaveAs("../plots/ANA/SimFit_run1_CBSig.pdf");
-	//     sim_Run2->SaveAs("../plots/ANA/SimFit_run2_CBSig.pdf");
+	//     sim_Run1->SaveAs("plots/ANA/SimFit_run1_CBSig.pdf");
+	//     sim_Run2->SaveAs("plots/ANA/SimFit_run2_CBSig.pdf");
 	//   }
 	//*******************************************************************
 
@@ -4662,26 +4701,26 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	{
 		if(isBinned)
 		{
-			if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
-			if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c_run1->SaveAs(Form("plots/ANA/Fit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c_run2->SaveAs(Form("plots/ANA/Fit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-			if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
-			if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c_run1->SaveAs(Form("plots/ANA/Fit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c_run2->SaveAs(Form("plots/ANA/Fit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 	if(sigType == 1 && bkgType == 0)
 	{
 		if(isBinned)
 		{
-			if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
-			if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c_run1->SaveAs(Form("plots/ANA/Fit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c_run2->SaveAs(Form("plots/ANA/Fit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-			if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
-			if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c_run1->SaveAs(Form("plots/ANA/Fit_run1_CBSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c_run2->SaveAs(Form("plots/ANA/Fit_run2_CBSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 
@@ -4689,26 +4728,26 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	{
 		if(isBinned)
 		{
-			if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-			if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c1_run1->SaveAs(Form("plots/ANA/Fit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c1_run2->SaveAs(Form("plots/ANA/Fit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-			if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-			if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c1_run1->SaveAs(Form("plots/ANA/Fit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c1_run2->SaveAs(Form("plots/ANA/Fit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 	if(sigType == 1 && bkgType == 0)
 	{
 		if(isBinned)
 		{
-			if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-			if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c1_run1->SaveAs(Form("plots/ANA/Fit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c1_run2->SaveAs(Form("plots/ANA/Fit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-			if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-			if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c1_run1->SaveAs(Form("plots/ANA/Fit_run1_CBSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c1_run2->SaveAs(Form("plots/ANA/Fit_run2_CBSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 
@@ -4716,26 +4755,26 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	{
 		if(isBinned)
 		{
-			if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
-			if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c_run1->SaveAs(Form("plots/ANA/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c_run2->SaveAs(Form("plots/ANA/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-			if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
-			if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c_run1->SaveAs(Form("plots/ANA/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c_run2->SaveAs(Form("plots/ANA/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 	if(sigType == 1 && bkgType == 2)
 	{
 		if(isBinned)
 		{
-			if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
-			if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c_run1->SaveAs(Form("plots/ANA/Fit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c_run2->SaveAs(Form("plots/ANA/Fit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-			if(saveFlag) c_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
-			if(saveFlag) c_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c_run1->SaveAs(Form("plots/ANA/Fit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c_run2->SaveAs(Form("plots/ANA/Fit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 
@@ -4743,39 +4782,39 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	{
 		if(isBinned)
 		{
-			if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-			if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c1_run1->SaveAs(Form("plots/ANA/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c1_run2->SaveAs(Form("plots/ANA/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-			if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-			if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c1_run1->SaveAs(Form("plots/ANA/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c1_run2->SaveAs(Form("plots/ANA/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 	if(sigType == 1 && bkgType == 2)
 	{
 		if(isBinned)
 		{
-			if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-			if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c1_run1->SaveAs(Form("plots/ANA/Fit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+			if(saveFlag) c1_run2->SaveAs(Form("plots/ANA/Fit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
 		}
 		else
 		{
-			if(saveFlag) c1_run1->SaveAs(Form("../plots/ANA/Fit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-			if(saveFlag) c1_run2->SaveAs(Form("../plots/ANA/Fit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c1_run1->SaveAs(Form("plots/ANA/Fit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+			if(saveFlag) c1_run2->SaveAs(Form("plots/ANA/Fit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
 		}
 	}
 
 	// if(isBinned)
 	// {
-	//      fileName = Form("../rootFiles/dataFiles/JpsiLambda/ModelConfigs/Hypatia_Exp_%d_%d_%dMeVBins.root",myLow,myHigh,binwidth);
+	//      fileName = Form("rootFiles/dataFiles/JpsiLambda/ModelConfigs/Hypatia_Exp_%d_%d_%dMeVBins.root",myLow,myHigh,binwidth);
 	// }
 	// else
 	// {
-	//      fileName = Form("../rootFiles/dataFiles/JpsiLambda/ModelConfigs/Hypatia_ExpBkg_%d_%d_unbinned.root",myLow,myHigh);
+	//      fileName = Form("rootFiles/dataFiles/JpsiLambda/ModelConfigs/Hypatia_ExpBkg_%d_%d_unbinned.root",myLow,myHigh);
 	// }
 
-	w.writeToFile(Form("../rootFiles/dataFiles/JpsiLambda/ModelConfigs/%s",fileName),true);
+	w.writeToFile(Form("rootFiles/dataFiles/JpsiLambda/ModelConfigs/%s",fileName),true);
 
 	if(!inputFlag)
 	{
@@ -4783,7 +4822,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	}
 	cout << "workspace written to file " << fileName << endl;
 
-//	gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"../rootFiles/dataFiles/JpsiLambda/ModelConfigs/%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,3,true,20,0,500,100,false,0,%d,%d,%d,%d,%d)",fileName,myLow,myHigh,sigType,config_Run1,config_Run2));
+//	gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"rootFiles/dataFiles/JpsiLambda/ModelConfigs/%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,3,true,20,0,500,100,false,0,%d,%d,%d,%d,%d)",fileName,myLow,myHigh,sigType,config_Run1,config_Run2));
 	// gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,2,true,20,100,2000,100,false,0,%d,%d)",fileName,myLow,myHigh));
 	// Get Lower and Upper limits from Profile Calculator
 	//	cout << "Profile lower limit on s = " << ((LikelihoodInterval*) lr_int)->LowerLimit(*(w.var("R"))) << endl;
