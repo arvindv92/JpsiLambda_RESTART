@@ -80,46 +80,47 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		}
 	}
 	{
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;
-	 cout<<"************************"<<endl;}
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+		cout<<"************************"<<endl;
+	}
 
 	gSystem->Exec("date");
 	gROOT->ProcessLine(".x lhcbStyle.C");
@@ -391,7 +392,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			cout<<"bdtCut_Zero[0] = "<<bdtCut_Zero[0]<<endl;
 			cout<<"bdtCut_nonZero[1] = "<<bdtCut_nonZero[1]<<endl;
 			cout<<"bdtCut_Zero[1] = "<<bdtCut_Zero[1]<<endl;
-			
+
 		}
 	}//end if for !simFlag
 	else // using BDT trained on MC
@@ -1148,8 +1149,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	cout<<"Get Lb -> J/psi Sigma efficiency and shape"<<endl;
 	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
 
-	const char* sigmaPath = "/data1/avenkate/JpsiLambda_RESTART/"
-	                        "rootFiles/mcFiles/JpsiLambda/JpsiSigma";
+	const char* sigmaPath = "rootFiles/mcFiles/JpsiLambda/JpsiSigma";
 
 	if(inputFlag)
 	{
@@ -1418,8 +1418,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	cout<<"Get Lb -> J/psi Lst(1405) efficiency and shape"<<endl;
 	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
 
-	const char* Lst1405Path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/"
-	                          "mcFiles/JpsiLambda/Lst1405";
+	const char* Lst1405Path = "rootFiles/mcFiles/JpsiLambda/Lst1405";
 	const char* rwSuffix    = "";
 	const char* rwType      = "";
 
@@ -1739,7 +1738,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	RooDataSet* ds_1520[2];
 	RooKeysPdf* KEYS_1520[2];//No Mirror
 
-	const char* Lst1520Path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/Lst1520";
+	const char* Lst1520Path = "rootFiles/mcFiles/JpsiLambda/Lst1520";
 
 	if(inputFlag)
 	{
@@ -1983,7 +1982,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	RooDataSet* ds_1600[2];
 	RooKeysPdf* KEYS_1600[2];//No Mirror
 
-	const char* Lst1600Path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/Lst1600";
+	const char* Lst1600Path = "rootFiles/mcFiles/JpsiLambda/Lst1600";
 
 	if(inputFlag)
 	{
@@ -2228,7 +2227,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	// RooKeysPdf* KEYS_chic1[2];
 	//
 	// //****Get chiC1 Lambda efficiencies and shape from MC*******
-	// const char* chiC1Path = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/chiC1";
+	// const char* chiC1Path = "rootFiles/mcFiles/JpsiLambda/chiC1";
 	//
 	// for(Int_t run = 1; run<=2; run++)
 	// {
@@ -2423,7 +2422,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	xibHigh[0] = 200;
 	xibHigh[1] = 400;
 
-	const char* xibPath = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiXi";
+	const char* xibPath = "rootFiles/mcFiles/JpsiLambda/JpsiXi";
 
 	if(inputFlag)
 	{
@@ -2576,7 +2575,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	RooDataSet* ds_jpsiks[2];
 	RooKeysPdf* JPSIKS_KEYS[2];
 
-	const char* jpsiksPath = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/mcFiles/JpsiLambda/JpsiKs";
+	const char* jpsiksPath = "rootFiles/mcFiles/JpsiLambda/JpsiKs";
 
 	if(inputFlag)
 	{
@@ -3119,7 +3118,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	//*******************************************************************
 
 	//*********Input Data************************************************
-	const char *dataPath = "/data1/avenkate/JpsiLambda_RESTART/rootFiles/dataFiles/JpsiLambda";
+	const char *dataPath = "rootFiles/dataFiles/JpsiLambda";
 
 	for(Int_t run = 1; run<=2; run++)
 	{

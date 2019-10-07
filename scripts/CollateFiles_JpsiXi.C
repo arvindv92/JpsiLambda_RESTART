@@ -77,15 +77,11 @@ void CollateFiles_JpsiXi(Int_t run, Int_t year, Bool_t isData, TChain** h1,
 		//No PIDGEN files here because no PID cuts are made
 		if(run == 1)
 		{
-			gSystem->Exec("hadd -f /data1/avenkate/JpsiLambda_RESTART/rootFiles/"
-			              "mcFiles/JpsiXi/run1/jpsixi.root 2011*/*/*.root 2012*/"
-			              "*/*.root");
+			gSystem->Exec("hadd -f rootFiles/mcFiles/JpsiXi/run1/jpsixi.root 2011*/*/*.root 2012*/*/*.root");
 		}
 		else if(run == 2)
 		{
-			gSystem->Exec("hadd -f /data1/avenkate/JpsiLambda_RESTART/rootFiles/"
-			              "mcFiles/JpsiXi/run2/jpsixi.root 2015*/*/*.root "
-			              "2016*/*/*.root");
+			gSystem->Exec("hadd -f rootFiles/mcFiles/JpsiXi/run2/jpsixi.root 2015*/*/*.root 2016*/*/*.root");
 		}
 	}//end MC block
 
