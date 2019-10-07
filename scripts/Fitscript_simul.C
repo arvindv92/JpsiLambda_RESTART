@@ -647,7 +647,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	Int_t sigWindow_high = 5600;
 
 	if(sigType == 0)
-		gSystem->Load("RooHypatia2_cpp.so"); //Load library for Hypatia shape
+		gSystem->Load("scripts/RooHypatia2_cpp.so"); //Load library for Hypatia shape
 
 	// Xib normalization & errs
 
