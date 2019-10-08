@@ -3900,7 +3900,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 	auto legend_zoom_run1 = new TLegend(0.63,0.5,0.93,0.9);
 	legend_zoom_run1->SetTextSize(0.03);
-	legend_zoom_run1>AddEntry("data_Run1","Data","lp");
+	legend_zoom_run1->AddEntry("data_Run1","Data","lp");
 	legend_zoom_run1->AddEntry("fit_Run1","Total Fit","l");
 	legend_zoom_run1->AddEntry("lb_Run1","#Lambda_{b} #rightarrow J/#psi #Lambda","l");
 	legend_zoom_run1->AddEntry("bkg_Run1","Comb. Bkg.","l");
