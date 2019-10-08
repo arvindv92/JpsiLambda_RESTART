@@ -3723,7 +3723,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	if(jpsiksflag)
 		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("JPSIKS_RUN1"))),LineColor(kBlue-2),LineStyle(1),Name("JpsiKs_Run1"));
 
-	frame_run1->GetYaxis()->SetRangeUser(0.1,3000);
+	frame_run1->GetYaxis()->SetRangeUser(0.1,2000);
 	// Double_t chiSquare1 = frame_run1->chiSquare("fit_run1","data_Run1");
 	// cout<<"chi square1/dof = "<<chiSquare1<<endl;
 	RooArgSet *allpar_run1 = simPdf.getParameters(*(ds[0]));
@@ -3807,6 +3807,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	// }
 	legend_run1->AddEntry("misclst_Run1","misc. J/#psi #Lambda* shapes","l");
 	legend_run1->Draw("same");
+	legend_run1_2->Draw("same");
 
 	c_run1->Update();
 
@@ -3890,7 +3891,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	// pad1_zoom->Update();
 
 	frame_zoom_run1->Draw();
-	gPad->SetLogy();
 	gPad->SetGridx();
 	gPad->SetGridy();
 
@@ -4070,6 +4070,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	// }
 	legend_run2->AddEntry("misclst_Run2","misc. J/#psi #Lambda* shapes","l");
 	legend_run2->Draw("same");
+	legend_run2_2->Draw("same");
 
 	// TLatex l_run2;
 	// l_run2.SetTextSize(0.04);
@@ -4152,7 +4153,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	// pad3_zoom->Update();
 
 	frame_zoom_run2->Draw();
-	gPad->SetLogy();
 	gPad->SetGridx();
 	gPad->SetGridy();
 
