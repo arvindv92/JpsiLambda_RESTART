@@ -1,4 +1,4 @@
-BWFit #include "Fitscript_simul.h"
+#include "Fitscript_simul.h"
 
 using namespace std;
 using namespace RooFit;
