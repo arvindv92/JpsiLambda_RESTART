@@ -4040,7 +4040,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	legend_run2_2->AddEntry("bkg_Run2","Comb. Bkg.","l");
 	legend_run2_2->AddEntry("sig_Run2","#Lambda_{b} #rightarrow J/#psi #Sigma @ R = 0.2%","l");
 
-	auto legend_run2 = new TLegend(0.63,0.65,0.93,0.9);
+	auto legend_run2 = new TLegend(0.73,0.65,0.93,0.9);
 	legend_run2->SetTextSize(0.03);
 	legend_run2->AddEntry("xib_Run2","#Xi_{b}^{-/0} #rightarrow J/#psi #Xi^{-/0}","l");
 
