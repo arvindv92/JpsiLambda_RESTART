@@ -4223,6 +4223,11 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	TCanvas* c_run2_BW = (TCanvas*)c_run2->Clone();
 	TCanvas* c1_run2_BW = (TCanvas*)c1_run2->Clone();
 
+	c_run1_BW->SetName("Run1_BW");
+	c1_run1_BW->SetName("Run1_zoomed_BW");
+	c_run2_BW->SetName("Run2_BW");
+	c1_run2_BW->SetName("Run2_zoomed_BW");
+
 	c_run1_BW->SetGrayscale();
 	c1_run1_BW->SetGrayscale();
 	c_run2_BW->SetGrayscale();
