@@ -1,4 +1,4 @@
-#include "Fitscript_simul.h"
+BWFit #include "Fitscript_simul.h"
 
 using namespace std;
 using namespace RooFit;
@@ -4339,115 +4339,128 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 
 	//Save Canvases
+	if(saveFlag)
+	{
+		if(sigType == 0 && bkgType == 0)
+		{
+			if(isBinned)
+			{
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
 
-	if(sigType == 0 && bkgType == 0)
-	{
-		if(isBinned)
-		{
-			if(saveFlag) c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
-			if(saveFlag) c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
-		}
-		else
-		{
-			if(saveFlag) c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
-			if(saveFlag) c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
-		}
-	}
-	if(sigType == 1 && bkgType == 0)
-	{
-		if(isBinned)
-		{
-			if(saveFlag) c_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
-			if(saveFlag) c_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
-		}
-		else
-		{
-			if(saveFlag) c_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
-			if(saveFlag) c_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
-		}
-	}
+				c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
 
-	if(sigType == 0 && bkgType == 0)
-	{
-		if(isBinned)
-		{
-			if(saveFlag) c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-			if(saveFlag) c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-		}
-		else
-		{
-			if(saveFlag) c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-			if(saveFlag) c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-		}
-	}
-	if(sigType == 1 && bkgType == 0)
-	{
-		if(isBinned)
-		{
-			if(saveFlag) c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-			if(saveFlag) c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-		}
-		else
-		{
-			if(saveFlag) c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-			if(saveFlag) c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-		}
-	}
+				c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+				c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
 
-	if(sigType == 0 && bkgType == 2)
-	{
-		if(isBinned)
-		{
-			if(saveFlag) c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
-			if(saveFlag) c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
-		}
-		else
-		{
-			if(saveFlag) c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
-			if(saveFlag) c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
-		}
-	}
-	if(sigType == 1 && bkgType == 2)
-	{
-		if(isBinned)
-		{
-			if(saveFlag) c_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
-			if(saveFlag) c_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
-		}
-		else
-		{
-			if(saveFlag) c_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
-			if(saveFlag) c_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
-		}
-	}
+				c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+			}
+			else
+			{
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
 
-	if(sigType == 0 && bkgType == 2)
-	{
-		if(isBinned)
-		{
-			if(saveFlag) c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-			if(saveFlag) c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-		}
-		else
-		{
-			if(saveFlag) c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-			if(saveFlag) c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-		}
-	}
-	if(sigType == 1 && bkgType == 2)
-	{
-		if(isBinned)
-		{
-			if(saveFlag) c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-			if(saveFlag) c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-		}
-		else
-		{
-			if(saveFlag) c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-			if(saveFlag) c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-		}
-	}
+				c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+				c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
 
+				c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+				c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+
+				c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+				c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+			}
+		}
+		if(sigType == 1 && bkgType == 0)
+		{
+			if(isBinned)
+			{
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+
+				c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+
+				c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+				c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+
+				c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+			}
+			else
+			{
+				c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+				c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+
+				c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+				c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+			}
+		}
+
+		if(sigType == 0 && bkgType == 2)
+		{
+			if(isBinned)
+			{
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+
+				c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+
+				c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+				c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+
+				c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+			}
+			else
+			{
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+
+				c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+				c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+
+				c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+				c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+
+				c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+				c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+			}
+		}
+		if(sigType == 1 && bkgType == 2)
+		{
+			if(isBinned)
+			{
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+
+				c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+
+				c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+				c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+
+				c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+			}
+			else
+			{
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+
+				c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+				c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+
+				c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+				c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+
+				c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+				c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+			}
+		}
+	}
 	// if(isBinned)
 	// {
 	//      fileName = Form("rootFiles/dataFiles/JpsiLambda/ModelConfigs/Hypatia_Exp_%d_%d_%dMeVBins.root",myLow,myHigh,binwidth);
