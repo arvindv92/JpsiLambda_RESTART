@@ -4228,10 +4228,10 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	c_run2_BW->SetGrayscale();
 	c1_run2_BW->SetGrayscale();
 
-	c_run1_BW->Update();
-	c1_run1_BW->Update();
-	c_run2_BW->Update();
-	c1_run2_BW->Update();
+	c_run1_BW->Draw();
+	c1_run1_BW->Draw();
+	c_run2_BW->Draw();
+	c1_run2_BW->Draw();
 	//************************************************************
 	//Set R back to its old value
 	w.var("R")->setVal(oldVal_R);
