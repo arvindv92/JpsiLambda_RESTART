@@ -2491,7 +2491,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		// XIB[i] = new RooHistPdf(Form("XIB%d",run),Form("XIB%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_xib_smooth,0);
 
 		RooPlot *framexib = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
-		framexib->SetTitle("#Xi_{b}^{-/0} #rightarrow J/#psi #Xi^{-/0}");
+		framexib->SetTitle("#Xi_{b} #rightarrow J/#psi #Xi");
 		framexib->GetXaxis()->SetTitle("m[J/#psi #Lambda] (MeV)");
 		framexib->GetXaxis()->SetRangeUser(5200,5800);
 		framexib->GetYaxis()->SetTitle("Candidates/(4 MeV)");
@@ -3699,8 +3699,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	frame_run1->GetYaxis()->SetTitle(Form("Candidates/(%d MeV)",binwidth));
 
 	combData->plotOn(frame_run1,Name("data_Run1"),Cut("sample==sample::run1"),DataError(RooAbsData::Poisson),LineWidth(1));
-	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Name("fit_Run1"),LineWidth(5));
 	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Lb_Run1"))),Name("lb_Run1"),LineColor(kMagenta-5),LineWidth(4));
+	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Name("fit_Run1"),LineWidth(5));
 	if(sigType == 1)
 	{
 		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Lb1_Run1"))),LineStyle(kDotted),LineColor(kMagenta));
@@ -3719,7 +3719,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("SIG_Run1"))),LineColor(kBlack),Name("sig_Run1"),LineStyle(1),FillStyle(3003),FillColor(kBlack),DrawOption("F"),LineWidth(0));
 	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("lstLump_Run1"))),LineColor(kRed+2),LineStyle(9),Name("misclst_Run1"));
 	if(xib0flag)
-		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Xib_Run1"))),LineColor(kRed-1),LineStyle(7),Name("Xib_JpsiLambda_Run1"),FillColor(kRed-1),DrawOption("FL"));
+		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Xib_Run1"))),LineColor(kRed-1),LineStyle(7),Name("Xib_JpsiLambda_Run1"),FillColor(kRed-1),DrawOption("FL"),FillStyle(3002));
 	if(jpsiksflag)
 		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("JPSIKS_RUN1"))),LineColor(kBlue-2),LineStyle(1),Name("JpsiKs_Run1"));
 
@@ -3769,7 +3769,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	//
 	// c_run1->Modified();
 
-	auto legend_run1_2 = new TLegend(0.40,0.7,0.65,0.9);
+	auto legend_run1_2 = new TLegend(0.35,0.7,0.65,0.9);
 	legend_run1_2->SetTextSize(0.03);
 	legend_run1_2->AddEntry("data_Run1","Data","lp");
 	legend_run1_2->AddEntry("fit_Run1","Total Fit","l");
@@ -3777,9 +3777,9 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	legend_run1_2->AddEntry("bkg_Run1","Comb. Bkg.","l");
 	legend_run1_2->AddEntry("sig_Run1","#Lambda_{b} #rightarrow J/#psi #Sigma^{0} @ R = 0.2%","f");
 
-	auto legend_run1 = new TLegend(0.73,0.65,0.93,0.9);//0.7,0.5,0.9,0.9
+	auto legend_run1 = new TLegend(0.73,0.67,0.95,0.97);//0.7,0.5,0.9,0.9
 	legend_run1->SetTextSize(0.03);
-	legend_run1->AddEntry("xib_Run1","#Xi_{b}^{-/0} #rightarrow J/#psi #Xi^{-/0}","l");
+	legend_run1->AddEntry("xib_Run1","#Xi_{b} #rightarrow J/#psi #Xi","l");
 
 	if(jpsiksflag)
 	{
@@ -3805,7 +3805,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	// {
 	//      legend_run1->AddEntry("chic1_Run1","#chi_{c1} #Lambda shape","l");
 	// }
-	legend_run1->AddEntry("misclst_Run1","misc. J/#psi #Lambda* shapes","l");
+	legend_run1->AddEntry("misclst_Run1","Sum of other J/#psi #Lambda*","l");
 	legend_run1->Draw("same");
 	legend_run1_2->Draw("same");
 
@@ -3843,8 +3843,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	frame_zoom_run1->GetYaxis()->SetTitle(Form("Candidates/(%d MeV)",binwidth));
 
 	combData->plotOn(frame_zoom_run1,Name("data_Run1"),Cut("sample==sample::run1"),DataError(RooAbsData::Poisson),LineWidth(1));
-	simPdf.plotOn(frame_zoom_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Name("fit_Run1"),LineWidth(5));
 	simPdf.plotOn(frame_zoom_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Lb_Run1"))),Name("lb_Run1"),LineColor(kMagenta-5),LineWidth(4));
+	simPdf.plotOn(frame_zoom_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Name("fit_Run1"),LineWidth(5));
 	if(sigType == 1)
 	{
 		simPdf.plotOn(frame_zoom_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Lb1_Run1"))),LineStyle(kDotted),LineColor(kMagenta));
@@ -3863,7 +3863,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	simPdf.plotOn(frame_zoom_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("SIG_Run1"))),LineColor(kBlack),Name("sig_Run1"),LineStyle(1),FillStyle(3003),FillColor(kBlack),DrawOption("F"),LineWidth(0));
 	simPdf.plotOn(frame_zoom_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("lstLump_Run1"))),LineColor(kRed+2),LineStyle(9),Name("misclst_Run1"));
 	if(xib0flag)
-		simPdf.plotOn(frame_zoom_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Xib_Run1"))),LineColor(kRed-1),LineStyle(7),Name("Xib_JpsiLambda_Run1"),FillColor(kRed-1),DrawOption("FL"));
+		simPdf.plotOn(frame_zoom_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Xib_Run1"))),LineColor(kRed-1),LineStyle(7),Name("Xib_JpsiLambda_Run1"),FillColor(kRed-1),DrawOption("FL"),FillStyle(3002));
 	if(jpsiksflag)
 		simPdf.plotOn(frame_zoom_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("JPSIKS_RUN1"))),LineColor(kBlue-2),LineStyle(1),Name("JpsiKs_Run1"));
 
@@ -3905,7 +3905,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	legend_zoom_run1->AddEntry("lb_Run1","#Lambda_{b} #rightarrow J/#psi #Lambda","l");
 	legend_zoom_run1->AddEntry("bkg_Run1","Comb. Bkg.","l");
 	legend_zoom_run1->AddEntry("sig_Run1","#Lambda_{b} #rightarrow J/#psi #Sigma^{0} @ R = 0.2%","f");
-	legend_zoom_run1->AddEntry("xib_Run1","#Xi_{b}^{-/0} #rightarrow J/#psi #Xi^{-/0}","l");
+	legend_zoom_run1->AddEntry("xib_Run1","#Xi_{b} #rightarrow J/#psi #Xi","l");
 
 	if(jpsiksflag)
 	{
@@ -3931,7 +3931,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	// {
 	//      legend_zoom_run1->AddEntry("chic1_Run1","#chi_{c1} #Lambda shape","l");
 	// }
-	legend_zoom_run1->AddEntry("misclst_Run1","misc. J/#psi #Lambda* shapes","l");
+	legend_zoom_run1->AddEntry("misclst_Run1","Sum of other J/#psi #Lambda*","l");
 	legend_zoom_run1->Draw("same");
 
 	c1_run1->Update();
@@ -3966,8 +3966,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	frame_run2->GetYaxis()->SetTitle(Form("Candidates/(%d MeV)",binwidth));
 
 	combData->plotOn(frame_run2,Name("data_Run2"),Cut("sample==sample::run2"),DataError(RooAbsData::Poisson),LineWidth(1));
-	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Name("fit_Run2"),LineWidth(5));
 	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Lb_Run2"))),Name("lb_Run2"),LineColor(kMagenta-5),LineWidth(4));
+	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Name("fit_Run2"),LineWidth(5));
 	if(sigType == 1)
 	{
 		simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Lb1_Run2"))),LineStyle(kDotted),LineColor(kMagenta));
@@ -3986,7 +3986,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("SIG_Run2"))),LineColor(kBlack),Name("sig_Run2"),LineStyle(1),FillStyle(3003),FillColor(kBlack),DrawOption("F"),LineWidth(0));
 	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("lstLump_Run2"))),LineColor(kRed+2),LineStyle(9),Name("misclst_Run2"));
 	if(xib0flag)
-		simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Xib_Run2"))),LineColor(kRed-1),LineStyle(7),Name("Xib_JpsiLambda_Run2"),FillColor(kRed-1),DrawOption("FL"));
+		simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Xib_Run2"))),LineColor(kRed-1),LineStyle(7),Name("Xib_JpsiLambda_Run2"),FillColor(kRed-1),DrawOption("FL"),FillStyle(3002));
 	if(jpsiksflag)
 		simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("JPSIKS_RUN2"))),LineColor(kBlue-2),LineStyle(1),Name("JpsiKs_Run2"));
 
@@ -4032,7 +4032,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 	// c_run2->cd();
 
-	auto legend_run2_2 = new TLegend(0.40,0.7,0.65,0.9);
+	auto legend_run2_2 = new TLegend(0.35,0.7,0.65,0.9);
 	legend_run2_2->SetTextSize(0.03);
 	legend_run2_2->AddEntry("data_Run2","Data","lp");
 	legend_run2_2->AddEntry("fit_Run2","Total Fit","l");
@@ -4040,9 +4040,9 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	legend_run2_2->AddEntry("bkg_Run2","Comb. Bkg.","l");
 	legend_run2_2->AddEntry("sig_Run2","#Lambda_{b} #rightarrow J/#psi #Sigma^{0} @ R = 0.2%","f");
 
-	auto legend_run2 = new TLegend(0.73,0.65,0.93,0.9);
+	auto legend_run2 = new TLegend(0.73,0.67,0.95,0.97);
 	legend_run2->SetTextSize(0.03);
-	legend_run2->AddEntry("xib_Run2","#Xi_{b}^{-/0} #rightarrow J/#psi #Xi^{-/0}","l");
+	legend_run2->AddEntry("xib_Run2","#Xi_{b} #rightarrow J/#psi #Xi","l");
 
 	if(jpsiksflag)
 	{
@@ -4068,7 +4068,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	// {
 	//      legend_run2->AddEntry("chic1_Run2","#chi_{c1} #Lambda shape","l");
 	// }
-	legend_run2->AddEntry("misclst_Run2","misc. J/#psi #Lambda* shapes","l");
+	legend_run2->AddEntry("misclst_Run2","Sum of other J/#psi #Lambda*","l");
 	legend_run2->Draw("same");
 	legend_run2_2->Draw("same");
 
@@ -4105,8 +4105,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	frame_zoom_run2->GetYaxis()->SetTitle(Form("Candidates/(%d MeV)",binwidth));
 
 	combData->plotOn(frame_zoom_run2,Name("data_Run2"),Cut("sample==sample::run2"),DataError(RooAbsData::Poisson),LineWidth(1));
-	simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Name("fit_Run2"),LineWidth(5));
 	simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Lb_Run2"))),Name("lb_Run2"),LineColor(kMagenta-5),LineWidth(4));
+	simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Name("fit_Run2"),LineWidth(5));
 	if(sigType == 1)
 	{
 		simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Lb1_Run2"))),LineStyle(kDotted),LineColor(kMagenta));
@@ -4125,7 +4125,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("SIG_Run2"))),LineColor(kBlack),Name("sig_Run2"),LineStyle(1),FillStyle(3003),FillColor(kBlack),DrawOption("F"),LineWidth(0));
 	simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("lstLump_Run2"))),LineColor(kRed+2),LineStyle(9),Name("misclst_Run2"));
 	if(xib0flag)
-		simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Xib_Run2"))),LineColor(kRed-1),LineStyle(7),Name("Xib_JpsiLambda_Run2"),FillColor(kRed-1),DrawOption("FL"));
+		simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Xib_Run2"))),LineColor(kRed-1),LineStyle(7),Name("Xib_JpsiLambda_Run2"),FillColor(kRed-1),DrawOption("FL"),FillStyle(3002));
 	if(jpsiksflag)
 		simPdf.plotOn(frame_zoom_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("JPSIKS_RUN2"))),LineColor(kBlue-2),LineStyle(1),Name("JpsiKs_Run2"));
 
@@ -4167,7 +4167,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	legend_zoom_run2->AddEntry("lb_Run2","#Lambda_{b} #rightarrow J/#psi #Lambda","l");
 	legend_zoom_run2->AddEntry("bkg_Run2","Comb. Bkg.","l");
 	legend_zoom_run2->AddEntry("sig_Run2","#Lambda_{b} #rightarrow J/#psi #Sigma^{0} @ R = 0.2%","f");
-	legend_zoom_run2->AddEntry("xib_Run2","#Xi_{b}^{-/0} #rightarrow J/#psi #Xi^{-/0}","l");
+	legend_zoom_run2->AddEntry("xib_Run2","#Xi_{b} #rightarrow J/#psi #Xi","l");
 
 	if(jpsiksflag)
 	{
@@ -4193,7 +4193,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	// {
 	//      legend_zoom_run2->AddEntry("chic1_Run2","#chi_{c1} #Lambda shape","l");
 	// }
-	legend_zoom_run2->AddEntry("misclst_Run2","misc. J/#psi #Lambda* shapes","l");
+	legend_zoom_run2->AddEntry("misclst_Run2","Sum of other J/#psi #Lambda*","l");
 	legend_zoom_run2->Draw("same");
 
 	c1_run2->Update();
