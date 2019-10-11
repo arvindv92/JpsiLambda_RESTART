@@ -3775,7 +3775,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	legend_run1_2->AddEntry("fit_Run1","Total Fit","l");
 	legend_run1_2->AddEntry("lb_Run1","#Lambda_{b} #rightarrow J/#psi #Lambda","l");
 	legend_run1_2->AddEntry("bkg_Run1","Comb. Bkg.","l");
-	legend_run1_2->AddEntry("sig_Run1","#Lambda_{b} #rightarrow J/#psi #Sigma^{0} @ R = 0.2%","f");
+	legend_run1_2->AddEntry("sig_Run1","#Lambda_{b} #rightarrow J/#psi #Sigma^{0} @ R = 0.23%","f");
 
 	auto legend_run1 = new TLegend(0.73,0.67,0.95,0.94);//0.7,0.5,0.9,0.9
 	legend_run1->SetTextSize(0.03);
@@ -3904,7 +3904,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	legend_zoom_run1->AddEntry("fit_Run1","Total Fit","l");
 	legend_zoom_run1->AddEntry("lb_Run1","#Lambda_{b} #rightarrow J/#psi #Lambda","l");
 	legend_zoom_run1->AddEntry("bkg_Run1","Comb. Bkg.","l");
-	legend_zoom_run1->AddEntry("sig_Run1","#Lambda_{b} #rightarrow J/#psi #Sigma^{0} @ R = 0.2%","f");
+	legend_zoom_run1->AddEntry("sig_Run1","#Lambda_{b} #rightarrow J/#psi #Sigma^{0} @ R = 0.23%","f");
 	legend_zoom_run1->AddEntry("xib_Run1","#Xi_{b} #rightarrow J/#psi #Xi","l");
 
 	if(jpsiksflag)
@@ -4038,7 +4038,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	legend_run2_2->AddEntry("fit_Run2","Total Fit","l");
 	legend_run2_2->AddEntry("lb_Run2","#Lambda_{b} #rightarrow J/#psi #Lambda","l");
 	legend_run2_2->AddEntry("bkg_Run2","Comb. Bkg.","l");
-	legend_run2_2->AddEntry("sig_Run2","#Lambda_{b} #rightarrow J/#psi #Sigma^{0} @ R = 0.2%","f");
+	legend_run2_2->AddEntry("sig_Run2","#Lambda_{b} #rightarrow J/#psi #Sigma^{0} @ R = 0.23%","f");
 
 	auto legend_run2 = new TLegend(0.73,0.67,0.95,0.94);
 	legend_run2->SetTextSize(0.03);
@@ -4166,7 +4166,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	legend_zoom_run2->AddEntry("fit_Run2","Total Fit","l");
 	legend_zoom_run2->AddEntry("lb_Run2","#Lambda_{b} #rightarrow J/#psi #Lambda","l");
 	legend_zoom_run2->AddEntry("bkg_Run2","Comb. Bkg.","l");
-	legend_zoom_run2->AddEntry("sig_Run2","#Lambda_{b} #rightarrow J/#psi #Sigma^{0} @ R = 0.2%","f");
+	legend_zoom_run2->AddEntry("sig_Run2","#Lambda_{b} #rightarrow J/#psi #Sigma^{0} @ R = 0.23%","f");
 	legend_zoom_run2->AddEntry("xib_Run2","#Xi_{b} #rightarrow J/#psi #Xi","l");
 
 	if(jpsiksflag)
