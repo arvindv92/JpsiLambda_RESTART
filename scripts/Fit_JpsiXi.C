@@ -284,12 +284,12 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 		frame->SetAxisRange(5700,5900);
 	}
 
-	ds->plotOn(frame,Name("data"),DataError(RooAbsData::Poisson));
+	ds->plotOn(frame,Name("data"),DataError(RooAbsData::Poisson),LineWidth(1));
 	myModel.plotOn(frame,Name("fit"));
-	myModel.plotOn(frame,Components(sig),LineStyle(kDashed));
+	myModel.plotOn(frame,Components(sig),LineStyle(kDashed),Name("sig"));
 	// myModel.plotOn(frame,Components(sig1),LineStyle(kDotted),LineColor(kMagenta));
 	// myModel.plotOn(frame,Components(sig2),LineStyle(kDotted),LineColor(kMagenta));
-	myModel.plotOn(frame,Components(bkg),LineColor(kRed));
+	myModel.plotOn(frame,Components(bkg),LineColor(kRed),Name("bkg"));
 
 	Double_t chiSquare1 = frame->chiSquare("fit","data");
 	cout<<"chi square1 = "<<chiSquare1<<endl;
@@ -319,6 +319,15 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 
 	frame->Draw();
 
+	auto legend = new TLegend(0.7,0.7,0.9,0.9);
+	legend->SetTextSize(0.03);
+	legend->AddEntry("data","Data","lp");
+	legend->AddEntry("fit","Total Fit","l");
+	legend->AddEntry("sig","#Xi_{b} #rightarrow J/#psi #Xi^{-} signal","l");
+	legend->AddEntry("bkg","Comb. Bkg.","l");
+
+	legend->Draw("same");
+	c->Update();
 	//  TPaveText *pt = (TPaveText*)pad1->GetListOfPrimitives()->FindObject("model_paramBox");
 	// pt->AddText(Form("#chi^{2}/dof = %f",chi2));
 	// c->Modified();
