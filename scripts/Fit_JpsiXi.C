@@ -350,8 +350,8 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 	// c->cd();
 
 	//Check pull mean and RMS. Ideally the pull mean should be 0 and the RMS should be 1
-	cout<<"Pull Mean Y = "<<hpull->GetMean(2)<<endl;
-	cout<<"Pull RMS Y = "<<hpull->GetRMS(2)<<endl;
+	// cout<<"Pull Mean Y = "<<hpull->GetMean(2)<<endl;
+	// cout<<"Pull RMS Y = "<<hpull->GetRMS(2)<<endl;
 
 	if(!isData)
 	{
