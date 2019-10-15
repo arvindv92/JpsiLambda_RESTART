@@ -17,6 +17,7 @@
 #include "TSystem.h"
 #include "TROOT.h"
 #include "RooMCStudy.h"
+#include "TLegend.h"
 #include <iostream>
 #include <fstream>
 using namespace RooFit;
