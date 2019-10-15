@@ -277,14 +277,14 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 	RooAddPdf myModel = model_nom;
 
 	RooPlot *frame = Xib_M.frame();
-	frame->GetXaxis()->SetTitle("m_{J/#psi#Xi}[MeV]");
+	frame->GetXaxis()->SetTitle("m_{J/#psi#Xi^{-}}[MeV]");
 	frame->GetYaxis()->SetTitle("Candidates/(6 MeV)");
 	if(!isData)
 	{
 		frame->SetAxisRange(5700,5900);
 	}
 
-	ds->plotOn(frame,Name("data"),DataError(RooAbsData::Poisson),LineWidth(1));
+	ds->plotOn(frame,Name("data"),DataError(RooAbsData::Poisson));
 	myModel.plotOn(frame,Name("fit"));
 	myModel.plotOn(frame,Components(sig),LineStyle(kDashed));
 	// myModel.plotOn(frame,Components(sig1),LineStyle(kDotted),LineColor(kMagenta));
