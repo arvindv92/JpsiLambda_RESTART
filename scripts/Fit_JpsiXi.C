@@ -105,7 +105,7 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 
 	RooRealVar CBn("CBn","Crystal Ball n",10.0);//fixed in both sim fit and data fit.
 
-	RooRealVar fs("fs","fs",1.00,0.5,2.0);
+	RooRealVar fs("fs","fs",1.00,0.5,2.0);//scaling factor for MC width
 	RooFormulaVar sigma1("sigma1","","sigma*fs",RooArgList(sigma,fs));
 
 	RooCBShape sig1("sig1","Crystal Ball 1",Xib_M,mean,sigma1,alpha1,CBn);
@@ -277,16 +277,18 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 	RooAddPdf myModel = model_nom;
 
 	RooPlot *frame = Xib_M.frame();
+	frame->GetXaxis()->SetTitle("m_{J/#psi#Xi}[MeV]");
+	frame->GetYaxis()->SetTitle("Candidates/(6 MeV)");
 	if(!isData)
 	{
 		frame->SetAxisRange(5700,5900);
 	}
 
-	ds->plotOn(frame,Name("data"));
+	ds->plotOn(frame,Name("data"),DataError(RooAbsData::Poisson),LineWidth(1));
 	myModel.plotOn(frame,Name("fit"));
 	myModel.plotOn(frame,Components(sig),LineStyle(kDashed));
-	myModel.plotOn(frame,Components(sig1),LineStyle(kDotted),LineColor(kMagenta));
-	myModel.plotOn(frame,Components(sig2),LineStyle(kDotted),LineColor(kMagenta));
+	// myModel.plotOn(frame,Components(sig1),LineStyle(kDotted),LineColor(kMagenta));
+	// myModel.plotOn(frame,Components(sig2),LineStyle(kDotted),LineColor(kMagenta));
 	myModel.plotOn(frame,Components(bkg),LineColor(kRed));
 
 	Double_t chiSquare1 = frame->chiSquare("fit","data");
@@ -300,52 +302,52 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 
 	TCanvas* c = new TCanvas("c","#Xi_{b} #to J/#psi #Xi Fit", 1200, 800);
 	// ///////////
-	TPad *pad1 = new TPad("pad1","pad1",0.0,0.3,1.0,1.0);
-	TPad *pad2 = new TPad("pad2","pad2",0.0,0.0,1.0,0.3);
-	pad1->SetBottomMargin(0);
-	pad2->SetTopMargin(0);
-	pad2->SetBottomMargin(0.5);
-	pad2->SetBorderMode(0);
-	pad1->SetBorderMode(0);
-	c->SetBorderMode(0);
-	pad2->Draw();
-	pad1->Draw();
-	pad1->cd();
-
-	gPad->SetTopMargin(0.06);
-	pad1->Update();
+	// TPad *pad1 = new TPad("pad1","pad1",0.0,0.3,1.0,1.0);
+	// TPad *pad2 = new TPad("pad2","pad2",0.0,0.0,1.0,0.3);
+	// pad1->SetBottomMargin(0);
+	// pad2->SetTopMargin(0);
+	// pad2->SetBottomMargin(0.5);
+	// pad2->SetBorderMode(0);
+	// pad1->SetBorderMode(0);
+	// c->SetBorderMode(0);
+	// pad2->Draw();
+	// pad1->Draw();
+	// pad1->cd();
+	//
+	// gPad->SetTopMargin(0.06);
+	// pad1->Update();
 
 	frame->Draw();
 
 	//  TPaveText *pt = (TPaveText*)pad1->GetListOfPrimitives()->FindObject("model_paramBox");
 	// pt->AddText(Form("#chi^{2}/dof = %f",chi2));
-	c->Modified();
+	// c->Modified();
 
 	// Pull distribution
-	RooPlot *framex2 = Xib_M.frame();
-	if(!isData)
-	{
-		framex2->SetAxisRange(5700,5900);
-	}
-	RooHist* hpull = frame->pullHist("data","fit");
-	framex2->addPlotable(hpull,"P");
-	hpull->SetLineColor(kBlack);
-	hpull->SetMarkerColor(kBlack);
-	framex2->SetTitle(0);
-	framex2->GetYaxis()->SetTitle("Pull");
-	framex2->GetYaxis()->SetTitleSize(0.15);
-	framex2->GetYaxis()->SetLabelSize(0.15);
-	framex2->GetXaxis()->SetTitleSize(0.2);
-	framex2->GetXaxis()->SetLabelSize(0.15);
-	framex2->GetYaxis()->CenterTitle();
-	framex2->GetYaxis()->SetTitleOffset(0.25);
-	framex2->GetXaxis()->SetTitleOffset(1.1);
-	framex2->GetYaxis()->SetNdivisions(505);
-	framex2->GetYaxis()->SetRangeUser(-8.8,8.8);
-	pad2->cd();
-	framex2->Draw();
-
-	c->cd();
+	// RooPlot *framex2 = Xib_M.frame();
+	// if(!isData)
+	// {
+	//      framex2->SetAxisRange(5700,5900);
+	// }
+	// RooHist* hpull = frame->pullHist("data","fit");
+	// framex2->addPlotable(hpull,"P");
+	// hpull->SetLineColor(kBlack);
+	// hpull->SetMarkerColor(kBlack);
+	// framex2->SetTitle(0);
+	// framex2->GetYaxis()->SetTitle("Pull");
+	// framex2->GetYaxis()->SetTitleSize(0.15);
+	// framex2->GetYaxis()->SetLabelSize(0.15);
+	// framex2->GetXaxis()->SetTitleSize(0.2);
+	// framex2->GetXaxis()->SetLabelSize(0.15);
+	// framex2->GetYaxis()->CenterTitle();
+	// framex2->GetYaxis()->SetTitleOffset(0.25);
+	// framex2->GetXaxis()->SetTitleOffset(1.1);
+	// framex2->GetYaxis()->SetNdivisions(505);
+	// framex2->GetYaxis()->SetRangeUser(-8.8,8.8);
+	// pad2->cd();
+	// framex2->Draw();
+	//
+	// c->cd();
 
 	//Check pull mean and RMS. Ideally the pull mean should be 0 and the RMS should be 1
 	cout<<"Pull Mean Y = "<<hpull->GetMean(2)<<endl;
@@ -353,11 +355,11 @@ void Fit_JpsiXi(Int_t run = 1, Bool_t isData = true, Bool_t logFlag = true)
 
 	if(!isData)
 	{
-		c->SaveAs(Form("plots/ANA/NominalFit_JpsiXi_MC_Run%d.pdf",run));
+		c->SaveAs(Form("plots/PAPER/NominalFit_JpsiXi_MC_Run%d.pdf",run));
 	}
 	else
 	{
-		c->SaveAs(Form("plots/ANA/NominalFit_JpsiXi_Data_Run%d.pdf",run));
+		c->SaveAs(Form("plots/PAPER/NominalFit_JpsiXi_Data_Run%d.pdf",run));
 	}
 
 	nSig.Print();
