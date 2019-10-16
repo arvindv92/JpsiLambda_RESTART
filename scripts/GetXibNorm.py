@@ -26,7 +26,7 @@ def GetNorm(run=1, isoFlag=False, isoVersion="v0", isoConf=1, finalBDTConf_nonZe
                       + "/Fit_JpsiXi_log.txt")
     lines = xibDataLog.readlines()
     for line in lines:
-        if 'RooRealVar::nSig' in line:
+        if 'RooRealVar::nsig' in line:
             xibYield = float(line.split()[2])
             xibYieldErr = float(line.split()[4])
 
