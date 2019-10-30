@@ -132,6 +132,8 @@ Double_t DoSWeight_JpsiXi(Int_t run, Bool_t logFlag)
 	sw.Print();
 	// if(logFlag) gROOT->ProcessLine(".>"); //end redirect
 	if(logFlag) gSystem->RedirectOutput(0); //end redirect
+
+	return myChi2;
 }
 
 void AddModel(RooWorkspace *ws, Int_t lowRange, Int_t highRange, Int_t nEntries, Int_t run)
