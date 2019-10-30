@@ -118,19 +118,13 @@ Double_t DoSWeight_JpsiXi(Int_t run, Bool_t logFlag)
 	treeOut->Write("",TObject::kOverwrite);
 	fileOut->Close();
 
-	// if(!zeroFlag)
-	// {
-	//      fileOut_training->cd();
-	//      treeOut_training->Write("",TObject::kOverwrite);
-	//      fileOut_training->Close();
-	// }
 	// cleanup
 	delete wSpace;
 
 	sw.Stop();
 	cout << "==> DoSWeight_JpsiXi is done! Check fit status! sWeights FTW!: ";
 	sw.Print();
-	// if(logFlag) gROOT->ProcessLine(".>"); //end redirect
+
 	if(logFlag) gSystem->RedirectOutput(0); //end redirect
 
 	return myChi2;
