@@ -52,7 +52,7 @@ Double_t DoSWeight_JpsiXi(Int_t run, Bool_t logFlag)
 	Double_t Xib_Mass         = 0.0;
 
 	rootFolder  = Form("rootFiles/dataFiles/JpsiXi/run%d", run);
-	inFileName  = Form("%s/jpsixi_cut_LL.root", rootFolder);
+	inFileName  = Form("%s/jpsixi_cut_Run%d.root", rootFolder,run);
 	outFileName = Form("%s/jpsixi_withsw.root", rootFolder);
 
 	fileIn = TFile::Open(inFileName,"READ");
