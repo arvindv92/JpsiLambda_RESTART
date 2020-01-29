@@ -55,6 +55,7 @@
 #include "TROOT.h"
 #include "TIterator.h"
 #include "TLatex.h"
+#include "TMathText.h"
 
 void Fitscript_simul(Int_t config_Run1 = 1, Int_t config_Run2 = 1, Bool_t isoFlag = true,
                      Int_t myLow = 4700, Int_t myHigh = 6000, Int_t Lst1405_rwtype = 0,

@@ -1345,7 +1345,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			}
 		}
 		RooPlot *framesigma = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),5300,5700,(400)/binwidth);
-		framesigma->GetXaxis()->SetTitle("m_{J/#psi#Lambda}[MeV]");
+		framesigma->GetXaxis()->SetTitle("#it{m_{J/#kern[-0.2]{#psi}#Lambda}}[MeV]");
 		framesigma->GetYaxis()->SetTitle(Form("Candidates/(%d MeV)",binwidth));
 
 		if(mcRW)
@@ -1357,9 +1357,9 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		// cout<<"mirror both chi2/ndof = "<<framesigma->chiSquare("sigmafit","sigmadata")<<endl;
 		// cout<<"no mirror chi2/ndof = "<<framesigma->chiSquare("sigmafit_NoMirror","sigmadata")<<endl;
 
-		TCanvas *csigma = new TCanvas(Form("JpsiSigma%d",run),Form("JpsiSigma%d",run));
-		framesigma->Draw();
-		lhcbName_sim->Draw();
+		// TCanvas *csigma = new TCanvas(Form("JpsiSigma%d",run),Form("JpsiSigma%d",run));
+		// framesigma->Draw();
+		// lhcbName_sim->Draw();
 
 		w.import(*(SIG_KEYS[i]));
 
@@ -1370,7 +1370,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			w1->import(*(ds_sig_wt[i]));
 		}
 		cout<<"Done importing Jpsi Sigma shape"<<endl;
-		if(saveFlag) csigma->SaveAs(Form("plots/ANA/JpsiSigma_Fit_Run%d.pdf",run));
+		// if(saveFlag) csigma->SaveAs(Form("plots/ANA/JpsiSigma_Fit_Run%d.pdf",run));
 	}
 	//********************************************************************
 	//****Get J/psi Lst(1405) efficiencies and shape from MC*******
@@ -1675,7 +1675,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			                              *(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_1405[i]),RooKeysPdf::NoMirror,1);
 		}
 		RooPlot *frame1405 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),myLow,5600,(5600-myLow)/binwidth);
-		frame1405->GetXaxis()->SetTitle("m_{J/#psi#Lambda}[MeV]");
+		frame1405->GetXaxis()->SetTitle("#it{m_{J/#kern[-0.2]{#psi}#Lambda}}[MeV]");
 		frame1405->GetYaxis()->SetTitle(Form("Candidates/(%d MeV)",binwidth));
 		ds_1405[i]->plotOn(frame1405,Name("1405data"),LineColor(kBlack));
 		(*(KEYS_1405[i])).plotOn(frame1405,Name("1405fit"),LineColor(kBlue));
@@ -1684,9 +1684,9 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		// cout<<"1405 no mirror chi2/ndof = "<<frame1405->chiSquare("1405fit_NoMirror","1405data")<<endl;
 		// cout<<"1405 mirror right chi2/ndof = "<<frame1405->chiSquare("1405fit_MirrorRight","1405data")<<endl;
 
-		TCanvas *c1405 = new TCanvas(Form("Jpsi1405%d",run),Form("Jpsi1405%d",run));
-		frame1405->Draw();
-		lhcbName_sim->Draw();
+		// TCanvas *c1405 = new TCanvas(Form("Jpsi1405%d",run),Form("Jpsi1405%d",run));
+		// frame1405->Draw();
+		// lhcbName_sim->Draw();
 
 		w.import(*(KEYS_1405[i]));
 		if(!inputFlag)
@@ -1694,7 +1694,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			w1->import(*(ds_1405[i]));
 			w1->import(*(KEYS_1405[i]));
 		}
-		if(saveFlag) c1405->SaveAs(Form("plots/ANA/Lst1405_Fit_Run%d.pdf",run));
+		// if(saveFlag) c1405->SaveAs(Form("plots/ANA/Lst1405_Fit_Run%d.pdf",run));
 		cout<<"Done importing Jpsi Lst(1405) shape"<<endl;
 	}
 	//*******************************************************************
@@ -1918,7 +1918,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		}
 
 		RooPlot *frame1520 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),myLow,5600,(5600-myLow)/binwidth);
-		frame1520->GetXaxis()->SetTitle("m_{J/#psi#Lambda}[MeV]");
+		frame1520->GetXaxis()->SetTitle("#it{m_{J/#kern[-0.2]{#psi}#Lambda}}[MeV]");
 		frame1520->GetYaxis()->SetTitle(Form("Candidates/(%d MeV)",binwidth));
 		ds_1520[i]->plotOn(frame1520,Name("1520data"),LineColor(kBlack));
 		(*(KEYS_1520[i])).plotOn(frame1520,Name("1520fit"),LineColor(kBlue));
@@ -1927,9 +1927,9 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		// cout<<"1520 no mirror chi2/ndof = "<<frame1520->chiSquare("1520fit_NoMirror","1520data")<<endl;
 		// cout<<"1520 mirror right chi2/ndof = "<<frame1520->chiSquare("1520fit_MirrorRight","1520data")<<endl;
 
-		TCanvas *c1520 = new TCanvas(Form("Jpsi1520%d",run),Form("Jpsi1520%d",run));
-		frame1520->Draw();
-		lhcbName_sim->Draw();
+		// TCanvas *c1520 = new TCanvas(Form("Jpsi1520%d",run),Form("Jpsi1520%d",run));
+		// frame1520->Draw();
+		// lhcbName_sim->Draw();
 
 		w.import(*(KEYS_1520[i]));
 		if(!inputFlag)
@@ -1937,7 +1937,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			w1->import(*(ds_1520[i]));
 			w1->import(*(KEYS_1520[i]));
 		}
-		if(saveFlag) c1520->SaveAs(Form("plots/ANA/Lst1520_Fit_Run%d.pdf",run));
+		// if(saveFlag) c1520->SaveAs(Form("plots/ANA/Lst1520_Fit_Run%d.pdf",run));
 		cout<<"Done importing Jpsi Lst(1520) shape"<<endl;
 	}
 	//*******************************************************************
@@ -2161,7 +2161,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		}
 
 		RooPlot *frame1600 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),myLow,5600,(5600-myLow)/binwidth);
-		frame1600->GetXaxis()->SetTitle("m_{J/#psi#Lambda}[MeV]");
+		frame1600->GetXaxis()->SetTitle("#it{m_{J/#kern[-0.2]{#psi}#Lambda}}[MeV]");
 		frame1600->GetYaxis()->SetTitle(Form("Candidates/(%d MeV)",binwidth));
 		ds_1600[i]->plotOn(frame1600,Name("1600data"),LineColor(kBlack));
 		(*(KEYS_1600[i])).plotOn(frame1600,Name("1600fit"),LineColor(kBlue));
@@ -2170,9 +2170,9 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 		// cout<<"1600 no mirror chi2/ndof = "<<frame1600->chiSquare("1600fit_NoMirror","1600data")<<endl;
 		// cout<<"1600 mirror right chi2/ndof = "<<frame1600->chiSquare("1600fit_MirrorRight","1600data")<<endl;
 
-		TCanvas *c1600 = new TCanvas(Form("Jpsi1600%d",run),Form("Jpsi1600%d",run));
-		frame1600->Draw();
-		lhcbName_sim->Draw();
+		// TCanvas *c1600 = new TCanvas(Form("Jpsi1600%d",run),Form("Jpsi1600%d",run));
+		// frame1600->Draw();
+		// lhcbName_sim->Draw();
 
 		w.import(*(KEYS_1600[i]));
 		if(!inputFlag)
@@ -2180,7 +2180,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 			w1->import(*(ds_1600[i]));
 			w1->import(*(KEYS_1600[i]));
 		}
-		if(saveFlag) c1600->SaveAs(Form("plots/ANA/Lst1600_Fit_Run%d.pdf",run));
+		// if(saveFlag) c1600->SaveAs(Form("plots/ANA/Lst1600_Fit_Run%d.pdf",run));
 		cout<<"Done importing Jpsi Lst(1600) shape"<<endl;
 	}
 	//*******************************************************************
@@ -2503,9 +2503,9 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 		(*(XIB_KEYS[i])).plotOn(framexib,Name("xibfitsmooth"),LineColor(kBlue));
 
-		TCanvas *cxib = new TCanvas(Form("JpsiXi%d",run),Form("JpsiXi%d",run));
-		framexib->Draw();
-		lhcbName_sim->Draw();
+		// TCanvas *cxib = new TCanvas(Form("JpsiXi%d",run),Form("JpsiXi%d",run));
+		// framexib->Draw();
+		// lhcbName_sim->Draw();
 
 		// w.import(*(XIB[i]));
 		w.import(*(XIB_KEYS[i]));
@@ -2987,7 +2987,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 	TCanvas *sim_Run1      = new TCanvas("sim_Run1","sim_Run1");
 	RooPlot *simframe_Run1 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),5500,5740,120);
-	simframe_Run1->GetXaxis()->SetTitle("m_{J/#psi#Lambda}[MeV]");
+	simframe_Run1->GetXaxis()->SetTitle("#it{m_{J/#kern[-0.2]{#psi}#Lambda}}[MeV]");
 	simframe_Run1->GetYaxis()->SetTitle(Form("Candidates/(2 MeV)"));
 
 	(ds_sim_wt[0])->plotOn(simframe_Run1,Name("simdata_Run1"),DataError(RooAbsData::SumW2));
@@ -3004,7 +3004,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 	TCanvas *sim_Run2      = new TCanvas("sim_Run2","sim_Run2");
 	RooPlot *simframe_Run2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),5500,5740,120);
-	simframe_Run2->GetXaxis()->SetTitle("m_{J/#psi#Lambda}[MeV]");
+	simframe_Run2->GetXaxis()->SetTitle("#it{m_{J/#kern[-0.2]{#psi}#Lambda}}[MeV]");
 	simframe_Run2->GetYaxis()->SetTitle(Form("Candidates/(2 MeV)"));
 
 	(ds_sim_wt[1])->plotOn(simframe_Run2,Name("simdata_Run2"),DataError(RooAbsData::SumW2));
@@ -3235,10 +3235,13 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 	//************************MAKE COMBINED MODEL************************
 
-	w.factory("R[0.01,0,500]"); // R*10^5 is the parameter of interest  This is shared b/w Run1 and Run2
+//	w.factory("R[0.01,0,500]"); // R*10^5 is the parameter of interest  This is shared b/w Run1 and Run2
+	w.factory("R[0.0001,0,5]"); // R*10^5 is the parameter of interest  This is shared b/w Run1 and Run2
 	// R*10^5 =  [N(Jpsi Sigma)/N(Jpsi Lambda)] * [eff(Jpsi Lambda)/eff(Jpsi Sigma)]
-	w.var("R")->setError(0.1);
-	w.var("R")->SetTitle("R.10^{5}");
+	w.var("R")->setError(0.001);
+
+//	w.var("R")->SetTitle("\\mathscr{R} #upoint 10^{5}");
+	w.var("R")->SetTitle("\\mathscr{R} #upoint 10^{3}");
 
 	w.factory("R_1405[0.01,0.00001,0.4]"); //R_1405 = N_corr(Lb -> Jpsi Lambda(1405)) / N_corr(Lb -> Jpsi Lambda)
 	w.factory("R_1520[0.01,0.00001,0.5]"); //R_1520 = N_corr(Lb -> Jpsi Lambda(1520)) / N_corr(Lb -> Jpsi Lambda)
@@ -3367,8 +3370,11 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	//*******************************************************************
 
 	//*****************Jpsi Sigma yield**********************************
-	w.factory("expr::nSigma1('pow(10,-5)*R*nLb_Run1/(eff_ratio1*1.058)',R,nLb_Run1,eff_ratio1)");
-	w.factory("expr::nSigma2('pow(10,-5)*R*nLb_Run2/(eff_ratio2*1.058)',R,nLb_Run2,eff_ratio2)");
+	// w.factory("expr::nSigma1('pow(10,-5)*R*nLb_Run1/(eff_ratio1*1.058)',R,nLb_Run1,eff_ratio1)");
+	// w.factory("expr::nSigma2('pow(10,-5)*R*nLb_Run2/(eff_ratio2*1.058)',R,nLb_Run2,eff_ratio2)");
+
+	w.factory("expr::nSigma1('pow(10,-3)*R*nLb_Run1/(eff_ratio1*1.058)',R,nLb_Run1,eff_ratio1)");
+	w.factory("expr::nSigma2('pow(10,-3)*R*nLb_Run2/(eff_ratio2*1.058)',R,nLb_Run2,eff_ratio2)");
 	//*******************************************************************
 
 	//*****************Jpsi Lambda(1405) yield***************************
@@ -3694,8 +3700,22 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 	TCanvas* c_run1 = new TCanvas("Run1","Run1", 1200, 800);
 
+	// TPaveText* lhcbName = new TPaveText(gStyle->GetPadLeftMargin() + 0.05,
+	//                                     0.87 - gStyle->GetPadTopMargin(),
+	//                                     gStyle->GetPadLeftMargin() + 0.20,
+	//                                     0.95 - gStyle->GetPadTopMargin(),
+	//                                     "BRNDC");
+
+//	TPaveText* lhcbName = new TPaveText(0.20,0.8,0.27,0.87,"brNDC");
+	TPaveText* lhcbName = new TPaveText(0.83,0.85,0.92,0.92,"brNDC");
+	lhcbName->AddText("LHCb");
+	lhcbName->SetFillColor(0);
+	lhcbName->SetTextAlign(12);
+	lhcbName->SetBorderSize(0);
+	lhcbName->SetTextSizePixels(60);
+
 	RooPlot *frame_run1 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),myLow,myHigh,nbins);
-	frame_run1->GetXaxis()->SetTitle("m_{J/#psi#Lambda}[MeV]");
+	frame_run1->GetXaxis()->SetTitle("#it{m_{J/#kern[-0.2]{#psi}#Lambda}}[MeV]");
 	frame_run1->GetYaxis()->SetTitle(Form("Candidates/(%d MeV)",binwidth));
 
 	combData->plotOn(frame_run1,Name("data_Run1"),Cut("sample==sample::run1"),DataError(RooAbsData::Poisson),LineWidth(1));
@@ -3760,8 +3780,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 	frame_run1->Draw();
 	gPad->SetLogy();
-	gPad->SetGridx();
-	gPad->SetGridy();
+//	gPad->SetGridx();
+//	gPad->SetGridy();
 
 	// TLatex l_run1;
 	// l_run1.SetTextSize(0.04);
@@ -3769,53 +3789,66 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	//
 	// c_run1->Modified();
 
-	auto legend_run1_2 = new TLegend(0.35,0.7,0.65,0.9);
-	legend_run1_2->SetTextSize(0.03);
-	legend_run1_2->AddEntry("data_Run1","Data","lp");
-	legend_run1_2->AddEntry("fit_Run1","Total Fit","l");
-	legend_run1_2->AddEntry("lb_Run1","#Lambda_{b} #rightarrow J/#psi #Lambda","l");
-	legend_run1_2->AddEntry("bkg_Run1","Comb. Bkg.","l");
-	legend_run1_2->AddEntry("sig_Run1","#Lambda_{b} #rightarrow J/#psi #Sigma^{0} @ R = 0.23%","f");
+	Float_t leg2_xstart = 0.15;
+	Float_t leg2_xend   = 0.44;
+	Float_t leg2_ystart = 0.7;
+	Float_t leg2_yend   = 0.94;
 
-	auto legend_run1 = new TLegend(0.73,0.67,0.95,0.94);//0.7,0.5,0.9,0.9
-	legend_run1->SetTextSize(0.03);
-	legend_run1->AddEntry("xib_Run1","#Xi_{b} #rightarrow J/#psi #Xi","l");
+	Float_t leg1_xstart = 0.45;
+	Float_t leg1_xend   = 0.67;
+	Float_t leg1_ystart = 0.67;
+	Float_t leg1_yend   = 0.94;
+
+	auto legend_run1_2 = new TLegend(leg2_xstart,leg2_ystart,leg2_xend,leg2_yend);
+//	legend_run1_2->SetTextSize(0.032);
+	legend_run1_2->SetTextSizePixels(25);
+	legend_run1_2->AddEntry("data_Run1","Data","lp");
+	legend_run1_2->AddEntry("fit_Run1","Total fit","l");
+	legend_run1_2->AddEntry("lb_Run1","#it{#Lambda_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Lambda}}","l");
+	legend_run1_2->AddEntry("bkg_Run1","Comb. bkg.","l");
+	legend_run1_2->AddEntry("sig_Run1","#it{#Lambda_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Sigma}^{#kern[0.2]{0}}} @ #it{R} = 0.23%","f");
+
+	auto legend_run1 = new TLegend(leg1_xstart,leg1_ystart,leg1_xend,leg1_yend);//0.7,0.5,0.9,0.9
+//	legend_run1->SetTextSize(0.032);
+	legend_run1->SetTextSizePixels(25);
+	legend_run1->AddEntry("xib_Run1","#it{#Xi_{b}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#Xi}","l");
 
 	if(jpsiksflag)
 	{
-		legend_run1->AddEntry("JpsiKs_Run1","B^{0} #rightarrow J/#psi K_{S}^{0}","l");
+		legend_run1->AddEntry("JpsiKs_Run1","B^{0} #rightarrow #it{J/#kern[-0.2]{#psi}} K_{S}^{0}","l");
 	}
 	if(xib0flag)
 	{
-		legend_run1->AddEntry("Xib_JpsiLambda_Run1","#Xi_{b}^{0} #rightarrow J/#psi #Lambda","fl");
+		legend_run1->AddEntry("Xib_JpsiLambda_Run1","#it{#Xi_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Lambda}}","fl");
 	}
 	if(lst1405flag)
 	{
-		legend_run1->AddEntry("lst1405_Run1","#Lambda_{b} #rightarrow J/#psi #Lambda(1405)","l");
+		legend_run1->AddEntry("lst1405_Run1","#it{#Lambda_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Lambda}}(1405)","l");
 	}
 	if(lst1520flag)
 	{
-		legend_run1->AddEntry("lst1520_Run1","#Lambda_{b} #rightarrow J/#psi #Lambda(1520)","l");
+		legend_run1->AddEntry("lst1520_Run1","#it{#Lambda_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Lambda}}(1520)","l");
 	}
 	if(lst1600flag)
 	{
-		legend_run1->AddEntry("lst1600_Run1","#Lambda_{b} #rightarrow J/#psi #Lambda(1600)","l");
+		legend_run1->AddEntry("lst1600_Run1","#it{#Lambda_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Lambda}}(1600)","l");
 	}
 	// if(chic1flag)
 	// {
 	//      legend_run1->AddEntry("chic1_Run1","#chi_{c1} #Lambda shape","l");
 	// }
-	legend_run1->AddEntry("misclst_Run1","Sum of other J/#psi #Lambda*","l");
+	legend_run1->AddEntry("misclst_Run1","Other part. rec. bkgs.","l");
 	legend_run1->Draw("same");
 	legend_run1_2->Draw("same");
 
+	lhcbName->Draw();
 	c_run1->Update();
 
 	// Pull distribution
 	// RooPlot *frame_run1x2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),myLow,myHigh,nbins);
 	// RooHist* hpull_run1 = frame_run1->pullHist("data_Run1","fit_Run1");
 	// frame_run1x2->addPlotable(hpull_run1,"P");
-	// frame_run1x2->GetXaxis()->SetTitle("m_{J/#psi#Lambda}[MeV]");
+	// frame_run1x2->GetXaxis()->SetTitle("#it{m_{J/#kern[-0.2]{#psi}#Lambda}}[MeV]");
 	// frame_run1x2->GetYaxis()->SetTitle("Pull");
 	//
 	// hpull_run1->SetLineColor(kBlack);
@@ -3835,11 +3868,11 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 	//************************************************************
 
-	TCanvas* c1_run1 = new TCanvas("Run1_zoomed","Run1_zoomed", 1200, 800);
+/*	TCanvas* c1_run1 = new TCanvas("Run1_zoomed","Run1_zoomed", 1200, 800);
 
 	RooPlot *frame_zoom_run1 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),5200,6000,800/binwidth);
 	//	frame_zoom_run1->SetTitle("Run1 Fit");
-	frame_zoom_run1->GetXaxis()->SetTitle("m_{J/#psi#Lambda}[MeV]");
+	frame_zoom_run1->GetXaxis()->SetTitle("#it{m_{J/#kern[-0.2]{#psi}#Lambda}}[MeV]");
 	frame_zoom_run1->GetYaxis()->SetTitle(Form("Candidates/(%d MeV)",binwidth));
 
 	combData->plotOn(frame_zoom_run1,Name("data_Run1"),Cut("sample==sample::run1"),DataError(RooAbsData::Poisson),LineWidth(1));
@@ -3899,48 +3932,50 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	// c1_run1->Modified();
 
 	auto legend_zoom_run1 = new TLegend(0.63,0.5,0.93,0.9);
-	legend_zoom_run1->SetTextSize(0.03);
+//	legend_zoom_run1->SetTextSize(0.032);
+	legend_zoom_run1->SetTextSizePixels(25);
 	legend_zoom_run1->AddEntry("data_Run1","Data","lp");
-	legend_zoom_run1->AddEntry("fit_Run1","Total Fit","l");
-	legend_zoom_run1->AddEntry("lb_Run1","#Lambda_{b} #rightarrow J/#psi #Lambda","l");
-	legend_zoom_run1->AddEntry("bkg_Run1","Comb. Bkg.","l");
-	legend_zoom_run1->AddEntry("sig_Run1","#Lambda_{b} #rightarrow J/#psi #Sigma^{0} @ R = 0.23%","f");
-	legend_zoom_run1->AddEntry("xib_Run1","#Xi_{b} #rightarrow J/#psi #Xi","l");
+	legend_zoom_run1->AddEntry("fit_Run1","Total fit","l");
+	legend_zoom_run1->AddEntry("lb_Run1","#it{#Lambda_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Lambda}}","l");
+	legend_zoom_run1->AddEntry("bkg_Run1","Comb. bkg.","l");
+	legend_zoom_run1->AddEntry("sig_Run1","#it{#Lambda_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#Sigma^{0}} @ #it{R} = 0.23%","f");
+	legend_zoom_run1->AddEntry("xib_Run1","#it{#Xi_{b}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#Xi}","l");
 
 	if(jpsiksflag)
 	{
-		legend_zoom_run1->AddEntry("JpsiKs_Run1","B^{0} #rightarrow J/#psi K_{S}^{0}","l");
+		legend_zoom_run1->AddEntry("JpsiKs_Run1","B^{0} #rightarrow #it{J/#kern[-0.2]{#psi}} K_{S}^{0}","l");
 	}
 	if(xib0flag)
 	{
-		legend_zoom_run1->AddEntry("Xib_JpsiLambda_Run1","#Xi_{b}^{0} #rightarrow J/#psi #Lambda","fl");
+		legend_zoom_run1->AddEntry("Xib_JpsiLambda_Run1","#it{#Xi_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Lambda}}","fl");
 	}
 	if(lst1405flag)
 	{
-		legend_zoom_run1->AddEntry("lst1405_Run1","#Lambda_{b} #rightarrow J/#psi #Lambda(1405)","l");
+		legend_zoom_run1->AddEntry("lst1405_Run1","#it{#Lambda_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Lambda}}(1405)","l");
 	}
 	if(lst1520flag)
 	{
-		legend_zoom_run1->AddEntry("lst1520_Run1","#Lambda_{b} #rightarrow J/#psi #Lambda(1520)","l");
+		legend_zoom_run1->AddEntry("lst1520_Run1","#it{#Lambda_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Lambda}}(1520)","l");
 	}
 	if(lst1600flag)
 	{
-		legend_zoom_run1->AddEntry("lst1600_Run1","#Lambda_{b} #rightarrow J/#psi #Lambda(1600)","l");
+		legend_zoom_run1->AddEntry("lst1600_Run1","#it{#Lambda_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Lambda}}(1600)","l");
 	}
 	// if(chic1flag)
 	// {
 	//      legend_zoom_run1->AddEntry("chic1_Run1","#chi_{c1} #Lambda shape","l");
 	// }
-	legend_zoom_run1->AddEntry("misclst_Run1","Sum of other J/#psi #Lambda*","l");
+	legend_zoom_run1->AddEntry("misclst_Run1","Other part. rec. bkgs.","l");
 	legend_zoom_run1->Draw("same");
-
+	
+	lhcbName->Draw();
 	c1_run1->Update();
 
 	// Pull distribution
 	// RooPlot *frame_zoom_run1x2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),5200,6000,800/binwidth);
 	// RooHist* hpull_zoom_run1 = frame_zoom_run1->pullHist("data_Run1","fit_Run1");
 	// frame_zoom_run1x2->addPlotable(hpull_zoom_run1,"P");
-	// frame_zoom_run1x2->GetXaxis()->SetTitle("m_{J/#psi#Lambda}[MeV]");
+	// frame_zoom_run1x2->GetXaxis()->SetTitle("#it{m_{J/#kern[-0.2]{#psi}#Lambda}}[MeV]");
 	// frame_zoom_run1x2->GetYaxis()->SetTitle("Pull");
 	//
 	// hpull_zoom_run1->SetLineColor(kBlack);
@@ -3954,7 +3989,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	//
 	// c1_run1->cd();
 	// pad1_zoom->cd();
-
+	*/
 	//************************************************************
 	TCanvas* c_run2 = new TCanvas("Run2","Run2", 1200, 800);
 
@@ -3962,7 +3997,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 	//	frame_run2->SetTitle("Run2 Fit");
 
-	frame_run2->GetXaxis()->SetTitle("m_{J/#psi#Lambda}[MeV]");
+	frame_run2->GetXaxis()->SetTitle("#it{m_{J/#kern[-0.2]{#psi}#Lambda}}[MeV]");
 	frame_run2->GetYaxis()->SetTitle(Form("Candidates/(%d MeV)",binwidth));
 
 	combData->plotOn(frame_run2,Name("data_Run2"),Cut("sample==sample::run2"),DataError(RooAbsData::Poisson),LineWidth(1));
@@ -4027,50 +4062,55 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 
 	frame_run2->Draw();
 	gPad->SetLogy();
-	gPad->SetGridx();
-	gPad->SetGridy();
+//	gPad->SetGridx();
+//	gPad->SetGridy();
 
 	// c_run2->cd();
 
-	auto legend_run2_2 = new TLegend(0.35,0.7,0.65,0.9);
-	legend_run2_2->SetTextSize(0.03);
+	auto legend_run2_2 = new TLegend(leg2_xstart,leg2_ystart,leg2_xend,leg2_yend);
+//	legend_run2_2->SetTextSize(0.032);
+	legend_run2_2->SetTextSizePixels(25);
 	legend_run2_2->AddEntry("data_Run2","Data","lp");
-	legend_run2_2->AddEntry("fit_Run2","Total Fit","l");
-	legend_run2_2->AddEntry("lb_Run2","#Lambda_{b} #rightarrow J/#psi #Lambda","l");
-	legend_run2_2->AddEntry("bkg_Run2","Comb. Bkg.","l");
-	legend_run2_2->AddEntry("sig_Run2","#Lambda_{b} #rightarrow J/#psi #Sigma^{0} @ R = 0.23%","f");
+	legend_run2_2->AddEntry("fit_Run2","Total fit","l");
+	legend_run2_2->AddEntry("lb_Run2","#it{#Lambda_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Lambda}}","l");
+	legend_run2_2->AddEntry("bkg_Run2","Comb. bkg.","l");
+	legend_run2_2->AddEntry("sig_Run2","#it{#Lambda_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Sigma}^{#kern[0.2]{0}}} @ #it{R} = 0.23%","f");
 
-	auto legend_run2 = new TLegend(0.73,0.67,0.95,0.94);
-	legend_run2->SetTextSize(0.03);
-	legend_run2->AddEntry("xib_Run2","#Xi_{b} #rightarrow J/#psi #Xi","l");
+	auto legend_run2 = new TLegend(leg1_xstart,leg1_ystart,leg1_xend,leg1_yend);
+//	legend_run2->SetTextSize(0.032);
+	legend_run2->SetTextSizePixels(25);
+	legend_run2->AddEntry("xib_Run2","#it{#Xi_{b}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#Xi}","l");
 
 	if(jpsiksflag)
 	{
-		legend_run2->AddEntry("JpsiKs_Run2","B^{0} #rightarrow J/#psi K_{S}^{0}","l");
+		legend_run2->AddEntry("JpsiKs_Run2","B^{0} #rightarrow #it{J/#kern[-0.2]{#psi}} K_{S}^{0}","l");
 	}
 	if(xib0flag)
 	{
-		legend_run2->AddEntry("Xib_JpsiLambda_Run2","#Xi_{b}^{0} #rightarrow J/#psi #Lambda","fl");
+		legend_run2->AddEntry("Xib_JpsiLambda_Run2","#it{#Xi_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Lambda}}","fl");
 	}
 	if(lst1405flag)
 	{
-		legend_run2->AddEntry("lst1405_Run2","#Lambda_{b} #rightarrow J/#psi #Lambda(1405)","l");
+		legend_run2->AddEntry("lst1405_Run2","#it{#Lambda_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Lambda}}(1405)","l");
 	}
 	if(lst1520flag)
 	{
-		legend_run2->AddEntry("lst1520_Run2","#Lambda_{b} #rightarrow J/#psi #Lambda(1520)","l");
+		legend_run2->AddEntry("lst1520_Run2","#it{#Lambda_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Lambda}}(1520)","l");
 	}
 	if(lst1600flag)
 	{
-		legend_run2->AddEntry("lst1600_Run2","#Lambda_{b} #rightarrow J/#psi #Lambda(1600)","l");
+		legend_run2->AddEntry("lst1600_Run2","#it{#Lambda_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Lambda}}(1600)","l");
 	}
 	// if(chic1flag)
 	// {
 	//      legend_run2->AddEntry("chic1_Run2","#chi_{c1} #Lambda shape","l");
 	// }
-	legend_run2->AddEntry("misclst_Run2","Sum of other J/#psi #Lambda*","l");
+	legend_run2->AddEntry("misclst_Run2","Other part. rec. bkgs.","l");
 	legend_run2->Draw("same");
 	legend_run2_2->Draw("same");
+
+	lhcbName->Draw();
+
 
 	// TLatex l_run2;
 	// l_run2.SetTextSize(0.04);
@@ -4085,7 +4125,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	// hpull_run2->SetLineColor(kBlack);
 	// hpull_run2->SetMarkerColor(kBlack);
 	// frame_run2x2->SetTitle(0);
-	// frame_run2x2->GetXaxis()->SetTitle("m_{J/#psi#Lambda}[MeV]");
+	// frame_run2x2->GetXaxis()->SetTitle("#it{m_{J/#kern[-0.2]{#psi}#Lambda}}[MeV]");
 	// frame_run2x2->GetYaxis()->SetTitle("Pull");
 	// frame_run2x2->GetYaxis()->CenterTitle();
 	// frame_run2x2->GetYaxis()->SetNdivisions(505);
@@ -4096,12 +4136,12 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	// c_run2->cd();
 
 	//************************************************************
-
+/*
 	TCanvas* c1_run2 = new TCanvas("Run2_zoomed","Run2_zoomed", 1200, 800);
 
 	RooPlot *frame_zoom_run2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),5200,6000,800/binwidth);
 	//	frame_zoom_run2->SetTitle("Run2 Fit");
-	frame_zoom_run2->GetXaxis()->SetTitle("m_{J/#psi#Lambda}[MeV]");
+	frame_zoom_run2->GetXaxis()->SetTitle("#it{m_{J/#kern[-0.2]{#psi}#Lambda}}[MeV]");
 	frame_zoom_run2->GetYaxis()->SetTitle(Form("Candidates/(%d MeV)",binwidth));
 
 	combData->plotOn(frame_zoom_run2,Name("data_Run2"),Cut("sample==sample::run2"),DataError(RooAbsData::Poisson),LineWidth(1));
@@ -4161,48 +4201,50 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	// c1_run2->Modified();
 
 	auto legend_zoom_run2 = new TLegend(0.63,0.5,0.93,0.9);
-	legend_zoom_run2->SetTextSize(0.03);
+//	legend_zoom_run2->SetTextSize(0.032);
+	legend_zoom_run2->SetTextSizePixels(25);
 	legend_zoom_run2->AddEntry("data_Run2","Data","lp");
-	legend_zoom_run2->AddEntry("fit_Run2","Total Fit","l");
-	legend_zoom_run2->AddEntry("lb_Run2","#Lambda_{b} #rightarrow J/#psi #Lambda","l");
-	legend_zoom_run2->AddEntry("bkg_Run2","Comb. Bkg.","l");
-	legend_zoom_run2->AddEntry("sig_Run2","#Lambda_{b} #rightarrow J/#psi #Sigma^{0} @ R = 0.23%","f");
-	legend_zoom_run2->AddEntry("xib_Run2","#Xi_{b} #rightarrow J/#psi #Xi","l");
+	legend_zoom_run2->AddEntry("fit_Run2","Total fit","l");
+	legend_zoom_run2->AddEntry("lb_Run2","#it{#Lambda_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Lambda}}","l");
+	legend_zoom_run2->AddEntry("bkg_Run2","Comb. bkg.","l");
+	legend_zoom_run2->AddEntry("sig_Run2","#it{#Lambda_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#Sigma^{0}} @ #it{R} = 0.23%","f");
+	legend_zoom_run2->AddEntry("xib_Run2","#it{#Xi_{b}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#Xi}","l");
 
 	if(jpsiksflag)
 	{
-		legend_zoom_run2->AddEntry("JpsiKs_Run2","B^{0} #rightarrow J/#psi K_{S}^{0}","l");
+		legend_zoom_run2->AddEntry("JpsiKs_Run2","B^{0} #rightarrow #it{J/#kern[-0.2]{#psi}} K_{S}^{0}","l");
 	}
 	if(xib0flag)
 	{
-		legend_zoom_run2->AddEntry("Xib_JpsiLambda_Run2","#Xi_{b}^{0} #rightarrow J/#psi #Lambda","fl");
+		legend_zoom_run2->AddEntry("Xib_JpsiLambda_Run2","#it{#Xi_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Lambda}}","fl");
 	}
 	if(lst1405flag)
 	{
-		legend_zoom_run2->AddEntry("lst1405_Run2","#Lambda_{b} #rightarrow J/#psi #Lambda(1405)","l");
+		legend_zoom_run2->AddEntry("lst1405_Run2","#it{#Lambda_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Lambda}}(1405)","l");
 	}
 	if(lst1520flag)
 	{
-		legend_zoom_run2->AddEntry("lst1520_Run2","#Lambda_{b} #rightarrow J/#psi #Lambda(1520)","l");
+		legend_zoom_run2->AddEntry("lst1520_Run2","#it{#Lambda_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Lambda}}(1520)","l");
 	}
 	if(lst1600flag)
 	{
-		legend_zoom_run2->AddEntry("lst1600_Run2","#Lambda_{b} #rightarrow J/#psi #Lambda(1600)","l");
+		legend_zoom_run2->AddEntry("lst1600_Run2","#it{#Lambda_{b}}^{#kern[-0.5]{0}} #rightarrow #it{J/#kern[-0.2]{#psi}} #it{#kern[-0.2]{#Lambda}}(1600)","l");
 	}
 	// if(chic1flag)
 	// {
 	//      legend_zoom_run2->AddEntry("chic1_Run2","#chi_{c1} #Lambda shape","l");
 	// }
-	legend_zoom_run2->AddEntry("misclst_Run2","Sum of other J/#psi #Lambda*","l");
+	legend_zoom_run2->AddEntry("misclst_Run2","Other part. rec. bkgs.","l");
 	legend_zoom_run2->Draw("same");
 
+	lhcbName->Draw();
 	c1_run2->Update();
 
 	// Pull distribution
 	// RooPlot *frame_zoom_run2x2 = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),5200,6000,800/binwidth);
 	// RooHist* hpull_zoom_run2 = frame_zoom_run2->pullHist("data_Run2","fit_Run2");
 	// frame_zoom_run2x2->addPlotable(hpull_zoom_run2,"P");
-	// frame_zoom_run2x2->GetXaxis()->SetTitle("m_{J/#psi#Lambda}[MeV]");
+	// frame_zoom_run2x2->GetXaxis()->SetTitle("#it{m_{J/#kern[-0.2]{#psi}#Lambda}}[MeV]");
 	// frame_zoom_run2x2->GetYaxis()->SetTitle("Pull");
 	//
 	// hpull_zoom_run2->SetLineColor(kBlack);
@@ -4217,8 +4259,9 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	// c1_run2->cd();
 	// pad3_zoom->cd();
 
+	*/
 
-	TCanvas* c_run1_BW = (TCanvas*)c_run1->Clone();
+/*	TCanvas* c_run1_BW = (TCanvas*)c_run1->Clone();
 	TCanvas* c1_run1_BW = (TCanvas*)c1_run1->Clone();
 	TCanvas* c_run2_BW = (TCanvas*)c_run2->Clone();
 	TCanvas* c1_run2_BW = (TCanvas*)c1_run2->Clone();
@@ -4237,6 +4280,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 	c1_run1_BW->Draw();
 	c_run2_BW->Draw();
 	c1_run2_BW->Draw();
+*/
 	//************************************************************
 	//Set R back to its old value
 	w.var("R")->setVal(oldVal_R);
@@ -4348,28 +4392,46 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
 				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
 
-				c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-				c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.eps",myLow,myHigh,binwidth,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.eps",myLow,myHigh,binwidth,suffix));
 
-				c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
-				c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.C",myLow,myHigh,binwidth,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.C",myLow,myHigh,binwidth,suffix));
 
-				c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-				c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.png",myLow,myHigh,binwidth,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.png",myLow,myHigh,binwidth,suffix));
+
+				// c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				// c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+
+				// c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+				// c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+
+				// c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				// c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
 			}
 			else
 			{
 				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
 				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
 
-				c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-				c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned%s.eps",myLow,myHigh,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned%s.eps",myLow,myHigh,suffix));
 
-				c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
-				c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned%s.C",myLow,myHigh,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned%s.C",myLow,myHigh,suffix));
 
-				c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-				c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned%s.png",myLow,myHigh,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned%s.png",myLow,myHigh,suffix));
+
+				// c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+				// c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+
+				// c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+				// c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+
+				// c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+				// c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
 			}
 		}
 		if(sigType == 1 && bkgType == 0)
@@ -4379,22 +4441,31 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
 				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
 
-				c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-				c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins%s.eps",myLow,myHigh,binwidth,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins%s.eps",myLow,myHigh,binwidth,suffix));
 
-				c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
-				c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins%s.C",myLow,myHigh,binwidth,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins%s.C",myLow,myHigh,binwidth,suffix));
 
-				c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-				c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins%s.png",myLow,myHigh,binwidth,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins%s.png",myLow,myHigh,binwidth,suffix));
+
+				// c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				// c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+
+				// c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+				// c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+
+				// c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				// c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_ExpBkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
 			}
 			else
 			{
-				c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
-				c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+				// c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+				// c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_ExpBkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
 
-				c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-				c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+				// c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+				// c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_ExpBkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
 			}
 		}
 
@@ -4405,28 +4476,46 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
 				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
 
-				c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-				c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.eps",myLow,myHigh,binwidth,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.eps",myLow,myHigh,binwidth,suffix));
 
-				c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
-				c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.C",myLow,myHigh,binwidth,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.C",myLow,myHigh,binwidth,suffix));
 
-				c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-				c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.png",myLow,myHigh,binwidth,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.png",myLow,myHigh,binwidth,suffix));
+
+				// c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				// c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+
+				// c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+				// c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+
+				// c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				// c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
 			}
 			else
 			{
 				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
 				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
 
-				c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-				c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.eps",myLow,myHigh,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.eps",myLow,myHigh,suffix));
 
-				c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
-				c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.C",myLow,myHigh,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.C",myLow,myHigh,suffix));
 
-				c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-				c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.png",myLow,myHigh,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.png",myLow,myHigh,suffix));
+
+				// c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+				// c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+
+				// c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+				// c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+
+				// c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+				// c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_HypatiaSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
 			}
 		}
 		if(sigType == 1 && bkgType == 2)
@@ -4436,28 +4525,46 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2, Bool_t isoFlag, Int_t
 				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
 				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
 
-				c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-				c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.eps",myLow,myHigh,binwidth,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.eps",myLow,myHigh,binwidth,suffix));
 
-				c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
-				c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.C",myLow,myHigh,binwidth,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.C",myLow,myHigh,binwidth,suffix));
 
-				c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
-				c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.png",myLow,myHigh,binwidth,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.png",myLow,myHigh,binwidth,suffix));
+
+				// c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				// c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+
+				// c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+				// c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins%s.pdf",myLow,myHigh,binwidth,suffix));
+
+				// c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
+				// c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_Cheby3Bkg_%d_%d_%dMeVBins_zoom%s.pdf",myLow,myHigh,binwidth,suffix));
 			}
 			else
 			{
 				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
 				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
 
-				c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-				c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned%s.eps",myLow,myHigh,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned%s.eps",myLow,myHigh,suffix));
 
-				c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
-				c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned%s.C",myLow,myHigh,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned%s.C",myLow,myHigh,suffix));
 
-				c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
-				c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+				c_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned%s.png",myLow,myHigh,suffix));
+				c_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned%s.png",myLow,myHigh,suffix));
+
+				// c1_run1->SaveAs(Form("plots/PAPER/Fit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+				// c1_run2->SaveAs(Form("plots/PAPER/Fit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+
+				// c_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+				// c_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned%s.pdf",myLow,myHigh,suffix));
+
+				// c1_run1_BW->SaveAs(Form("plots/PAPER/BWFit_run1_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
+				// c1_run2_BW->SaveAs(Form("plots/PAPER/BWFit_run2_CBSig_Cheby3Bkg_%d_%d_unbinned_zoom%s.pdf",myLow,myHigh,suffix));
 			}
 		}
 	}
