@@ -16,6 +16,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 //rwType 0 is no RW, 1 is MV RW, 2 is BONN RW
 //bkgType = 0 for Exponential. 1 for 2nd order Chebychev. 2 for 3rd order Chebychev
 //sigType = 0 for Hypatia, 1 for Double sided Crystal Ball.
+
+//NOTE: I AM UNABLE TO GET THE FIT TO WORK FOR ANY BACKGROUND SHAPE OTHER THAN THE EXPONENTIAL.
 {
 	Int_t binwidth = 4;
 	Bool_t logFlag = true;
@@ -24,6 +26,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 
 	gSystem->cd("/data1/avenkate/JpsiLambda_RESTART");
 
+	//********Set up logging********
 	if(!simFlag)
 	{
 		if(isoFlag)
@@ -82,6 +85,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 			}
 		}
 	}
+	//********Finish setting up logging********
 	{
 		for(Int_t i=0; i<=70; i++)
 		{
@@ -600,24 +604,19 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 		}
 	}//end if for simFlag
 
-	Bool_t isBinned = true; //set to false if you want unbinned ML fit.
-	Bool_t saveFlag = true;
-
-	// Fit params
-	// If final fit is a binned fit ,it will use binwidth for binning (MeV)
+	Bool_t isBinned = true; //set to false if you want unbinned ML fit. // If final fit is a binned fit ,it will use binwidth for binning (MeV)
 	// If it is an unbinned it, it will just use the binning for visualization
-	// Int_t myLow      = myLow, myHigh = myHigh; //Define range in which fit is performed
+	Bool_t saveFlag = true; //determines if plots get saved
 
 	Int_t nbins    = (Int_t)(myHigh-myLow)/binwidth;
 
-	Int_t sigWindow_low  = 5365;
+	Int_t sigWindow_low  = 5365;//roughly signal region for Lambda_b -> J/psi Sigma
 	Int_t sigWindow_high = 5600;
 
 	if(sigType == 0)
 		gSystem->Load("scripts/RooHypatia2_cpp.so"); //Load library for Hypatia shape
 
 	// Xib normalization & errs
-
 	Float_t XibNorm[2]         = {0.0,0.0}; // Unweighted normalization inside signal window
 	Float_t XibNorm_StatErr[2] = {0.0,0.0}; // Abs. error
 	Float_t XibNorm_SystErr[2] = {0.0,0.0}; // Abs. error
@@ -710,23 +709,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 	Float_t eff_1600_wt[2]         = {0.0,0.0};
 	Float_t eff_1600_wt_SystErr[2] = {0.0,0.0};
 
-	// // Lb->chiC1 Lambda MC eff & errs
-	// Int_t nGen_chic1[2]          = {0,0};
-	// Float_t nGen_chic1_wt[2]          = {0,0};
-	// Float_t nGen_chiC1_wt[2]     = {0,0}; // Generated yield weighted
-	// Float_t eff_chic1_gen[2]     = {0.0,0.0};
-	// Float_t eff_chic1_gen_err[2] = {0.0,0.0};
-	//
-	// Float_t eff_chic1_rec[2]      = {0.0,0.0};
-	// Float_t eff_chic1_rec_err[2]  = {0.0,0.0};
-	// Float_t eff_chic1[2]          = {0.0,0.0};
-	// Float_t eff_chic1_staterr[2]  = {0.0,0.0};
-	//
-	// Float_t eff_chic1_rec_wt[2]      = {0.0,0.0};
-	// Float_t eff_chic1_rec_err_wt[2]  = {0.0,0.0};
-	// Float_t eff_chic1_wt[2]          = {0.0,0.0};
-	// Float_t eff_chic1_staterr_wt[2]  = {0.0,0.0};
-
 	// eff(Lb -> J/psi Lambda) / eff(Lb -> J/psi Sigma)
 	Float_t eff_ratio[2]         = {0.0,0.0}; // Ratio of unweighted efficiencies
 	Float_t eff_ratio_StatErr[2] = {0.0,0.0}; // Absolute error. Will remain zero
@@ -769,17 +751,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 	Float_t eff_ratio_wt_SystErr_1600[2] = {0.0,0.0};
 	Float_t eff_ratio_Err_1600_wt[2]     = {0.0,0.0};
 
-	// // eff(Lb -> chiC1 Lambda) / eff(Lb -> J/psi Lambda)
-	// Float_t eff_ratio_chic1[2]          = {0.0,0.0};
-	// Float_t eff_ratio_StatErr_chic1[2]  = {0.0,0.0};
-	// Float_t eff_ratio_SystErr_chic1[2]  = {0.0,0.0};
-	// Float_t eff_ratio_Err_chic1[2]      = {0.0,0.0};
-	//
-	// Float_t eff_ratio_chic1_wt[2]          = {0.0,0.0};
-	// Float_t eff_ratio_StatErr_chic1_wt[2]  = {0.0,0.0};
-	// Float_t eff_ratio_SystErr_chic1_wt[2]  = {0.0,0.0};
-	// Float_t eff_ratio_Err_chic1_wt[2]      = {0.0,0.0};
-
 	//yield for Lb -> J/psi Lambda
 	Float_t N_JpsiLambda[2]         = {0.0,0.0};
 	Float_t N_JpsiLambda_StatErr[2] = {0.0,0.0}; // abs. error. = fit error on yield
@@ -799,12 +770,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 	Float_t N_JpsiSigma_wt_StatErr[2] = {0.0,0.0};
 	Float_t N_JpsiSigma_wt_SystErr[2] = {0.0,0.0};
 
-	Float_t Nobs[2]         = {0.0,0.0}; // no. of events observed in data inside signal window
-	Float_t Nobs_StatErr[2] = {0.0,0.0};
-
-	Float_t Ncomb[2]         = {0.0,0.0}; // no. of events counted in sideband window above peak in data
-	Float_t Ncomb_StatErr[2] = {0.0,0.0};
-
 	TPaveText* lhcbName_sim = new TPaveText(gStyle->GetPadLeftMargin() + 0.05,
 	                                        0.87 - gStyle->GetPadTopMargin(),
 	                                        gStyle->GetPadLeftMargin() + 0.20,
@@ -821,8 +786,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 	Int_t lst1405flag  = 1;
 	Int_t lst1520flag  = 1;
 	Int_t lst1600flag  = 1;
-	Int_t lst1810flag  = 0;
-	// Int_t chic1flag = 0;
 	Int_t xibflag      = 1;
 	Int_t sigmaflag    = 1;
 	Int_t xib0flag     = 1;
@@ -837,6 +800,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 	// ************************Workspace for input data**************************
 	Bool_t inputFlag = false;
 	TString inputFileName = "";
+
 	if(!simFlag)
 	{
 		if(isoFlag)
@@ -887,6 +851,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 			}
 		}
 	}
+	//If the inputFile containing the workspace exists, set the inputFlag to true.
 	if(!(gSystem->AccessPathName(inputFileName.Data())))
 	{
 		inputFlag = true;
@@ -924,6 +889,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 	//*********CONTROL VERBOSITY*****************************************
 	RooMsgService::instance().setGlobalKillBelow(RooFit::ERROR);
 	//*******************************************************************
+
 	//*****Run script to get Xib normalization***************************
 	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
 	cout<<"Get Xib Normalization"<<endl;
@@ -968,6 +934,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 		cout<<"************************************************"<<endl;
 	}
 	//************************************************
+
 	//****Get J/psi Lambda efficiencies from MC*******
 	cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
 	cout<<"Get Lb -> J/psi Lambda efficiency"<<endl;
@@ -1339,12 +1306,10 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 			if(mcRW)
 			{
 				SIG_KEYS[i] = new RooKeysPdf(Form("SIG_Run%d",run),Form("SIG_Run%d",run),*myVar,*(ds_sig_wt[i]),RooKeysPdf::NoMirror,1.5);
-				// SIG_KEYS_NoMirror[i] = new RooKeysPdf(Form("SIG_Run%d_NoMirror",run),Form("SIG_Run%d_NoMirror",run),*myVar,*(ds_sig_wt[i]),RooKeysPdf::NoMirror,1);
 			}
 			else
 			{
 				SIG_KEYS[i] = new RooKeysPdf(Form("SIG_Run%d",run),Form("SIG_Run%d",run),*myVar,*(ds_sig[i]),RooKeysPdf::NoMirror,1.5);
-				// SIG_KEYS_NoMirror[i] = new RooKeysPdf(Form("SIG_Run%d_NoMirror",run),Form("SIG_Run%d_NoMirror",run),*myVar,*(ds_sig[i]),RooKeysPdf::NoMirror,1);
 			}
 		}
 		RooPlot *framesigma = new RooPlot(*(w.var("Lb_DTF_M_JpsiLConstr")),5300,5700,(400)/binwidth);
@@ -1356,9 +1321,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 		else
 			ds_sig[i]->plotOn(framesigma,Name("sigmadata_nowt"),LineColor(kBlack));
 		(*(SIG_KEYS[i])).plotOn(framesigma,Name("sigmafit"),LineColor(kBlue));
-
-		// cout<<"mirror both chi2/ndof = "<<framesigma->chiSquare("sigmafit","sigmadata")<<endl;
-		// cout<<"no mirror chi2/ndof = "<<framesigma->chiSquare("sigmafit_NoMirror","sigmadata")<<endl;
 
 		// TCanvas *csigma = new TCanvas(Form("JpsiSigma%d",run),Form("JpsiSigma%d",run));
 		// framesigma->Draw();
@@ -1402,7 +1364,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 	if(Lst1405_rwtype==0)
 	{
 		nGen_1405[0] = 3902198;
-		nGen_1405[1] = 3460130;
+		nGen_1405[1] = 3460310;
 		rwSuffix     = "";
 	}
 	else if(Lst1405_rwtype==1)//MV RW
@@ -1495,7 +1457,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 				num_1405_wt = (wt_1405_nonZero->GetMean()*wt_1405_nonZero->GetEntries()) +
 				              (wt_1405_Zero->GetMean()*wt_1405_Zero->GetEntries());
 			}
-			else //HAVE TO DEAL WITH THIS
+			else //TODO HAVE TO DEAL WITH THIS
 			{
 				mcTreeIn_nonZero_1405->Draw(Form("%sweight>>hrw0",rwType),Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");
 				mcTreeIn_Zero_1405->Draw(Form("%sweight>>hrw1",rwType),Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]),"goff");
@@ -1682,10 +1644,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 		frame1405->GetYaxis()->SetTitle(Form("Candidates/(%d MeV)",binwidth));
 		ds_1405[i]->plotOn(frame1405,Name("1405data"),LineColor(kBlack));
 		(*(KEYS_1405[i])).plotOn(frame1405,Name("1405fit"),LineColor(kBlue));
-
-		// cout<<"1405 mirror both chi2/ndof = "<<frame1405->chiSquare("1405fit","1405data")<<endl;
-		// cout<<"1405 no mirror chi2/ndof = "<<frame1405->chiSquare("1405fit_NoMirror","1405data")<<endl;
-		// cout<<"1405 mirror right chi2/ndof = "<<frame1405->chiSquare("1405fit_MirrorRight","1405data")<<endl;
 
 		// TCanvas *c1405 = new TCanvas(Form("Jpsi1405%d",run),Form("Jpsi1405%d",run));
 		// frame1405->Draw();
@@ -1926,10 +1884,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 		ds_1520[i]->plotOn(frame1520,Name("1520data"),LineColor(kBlack));
 		(*(KEYS_1520[i])).plotOn(frame1520,Name("1520fit"),LineColor(kBlue));
 
-		// cout<<"1520 mirror both chi2/ndof = "<<frame1520->chiSquare("1520fit","1520data")<<endl;
-		// cout<<"1520 no mirror chi2/ndof = "<<frame1520->chiSquare("1520fit_NoMirror","1520data")<<endl;
-		// cout<<"1520 mirror right chi2/ndof = "<<frame1520->chiSquare("1520fit_MirrorRight","1520data")<<endl;
-
 		// TCanvas *c1520 = new TCanvas(Form("Jpsi1520%d",run),Form("Jpsi1520%d",run));
 		// frame1520->Draw();
 		// lhcbName_sim->Draw();
@@ -2169,10 +2123,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 		ds_1600[i]->plotOn(frame1600,Name("1600data"),LineColor(kBlack));
 		(*(KEYS_1600[i])).plotOn(frame1600,Name("1600fit"),LineColor(kBlue));
 
-		// cout<<"1600 mirror both chi2/ndof = "<<frame1600->chiSquare("1600fit","1600data")<<endl;
-		// cout<<"1600 no mirror chi2/ndof = "<<frame1600->chiSquare("1600fit_NoMirror","1600data")<<endl;
-		// cout<<"1600 mirror right chi2/ndof = "<<frame1600->chiSquare("1600fit_MirrorRight","1600data")<<endl;
-
 		// TCanvas *c1600 = new TCanvas(Form("Jpsi1600%d",run),Form("Jpsi1600%d",run));
 		// frame1600->Draw();
 		// lhcbName_sim->Draw();
@@ -2186,190 +2136,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 		// if(saveFlag) c1600->SaveAs(Form("plots/ANA/Lst1600_Fit_Run%d.pdf",run));
 		cout<<"Done importing Jpsi Lst(1600) shape"<<endl;
 	}
-	//*******************************************************************
-	//
-	// RooDataSet* ds_chic1[2];
-	// RooKeysPdf* KEYS_chic1[2];
-	//
-	// //****Get chiC1 Lambda efficiencies and shape from MC*******
-	// const char* chiC1Path = "rootFiles/mcFiles/JpsiLambda/chiC1";
-	//
-	// for(Int_t run = 1; run<=2; run++)
-	// {
-	//      Int_t i = run-1;
-	//      TFile *mcFileIn_nonZero_chic1 = Open(Form("%s/run%d/chic1_cutoutks_LL_nonZeroTracks.root",
-	//                                                chiC1Path,run));
-	//      TTree *mcTreeIn_nonZero_chic1 = (TTree*)mcFileIn_nonZero_chic1->Get("MyTuple");
-	//
-	//      TFile *mcFileIn_Zero_chic1    = Open(Form("%s/run%d/chic1_cutoutks_LL_ZeroTracks.root",
-	//                                                chiC1Path,run));
-	//      TTree *mcTreeIn_Zero_chic1    = (TTree*)mcFileIn_Zero_chic1->Get("MyTuple");
-	//
-	//      mcTreeIn_nonZero_chic1->AddFriend("MyTuple",Form("%s/run%d/chic1_LL_FinalBDT%d_iso%d_%s.root",
-	//                                                       chiC1Path,run,bdtConf_nonZero[i],isoConf[i],isoVersion[i]));
-	//      mcTreeIn_Zero_chic1->AddFriend("MyTuple",Form("%s/run%d/chic1_zeroTracksLL_FinalBDT%d.root",
-	//                                                    chiC1Path,run,bdtConf_Zero[i]));
-	//      fstream genFile_chic1;
-	//      genFile_chic1.open((Form("logs/mc/JpsiLambda/chiC1/run%d/gen_log.txt",run)));
-	//
-	//      genFile_chic1>>nGen_chic1[i]; // Get number of generated events
-	//
-	//      TFile *genWtsFile_chic1 = Open(Form("%s/run%d/RW/gbWeights_gen.root",
-	//                                          chiC1Path,run));
-	//      TTree *genWtsTree_chic1 = (TTree*)genWtsFile_chic1->Get("MyTuple");
-	//
-	//      genWtsTree_chic1->AddFriend("MyTuple",Form("%s/run%d/RW/tauWeights_gen.root",
-	//                                                 chiC1Path,run));
-	//
-	//      genWtsTree_chic1->Draw("GB_WT*wt_tau>>genWt_chic1","","goff");
-	//
-	//      TH1F *genWt_chic1 = (TH1F*)gDirectory->Get("genWt_chic1");
-	//      nGen_chic1_wt[i] = genWt_chic1->GetEntries()*genWt_chic1->GetMean();
-	//
-	//      //***** DONT HAVE GENERATOR EFFS FOR chic1 YET
-	//      // fstream genEffFile_chic1;
-	//      // genEffFile_chic1.open(Form("logs/mc/JpsiLambda/chiC1/run%d/Generator_Effs_Combined.txt",run));
-	//      //
-	//      // genEffFile_chic1>>eff_chic1_gen[i]; // Get generator efficiency
-	//      // genEffFile_chic1>>eff_chic1_gen_err[i]; // and error on above
-	//      //
-	//      // cout<<"Run "<<run<<" chic1 Generator Effs = "<<eff_chic1_gen[i]*100
-	//      //     <<" % +/- "<<eff_chic1_gen_err[i]*100<<" %"<<endl;
-	//
-	//      //FOR NOW, EFF RATIO IS JUST RATIO OF RECO EFFS. ONCE I GET GENERATOR EFFS, I'LL PUT THEM IN
-	//
-	//      Int_t num_chic1 = mcTreeIn_nonZero_chic1->GetEntries(Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i])) +
-	//                        mcTreeIn_Zero_chic1->GetEntries(Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));                                               //NOTE NO TM HERE
-	//
-	//      mcTreeIn_nonZero_chic1->Draw("GB_WT*wt_tau>>wt_chic1_nonZero",Form("BDT%d > %f", bdtConf_nonZero[i],bdtCut_nonZero[i]));
-	//      mcTreeIn_Zero_chic1->Draw("GB_WT*wt_tau>>wt_chic1_Zero",Form("BDT%d > %f", bdtConf_Zero[i],bdtCut_Zero[i]));
-	//
-	//      TH1F *wt_chic1_nonZero = (TH1F*)gDirectory->Get("wt_chic1_nonZero");
-	//      TH1F *wt_chic1_Zero    = (TH1F*)gDirectory->Get("wt_chic1_Zero");
-	//
-	//      Int_t num_chic1_wt = (wt_chic1_nonZero->GetMean()*wt_chic1_nonZero->GetEntries()) +
-	//                           (wt_chic1_Zero->GetMean()*wt_chic1_Zero->GetEntries());
-	//
-	//      eff_chic1_rec[i]     = num_chic1*1.0/nGen_chic1[i]; // Calc. reco. eff.
-	//      eff_chic1_rec_err[i] = sqrt(eff_chic1_rec[i]*(1-eff_chic1_rec[i])/nGen_chic1[i]); //stat error on recon. eff.
-	//
-	//      eff_chic1_rec_wt[i]     = num_chic1_wt*1.0/nGen_chic1_wt[i]; //Calc. weighted reco eff.
-	//      eff_chic1_rec_err_wt[i] = sqrt(eff_chic1_rec_wt[i]*(1-eff_chic1_rec_wt[i])/nGen_chic1_wt[i]); //statistical error on weighted recon. eff.
-	//
-	//      cout<<"Run "<<run<<" UNWEIGHTED chic1 Recons. Effs = "<<eff_chic1_rec[i]*100
-	//          <<" % +/- "<<eff_chic1_rec_err[i]*100<<" %"<<endl;
-	//
-	//      cout<<"Run "<<run<<" WEIGHTED chic1 Recons. Effs = "<<eff_chic1_rec_wt[i]*100
-	//          <<" % +/- "<<eff_chic1_rec_err_wt[i]*100<<" %"<<endl;
-	//
-	//      eff_chic1[i] = eff_chic1_rec[i]; //TEMPORARY
-	//      eff_chic1_staterr[i] = eff_chic1_rec_err[i]; //TEMPORARY
-	//
-	//      eff_chic1_wt[i]         = eff_chic1_rec_wt[i]; //TEMPORARY
-	//      eff_chic1_staterr_wt[i] = eff_chic1_rec_err_wt[i]; //TEMPORARY
-	//
-	//      // eff_chic1[i] = eff_chic1_gen[i] * eff_chic1_rec[i]; // Calc overall eff.
-	//      // eff_chic1_staterr[i] = eff_chic1[i]*sqrt(pow((eff_chic1_gen_err[i]/eff_chic1_gen[i]),2) +
-	//      //                                        pow((eff_chic1_rec_err[i]/eff_chic1_rec[i]),2));   // and stat. error on above
-	//
-	//      cout<<"************************************************"<<endl;
-	//      cout<<"Run "<<run<<" UNWEIGHTED Jpsi chic1 Eff = "<<eff_chic1[i]*100
-	//          <<" % +/- "<<eff_chic1_staterr[i]*100<<" %"<<endl;
-	//      cout<<"Run "<<run<<" WEIGHTED Jpsi chic1 Eff = "<<eff_chic1_wt[i]*100
-	//          <<" % +/- "<<eff_chic1_staterr_wt[i]*100<<" %"<<endl;
-	//      cout<<"************************************************"<<endl;
-	//
-	//      // eff_ratio[i]         = eff_chic1[i]/eff_JpsiLambda[i]; // Calc eff ratio.
-	//
-	//      eff_ratio_chic1[i] = eff_chic1[i]/eff_Lambda_rec[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
-	//      // eff_ratio_StatErr_chic1[i] = eff_ratio_chic1[i]*sqrt(pow((eff_chic1_staterr[i]/eff_chic1[i]),2)+pow((eff_JpsiLambda_SystErr[i]/eff_JpsiLambda[i]),2)); // stat err on ratio
-	//      eff_ratio_StatErr_chic1[i] = eff_ratio_chic1[i]*sqrt(pow((eff_chic1_staterr[i]/eff_chic1[i]),2)+pow((eff_Lambda_rec_err[i]/eff_Lambda_rec[i]),2)); // TEMPORARY
-	//      eff_ratio_SystErr_chic1[i] = eff_ratio_chic1[i]*eff_ratio_syst_chic1;
-	//      eff_ratio_Err_chic1[i] = sqrt(pow(eff_ratio_StatErr_chic1[i],2) + pow(eff_ratio_SystErr_chic1[i],2));//combine in quadrature
-	//
-	//      eff_ratio_chic1_wt[i]            = eff_chic1_wt[i]/eff_Lambda_rec_wt[i]; //TEMPORARY - FOR NOW EFF RATIO IS JUST RATIO OF REC EFFS.
-	//      // eff_ratio_StatErr_chic1_wt[i] = eff_ratio_chic1_wt[i]*sqrt(pow((eff_chic1_staterr_wt[i]/eff_chic1_wt[i]),2)+pow((eff_JpsiLambda_wt_SystErr[i]/eff_JpsiLambda_wt[i]),2)); // stat err on ratio
-	//      eff_ratio_StatErr_chic1_wt[i]    = eff_ratio_chic1_wt[i]*sqrt(pow((eff_chic1_staterr_wt[i]/eff_chic1_wt[i]),2)+pow((eff_Lambda_rec_err_wt[i]/eff_Lambda_rec_wt[i]),2)); // TEMPORARY
-	//      eff_ratio_SystErr_chic1_wt[i]    = eff_ratio_chic1_wt[i]*eff_ratio_syst_chic1;
-	//      eff_ratio_Err_chic1_wt[i]        = sqrt(pow(eff_ratio_StatErr_chic1_wt[i],2) + pow(eff_ratio_SystErr_chic1_wt[i],2));//combine in quadrature
-	//
-	//      cout<<"***************************************"<<endl;
-	//      cout<<"Run "<<run<<" UNWEIGHTED chic1/Lambda efficiency ratio = "<<eff_ratio[i]<<" +/- "<<eff_ratio_Err[i]<<endl;
-	//      cout<<"Run "<<run<<" WEIGHTED chic1/Lambda efficiency ratio   = "<<eff_ratio_wt[i]<<" +/- "<<eff_ratio_Err_wt[i]<<endl;
-	//      cout<<"***************************************"<<endl;
-	//      //*******************************************************************
-	//
-	//      //****************Shape*********************************************
-	//      cout<<"***************************************"<<endl;
-	//      cout<<"Get J/psi Lambda(chic1) shape from MC"<<endl;
-	//      cout<<"***************************************"<<endl;
-	//
-	//      mcTreeIn_Zero_chic1->SetBranchStatus("*",0);
-	//      mcTreeIn_Zero_chic1->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-	//      mcTreeIn_Zero_chic1->SetBranchStatus(Form("BDT%d",bdtConf_Zero[i]),1);
-	//      mcTreeIn_Zero_chic1->SetBranchStatus("Lb_BKGCAT",1);
-	//      mcTreeIn_Zero_chic1->SetBranchStatus("GB_WT",1);
-	//      mcTreeIn_Zero_chic1->SetBranchStatus("wt_tau",1);
-	//
-	//      mcTreeIn_nonZero_chic1->SetBranchStatus("*",0);
-	//      mcTreeIn_nonZero_chic1->SetBranchStatus("Lb_DTF_M_JpsiLConstr",1);
-	//      mcTreeIn_nonZero_chic1->SetBranchStatus(Form("BDT%d",bdtConf_nonZero[i]),1);
-	//      mcTreeIn_nonZero_chic1->SetBranchStatus("Lb_BKGCAT",1);
-	//      mcTreeIn_nonZero_chic1->SetBranchStatus("GB_WT",1);
-	//      mcTreeIn_nonZero_chic1->SetBranchStatus("wt_tau",1);
-	//
-	//      TFile *tempFile_chic1 = new TFile("tempFile_chic1.root","RECREATE");
-	//
-	//      TTree* mcTreeIn_Zero_chic1_cut    = (TTree*)mcTreeIn_Zero_chic1->CopyTree(Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]));//NOTE NO TRUTH MATCHING HERE!
-	//      TTree* mcTreeIn_nonZero_chic1_cut = (TTree*)mcTreeIn_nonZero_chic1->CopyTree(Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]));//NOTE NO TRUTH MATCHING HERE!
-	//
-	//      TList *list_chic1 = new TList;
-	//      list_chic1->Add(mcTreeIn_Zero_chic1_cut);
-	//      list_chic1->Add(mcTreeIn_nonZero_chic1_cut);
-	//
-	//      TTree *combTree_chic1 = TTree::MergeTrees(list_chic1);
-	//      combTree_chic1->SetName("combTree_chic1");
-	//
-	//      ds_chic1[i] = new RooDataSet("ds_chic1","ds_chic1",combTree_chic1,RooArgSet(*(w.var("Lb_DTF_M_JpsiLConstr"))),0,"GB_WT*wt_tau");
-	//      ds_chic1[i]->Print();
-	//
-	//      KEYS_chic1[i] = new RooKeysPdf(Form("chic1_Run%d",run),Form("chic1_Run%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*(ds_chic1[i]),RooKeysPdf::MirrorBoth,1);
-	//
-	//      // mcTreeIn_nonZero_chic1->Draw(Form("Lb_DTF_M_JpsiLConstr>>hchic1_nonZero%d(%d,%d,%d)",run,nbins,myLow,myHigh),
-	//      //                            Form("BDT%d > %f",bdtConf_nonZero[i],bdtCut_nonZero[i]),"goff");        //Not TRUTH MATCHING HERE!
-	//      //
-	//      // mcTreeIn_Zero_chic1->Draw(Form("Lb_DTF_M_JpsiLConstr>>hchic1_Zero%d(%d,%d,%d)",run,nbins,myLow,myHigh),
-	//      //                         Form("BDT%d > %f",bdtConf_Zero[i],bdtCut_Zero[i]),"goff");        //Not TRUTH MATCHING HERE!
-	//      //
-	//      // TH1D *hchic1_nonZero = (TH1D*)gDirectory->Get(Form("hchic1_nonZero%d",run));
-	//      // TH1D *hchic1_Zero    = (TH1D*)gDirectory->Get(Form("hchic1_Zero%d",run));
-	//      // TH1D *hchic1         = new TH1D(Form("hchic1%d",run),"",nbins,myLow,myHigh);
-	//      //
-	//      // hchic1->Add(hchic1_nonZero,hchic1_Zero);
-	//      // TH1D *hchic1_smooth  = (TH1D*)hchic1->Clone(Form("hchic1_smooth%d",run));
-	//      // hchic1_smooth->Smooth(2);
-	//      //
-	//      // RooDataHist *ds_chic1        = new RooDataHist(Form("ds_chic1%d",run),Form("ds_chic1%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),hchic1);
-	//      // RooDataHist *ds_chic1_smooth = new RooDataHist(Form("ds_chic1_smooth%d",run),Form("ds_chic1_smooth%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),hchic1_smooth);
-	//      //
-	//      // ds_chic1->Print();
-	//      //
-	//      // RooHistPdf chic1shape(Form("chic1shape%d",run),Form("chic1shape%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_chic1,0);
-	//      // SIG[i] = new RooHistPdf(Form("SIG%d",run),Form("SIG%d",run),*(w.var("Lb_DTF_M_JpsiLConstr")),*ds_chic1_smooth,0);
-	//
-	//      RooPlot *framechic1 = (w.var("Lb_DTF_M_JpsiLConstr"))->frame();
-	//      framechic1->SetTitle("#chi_{C1} #Lambda");
-	//      // ds_chic1->plotOn(framechic1,Name("chic1data"));
-	//      ds_chic1[i]->plotOn(framechic1,Name("chiC1data"));
-	//      // chic1shape.plotOn(framechic1,Name("chic1fit"),LineColor(kBlue));
-	//      (*(KEYS_chic1[i])).plotOn(framechic1,Name("chiC1fitsmooth"),LineColor(kRed),LineStyle(kDashed));
-	//
-	//      TCanvas *cchic1 = new TCanvas(Form("chic1_Run%d",run),Form("chic1_Run%d",run));
-	//      framechic1->Draw();
-	//      w.import(*(KEYS_chic1[i]));
-	//
-	//      cout<<"Done importing chiC1 Lambda shape"<<endl;
-	// }
 	//*******************************************************************
 
 	//******************Get shape from Xib background********************
@@ -2749,14 +2515,8 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 		w.factory("Exponential::Bkg_Run1(Lb_DTF_M_JpsiLConstr,expr('-1*pow(10,slope_Run1)',slope_Run1[-2.0,-5.0,0.0]))");
 		w.factory("Exponential::Bkg_Run2(Lb_DTF_M_JpsiLConstr,expr('-1*pow(10,slope_Run2)',slope_Run2[-2.0,-5.0,0.0]))");
 
-		// w.factory("Exponential::Expo2_Run1(Lb_DTF_M_JpsiLConstr,expr('-1*pow(10,slope2_Run1)',slope2_Run1[-2.0,-5.0,0.0]))");
-		// w.factory("Exponential::Expo2_Run2(Lb_DTF_M_JpsiLConstr,expr('-1*pow(10,slope2_Run2)',slope2_Run2[-2.0,-5.0,0.0]))");
-
 		w.var("slope_Run1")->setError(0.25);
 		w.var("slope_Run2")->setError(0.25);
-		// w.var("slope2_Run1")->setError(0.25);
-		// w.var("slope2_Run2")->setError(0.25);
-
 	}
 	else if(bkgType == 1)
 	{
@@ -3238,18 +2998,14 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 
 	//************************MAKE COMBINED MODEL************************
 
-//	w.factory("R[0.01,0,500]"); // R*10^5 is the parameter of interest  This is shared b/w Run1 and Run2
-	w.factory("R[0.0001,0,5]"); // R*10^5 is the parameter of interest  This is shared b/w Run1 and Run2
-	// R*10^5 =  [N(Jpsi Sigma)/N(Jpsi Lambda)] * [eff(Jpsi Lambda)/eff(Jpsi Sigma)]
+	w.factory("R[0.0001,0,5]"); // R*10^3 is the parameter of interest  This is shared b/w Run1 and Run2
 	w.var("R")->setError(0.001);
 
-//	w.var("R")->SetTitle("\\mathscr{R} #upoint 10^{5}");
 	w.var("R")->SetTitle("\\mathscr{R} #upoint 10^{3}");
 
 	w.factory("R_1405[0.01,0.00001,0.4]"); //R_1405 = N_corr(Lb -> Jpsi Lambda(1405)) / N_corr(Lb -> Jpsi Lambda)
 	w.factory("R_1520[0.01,0.00001,0.5]"); //R_1520 = N_corr(Lb -> Jpsi Lambda(1520)) / N_corr(Lb -> Jpsi Lambda)
 	w.factory("R_1600[0.1,0.001,0.4]"); //R_1600 = N_corr(Lb -> Jpsi Lambda(1600)) / N_corr(Lb -> Jpsi Lambda)
-	//	w.factory("R_chic1[0.1,0.0,0.5]"); //R_chic1 = N_corr(Lb -> chic1 Lambda / N_corr(Lb -> Jpsi Lambda)
 
 	//**************** Sigma/Lb Efficiency Ratio*************************
 	if(mcRW)
@@ -3339,29 +3095,14 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 	w.var("geff_ratio_1600_Run2")->setConstant();
 	//*******************************************************************
 
-	//**************** chic1/Lb Efficiency Ratio**************************
-	// w.factory(Form("eff_ratio_chic1_1[%f,0.,1.]",eff_ratio_chic1_wt[0])); //eff(Lb -> Jpsi Lambda(chic1))/eff(Lb -> Jpsi Lambda)
-	// w.factory(Form("eff_ratio_chic1_2[%f,0.,1.]",eff_ratio_chic1_wt[1]));
-	//
-	// w.factory(Form("Gaussian::eff_ratio_chic1_constraint1(geff_ratio_chic1_1[%f,0,1],eff_ratio_chic1_1,%f)",eff_ratio_chic1_wt[0],eff_ratio_Err_chic1_wt[0]));
-	// w.factory(Form("Gaussian::eff_ratio_chic1_constraint2(geff_ratio_chic1_2[%f,0,1],eff_ratio_chic1_2,%f)",eff_ratio_chic1_wt[1],eff_ratio_Err_chic1_wt[1]));
-	//
-	// w.var("geff_ratio_chic1_1")->setConstant();
-	// w.var("geff_ratio_chic1_2")->setConstant();
-	//*******************************************************************
+	//***************SOME IMPORTANT YIELDS*************************
 	w.factory("nLb_Run1[5000,1000,8000]");
 	w.factory("nLb_Run2[17000,1000,24000]");
 	w.factory("nMiscLst_Run1[1500,100,4000]");
 	w.factory("nMiscLst_Run2[4000,200,9000]");
-	// w.factory(Form("nBkg_Run1[1,%d]",nentries[0]));
-	// w.factory(Form("nBkg_Run2[1,%d]",nentries[1]));
 	w.factory("nBkg_Run1[700,500,1500]");
 	w.factory("nBkg_Run2[2500,1000,5000]");
-
 	//****************Xib Bkg Yield**************************************
-
-	//What should the limits on nXib be?
-
 	w.factory(Form("nXib1[%f,%f,%f]",xibCentral[0],xibLow[0],xibHigh[0]));
 	w.factory(Form("nXib2[%f,%f,%f]",xibCentral[1],xibLow[1],xibHigh[1]));
 
@@ -3373,9 +3114,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 	//*******************************************************************
 
 	//*****************Jpsi Sigma yield**********************************
-	// w.factory("expr::nSigma1('pow(10,-5)*R*nLb_Run1/(eff_ratio_Sigma_Run1*1.058)',R,nLb_Run1,eff_ratio_Sigma_Run1)");
-	// w.factory("expr::nSigma2('pow(10,-5)*R*nLb_Run2/(eff_ratio_Sigma_Run2*1.058)',R,nLb_Run2,eff_ratio_Sigma_Run2)");
-
 	w.factory("expr::nSigma1('pow(10,-3)*R*nLb_Run1/(eff_ratio_Sigma_Run1*1.058)',R,nLb_Run1,eff_ratio_Sigma_Run1)");
 	w.factory("expr::nSigma2('pow(10,-3)*R*nLb_Run2/(eff_ratio_Sigma_Run2*1.058)',R,nLb_Run2,eff_ratio_Sigma_Run2)");
 	//*******************************************************************
@@ -3394,9 +3132,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 	w.factory("expr::n1600_Run1('R_1600*nLb_Run1*eff_ratio_1600_Run1',R_1600,nLb_Run1,eff_ratio_1600_Run1)");
 	w.factory("expr::n1600_Run2('R_1600*nLb_Run2*eff_ratio_1600_Run2',R_1600,nLb_Run2,eff_ratio_1600_Run2)");
 	//*******************************************************************
-	//*****************chic1 Lambda yield***************************
-	// w.factory("expr::nchic1_Run1('R_chic1*nLb_Run1*eff_ratio_chic1_1',R_chic1,nLb_Run1,eff_ratio_chic1_1)");
-	// w.factory("expr::nchic1_Run2('R_chic1*nLb_Run2*eff_ratio_chic1_2',R_chic1,nLb_Run2,eff_ratio_chic1_2)");
+
 	//*******************************************************************
 	w.factory("SUM::model1(nSigma1*SIG_Run1 , nLb_Run1*Lb_Run1 , nXib1*XIB_RUN1 , n1405_Run1*LST1405_Run1 ,"
 	          " n1520_Run1*LST1520_Run1 , n1600_Run1*LST1600_Run1 , nMiscLst_Run1*lstLump_Run1 , "
@@ -3435,11 +3171,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 		w.var("nJpsiKs_Run2")->setVal(0.0);
 		w.var("nJpsiKs_Run2")->setConstant();
 	}
-	// if(!chic1flag)
-	// {
-	//      w.var("R_chic1")->setVal(0);
-	//      w.var("R_chic1")->setConstant();
-	// }
 
 	w.defineSet("poi","R"); //parameters of interest
 
@@ -3452,19 +3183,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 	            "nBkg_Run2,nMiscLst_Run2,miscLstMean_Run2,"
 	            "miscLstSigma_Run2,eff_ratio_Sigma_Run2,nXib2,eff_ratio_1405_Run2,"
 	            "eff_ratio_1520_Run2,eff_ratio_1600_Run2");
-
-	// w.extendSet("nuisParams","nJpsiKs_Run1,nJpsiKs_Run2");
-
-	// if(sigType == 0)//Hypatia
-	// {
-	//      w.extendSet("nuisParams","lambda_Run1");
-	//      w.extendSet("nuisParams","lambda_Run2");
-	// }
-	// else if(sigType == 1)//Crytal Ball
-	// {
-	//      w.extendSet("nuisParams","alpha1_Run1,alpha2_Run1");
-	//      w.extendSet("nuisParams","alpha1_Run2,alpha2_Run2");
-	// }
 
 	if(lst1405flag)
 		w.extendSet("nuisParams","R_1405");
@@ -3702,13 +3420,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 
 	TCanvas* c_run1 = new TCanvas("Run1","Run1", 1200, 800);
 
-	// TPaveText* lhcbName = new TPaveText(gStyle->GetPadLeftMargin() + 0.05,
-	//                                     0.87 - gStyle->GetPadTopMargin(),
-	//                                     gStyle->GetPadLeftMargin() + 0.20,
-	//                                     0.95 - gStyle->GetPadTopMargin(),
-	//                                     "BRNDC");
-
-//	TPaveText* lhcbName = new TPaveText(0.20,0.8,0.27,0.87,"brNDC");
 	TPaveText* lhcbName = new TPaveText(0.83,0.85,0.92,0.92,"brNDC");
 	lhcbName->AddText("LHCb");
 	lhcbName->SetFillColor(0);
@@ -3736,8 +3447,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("LST1520_Run1"))),LineColor(kBlue+2),LineStyle(4),Name("lst1520_Run1"));
 	if(lst1600flag)
 		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("LST1600_Run1"))),LineColor(kBlue+4),LineStyle(7),Name("lst1600_Run1"));
-	// if(chic1flag)
-	//      simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("chic1_Run1"))),LineColor(kMagenta+2),LineStyle(kDashed),Name("chic1_Run1"));
 	//**** Set R to its upper limit to artificially plot the Lb->J/psi Sigma signal shape and show what it would look like at its upper limit
 	w.var("R")->setVal(2.28);
 	//****
@@ -3752,8 +3461,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("JPSIKS_RUN1"))),LineColor(kBlue-2),LineStyle(1),Name("JpsiKs_Run1"));
 
 	frame_run1->GetYaxis()->SetRangeUser(0.1,2000);
-	// Double_t chiSquare1 = frame_run1->chiSquare("fit_run1","data_Run1");
-	// cout<<"chi square1/dof = "<<chiSquare1<<endl;
 	RooArgSet *allpar_run1 = simPdf.getParameters(*(ds[0]));
 	RooArgSet *floatpar_run1 = (RooArgSet*)allpar_run1->selectByAttrib("Constant",kFALSE);
 	floatpar_run1->Print();
@@ -4352,7 +4059,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 	// w.Write();
 	//*******************************************************************
 
-	//**************Upper Limit Calculation*****************************
+	//**************OLD Upper Limit Calculation*****************************
 
 	// cout<<"Starting Upper Limit Calculation"<<endl;
 
@@ -4595,6 +4302,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 		w1->writeToFile(inputFileName.Data(),true);
 	}
 	cout << "workspace written to file " << fileName << endl;
+	if(logFlag) gSystem->RedirectOutput(0);
 
 //	gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"rootFiles/dataFiles/JpsiLambda/ModelConfigs/%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,3,true,20,0,500,100,false,0,%d,%d,%d,%d,%d)",fileName,myLow,myHigh,sigType,config_Run1,config_Run2));
 	// gROOT->ProcessLine(Form(".x StandardHypoTestInvDemo.C(\"%s\",\"w\",\"ModelConfig\",\"bkgOnlyModel\",\"combData\",2,2,true,20,100,2000,100,false,0,%d,%d)",fileName,myLow,myHigh));
@@ -4604,23 +4312,13 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 
 	// TCanvas* dataCanvas = new TCanvas("dataCanvas");
 	// //dataCanvas->Divide(2,1);
-	// cout<<"poop0"<<endl;
 	// // dataCanvas->cd(1);
 	// LikelihoodIntervalPlot plotInt((LikelihoodInterval*)lr_int);
-	// cout<<"poop0.1"<<endl;
 	// plotInt.SetTitle("Profile Likelihood Ratio and Posterior for S");
-	// cout<<"poop0.2"<<endl;
 	// plotInt.Draw();
-	// cout<<"poop0.3"<<endl;
-
-	if(logFlag) gSystem->RedirectOutput(0);
-
 
 	// RooRealVar x("x","x",0,1000);
-
-	// cout<<"poop0.4"<<endl;
 	// RooDataSet d("d","d",RooArgSet(x));
-	// cout<<"poop0.5"<<endl;
 
 	// for(Int_t i=0;i<=1000;i+=100)
 	//   {
@@ -4631,21 +4329,14 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 	// // Second, use a Calculator based on the Feldman Cousins technique
 	// cout<<"starting fc"<<endl;
 	// FeldmanCousins fc(*combData, mc);
-	// cout<<"poop1"<<endl;
 	// fc.UseAdaptiveSampling(true);
-	// cout<<"poop2"<<endl;
 	// fc.SetPOIPointsToTest(d);
-	// cout<<"poop3"<<endl;
 	// fc.FluctuateNumDataEntries(true);
-	// cout<<"poop4"<<endl;
 	// //	fc.SetNBins(20); // number of points to test per parameter
 	// fc.SetTestSize(.05);
-	// cout<<"poop5"<<endl;
 	// //  fc.SaveBeltToFile(true); // optional
 	// ConfInterval* fcint = NULL;
-	// cout<<"poop6"<<endl;
 	// fcint = fc.GetInterval();  // that was easy.
-	// cout<<"poop7"<<endl;
 
 	// if (fcint != NULL) {
 	//   double fcul = ((PointSetInterval*) fcint)->UpperLimit(*(w.var("R")));
