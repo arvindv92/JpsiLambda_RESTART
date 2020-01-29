@@ -3699,7 +3699,6 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 	//*********************PLOTTING STUFF*********************************************
 
 	Double_t oldVal_R = w.var("R")->getValV();
-	// w.var("R")->setVal(200);
 
 	TCanvas* c_run1 = new TCanvas("Run1","Run1", 1200, 800);
 
@@ -3739,7 +3738,13 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("LST1600_Run1"))),LineColor(kBlue+4),LineStyle(7),Name("lst1600_Run1"));
 	// if(chic1flag)
 	//      simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("chic1_Run1"))),LineColor(kMagenta+2),LineStyle(kDashed),Name("chic1_Run1"));
+	//**** Set R to its upper limit to artificially plot the Lb->J/psi Sigma signal shape and show what it would look like at its upper limit
+	w.var("R")->setVal(2.28);
+	//****
 	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("SIG_Run1"))),LineColor(kBlack),Name("sig_Run1"),LineStyle(1),FillStyle(3003),FillColor(kBlack),DrawOption("F"),LineWidth(0));
+	//**** Set R back to its fitted value
+	w.var("R")->setVal(oldVal_R);
+	//****
 	simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("lstLump_Run1"))),LineColor(kRed+2),LineStyle(9),Name("misclst_Run1"));
 	if(xib0flag)
 		simPdf.plotOn(frame_run1,Slice(sample,"run1"),ProjWData(sample,*combData),Components(*(w.pdf("Xib_Run1"))),LineColor(kRed-1),LineStyle(7),Name("Xib_JpsiLambda_Run1"),FillColor(kRed-1),DrawOption("FL"),FillStyle(3001));
@@ -4021,7 +4026,13 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
 		simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("LST1600_Run2"))),LineColor(kBlue+4),LineStyle(7),Name("lst1600_Run2"));
 	// if(chic1flag)
 	// simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("chic1_Run2"))),LineColor(kMagenta+2),LineStyle(kDashed),Name("chic1_Run2"));
+	//**** Set R to its upper limit to artificially plot the Lb->J/psi Sigma signal shape and show what it would look like at its upper limit
+	w.var("R")->setVal(2.28);
+	//****
 	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("SIG_Run2"))),LineColor(kBlack),Name("sig_Run2"),LineStyle(1),FillStyle(3003),FillColor(kBlack),DrawOption("F"),LineWidth(0));
+	//**** Set R back to its fitted value
+	w.var("R")->setVal(oldVal_R);
+	//****
 	simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("lstLump_Run2"))),LineColor(kRed+2),LineStyle(9),Name("misclst_Run2"));
 	if(xib0flag)
 		simPdf.plotOn(frame_run2,Slice(sample,"run2"),ProjWData(sample,*combData),Components(*(w.pdf("Xib_Run2"))),LineColor(kRed-1),LineStyle(7),Name("Xib_JpsiLambda_Run2"),FillColor(kRed-1),DrawOption("FL"),FillStyle(3001));
@@ -4284,10 +4295,7 @@ void Fitscript_simul(Int_t config_Run1, Int_t config_Run2,
         c_run2_BW->Draw();
         c1_run2_BW->Draw();
  */
-	//************************************************************
-	//Set R back to its old value
-	w.var("R")->setVal(oldVal_R);
-
+	//**********************Calculate global fit chi2**************************************
 	Double_t chi2_global = chi2_run1*fit_ndof_run1 + chi2_run2*fit_ndof_run2;
 	Int_t ndof_global = fit_ndof_run1 + fit_ndof_run2;
 
