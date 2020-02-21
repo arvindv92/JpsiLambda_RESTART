@@ -431,16 +431,16 @@ void Xib_JpsiLambda(Bool_t logFlag = true)
 	// cout<<"Ncorr Xib0-> J/psi Lambda = "<<(N_Xib0_JpsiLambda_Run1/Eff_Xib0_JpsiLambda_Run1)<<endl;
 	// cout<<"Ncorr Xib0-> J/psi Xi = "<<(N_Xib0_JpsiXi0_Run1/Eff_Xibm_JpsiXim_Run1)<<endl;
 	cout<<endl;
-	cout<<"UNWEIGHTED RATIO = "<<(BF_Ratio_Run1*1000)<<" +/- "<<(StatErr_BF_Ratio_Run1*1000)<<" +/- "<<(SystErr_BF_Ratio_Run1*1000)<<"*10^{-3}"<<endl;
-	cout<<"WEIGHTED RATIO   = " <<(BF_Ratio_Run1_wt*1000)<<" +/- "<<(StatErr_BF_Ratio_Run1_wt*1000)<<" +/- "<<(SystErr_BF_Ratio_Run1_wt*1000)<<"*10^{-3}"<<endl;
+	cout<<"UNWEIGHTED RATIO = ("<<(BF_Ratio_Run1*1000)<<" +/- "<<(StatErr_BF_Ratio_Run1*1000)<<" +/- "<<(SystErr_BF_Ratio_Run1*1000)<<")*10^{-3}"<<endl;
+	cout<<"WEIGHTED RATIO   = (" <<(BF_Ratio_Run1_wt*1000)<<" +/- "<<(StatErr_BF_Ratio_Run1_wt*1000)<<" +/- "<<(SystErr_BF_Ratio_Run1_wt*1000)<<")*10^{-3}"<<endl;
 	cout<<endl;
 
 	cout<<"******RUN 2 RESULT***********"<<endl;
 	// cout<<"Ncorr Xib0-> J/psi Lambda = "<<(N_Xib0_JpsiLambda_Run2/Eff_Xib0_JpsiLambda_Run2)<<endl;
 	// cout<<"Ncorr Xib0-> J/psi Xi = "<<(N_Xib0_JpsiXi0_Run2/Eff_Xibm_JpsiXim_Run2)<<endl;
 	cout<<endl;
-	cout<<"UNWEIGHTED RATIO = "<<(BF_Ratio_Run2*1000)<<" +/- "<<(StatErr_BF_Ratio_Run2*1000)<<" +/- "<<(SystErr_BF_Ratio_Run2*1000)<<"*10^{-3}"<<endl;
-	cout<<"WEIGHTED RATIO   = " <<(BF_Ratio_Run2_wt*1000)<<" +/- "<<(StatErr_BF_Ratio_Run2_wt*1000)<<" +/- "<<(SystErr_BF_Ratio_Run2_wt*1000)<<"*10^{-3}"<<endl;
+	cout<<"UNWEIGHTED RATIO = ("<<(BF_Ratio_Run2*1000)<<" +/- "<<(StatErr_BF_Ratio_Run2*1000)<<" +/- "<<(SystErr_BF_Ratio_Run2*1000)<<")*10^{-3}"<<endl;
+	cout<<"WEIGHTED RATIO   = (" <<(BF_Ratio_Run2_wt*1000)<<" +/- "<<(StatErr_BF_Ratio_Run2_wt*1000)<<" +/- "<<(SystErr_BF_Ratio_Run2_wt*1000)<<")*10^{-3}"<<endl;
 	cout<<endl;
 
 	//Combined Result
