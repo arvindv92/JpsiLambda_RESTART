@@ -7,11 +7,28 @@ def GetNorm(run=1, isoFlag=False, isoVersion="v0", isoConf=1, finalBDTConf_nonZe
             finalBDTConf_Zero=1, bdtCut_nonZero=-1.0, bdtCut_Zero=-1.0,
             shift_trEff=0.0, simFlag=False):
     # (tau Xib-/tau Xib0)
-    tauXibmin_tauXib0 = 1.087  # despite the name of the variable, this is (tau(Xib-)*B(Xi- -> Lambda pi-))/(tau(Xib0)*B(Xi0 -> Lambda pi0)
+    tauXibmin_tauXib0 = 1.083  # tau(Xib-)/tau(Xib0)
     err_tauXibmin_tauXib0 = 0.036
 
-    scale_factor = 1.0 + (1.0 / tauXibmin_tauXib0)
-    err_scale_factor = scale_factor * (err_tauXibmin_tauXib0 / tauXibmin_tauXib0)
+    fXib0_fXibm = 1.37  # f(Xib-)/f(Xib0)\
+    err_fXib0_fXibm = 0.09
+
+    fXibm_fXib0 = 1.0 / fXib0_fXibm
+    err_fXibm_fXib0 = err_fXib0_fXibm / (fXib0_fXibm * fXib0_fXibm)
+
+    B_Xi0_LambdaPi0 = 99.524 / 100
+    Err_B_Xi0_LambdaPi0 = 0.012 / 100
+
+    B_Xim_LambdaPim = 99.887 / 100
+    Err_B_Xim_LambdaPim = 0.035 / 100
+
+    NXibm_NXib0 = fXibm_fXib0 * tauXibmin_tauXib0 * B_Xim_LambdaPim
+    Err_NXibm_NXib0 = NXibm_NXib0 * math.sqrt(pow(err_fXibm_fXib0 / fXibm_fXib0, 2)
+                                              + pow(err_tauXibmin_tauXib0 / tauXibmin_tauXib0, 2)
+                                              + pow(Err_B_Xim_LambdaPim / B_Xim_LambdaPim, 2))
+
+    scale_factor = 1.0 + (1.0 / NXibm_NXib0)
+    err_scale_factor = scale_factor * (Err_NXibm_NXib0 / NXibm_NXib0)
 
     relErr_scale_factor = (err_scale_factor / scale_factor)
 
@@ -198,7 +215,7 @@ def GetNorm(run=1, isoFlag=False, isoVersion="v0", isoConf=1, finalBDTConf_nonZe
     print '*Xib Yield       = ' + str(xibYield_relSyst * 100) + '%'
     print '*Xib->JpsiL eff  = ' + str(relErr_xibEff_JpsiLambda_wt * 100) + '%'
     print '*Xib->JpsiXi eff = ' + str(relErr_xibEff_wt * 100) + '%'
-    print '*tauXib-/tauXib0 = ' + str(relErr_scale_factor * 100) + '%'
+    print '*Scale Factor = ' + str(relErr_scale_factor * 100) + '%'
     # Write results out to log file
     xibNormLog = open("../logs/mc/JpsiXi/run" + str(run) + "/xibNorm_log.txt",
                       "w")
