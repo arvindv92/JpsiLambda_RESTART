@@ -177,7 +177,7 @@ void Xib_JpsiLambda(Bool_t logFlag = true)
 	Float_t fXib0_fXibm = 1.37; //f(Xib-)/f(Xib0)
 	Float_t Err_fXib0_fXibm = 0.09;
 
-	Float_t fXibm_fXib0 = 1.0/fXib0_fXibm;
+	Float_t fXibm_fXib0 = 1.0/fXib0_fXibm; //f(Xib0)/f(Xib-)
 	Float_t Err_fXibm_fXib0 = Err_fXib0_fXibm/(fXib0_fXibm*fXib0_fXibm);
 
 	// Float_t Scale_Factor = 1.087;
