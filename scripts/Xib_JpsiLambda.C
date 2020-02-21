@@ -464,8 +464,8 @@ void Xib_JpsiLambda(Bool_t logFlag = true)
 
 	//Calculate amplitude ratio using combined weighted result.
 	Amp_Ratio         = (1.0/lambda)*sqrt(BF_Ratio_Comb_wt/Phi_Xib);
-	StatErr_Amp_Ratio = StatErr_BF_Ratio_Comb_wt/pow(Amp_Ratio,2);
-	SystErr_Amp_Ratio = SystErr_BF_Ratio_Comb_wt/pow(Amp_Ratio,2);
+	StatErr_Amp_Ratio = (1.0/lambda)*1/sqrt(Phi_Xib)*StatErr_BF_Ratio_Comb_wt/pow(Amp_Ratio,2);
+	SystErr_Amp_Ratio = (1.0/lambda)*1/sqrt(Phi_Xib)*SystErr_BF_Ratio_Comb_wt/pow(Amp_Ratio,2);
 
 	cout<<"******Combined Result************"<<endl;
 	cout<<endl;
