@@ -205,6 +205,12 @@ void Xib_JpsiLambda(Bool_t logFlag = true)
 	Float_t trackingUnc = 0.05; //5%
 	Float_t xiVtxUnc    = 0.014;//1.4%
 
+	Float_t Amp_Ratio = 0.0;
+	Float_t StatErr_Amp_Ratio = 0.0;
+	Float_t SystErr_Amp_Ratio = 0.0;
+
+	Float_t lambda = 0.231; //= |V_us|/|V_ud| assumed equal to |V_cd|/|V_cs|
+	Float_t Phi_Xib = 1.15; //Phase space factor
 	//Get efficiencies for Run1
 	TFile *fileIn_nonZero_Run1 = TFile::Open("rootFiles/mcFiles/JpsiLambda/Xib0/run1/xib0_cutoutks_LL_nonZeroTracks.root","READ");
 	TTree *treeIn_nonZero_Run1 = (TTree*)fileIn_nonZero_Run1->Get("MyTuple");
@@ -456,6 +462,11 @@ void Xib_JpsiLambda(Bool_t logFlag = true)
 	BF_Ratio_Comb    = ((BF_Ratio_Run1/pow(Err_BF_Ratio_Run1,2)) + (BF_Ratio_Run2/pow(Err_BF_Ratio_Run2,2))) * pow(Err_BF_Ratio_Comb,2);
 	BF_Ratio_Comb_wt = ((BF_Ratio_Run1_wt/pow(Err_BF_Ratio_Run1_wt,2)) + (BF_Ratio_Run2_wt/pow(Err_BF_Ratio_Run2_wt,2))) * pow(Err_BF_Ratio_Comb_wt,2);
 
+	//Calculate amplitude ratio using combined weighted result.
+	Amp_Ratio         = (1.0/lambda)*sqrt(BF_Ratio_Comb_wt/Phi_Xib);
+	StatErr_Amp_Ratio = StatErr_BF_Ratio_Comb_wt/pow(Amp_Ratio,2);
+	SystErr_Amp_Ratio = SystErr_BF_Ratio_Comb_wt/pow(Amp_Ratio,2);
+
 	cout<<"******Combined Result************"<<endl;
 	cout<<endl;
 	cout<<"UNWEIGHTED RATIO = ("<<BF_Ratio_Comb*1000<<" +/- "<<StatErr_BF_Ratio_Comb*1000<<" +/- "<<SystErr_BF_Ratio_Comb*1000<<")*10^{-3}"<<endl;
@@ -509,6 +520,10 @@ void Xib_JpsiLambda(Bool_t logFlag = true)
 	cout<<"Tracking Bach.pi-    :"<<trackingUnc*100<<endl;
 	cout<<"Xi Vtx. Unc.         :"<<xiVtxUnc*100<<endl;
 
+	cout<<"*******Amplitude Ratio (using combined weighted result) **********"<<endl;
+	cout<<endl;
+	cout<<"Amplitude Ratio = "<<Amp_Ratio<<" +/- "<<StatErr_Amp_Ratio<<" +/- "<<SystErr_Amp_Ratio<<endl;
+	cout<<endl;
 	sw.Stop();
 	cout << "==> Xib_JpsiLambda is done! Congratulations!: "; sw.Print();
 	if(logFlag) gSystem->RedirectOutput(0);
