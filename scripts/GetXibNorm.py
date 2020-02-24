@@ -28,7 +28,7 @@ def GetNorm(run=1, isoFlag=False, isoVersion="v0", isoConf=1, finalBDTConf_nonZe
                                               + pow(Err_B_Xim_LambdaPim / B_Xim_LambdaPim, 2))
 
     scale_factor = 1.0 + (1.0 / NXibm_NXib0)
-    err_scale_factor = (Err_NXibm_NXib0 / NXibm_NXib0 * NXibm_NXib0)
+    err_scale_factor = (Err_NXibm_NXib0 / (NXibm_NXib0 * NXibm_NXib0))
 
     relErr_scale_factor = (err_scale_factor / scale_factor)
 
