@@ -32,6 +32,7 @@ def GetNorm(run=1, isoFlag=False, isoVersion="v0", isoConf=1, finalBDTConf_nonZe
 
     relErr_scale_factor = (err_scale_factor / scale_factor)
 
+    print 'NXibm_NXib0 = ' + str(NXibm_NXib0) + '+/-' + str(Err_NXibm_NXib0)
     print 'scale factor = ' + str(scale_factor) + '+/-' + str(err_scale_factor)
     # Get generated yield of Xib -> J/psi Xi MC ###############
     genLog = open("../logs/mc/JpsiXi/run" + str(run) + "/gen_log.txt")
